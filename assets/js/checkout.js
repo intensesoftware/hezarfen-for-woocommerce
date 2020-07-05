@@ -1,3 +1,10 @@
+jQuery(document).ready(function($){
+
+    $('#wc_hezarfen_billing_district').select2();
+
+});
+
+
 jQuery( function( $ ) {
 
     $("#billing_state").on("select2:select", function(e){
