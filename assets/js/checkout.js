@@ -4,11 +4,11 @@ jQuery( function( $ ) {
 
 
         // empty district select box
-        $('#wc_hezarfen_district').empty();
+        $('#wc_hezarfen_billing_district').empty();
 
 
         // push placeholder data
-        $('#wc_hezarfen_district')
+        $('#wc_hezarfen_billing_district')
             .append($("<option></option>")
                 .attr("value", "")
                 .text("Lütfen seçiniz"));
@@ -32,7 +32,7 @@ jQuery( function( $ ) {
 
             $.each(districts, function (district_id, district_name) {
 
-                $('#wc_hezarfen_district')
+                $('#wc_hezarfen_billing_district')
                     .append($("<option></option>")
                         .attr("value", district_id)
                         .text(district_name));

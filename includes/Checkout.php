@@ -28,7 +28,7 @@ class Checkout
 
 			$fields[ $type ]['district'] = array(
 
-				'id' => 'wc_hezarfen_district',
+				'id' => 'wc_hezarfen_billing_district',
 				'type' => 'select',
 				'label' => __('İlçe', 'woocommerce'),
 				'required' => true,
