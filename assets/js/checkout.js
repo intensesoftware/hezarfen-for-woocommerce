@@ -10,6 +10,7 @@ jQuery( function( $ ) {
 
     $("#billing_state").on("select2:select", function(e){
 
+        $('#wc_hezarfen_billing_district').prop("disabled", true);
 
         // empty district select box
         $('#wc_hezarfen_billing_district').empty();
@@ -47,6 +48,9 @@ jQuery( function( $ ) {
 
             });
 
+
+            $('#wc_hezarfen_billing_district').prop("disabled", false);
+
         });
 
     });
@@ -55,6 +59,7 @@ jQuery( function( $ ) {
 
     $("#wc_hezarfen_billing_district").on("select2:select", function(e){
 
+        $('#wc_hezarfen_billing_neighborhood').prop("disabled", true);
 
         // empty neighborhood select box
         $('#wc_hezarfen_billing_neighborhood').empty();
@@ -90,6 +95,8 @@ jQuery( function( $ ) {
                         .text(neighborhood_name));
 
             });
+
+            $('#wc_hezarfen_billing_neighborhood').prop("disabled", false);
 
         });
 
