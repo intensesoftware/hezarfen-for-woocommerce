@@ -9,3 +9,5 @@ Author: Intense Yazılım Ltd.
 Author URI: http://intense.com.tr
 License: GPL2
 */
+
+include_once 'includes/Autoload.php';
