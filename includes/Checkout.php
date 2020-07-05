@@ -40,6 +40,7 @@ class Checkout
 
 			$fields[ $type ]['neighborhood'] = array(
 
+				'id' => 'wc_hezarfen_billing_neighborhood',
 				'type' => 'select',
 				'label' => __('Mahalle', 'woocommerce'),
 				'required' => true,

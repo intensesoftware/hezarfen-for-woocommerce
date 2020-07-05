@@ -13,6 +13,9 @@ class Ajax
 		add_action('wp_ajax_wc_hezarfen_get_districts', array( $this, 'get_districts' ) );
 		add_action('wp_ajax_nopriv_wc_hezarfen_get_districts', array( $this, 'get_districts' ) );
 
+		add_action('wp_ajax_wc_hezarfen_get_neighborhoods', array( $this, 'get_neighborhoods' ) );
+		add_action('wp_ajax_nopriv_wc_hezarfen_get_neighborhoods', array( $this, 'get_neighborhoods' ) );
+
 	}
 
 	function get_districts(){
@@ -58,6 +61,60 @@ class Ajax
 
 		// return result
 		echo wp_json_encode($districts);
+
+
+		wp_die();
+
+	}
+
+
+
+	function get_neighborhoods(){
+
+		$district_id = $_POST['district_id'];
+
+		$url = sprintf( 'http://api.mahalle.io/v1/mahalle?ilce_id=%d', $district_id );
+
+		$args = [
+
+			'headers' => [
+
+				'Accept' => 'application/json',
+				'Content-Type' => 'application/json'
+
+			]
+
+		];
+
+		$result = wp_remote_get( $url, $args );
+
+		$status_code = wp_remote_retrieve_response_code($result);
+
+		$body = json_decode(wp_remote_retrieve_body($result));
+
+		// return error if exists any error
+		if($status_code!=200 || !isset($body->data)){
+
+			echo wp_json_encode(['message'=>'Server Error']);
+			wp_die();
+
+		}
+
+		$neighborhoods = [];
+
+		foreach($body->data as $semt){
+
+			foreach($semt->mahalleler as $neighborhood){
+
+				$neighborhoods[$neighborhood->id] = $neighborhood->mahalle_adi;
+
+			}
+
+		}
+
+
+		// return result
+		echo wp_json_encode($neighborhoods);
 
 
 		wp_die();

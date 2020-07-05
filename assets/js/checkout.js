@@ -50,4 +50,48 @@ jQuery( function( $ ) {
 
     });
 
+
+
+    $("#wc_hezarfen_billing_district").on("select2:select", function(e){
+
+
+        // empty neighborhood select box
+        $('#wc_hezarfen_billing_neighborhood').empty();
+
+
+        // push placeholder data
+        $('#wc_hezarfen_billing_neighborhood')
+            .append($("<option></option>")
+                .attr("value", "")
+                .text("Lütfen seçiniz"));
+
+
+        // get selected data
+        var selected = e.params.data;
+
+
+        var data = {
+
+            'action':'wc_hezarfen_get_neighborhoods',
+            'district_id':selected.id
+
+        };
+
+        jQuery.post(wc_hezarfen_ajax_object.ajax_url, data, function(response){
+
+            var neighborhoods = JSON.parse(response);
+
+            $.each(neighborhoods, function (neighborhood_id, neighborhood_name) {
+
+                $('#wc_hezarfen_billing_neighborhood')
+                    .append($("<option></option>")
+                        .attr("value", neighborhood_id)
+                        .text(neighborhood_name));
+
+            });
+
+        });
+
+    });
+
 } );
