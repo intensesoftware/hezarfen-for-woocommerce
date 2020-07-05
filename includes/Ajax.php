@@ -71,7 +71,11 @@ class Ajax
 
 	function get_neighborhoods(){
 
-		$district_id = $_POST['district_id'];
+		$district_data = $_POST['district_id'];
+
+		$district_data_array = explode(":", $district_data);
+
+		$district_id = $district_data_array[0];
 
 		$url = sprintf( 'http://api.mahalle.io/v1/mahalle?ilce_id=%d', $district_id );
 

@@ -42,7 +42,7 @@ jQuery( function( $ ) {
 
                 $('#wc_hezarfen_billing_district')
                     .append($("<option></option>")
-                        .attr("value", district_id)
+                        .attr("value", district_id+":"+district_name)
                         .text(district_name));
 
             });
@@ -86,7 +86,7 @@ jQuery( function( $ ) {
 
                 $('#wc_hezarfen_billing_neighborhood')
                     .append($("<option></option>")
-                        .attr("value", neighborhood_id)
+                        .attr("value", neighborhood_id+":"+neighborhood_name)
                         .text(neighborhood_name));
 
             });
