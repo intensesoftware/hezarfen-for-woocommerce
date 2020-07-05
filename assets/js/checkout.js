@@ -1,6 +1,7 @@
 jQuery(document).ready(function($){
 
     $('#wc_hezarfen_billing_district').select2();
+    $('#wc_hezarfen_billing_neighborhood').select2();
 
 });
 
