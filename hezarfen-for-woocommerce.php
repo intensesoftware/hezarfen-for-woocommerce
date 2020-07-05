@@ -10,4 +10,7 @@ Author URI: http://intense.com.tr
 License: GPL2
 */
 
+define('WC_HEZARFEN_VERSION', '0.0');
+define('WC_HEZARFEN_FILE', __FILE__);
+
 include_once 'includes/Autoload.php';
