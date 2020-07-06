@@ -102,4 +102,28 @@ jQuery( function( $ ) {
 
     });
 
+
+
+    $("#wc_hezarfen_billing_neighborhood").on("select2:select", function(e){
+
+
+        // get selected data
+        var selected = e.params.data;
+
+        var data = {
+
+            'action':'wc_hezarfen_neighborhood_changed',
+            'neighborhood_data':selected.id
+
+        };
+
+        jQuery.post(wc_hezarfen_ajax_object.ajax_url, data, function(response){
+
+            
+
+        });
+
+
+    });
+
 } );

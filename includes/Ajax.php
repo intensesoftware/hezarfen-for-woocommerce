@@ -16,6 +16,9 @@ class Ajax
 		add_action('wp_ajax_wc_hezarfen_get_neighborhoods', array( $this, 'get_neighborhoods' ) );
 		add_action('wp_ajax_nopriv_wc_hezarfen_get_neighborhoods', array( $this, 'get_neighborhoods' ) );
 
+		add_action('wp_ajax_wc_hezarfen_neighborhood_changed', array( $this, 'neighborhood_changed' ) );
+		add_action('wp_ajax_nopriv_wc_hezarfen_neighborhood_changed', array( $this, 'neighborhood_changed' ) );
+
 	}
 
 	function get_districts(){
@@ -120,6 +123,24 @@ class Ajax
 		// return result
 		echo wp_json_encode($neighborhoods);
 
+
+		wp_die();
+
+	}
+
+
+
+	function neighborhood_changed(){
+
+		$neighborhood_data = $_POST["neighborhood_data"];
+
+		$neighborhood_data_arr = explode(":", $neighborhood_data);
+
+		$neighborhood_id = $neighborhood_data_arr[0];
+
+		$neighborhood_name = $neighborhood_data_arr[1];
+
+		do_action('hezarfen_checkout_neighborhood_changed', $neighborhood_id, $neighborhood_name);
 
 		wp_die();
 
