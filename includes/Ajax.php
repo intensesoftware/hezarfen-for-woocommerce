@@ -23,10 +23,14 @@ class Ajax
 
 	function get_districts(){
 
-		$city_name = $_POST['city_name'];
+		$city_plate_number_with_TR = $_POST['city_plate_number'];
+
+		$city_plate_number = explode("TR", $city_plate_number_with_TR);
+
+		$city_plate_number = $city_plate_number[1];
 
 
-		$url = sprintf( 'https://api.mahalle.io/v1/ilce?sorgu_tipi=il_adi&il_adi=%s', $city_name );
+		$url = sprintf( 'https://api.mahalle.io/v1/ilce?sorgu_tipi=plaka_kodu&plaka_kodu=%s', $city_plate_number );
 
 		$args = [
 

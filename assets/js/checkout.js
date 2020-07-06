@@ -31,7 +31,7 @@ jQuery( function( $ ) {
         var data = {
 
             'action':'wc_hezarfen_get_districts',
-            'city_name':selected.text
+            'city_plate_number':selected.id
 
         };
 
