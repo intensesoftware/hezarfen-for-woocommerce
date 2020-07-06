@@ -76,6 +76,8 @@ class Checkout
 		$district_options = [""=>__('Lütfen seçiniz', 'woocommerce')];
 		$neighborhood_options = [""=>__('Lütfen seçiniz', 'woocommerce')];
 
+		global $woocommerce;
+
 		foreach($types as $type){
 
 			$city_field_name = sprintf('%s_city', $type);
@@ -86,6 +88,14 @@ class Checkout
 			unset($fields[ $type ][ $city_field_name ]);
 
 
+			$get_city_function = "get_" . $type . "_state";
+
+			$current_city_plate_number_with_TR = $woocommerce->customer->$get_city_function();
+
+			$districts = $this->get_districts( $current_city_plate_number_with_TR );
+
+
+
 			$fields[ $type ][ $city_field_name ] = array(
 
 				'id' => 'wc_hezarfen_'.$type.'_district',
@@ -94,7 +104,7 @@ class Checkout
 				'required' => true,
 				'class' => ['form-row-wide'],
 				'clear' => true,
-				'options' => $district_options
+				'options' => array_merge($district_options, $districts)
 
 			);
 
@@ -115,6 +125,53 @@ class Checkout
 
 
 		return $fields;
+
+
+	}
+
+
+
+	private function get_districts($city_plate_number_with_TR){
+
+		$city_plate_number = explode("TR", $city_plate_number_with_TR);
+
+		$city_plate_number = $city_plate_number[1];
+
+		$url = sprintf( 'https://api.mahalle.io/v1/ilce?sorgu_tipi=plaka_kodu&plaka_kodu=%s', $city_plate_number );
+
+		$args = [
+
+			'headers' => [
+
+				'Accept' => 'application/json',
+				'Content-Type' => 'application/json'
+
+			]
+
+		];
+
+		$result = wp_remote_get( $url, $args );
+
+		$status_code = wp_remote_retrieve_response_code($result);
+
+		$body = json_decode(wp_remote_retrieve_body($result));
+
+		// return error if exists any error
+		if($status_code!=200 || !isset($body->data)){
+
+			return false;
+
+		}
+
+		$districts = [];
+
+		foreach($body->data as $district){
+
+			$districts[$district->id] = $district->ilce_adi;
+
+		}
+
+		return $districts;
 
 
 	}
