@@ -23,7 +23,7 @@ class Ajax
 		$city_name = $_POST['city_name'];
 
 
-		$url = sprintf( 'http://api.mahalle.io/v1/ilce?sorgu_tipi=il_adi&il_adi=%s', $city_name );
+		$url = sprintf( 'https://api.mahalle.io/v1/ilce?sorgu_tipi=il_adi&il_adi=%s', $city_name );
 
 		$args = [
 
@@ -77,7 +77,7 @@ class Ajax
 
 		$district_id = $district_data_array[0];
 
-		$url = sprintf( 'http://api.mahalle.io/v1/mahalle?ilce_id=%d', $district_id );
+		$url = sprintf( 'https://api.mahalle.io/v1/mahalle?ilce_id=%d', $district_id );
 
 		$args = [
 
