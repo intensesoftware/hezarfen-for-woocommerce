@@ -88,7 +88,7 @@ class Checkout
 
 			$fields[ $type ][ $city_field_name ] = array(
 
-				'id' => 'wc_hezarfen_billing_district',
+				'id' => 'wc_hezarfen_'.$type.'_district',
 				'type' => 'select',
 				'label' => __('İlçe', 'woocommerce'),
 				'required' => true,
@@ -100,7 +100,7 @@ class Checkout
 
 			$fields[ $type ][ $neighborhood_field_name ] = array(
 
-				'id' => 'wc_hezarfen_billing_neighborhood',
+				'id' => 'wc_hezarfen_'.$type.'_neighborhood',
 				'type' => 'select',
 				'label' => __('Mahalle', 'woocommerce'),
 				'required' => true,
