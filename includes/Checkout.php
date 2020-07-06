@@ -105,7 +105,7 @@ class Checkout
 				'class' => ['form-row-wide'],
 				'clear' => true,
 				'priority' => $fields[ $type ][ $type . '_state' ]['priority'] + 1,
-				'options' => array_merge($district_options, $districts)
+				'options' => $district_options + $districts
 
 			);
 
