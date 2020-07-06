@@ -14,6 +14,8 @@ class Autoload
 
 		$this->load_assets();
 
+		register_activation_hook( WC_HEZARFEN_FILE, array( 'Hezarfen_Install', 'install' ) );
+
 	}
 
 
@@ -37,6 +39,7 @@ class Autoload
 
 		require_once 'Checkout.php';
 		require_once 'Ajax.php';
+		require_once 'Hezarfen_Install.php';
 
 	}
 
