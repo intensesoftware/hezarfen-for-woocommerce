@@ -104,6 +104,7 @@ class Checkout
 				'required' => true,
 				'class' => ['form-row-wide'],
 				'clear' => true,
+				'priority' => $fields[ $type ][ $type . '_state' ]['priority'] + 1,
 				'options' => array_merge($district_options, $districts)
 
 			);
@@ -116,6 +117,7 @@ class Checkout
 				'required' => true,
 				'class' => ['form-row-wide'],
 				'clear' => true,
+				'priority' => $fields[ $type ][ $type . '_state' ]['priority'] + 2,
 				'options' => $neighborhood_options
 
 			);
