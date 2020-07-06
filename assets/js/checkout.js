@@ -119,7 +119,10 @@ jQuery( function( $ ) {
 
         jQuery.post(wc_hezarfen_ajax_object.ajax_url, data, function(response){
 
-            
+            var args = JSON.parse(response);
+
+            if(args.update_checkout)
+                jQuery('body').trigger('update_checkout');
 
         });
 

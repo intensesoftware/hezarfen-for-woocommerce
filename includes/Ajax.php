@@ -142,6 +142,14 @@ class Ajax
 
 		do_action('hezarfen_checkout_neighborhood_changed', $neighborhood_id, $neighborhood_name);
 
+		$args = [
+
+			'update_checkout' => true
+
+		];
+
+		echo wp_json_encode( apply_filters( 'hezarfen_checkout_neighborhood_changed_output_args', $args, $neighborhood_id, $neighborhood_name ) );
+
 		wp_die();
 
 	}
