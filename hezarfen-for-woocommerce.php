@@ -10,6 +10,8 @@ Author URI: http://intense.com.tr
 License: GPL2
 */
 
+defined( 'ABSPATH' ) || exit;
+
 define('WC_HEZARFEN_VERSION', '0.4.1');
 define('WC_HEZARFEN_FILE', __FILE__);
 
