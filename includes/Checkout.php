@@ -37,12 +37,16 @@ class Checkout
 
 				$value = $data[ $city_field_name ];
 
-				$district_data_arr = explode(":", $value);
+				if( $value ){
 
-				$district_id   = $district_data_arr[0];
-				$district_name = $district_data_arr[1];
+					$district_data_arr = explode(":", $value);
 
-				$data[ $city_field_name ] = $district_name;
+					$district_id   = $district_data_arr[0];
+					$district_name = $district_data_arr[1];
+
+					$data[ $city_field_name ] = $district_name;
+
+				}
 
 			}
 
@@ -51,12 +55,16 @@ class Checkout
 
 				$value = $data[ $neighborhood_field_name ];
 
-				$neighborhood_data_arr = explode(":", $value );
+				if( $value ){
+					
+					$neighborhood_data_arr = explode(":", $value );
 
-				$neighborhood_id   = $neighborhood_data_arr[0];
-				$neighborhood_name = $neighborhood_data_arr[1];
+					$neighborhood_id   = $neighborhood_data_arr[0];
+					$neighborhood_name = $neighborhood_data_arr[1];
 
-				$data[ $neighborhood_field_name ] = $neighborhood_name;
+					$data[ $neighborhood_field_name ] = $neighborhood_name;
+
+				}
 
 			}
 
