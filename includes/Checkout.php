@@ -94,8 +94,9 @@ class Checkout
 
 			$current_city_plate_number_with_TR = $woocommerce->customer->$get_city_function();
 
-			$districts = $this->get_districts( $current_city_plate_number_with_TR );
 
+			// update array keys for id:name format
+			$districts = hezarfen_wc_checkout_select2_option_format( $this->get_districts( $current_city_plate_number_with_TR ) );
 
 
 			$fields[ $type ][ $city_field_name ] = array(
@@ -132,6 +133,9 @@ class Checkout
 
 
 	}
+
+
+
 
 
 

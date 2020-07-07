@@ -40,6 +40,7 @@ class Autoload
 		require_once 'Checkout.php';
 		require_once 'Ajax.php';
 		require_once 'Hezarfen_Install.php';
+		require_once 'hezarfen-wc-helpers.php';
 
 	}
 
