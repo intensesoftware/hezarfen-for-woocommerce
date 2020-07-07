@@ -30,7 +30,7 @@ class Checkout
 
 			$city_field_name = sprintf('%s_city', $type);
 
-			$neighborhood_field_name = sprintf('%s_neighborhood', $type);
+			$neighborhood_field_name = sprintf('%s_address_1', $type);
 
 
 			if (array_key_exists( $city_field_name, $data )) {
@@ -83,7 +83,7 @@ class Checkout
 		foreach($types as $type){
 
 			$city_field_name = sprintf('%s_city', $type);
-			$neighborhood_field_name = sprintf('%s_neighborhood', $type);
+			$neighborhood_field_name = sprintf('%s_address_1', $type);
 
 
 			// remove WooCommerce default district field on checkout
