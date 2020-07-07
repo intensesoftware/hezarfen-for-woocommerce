@@ -14,6 +14,59 @@ class Checkout
 
 		add_action('woocommerce_checkout_update_order_meta', array($this, 'update_data'));
 
+		add_action('woocommerce_checkout_posted_data', array( $this, 'override_posted_data' ) );
+
+	}
+
+
+	function override_posted_data( $data ){
+
+
+
+		$types = ['shipping', 'billing'];
+
+		foreach( $types as $type ) {
+
+
+			$city_field_name = sprintf('%s_city', $type);
+
+			$neighborhood_field_name = sprintf('%s_neighborhood', $type);
+
+
+			if (array_key_exists( $city_field_name, $data )) {
+
+				$value = $data[ $city_field_name ];
+
+				$district_data_arr = explode(":", $value);
+
+				$district_id   = $district_data_arr[0];
+				$district_name = $district_data_arr[1];
+
+				$data[ $city_field_name ] = $district_name;
+
+			}
+
+
+			if ( array_key_exists( $neighborhood_field_name, $data ) ) {
+
+				$value = $data[ $neighborhood_field_name ];
+
+				$neighborhood_data_arr = explode(":", $value );
+
+				$neighborhood_id   = $neighborhood_data_arr[0];
+				$neighborhood_name = $neighborhood_data_arr[1];
+
+				$data[ $neighborhood_field_name ] = $neighborhood_name;
+
+			}
+
+
+		}
+
+
+		return $data;
+
+
 	}
 
 
