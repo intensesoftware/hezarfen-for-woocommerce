@@ -28,9 +28,14 @@ class Autoload
 
 	function load_js_files(){
 
-		wp_enqueue_script( 'wc_hezarfen_checkout_js', plugins_url( 'assets/js/checkout.js', WC_HEZARFEN_FILE ), array('jquery'), WC_HEZARFEN_VERSION );
+		if(is_checkout()){
 
-		wp_localize_script( 'wc_hezarfen_checkout_js', 'wc_hezarfen_ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+			wp_enqueue_script( 'wc_hezarfen_checkout_js', plugins_url( 'assets/js/checkout.js', WC_HEZARFEN_FILE ), array('jquery'), WC_HEZARFEN_VERSION );
+
+			wp_localize_script( 'wc_hezarfen_checkout_js', 'wc_hezarfen_ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+
+		}
+
 
 	}
 
