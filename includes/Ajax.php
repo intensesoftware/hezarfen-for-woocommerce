@@ -51,49 +51,10 @@ class Ajax
 
 		$district_id = $district_data_array[0];
 
-		$url = sprintf( 'https://api.mahalle.io/v1/mahalle?ilce_id=%d', $district_id );
-
-		$args = [
-
-			'headers' => [
-
-				'Accept' => 'application/json',
-				'Content-Type' => 'application/json'
-
-			]
-
-		];
-
-		$result = wp_remote_get( $url, $args );
-
-		$status_code = wp_remote_retrieve_response_code($result);
-
-		$body = json_decode(wp_remote_retrieve_body($result));
-
-		// return error if exists any error
-		if($status_code!=200 || !isset($body->data)){
-
-			echo wp_json_encode(['message'=>'Server Error']);
-			wp_die();
-
-		}
-
-		$neighborhoods = [];
-
-		foreach($body->data as $semt){
-
-			foreach($semt->mahalleler as $neighborhood){
-
-				$neighborhoods[$neighborhood->id] = $neighborhood->mahalle_adi;
-
-			}
-
-		}
-
+		$neighborhoods = MahalleIO::get_neighborhoods( $district_id );
 
 		// return result
 		echo wp_json_encode($neighborhoods);
-
 
 		wp_die();
 
