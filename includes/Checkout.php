@@ -19,6 +19,13 @@ class Checkout
 	}
 
 
+	/**
+	 *
+	 * Update district and neighborhood data after checkout submit
+	 *
+	 * @param $data
+	 * @return array
+	 */
 	function override_posted_data( $data ){
 
 
@@ -77,7 +84,12 @@ class Checkout
 
 	}
 
-
+	/**
+	 * Show district and neighborhood fields on checkout page.
+	 *
+	 * @param $fields
+	 * @return array
+	 */
 	function add_district_and_neighborhood_fields($fields){
 
 
@@ -143,10 +155,12 @@ class Checkout
 	}
 
 
-
-
-
-
+	/**
+	 * Get districts from mahalle.io
+	 *
+	 * @param $city_plate_number_with_TR
+	 * @return array|bool
+	 */
 	private function get_districts($city_plate_number_with_TR){
 
 		$city_plate_number = explode("TR", $city_plate_number_with_TR);
