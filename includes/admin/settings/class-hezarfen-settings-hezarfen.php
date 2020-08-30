@@ -108,6 +108,15 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		WC_Admin_Settings::output_fields( $settings );
 	}
 
+	public function save(){
+
+		global $current_section;
+
+		$settings = $this->get_settings( $current_section );
+		WC_Admin_Settings::save_fields( $settings );
+
+	}
+
 }
 
 return new Hezarfen_Settings_Hezarfen();
