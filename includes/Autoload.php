@@ -63,6 +63,7 @@ class Autoload
 		require_once 'Ajax.php';
 		require_once 'Hezarfen_Install.php';
 		require_once 'hezarfen-wc-helpers.php';
+		require_once 'Services/MahalleIO.php';
 
 	}
 
