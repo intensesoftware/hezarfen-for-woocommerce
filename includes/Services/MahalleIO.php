@@ -7,6 +7,13 @@ defined( 'ABSPATH' ) || exit;
 class MahalleIO
 {
 
+
+	/**
+	 * Get districts by TR city plate number from mahalle.io
+	 *
+	 * @param $city_plate_number
+	 * @return array
+	 */
 	public static function get_districts( $city_plate_number )
 	{
 
