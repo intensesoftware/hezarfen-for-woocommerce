@@ -17,5 +17,6 @@ defined( 'ABSPATH' ) || exit;
 
 define('WC_HEZARFEN_VERSION', '0.4.3');
 define('WC_HEZARFEN_FILE', __FILE__);
+define('WC_HEZARFEN_UYGULAMA_YOLU', plugin_dir_path(__FILE__));
 
 include_once 'includes/Autoload.php';

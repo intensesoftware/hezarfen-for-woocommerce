@@ -16,6 +16,23 @@ class Autoload
 
 		register_activation_hook( WC_HEZARFEN_FILE, array( 'Hezarfen_Install', 'install' ) );
 
+		add_filter( 'woocommerce_get_settings_pages', array( $this, 'add_hezarfen_setting_page' ) );
+
+	}
+
+
+	/**
+	 *
+	 * Load Hezarfen Settings Page
+	 *
+	 * @param $settings
+	 * @return array
+	 */
+	public function add_hezarfen_setting_page( $settings )
+	{
+		$settings[] = include_once WC_HEZARFEN_UYGULAMA_YOLU . 'includes/admin/settings/class-hezarfen-settings-hezarfen.php';
+
+		return $settings;
 	}
 
 
