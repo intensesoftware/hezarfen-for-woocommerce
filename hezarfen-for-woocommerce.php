@@ -7,6 +7,8 @@ Description: Hezarfen, WooCommerce eklentisini Türkiye için daha kullanılabil
 Version: 0.4.3
 Author: Intense Yazılım Ltd.
 Author URI: http://intense.com.tr
+Developer: Intense Yazılım Ltd.
+Developer URI: http://intense.com.tr
 License: GPL2
 Text Domain: hezarfen-for-woocommerce
 */
