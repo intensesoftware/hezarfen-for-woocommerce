@@ -8,6 +8,7 @@ Version: 0.4.3
 Author: Intense Yazılım Ltd.
 Author URI: http://intense.com.tr
 License: GPL2
+Text Domain: hezarfen-for-woocommerce
 */
 
 defined( 'ABSPATH' ) || exit;
