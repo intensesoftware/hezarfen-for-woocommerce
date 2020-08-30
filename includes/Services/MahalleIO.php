@@ -9,15 +9,12 @@ class MahalleIO
 
 
 	/**
-	 * Get districts by TR city plate number from mahalle.io
+	 * Make HTTP - GET Request to mahalle.io
 	 *
-	 * @param $city_plate_number
-	 * @return array
+	 * @param $url
+	 * @return mixed
 	 */
-	public static function get_districts( $city_plate_number )
-	{
-
-		$url = sprintf( 'https://api.mahalle.io/v1/ilce?sorgu_tipi=plaka_kodu&plaka_kodu=%s', $city_plate_number );
+	public static function HTTP( $url ){
 
 		$args = [
 
@@ -34,19 +31,35 @@ class MahalleIO
 
 		$status_code = wp_remote_retrieve_response_code($result);
 
-		$body = json_decode(wp_remote_retrieve_body($result));
+		$response = json_decode(wp_remote_retrieve_body($result));
 
 		// return error if exists any error
-		if($status_code!=200 || !isset($body->data)){
+		if($status_code!=200 || !isset($response->data))
+			return new \WP_Error( 'connection_failed', __( 'mahalle.io connection failed' ) );
 
-			echo wp_json_encode(['message'=>'Server Error']);
-			wp_die();
+		return $response;
 
-		}
+	}
+
+	/**
+	 * Get districts by TR city plate number from mahalle.io
+	 *
+	 * @param $city_plate_number
+	 * @return array
+	 */
+	public static function get_districts( $city_plate_number )
+	{
+
+		$url = sprintf( 'https://api.mahalle.io/v1/ilce?sorgu_tipi=plaka_kodu&plaka_kodu=%s', $city_plate_number );
+
+		$result = self::HTTP( $url );
+
+		if( is_wp_error( $result ) )
+			return $result;
 
 		$districts = [];
 
-		foreach($body->data as $district){
+		foreach($result->data as $district){
 
 			$districts[$district->id] = $district->ilce_adi;
 
@@ -68,34 +81,14 @@ class MahalleIO
 
 		$url = sprintf( 'https://api.mahalle.io/v1/mahalle?ilce_id=%d', $district_id );
 
-		$args = [
+		$result = self::HTTP( $url );
 
-			'headers' => [
-
-				'Accept' => 'application/json',
-				'Content-Type' => 'application/json'
-
-			]
-
-		];
-
-		$result = wp_remote_get( $url, $args );
-
-		$status_code = wp_remote_retrieve_response_code($result);
-
-		$body = json_decode(wp_remote_retrieve_body($result));
-
-		// return error if exists any error
-		if($status_code!=200 || !isset($body->data)){
-
-			echo wp_json_encode(['message'=>'Server Error']);
-			wp_die();
-
-		}
+		if( is_wp_error( $result ) )
+			return $result;
 
 		$neighborhoods = [];
 
-		foreach($body->data as $semt){
+		foreach($result->data as $semt){
 
 			foreach($semt->mahalleler as $neighborhood){
 
