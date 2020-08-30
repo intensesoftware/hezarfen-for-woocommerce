@@ -31,7 +31,16 @@ class Ajax
 
 		$city_plate_number = $city_plate_number[1];
 
-		$districts = MahalleIO::get_districts( $city_plate_number );
+		$get_districts_response = MahalleIO::get_districts( $city_plate_number );
+
+		// if get_districts failed, return empty array.
+		/**
+		 * Todo: fire a notification about failed mahalle.io connection
+		 */
+		if( is_wp_error( $get_districts_response ) )
+			$districts = [];
+		else
+			$districts = $get_districts_response;
 
 		// return result
 		echo wp_json_encode($districts);
@@ -51,7 +60,16 @@ class Ajax
 
 		$district_id = $district_data_array[0];
 
-		$neighborhoods = MahalleIO::get_neighborhoods( $district_id );
+		$get_neighborhoods_response = MahalleIO::get_neighborhoods( $district_id );
+
+		// if get_neighborhoods failed, return empty array.
+		/**
+		 * Todo: fire a notification about failed mahalle.io connection
+		 */
+		if( is_wp_error($get_neighborhoods_response ) )
+			$neighborhoods = [];
+		else
+			$neighborhoods = $get_neighborhoods_response;
 
 		// return result
 		echo wp_json_encode($neighborhoods);

@@ -116,9 +116,19 @@ class Checkout
 
 			$current_city_plate_number_with_TR = $woocommerce->customer->$get_city_function();
 
+			$districts_response = $this->get_districts( $current_city_plate_number_with_TR );
+
+			// if get_districts failed, return empty array.
+			/**
+			 * Todo: fire a notification about failed mahalle.io connection
+			 */
+			if( is_wp_error( $districts_response ) )
+				$districts = [];
+			else
+				$districts = $districts_response;
 
 			// update array keys for id:name format
-			$districts = hezarfen_wc_checkout_select2_option_format( $this->get_districts( $current_city_plate_number_with_TR ) );
+			$districts = hezarfen_wc_checkout_select2_option_format( $districts );
 
 
 			$fields[ $type ][ $city_field_name ] = array(
