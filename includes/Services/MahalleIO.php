@@ -9,6 +9,19 @@ class MahalleIO
 
 
 	/**
+	 *
+	 * Get registered API Token
+	 *
+	 * @return string|false
+	 */
+	public static function get_api_token(){
+
+		return get_option('hezarfen_mahalle_io_api_key', false);
+
+	}
+
+
+	/**
 	 * Make HTTP - GET Request to mahalle.io
 	 *
 	 * @param $url
@@ -21,7 +34,8 @@ class MahalleIO
 			'headers' => [
 
 				'Accept' => 'application/json',
-				'Content-Type' => 'application/json'
+				'Content-Type' => 'application/json',
+				'Authorization' => 'Bearer '.self::get_api_token()
 
 			]
 
@@ -50,7 +64,7 @@ class MahalleIO
 	public static function get_districts( $city_plate_number )
 	{
 
-		$url = sprintf( 'https://api.mahalle.io/v1/ilce?sorgu_tipi=plaka_kodu&plaka_kodu=%s', $city_plate_number );
+		$url = sprintf( 'https://api.mahalle.io/v2/ilce?sorgu_tipi=plaka_kodu&plaka_kodu=%s', $city_plate_number );
 
 		$result = self::HTTP( $url );
 
@@ -79,7 +93,7 @@ class MahalleIO
 	public static function get_neighborhoods( $district_id )
 	{
 
-		$url = sprintf( 'https://api.mahalle.io/v1/mahalle?ilce_id=%d', $district_id );
+		$url = sprintf( 'https://api.mahalle.io/v2/mahalle?ilce_id=%d', $district_id );
 
 		$result = self::HTTP( $url );
 
