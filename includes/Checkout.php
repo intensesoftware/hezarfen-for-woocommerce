@@ -12,9 +12,64 @@ class Checkout
 	public function __construct()
 	{
 
+		add_filter( 'woocommerce_checkout_fields', array( $this, 'add_tax_fields' ) );
+
 		add_filter('woocommerce_checkout_fields', array($this, 'add_district_and_neighborhood_fields'));
 
 		add_action('woocommerce_checkout_posted_data', array( $this, 'override_posted_data' ) );
+
+	}
+
+
+	/**
+	 * Add tax fields (person or company selection and tax informations)
+	 */
+	public function add_tax_fields( $fields ){
+
+		$fields['billing']['invoice_type'] = array(
+
+			'id' => 'hezarfen_invoice_type',
+			'label' => __('Invoice Type', 'hezarfen-for-woocommerce'),
+			'type' => 'select',
+			'required' => true,
+			'class' => ['form-row-wide'],
+			'options' => array(
+
+				'person' => __('Personal', 'hezarfen-for-woocommerce'),
+				'company' => __('Company', 'hezarfen-for-woocommerce')
+
+			)
+
+		);
+
+		$fields['billing']['TC_number'] = array(
+
+			'id' => 'hezarfen_TC_number',
+			'label' => __('T.C. Identity Number', 'hezarfen-for-woocommerce'),
+			'required' => false,
+			'class' => ['form-row-wide']
+
+		);
+
+		$fields['billing']['tax_number'] = array(
+
+			'id' => 'hezarfen_tax_number',
+			'label' => __('Tax Number', 'hezarfen-for-woocommerce'),
+			'required' => false,
+			'class' => ['form-row-wide', 'hezarfen-hide-form-field']
+
+		);
+
+		$fields['billing']['tax_office'] = array(
+
+			'id' => 'hezarfen_tax_office',
+			'label' => __('TAX Office', 'hezarfen-for-woocommerce'),
+			'required' => false,
+			'class' => ['form-row-wide', 'hezarfen-hide-form-field']
+
+		);
+
+		return $fields;
 
 	}
 

@@ -12,6 +12,21 @@ jQuery(document).ready(function($){
 
 jQuery( function( $ ) {
 
+    $('#hezarfen_invoice_type').change(function(){
+
+        var invoice_type = $(this).val();
+
+        if( invoice_type == 'person' ){
+            $('#hezarfen_TC_number_field').removeClass('hezarfen-hide-form-field');
+            $('#hezarfen_tax_number_field').addClass('hezarfen-hide-form-field');
+            $('#hezarfen_tax_office_field').addClass('hezarfen-hide-form-field');
+        }else if( invoice_type == 'company' ){
+            $('#hezarfen_TC_number_field').addClass('hezarfen-hide-form-field');
+            $('#hezarfen_tax_number_field').removeClass('hezarfen-hide-form-field');
+            $('#hezarfen_tax_office_field').removeClass('hezarfen-hide-form-field');
+        }
+
+    });
 
     $.each(["billing", "shipping"], function(index, type){
 
