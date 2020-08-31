@@ -10,6 +10,20 @@ class MahalleIO
 
 	/**
 	 *
+	 * Check: Is MahalleIO service activated?
+	 *
+	 * @return bool
+	 */
+	public static function is_active()
+	{
+
+		return self::get_api_token() ? true : false;
+
+	}
+
+
+	/**
+	 *
 	 * Get registered API Token
 	 *
 	 * @return string|false
