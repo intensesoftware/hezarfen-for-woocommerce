@@ -107,25 +107,25 @@ class Checkout
 			$city_field_name = sprintf('%s_city', $type);
 			$neighborhood_field_name = sprintf('%s_address_1', $type);
 
-
-			// remove WooCommerce default district field on checkout
-			unset($fields[ $type ][ $city_field_name ]);
-
-
 			$get_city_function = "get_" . $type . "_state";
 
 			$current_city_plate_number_with_TR = $woocommerce->customer->$get_city_function();
 
 			$districts_response = $this->get_districts( $current_city_plate_number_with_TR );
 
-			// if get_districts failed, return empty array.
+
 			/**
 			 * Todo: fire a notification about failed mahalle.io connection
 			 */
+			// if get_districts failed, return empty array and disable mahalle.io - Hezarfen customizations.
+			
 			if( is_wp_error( $districts_response ) )
-				$districts = [];
+				continue;
 			else
 				$districts = $districts_response;
+
+			// remove WooCommerce default district field on checkout
+			unset($fields[ $type ][ $city_field_name ]);
 
 			// update array keys for id:name format
 			$districts = hezarfen_wc_checkout_select2_option_format( $districts );
