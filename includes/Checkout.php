@@ -14,8 +14,6 @@ class Checkout
 
 		add_filter('woocommerce_checkout_fields', array($this, 'add_district_and_neighborhood_fields'));
 
-		add_action('woocommerce_checkout_update_order_meta', array($this, 'update_data'));
-
 		add_action('woocommerce_checkout_posted_data', array( $this, 'override_posted_data' ) );
 
 	}
