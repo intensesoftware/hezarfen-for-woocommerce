@@ -31,6 +31,10 @@ class Checkout
 	function override_posted_data( $data ){
 
 
+		// if Mahalle.io not activated, return.
+		if( ! MahalleIO::is_active() )
+			return $data;
+
 
 		$types = ['shipping', 'billing'];
 
@@ -94,6 +98,9 @@ class Checkout
 	 */
 	function add_district_and_neighborhood_fields($fields){
 
+		// if Mahalle.io not activated, return.
+		if( ! MahalleIO::is_active() )
+			return $fields;
 
 		$types = ['shipping', 'billing'];
 
