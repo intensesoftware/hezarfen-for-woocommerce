@@ -46,7 +46,7 @@ class Checkout
 
 				$value = $data[ $city_field_name ];
 
-				if( $value ){
+				if( $value && strpos($value, ':') !== false ){
 
 					$district_data_arr = explode(":", $value);
 
@@ -64,7 +64,7 @@ class Checkout
 
 				$value = $data[ $neighborhood_field_name ];
 
-				if( $value ){
+				if( $value && strpos($value, ':') !== false ){
 					
 					$neighborhood_data_arr = explode(":", $value );
 
