@@ -235,6 +235,9 @@ class Checkout
 	 */
 	private function get_districts($city_plate_number_with_TR){
 
+		if( ! $city_plate_number_with_TR )
+			return [];
+
 		$city_plate_number = explode("TR", $city_plate_number_with_TR);
 
 		$city_plate_number = $city_plate_number[1];
