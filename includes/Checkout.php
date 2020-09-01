@@ -18,8 +18,54 @@ class Checkout
 
 		add_action('woocommerce_checkout_posted_data', array( $this, 'override_posted_data' ) );
 
+		add_action( 'woocommerce_before_checkout_process', array( $this, 'update_field_required_statuses_before_checkout_process' ) );
+
 	}
 
+	/**
+	 * Make non-required tax_number and tax_office fields.
+	 *
+	 * @param $fields
+	 * @return array
+	 */
+	public function update_fields_required_options_for_invoice_type_person( $fields )
+	{
+
+		$fields['billing']['tax_number']['required'] = false;
+		$fields['billing']['tax_office']['required'] = false;
+
+		return $fields;
+
+	}
+
+	/**
+	 * Make non-required TC_number field.
+	 *
+	 * @param $fields
+	 * @return array
+	 */
+	public function update_fields_required_options_for_invoice_type_company( $fields )
+	{
+
+		$fields['billing']['TC_number']['required'] = false;
+
+		return $fields;
+
+	}
+
+	/**
+	 * Update tax field required statuses according to the invoice type selection when checkout submit (before checkout processed.).
+	 */
+	public function update_field_required_statuses_before_checkout_process(){
+
+		$hezarfen_invoice_type = $_POST['invoice_type'];
+
+		if( $hezarfen_invoice_type == 'person' )
+			add_filter('woocommerce_checkout_fields', array( $this, 'update_fields_required_options_for_invoice_type_person' ) );
+		elseif( $hezarfen_invoice_type == 'company' )
+			add_filter('woocommerce_checkout_fields', array( $this, 'update_fields_required_options_for_invoice_type_company' ) );
+
+	}
 
 	/**
 	 * Add tax fields (person or company selection and tax informations)
