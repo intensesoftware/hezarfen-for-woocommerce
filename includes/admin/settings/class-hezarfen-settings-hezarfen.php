@@ -109,6 +109,14 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				),
 
 				array(
+					'title' => 'Checkout T.C. Identity Number Fields Required Statuses',
+					'desc' => __('Is T.C. Identity Number field required?', 'hezarfen-for-woocommerce'),
+					'id' => 'hezarfen_checkout_is_TC_identity_number_field_required',
+					'default' => 'no',
+					'type' => 'checkbox'
+				),
+
+				array(
 					'type' => 'sectionend',
 					'id' => 'hezarfen_checkout_options'
 				)

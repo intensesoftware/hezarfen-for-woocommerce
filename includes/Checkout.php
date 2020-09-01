@@ -34,6 +34,16 @@ class Checkout
 	}
 
 	/**
+	 * Is TC Identity Number field required?
+	 * @return bool
+	 */
+	public static function is_TC_identity_number_field_required(){
+
+		return ( get_option( 'hezarfen_checkout_is_TC_identity_number_field_required', false ) == 'yes' ) ? true : false ;
+
+	}
+
+	/**
 	 * Make non-required tax_number and tax_office fields.
 	 *
 	 * @param $fields
@@ -107,7 +117,7 @@ class Checkout
 
 				'id' => 'hezarfen_TC_number',
 				'label' => __('T.C. Identity Number', 'hezarfen-for-woocommerce'),
-				'required' => false,
+				'required' => self::is_TC_identity_number_field_required(),
 				'class' => ['form-row-wide']
 
 			);
