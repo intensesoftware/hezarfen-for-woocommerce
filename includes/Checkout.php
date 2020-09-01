@@ -126,7 +126,7 @@ class Checkout
 
 			'id' => 'hezarfen_tax_number',
 			'label' => __('Tax Number', 'hezarfen-for-woocommerce'),
-			'required' => false,
+			'required' => true,
 			'class' => ['form-row-wide', 'hezarfen-hide-form-field']
 
 		);
@@ -135,7 +135,7 @@ class Checkout
 
 			'id' => 'hezarfen_tax_office',
 			'label' => __('TAX Office', 'hezarfen-for-woocommerce'),
-			'required' => false,
+			'required' => true,
 			'class' => ['form-row-wide', 'hezarfen-hide-form-field']
 
 		);
