@@ -35,7 +35,8 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	{
 		$sections = array(
 			'general' => __( 'General', 'hezarfen-for-woocommerce' ),
-			'mahalle_io'  =>  'mahalle.io'
+			'mahalle_io'  =>  'mahalle.io',
+			'checkout'  =>  __( 'Checkout Fields', 'hezarfen-for-woocommerce' ),
 		);
 
 		return apply_filters( 'woocommerce_get_sections_' . $this->id, $sections );
@@ -81,6 +82,12 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				)
 
 			) );
+
+		}elseif( 'checkout' == $current_section ){
+
+
+			$settings = apply_filters( 'hezarfen_general_settings', array() );
+
 
 		}else{
 
