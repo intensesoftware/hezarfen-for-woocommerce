@@ -86,7 +86,34 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		}elseif( 'checkout' == $current_section ){
 
 
-			$settings = apply_filters( 'hezarfen_general_settings', array() );
+			$settings = apply_filters( 'hezarfen_checkout_settings', array(
+
+				array(
+
+					'title' => __( 'Checkout Form Settings', 'hezarfen-for-woocommerce' ),
+					'type' => 'title',
+					'desc' => 'Update checkout fields and checkout page options.',
+					'id' => 'hezarfen_checkout_options'
+
+				),
+
+				array(
+
+					'title' => __( 'Show T.C. Identity Field on Checkout Page ', 'hezarfen-for-woocommerce' ),
+					'type' => 'checkbox',
+					'desc' => 'T.C. Identity Field optionally shows on checkout field when invoice type selected as person.',
+					'id' => 'hezarfen_checkout_show_TC_identity_field',
+					'default' => 'no',
+					'std' => 'yes'
+
+				),
+
+				array(
+					'type' => 'sectionend',
+					'id' => 'hezarfen_checkout_options'
+				)
+
+			) );
 
 
 		}else{

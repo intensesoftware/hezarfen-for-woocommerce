@@ -23,6 +23,17 @@ class Checkout
 	}
 
 	/**
+	 * Should show TC Identity field on checkout?.
+	 * Default: false
+	 * @return boolean
+	 */
+	public static function is_show_TC_field_on_checkout(){
+
+		return ( get_option( 'hezarfen_checkout_show_TC_identity_field', false ) == 'yes' ) ? true : false ;
+
+	}
+
+	/**
 	 * Make non-required tax_number and tax_office fields.
 	 *
 	 * @param $fields
@@ -46,6 +57,9 @@ class Checkout
 	 */
 	public function update_fields_required_options_for_invoice_type_company( $fields )
 	{
+
+		if( ! self::is_show_TC_field_on_checkout() )
+			return $fields;
 
 		$fields['billing']['TC_number']['required'] = false;
 
@@ -88,14 +102,15 @@ class Checkout
 
 		);
 
-		$fields['billing']['TC_number'] = array(
+		if( self::is_show_TC_field_on_checkout() )
+			$fields['billing']['TC_number'] = array(
 
-			'id' => 'hezarfen_TC_number',
-			'label' => __('T.C. Identity Number', 'hezarfen-for-woocommerce'),
-			'required' => false,
-			'class' => ['form-row-wide']
+				'id' => 'hezarfen_TC_number',
+				'label' => __('T.C. Identity Number', 'hezarfen-for-woocommerce'),
+				'required' => false,
+				'class' => ['form-row-wide']
 
-		);
+			);
 
 		$fields['billing']['tax_number'] = array(
 
