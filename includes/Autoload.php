@@ -67,6 +67,12 @@ class Autoload
 		require_once 'hezarfen-wc-helpers.php';
 		require_once 'Services/MahalleIO.php';
 
+		if( is_admin() ){
+
+			require_once 'admin/order/OrderDetails.php';
+
+		}
+
 	}
 
 }
