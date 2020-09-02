@@ -52,8 +52,8 @@ class Checkout
 	public function update_fields_required_options_for_invoice_type_person( $fields )
 	{
 
-		$fields['billing']['tax_number']['required'] = false;
-		$fields['billing']['tax_office']['required'] = false;
+		$fields['billing']['billing_tax_number']['required'] = false;
+		$fields['billing']['billing_tax_office']['required'] = false;
 
 		return $fields;
 
@@ -71,7 +71,7 @@ class Checkout
 		if( ! self::is_show_TC_field_on_checkout() )
 			return $fields;
 
-		$fields['billing']['TC_number']['required'] = false;
+		$fields['billing']['billing_TC_identity_number']['required'] = false;
 
 		return $fields;
 
@@ -96,7 +96,7 @@ class Checkout
 	 */
 	public function add_tax_fields( $fields ){
 
-		$fields['billing']['invoice_type'] = array(
+		$fields['billing']['billing_invoice_type'] = array(
 
 			'id' => 'hezarfen_invoice_type',
 			'label' => __('Invoice Type', 'hezarfen-for-woocommerce'),
@@ -113,7 +113,7 @@ class Checkout
 		);
 
 		if( self::is_show_TC_field_on_checkout() )
-			$fields['billing']['TC_number'] = array(
+			$fields['billing']['billing_TC_number'] = array(
 
 				'id' => 'hezarfen_TC_number',
 				'label' => __('T.C. Identity Number', 'hezarfen-for-woocommerce'),
@@ -122,7 +122,7 @@ class Checkout
 
 			);
 
-		$fields['billing']['tax_number'] = array(
+		$fields['billing']['billing_tax_number'] = array(
 
 			'id' => 'hezarfen_tax_number',
 			'label' => __('Tax Number', 'hezarfen-for-woocommerce'),
@@ -131,7 +131,7 @@ class Checkout
 
 		);
 
-		$fields['billing']['tax_office'] = array(
+		$fields['billing']['billing_tax_office'] = array(
 
 			'id' => 'hezarfen_tax_office',
 			'label' => __('TAX Office', 'hezarfen-for-woocommerce'),
