@@ -82,7 +82,7 @@ class Checkout
 	 */
 	public function update_field_required_statuses_before_checkout_process(){
 
-		$hezarfen_invoice_type = $_POST['invoice_type'];
+		$hezarfen_invoice_type = $_POST['billing_invoice_type'];
 
 		if( $hezarfen_invoice_type == 'person' )
 			add_filter('woocommerce_checkout_fields', array( $this, 'update_fields_required_options_for_invoice_type_person' ) );
