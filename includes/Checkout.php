@@ -52,8 +52,8 @@ class Checkout
 	public function update_fields_required_options_for_invoice_type_person( $fields )
 	{
 
-		$fields['billing']['billing_tax_number']['required'] = false;
-		$fields['billing']['billing_tax_office']['required'] = false;
+		unset($fields['billing']['billing_tax_number']);
+		unset($fields['billing']['billing_tax_office']);
 
 		return $fields;
 
@@ -71,7 +71,7 @@ class Checkout
 		if( ! self::is_show_TC_field_on_checkout() )
 			return $fields;
 
-		$fields['billing']['billing_TC_number']['required'] = false;
+		unset($fields['billing']['billing_TC_number']);
 
 		return $fields;
 
