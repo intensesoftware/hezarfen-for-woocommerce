@@ -71,7 +71,7 @@ class Checkout
 		if( ! self::is_show_TC_field_on_checkout() )
 			return $fields;
 
-		$fields['billing']['billing_TC_identity_number']['required'] = false;
+		$fields['billing']['billing_TC_number']['required'] = false;
 
 		return $fields;
 
