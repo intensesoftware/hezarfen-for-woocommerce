@@ -11,6 +11,7 @@ Developer: Intense Yazılım Ltd.
 Developer URI: http://intense.com.tr
 License: GPL2
 Text Domain: hezarfen-for-woocommerce
+Domain Path: /languages
 */
 
 defined( 'ABSPATH' ) || exit;
@@ -20,3 +21,10 @@ define('WC_HEZARFEN_FILE', __FILE__);
 define('WC_HEZARFEN_UYGULAMA_YOLU', plugin_dir_path(__FILE__));
 
 include_once 'includes/Autoload.php';
+
+add_action( 'plugins_loaded', 'hezarfen_load_plugin_textdomain' );
+
+function hezarfen_load_plugin_textdomain()
+{
+	load_plugin_textdomain( 'hezarfen-for-woocommerce', FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
+}
