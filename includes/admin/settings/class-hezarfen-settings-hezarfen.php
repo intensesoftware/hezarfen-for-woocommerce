@@ -144,6 +144,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					array(
 						'title' => __( 'Encryption Key', 'hezarfen-for-woocommerce' ),
 						'type' => 'textarea',
+						'css' => 'width:100%;height:60px',
 						'default' => sprintf("define( 'HEZARFEN_ENCRYPTION_KEY', '%s' );", $encryption_key),
 						'desc' => 'Back up the phrase in the box to a safe area, then place it in wp-config.php file.',
 					),
