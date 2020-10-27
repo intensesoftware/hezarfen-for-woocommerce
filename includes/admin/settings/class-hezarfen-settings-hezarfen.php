@@ -131,7 +131,8 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			// if encryption key not generated before, generate a new key.
 			if(!Encryption::is_encryption_key_generated())
 			{
-				$encryption_key = rand();
+				// create a new random key.
+				$encryption_key = Encryption::create_random_key();
 
 				$fields = array(
 					array(

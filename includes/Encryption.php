@@ -119,4 +119,14 @@ class Encryption
             return $original_plaintext;
         }
     }
+    
+    /**
+     * Creates a new securely random key.
+     *
+     * @return string
+     */
+    public static function create_random_key()
+    {
+        return bin2hex(random_bytes(32));
+    }
 }
