@@ -2,6 +2,8 @@
 
 namespace Hezarfen\Inc\Admin;
 
+use Hezarfen\Inc\Encryption;
+
 defined( 'ABSPATH' ) || exit;
 
 class OrderDetails
@@ -14,6 +16,13 @@ class OrderDetails
 
 	function add_tax_fields_to_order_details( $fields ){
 
+		global $post;
+
+		$TC_number_field_value = get_post_meta( $post->ID, '_billing_TC_number', true );
+
+		// Try to decroypt the T.C number
+		$TC_number_field_decrypted_value = Encryption::decrypt( $TC_number_field_value );
+		
 		$tax_fields = array(
 			'invoice_type' => array(
 				'label' => __( 'Invoice type', 'hezarfen-for-woocommerce'),
@@ -30,6 +39,7 @@ class OrderDetails
 			'TC_number' => array(
 				'label' => __('T.C. Identity Number', 'hezarfen-for-woocommerce'),
 				'show' => true,
+				'value' => $TC_number_field_decrypted_value,
 				'class' => 'hezarfen_billing_TC_number_field'
 			),
 			'tax_number' => array(
