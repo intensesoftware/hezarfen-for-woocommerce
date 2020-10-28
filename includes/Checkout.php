@@ -154,6 +154,19 @@ class Checkout
 	 */
 	function override_posted_data( $data ){
 
+		// Check the T.C. Identitiy Field is active
+		if( self::is_show_TC_field_on_checkout() )
+		{
+			if(Encryption::health_check() && Encryption::test_the_encryption_key())
+			{
+				// Encrypt the T.C. Identity fields
+				$data['billing_TC_number'] = Encryption::encrypt($data['billing_TC_number']);
+			}else
+			{
+				// do not save the T.C. identitiy fields.
+				$data['billing_TC_number'] = '******';
+			}
+		}
 
 		// if Mahalle.io activated, update neighborhood fields.
 		if( MahalleIO::is_active() )
