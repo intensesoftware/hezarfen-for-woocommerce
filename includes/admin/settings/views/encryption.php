@@ -4,7 +4,7 @@
     <tr>
         <th>
             <p><?php echo __('Is the encryption key genereated and placed the wp-config.php?', 'hezarfen-for-woocommerce'); ?></p>
-            <p class="description">It checks encryption key whetever placed to the wp-config.php</p>
+            <p class="description"><?php echo __('It checks encryption key whetever placed to the wp-config.php', 'hezarfen-for-woocommerce'); ?></p>
         </th>
         <td>
             <?php echo $health_check_status ? __('<span class="yes">Yes</span>', 'hezarfen-for-woocommerce') : __('<span class="no">No</span>', 'hezarfen-for-woocommerce'); ?></span>
@@ -13,7 +13,7 @@
     <tr>
         <th>
             <p><?php echo __('Key comparison success?'); ?></p>
-            <p class="description">Checks if the key created when the plugin was first installed is still the same key.</p>
+            <p class="description"><?php echo __('Checks if the key created when the plugin was first installed is still the same key.', 'hezarfen-for-woocommerce'); ?></p>
         </th>
         <td>
             <?php echo $test_the_key ? __('<span class="yes">Yes</span>', 'hezarfen-for-woocommerce') : __('<span class="no">No</span>', 'hezarfen-for-woocommerce'); ?></span>

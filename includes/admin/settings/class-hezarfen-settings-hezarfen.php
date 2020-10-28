@@ -64,7 +64,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 
 					'title' => __( 'mahalle.io Settings', 'hezarfen-for-woocommerce' ),
 					'type' => 'title',
-					'desc' => 'mahalle.io is a optional and paid service for show Turkey neighbors in checkout page.',
+					'desc' => __('mahalle.io is a optional and paid service for show Turkey neighbors in checkout page.', 'hezarfen-for-woocommerce'),
 					'id' => 'hezarfen_mahalleio_options'
 
 				),
@@ -73,7 +73,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 
 					'title' => __( 'API Key', 'hezarfen-for-woocommerce' ),
 					'type' => 'text',
-					'desc' => 'API key may be created on mahalle.io my account page',
+					'desc' => __('API key may be created on mahalle.io my account page', 'hezarfen-for-woocommerce'),
 					'id' => 'hezarfen_mahalle_io_api_key'
 
 				),
@@ -94,7 +94,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 
 					'title' => __( 'Checkout Form Settings', 'hezarfen-for-woocommerce' ),
 					'type' => 'title',
-					'desc' => 'Update checkout fields and checkout page options.',
+					'desc' => __( 'Update checkout fields and checkout page options.', 'hezarfen-for-woocommerce' ),
 					'id' => 'hezarfen_checkout_options'
 
 				),
@@ -103,7 +103,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 
 					'title' => __( 'Show T.C. Identity Field on Checkout Page ', 'hezarfen-for-woocommerce' ),
 					'type' => 'checkbox',
-					'desc' => 'T.C. Identity Field optionally shows on checkout field when invoice type selected as person.',
+					'desc' => __( 'T.C. Identity Field optionally shows on checkout field when invoice type selected as person.', 'hezarfen-for-woocommerce'),
 					'id' => 'hezarfen_checkout_show_TC_identity_field',
 					'default' => 'no',
 					'std' => 'yes'
@@ -111,7 +111,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				),
 
 				array(
-					'title' => 'Checkout T.C. Identity Number Fields Required Statuses',
+					'title' => __( 'Checkout T.C. Identity Number Fields Required Statuses', 'hezarfen-for-woocommerce' ),
 					'desc' => __('Is T.C. Identity Number field required?', 'hezarfen-for-woocommerce'),
 					'id' => 'hezarfen_checkout_is_TC_identity_number_field_required',
 					'default' => 'no',
@@ -138,7 +138,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					array(
 						'title' => __( 'Encryption Settings', 'hezarfen-for-woocommerce' ),
 						'type' => 'title',
-						'desc' => 'If the T.C. Identity Field is active, an encryption key must be generated. The following encryption key generated will be lost upon saving the form. Please back up the generated encryption key to a secure area, then paste it anywhere in the wp-config.php file. In case of deletion of the hezarfen-encryption-key line from wp-config.php, retrospectively, the orders will be sent to T.C. no values will become unreadable.',
+						'desc' => __('If the T.C. Identity Field is active, an encryption key must be generated. The following encryption key generated will be lost upon saving the form. Please back up the generated encryption key to a secure area, then paste it anywhere in the wp-config.php file. In case of deletion of the hezarfen-encryption-key line from wp-config.php, retrospectively, the orders will be sent to T.C. no values will become unreadable.', 'hezarfen-for-woocommerce'),
 						'id' => 'hezarfen_checkout_options'
 					),
 					array(
@@ -146,12 +146,12 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 						'type' => 'textarea',
 						'css' => 'width:100%;height:60px',
 						'default' => sprintf("define( 'HEZARFEN_ENCRYPTION_KEY', '%s' );", $encryption_key),
-						'desc' => 'Back up the phrase in the box to a safe area, then place it in wp-config.php file.',
+						'desc' => __('Back up the phrase in the box to a safe area, then place it in wp-config.php file.', 'hezarfen-for-woocommerce'),
 					),
 					array(
 						'title' => __( 'Encryption Key Confirmation', 'hezarfen-for-woocommerce' ),
 						'type' => 'checkbox',
-						'desc' => 'I backed up the key to a secure area and placed it in the wp-config file. In case the encryption key value is deleted from the wp-config.php file, all past orders will be transferred to T.C. I know I cannot access ID data.',
+						'desc' => __('I backed up the key to a secure area and placed it in the wp-config file. In case the encryption key value is deleted from the wp-config.php file, all past orders will be transferred to T.C. I know I cannot access ID data.', 'hezarfen-for-woocommerce'),
 						'id' => 'hezarfen_checkout_show_TC_identity_field',
 						'default' => 'no',
 						'std' => 'yes'
