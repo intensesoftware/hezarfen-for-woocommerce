@@ -12,7 +12,7 @@
     </tr>
     <tr>
         <th>
-            <p><?php echo __('Key comparison success?'); ?></p>
+            <p><?php echo __('Key comparison success?', 'hezarfen-for-woocommerce'); ?></p>
             <p class="description"><?php echo __('Checks if the key created when the plugin was first installed is still the same key.', 'hezarfen-for-woocommerce'); ?></p>
         </th>
         <td>

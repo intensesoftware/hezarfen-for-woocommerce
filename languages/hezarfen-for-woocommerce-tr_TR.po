@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-28 07:18+0000\n"
-"PO-Revision-Date: 2020-10-28 07:18+0000\n"
+"POT-Creation-Date: 2020-10-28 07:25+0000\n"
+"PO-Revision-Date: 2020-10-28 07:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: Türkçe\n"
 "Language: tr_TR\n"
@@ -176,6 +176,10 @@ msgstr "Evet"
 #: includes/admin/settings/views/encryption.php:19
 msgid "<span class=\"no\">No</span>"
 msgstr "Hayır"
+
+#: includes/admin/settings/views/encryption.php:15
+msgid "Key comparison success?"
+msgstr "Anahtar doğrulaması başarılı mı?"
 
 #: includes/admin/settings/views/encryption.php:16
 msgid ""
