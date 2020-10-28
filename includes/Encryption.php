@@ -127,6 +127,6 @@ class Encryption
      */
     public static function create_random_key()
     {
-        return bin2hex(random_bytes(32));
+        return bin2hex(random_bytes(16));
     }
 }
