@@ -1,0 +1,22 @@
+{
+  "name": "hezarfen-for-woocommerce",
+  "version": "0.0.0",
+  "description": "Hezarfen, WooCommerce eklentisini Türkiye için daha kullanılabilir kılmayı amaçlar.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/intensesoftware/hezarfen-for-woocommerce.git"
+  },
+  "author": "",
+  "license": "GPLV2",
+  "bugs": {
+    "url": "https://github.com/intensesoftware/hezarfen-for-woocommerce/issues"
+  },
+  "homepage": "https://github.com/intensesoftware/hezarfen-for-woocommerce#readme"
+}
