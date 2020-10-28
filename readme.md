@@ -5,8 +5,7 @@ Hezarfen, WooCommerce eklentisini Türkiye için daha kullanılabilir kılmayı 
 ### Dikkat: Eklenti henüz stabil sürüme ulaşmamıştır. Stabil sürüm için wordpress.org'da yayınlanacak eklentiyi beklemenizi önermekteyiz.
 
 ### Yol Haritası
-- Ödeme ekranında vergi bilgileri (kurumsal ve bireysel fatura tercihine göre)
-- Encrypt edilebilir T.C. kimlik no alanı
-- Opsiyonel olarak ödeme ekranına mahalle alanının eklenmesi
+- Opsiyonel olarak ödeme ekranına mahalle alanının eklenmesi (Tamamlandı)
+- Ödeme ekranında vergi bilgileri (kurumsal ve bireysel fatura tercihine göre) (Tamamlandı)
+- Encrypt edilebilir T.C. kimlik no alanı (Geliştirme Sürecinde)
 - ...
-
