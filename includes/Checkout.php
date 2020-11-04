@@ -8,9 +8,16 @@ use Hezarfen\Inc\Services\MahalleIO;
 
 class Checkout
 {
+	protected $hezarfen_show_hezarfen_checkout_fields;
+
 	public function __construct()
 	{
-		add_filter('woocommerce_checkout_fields', [$this, 'add_tax_fields']);
+		$this->hezarfen_show_hezarfen_checkout_fields = ( get_option( 'hezarfen_show_hezarfen_checkout_fields' ) == 'yes' ) ? true : false;
+
+		if( $this->hezarfen_show_hezarfen_checkout_fields )
+		{
+			add_filter('woocommerce_checkout_fields', [$this, 'add_tax_fields']);
+		}
 
 		add_filter('woocommerce_checkout_fields', [
 			$this,
@@ -79,7 +86,7 @@ class Checkout
 	public function update_fields_required_options_for_invoice_type_company(
 		$fields
 	) {
-		if (!self::is_show_TC_field_on_checkout()) {
+		if ( !$this->hezarfen_show_hezarfen_checkout_fields || !self::is_show_TC_field_on_checkout()) {
 			return $fields;
 		}
 
@@ -164,7 +171,7 @@ class Checkout
 	function override_posted_data($data)
 	{
 		// Check the T.C. Identitiy Field is active
-		if (self::is_show_TC_field_on_checkout()) {
+		if ( $this->hezarfen_show_hezarfen_checkout_fields && self::is_show_TC_field_on_checkout() ) {
 			if (
 				Encryption::health_check() &&
 				Encryption::test_the_encryption_key()
