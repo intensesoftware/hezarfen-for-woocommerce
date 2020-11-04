@@ -33,6 +33,29 @@ class Checkout
 			$this,
 			'update_field_required_statuses_before_checkout_process',
 		]);
+
+		add_action('default_checkout_billing_TC_number', [
+			$this,
+			'override_billing_TC_number',
+		], 10, 2);
+	}
+
+	/**
+	 * Override billing TC Number.
+	 *
+	 * @param  mixed $value
+	 * @param  mixed $input
+	 * @return string
+	 */
+	public function override_billing_TC_number( $value, $input )
+	{
+		if( $input == 'billing_TC_number' )
+		{
+			// if the value encrypted, decrypt the value.
+			return Encryption::decrypt( $value );
+		}
+
+		return $value;
 	}
 
 	/**
