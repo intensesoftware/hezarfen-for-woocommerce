@@ -14,6 +14,8 @@ if (class_exists('Hezarfen_Settings_Hezarfen', false)) {
 
 class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 {
+	private $hezarfen_show_hezarfen_checkout_fields;
+
 	/**
 	 * Hezarfen_Settings_Hezarfen constructor.
 	 */
@@ -21,6 +23,8 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 	{
 		$this->id = 'hezarfen';
 		$this->label = 'Hezarfen';
+
+		$this->hezarfen_show_hezarfen_checkout_fields = ( get_option( 'hezarfen_show_hezarfen_checkout_fields' ) == 'yes' ) ? true : false;
 
 		parent::__construct();
 	}
@@ -35,9 +39,14 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 		$sections = [
 			'general' => __('General', 'hezarfen-for-woocommerce'),
 			'mahalle_io' => 'mahalle.io',
-			'checkout' => __('Checkout Fields', 'hezarfen-for-woocommerce'),
 			'encryption' => __('Encryption', 'hezarfen-for-woocommerce'),
 		];
+
+		// if checkout field is active, show the section.
+		if( $this->hezarfen_show_hezarfen_checkout_fields )
+		{
+			$sections['checkout'] = __('Checkout Fields', 'hezarfen-for-woocommerce');
+		}
 
 		return apply_filters(
 			'woocommerce_get_sections_' . $this->id,
@@ -133,6 +142,16 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 					'id' => 'hezarfen_checkout_options',
 				],
 			]);
+
+			if( !$this->hezarfen_show_hezarfen_checkout_fields )
+			{
+				global $hide_save_button;
+
+				$hide_save_button = true;
+
+				$settings = apply_filters('hezarfen_checkout_settings', []);
+			}
+
 		} elseif ('encryption' == $current_section) {
 			// if encryption key not generated before, generate a new key.
 			if (!Encryption::is_encryption_key_generated()) {
