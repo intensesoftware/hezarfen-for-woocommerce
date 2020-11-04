@@ -14,7 +14,6 @@ if (class_exists('Hezarfen_Settings_Hezarfen', false)) {
 
 class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 {
-	private $hezarfen_show_hezarfen_checkout_tax_fields;
 
 	/**
 	 * Hezarfen_Settings_Hezarfen constructor.
@@ -25,8 +24,11 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 		$this->label = 'Hezarfen';
 
 		parent::__construct();
+	}
 
-		$this->hezarfen_show_hezarfen_checkout_tax_fields = ( get_option( 'hezarfen_show_hezarfen_checkout_tax_fields' ) == 'yes' ) ? true : false;
+	private function show_hezarfen_tax_fields()
+	{
+		return ( get_option( 'hezarfen_show_hezarfen_checkout_tax_fields' ) == 'yes' ) ? true : false;
 	}
 
 	/**
@@ -43,7 +45,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 		];
 
 		// if checkout field is active, show the section.
-		if( $this->hezarfen_show_hezarfen_checkout_tax_fields )
+		if( $this->show_hezarfen_tax_fields() )
 		{
 			$sections['checkout'] = __('Checkout Tax Fields', 'hezarfen-for-woocommerce');
 		}
@@ -143,7 +145,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 				],
 			]);
 
-			if( !$this->hezarfen_show_hezarfen_checkout_tax_fields )
+			if( !$this->show_hezarfen_tax_fields() )
 			{
 				global $hide_save_button;
 
