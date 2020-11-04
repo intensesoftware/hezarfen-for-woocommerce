@@ -45,7 +45,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 		// if checkout field is active, show the section.
 		if( $this->hezarfen_show_hezarfen_checkout_tax_fields )
 		{
-			$sections['checkout'] = __('Checkout Fields', 'hezarfen-for-woocommerce');
+			$sections['checkout'] = __('Checkout Tax Fields', 'hezarfen-for-woocommerce');
 		}
 
 		return apply_filters(
@@ -93,18 +93,18 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 				],
 			]);
 		} elseif ('checkout' == $current_section) {
-			$settings = apply_filters('hezarfen_checkout_settings', [
+			$settings = apply_filters('hezarfen_checkout_tax_settings', [
 				[
 					'title' => __(
-						'Checkout Form Settings',
+						'Checkout Tax Fields Settings',
 						'hezarfen-for-woocommerce'
 					),
 					'type' => 'title',
 					'desc' => __(
-						'Update checkout fields and checkout page options.',
+						'Update checkout tax fields.',
 						'hezarfen-for-woocommerce'
 					),
-					'id' => 'hezarfen_checkout_options',
+					'id' => 'hezarfen_checkout_tax_fields_options',
 				],
 
 				[
@@ -139,7 +139,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 
 				[
 					'type' => 'sectionend',
-					'id' => 'hezarfen_checkout_options',
+					'id' => 'hezarfen_checkout_tax_fields_options',
 				],
 			]);
 
@@ -149,7 +149,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 
 				$hide_save_button = true;
 
-				$settings = apply_filters('hezarfen_checkout_settings', []);
+				$settings = apply_filters('hezarfen_checkout_tax_settings', []);
 			}
 
 		} elseif ('encryption' == $current_section) {
@@ -169,7 +169,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 							'If the T.C. Identity Field is active, an encryption key must be generated. The following encryption key generated will be lost upon saving the form. Please back up the generated encryption key to a secure area, then paste it anywhere in the wp-config.php file. In case of deletion of the hezarfen-encryption-key line from wp-config.php, retrospectively, the orders will be sent to T.C. no values will become unreadable.',
 							'hezarfen-for-woocommerce'
 						),
-						'id' => 'hezarfen_checkout_options',
+						'id' => 'hezarfen_checkout_tax_fields_options',
 					],
 					[
 						'title' => __(
@@ -203,12 +203,12 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 					],
 					[
 						'type' => 'sectionend',
-						'id' => 'hezarfen_checkout_options',
+						'id' => 'hezarfen_checkout_tax_fields_options',
 					],
 				];
 			}
 
-			$settings = apply_filters('hezarfen_checkout_settings', $fields);
+			$settings = apply_filters('hezarfen_checkout_tax_settings', $fields);
 		} else {
 			$fields = [
 				[

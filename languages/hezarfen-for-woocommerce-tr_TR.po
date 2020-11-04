@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-28 07:25+0000\n"
-"PO-Revision-Date: 2020-10-28 07:25+0000\n"
+"POT-Creation-Date: 2020-11-04 11:13+0000\n"
+"PO-Revision-Date: 2020-11-04 11:14+0000\n"
 "Last-Translator: \n"
 "Language-Team: Türkçe\n"
 "Language: tr_TR\n"
@@ -14,51 +14,51 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.4.3; wp-5.4.2"
 
-#: includes/Checkout.php:102
+#: includes/Checkout.php:125
 msgid "Invoice Type"
 msgstr "Fatura tipi"
 
-#: includes/Checkout.php:108 includes/admin/order/OrderDetails.php:23
+#: includes/Checkout.php:130 includes/admin/order/OrderDetails.php:47
 msgid "Personal"
 msgstr "Bireysel"
 
-#: includes/Checkout.php:109 includes/admin/order/OrderDetails.php:24
+#: includes/Checkout.php:131 includes/admin/order/OrderDetails.php:48
 msgid "Company"
 msgstr "Kurumsal"
 
-#: includes/Checkout.php:119 includes/admin/order/OrderDetails.php:31
+#: includes/Checkout.php:138 includes/admin/order/OrderDetails.php:54
 msgid "T.C. Identity Number"
 msgstr "T.C. Kimlik Numarası"
 
-#: includes/Checkout.php:128 includes/admin/order/OrderDetails.php:36
+#: includes/Checkout.php:149 includes/admin/order/OrderDetails.php:63
 msgid "Tax Number"
 msgstr "Vergi Numarası"
 
-#: includes/Checkout.php:137 includes/admin/order/OrderDetails.php:41
+#: includes/Checkout.php:156 includes/admin/order/OrderDetails.php:68
 msgid "TAX Office"
 msgstr "Vergi Dairesi"
 
-#: includes/admin/order/OrderDetails.php:19
+#: includes/admin/order/OrderDetails.php:44
 msgid "Invoice type"
 msgstr "Fatura tipi"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:38
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:40
 msgid "General"
 msgstr "Genel"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:40
-msgid "Checkout Fields"
-msgstr "Ödeme Alanları"
-
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:41
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:42
 msgid "Encryption"
 msgstr "Şifreleme (Encryption)"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:65
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:48
+msgid "Checkout Tax Fields"
+msgstr "Ödeme Vergi Alanları"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:68
 msgid "mahalle.io Settings"
 msgstr "mahalle.io Ayarları"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:67
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:73
 msgid ""
 "mahalle.io is a optional and paid service for show Turkey neighbors in "
 "checkout page."
@@ -66,27 +66,27 @@ msgstr ""
 "mahalle.io servisi ücretli bir servistir. Türkiye'de bulunan il, ilçe ve "
 "mahalle verilerini yüksek erişililebilirlikli API servisi olarak sunar."
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:74
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:81
 msgid "API Key"
 msgstr "API Anahtarı"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:76
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:83
 msgid "API key may be created on mahalle.io my account page"
 msgstr "API anahtarını mahalle.io hesabınıza giriş yaparak oluşturabilirsiniz."
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:95
-msgid "Checkout Form Settings"
-msgstr "Ödeme Form Ayarları"
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:98
+msgid "Checkout Tax Fields Settings"
+msgstr "Ödeme Vergi Alan Ayarları"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:97
-msgid "Update checkout fields and checkout page options."
-msgstr "Ödeme alanlarını ve Ödeme Sayfası Ayarlarını Güncelleyin"
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:103
+msgid "Update checkout tax fields."
+msgstr "Ödeme vergi alanlarını güncelle"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:104
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:111
 msgid "Show T.C. Identity Field on Checkout Page "
 msgstr "T.C. Kimlik Numarası Alanını Ödeme Sayfasında Göster"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:106
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:116
 msgid ""
 "T.C. Identity Field optionally shows on checkout field when invoice type "
 "selected as person."
@@ -94,19 +94,19 @@ msgstr ""
 "T.C. Kimlik No alanı ödeme ekranında, fatura tipi: bireysel olarak "
 "seçildiğinde opsiyonel olarak gösterilir."
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:114
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:126
 msgid "Checkout T.C. Identity Number Fields Required Statuses"
 msgstr "Ödeme Ekranında, T.C. Kimlik Numarasının Zorunluluk Durumlar"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:115
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:130
 msgid "Is T.C. Identity Number field required?"
 msgstr "T.C. Kimlik Numarası alanı zorunlu yapılsın mı?"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:139
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:163
 msgid "Encryption Settings"
 msgstr "Şifreleme Anahtarı (Encryption Key) Ayarları"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:141
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:168
 msgid ""
 "If the T.C. Identity Field is active, an encryption key must be generated. "
 "The following encryption key generated will be lost upon saving the form. "
@@ -123,11 +123,11 @@ msgstr ""
 "alana yapıştırın. Bu satırın wp-config.php dosyasından silinmesi durumunda, "
 "daha önceki siparişlere ait T.C. no bilgileri okunamaz hale gelecektir."
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:145
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:175
 msgid "Encryption Key"
 msgstr "Şifreleme Anahtarı (Encryption Key)"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:149
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:185
 msgid ""
 "Back up the phrase in the box to a safe area, then place it in wp-config.php "
 "file."
@@ -135,11 +135,11 @@ msgstr ""
 "Kutunun içindekileri güvenli bir alana yedekleyin, ardından wp-config.php "
 "dosyasında herhangi bir alana yerleştirin."
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:152
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:191
 msgid "Encryption Key Confirmation"
 msgstr "Şifreleme Anahtarı (Encryption Key) Onayı"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:154
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:196
 msgid ""
 "I backed up the key to a secure area and placed it in the wp-config file. In "
 "case the encryption key value is deleted from the wp-config.php file, all "
@@ -151,6 +151,18 @@ msgstr ""
 "no bilgilerinin okunamaz(decrypt edilemez) hale geleceğini anladım ve "
 "onaylıyorum. "
 
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:215
+msgid "General Settings"
+msgstr "Genel Ayarlar"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:220
+msgid "You can edit the general settings from this page."
+msgstr "Hezarfen ile ilgili genel ayarları bu sayfadan yönetebilirsiniz."
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:227
+msgid "Show Hezarfen Checkout TAX Fields?"
+msgstr "Ödeme sayfasında vergi alanları gösterilsin mi?"
+
 #: includes/admin/settings/views/encryption.php:1
 msgid "Encryption Key Health"
 msgstr "Şifreleme Anahtarı (Encryption Key) Sağlığı"
@@ -161,27 +173,31 @@ msgstr ""
 "Şifreleme Anahtarı (Encryption Key) oluşturulmuş ve wp-config.php dosyasına "
 "yerleştirilmiş mi?"
 
-#: includes/admin/settings/views/encryption.php:7
+#: includes/admin/settings/views/encryption.php:10
 msgid "It checks encryption key whetever placed to the wp-config.php"
 msgstr ""
 "Şifreleme Anahtarının (Encryption Key) wp-config dosyasın'da bulunup "
 "bulunmadığını kontrol eder."
 
-#: includes/admin/settings/views/encryption.php:10
-#: includes/admin/settings/views/encryption.php:19
-msgid "<span class=\"yes\">Yes</span>"
+#: includes/admin/settings/views/encryption.php:20
+#: includes/admin/settings/views/encryption.php:41
+#, fuzzy
+#| msgid "<span class=\"yes\">Yes</span>"
+msgid "Yes"
 msgstr "Evet"
 
-#: includes/admin/settings/views/encryption.php:10
-#: includes/admin/settings/views/encryption.php:19
-msgid "<span class=\"no\">No</span>"
+#: includes/admin/settings/views/encryption.php:21
+#: includes/admin/settings/views/encryption.php:42
+#, fuzzy
+#| msgid "<span class=\"no\">No</span>"
+msgid "No"
 msgstr "Hayır"
 
-#: includes/admin/settings/views/encryption.php:15
+#: includes/admin/settings/views/encryption.php:27
 msgid "Key comparison success?"
 msgstr "Anahtar doğrulaması başarılı mı?"
 
-#: includes/admin/settings/views/encryption.php:16
+#: includes/admin/settings/views/encryption.php:31
 msgid ""
 "Checks if the key created when the plugin was first installed is still the "
 "same key."
