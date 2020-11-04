@@ -34,9 +34,9 @@ class Checkout
 			'update_field_required_statuses_before_checkout_process',
 		]);
 
-		add_action('default_checkout_billing_TC_number', [
+		add_action('default_checkout_billing_hez_TC_number', [
 			$this,
-			'override_billing_TC_number',
+			'override_billing_hez_TC_number',
 		], 10, 2);
 	}
 
@@ -47,9 +47,9 @@ class Checkout
 	 * @param  mixed $input
 	 * @return string
 	 */
-	public function override_billing_TC_number( $value, $input )
+	public function override_billing_hez_TC_number( $value, $input )
 	{
-		if( $input == 'billing_TC_number' )
+		if( $input == 'billing_hez_TC_number' )
 		{
 			// if the value encrypted, decrypt the value.
 			return Encryption::decrypt( $value );
@@ -99,8 +99,8 @@ class Checkout
 	public function update_fields_required_options_for_invoice_type_person(
 		$fields
 	) {
-		unset($fields['billing']['billing_tax_number']);
-		unset($fields['billing']['billing_tax_office']);
+		unset($fields['billing']['billing_hez_tax_number']);
+		unset($fields['billing']['billing_hez_tax_office']);
 
 		return $fields;
 	}
@@ -118,7 +118,7 @@ class Checkout
 			return $fields;
 		}
 
-		unset($fields['billing']['billing_TC_number']);
+		unset($fields['billing']['billing_hez_TC_number']);
 
 		return $fields;
 	}
@@ -128,7 +128,7 @@ class Checkout
 	 */
 	public function update_field_required_statuses_before_checkout_process()
 	{
-		$hezarfen_invoice_type = $_POST['billing_invoice_type'];
+		$hezarfen_invoice_type = $_POST['billing_hez_invoice_type'];
 
 		if ($hezarfen_invoice_type == 'person') {
 			add_filter('woocommerce_checkout_fields', [
@@ -148,7 +148,7 @@ class Checkout
 	 */
 	public function add_tax_fields($fields)
 	{
-		$fields['billing']['billing_invoice_type'] = [
+		$fields['billing']['billing_hez_invoice_type'] = [
 			'id' => 'hezarfen_invoice_type',
 			'label' => __('Invoice Type', 'hezarfen-for-woocommerce'),
 			'type' => 'select',
@@ -161,7 +161,7 @@ class Checkout
 		];
 
 		if (self::is_show_TC_field_on_checkout()) {
-			$fields['billing']['billing_TC_number'] = [
+			$fields['billing']['billing_hez_TC_number'] = [
 				'id' => 'hezarfen_TC_number',
 				'label' => __(
 					'T.C. Identity Number',
@@ -172,14 +172,14 @@ class Checkout
 			];
 		}
 
-		$fields['billing']['billing_tax_number'] = [
+		$fields['billing']['billing_hez_tax_number'] = [
 			'id' => 'hezarfen_tax_number',
 			'label' => __('Tax Number', 'hezarfen-for-woocommerce'),
 			'required' => true,
 			'class' => ['form-row-wide', 'hezarfen-hide-form-field'],
 		];
 
-		$fields['billing']['billing_tax_office'] = [
+		$fields['billing']['billing_hez_tax_office'] = [
 			'id' => 'hezarfen_tax_office',
 			'label' => __('TAX Office', 'hezarfen-for-woocommerce'),
 			'required' => true,
@@ -205,12 +205,12 @@ class Checkout
 				Encryption::test_the_encryption_key()
 			) {
 				// Encrypt the T.C. Identity fields
-				$data['billing_TC_number'] = Encryption::encrypt(
-					$data['billing_TC_number']
+				$data['billing_hez_TC_number'] = Encryption::encrypt(
+					$data['billing_hez_TC_number']
 				);
 			} else {
 				// do not save the T.C. identitiy fields.
-				$data['billing_TC_number'] = '******';
+				$data['billing_hez_TC_number'] = '******';
 			}
 		}
 

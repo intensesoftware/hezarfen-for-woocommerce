@@ -22,7 +22,7 @@ class OrderDetails
 
 		$TC_number_field_value = get_post_meta(
 			$post->ID,
-			'_billing_TC_number',
+			'_billing_hez_TC_number',
 			true
 		);
 
@@ -40,7 +40,7 @@ class OrderDetails
 
 
 		$tax_fields = [
-			'invoice_type' => [
+			'hez_invoice_type' => [
 				'label' => __('Invoice type', 'hezarfen-for-woocommerce'),
 				'type' => 'select',
 				'options' => [
@@ -50,7 +50,7 @@ class OrderDetails
 				'class' => 'hezarfen_billing_invoice_type_field',
 				'show' => true,
 			],
-			'TC_number' => [
+			'hez_TC_number' => [
 				'label' => __(
 					'T.C. Identity Number',
 					'hezarfen-for-woocommerce'
@@ -59,12 +59,12 @@ class OrderDetails
 				'value' => $TC_number_field_decrypted_value,
 				'class' => 'hezarfen_billing_TC_number_field',
 			],
-			'tax_number' => [
+			'hez_tax_number' => [
 				'label' => __('Tax Number', 'hezarfen-for-woocommerce'),
 				'show' => true,
 				'class' => 'hezarfen_billing_tax_number_field',
 			],
-			'tax_office' => [
+			'hez_tax_office' => [
 				'label' => __('TAX Office', 'hezarfen-for-woocommerce'),
 				'show' => true,
 				'class' => 'hezarfen_billing_tax_office_field',
