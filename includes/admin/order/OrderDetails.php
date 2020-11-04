@@ -26,10 +26,18 @@ class OrderDetails
 			true
 		);
 
-		// Try to decroypt the T.C number
-		$TC_number_field_decrypted_value = Encryption::decrypt(
-			$TC_number_field_value
-		);
+		if($TC_number_field_value)
+		{
+			// Try to decroypt the T.C number
+			$TC_number_field_decrypted_value = Encryption::decrypt(
+				$TC_number_field_value
+			);
+		}else
+		{
+			$TC_number_field_decrypted_value = '';
+		}
+
+
 
 		$tax_fields = [
 			'invoice_type' => [
