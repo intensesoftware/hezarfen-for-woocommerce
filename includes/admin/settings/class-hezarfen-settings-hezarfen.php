@@ -24,9 +24,9 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 		$this->id = 'hezarfen';
 		$this->label = 'Hezarfen';
 
-		$this->hezarfen_show_hezarfen_checkout_tax_fields = ( get_option( 'hezarfen_show_hezarfen_checkout_tax_fields' ) == 'yes' ) ? true : false;
-
 		parent::__construct();
+
+		$this->hezarfen_show_hezarfen_checkout_tax_fields = ( get_option( 'hezarfen_show_hezarfen_checkout_tax_fields' ) == 'yes' ) ? true : false;
 	}
 
 	/**
