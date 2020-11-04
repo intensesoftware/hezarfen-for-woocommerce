@@ -42,10 +42,15 @@ class Checkout
 	 */
 	public static function is_show_TC_field_on_checkout()
 	{
-		return get_option('hezarfen_checkout_show_TC_identity_field', false) ==
+		$show =  get_option('hezarfen_checkout_show_TC_identity_field', false) ==
 			'yes'
 			? true
 			: false;
+
+		if( ! $show || ! Encryption::test_the_encryption_key() )
+			return false;
+
+		return true;
 	}
 
 	/**
