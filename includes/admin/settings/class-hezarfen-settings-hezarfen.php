@@ -191,8 +191,40 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 
 			$settings = apply_filters('hezarfen_checkout_settings', $fields);
 		} else {
-			// section 1
-			$settings = apply_filters('hezarfen_general_settings', []);
+			$fields = [
+				[
+					'title' => __(
+						'General Settings',
+						'hezarfen-for-woocommerce'
+					),
+					'type' => 'title',
+					'desc' => __(
+						'You can edit the general settings from this page.',
+						'hezarfen-for-woocommerce'
+					),
+					'id' => 'hezarfen_general_settings_title',
+				],
+				[
+					'title' => __(
+						'Show Hezarfen Checkout Fields?',
+						'hezarfen-for-woocommerce'
+					),
+					'type' => 'checkbox',
+					'desc' => __(
+						'',
+						'hezarfen-for-woocommerce'
+					),
+					'id' => 'hezarfen_show_hezarfen_checkout_fields',
+					'default' => 'no',
+					'std' => 'yes',
+				],
+				[
+					'type' => 'sectionend',
+					'id' => 'hezarfen_general_settings_section_end',
+				]
+			];
+
+			$settings = apply_filters('hezarfen_general_settings', $fields);
 		}
 
 		return apply_filters(
