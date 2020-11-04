@@ -103,7 +103,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 					),
 					'type' => 'title',
 					'desc' => __(
-						'Update checkout tax fields.',
+						'You can update the checkout TAX fields. Note: T.C. number field requires encryption feature. If you do not activate the encryption feature, T.C. number field does not appear on the checkout.',
 						'hezarfen-for-woocommerce'
 					),
 					'id' => 'hezarfen_checkout_tax_fields_options',
