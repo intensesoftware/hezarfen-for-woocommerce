@@ -29,7 +29,7 @@ class OrderDetails
 		if($TC_number_field_value)
 		{
 			// Try to decroypt the T.C number
-			$TC_number_field_decrypted_value = Encryption::decrypt(
+			$TC_number_field_decrypted_value = ( new Encryption() )->decrypt(
 				$TC_number_field_value
 			);
 		}else

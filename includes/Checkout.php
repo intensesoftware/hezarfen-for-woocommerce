@@ -52,7 +52,7 @@ class Checkout
 		if( $input == 'billing_hez_TC_number' )
 		{
 			// if the value encrypted, decrypt the value.
-			return Encryption::decrypt( $value );
+			return ( new Encryption() )->decrypt( $value );
 		}
 
 		return $value;
@@ -70,7 +70,7 @@ class Checkout
 			? true
 			: false;
 
-		if( ! $show || ! Encryption::test_the_encryption_key() )
+		if( ! $show || ! ( new Encryption() )->test_the_encryption_key() )
 			return false;
 
 		return true;
@@ -201,11 +201,11 @@ class Checkout
 		// Check the T.C. Identitiy Field is active
 		if ( $this->hezarfen_show_hezarfen_checkout_tax_fields && self::is_show_TC_field_on_checkout() ) {
 			if (
-				Encryption::health_check() &&
-				Encryption::test_the_encryption_key()
+				( new Encryption() )->health_check() &&
+				( new Encryption() )->test_the_encryption_key()
 			) {
 				// Encrypt the T.C. Identity fields
-				$data['billing_hez_TC_number'] = Encryption::encrypt(
+				$data['billing_hez_TC_number'] = ( new Encryption() )->encrypt(
 					$data['billing_hez_TC_number']
 				);
 			} else {

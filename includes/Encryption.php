@@ -4,14 +4,18 @@ namespace Hezarfen\Inc;
 
 defined('ABSPATH') || exit();
 
-use Hezarfen\Inc;
-
 class Encryption
 {
+	protected $encryption_key;
+
+	public function __construct()
+	{
+		$this->setEncryptionKey();
+	}
 	/**
 	 * Check HEZARFEN_ENCRYPTION_KEY is generated before.
 	 */
-	public static function is_encryption_key_generated()
+	public function is_encryption_key_generated()
 	{
 		$is_encryption_key_generated = get_option(
 			'_hezarfen_encryption_key_generated',
@@ -28,10 +32,10 @@ class Encryption
 	 *
 	 * @return bool
 	 */
-	public static function health_check()
+	public function health_check()
 	{
 		if (
-			!self::is_encryption_key_generated() ||
+			!$this->is_encryption_key_generated() ||
 			!defined('HEZARFEN_ENCRYPTION_KEY')
 		) {
 			return false;
@@ -47,15 +51,15 @@ class Encryption
 	 *
 	 * @return bool
 	 */
-	public static function test_the_encryption_key()
+	public function test_the_encryption_key()
 	{
-		if (!self::health_check()) {
+		if (!$this->health_check()) {
 			return false;
 		}
 
 		$cipher_text = get_option('_hezarfen_encryption_tester_text', true);
 
-		return self::decrypt($cipher_text) == 'Istanbul';
+		return $this->decrypt($cipher_text) == 'Istanbul';
 	}
 
 	/**
@@ -63,7 +67,7 @@ class Encryption
 	 *
 	 * @return void
 	 */
-	public static function create_encryption_tester_text()
+	public function create_encryption_tester_text()
 	{
 		if (get_option('_hezarfen_encryption_tester_text')) {
 			return false;
@@ -72,7 +76,7 @@ class Encryption
 		// Encryption key değerinin ileride değişip değişmediğini anlayabilmek için bir encryption yap ve options tablosuna yaz :)
 		return update_option(
 			'_hezarfen_encryption_tester_text',
-			self::encrypt("Istanbul")
+			$this->encrypt("Istanbul")
 		);
 	}
 
@@ -81,13 +85,13 @@ class Encryption
 	 *
 	 * @return string|bool
 	 */
-	public static function getEncryptionKey()
+	public function setEncryptionKey()
 	{
-		if (!self::health_check()) {
-			return self::health_check();
+		if (!$this->health_check()) {
+			return $this->health_check();
 		}
 
-		return HEZARFEN_ENCRYPTION_KEY;
+		$this->encryption_key = HEZARFEN_ENCRYPTION_KEY;
 	}
 
 	/**
@@ -96,10 +100,10 @@ class Encryption
 	 * @param  mixed $plaintext
 	 * @return string|bool
 	 */
-	public static function encrypt($plaintext)
+	public function encrypt($plaintext)
 	{
-		if (is_wp_error(self::getEncryptionKey())) {
-			return self::getEncryptionKey();
+		if (is_wp_error($this->encryption_key)) {
+			return $this->encryption_key;
 		}
 
 		if( ! extension_loaded( 'openssl' ) ) {
@@ -111,14 +115,14 @@ class Encryption
 		$ciphertext_raw = openssl_encrypt(
 			$plaintext,
 			$cipher,
-			self::getEncryptionKey(),
+			$this->encryption_key,
 			$options = OPENSSL_RAW_DATA,
 			$iv
 		);
 		$hmac = hash_hmac(
 			'sha256',
 			$ciphertext_raw,
-			self::getEncryptionKey(),
+			$this->encryption_key,
 			$as_binary = true
 		);
 		$ciphertext = base64_encode($iv . $hmac . $ciphertext_raw);
@@ -131,10 +135,10 @@ class Encryption
 	 * @param  mixed $ciphertext
 	 * @return string|bool
 	 */
-	public static function decrypt($ciphertext)
+	public function decrypt($ciphertext)
 	{
-		if (is_wp_error(self::getEncryptionKey())) {
-			return self::getEncryptionKey();
+		if (is_wp_error($this->encryption_key)) {
+			return $this->encryption_key;
 		}
 
 		if( ! extension_loaded( 'openssl' ) ) {
@@ -149,14 +153,14 @@ class Encryption
 		$original_plaintext = openssl_decrypt(
 			$ciphertext_raw,
 			$cipher,
-			self::getEncryptionKey(),
+			$this->encryption_key,
 			$options = OPENSSL_RAW_DATA,
 			$iv
 		);
 		$calcmac = hash_hmac(
 			'sha256',
 			$ciphertext_raw,
-			self::getEncryptionKey(),
+			$this->encryption_key,
 			$as_binary = true
 		);
 		if (hash_equals($hmac, $calcmac)) {
@@ -170,7 +174,7 @@ class Encryption
 	 *
 	 * @return string
 	 */
-	public static function create_random_key()
+	public function create_random_key()
 	{
 		return bin2hex(random_bytes(16));
 	}
