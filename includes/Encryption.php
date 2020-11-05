@@ -102,6 +102,10 @@ class Encryption
 			return self::getEncryptionKey();
 		}
 
+		if( ! extension_loaded( 'openssl' ) ) {
+			return $plaintext;
+		}
+
 		$ivlen = openssl_cipher_iv_length($cipher = "AES-128-CBC");
 		$iv = openssl_random_pseudo_bytes($ivlen);
 		$ciphertext_raw = openssl_encrypt(
@@ -131,6 +135,10 @@ class Encryption
 	{
 		if (is_wp_error(self::getEncryptionKey())) {
 			return self::getEncryptionKey();
+		}
+
+		if( ! extension_loaded( 'openssl' ) ) {
+			return $ciphertext;
 		}
 
 		$c = base64_decode($ciphertext);
