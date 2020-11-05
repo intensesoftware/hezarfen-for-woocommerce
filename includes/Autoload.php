@@ -96,7 +96,8 @@ class Autoload
 
 	function load_plugin_files()
 	{
-		require_once 'Encryption.php';
+		require_once 'Data/Abstracts/Abstract_Encryption.php';
+		require_once 'Data/PostMetaEncryption.php';
 		require_once 'Checkout.php';
 		require_once 'Ajax.php';
 		require_once 'Hezarfen_Install.php';

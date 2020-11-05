@@ -6,7 +6,7 @@
 
 defined('ABSPATH') || exit();
 
-use Hezarfen\Inc\Encryption;
+use Hezarfen\Inc\Data\PostMetaEncryption;
 
 if (class_exists('Hezarfen_Settings_Hezarfen', false)) {
 	return new Hezarfen_Settings_Hezarfen();
@@ -156,9 +156,9 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 
 		} elseif ('encryption' == $current_section) {
 			// if encryption key not generated before, generate a new key.
-			if (!( new Encryption() )->is_encryption_key_generated()) {
+			if (!( new PostMetaEncryption() )->is_encryption_key_generated()) {
 				// create a new random key.
-				$encryption_key = ( new Encryption() )->create_random_key();
+				$encryption_key = ( new PostMetaEncryption() )->create_random_key();
 
 				$fields = [
 					[
@@ -266,14 +266,14 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 		global $hide_save_button;
 
 		if ($current_section == 'encryption') {
-			if (( new Encryption() )->is_encryption_key_generated()) {
+			if (( new PostMetaEncryption() )->is_encryption_key_generated()) {
 				$hide_save_button = true;
 
 				// is key generated and placed to the wp-config.php?
-				$health_check_status = ( new Encryption() )->health_check();
+				$health_check_status = ( new PostMetaEncryption() )->health_check();
 
 				// is key correct and is it equal to the key that generated first time?
-				$test_the_key = ( new Encryption() )->test_the_encryption_key();
+				$test_the_key = ( new PostMetaEncryption() )->test_the_encryption_key();
 
 				require 'views/encryption.php';
 			} else {
@@ -294,8 +294,8 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 		// if encryption key generated before, do not continue.
 		if (
 			$current_section == 'encryption' &&
-			(( new Encryption() )->health_check() ||
-				( new Encryption() )->test_the_encryption_key())
+			(( new PostMetaEncryption() )->health_check() ||
+				( new PostMetaEncryption() )->test_the_encryption_key())
 		) {
 			return false;
 		}
@@ -314,9 +314,9 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 			) {
 				update_option('_hezarfen_encryption_key_generated', 'yes');
 
-				if (( new Encryption() )->health_check()) {
+				if (( new PostMetaEncryption() )->health_check()) {
 					// create an encryption tester text.
-					( new Encryption() )->create_encryption_tester_text();
+					( new PostMetaEncryption() )->create_encryption_tester_text();
 				}
 			}
 		}

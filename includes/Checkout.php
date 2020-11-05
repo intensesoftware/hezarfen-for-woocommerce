@@ -5,6 +5,7 @@ namespace Hezarfen\Inc;
 defined('ABSPATH') || exit();
 
 use Hezarfen\Inc\Services\MahalleIO;
+use Hezarfen\Inc\Data\PostMetaEncryption;
 
 class Checkout
 {
@@ -52,7 +53,7 @@ class Checkout
 		if( $input == 'billing_hez_TC_number' )
 		{
 			// if the value encrypted, decrypt the value.
-			return ( new Encryption() )->decrypt( $value );
+			return ( new PostMetaEncryption() )->decrypt( $value );
 		}
 
 		return $value;
@@ -70,7 +71,7 @@ class Checkout
 			? true
 			: false;
 
-		if( ! $show || ! ( new Encryption() )->test_the_encryption_key() )
+		if( ! $show || ! ( new PostMetaEncryption() )->test_the_encryption_key() )
 			return false;
 
 		return true;
@@ -201,11 +202,11 @@ class Checkout
 		// Check the T.C. Identitiy Field is active
 		if ( $this->hezarfen_show_hezarfen_checkout_tax_fields && self::is_show_TC_field_on_checkout() ) {
 			if (
-				( new Encryption() )->health_check() &&
-				( new Encryption() )->test_the_encryption_key()
+				( new PostMetaEncryption() )->health_check() &&
+				( new PostMetaEncryption() )->test_the_encryption_key()
 			) {
 				// Encrypt the T.C. Identity fields
-				$data['billing_hez_TC_number'] = ( new Encryption() )->encrypt(
+				$data['billing_hez_TC_number'] = ( new PostMetaEncryption() )->encrypt(
 					$data['billing_hez_TC_number']
 				);
 			} else {
