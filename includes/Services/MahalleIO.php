@@ -4,6 +4,8 @@ namespace Hezarfen\Inc\Services;
 
 defined('ABSPATH') || exit();
 
+use Hezarfen\Inc\Data\ServiceCredentialEncryption;
+
 class MahalleIO
 {
 	/**
@@ -25,7 +27,9 @@ class MahalleIO
 	 */
 	public static function get_api_token()
 	{
-		return get_option('hezarfen_mahalle_io_api_key', false);
+		$encrypted_api_key = get_option('hezarfen_mahalle_io_api_key', null);
+
+		return ! is_null( $encrypted_api_key ) ? ( new ServiceCredentialEncryption() )->decrypt( $encrypted_api_key ) : false;
 	}
 
 	/**

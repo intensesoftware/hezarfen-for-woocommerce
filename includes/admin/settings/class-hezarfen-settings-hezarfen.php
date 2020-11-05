@@ -7,6 +7,7 @@
 defined('ABSPATH') || exit();
 
 use Hezarfen\Inc\Data\PostMetaEncryption;
+use Hezarfen\Inc\Data\ServiceCredentialEncryption;
 
 if (class_exists('Hezarfen_Settings_Hezarfen', false)) {
 	return new Hezarfen_Settings_Hezarfen();
@@ -24,6 +25,13 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 		$this->label = 'Hezarfen';
 
 		parent::__construct();
+
+		add_filter('woocommerce_admin_settings_sanitize_option_hezarfen_mahalle_io_api_key', array( $this, 'override_the_mahalle_io_apikey' ), 10, 1);
+	}
+
+	function override_the_mahalle_io_apikey($value)
+	{
+		return ( new ServiceCredentialEncryption() )->encrypt( $value );
 	}
 
 	private function show_hezarfen_tax_fields()
@@ -65,6 +73,8 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 	public function get_settings($current_section = '')
 	{
 		if ('mahalle_io' == $current_section) {
+			$api_key_value = get_option( 'hezarfen_mahalle_io_api_key', null );
+
 			$settings = apply_filters('hezarfen_mahalle_io_settings', [
 				[
 					'title' => __(
@@ -78,7 +88,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 					),
 					'id' => 'hezarfen_mahalleio_options',
 				],
-
 				[
 					'title' => __('API Key', 'hezarfen-for-woocommerce'),
 					'type' => 'text',
@@ -87,6 +96,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 						'hezarfen-for-woocommerce'
 					),
 					'id' => 'hezarfen_mahalle_io_api_key',
+					'value' => ! is_null( $api_key_value ) ? ( new ServiceCredentialEncryption() )->decrypt( $api_key_value ) : ''
 				],
 
 				[
