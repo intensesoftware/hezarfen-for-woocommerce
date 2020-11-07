@@ -311,7 +311,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 		}
 
 		// if encryption key not placed the wp-config, do not continue.
-		if( !defined('HEZARFEN_ENCRYPTION_KEY') )
+		if( !defined('HEZARFEN_ENCRYPTION_KEY') && $current_section == 'encryption' )
 			return false;
 
 		$settings = $this->get_settings($current_section);
