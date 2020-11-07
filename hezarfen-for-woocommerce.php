@@ -12,6 +12,8 @@ Developer URI: http://intense.com.tr
 License: GPL2
 Text Domain: hezarfen-for-woocommerce
 Domain Path: /languages
+Requires PHP: 7.0
+Requires at least: 5.3
 */
 
 defined('ABSPATH') || exit();
