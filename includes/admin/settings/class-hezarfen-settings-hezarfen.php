@@ -322,7 +322,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 				get_option('hezarfen_checkout_show_TC_identity_field', false) ==
 				'yes'
 			) {
-				update_option('_hezarfen_encryption_key_generated', 'yes');
+				update_option('hezarfen_encryption_key_generated', 'yes');
 
 				if (( new PostMetaEncryption() )->health_check()) {
 					// create an encryption tester text.

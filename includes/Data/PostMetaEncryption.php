@@ -20,7 +20,7 @@ class PostMetaEncryption extends Abstract_Encryption
 	public function is_encryption_key_generated()
 	{
 		$is_encryption_key_generated = get_option(
-			'_hezarfen_encryption_key_generated',
+			'hezarfen_encryption_key_generated',
 			'no'
 		);
 
