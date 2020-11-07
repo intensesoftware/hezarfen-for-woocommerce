@@ -37,7 +37,18 @@ class OrderDetails
 			$TC_number_field_decrypted_value = '';
 		}
 
+		$invoice_type = get_post_meta( $post->ID, '_billing_hez_invoice_type', true );
 
+		if( $invoice_type == 'person' )
+		{
+			$invoice_type_human = __( 'Personal', 'hezarfen-for-woocommerce' );
+		}else if( $invoice_type == 'company' )
+		{
+			$invoice_type_human = __( 'Company', 'hezarfen-for-woocommerce' );
+		}else
+		{
+			$invoice_type_human = '';
+		}
 
 		$tax_fields = [
 			'hez_invoice_type' => [
@@ -49,6 +60,7 @@ class OrderDetails
 				],
 				'class' => 'hezarfen_billing_invoice_type_field',
 				'show' => true,
+				'value' => $invoice_type_human
 			],
 			'hez_TC_number' => [
 				'label' => __(
