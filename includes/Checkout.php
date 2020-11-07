@@ -50,7 +50,7 @@ class Checkout
 	 */
 	public function override_billing_hez_TC_number( $value, $input )
 	{
-		if( $input == 'billing_hez_TC_number' )
+		if( $input == 'billing_hez_TC_number' && $value !== null )
 		{
 			// if the value encrypted, decrypt the value.
 			return ( new PostMetaEncryption() )->decrypt( $value );
