@@ -59,7 +59,7 @@ class PostMetaEncryption extends Abstract_Encryption
 			return false;
 		}
 
-		$cipher_text = get_option('_hezarfen_encryption_tester_text', true);
+		$cipher_text = get_option('hezarfen_encryption_tester_text', true);
 
 		return $this->decrypt($cipher_text) == 'Istanbul';
 	}
@@ -71,13 +71,13 @@ class PostMetaEncryption extends Abstract_Encryption
 	 */
 	public function create_encryption_tester_text()
 	{
-		if (get_option('_hezarfen_encryption_tester_text')) {
+		if (get_option('hezarfen_encryption_tester_text')) {
 			return false;
 		}
 
 		// Encryption key değerinin ileride değişip değişmediğini anlayabilmek için bir encryption yap ve options tablosuna yaz :)
 		return update_option(
-			'_hezarfen_encryption_tester_text',
+			'hezarfen_encryption_tester_text',
 			$this->encrypt("Istanbul")
 		);
 	}
