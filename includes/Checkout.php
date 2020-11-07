@@ -149,6 +149,8 @@ class Checkout
 	 */
 	public function add_tax_fields($fields)
 	{
+		$invoice_type_value = ( new \WC_Checkout() )->get_value('billing_hez_invoice_type');
+
 		$fields['billing']['billing_hez_invoice_type'] = [
 			'id' => 'hezarfen_invoice_type',
 			'label' => __('Invoice Type', 'hezarfen-for-woocommerce'),
@@ -177,15 +179,29 @@ class Checkout
 			'id' => 'hezarfen_tax_number',
 			'label' => __('Tax Number', 'hezarfen-for-woocommerce'),
 			'required' => true,
-			'class' => ['form-row-wide', 'hezarfen-hide-form-field'],
+			'class' => ['form-row-wide'],
 		];
 
 		$fields['billing']['billing_hez_tax_office'] = [
 			'id' => 'hezarfen_tax_office',
 			'label' => __('TAX Office', 'hezarfen-for-woocommerce'),
 			'required' => true,
-			'class' => ['form-row-wide', 'hezarfen-hide-form-field'],
+			'class' => ['form-row-wide'],
 		];
+
+		// set the hidden tax fields according to the invoice_type value.
+		if( $invoice_type_value == 'person' )
+		{
+			$fields['billing']['billing_hez_tax_office']['class'][] = 'hezarfen-hide-form-field';
+			$fields['billing']['billing_hez_tax_number']['class'][] = 'hezarfen-hide-form-field';
+		}else if( $invoice_type_value == 'company' )
+		{
+			$fields['billing']['billing_hez_TC_number']['class'][] = 'hezarfen-hide-form-field';
+		}else
+		{
+			$fields['billing']['billing_hez_tax_office']['class'][] = 'hezarfen-hide-form-field';
+			$fields['billing']['billing_hez_tax_number']['class'][] = 'hezarfen-hide-form-field';
+		}
 
 		return $fields;
 	}
