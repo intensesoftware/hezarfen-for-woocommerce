@@ -103,6 +103,6 @@ class PostMetaEncryption extends Abstract_Encryption
 	 */
 	public function create_random_key()
 	{
-		return bin2hex(random_bytes(16));
+		return bin2hex(random_bytes(24));
 	}
 }
