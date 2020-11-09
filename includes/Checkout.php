@@ -102,6 +102,7 @@ class Checkout
 	) {
 		unset($fields['billing']['billing_hez_tax_number']);
 		unset($fields['billing']['billing_hez_tax_office']);
+		unset($fields['billing']['billing_company']);
 
 		return $fields;
 	}
@@ -161,6 +162,7 @@ class Checkout
 				'person' => __('Personal', 'hezarfen-for-woocommerce'),
 				'company' => __('Company', 'hezarfen-for-woocommerce'),
 			],
+			'priority' => $fields['billing']['billing_email']['priority'] + 1
 		];
 
 		if (self::is_show_TC_field_on_checkout()) {
@@ -172,14 +174,23 @@ class Checkout
 				),
 				'required' => self::is_TC_identity_number_field_required(),
 				'class' => ['form-row-wide'],
+				'priority' => $fields['billing']['billing_hez_invoice_type']['priority'] + 1
 			];
 		}
+
+		$fields['billing']['billing_company'] = [
+			'label' => __('Title', 'hezarfen-for-woocommerce'),
+			'placeholder' => __('Please enter the invoice title', 'hezarfen-for-woocommerce'),
+			'required' => true,
+			'priority' => $fields['billing']['billing_hez_invoice_type']['priority'] + 1
+		];
 
 		$fields['billing']['billing_hez_tax_number'] = [
 			'id' => 'hezarfen_tax_number',
 			'label' => __('Tax Number', 'hezarfen-for-woocommerce'),
 			'required' => true,
 			'class' => ['form-row-wide'],
+			'priority' => $fields['billing']['billing_company']['priority'] + 1
 		];
 
 		$fields['billing']['billing_hez_tax_office'] = [
@@ -187,11 +198,13 @@ class Checkout
 			'label' => __('TAX Office', 'hezarfen-for-woocommerce'),
 			'required' => true,
 			'class' => ['form-row-wide'],
+			'priority' => $fields['billing']['billing_hez_tax_number']['priority'] + 1
 		];
 
 		// set the hidden tax fields according to the invoice_type value.
 		if( $invoice_type_value == 'person' )
 		{
+			$fields['billing']['billing_company']['class'][] = 'hezarfen-hide-form-field';
 			$fields['billing']['billing_hez_tax_office']['class'][] = 'hezarfen-hide-form-field';
 			$fields['billing']['billing_hez_tax_number']['class'][] = 'hezarfen-hide-form-field';
 		}else if( $invoice_type_value == 'company' )
@@ -199,6 +212,7 @@ class Checkout
 			$fields['billing']['billing_hez_TC_number']['class'][] = 'hezarfen-hide-form-field';
 		}else
 		{
+			$fields['billing']['billing_company']['class'][] = 'hezarfen-hide-form-field';
 			$fields['billing']['billing_hez_tax_office']['class'][] = 'hezarfen-hide-form-field';
 			$fields['billing']['billing_hez_tax_number']['class'][] = 'hezarfen-hide-form-field';
 		}

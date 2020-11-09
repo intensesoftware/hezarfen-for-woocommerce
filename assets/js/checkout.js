@@ -20,10 +20,12 @@ jQuery( function( $ ) {
             $('#hezarfen_TC_number_field').removeClass('hezarfen-hide-form-field');
             $('#hezarfen_tax_number_field').addClass('hezarfen-hide-form-field');
             $('#hezarfen_tax_office_field').addClass('hezarfen-hide-form-field');
+            $('#billing_company_field').addClass('hezarfen-hide-form-field');
         }else if( invoice_type == 'company' ){
             $('#hezarfen_TC_number_field').addClass('hezarfen-hide-form-field');
             $('#hezarfen_tax_number_field').removeClass('hezarfen-hide-form-field');
-            $('#hezarfen_tax_office_field').removeClass('hezarfen-hide-form-field');
+			$('#hezarfen_tax_office_field').removeClass('hezarfen-hide-form-field');
+			$('#billing_company_field').removeClass('hezarfen-hide-form-field');
         }
 
     });
