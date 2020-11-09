@@ -55,7 +55,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 		// if checkout field is active, show the section.
 		if( $this->show_hezarfen_tax_fields() )
 		{
-			$sections['checkout'] = __('Checkout Tax Fields', 'hezarfen-for-woocommerce');
+			$sections['checkout_tax'] = __('Checkout Tax Fields', 'hezarfen-for-woocommerce');
 		}
 
 		return apply_filters(
@@ -104,7 +104,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 					'id' => 'hezarfen_mahalleio_options',
 				],
 			]);
-		} elseif ('checkout' == $current_section) {
+		} elseif ('checkout_tax' == $current_section) {
 			$settings = apply_filters('hezarfen_checkout_tax_settings', [
 				[
 					'title' => __(
