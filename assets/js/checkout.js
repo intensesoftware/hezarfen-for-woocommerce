@@ -2,12 +2,12 @@ jQuery(document).ready(function($){
 
     $.each(["billing", "shipping"], function(index, type){
 
-        $('#wc_hezarfen_' + type + '_district').select2();
-        $('#wc_hezarfen_' + type + '_neighborhood').select2();
+        $('#wc_hezarfen_' + type + '_district').select2({ language: "tr" });
+        $('#wc_hezarfen_' + type + '_neighborhood').select2({ language: "tr" });
 
 	});
 
-	$('#hezarfen_invoice_type').select2();
+	$('#hezarfen_invoice_type').select2({ language: "tr" });
 
 });
 

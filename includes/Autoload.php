@@ -86,6 +86,12 @@ class Autoload
 				WC_HEZARFEN_VERSION
 			);
 
+			wp_enqueue_script(
+				'wc_hezarfen_checkout_TR_localization',
+				plugins_url('assets/packages/select2/i18n/tr.js', WC_HEZARFEN_FILE),
+				['jquery', 'select2']
+			);
+
 			wp_localize_script(
 				'wc_hezarfen_checkout_js',
 				'wc_hezarfen_ajax_object',
