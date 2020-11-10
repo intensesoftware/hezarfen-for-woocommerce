@@ -50,6 +50,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 			'general' => __('General', 'hezarfen-for-woocommerce'),
 			'mahalle_io' => 'mahalle.io',
 			'encryption' => __('Encryption', 'hezarfen-for-woocommerce'),
+			'checkout-page' => __('Checkout Page Settings', 'hezarfen-for-woocommerce'),
 		];
 
 		// if checkout field is active, show the section.
@@ -221,6 +222,41 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 			}
 
 			$settings = apply_filters('hezarfen_checkout_tax_settings', $fields);
+		} elseif( 'checkout-page' == $current_section ){
+			$fields = [
+				[
+					'title' => __(
+						'Checkout Settings',
+						'hezarfen-for-woocommerce'
+					),
+					'type' => 'title',
+					'desc' => __(
+						'You can set general checkout settings.',
+						'hezarfen-for-woocommerce'
+					),
+					'id' => 'hezarfen_checkout_settings_title',
+				],
+				[
+					'title' => __(
+						'Hide postcode fields?',
+						'hezarfen-for-woocommerce'
+					),
+					'type' => 'checkbox',
+					'desc' => __(
+						'',
+						'hezarfen-for-woocommerce'
+					),
+					'id' => 'hezarfen_hide_checkout_postcode_fields',
+					'default' => 'no',
+					'std' => 'yes',
+				],
+				[
+					'type' => 'sectionend',
+					'id' => 'hezarfen_checkout_settings_section_end',
+				]
+			];
+
+			$settings = apply_filters('hezarfen_checkout_settings', $fields);
 		} else {
 			$fields = [
 				[

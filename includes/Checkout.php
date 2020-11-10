@@ -20,6 +20,13 @@ class Checkout
 			add_filter('woocommerce_checkout_fields', [$this, 'add_tax_fields']);
 		}
 
+		$hide_postcode_field = get_option( 'hezarfen_hide_checkout_postcode_fields', 'no' ) == 'yes';
+
+		if( $hide_postcode_field )
+		{
+			add_filter('woocommerce_checkout_fields', [$this, 'hide_postcode_fields']);
+		}
+
 		add_filter('woocommerce_checkout_fields', [
 			$this,
 			'add_district_and_neighborhood_fields',
@@ -39,6 +46,14 @@ class Checkout
 			$this,
 			'override_billing_hez_TC_number',
 		], 10, 2);
+	}
+
+	public function hide_postcode_fields( $fields )
+	{
+		unset( $fields['billing']['billing_postcode'] );
+		unset( $fields['shipping']['shipping_postcode'] );
+
+		return $fields;
 	}
 
 	/**
