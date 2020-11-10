@@ -5,7 +5,9 @@ jQuery(document).ready(function($){
         $('#wc_hezarfen_' + type + '_district').select2();
         $('#wc_hezarfen_' + type + '_neighborhood').select2();
 
-    });
+	});
+
+	$('#hezarfen_invoice_type').select2();
 
 });
 
