@@ -172,7 +172,7 @@ class Checkout
 			'label' => __('Invoice Type', 'hezarfen-for-woocommerce'),
 			'type' => 'select',
 			'required' => true,
-			'class' => ['form-row-wide'],
+			'class' => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_invoice_type', ['form-row-wide'] ),
 			'options' => [
 				'person' => __('Personal', 'hezarfen-for-woocommerce'),
 				'company' => __('Company', 'hezarfen-for-woocommerce'),
@@ -188,7 +188,7 @@ class Checkout
 					'hezarfen-for-woocommerce'
 				),
 				'required' => self::is_TC_identity_number_field_required(),
-				'class' => ['form-row-wide'],
+				'class' => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_TC_number', ['form-row-wide'] ),
 				'priority' => $fields['billing']['billing_hez_invoice_type']['priority'] + 1
 			];
 		}
@@ -204,7 +204,7 @@ class Checkout
 			'id' => 'hezarfen_tax_number',
 			'label' => __('Tax Number', 'hezarfen-for-woocommerce'),
 			'required' => true,
-			'class' => ['form-row-wide'],
+			'class' => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_tax_number', ['form-row-wide'] ),
 			'priority' => $fields['billing']['billing_company']['priority'] + 1
 		];
 
@@ -212,7 +212,7 @@ class Checkout
 			'id' => 'hezarfen_tax_office',
 			'label' => __('TAX Office', 'hezarfen-for-woocommerce'),
 			'required' => true,
-			'class' => ['form-row-wide'],
+			'class' => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_tax_office', ['form-row-wide'] ),
 			'priority' => $fields['billing']['billing_hez_tax_number']['priority'] + 1
 		];
 
@@ -354,7 +354,7 @@ class Checkout
 				'type' => 'select',
 				'label' => __('İlçe', 'woocommerce'),
 				'required' => true,
-				'class' => ['form-row-wide'],
+				'class' => apply_filters( 'hezarfen_checkout_fields_class_' . 'wc_hezarfen_' . $type . '_district', ['form-row-wide'] ),
 				'clear' => true,
 				'priority' => $fields[$type][$type . '_state']['priority'] + 1,
 				'options' => $district_options + $districts,
@@ -365,7 +365,7 @@ class Checkout
 				'type' => 'select',
 				'label' => __('Mahalle', 'woocommerce'),
 				'required' => true,
-				'class' => ['form-row-wide'],
+				'class' => apply_filters( 'hezarfen_checkout_fields_class_' . 'wc_hezarfen_' . $type . '_neighborhood', ['form-row-wide'] ),
 				'clear' => true,
 				'priority' => $fields[$type][$type . '_state']['priority'] + 2,
 				'options' => $neighborhood_options,
