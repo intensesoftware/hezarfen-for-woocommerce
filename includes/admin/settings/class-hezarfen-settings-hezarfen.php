@@ -90,7 +90,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 					'id' => 'hezarfen_mahalleio_options',
 				],
 				[
-					'title' => __('API Key', 'hezarfen-for-woocommerce'),
+					'title' => __('API key', 'hezarfen-for-woocommerce'),
 					'type' => 'text',
 					'desc' => __(
 						'API key may be created on mahalle.io my account page',
@@ -122,7 +122,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 
 				[
 					'title' => __(
-						'Show T.C. Identity Field on Checkout Page ',
+						'Show T.C. Identity Field on checkout page ',
 						'hezarfen-for-woocommerce'
 					),
 					'type' => 'checkbox',
@@ -273,7 +273,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 				],
 				[
 					'title' => __(
-						'Show Hezarfen Checkout TAX Fields?',
+						'Show hezarfen checkout tax fields?',
 						'hezarfen-for-woocommerce'
 					),
 					'type' => 'checkbox',

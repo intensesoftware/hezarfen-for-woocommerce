@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-10 06:32+0000\n"
+"POT-Creation-Date: 2020-11-10 06:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -80,7 +80,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:93
-msgid "API Key"
+msgid "API key"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:95
@@ -99,7 +99,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:124
-msgid "Show T.C. Identity Field on Checkout Page "
+msgid "Show T.C. Identity Field on checkout page "
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:129
@@ -172,7 +172,7 @@ msgid "You can edit the general settings from this page."
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:275
-msgid "Show Hezarfen Checkout TAX Fields?"
+msgid "Show hezarfen checkout tax fields?"
 msgstr ""
 
 #: includes/admin/settings/views/encryption.php:1

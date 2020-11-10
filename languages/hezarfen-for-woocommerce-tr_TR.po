@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-10 06:32+0000\n"
-"PO-Revision-Date: 2020-11-10 06:32+0000\n"
+"POT-Creation-Date: 2020-11-10 06:47+0000\n"
+"PO-Revision-Date: 2020-11-10 06:48+0000\n"
 "Last-Translator: \n"
 "Language-Team: Türkçe\n"
 "Language: tr_TR\n"
@@ -81,7 +81,9 @@ msgstr ""
 "mahalle verilerini yüksek erişililebilirlikli API servisi olarak sunar."
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:93
-msgid "API Key"
+#, fuzzy
+#| msgid "API Key"
+msgid "API key"
 msgstr "API Anahtarı"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:95
@@ -104,7 +106,9 @@ msgstr ""
 "etmediyseniz, T.C. kimlik numara alanı ödeme ekranında görünmeyecektir."
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:124
-msgid "Show T.C. Identity Field on Checkout Page "
+#, fuzzy
+#| msgid "Show T.C. Identity Field on Checkout Page "
+msgid "Show T.C. Identity Field on checkout page "
 msgstr "T.C. Kimlik Numarası Alanını Ödeme Sayfasında Göster"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:129
@@ -193,7 +197,9 @@ msgid "You can edit the general settings from this page."
 msgstr "Hezarfen ile ilgili genel ayarları bu sayfadan yönetebilirsiniz."
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:275
-msgid "Show Hezarfen Checkout TAX Fields?"
+#, fuzzy
+#| msgid "Show Hezarfen Checkout TAX Fields?"
+msgid "Show hezarfen checkout tax fields?"
 msgstr "Ödeme sayfasında vergi alanları gösterilsin mi?"
 
 #: includes/admin/settings/views/encryption.php:1
