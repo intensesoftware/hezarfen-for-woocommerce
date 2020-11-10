@@ -12,7 +12,7 @@ Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabil
 == Description ==
 - Özellikler
 * Opsiyonel olarak ödeme ekranına mahalle alanının eklenmesi (mahalle.io üyeliği gerektirir.)
-* Ödeme ekranında vergi bilgileri (kurumsal ve bireysel fatura tercihine göre) 
+* Ödeme ekranında vergi bilgileri (kurumsal ve bireysel fatura tercihine göre)
 * Encrypt edilebilir T.C. kimlik no alanı (T.C. no verileri veritabanına encrypt edilerek yazılır.)
 * Posta kodu alanını ödeme ekranından tek tuşla kaldırabilme
 
@@ -20,6 +20,11 @@ Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabil
 Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hezarfen menüsünden eklentinin ayarlarını kontrol edebilirsiniz.
 
 == Changelog ==
+= 1.2.1 - 2020-11-10 =
+* Özellik: Ödeme sayfasında yer alan Hezarfen select2 alanları için Türkçe dil desteği eklendi.
+* Özellik: Ödeme sayfasında yer alan Hezarfen form alanları için WP filter desteği eklendi.
+* İyileştirme: Ödeme sayfasında yer alan Hezarfen select2 alanları için tasarımsal iyileştirmeler
+
 = 1.2.0 - 2020-11-10 =
 * Ödeme sayfasında yer alan posta kodu alanlarının tek tuşla ödeme ekranından kaldırılabilmesi sağlandı.
 
