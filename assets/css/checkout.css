@@ -3,3 +3,10 @@
     display: none
 
 }
+
+select#wc_hezarfen_shipping_district,
+select#wc_hezarfen_billing_district,
+select#wc_hezarfen_shipping_neighborhood,
+select#wc_hezarfen_billing_neighborhood {
+	width:100% !important
+}
