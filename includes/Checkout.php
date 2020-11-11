@@ -145,7 +145,7 @@ class Checkout
 	 */
 	public function update_field_required_statuses_before_checkout_process()
 	{
-		$hezarfen_invoice_type = $_POST['billing_hez_invoice_type'];
+		$hezarfen_invoice_type = sanitize_key( $_POST['billing_hez_invoice_type'] );
 
 		if ($hezarfen_invoice_type == 'person') {
 			add_filter('woocommerce_checkout_fields', [
