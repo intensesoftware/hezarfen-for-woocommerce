@@ -20,6 +20,10 @@ Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabil
 Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hezarfen menüsünden eklentinin ayarlarını kontrol edebilirsiniz.
 
 == Changelog ==
+= 1.2.2 - 2020-11-11 =
+* mahalle.io AJAX fonksiyonlarinda iyileştirmeler ( nonce ve sanization desteği )
+* Genel iyileştirmeler
+
 = 1.2.1 - 2020-11-10 =
 * Özellik: Ödeme sayfasında yer alan Hezarfen select2 alanları için Türkçe dil desteği eklendi.
 * Özellik: Ödeme sayfasında yer alan Hezarfen form alanları için WP filter desteği eklendi.
