@@ -40,11 +40,17 @@ class Ajax
 
 	function get_districts()
 	{
-		$city_plate_number_with_TR = $_POST['city_plate_number'];
+		$city_plate_number_with_TR = sanitize_text_field( $_POST['city_plate_number'] );
 
 		$city_plate_number = explode("TR", $city_plate_number_with_TR);
 
-		$city_plate_number = $city_plate_number[1];
+		$city_plate_number = intval( $city_plate_number[1] );
+
+		if( ! $city_plate_number )
+		{
+			echo wp_json_encode( [] );
+			wp_die();
+		}
 
 		$get_districts_response = MahalleIO::get_districts($city_plate_number);
 
@@ -66,11 +72,17 @@ class Ajax
 
 	function get_neighborhoods()
 	{
-		$district_data = $_POST['district_id'];
+		$district_data = sanitize_text_field( $_POST['district_id'] );
 
 		$district_data_array = explode(":", $district_data);
 
-		$district_id = $district_data_array[0];
+		$district_id = intval( $district_data_array[0] );
+
+		if( ! $district_id )
+		{
+			echo wp_json_encode([]);
+			wp_die();
+		}
 
 		$get_neighborhoods_response = MahalleIO::get_neighborhoods(
 			$district_id
@@ -94,11 +106,17 @@ class Ajax
 
 	function neighborhood_changed()
 	{
-		$neighborhood_data = $_POST["neighborhood_data"];
+		$neighborhood_data = sanitize_text_field( $_POST["neighborhood_data"] );
 
 		$neighborhood_data_arr = explode(":", $neighborhood_data);
 
-		$neighborhood_id = $neighborhood_data_arr[0];
+		$neighborhood_id = intval( $neighborhood_data_arr[0] );
+
+		if( ! $neighborhood_id )
+		{
+			echo wp_json_encode([]);
+			wp_die();
+		}
 
 		$neighborhood_name = $neighborhood_data_arr[1];
 
