@@ -95,7 +95,7 @@ class Autoload
 			wp_localize_script(
 				'wc_hezarfen_checkout_js',
 				'wc_hezarfen_ajax_object',
-				['ajax_url' => admin_url('admin-ajax.php')]
+				['ajax_url' => admin_url('admin-ajax.php'), 'mahalleio_nonce' => wp_create_nonce( 'mahalle-io-get-data' ) ]
 			);
 		}
 	}

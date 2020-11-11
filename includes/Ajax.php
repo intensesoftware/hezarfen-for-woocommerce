@@ -40,6 +40,8 @@ class Ajax
 
 	function get_districts()
 	{
+		check_ajax_referer( 'mahalle-io-get-data', 'security' );
+
 		$city_plate_number_with_TR = sanitize_text_field( $_POST['city_plate_number'] );
 
 		$city_plate_number = explode("TR", $city_plate_number_with_TR);
@@ -72,6 +74,8 @@ class Ajax
 
 	function get_neighborhoods()
 	{
+		check_ajax_referer( 'mahalle-io-get-data', 'security' );
+
 		$district_data = sanitize_text_field( $_POST['district_id'] );
 
 		$district_data_array = explode(":", $district_data);
@@ -106,6 +110,8 @@ class Ajax
 
 	function neighborhood_changed()
 	{
+		check_ajax_referer( 'mahalle-io-get-data', 'security' );
+
 		$neighborhood_data = sanitize_text_field( $_POST["neighborhood_data"] );
 
 		$neighborhood_data_arr = explode(":", $neighborhood_data);

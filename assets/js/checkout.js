@@ -57,7 +57,8 @@ jQuery( function( $ ) {
 
             var data = {
 
-                'action':'wc_hezarfen_get_districts',
+				'action':'wc_hezarfen_get_districts',
+				'security': wc_hezarfen_ajax_object.mahalleio_nonce,
                 'city_plate_number':selected.id
 
             };
@@ -105,7 +106,8 @@ jQuery( function( $ ) {
 
             var data = {
 
-                'action':'wc_hezarfen_get_neighborhoods',
+				'action':'wc_hezarfen_get_neighborhoods',
+				'security': wc_hezarfen_ajax_object.mahalleio_nonce,
                 'district_id':selected.id
 
             };
@@ -139,7 +141,8 @@ jQuery( function( $ ) {
 
             var data = {
 
-                'action':'wc_hezarfen_neighborhood_changed',
+				'action':'wc_hezarfen_neighborhood_changed',
+				'security': wc_hezarfen_ajax_object.mahalleio_nonce,
                 'neighborhood_data':selected.id
 
             };
