@@ -251,6 +251,20 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 					'std' => 'yes',
 				],
 				[
+					'title' => __(
+						'Auto sort fields in checkout form?',
+						'hezarfen-for-woocommerce'
+					),
+					'type' => 'checkbox',
+					'desc' => __(
+						'',
+						'hezarfen-for-woocommerce'
+					),
+					'id' => 'hezarfen_checkout_fields_auto_sort',
+					'default' => 'no',
+					'std' => 'yes',
+				],
+				[
 					'type' => 'sectionend',
 					'id' => 'hezarfen_checkout_settings_section_end',
 				]

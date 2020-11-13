@@ -17,20 +17,26 @@ class Checkout
 
 		if( $this->hezarfen_show_hezarfen_checkout_tax_fields )
 		{
-			add_filter('woocommerce_checkout_fields', [$this, 'add_tax_fields']);
+			add_filter('woocommerce_checkout_fields', [$this, 'add_tax_fields'], 1, 110);
 		}
 
 		$hide_postcode_field = get_option( 'hezarfen_hide_checkout_postcode_fields', 'no' ) == 'yes';
+		$checkout_fields_auto_sort = get_option( 'hezarfen_checkout_fields_auto_sort', 'no' ) == 'yes';
+
+		if( $checkout_fields_auto_sort )
+		{
+			add_filter('woocommerce_checkout_fields', [$this, 'auto_sort_checkout_fields'], 1, 999999);
+		}
 
 		if( $hide_postcode_field )
 		{
-			add_filter('woocommerce_checkout_fields', [$this, 'hide_postcode_fields']);
+			add_filter('woocommerce_checkout_fields', [$this, 'hide_postcode_fields'], 90);
 		}
 
 		add_filter('woocommerce_checkout_fields', [
 			$this,
 			'add_district_and_neighborhood_fields',
-		]);
+		], 1, 100);
 
 		add_action('woocommerce_checkout_posted_data', [
 			$this,
@@ -46,6 +52,41 @@ class Checkout
 			$this,
 			'override_billing_hez_TC_number',
 		], 10, 2);
+	}
+
+	/**
+	 * Auto Sort the Checkout Form Fields.
+	 *
+	 * @param  mixed $fields
+	 * @return array
+	 */
+	public function auto_sort_checkout_fields( $fields )
+	{
+		$fields['billing']['billing_first_name']['priority'] = 1;
+		$fields['billing']['billing_last_name']['priority'] = 2;
+		$fields['billing']['billing_phone']['priority'] = 3;
+		$fields['billing']['billing_email']['priority'] = 4;
+		$fields['billing']['billing_country']['priority'] = 5;
+		$fields['billing']['billing_state']['priority'] = 6;
+		$fields['billing']['billing_city']['priority'] = 7;
+		$fields['billing']['billing_address_1']['priority'] = 8;
+		$fields['billing']['billing_address_2']['priority'] = 9;
+		$fields['billing']['billing_hez_invoice_type']['priority'] = 10;
+		$fields['billing']['billing_hez_TC_number']['priority'] = 11;
+		$fields['billing']['billing_company']['priority'] = 12;
+		$fields['billing']['billing_hez_tax_number']['priority'] = 13;
+		$fields['billing']['billing_hez_tax_office']['priority'] = 14;
+
+		$fields['shipping']['shipping_company']['priority'] = 0;
+		$fields['shipping']['shipping_first_name']['priority'] = 1;
+		$fields['shipping']['shipping_last_name']['priority'] = 2;
+		$fields['shipping']['shipping_country']['priority'] = 5;
+		$fields['shipping']['shipping_state']['priority'] = 6;
+		$fields['shipping']['shipping_city']['priority'] = 7;
+		$fields['shipping']['shipping_address_1']['priority'] = 8;
+		$fields['shipping']['shipping_address_2']['priority'] = 9;
+
+		return $fields;
 	}
 
 	public function hide_postcode_fields( $fields )
