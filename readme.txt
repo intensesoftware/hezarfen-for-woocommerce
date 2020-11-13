@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 5.5.3
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 1.2.2
+Stable tag: 1.3.0
 
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
@@ -34,6 +34,10 @@ Eğer mahalle özelliğini aktif ettiyseniz mutlaka; adres2 alanını aktif edin
 
 = Geliştirmeye katkıda bulunmak istiyorum =
 Hezarfen projesi Intense Yazılım ekibi tarafından geliştirilmektedir, dilerseniz siz de yazılım geliştirici olarak [Github Repository'e](https://github.com/intensesoftware/hezarfen-for-woocommerce) katkı sağlayabilirsiniz.
+
+= 1.3.0 - 2020-11-13 =
+* Özellik: Ödeme ekranındaki alanların otomatik sıralanması özelliği eklendi.
+* Özellik: mahalle.io aktif edilirse, adres2 alanının otomatik olarak zorunlu yapılması sağlandı.
 
 = 1.2.1 - 2020-11-10 =
 * Özellik: Ödeme sayfasında yer alan Hezarfen select2 alanları için Türkçe dil desteği eklendi.
