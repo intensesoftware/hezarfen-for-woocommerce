@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-10 06:47+0000\n"
-"PO-Revision-Date: 2020-11-10 06:48+0000\n"
+"POT-Creation-Date: 2020-11-13 14:58+0000\n"
+"PO-Revision-Date: 2020-11-13 14:58+0000\n"
 "Last-Translator: \n"
 "Language-Team: Türkçe\n"
 "Language: tr_TR\n"
@@ -14,37 +14,37 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.4.3; wp-5.4.2"
 
-#: includes/Checkout.php:172
+#: includes/Checkout.php:265
 msgid "Invoice Type"
 msgstr "Fatura tipi"
 
-#: includes/Checkout.php:177 includes/admin/order/OrderDetails.php:44
+#: includes/Checkout.php:270 includes/admin/order/OrderDetails.php:44
 #: includes/admin/order/OrderDetails.php:58
 msgid "Personal"
 msgstr "Bireysel"
 
-#: includes/Checkout.php:178 includes/admin/order/OrderDetails.php:47
+#: includes/Checkout.php:271 includes/admin/order/OrderDetails.php:47
 #: includes/admin/order/OrderDetails.php:59
 msgid "Company"
 msgstr "Kurumsal"
 
-#: includes/Checkout.php:186 includes/admin/order/OrderDetails.php:66
+#: includes/Checkout.php:279 includes/admin/order/OrderDetails.php:66
 msgid "T.C. Identity Number"
 msgstr "T.C. Kimlik Numarası"
 
-#: includes/Checkout.php:197
+#: includes/Checkout.php:290
 msgid "Title"
 msgstr "Ünvan"
 
-#: includes/Checkout.php:198
+#: includes/Checkout.php:291
 msgid "Please enter the invoice title"
 msgstr "Faturanızın kesileceği fatura ünvanını yazınız."
 
-#: includes/Checkout.php:205 includes/admin/order/OrderDetails.php:75
+#: includes/Checkout.php:298 includes/admin/order/OrderDetails.php:75
 msgid "Tax Number"
 msgstr "Vergi Numarası"
 
-#: includes/Checkout.php:213 includes/admin/order/OrderDetails.php:80
+#: includes/Checkout.php:306 includes/admin/order/OrderDetails.php:80
 msgid "TAX Office"
 msgstr "Vergi Dairesi"
 
@@ -82,7 +82,6 @@ msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:93
 #, fuzzy
-#| msgid "API Key"
 msgid "API key"
 msgstr "API Anahtarı"
 
@@ -107,7 +106,6 @@ msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:124
 #, fuzzy
-#| msgid "Show T.C. Identity Field on Checkout Page "
 msgid "Show T.C. Identity Field on checkout page "
 msgstr "T.C. Kimlik Numarası Alanını Ödeme Sayfasında Göster"
 
@@ -188,17 +186,20 @@ msgstr "Ödeme sayfasıyla ilgili genel ayarları düzenleyebilirsiniz."
 msgid "Hide postcode fields?"
 msgstr "Posta kodu alanları gizlensin mi?"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:263
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:254
+msgid "Auto sort fields in checkout form?"
+msgstr "Ödeme formundaki alanlar otomatik olarak sıralansın mı?"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:277
 msgid "General Settings"
 msgstr "Genel Ayarlar"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:268
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:282
 msgid "You can edit the general settings from this page."
 msgstr "Hezarfen ile ilgili genel ayarları bu sayfadan yönetebilirsiniz."
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:275
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:289
 #, fuzzy
-#| msgid "Show Hezarfen Checkout TAX Fields?"
 msgid "Show hezarfen checkout tax fields?"
 msgstr "Ödeme sayfasında vergi alanları gösterilsin mi?"
 
@@ -254,11 +255,10 @@ msgstr ""
 "Hezarfen, WooCommerce eklentisini Türkiye için daha kullanılabilir kılmayı "
 "amaçlar."
 
-#. URI of the plugin
-#. Author URI of the plugin
-msgid "http://intense.com.tr"
-msgstr "http://intense.com.tr"
-
 #. Author of the plugin
 msgid "Intense Yazılım Ltd."
 msgstr "Intense Yazılım Ltd."
+
+#. Author URI of the plugin
+msgid "http://intense.com.tr"
+msgstr "http://intense.com.tr"

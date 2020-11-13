@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-10 06:47+0000\n"
+"POT-Creation-Date: 2020-11-13 14:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -15,37 +15,37 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.4.3; wp-5.4.2"
 
-#: includes/Checkout.php:172
+#: includes/Checkout.php:265
 msgid "Invoice Type"
 msgstr ""
 
-#: includes/Checkout.php:177 includes/admin/order/OrderDetails.php:44
+#: includes/Checkout.php:270 includes/admin/order/OrderDetails.php:44
 #: includes/admin/order/OrderDetails.php:58
 msgid "Personal"
 msgstr ""
 
-#: includes/Checkout.php:178 includes/admin/order/OrderDetails.php:47
+#: includes/Checkout.php:271 includes/admin/order/OrderDetails.php:47
 #: includes/admin/order/OrderDetails.php:59
 msgid "Company"
 msgstr ""
 
-#: includes/Checkout.php:186 includes/admin/order/OrderDetails.php:66
+#: includes/Checkout.php:279 includes/admin/order/OrderDetails.php:66
 msgid "T.C. Identity Number"
 msgstr ""
 
-#: includes/Checkout.php:197
+#: includes/Checkout.php:290
 msgid "Title"
 msgstr ""
 
-#: includes/Checkout.php:198
+#: includes/Checkout.php:291
 msgid "Please enter the invoice title"
 msgstr ""
 
-#: includes/Checkout.php:205 includes/admin/order/OrderDetails.php:75
+#: includes/Checkout.php:298 includes/admin/order/OrderDetails.php:75
 msgid "Tax Number"
 msgstr ""
 
-#: includes/Checkout.php:213 includes/admin/order/OrderDetails.php:80
+#: includes/Checkout.php:306 includes/admin/order/OrderDetails.php:80
 msgid "TAX Office"
 msgstr ""
 
@@ -163,15 +163,19 @@ msgstr ""
 msgid "Hide postcode fields?"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:263
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:254
+msgid "Auto sort fields in checkout form?"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:277
 msgid "General Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:268
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:282
 msgid "You can edit the general settings from this page."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:275
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:289
 msgid "Show hezarfen checkout tax fields?"
 msgstr ""
 
@@ -217,11 +221,10 @@ msgid ""
 "amaçlar."
 msgstr ""
 
-#. URI of the plugin
-#. Author URI of the plugin
-msgid "http://intense.com.tr"
-msgstr ""
-
 #. Author of the plugin
 msgid "Intense Yazılım Ltd."
+msgstr ""
+
+#. Author URI of the plugin
+msgid "http://intense.com.tr"
 msgstr ""
