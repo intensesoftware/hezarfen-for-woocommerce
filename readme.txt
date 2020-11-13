@@ -11,19 +11,29 @@ Stable tag: 1.2.2
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
 == Description ==
-- Özellikler
-* Opsiyonel olarak ödeme ekranına mahalle alanının eklenmesi (mahalle.io üyeliği gerektirir.)
-* Ödeme ekranında vergi bilgileri (kurumsal ve bireysel fatura tercihine göre)
-* Encrypt edilebilir T.C. kimlik no alanı (T.C. no verileri veritabanına encrypt edilerek yazılır.)
-* Posta kodu alanını ödeme ekranından tek tuşla kaldırabilme
+= ÖZELLİKLER =
+- Opsiyonel olarak ödeme ekranına mahalle alanının eklenmesi (mahalle.io üyeliği gerektirir.)
+- Ödeme ekranında vergi bilgileri (kurumsal ve bireysel fatura tercihine göre)
+-  Encrypt edilebilir T.C. kimlik no alanı (T.C. no verileri veritabanına encrypt edilerek yazılır.)
+- Posta kodu alanını ödeme ekranından tek tuşla kaldırabilme
 
 == Installation ==
 Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hezarfen menüsünden eklentinin ayarlarını kontrol edebilirsiniz.
+
+= mahalle.io Kurulumu =
+Eğer ödeme sayfasında il ilçe ve mahalle verilerini seçilebilir olarak göstermek istiyorsanız, [mahalle.io](https://mahalle.io)'ya kayıt olduktan sonra oluşturacağınız API anahtarını, WooCommerce->Ayarlar->Hezarfen->mahalle.io bölümüne yazmanız yeterlidir.
+
+mahalle verileri billing_address_1 ve shipping_address_1 alanlarına otomatik olarak yazılacaktır.
+
+Eğer mahalle özelliğini aktif ettiyseniz mutlaka; adres2 alanını aktif ediniz ve cadde/sokak/bina adı/kapı no bilgisinin bu alana zorunlu olarak girilmesini sağlayınız. (Bu işlemi şu an için diğer checkout field eklentileriyle yapmanızı önermekteyiz.)
 
 == Changelog ==
 = 1.2.2 - 2020-11-11 =
 * mahalle.io AJAX fonksiyonlarinda iyileştirmeler ( nonce ve sanization desteği )
 * Genel iyileştirmeler
+
+= Geliştirmeye katkıda bulunmak istiyorum =
+Hezarfen projesi Intense Yazılım ekibi tarafından geliştirilmektedir, dilerseniz siz de yazılım geliştirici olarak [Github Repository'e](https://github.com/intensesoftware/hezarfen-for-woocommerce) katkı sağlayabilirsiniz.
 
 = 1.2.1 - 2020-11-10 =
 * Özellik: Ödeme sayfasında yer alan Hezarfen select2 alanları için Türkçe dil desteği eklendi.
