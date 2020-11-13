@@ -38,6 +38,16 @@ class Checkout
 			'add_district_and_neighborhood_fields',
 		], 1, 100);
 
+		add_filter('woocommerce_checkout_fields', [
+			$this,
+			'make_address2_required_and_update_the_label',
+		], 999998, 1);
+
+		add_filter('woocommerce_default_address_fields', [
+			$this,
+			'make_address2_required_default_address_field'
+		], 99999, 1);
+
 		add_action('woocommerce_checkout_posted_data', [
 			$this,
 			'override_posted_data',
@@ -52,6 +62,48 @@ class Checkout
 			$this,
 			'override_billing_hez_TC_number',
 		], 10, 2);
+	}
+
+	/**
+	 * Make address 2 fields required.
+	 *
+	 * @param  mixed $fields
+	 * @return void
+	 */
+	public function make_address2_required_default_address_field( $fields )
+	{
+		// if Mahalle.io not activated, return.
+		if (!MahalleIO::is_active()) {
+			return $fields;
+		}
+
+		$fields['address_2']['required'] = true;
+
+		return $fields;
+	}
+
+	/**
+	 * Make address2 fields required.
+	 *
+	 * @param  mixed $fields
+	 * @return void
+	 */
+	public function make_address2_required_and_update_the_label( $fields )
+	{
+		// if Mahalle.io not activated, return.
+		if (!MahalleIO::is_active()) {
+			return $fields;
+		}
+
+		// if mahalle.io is active, make address2 required
+		$fields['billing']['billing_address_2']['required'] = true;
+		$fields['billing']['billing_address_2']['label'] = 'Adresiniz';
+		$fields['billing']['billing_address_2']['placeholder'] = 'Cadde, sokak, bina, daire no bilgilerinizi giriniz';
+		$fields['shipping']['shipping_address_2']['required'] = true;
+		$fields['shipping']['shipping_address_2']['label'] = 'Adresiniz';
+		$fields['shipping']['shipping_address_2']['placeholder'] = 'Cadde, sokak, bina, daire no bilgilerinizi giriniz';
+
+		return $fields;
 	}
 
 	/**
