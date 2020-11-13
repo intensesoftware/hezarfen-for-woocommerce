@@ -17,7 +17,7 @@ class Checkout
 
 		if( $this->hezarfen_show_hezarfen_checkout_tax_fields )
 		{
-			add_filter('woocommerce_checkout_fields', [$this, 'add_tax_fields'], 1, 110);
+			add_filter('woocommerce_checkout_fields', [$this, 'add_tax_fields'], 110, 1);
 		}
 
 		$hide_postcode_field = get_option( 'hezarfen_hide_checkout_postcode_fields', 'no' ) == 'yes';
@@ -25,7 +25,7 @@ class Checkout
 
 		if( $checkout_fields_auto_sort )
 		{
-			add_filter('woocommerce_checkout_fields', [$this, 'auto_sort_checkout_fields'], 1, 999999);
+			add_filter('woocommerce_checkout_fields', [$this, 'auto_sort_checkout_fields'], 999999, 1);
 		}
 
 		if( $hide_postcode_field )
@@ -36,7 +36,7 @@ class Checkout
 		add_filter('woocommerce_checkout_fields', [
 			$this,
 			'add_district_and_neighborhood_fields',
-		], 1, 100);
+		], 100, 1);
 
 		add_filter('woocommerce_checkout_fields', [
 			$this,
