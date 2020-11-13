@@ -14,13 +14,14 @@ Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabil
 = ÖZELLİKLER =
 - Opsiyonel olarak ödeme ekranına mahalle alanının eklenmesi (mahalle.io üyeliği gerektirir.)
 - Ödeme ekranında vergi bilgileri (kurumsal ve bireysel fatura tercihine göre)
--  Encrypt edilebilir T.C. kimlik no alanı (T.C. no verileri veritabanına encrypt edilerek yazılır.)
+- Encrypt edilebilir T.C. kimlik no alanı (T.C. no verileri veritabanına encrypt edilerek yazılır.)
 - Posta kodu alanını ödeme ekranından tek tuşla kaldırabilme
+- Ödeme formundaki alanları tek tuşla, Türkiye için otomatik sıralayabilme
 
 == Installation ==
 Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hezarfen menüsünden eklentinin ayarlarını kontrol edebilirsiniz.
 
-= mahalle.io Kurulumu =
+mahalle.io Kurulumu
 Eğer ödeme sayfasında il ilçe ve mahalle verilerini seçilebilir olarak göstermek istiyorsanız, [mahalle.io](https://mahalle.io)'ya kayıt olduktan sonra oluşturacağınız API anahtarını, WooCommerce->Ayarlar->Hezarfen->mahalle.io bölümüne yazmanız yeterlidir.
 
 mahalle verileri billing_address_1 ve shipping_address_1 alanlarına otomatik olarak yazılacaktır.
