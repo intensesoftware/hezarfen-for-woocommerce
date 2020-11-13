@@ -21,12 +21,12 @@ Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabil
 == Installation ==
 Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hezarfen menüsünden eklentinin ayarlarını kontrol edebilirsiniz.
 
-mahalle.io Kurulumu
-Eğer ödeme sayfasında il ilçe ve mahalle verilerini seçilebilir olarak göstermek istiyorsanız, [mahalle.io](https://mahalle.io)'ya kayıt olduktan sonra oluşturacağınız API anahtarını, WooCommerce->Ayarlar->Hezarfen->mahalle.io bölümüne yazmanız yeterlidir.
+= mahalle.io Kurulumu =
+Eğer ödeme sayfasında il ilçe ve mahalle verilerini seçilebilir olarak göstermek istiyorsanız, [mahalle.io](https://mahalle.io)\'ya kayıt olduktan sonra oluşturacağınız API anahtarını, WooCommerce->Ayarlar->Hezarfen->mahalle.io bölümüne yazmanız yeterlidir.
 
 mahalle verileri billing_address_1 ve shipping_address_1 alanlarına otomatik olarak yazılacaktır.
 
-Eğer mahalle özelliğini aktif ettiyseniz mutlaka; adres2 alanını aktif ediniz ve cadde/sokak/bina adı/kapı no bilgisinin bu alana zorunlu olarak girilmesini sağlayınız. (Bu işlemi şu an için diğer checkout field eklentileriyle yapmanızı önermekteyiz.)
+mahalle.io özelliğini aktif ettiğinizde; adres2 alanını Hezarfen tarafından otomatik olarak görünür ve zorunlu yapılacaktır ve alan ismi 'adresiniz' olarak güncellenecektir. Kullanıcıların bu alana mahalle harici verileri yazması beklenmektedir.
 
 == Changelog ==
 = 1.2.2 - 2020-11-11 =
