@@ -84,7 +84,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 					),
 					'type' => 'title',
 					'desc' => __(
-						'mahalle.io is a optional and paid service for show Turkey neighbors in checkout page.',
+						'mahalle.io is a optional and paid service for show Turkey neighbors in checkout page. If the mahalle.io service is activated, neighborhood data will be written in the address 1 field on the payment form. For this reason, the address2 field will be required for remain address.',
 						'hezarfen-for-woocommerce'
 					),
 					'id' => 'hezarfen_mahalleio_options',
