@@ -276,6 +276,7 @@ class Checkout
 		if (self::is_show_TC_field_on_checkout()) {
 			$fields['billing']['billing_hez_TC_number'] = [
 				'id' => 'hezarfen_TC_number',
+				'placeholder' => __('Enter T.C. Identity Number', 'hezarfen-for-woocommerce'),
 				'label' => __(
 					'T.C. Identity Number',
 					'hezarfen-for-woocommerce'
@@ -288,7 +289,7 @@ class Checkout
 
 		$fields['billing']['billing_company'] = [
 			'label' => __('Title', 'hezarfen-for-woocommerce'),
-			'placeholder' => __('Please enter the invoice title', 'hezarfen-for-woocommerce'),
+			'placeholder' => __('Enter invoice title', 'hezarfen-for-woocommerce'),
 			'required' => true,
 			'priority' => $fields['billing']['billing_hez_invoice_type']['priority'] + 1
 		];
@@ -296,6 +297,7 @@ class Checkout
 		$fields['billing']['billing_hez_tax_number'] = [
 			'id' => 'hezarfen_tax_number',
 			'label' => __('Tax Number', 'hezarfen-for-woocommerce'),
+			'placeholder' => __('Enter tax number', 'hezarfen-for-woocommerce'),
 			'required' => true,
 			'class' => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_tax_number', ['form-row-wide'] ),
 			'priority' => $fields['billing']['billing_company']['priority'] + 1
@@ -304,6 +306,7 @@ class Checkout
 		$fields['billing']['billing_hez_tax_office'] = [
 			'id' => 'hezarfen_tax_office',
 			'label' => __('TAX Office', 'hezarfen-for-woocommerce'),
+			'placeholder' => __('Enter tax office', 'hezarfen-for-woocommerce'),
 			'required' => true,
 			'class' => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_tax_office', ['form-row-wide'] ),
 			'priority' => $fields['billing']['billing_hez_tax_number']['priority'] + 1

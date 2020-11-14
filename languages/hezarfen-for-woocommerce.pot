@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-13 15:03+0000\n"
+"POT-Creation-Date: 2020-11-14 09:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -29,24 +29,36 @@ msgstr ""
 msgid "Company"
 msgstr ""
 
-#: includes/Checkout.php:279 includes/admin/order/OrderDetails.php:66
+#: includes/Checkout.php:279
+msgid "Enter T.C. Identity Number"
+msgstr ""
+
+#: includes/Checkout.php:280 includes/admin/order/OrderDetails.php:66
 msgid "T.C. Identity Number"
 msgstr ""
 
-#: includes/Checkout.php:290
+#: includes/Checkout.php:291
 msgid "Title"
 msgstr ""
 
-#: includes/Checkout.php:291
-msgid "Please enter the invoice title"
+#: includes/Checkout.php:292
+msgid "Enter invoice title"
 msgstr ""
 
-#: includes/Checkout.php:298 includes/admin/order/OrderDetails.php:75
+#: includes/Checkout.php:299 includes/admin/order/OrderDetails.php:75
 msgid "Tax Number"
 msgstr ""
 
-#: includes/Checkout.php:306 includes/admin/order/OrderDetails.php:80
+#: includes/Checkout.php:300
+msgid "Enter tax number"
+msgstr ""
+
+#: includes/Checkout.php:308 includes/admin/order/OrderDetails.php:80
 msgid "TAX Office"
+msgstr ""
+
+#: includes/Checkout.php:309
+msgid "Enter tax office"
 msgstr ""
 
 #: includes/admin/order/OrderDetails.php:55

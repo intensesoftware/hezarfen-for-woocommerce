@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-13 15:03+0000\n"
-"PO-Revision-Date: 2020-11-13 15:04+0000\n"
+"POT-Creation-Date: 2020-11-14 09:19+0000\n"
+"PO-Revision-Date: 2020-11-14 09:20+0000\n"
 "Last-Translator: \n"
 "Language-Team: Türkçe\n"
 "Language: tr_TR\n"
@@ -28,25 +28,37 @@ msgstr "Bireysel"
 msgid "Company"
 msgstr "Kurumsal"
 
-#: includes/Checkout.php:279 includes/admin/order/OrderDetails.php:66
+#: includes/Checkout.php:279
+msgid "Enter T.C. Identity Number"
+msgstr "T.C. Kimlik numaranızı giriniz"
+
+#: includes/Checkout.php:280 includes/admin/order/OrderDetails.php:66
 msgid "T.C. Identity Number"
 msgstr "T.C. Kimlik Numarası"
 
-#: includes/Checkout.php:290
+#: includes/Checkout.php:291
 msgid "Title"
 msgstr "Ünvan"
 
-#: includes/Checkout.php:291
-msgid "Please enter the invoice title"
-msgstr "Faturanızın kesileceği fatura ünvanını yazınız."
+#: includes/Checkout.php:292
+msgid "Enter invoice title"
+msgstr "Fatura ünvanını giriniz"
 
-#: includes/Checkout.php:298 includes/admin/order/OrderDetails.php:75
+#: includes/Checkout.php:299 includes/admin/order/OrderDetails.php:75
 msgid "Tax Number"
 msgstr "Vergi Numarası"
 
-#: includes/Checkout.php:306 includes/admin/order/OrderDetails.php:80
+#: includes/Checkout.php:300
+msgid "Enter tax number"
+msgstr "Vergi numaranızı giriniz"
+
+#: includes/Checkout.php:308 includes/admin/order/OrderDetails.php:80
 msgid "TAX Office"
 msgstr "Vergi Dairesi"
+
+#: includes/Checkout.php:309
+msgid "Enter tax office"
+msgstr "Vergi dairesini giriniz"
 
 #: includes/admin/order/OrderDetails.php:55
 msgid "Invoice type"
