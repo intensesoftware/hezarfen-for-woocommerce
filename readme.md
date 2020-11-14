@@ -2,10 +2,12 @@
 
 Hezarfen, WooCommerce eklentisini Türkiye için daha kullanılabilir kılmayı amaçlar.
 
-### Dikkat: Eklenti henüz stabil sürüme ulaşmamıştır. Stabil sürüm için wordpress.org'da yayınlanacak eklentiyi beklemenizi önermekteyiz.
+### Stabil sürüm için lütfen wordpress.org'da yayınlanan linki ziyaret ediniz. https://wordpress.org/plugins/hezarfen-for-woocommerce/
 
 ### Yol Haritası
 - Opsiyonel olarak ödeme ekranına mahalle alanının eklenmesi (Tamamlandı)
 - Ödeme ekranında vergi bilgileri (kurumsal ve bireysel fatura tercihine göre) (Tamamlandı)
 - Encrypt edilebilir T.C. kimlik no alanı (Tamamlandı)
+- Posta kodu alanını ödeme ekranından tek tuşla kaldırabilme
+- Ödeme formundaki alanları tek tuşla, Türkiye için otomatik sıralayabilme
 - ...
