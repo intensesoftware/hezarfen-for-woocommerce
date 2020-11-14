@@ -34,8 +34,10 @@ mahalle.io özelliğini aktif ettiğinizde; adres2 alanını Hezarfen tarafında
 == Screenshots ==
 1. Ödeme formu ayarlar ekranı
 2. (Opsiyonel) mahalle.io ayarları
-3. opsiyonel mahalle.io servisi aktifken ödeme ekranı
-4. opsiyonel mahalle.io servisi kullanılmadığında ödeme ekranı
+3. Opsiyonel mahalle.io servisi aktifken ödeme ekranı
+4. Opsiyonel mahalle.io servisi kullanılmadığında ödeme ekranı
+5. Kurumsal vergi bilgileri
+6. Bireysel vergi bilgileri
 
 == Changelog ==
 = 1.3.3 - 2020-11-14 =
