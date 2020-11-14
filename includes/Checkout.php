@@ -124,7 +124,11 @@ class Checkout
 		$fields['billing']['billing_address_1']['priority'] = 8;
 		$fields['billing']['billing_address_2']['priority'] = 9;
 		$fields['billing']['billing_hez_invoice_type']['priority'] = 10;
-		$fields['billing']['billing_hez_TC_number']['priority'] = 11;
+
+		if (self::is_show_TC_field_on_checkout()) {
+			$fields['billing']['billing_hez_TC_number']['priority'] = 11;
+		}
+
 		$fields['billing']['billing_company']['priority'] = 12;
 		$fields['billing']['billing_hez_tax_number']['priority'] = 13;
 		$fields['billing']['billing_hez_tax_office']['priority'] = 14;
