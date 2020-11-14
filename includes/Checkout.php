@@ -26,6 +26,11 @@ class Checkout
 		if( $checkout_fields_auto_sort )
 		{
 			add_filter('woocommerce_checkout_fields', [$this, 'auto_sort_checkout_fields'], 999999, 1);
+
+			add_filter('woocommerce_default_address_fields', [
+				$this,
+				'sort_address_fields'
+			], 100000, 1);
 		}
 
 		if( $hide_postcode_field )
@@ -62,6 +67,22 @@ class Checkout
 			$this,
 			'override_billing_hez_TC_number',
 		], 10, 2);
+	}
+
+	/**
+	 * Sort address fields forcelly.
+	 *
+	 * @param  mixed $fields
+	 * @return void
+	 */
+	public function sort_address_fields( $fields )
+	{
+		$fields['state']['priority'] = 6;
+		$fields['city']['priority'] = 7;
+		$fields['address_1']['priority'] = 8;
+		$fields['address_2']['priority'] = 9;
+
+		return $fields;
 	}
 
 	/**
