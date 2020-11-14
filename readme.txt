@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 5.5.3
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
@@ -32,13 +32,16 @@ mahalle verileri billing_address_1 ve shipping_address_1 alanlarına otomatik ol
 mahalle.io özelliğini aktif ettiğinizde; adres2 alanını Hezarfen tarafından otomatik olarak görünür ve zorunlu yapılacaktır ve alan ismi 'adresiniz' olarak güncellenecektir. Kullanıcıların bu alana mahalle harici verileri yazması beklenmektedir.
 
 == Changelog ==
-= 1.2.2 - 2020-11-11 =
-* mahalle.io AJAX fonksiyonlarinda iyileştirmeler ( nonce ve sanization desteği )
-* Genel iyileştirmeler
+= 1.3.1 - 2020-11-14 =
+* Düzeltme: Ödeme ekranındaki Hezarfen vergi alanları kutucuklarının placeholder değerleri eklendi/güncellendi.
 
 = 1.3.0 - 2020-11-13 =
 * Özellik: Ödeme ekranındaki alanların otomatik sıralanması özelliği eklendi.
 * Özellik: mahalle.io aktif edilirse, adres2 alanının otomatik olarak zorunlu yapılması sağlandı.
+
+= 1.2.2 - 2020-11-11 =
+* mahalle.io AJAX fonksiyonlarinda iyileştirmeler ( nonce ve sanization desteği )
+* Genel iyileştirmeler
 
 = 1.2.1 - 2020-11-10 =
 * Özellik: Ödeme sayfasında yer alan Hezarfen select2 alanları için Türkçe dil desteği eklendi.
