@@ -127,7 +127,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page
 					),
 					'type' => 'checkbox',
 					'desc' => __(
-						'T.C. Identity Field optionally shows on checkout field when invoice type selected as person.',
+						'T.C. Identity Field optionally shows on checkout field when invoice type selected as person. (T.C. field requires encryption. If encryption is not enabled, this field is not displayed.)',
 						'hezarfen-for-woocommerce'
 					),
 					'id' => 'hezarfen_checkout_show_TC_identity_field',

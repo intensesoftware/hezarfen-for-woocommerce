@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-14 09:19+0000\n"
+"POT-Creation-Date: 2020-11-14 17:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -119,7 +119,8 @@ msgstr ""
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:129
 msgid ""
 "T.C. Identity Field optionally shows on checkout field when invoice type "
-"selected as person."
+"selected as person. (T.C. field requires encryption. If encryption is not "
+"enabled, this field is not displayed.)"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:139
