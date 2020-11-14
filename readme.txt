@@ -18,6 +18,9 @@ Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabil
 - Posta kodu alanını ödeme ekranından tek tuşla kaldırabilme
 - Ödeme formundaki alanları tek tuşla, Türkiye için otomatik sıralayabilme
 
+= Geliştirmeye katkıda bulunmak istiyorum =
+Hezarfen projesi Intense Yazılım ekibi tarafından geliştirilmektedir, dilerseniz siz de yazılım geliştirici olarak [Github Repository'e](https://github.com/intensesoftware/hezarfen-for-woocommerce) katkı sağlayabilirsiniz.
+
 == Installation ==
 Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hezarfen menüsünden eklentinin ayarlarını kontrol edebilirsiniz.
 
@@ -32,9 +35,6 @@ mahalle.io özelliğini aktif ettiğinizde; adres2 alanını Hezarfen tarafında
 = 1.2.2 - 2020-11-11 =
 * mahalle.io AJAX fonksiyonlarinda iyileştirmeler ( nonce ve sanization desteği )
 * Genel iyileştirmeler
-
-= Geliştirmeye katkıda bulunmak istiyorum =
-Hezarfen projesi Intense Yazılım ekibi tarafından geliştirilmektedir, dilerseniz siz de yazılım geliştirici olarak [Github Repository'e](https://github.com/intensesoftware/hezarfen-for-woocommerce) katkı sağlayabilirsiniz.
 
 = 1.3.0 - 2020-11-13 =
 * Özellik: Ödeme ekranındaki alanların otomatik sıralanması özelliği eklendi.
