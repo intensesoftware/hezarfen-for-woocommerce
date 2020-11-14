@@ -31,6 +31,12 @@ mahalle verileri billing_address_1 ve shipping_address_1 alanlarına otomatik ol
 
 mahalle.io özelliğini aktif ettiğinizde; adres2 alanını Hezarfen tarafından otomatik olarak görünür ve zorunlu yapılacaktır ve alan ismi 'adresiniz' olarak güncellenecektir. Kullanıcıların bu alana mahalle harici verileri yazması beklenmektedir.
 
+== Screenshots ==
+1. Ödeme formu ayarlar ekranı
+2. (Opsiyonel) mahalle.io ayarları
+3. opsiyonel mahalle.io servisi aktifken ödeme ekranı
+4. opsiyonel mahalle.io servisi kullanılmadığında ödeme ekranı
+
 == Changelog ==
 = 1.3.3 - 2020-11-14 =
 * Düzeltme: Ödeme ekranındaki alanların otomatik sıralama özelliğinin aktif edilmesine rağmen, istisnai olarak bazı sistemlerde il, ilçe alanlarının sıralamasının yapılamaması problemi giderildi.

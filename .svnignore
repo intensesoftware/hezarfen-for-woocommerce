@@ -14,3 +14,4 @@ phpunit
 phpunit.xml.dist
 readme.md
 tests
+.wordpress-org
