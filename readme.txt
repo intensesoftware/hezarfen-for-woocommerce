@@ -19,7 +19,7 @@ Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabil
 - Ödeme formundaki alanları tek tuşla, Türkiye için otomatik sıralayabilme
 
 = Geliştirmeye katkıda bulunmak istiyorum =
-Hezarfen projesi Intense Yazılım ekibi tarafından geliştirilmektedir, dilerseniz siz de yazılım geliştirici olarak [Github Repository'e](https://github.com/intensesoftware/hezarfen-for-woocommerce) katkı sağlayabilirsiniz.
+Hezarfen projesi Intense Yazılım ekibi tarafından geliştirilmektedir, dilerseniz siz de yazılım geliştirici olarak veya kullanıcı olarak geri besleme yapmak için [Github Repository'e](https://github.com/intensesoftware/hezarfen-for-woocommerce) katkı sağlayabilirsiniz.
 
 == Installation ==
 Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hezarfen menüsünden eklentinin ayarlarını kontrol edebilirsiniz.
