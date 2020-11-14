@@ -244,12 +244,12 @@ class Checkout
 			add_filter('woocommerce_checkout_fields', [
 				$this,
 				'update_fields_required_options_for_invoice_type_person',
-			]);
+			], 999999, 1);
 		} elseif ($hezarfen_invoice_type == 'company') {
 			add_filter('woocommerce_checkout_fields', [
 				$this,
 				'update_fields_required_options_for_invoice_type_company',
-			]);
+			], 999999, 1);
 		}
 	}
 
