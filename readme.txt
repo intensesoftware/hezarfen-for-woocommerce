@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 5.5.3
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 1.3.3
+Stable tag: 1.3.4
 
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
@@ -40,6 +40,9 @@ mahalle.io özelliğini aktif ettiğinizde; adres2 alanını Hezarfen tarafında
 6. Bireysel vergi bilgileri
 
 == Changelog ==
+= 1.3.4 - 2020-11-24 =
+* İyileştirme: hezarfen_checkout_neighborhood_changed WP action için, tip (billing veya shipping) desteği 3.parametre olarak eklendi.
+
 = 1.3.3 - 2020-11-14 =
 * Düzeltme: Ödeme ekranındaki alanların otomatik sıralama özelliğinin aktif edilmesine rağmen, istisnai olarak bazı sistemlerde il, ilçe alanlarının sıralamasının yapılamaması problemi giderildi.
 
