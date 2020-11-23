@@ -143,7 +143,8 @@ jQuery( function( $ ) {
 
 				'action':'wc_hezarfen_neighborhood_changed',
 				'security': wc_hezarfen_ajax_object.mahalleio_nonce,
-                'neighborhood_data':selected.id
+				'neighborhood_data':selected.id,
+				'type': type
 
             };
 

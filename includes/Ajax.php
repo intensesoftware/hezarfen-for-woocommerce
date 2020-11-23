@@ -112,6 +112,8 @@ class Ajax
 	{
 		check_ajax_referer( 'mahalle-io-get-data', 'security' );
 
+		$type = sanitize_key( $_POST["type"] );
+
 		$neighborhood_data = sanitize_text_field( $_POST["neighborhood_data"] );
 
 		$neighborhood_data_arr = explode(":", $neighborhood_data);
@@ -129,7 +131,8 @@ class Ajax
 		do_action(
 			'hezarfen_checkout_neighborhood_changed',
 			$neighborhood_id,
-			$neighborhood_name
+			$neighborhood_name,
+			$type
 		);
 
 		$args = [
