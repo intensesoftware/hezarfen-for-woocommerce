@@ -66,6 +66,30 @@ class MahalleIO
 	}
 
 	/**
+	 * Get cities from mahalle.io
+	 *
+	 * @return array
+	 */
+	public static function get_cities()
+	{
+		$url = 'https://api.mahalle.io/v2/il';
+
+		$result = self::HTTP($url);
+
+		if (is_wp_error($result)) {
+			return $result;
+		}
+
+		$cities = [];
+
+		foreach ($result->data as $city) {
+			$cities[$city->plaka_kodu] = $city->il_adi;
+		}
+
+		return $cities;
+	}
+
+	/**
 	 * Get districts by TR city plate number from mahalle.io
 	 *
 	 * @param $city_plate_number
