@@ -40,26 +40,26 @@ class OrderDetails {
 	public function add_tax_fields_to_order_details( $fields ) {
 		global $post;
 
-		$TC_number_field_value = get_post_meta(
+		$identity_number_field_value = get_post_meta(
 			$post->ID,
 			'_billing_hez_TC_number',
 			true
 		);
 
-		if ( $TC_number_field_value ) {
-			// Try to decroypt the T.C number
-			$TC_number_field_decrypted_value = ( new PostMetaEncryption() )->decrypt(
-				$TC_number_field_value
+		if ( $identity_number_field_value ) {
+			// Try to decrypt the T.C number.
+			$identity_number_field_decrypted_value = ( new PostMetaEncryption() )->decrypt(
+				$identity_number_field_value
 			);
 		} else {
-			$TC_number_field_decrypted_value = '';
+			$identity_number_field_decrypted_value = '';
 		}
 
 		$invoice_type = get_post_meta( $post->ID, '_billing_hez_invoice_type', true );
 
-		if ( $invoice_type == 'person' ) {
+		if ( 'person' == $invoice_type ) {
 			$invoice_type_human = __( 'Personal', 'hezarfen-for-woocommerce' );
-		} elseif ( $invoice_type == 'company' ) {
+		} elseif ( 'company' == $invoice_type ) {
 			$invoice_type_human = __( 'Company', 'hezarfen-for-woocommerce' );
 		} else {
 			$invoice_type_human = '';
@@ -83,7 +83,7 @@ class OrderDetails {
 					'hezarfen-for-woocommerce'
 				),
 				'show'  => true,
-				'value' => $TC_number_field_decrypted_value,
+				'value' => $identity_number_field_decrypted_value,
 				'class' => 'hezarfen_billing_TC_number_field',
 			),
 			'hez_tax_number'   => array(
