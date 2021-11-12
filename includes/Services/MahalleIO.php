@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class MahalleIO.
+ * 
+ * @package Hezarfen\Inc\Services
+ */
 
 namespace Hezarfen\Inc\Services;
 
@@ -6,6 +11,9 @@ defined( 'ABSPATH' ) || exit();
 
 use Hezarfen\Inc\Data\ServiceCredentialEncryption;
 
+/**
+ * MahalleIO
+ */
 class MahalleIO {
 
 	/**
@@ -33,7 +41,7 @@ class MahalleIO {
 	/**
 	 * Make HTTP - GET Request to mahalle.io
 	 *
-	 * @param $url
+	 * @param string $url the endpoint URL to make a request.
 	 * @return mixed
 	 */
 	public static function HTTP( $url ) {
