@@ -2,23 +2,21 @@
 
 namespace Hezarfen\Inc\Data;
 
-defined('ABSPATH') || exit();
+defined( 'ABSPATH' ) || exit();
 
 use Hezarfen\Inc\Data\Abstracts\Abstract_Encryption;
 
-class PostMetaEncryption extends Abstract_Encryption
-{
+class PostMetaEncryption extends Abstract_Encryption {
+
 	protected $encryption_key;
 
-	public function __construct()
-	{
-		$this->setEncryptionKey();
+	public function __construct() {
+		 $this->setEncryptionKey();
 	}
 	/**
 	 * Check HEZARFEN_ENCRYPTION_KEY is generated before.
 	 */
-	public function is_encryption_key_generated()
-	{
+	public function is_encryption_key_generated() {
 		$is_encryption_key_generated = get_option(
 			'hezarfen_encryption_key_generated',
 			'no'
@@ -34,11 +32,10 @@ class PostMetaEncryption extends Abstract_Encryption
 	 *
 	 * @return bool
 	 */
-	public function health_check()
-	{
+	public function health_check() {
 		if (
-			!$this->is_encryption_key_generated() ||
-			!defined('HEZARFEN_ENCRYPTION_KEY')
+			! $this->is_encryption_key_generated() ||
+			! defined( 'HEZARFEN_ENCRYPTION_KEY' )
 		) {
 			return false;
 		}
@@ -53,15 +50,14 @@ class PostMetaEncryption extends Abstract_Encryption
 	 *
 	 * @return bool
 	 */
-	public function test_the_encryption_key()
-	{
-		if (!$this->health_check()) {
+	public function test_the_encryption_key() {
+		if ( ! $this->health_check() ) {
 			return false;
 		}
 
-		$cipher_text = get_option('hezarfen_encryption_tester_text', true);
+		$cipher_text = get_option( 'hezarfen_encryption_tester_text', true );
 
-		return $this->decrypt($cipher_text) == 'Istanbul';
+		return $this->decrypt( $cipher_text ) == 'Istanbul';
 	}
 
 	/**
@@ -69,16 +65,15 @@ class PostMetaEncryption extends Abstract_Encryption
 	 *
 	 * @return void
 	 */
-	public function create_encryption_tester_text()
-	{
-		if (get_option('hezarfen_encryption_tester_text')) {
+	public function create_encryption_tester_text() {
+		if ( get_option( 'hezarfen_encryption_tester_text' ) ) {
 			return false;
 		}
 
 		// Encryption key değerinin ileride değişip değişmediğini anlayabilmek için bir encryption yap ve options tablosuna yaz :)
 		return update_option(
 			'hezarfen_encryption_tester_text',
-			$this->encrypt("Istanbul")
+			$this->encrypt( 'Istanbul' )
 		);
 	}
 
@@ -87,9 +82,8 @@ class PostMetaEncryption extends Abstract_Encryption
 	 *
 	 * @return string|bool
 	 */
-	public function setEncryptionKey()
-	{
-		if (!$this->health_check()) {
+	public function setEncryptionKey() {
+		if ( ! $this->health_check() ) {
 			return $this->health_check();
 		}
 
@@ -101,8 +95,7 @@ class PostMetaEncryption extends Abstract_Encryption
 	 *
 	 * @return string
 	 */
-	public function create_random_key()
-	{
-		return base64_encode(openssl_random_pseudo_bytes(64));
+	public function create_random_key() {
+		return base64_encode( openssl_random_pseudo_bytes( 64 ) );
 	}
 }

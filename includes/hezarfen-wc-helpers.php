@@ -1,6 +1,6 @@
 <?php
 
-defined('ABSPATH') || exit();
+defined( 'ABSPATH' ) || exit();
 
 /**
  *
@@ -9,12 +9,11 @@ defined('ABSPATH') || exit();
  * @param $arr
  * @return array
  */
-function hezarfen_wc_checkout_select2_option_format($arr)
-{
-	$values = [];
+function hezarfen_wc_checkout_select2_option_format( $arr ) {
+	$values = array();
 
-	foreach ($arr as $key => $value) {
-		$values[sprintf("%d:%s", $key, $value)] = $value;
+	foreach ( $arr as $key => $value ) {
+		$values[ sprintf( '%d:%s', $key, $value ) ] = $value;
 	}
 
 	return $values;

@@ -2,71 +2,98 @@
 
 namespace Hezarfen\Inc;
 
-defined('ABSPATH') || exit();
+defined( 'ABSPATH' ) || exit();
 
 use Hezarfen\Inc\Services\MahalleIO;
 use Hezarfen\Inc\Data\PostMetaEncryption;
 
-class Checkout
-{
+class Checkout {
+
 	protected $hezarfen_show_hezarfen_checkout_tax_fields;
 
-	public function __construct()
-	{
-		$this->hezarfen_show_hezarfen_checkout_tax_fields = ( get_option( 'hezarfen_show_hezarfen_checkout_tax_fields' ) == 'yes' ) ? true : false;
+	public function __construct() {
+		 $this->hezarfen_show_hezarfen_checkout_tax_fields = ( get_option( 'hezarfen_show_hezarfen_checkout_tax_fields' ) == 'yes' ) ? true : false;
 
-		if( $this->hezarfen_show_hezarfen_checkout_tax_fields )
-		{
-			add_filter('woocommerce_checkout_fields', [$this, 'add_tax_fields'], 110, 1);
+		if ( $this->hezarfen_show_hezarfen_checkout_tax_fields ) {
+			add_filter( 'woocommerce_checkout_fields', array( $this, 'add_tax_fields' ), 110, 1 );
 		}
 
-		$hide_postcode_field = get_option( 'hezarfen_hide_checkout_postcode_fields', 'no' ) == 'yes';
+		$hide_postcode_field       = get_option( 'hezarfen_hide_checkout_postcode_fields', 'no' ) == 'yes';
 		$checkout_fields_auto_sort = get_option( 'hezarfen_checkout_fields_auto_sort', 'no' ) == 'yes';
 
-		if( $checkout_fields_auto_sort )
-		{
-			add_filter('woocommerce_checkout_fields', [$this, 'auto_sort_checkout_fields'], 999999, 1);
+		if ( $checkout_fields_auto_sort ) {
+			add_filter( 'woocommerce_checkout_fields', array( $this, 'auto_sort_checkout_fields' ), 999999, 1 );
 
-			add_filter('woocommerce_default_address_fields', [
+			add_filter(
+				'woocommerce_default_address_fields',
+				array(
+					$this,
+					'sort_address_fields',
+				),
+				100000,
+				1
+			);
+		}
+
+		if ( $hide_postcode_field ) {
+			add_filter( 'woocommerce_checkout_fields', array( $this, 'hide_postcode_fields' ), 90 );
+		}
+
+		add_filter(
+			'woocommerce_checkout_fields',
+			array(
 				$this,
-				'sort_address_fields'
-			], 100000, 1);
-		}
+				'add_district_and_neighborhood_fields',
+			),
+			100,
+			1
+		);
 
-		if( $hide_postcode_field )
-		{
-			add_filter('woocommerce_checkout_fields', [$this, 'hide_postcode_fields'], 90);
-		}
+		add_filter(
+			'woocommerce_checkout_fields',
+			array(
+				$this,
+				'make_address2_required_and_update_the_label',
+			),
+			999998,
+			1
+		);
 
-		add_filter('woocommerce_checkout_fields', [
-			$this,
-			'add_district_and_neighborhood_fields',
-		], 100, 1);
+		add_filter(
+			'woocommerce_default_address_fields',
+			array(
+				$this,
+				'make_address2_required_default_address_field',
+			),
+			99999,
+			1
+		);
 
-		add_filter('woocommerce_checkout_fields', [
-			$this,
-			'make_address2_required_and_update_the_label',
-		], 999998, 1);
+		add_action(
+			'woocommerce_checkout_posted_data',
+			array(
+				$this,
+				'override_posted_data',
+			)
+		);
 
-		add_filter('woocommerce_default_address_fields', [
-			$this,
-			'make_address2_required_default_address_field'
-		], 99999, 1);
+		add_action(
+			'woocommerce_before_checkout_process',
+			array(
+				$this,
+				'update_field_required_statuses_before_checkout_process',
+			)
+		);
 
-		add_action('woocommerce_checkout_posted_data', [
-			$this,
-			'override_posted_data',
-		]);
-
-		add_action('woocommerce_before_checkout_process', [
-			$this,
-			'update_field_required_statuses_before_checkout_process',
-		]);
-
-		add_action('default_checkout_billing_hez_TC_number', [
-			$this,
-			'override_billing_hez_TC_number',
-		], 10, 2);
+		add_action(
+			'default_checkout_billing_hez_TC_number',
+			array(
+				$this,
+				'override_billing_hez_TC_number',
+			),
+			10,
+			2
+		);
 	}
 
 	/**
@@ -75,10 +102,9 @@ class Checkout
 	 * @param  mixed $fields
 	 * @return void
 	 */
-	public function sort_address_fields( $fields )
-	{
-		$fields['state']['priority'] = 6;
-		$fields['city']['priority'] = 7;
+	public function sort_address_fields( $fields ) {
+		$fields['state']['priority']     = 6;
+		$fields['city']['priority']      = 7;
 		$fields['address_1']['priority'] = 8;
 		$fields['address_2']['priority'] = 9;
 
@@ -91,10 +117,9 @@ class Checkout
 	 * @param  mixed $fields
 	 * @return void
 	 */
-	public function make_address2_required_default_address_field( $fields )
-	{
+	public function make_address2_required_default_address_field( $fields ) {
 		// if Mahalle.io not activated, return.
-		if (!MahalleIO::is_active()) {
+		if ( ! MahalleIO::is_active() ) {
 			return $fields;
 		}
 
@@ -109,19 +134,18 @@ class Checkout
 	 * @param  mixed $fields
 	 * @return void
 	 */
-	public function make_address2_required_and_update_the_label( $fields )
-	{
+	public function make_address2_required_and_update_the_label( $fields ) {
 		// if Mahalle.io not activated, return.
-		if (!MahalleIO::is_active()) {
+		if ( ! MahalleIO::is_active() ) {
 			return $fields;
 		}
 
 		// if mahalle.io is active, make address2 required
-		$fields['billing']['billing_address_2']['required'] = true;
-		$fields['billing']['billing_address_2']['label'] = 'Adresiniz';
-		$fields['billing']['billing_address_2']['placeholder'] = 'Cadde, sokak, bina, daire no bilgilerinizi giriniz';
-		$fields['shipping']['shipping_address_2']['required'] = true;
-		$fields['shipping']['shipping_address_2']['label'] = 'Adresiniz';
+		$fields['billing']['billing_address_2']['required']      = true;
+		$fields['billing']['billing_address_2']['label']         = 'Adresiniz';
+		$fields['billing']['billing_address_2']['placeholder']   = 'Cadde, sokak, bina, daire no bilgilerinizi giriniz';
+		$fields['shipping']['shipping_address_2']['required']    = true;
+		$fields['shipping']['shipping_address_2']['label']       = 'Adresiniz';
 		$fields['shipping']['shipping_address_2']['placeholder'] = 'Cadde, sokak, bina, daire no bilgilerinizi giriniz';
 
 		return $fields;
@@ -133,41 +157,39 @@ class Checkout
 	 * @param  mixed $fields
 	 * @return array
 	 */
-	public function auto_sort_checkout_fields( $fields )
-	{
-		$fields['billing']['billing_first_name']['priority'] = 1;
-		$fields['billing']['billing_last_name']['priority'] = 2;
-		$fields['billing']['billing_phone']['priority'] = 3;
-		$fields['billing']['billing_email']['priority'] = 4;
-		$fields['billing']['billing_country']['priority'] = 5;
-		$fields['billing']['billing_state']['priority'] = 6;
-		$fields['billing']['billing_city']['priority'] = 7;
-		$fields['billing']['billing_address_1']['priority'] = 8;
-		$fields['billing']['billing_address_2']['priority'] = 9;
+	public function auto_sort_checkout_fields( $fields ) {
+		$fields['billing']['billing_first_name']['priority']       = 1;
+		$fields['billing']['billing_last_name']['priority']        = 2;
+		$fields['billing']['billing_phone']['priority']            = 3;
+		$fields['billing']['billing_email']['priority']            = 4;
+		$fields['billing']['billing_country']['priority']          = 5;
+		$fields['billing']['billing_state']['priority']            = 6;
+		$fields['billing']['billing_city']['priority']             = 7;
+		$fields['billing']['billing_address_1']['priority']        = 8;
+		$fields['billing']['billing_address_2']['priority']        = 9;
 		$fields['billing']['billing_hez_invoice_type']['priority'] = 10;
 
-		if (self::is_show_TC_field_on_checkout()) {
+		if ( self::is_show_TC_field_on_checkout() ) {
 			$fields['billing']['billing_hez_TC_number']['priority'] = 11;
 		}
 
-		$fields['billing']['billing_company']['priority'] = 12;
+		$fields['billing']['billing_company']['priority']        = 12;
 		$fields['billing']['billing_hez_tax_number']['priority'] = 13;
 		$fields['billing']['billing_hez_tax_office']['priority'] = 14;
 
-		$fields['shipping']['shipping_company']['priority'] = 0;
+		$fields['shipping']['shipping_company']['priority']    = 0;
 		$fields['shipping']['shipping_first_name']['priority'] = 1;
-		$fields['shipping']['shipping_last_name']['priority'] = 2;
-		$fields['shipping']['shipping_country']['priority'] = 5;
-		$fields['shipping']['shipping_state']['priority'] = 6;
-		$fields['shipping']['shipping_city']['priority'] = 7;
-		$fields['shipping']['shipping_address_1']['priority'] = 8;
-		$fields['shipping']['shipping_address_2']['priority'] = 9;
+		$fields['shipping']['shipping_last_name']['priority']  = 2;
+		$fields['shipping']['shipping_country']['priority']    = 5;
+		$fields['shipping']['shipping_state']['priority']      = 6;
+		$fields['shipping']['shipping_city']['priority']       = 7;
+		$fields['shipping']['shipping_address_1']['priority']  = 8;
+		$fields['shipping']['shipping_address_2']['priority']  = 9;
 
 		return $fields;
 	}
 
-	public function hide_postcode_fields( $fields )
-	{
+	public function hide_postcode_fields( $fields ) {
 		unset( $fields['billing']['billing_postcode'] );
 		unset( $fields['shipping']['shipping_postcode'] );
 
@@ -181,10 +203,8 @@ class Checkout
 	 * @param  mixed $input
 	 * @return string
 	 */
-	public function override_billing_hez_TC_number( $value, $input )
-	{
-		if( $input == 'billing_hez_TC_number' && $value !== null )
-		{
+	public function override_billing_hez_TC_number( $value, $input ) {
+		if ( $input == 'billing_hez_TC_number' && $value !== null ) {
 			// if the value encrypted, decrypt the value.
 			return ( new PostMetaEncryption() )->decrypt( $value );
 		}
@@ -195,27 +215,28 @@ class Checkout
 	/**
 	 * Should show TC Identity field on checkout?.
 	 * Default: false
+	 *
 	 * @return boolean
 	 */
-	public static function is_show_TC_field_on_checkout()
-	{
-		$show =  get_option('hezarfen_checkout_show_TC_identity_field', false) ==
+	public static function is_show_TC_field_on_checkout() {
+		 $show = get_option( 'hezarfen_checkout_show_TC_identity_field', false ) ==
 			'yes'
 			? true
 			: false;
 
-		if( ! $show || ! ( new PostMetaEncryption() )->test_the_encryption_key() )
+		if ( ! $show || ! ( new PostMetaEncryption() )->test_the_encryption_key() ) {
 			return false;
+		}
 
 		return true;
 	}
 
 	/**
 	 * Is TC Identity Number field required?
+	 *
 	 * @return bool
 	 */
-	public static function is_TC_identity_number_field_required()
-	{
+	public static function is_TC_identity_number_field_required() {
 		return get_option(
 			'hezarfen_checkout_is_TC_identity_number_field_required',
 			false
@@ -233,9 +254,9 @@ class Checkout
 	public function update_fields_required_options_for_invoice_type_person(
 		$fields
 	) {
-		unset($fields['billing']['billing_hez_tax_number']);
-		unset($fields['billing']['billing_hez_tax_office']);
-		unset($fields['billing']['billing_company']);
+		unset( $fields['billing']['billing_hez_tax_number'] );
+		unset( $fields['billing']['billing_hez_tax_office'] );
+		unset( $fields['billing']['billing_company'] );
 
 		return $fields;
 	}
@@ -249,11 +270,11 @@ class Checkout
 	public function update_fields_required_options_for_invoice_type_company(
 		$fields
 	) {
-		if ( !$this->hezarfen_show_hezarfen_checkout_tax_fields || !self::is_show_TC_field_on_checkout()) {
+		if ( ! $this->hezarfen_show_hezarfen_checkout_tax_fields || ! self::is_show_TC_field_on_checkout() ) {
 			return $fields;
 		}
 
-		unset($fields['billing']['billing_hez_TC_number']);
+		unset( $fields['billing']['billing_hez_TC_number'] );
 
 		return $fields;
 	}
@@ -261,94 +282,99 @@ class Checkout
 	/**
 	 * Update tax field required statuses according to the invoice type selection when checkout submit (before checkout processed.).
 	 */
-	public function update_field_required_statuses_before_checkout_process()
-	{
+	public function update_field_required_statuses_before_checkout_process() {
 		$hezarfen_invoice_type = sanitize_key( $_POST['billing_hez_invoice_type'] );
 
-		if ($hezarfen_invoice_type == 'person') {
-			add_filter('woocommerce_checkout_fields', [
-				$this,
-				'update_fields_required_options_for_invoice_type_person',
-			], 999999, 1);
-		} elseif ($hezarfen_invoice_type == 'company') {
-			add_filter('woocommerce_checkout_fields', [
-				$this,
-				'update_fields_required_options_for_invoice_type_company',
-			], 999999, 1);
+		if ( $hezarfen_invoice_type == 'person' ) {
+			add_filter(
+				'woocommerce_checkout_fields',
+				array(
+					$this,
+					'update_fields_required_options_for_invoice_type_person',
+				),
+				999999,
+				1
+			);
+		} elseif ( $hezarfen_invoice_type == 'company' ) {
+			add_filter(
+				'woocommerce_checkout_fields',
+				array(
+					$this,
+					'update_fields_required_options_for_invoice_type_company',
+				),
+				999999,
+				1
+			);
 		}
 	}
 
 	/**
 	 * Add tax fields (person or company selection and tax informations)
 	 */
-	public function add_tax_fields($fields)
-	{
-		$invoice_type_value = ( new \WC_Checkout() )->get_value('billing_hez_invoice_type');
+	public function add_tax_fields( $fields ) {
+		$invoice_type_value = ( new \WC_Checkout() )->get_value( 'billing_hez_invoice_type' );
 
-		$fields['billing']['billing_hez_invoice_type'] = [
-			'id' => 'hezarfen_invoice_type',
-			'label' => __('Invoice Type', 'hezarfen-for-woocommerce'),
-			'type' => 'select',
+		$fields['billing']['billing_hez_invoice_type'] = array(
+			'id'       => 'hezarfen_invoice_type',
+			'label'    => __( 'Invoice Type', 'hezarfen-for-woocommerce' ),
+			'type'     => 'select',
 			'required' => true,
-			'class' => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_invoice_type', ['form-row-wide'] ),
-			'options' => [
-				'person' => __('Personal', 'hezarfen-for-woocommerce'),
-				'company' => __('Company', 'hezarfen-for-woocommerce'),
-			],
-			'priority' => $fields['billing']['billing_email']['priority'] + 1
-		];
+			'class'    => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_invoice_type', array( 'form-row-wide' ) ),
+			'options'  => array(
+				'person'  => __( 'Personal', 'hezarfen-for-woocommerce' ),
+				'company' => __( 'Company', 'hezarfen-for-woocommerce' ),
+			),
+			'priority' => $fields['billing']['billing_email']['priority'] + 1,
+		);
 
-		if (self::is_show_TC_field_on_checkout()) {
-			$fields['billing']['billing_hez_TC_number'] = [
-				'id' => 'hezarfen_TC_number',
-				'placeholder' => __('Enter T.C. Identity Number', 'hezarfen-for-woocommerce'),
-				'label' => __(
+		if ( self::is_show_TC_field_on_checkout() ) {
+			$fields['billing']['billing_hez_TC_number'] = array(
+				'id'          => 'hezarfen_TC_number',
+				'placeholder' => __( 'Enter T.C. Identity Number', 'hezarfen-for-woocommerce' ),
+				'label'       => __(
 					'T.C. Identity Number',
 					'hezarfen-for-woocommerce'
 				),
-				'required' => self::is_TC_identity_number_field_required(),
-				'class' => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_TC_number', ['form-row-wide'] ),
-				'priority' => $fields['billing']['billing_hez_invoice_type']['priority'] + 1
-			];
+				'required'    => self::is_TC_identity_number_field_required(),
+				'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_TC_number', array( 'form-row-wide' ) ),
+				'priority'    => $fields['billing']['billing_hez_invoice_type']['priority'] + 1,
+			);
 		}
 
-		$fields['billing']['billing_company'] = [
-			'label' => __('Title', 'hezarfen-for-woocommerce'),
-			'placeholder' => __('Enter invoice title', 'hezarfen-for-woocommerce'),
-			'required' => true,
-			'priority' => $fields['billing']['billing_hez_invoice_type']['priority'] + 1
-		];
+		$fields['billing']['billing_company'] = array(
+			'label'       => __( 'Title', 'hezarfen-for-woocommerce' ),
+			'placeholder' => __( 'Enter invoice title', 'hezarfen-for-woocommerce' ),
+			'required'    => true,
+			'priority'    => $fields['billing']['billing_hez_invoice_type']['priority'] + 1,
+		);
 
-		$fields['billing']['billing_hez_tax_number'] = [
-			'id' => 'hezarfen_tax_number',
-			'label' => __('Tax Number', 'hezarfen-for-woocommerce'),
-			'placeholder' => __('Enter tax number', 'hezarfen-for-woocommerce'),
-			'required' => true,
-			'class' => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_tax_number', ['form-row-wide'] ),
-			'priority' => $fields['billing']['billing_company']['priority'] + 1
-		];
+		$fields['billing']['billing_hez_tax_number'] = array(
+			'id'          => 'hezarfen_tax_number',
+			'label'       => __( 'Tax Number', 'hezarfen-for-woocommerce' ),
+			'placeholder' => __( 'Enter tax number', 'hezarfen-for-woocommerce' ),
+			'required'    => true,
+			'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_tax_number', array( 'form-row-wide' ) ),
+			'priority'    => $fields['billing']['billing_company']['priority'] + 1,
+		);
 
-		$fields['billing']['billing_hez_tax_office'] = [
-			'id' => 'hezarfen_tax_office',
-			'label' => __('TAX Office', 'hezarfen-for-woocommerce'),
-			'placeholder' => __('Enter tax office', 'hezarfen-for-woocommerce'),
-			'required' => true,
-			'class' => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_tax_office', ['form-row-wide'] ),
-			'priority' => $fields['billing']['billing_hez_tax_number']['priority'] + 1
-		];
+		$fields['billing']['billing_hez_tax_office'] = array(
+			'id'          => 'hezarfen_tax_office',
+			'label'       => __( 'TAX Office', 'hezarfen-for-woocommerce' ),
+			'placeholder' => __( 'Enter tax office', 'hezarfen-for-woocommerce' ),
+			'required'    => true,
+			'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_tax_office', array( 'form-row-wide' ) ),
+			'priority'    => $fields['billing']['billing_hez_tax_number']['priority'] + 1,
+		);
 
 		// set the hidden tax fields according to the invoice_type value.
-		if( $invoice_type_value == 'person' )
-		{
-			$fields['billing']['billing_company']['class'][] = 'hezarfen-hide-form-field';
+		if ( $invoice_type_value == 'person' ) {
+			$fields['billing']['billing_company']['class'][]        = 'hezarfen-hide-form-field';
 			$fields['billing']['billing_hez_tax_office']['class'][] = 'hezarfen-hide-form-field';
 			$fields['billing']['billing_hez_tax_number']['class'][] = 'hezarfen-hide-form-field';
-		}else if( $invoice_type_value == 'company' )
-		{
+		} elseif ( $invoice_type_value == 'company' ) {
 			$fields['billing']['billing_hez_TC_number']['class'][] = 'hezarfen-hide-form-field';
-		}else
-		{
-			$fields['billing']['billing_company']['class'][] = 'hezarfen-hide-form-field';
+		} else {
+			$fields['billing']['billing_company']['class'][]        = 'hezarfen-hide-form-field';
 			$fields['billing']['billing_hez_tax_office']['class'][] = 'hezarfen-hide-form-field';
 			$fields['billing']['billing_hez_tax_number']['class'][] = 'hezarfen-hide-form-field';
 		}
@@ -363,8 +389,7 @@ class Checkout
 	 * @param $data
 	 * @return array
 	 */
-	function override_posted_data($data)
-	{
+	function override_posted_data( $data ) {
 		// Check the T.C. Identitiy Field is active
 		if ( $this->hezarfen_show_hezarfen_checkout_tax_fields && self::is_show_TC_field_on_checkout() ) {
 			if (
@@ -382,37 +407,37 @@ class Checkout
 		}
 
 		// if Mahalle.io activated, update neighborhood fields.
-		if (MahalleIO::is_active()) {
-			$types = ['shipping', 'billing'];
+		if ( MahalleIO::is_active() ) {
+			$types = array( 'shipping', 'billing' );
 
-			foreach ($types as $type) {
-				$city_field_name = sprintf('%s_city', $type);
+			foreach ( $types as $type ) {
+				$city_field_name = sprintf( '%s_city', $type );
 
-				$neighborhood_field_name = sprintf('%s_address_1', $type);
+				$neighborhood_field_name = sprintf( '%s_address_1', $type );
 
-				if (array_key_exists($city_field_name, $data)) {
-					$value = $data[$city_field_name];
+				if ( array_key_exists( $city_field_name, $data ) ) {
+					$value = $data[ $city_field_name ];
 
-					if ($value && strpos($value, ':') !== false) {
-						$district_data_arr = explode(":", $value);
+					if ( $value && strpos( $value, ':' ) !== false ) {
+						$district_data_arr = explode( ':', $value );
 
-						$district_id = $district_data_arr[0];
+						$district_id   = $district_data_arr[0];
 						$district_name = $district_data_arr[1];
 
-						$data[$city_field_name] = $district_name;
+						$data[ $city_field_name ] = $district_name;
 					}
 				}
 
-				if (array_key_exists($neighborhood_field_name, $data)) {
-					$value = $data[$neighborhood_field_name];
+				if ( array_key_exists( $neighborhood_field_name, $data ) ) {
+					$value = $data[ $neighborhood_field_name ];
 
-					if ($value && strpos($value, ':') !== false) {
-						$neighborhood_data_arr = explode(":", $value);
+					if ( $value && strpos( $value, ':' ) !== false ) {
+						$neighborhood_data_arr = explode( ':', $value );
 
-						$neighborhood_id = $neighborhood_data_arr[0];
+						$neighborhood_id   = $neighborhood_data_arr[0];
 						$neighborhood_name = $neighborhood_data_arr[1];
 
-						$data[$neighborhood_field_name] = $neighborhood_name;
+						$data[ $neighborhood_field_name ] = $neighborhood_name;
 					}
 				}
 			}
@@ -427,25 +452,24 @@ class Checkout
 	 * @param $fields
 	 * @return array
 	 */
-	function add_district_and_neighborhood_fields($fields)
-	{
+	function add_district_and_neighborhood_fields( $fields ) {
 		// if Mahalle.io not activated, return.
-		if (!MahalleIO::is_active()) {
+		if ( ! MahalleIO::is_active() ) {
 			return $fields;
 		}
 
-		$types = ['shipping', 'billing'];
+		$types = array( 'shipping', 'billing' );
 
-		$district_options = ["" => __('Lütfen seçiniz', 'woocommerce')];
-		$neighborhood_options = ["" => __('Lütfen seçiniz', 'woocommerce')];
+		$district_options     = array( '' => __( 'Lütfen seçiniz', 'woocommerce' ) );
+		$neighborhood_options = array( '' => __( 'Lütfen seçiniz', 'woocommerce' ) );
 
 		global $woocommerce;
 
-		foreach ($types as $type) {
-			$city_field_name = sprintf('%s_city', $type);
-			$neighborhood_field_name = sprintf('%s_address_1', $type);
+		foreach ( $types as $type ) {
+			$city_field_name         = sprintf( '%s_city', $type );
+			$neighborhood_field_name = sprintf( '%s_address_1', $type );
 
-			$get_city_function = "get_" . $type . "_state";
+			$get_city_function = 'get_' . $type . '_state';
 
 			$current_city_plate_number_with_TR = $woocommerce->customer->$get_city_function();
 
@@ -458,39 +482,39 @@ class Checkout
 			 */
 			// if get_districts failed, return empty array and disable mahalle.io - Hezarfen customizations.
 
-			if (is_wp_error($districts_response)) {
+			if ( is_wp_error( $districts_response ) ) {
 				continue;
 			} else {
 				$districts = $districts_response;
 			}
 
 			// remove WooCommerce default district field on checkout
-			unset($fields[$type][$city_field_name]);
+			unset( $fields[ $type ][ $city_field_name ] );
 
 			// update array keys for id:name format
-			$districts = hezarfen_wc_checkout_select2_option_format($districts);
+			$districts = hezarfen_wc_checkout_select2_option_format( $districts );
 
-			$fields[$type][$city_field_name] = [
-				'id' => 'wc_hezarfen_' . $type . '_district',
-				'type' => 'select',
-				'label' => __('İlçe', 'woocommerce'),
+			$fields[ $type ][ $city_field_name ] = array(
+				'id'       => 'wc_hezarfen_' . $type . '_district',
+				'type'     => 'select',
+				'label'    => __( 'İlçe', 'woocommerce' ),
 				'required' => true,
-				'class' => apply_filters( 'hezarfen_checkout_fields_class_' . 'wc_hezarfen_' . $type . '_district', ['form-row-wide'] ),
-				'clear' => true,
-				'priority' => $fields[$type][$type . '_state']['priority'] + 1,
-				'options' => $district_options + $districts,
-			];
+				'class'    => apply_filters( 'hezarfen_checkout_fields_class_' . 'wc_hezarfen_' . $type . '_district', array( 'form-row-wide' ) ),
+				'clear'    => true,
+				'priority' => $fields[ $type ][ $type . '_state' ]['priority'] + 1,
+				'options'  => $district_options + $districts,
+			);
 
-			$fields[$type][$neighborhood_field_name] = [
-				'id' => 'wc_hezarfen_' . $type . '_neighborhood',
-				'type' => 'select',
-				'label' => __('Mahalle', 'woocommerce'),
+			$fields[ $type ][ $neighborhood_field_name ] = array(
+				'id'       => 'wc_hezarfen_' . $type . '_neighborhood',
+				'type'     => 'select',
+				'label'    => __( 'Mahalle', 'woocommerce' ),
 				'required' => true,
-				'class' => apply_filters( 'hezarfen_checkout_fields_class_' . 'wc_hezarfen_' . $type . '_neighborhood', ['form-row-wide'] ),
-				'clear' => true,
-				'priority' => $fields[$type][$type . '_state']['priority'] + 2,
-				'options' => $neighborhood_options,
-			];
+				'class'    => apply_filters( 'hezarfen_checkout_fields_class_' . 'wc_hezarfen_' . $type . '_neighborhood', array( 'form-row-wide' ) ),
+				'clear'    => true,
+				'priority' => $fields[ $type ][ $type . '_state' ]['priority'] + 2,
+				'options'  => $neighborhood_options,
+			);
 		}
 
 		return $fields;
@@ -502,17 +526,16 @@ class Checkout
 	 * @param $city_plate_number_with_TR
 	 * @return array|bool
 	 */
-	private function get_districts($city_plate_number_with_TR)
-	{
-		if (!$city_plate_number_with_TR) {
-			return [];
+	private function get_districts( $city_plate_number_with_TR ) {
+		if ( ! $city_plate_number_with_TR ) {
+			return array();
 		}
 
-		$city_plate_number = explode("TR", $city_plate_number_with_TR);
+		$city_plate_number = explode( 'TR', $city_plate_number_with_TR );
 
 		$city_plate_number = $city_plate_number[1];
 
-		$districts = MahalleIO::get_districts($city_plate_number);
+		$districts = MahalleIO::get_districts( $city_plate_number );
 
 		return $districts;
 	}

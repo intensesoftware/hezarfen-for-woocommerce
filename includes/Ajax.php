@@ -2,89 +2,102 @@
 
 namespace Hezarfen\Inc;
 
-defined('ABSPATH') || exit();
+defined( 'ABSPATH' ) || exit();
 
 use Hezarfen\Inc\Services\MahalleIO;
 
-class Ajax
-{
-	function __construct()
-	{
-		add_action('wp_ajax_wc_hezarfen_get_districts', [
-			$this,
-			'get_districts',
-		]);
-		add_action('wp_ajax_nopriv_wc_hezarfen_get_districts', [
-			$this,
-			'get_districts',
-		]);
+class Ajax {
 
-		add_action('wp_ajax_wc_hezarfen_get_neighborhoods', [
-			$this,
-			'get_neighborhoods',
-		]);
-		add_action('wp_ajax_nopriv_wc_hezarfen_get_neighborhoods', [
-			$this,
-			'get_neighborhoods',
-		]);
+	function __construct() {
+		add_action(
+			'wp_ajax_wc_hezarfen_get_districts',
+			array(
+				$this,
+				'get_districts',
+			)
+		);
+		add_action(
+			'wp_ajax_nopriv_wc_hezarfen_get_districts',
+			array(
+				$this,
+				'get_districts',
+			)
+		);
 
-		add_action('wp_ajax_wc_hezarfen_neighborhood_changed', [
-			$this,
-			'neighborhood_changed',
-		]);
-		add_action('wp_ajax_nopriv_wc_hezarfen_neighborhood_changed', [
-			$this,
-			'neighborhood_changed',
-		]);
+		add_action(
+			'wp_ajax_wc_hezarfen_get_neighborhoods',
+			array(
+				$this,
+				'get_neighborhoods',
+			)
+		);
+		add_action(
+			'wp_ajax_nopriv_wc_hezarfen_get_neighborhoods',
+			array(
+				$this,
+				'get_neighborhoods',
+			)
+		);
+
+		add_action(
+			'wp_ajax_wc_hezarfen_neighborhood_changed',
+			array(
+				$this,
+				'neighborhood_changed',
+			)
+		);
+		add_action(
+			'wp_ajax_nopriv_wc_hezarfen_neighborhood_changed',
+			array(
+				$this,
+				'neighborhood_changed',
+			)
+		);
 	}
 
-	function get_districts()
-	{
+	function get_districts() {
 		check_ajax_referer( 'mahalle-io-get-data', 'security' );
 
 		$city_plate_number_with_TR = sanitize_text_field( $_POST['city_plate_number'] );
 
-		$city_plate_number = explode("TR", $city_plate_number_with_TR);
+		$city_plate_number = explode( 'TR', $city_plate_number_with_TR );
 
 		$city_plate_number = intval( $city_plate_number[1] );
 
-		if( ! $city_plate_number )
-		{
-			echo wp_json_encode( [] );
+		if ( ! $city_plate_number ) {
+			echo wp_json_encode( array() );
 			wp_die();
 		}
 
-		$get_districts_response = MahalleIO::get_districts($city_plate_number);
+		$get_districts_response = MahalleIO::get_districts( $city_plate_number );
 
 		// if get_districts failed, return empty array.
 		/**
 		 * Todo: fire a notification about failed mahalle.io connection
 		 */
-		if (is_wp_error($get_districts_response)) {
-			$districts = [];
+		if ( is_wp_error( $get_districts_response ) ) {
+			$districts = array();
 		} else {
 			$districts = $get_districts_response;
 		}
 
 		// return result
-		echo wp_json_encode($districts);
+		echo wp_json_encode( $districts );
 
 		wp_die();
 	}
 
-	function get_neighborhoods()
-	{
+	function get_neighborhoods() {
 		check_ajax_referer( 'mahalle-io-get-data', 'security' );
 
 		$district_data = sanitize_text_field( $_POST['district_id'] );
 
-		$district_data_array = explode(":", $district_data);
+		$district_data_array = explode( ':', $district_data );
 
 		$district_id = intval( $district_data_array[0] );
 
-		if( ! $district_id )
-		{
-			echo wp_json_encode([]);
+		if ( ! $district_id ) {
+			echo wp_json_encode( array() );
 			wp_die();
 		}
 
@@ -96,33 +109,31 @@ class Ajax
 		/**
 		 * Todo: fire a notification about failed mahalle.io connection
 		 */
-		if (is_wp_error($get_neighborhoods_response)) {
-			$neighborhoods = [];
+		if ( is_wp_error( $get_neighborhoods_response ) ) {
+			$neighborhoods = array();
 		} else {
 			$neighborhoods = $get_neighborhoods_response;
 		}
 
 		// return result
-		echo wp_json_encode($neighborhoods);
+		echo wp_json_encode( $neighborhoods );
 
 		wp_die();
 	}
 
-	function neighborhood_changed()
-	{
+	function neighborhood_changed() {
 		check_ajax_referer( 'mahalle-io-get-data', 'security' );
 
-		$type = sanitize_key( $_POST["type"] );
+		$type = sanitize_key( $_POST['type'] );
 
-		$neighborhood_data = sanitize_text_field( $_POST["neighborhood_data"] );
+		$neighborhood_data = sanitize_text_field( $_POST['neighborhood_data'] );
 
-		$neighborhood_data_arr = explode(":", $neighborhood_data);
+		$neighborhood_data_arr = explode( ':', $neighborhood_data );
 
 		$neighborhood_id = intval( $neighborhood_data_arr[0] );
 
-		if( ! $neighborhood_id )
-		{
-			echo wp_json_encode([]);
+		if ( ! $neighborhood_id ) {
+			echo wp_json_encode( array() );
 			wp_die();
 		}
 
@@ -135,9 +146,9 @@ class Ajax
 			$type
 		);
 
-		$args = [
+		$args = array(
 			'update_checkout' => true,
-		];
+		);
 
 		echo wp_json_encode(
 			apply_filters(
