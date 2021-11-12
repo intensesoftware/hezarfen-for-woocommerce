@@ -59,8 +59,8 @@ class MahalleIO {
 
 		$response = json_decode( wp_remote_retrieve_body( $result ) );
 
-		// return error if exists any error
-		if ( $status_code != 200 || ! isset( $response->data ) ) {
+		// return error if exists any error.
+		if ( 200 != $status_code || ! isset( $response->data ) ) {
 			return new \WP_Error(
 				'connection_failed',
 				__( 'mahalle.io connection failed' )
@@ -96,7 +96,7 @@ class MahalleIO {
 	/**
 	 * Get districts by TR city plate number from mahalle.io
 	 *
-	 * @param $city_plate_number
+	 * @param int $city_plate_number that city plate number.
 	 * @return array
 	 */
 	public static function get_districts( $city_plate_number ) {
@@ -123,7 +123,7 @@ class MahalleIO {
 	/**
 	 * Get neighborhood from mahalle.io by district id
 	 *
-	 * @param $district_id
+	 * @param int $district_id the custom district ID provided by mahalle.io service.
 	 * @return array
 	 */
 	public static function get_neighborhoods( $district_id ) {
