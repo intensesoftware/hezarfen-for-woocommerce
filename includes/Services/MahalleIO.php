@@ -44,7 +44,7 @@ class MahalleIO {
 	 * @param string $url the endpoint URL to make a request.
 	 * @return mixed
 	 */
-	public static function HTTP( $url ) {
+	private static function http( $url ) {
 		$args = array(
 			'headers' => array(
 				'Accept'        => 'application/json',
@@ -78,7 +78,7 @@ class MahalleIO {
 	public static function get_cities() {
 		$url = 'https://api.mahalle.io/v2/il';
 
-		$result = self::HTTP( $url );
+		$result = self::http( $url );
 
 		if ( is_wp_error( $result ) ) {
 			return $result;
@@ -105,7 +105,7 @@ class MahalleIO {
 			$city_plate_number
 		);
 
-		$result = self::HTTP( $url );
+		$result = self::http( $url );
 
 		if ( is_wp_error( $result ) ) {
 			return $result;
@@ -132,7 +132,7 @@ class MahalleIO {
 			$district_id
 		);
 
-		$result = self::HTTP( $url );
+		$result = self::http( $url );
 
 		if ( is_wp_error( $result ) ) {
 			return $result;
