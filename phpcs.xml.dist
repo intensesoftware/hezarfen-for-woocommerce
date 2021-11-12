@@ -4,7 +4,9 @@
 
     <rule ref="WordPress-Core"/>
     <rule ref="WordPress-Docs"/>
-    <rule ref="WordPress"/>
-    <rule ref="WordPress-Extra"/>
+    <rule ref="WordPress-Extra">
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+    </rule>
     <rule ref="WordPress-VIP-Go"/>
 </ruleset>

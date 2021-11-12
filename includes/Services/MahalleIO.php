@@ -2,20 +2,19 @@
 
 namespace Hezarfen\Inc\Services;
 
-defined('ABSPATH') || exit();
+defined( 'ABSPATH' ) || exit();
 
 use Hezarfen\Inc\Data\ServiceCredentialEncryption;
 
-class MahalleIO
-{
+class MahalleIO {
+
 	/**
 	 *
 	 * Check: Is MahalleIO service activated?
 	 *
 	 * @return bool
 	 */
-	public static function is_active()
-	{
+	public static function is_active() {
 		return self::get_api_token() ? true : false;
 	}
 
@@ -25,9 +24,8 @@ class MahalleIO
 	 *
 	 * @return string|false
 	 */
-	public static function get_api_token()
-	{
-		$encrypted_api_key = get_option('hezarfen_mahalle_io_api_key', null);
+	public static function get_api_token() {
+		$encrypted_api_key = get_option( 'hezarfen_mahalle_io_api_key', null );
 
 		return ! is_null( $encrypted_api_key ) ? ( new ServiceCredentialEncryption() )->decrypt( $encrypted_api_key ) : false;
 	}
@@ -38,27 +36,26 @@ class MahalleIO
 	 * @param $url
 	 * @return mixed
 	 */
-	public static function HTTP($url)
-	{
-		$args = [
-			'headers' => [
-				'Accept' => 'application/json',
-				'Content-Type' => 'application/json',
+	public static function HTTP( $url ) {
+		$args = array(
+			'headers' => array(
+				'Accept'        => 'application/json',
+				'Content-Type'  => 'application/json',
 				'Authorization' => 'Bearer ' . self::get_api_token(),
-			],
-		];
+			),
+		);
 
-		$result = wp_remote_get($url, $args);
+		$result = wp_remote_get( $url, $args );
 
-		$status_code = wp_remote_retrieve_response_code($result);
+		$status_code = wp_remote_retrieve_response_code( $result );
 
-		$response = json_decode(wp_remote_retrieve_body($result));
+		$response = json_decode( wp_remote_retrieve_body( $result ) );
 
 		// return error if exists any error
-		if ($status_code != 200 || !isset($response->data)) {
+		if ( $status_code != 200 || ! isset( $response->data ) ) {
 			return new \WP_Error(
 				'connection_failed',
-				__('mahalle.io connection failed')
+				__( 'mahalle.io connection failed' )
 			);
 		}
 
@@ -70,20 +67,19 @@ class MahalleIO
 	 *
 	 * @return array
 	 */
-	public static function get_cities()
-	{
+	public static function get_cities() {
 		$url = 'https://api.mahalle.io/v2/il';
 
-		$result = self::HTTP($url);
+		$result = self::HTTP( $url );
 
-		if (is_wp_error($result)) {
+		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
 
-		$cities = [];
+		$cities = array();
 
-		foreach ($result->data as $city) {
-			$cities[$city->plaka_kodu] = $city->il_adi;
+		foreach ( $result->data as $city ) {
+			$cities[ $city->plaka_kodu ] = $city->il_adi;
 		}
 
 		return $cities;
@@ -95,23 +91,22 @@ class MahalleIO
 	 * @param $city_plate_number
 	 * @return array
 	 */
-	public static function get_districts($city_plate_number)
-	{
+	public static function get_districts( $city_plate_number ) {
 		$url = sprintf(
 			'https://api.mahalle.io/v2/ilce?sorgu_tipi=plaka_kodu&plaka_kodu=%s',
 			$city_plate_number
 		);
 
-		$result = self::HTTP($url);
+		$result = self::HTTP( $url );
 
-		if (is_wp_error($result)) {
+		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
 
-		$districts = [];
+		$districts = array();
 
-		foreach ($result->data as $district) {
-			$districts[$district->id] = $district->ilce_adi;
+		foreach ( $result->data as $district ) {
+			$districts[ $district->id ] = $district->ilce_adi;
 		}
 
 		return $districts;
@@ -123,24 +118,23 @@ class MahalleIO
 	 * @param $district_id
 	 * @return array
 	 */
-	public static function get_neighborhoods($district_id)
-	{
+	public static function get_neighborhoods( $district_id ) {
 		$url = sprintf(
 			'https://api.mahalle.io/v2/mahalle?ilce_id=%d',
 			$district_id
 		);
 
-		$result = self::HTTP($url);
+		$result = self::HTTP( $url );
 
-		if (is_wp_error($result)) {
+		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
 
-		$neighborhoods = [];
+		$neighborhoods = array();
 
-		foreach ($result->data as $semt) {
-			foreach ($semt->mahalleler as $neighborhood) {
-				$neighborhoods[$neighborhood->id] = $neighborhood->mahalle_adi;
+		foreach ( $result->data as $semt ) {
+			foreach ( $semt->mahalleler as $neighborhood ) {
+				$neighborhoods[ $neighborhood->id ] = $neighborhood->mahalle_adi;
 			}
 		}
 
