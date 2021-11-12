@@ -1,4 +1,8 @@
 {
+    "scripts": {
+        "phpcs": "./vendor/bin/phpcs",
+        "phpcbf": "./vendor/bin/phpcbf"
+    },
     "require-dev": {
         "squizlabs/php_codesniffer": "3.*",
         "php-stubs/woocommerce-stubs": "^5.9",
