@@ -1,0 +1,9 @@
+parameters:
+    level: 8
+    paths:
+        - includes
+    bootstrapFiles:
+        - hezarfen-for-woocommerce.php
+        - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+includes:
+    - phpstan-baseline.neon

@@ -1,0 +1,7 @@
+{
+    "require-dev": {
+        "php-stubs/woocommerce-stubs": "^5.9",
+        "szepeviktor/phpstan-wordpress": "^1.0",
+        "phpstan/extension-installer": "^1.1"
+    }
+}
