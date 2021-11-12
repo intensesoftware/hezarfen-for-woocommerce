@@ -12,6 +12,10 @@ class ComposerStaticInitce285da64f0b10f042fdc620edf92f72
     );
 
     public static $prefixLengthsPsr4 = array (
+        'V' => 
+        array (
+            'VariableAnalysis\\' => 17,
+        ),
         'S' => 
         array (
             'SzepeViktor\\PHPStan\\WordPress\\' => 30,
@@ -28,6 +32,10 @@ class ComposerStaticInitce285da64f0b10f042fdc620edf92f72
     );
 
     public static $prefixDirsPsr4 = array (
+        'VariableAnalysis\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sirbrillig/phpcs-variable-analysis/VariableAnalysis',
+        ),
         'SzepeViktor\\PHPStan\\WordPress\\' => 
         array (
             0 => __DIR__ . '/..' . '/szepeviktor/phpstan-wordpress/src',

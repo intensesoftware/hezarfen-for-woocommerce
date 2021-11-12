@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'afeec75336dece766425faf0128b86c7de0f62a0',
+    'reference' => '3f74174d470c4072a3ee359894d6d61bfea6c5ce',
     'name' => '__root__',
   ),
   'versions' => 
@@ -31,7 +31,16 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'afeec75336dece766425faf0128b86c7de0f62a0',
+      'reference' => '3f74174d470c4072a3ee359894d6d61bfea6c5ce',
+    ),
+    'automattic/vipwpcs' => 
+    array (
+      'pretty_version' => '2.3.3',
+      'version' => '2.3.3.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '6cd0a6a82bc0ac988dbf9d6a7c2e293dc8ac640b',
     ),
     'dealerdirect/phpcodesniffer-composer-installer' => 
     array (
@@ -84,6 +93,15 @@ private static $installed = array (
       array (
       ),
       'reference' => 'bcea0ae85868a89d5789c75f012c93129f842934',
+    ),
+    'sirbrillig/phpcs-variable-analysis' => 
+    array (
+      'pretty_version' => 'v2.11.2',
+      'version' => '2.11.2.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '3fad28475bfbdbf8aa5c440f8a8f89824983d85e',
     ),
     'squizlabs/php_codesniffer' => 
     array (
