@@ -1,0 +1,12 @@
+on: [push]
+name: PHPStan
+
+jobs:
+  phpstan:
+    name: phpstan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: action/checkout@v2
+      - name: Analyse
+        uses: actions-x@phpstan@v1
