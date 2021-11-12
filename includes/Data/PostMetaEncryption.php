@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class PostMetaEncryption.
+ * 
+ * @package Hezarfen\Inc\Data
+ */
 
 namespace Hezarfen\Inc\Data;
 
@@ -6,13 +11,27 @@ defined( 'ABSPATH' ) || exit();
 
 use Hezarfen\Inc\Data\Abstracts\Abstract_Encryption;
 
+/**
+ * PostMetaEncryption
+ */
 class PostMetaEncryption extends Abstract_Encryption {
-
+	
+	/**
+	 * The encryption key
+	 *
+	 * @var mixed
+	 */
 	protected $encryption_key;
-
+	
+	/**
+	 * __construct
+	 *
+	 * @return void
+	 */
 	public function __construct() {
-		 $this->setEncryptionKey();
+		$this->setEncryptionKey();
 	}
+	
 	/**
 	 * Check HEZARFEN_ENCRYPTION_KEY is generated before.
 	 */
@@ -22,7 +41,7 @@ class PostMetaEncryption extends Abstract_Encryption {
 			'no'
 		);
 
-		return $is_encryption_key_generated == 'yes';
+		return 'yes' == $is_encryption_key_generated;
 	}
 
 	/**
@@ -63,14 +82,14 @@ class PostMetaEncryption extends Abstract_Encryption {
 	/**
 	 * The method creates a new encryption tester text.
 	 *
-	 * @return void
+	 * @return bool
 	 */
 	public function create_encryption_tester_text() {
 		if ( get_option( 'hezarfen_encryption_tester_text' ) ) {
 			return false;
 		}
 
-		// Encryption key değerinin ileride değişip değişmediğini anlayabilmek için bir encryption yap ve options tablosuna yaz :)
+		// Encryption key değerinin ileride değişip değişmediğini anlayabilmek için bir encryption yap ve options tablosuna yaz :).
 		return update_option(
 			'hezarfen_encryption_tester_text',
 			$this->encrypt( 'Istanbul' )

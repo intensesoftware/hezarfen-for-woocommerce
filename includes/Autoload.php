@@ -1,9 +1,17 @@
 <?php
+/**
+ * Class Autoload.
+ * 
+ * @package Hezarfen\Inc
+ */
 
 namespace Hezarfen\Inc;
 
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Autoload
+ */
 class Autoload {
 
 	function __construct() {

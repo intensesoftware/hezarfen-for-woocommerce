@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class Checkout.
+ * 
+ * @package Hezarfen\Inc
+ */
 
 namespace Hezarfen\Inc;
 
@@ -7,6 +12,9 @@ defined( 'ABSPATH' ) || exit();
 use Hezarfen\Inc\Services\MahalleIO;
 use Hezarfen\Inc\Data\PostMetaEncryption;
 
+/**
+ * Checkout
+ */
 class Checkout {
 
 	protected $hezarfen_show_hezarfen_checkout_tax_fields;

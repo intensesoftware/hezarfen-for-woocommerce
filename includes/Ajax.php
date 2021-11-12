@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class Ajax.
+ * 
+ * @package Hezarfen\Inc
+ */
 
 namespace Hezarfen\Inc;
 
@@ -6,6 +11,9 @@ defined( 'ABSPATH' ) || exit();
 
 use Hezarfen\Inc\Services\MahalleIO;
 
+/**
+ * The class handles AJAX operations.
+ */
 class Ajax {
 
 	function __construct() {
