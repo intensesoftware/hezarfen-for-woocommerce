@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '92144e87dc39b1df5a2d65018c745801ac38ddfd',
+    'reference' => 'afeec75336dece766425faf0128b86c7de0f62a0',
     'name' => '__root__',
   ),
   'versions' => 
@@ -18,7 +18,16 @@
       'aliases' => 
       array (
       ),
-      'reference' => '92144e87dc39b1df5a2d65018c745801ac38ddfd',
+      'reference' => 'afeec75336dece766425faf0128b86c7de0f62a0',
+    ),
+    'dealerdirect/phpcodesniffer-composer-installer' => 
+    array (
+      'pretty_version' => 'v0.7.1',
+      'version' => '0.7.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'fe390591e0241955f22eb9ba327d137e501c771c',
     ),
     'giacocorsiglia/wordpress-stubs' => 
     array (
@@ -63,6 +72,15 @@
       ),
       'reference' => 'bcea0ae85868a89d5789c75f012c93129f842934',
     ),
+    'squizlabs/php_codesniffer' => 
+    array (
+      'pretty_version' => '3.6.1',
+      'version' => '3.6.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'f268ca40d54617c6e06757f83f699775c9b3ff2e',
+    ),
     'symfony/polyfill-php73' => 
     array (
       'pretty_version' => 'v1.23.0',
@@ -80,6 +98,15 @@
       array (
       ),
       'reference' => 'ae7f2676776000b7627f2644ab05e0f233061509',
+    ),
+    'wp-coding-standards/wpcs' => 
+    array (
+      'pretty_version' => '2.3.0',
+      'version' => '2.3.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '7da1894633f168fe244afc6de00d141f27517b62',
     ),
   ),
 );

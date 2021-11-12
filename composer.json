@@ -2,6 +2,8 @@
     "require-dev": {
         "php-stubs/woocommerce-stubs": "^5.9",
         "szepeviktor/phpstan-wordpress": "^1.0",
-        "phpstan/extension-installer": "^1.1"
+        "phpstan/extension-installer": "^1.1",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
+        "wp-coding-standards/wpcs": "^2.3"
     }
 }
