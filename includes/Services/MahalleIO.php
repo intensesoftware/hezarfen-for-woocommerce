@@ -53,6 +53,7 @@ class MahalleIO {
 			),
 		);
 
+		// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
 		$result = wp_remote_get( $url, $args );
 
 		$status_code = wp_remote_retrieve_response_code( $result );

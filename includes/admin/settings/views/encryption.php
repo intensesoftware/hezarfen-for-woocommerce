@@ -4,6 +4,7 @@
  * 
  * @package includes/admin/settings/views/encryption.php
  */
+
 ?>
 
 <h2><?php echo esc_html__( 'Encryption Key Health', 'hezarfen-for-woocommerce' ); ?></h2>

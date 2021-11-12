@@ -107,7 +107,7 @@ class Autoload {
 				WC_HEZARFEN_VERSION
 			);
 
-			// TODO: load the js file only in checkout page
+			// TODO: load the js file only in checkout page.
 			wp_enqueue_script(
 				'wc_hezarfen_checkout_js',
 				plugins_url( 'assets/js/checkout.js', WC_HEZARFEN_FILE ),

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class OrderDetails.
+ * 
+ * @package Hezarfen\Inc\Admin
+ */
 
 namespace Hezarfen\Inc\Admin;
 
@@ -6,8 +11,16 @@ use Hezarfen\Inc\Data\PostMetaEncryption;
 
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * OrderDetails
+ */
 class OrderDetails {
-
+	
+	/**
+	 * Constructor
+	 *
+	 * @return void
+	 */
 	public function __construct() {
 		add_filter(
 			'woocommerce_admin_billing_fields',
@@ -17,8 +30,14 @@ class OrderDetails {
 			)
 		);
 	}
-
-	function add_tax_fields_to_order_details( $fields ) {
+	
+	/**
+	 * Adds tax fields to billing form where in the admin order edit screen.
+	 *
+	 * @param  array $fields WooCommerce current fields.
+	 * @return array
+	 */
+	public function add_tax_fields_to_order_details( $fields ) {
 		global $post;
 
 		$TC_number_field_value = get_post_meta(
