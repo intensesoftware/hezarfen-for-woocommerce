@@ -89,7 +89,7 @@ class Checkout {
 			1
 		);
 
-		add_action(
+		add_filter(
 			'woocommerce_checkout_posted_data',
 			array(
 				$this,
@@ -105,7 +105,7 @@ class Checkout {
 			)
 		);
 
-		add_action(
+		add_filter(
 			'default_checkout_billing_hez_TC_number',
 			array(
 				$this,
@@ -274,7 +274,7 @@ class Checkout {
 	/**
 	 * Make non-required tax_number and tax_office fields.
 	 *
-	 * @param $fields
+	 * @param array $fields the current WooCommerce checkout fields.
 	 * @return array
 	 */
 	public function update_fields_required_options_for_invoice_type_person(
@@ -290,7 +290,7 @@ class Checkout {
 	/**
 	 * Make non-required TC_number field.
 	 *
-	 * @param $fields
+	 * @param array $fields current WooCommerce checkout fields.
 	 * @return array
 	 */
 	public function update_fields_required_options_for_invoice_type_company(
@@ -309,7 +309,7 @@ class Checkout {
 	 * Update tax field required statuses according to the invoice type selection when checkout submit (before checkout processed.).
 	 */
 	public function update_field_required_statuses_before_checkout_process() {
-		$hezarfen_invoice_type = sanitize_key( $_POST['billing_hez_invoice_type'] );
+		$hezarfen_invoice_type = isset( $_POST['billing_hez_invoice_type'] ) ? sanitize_key( $_POST['billing_hez_invoice_type'] ) : '';
 
 		if ( 'person' == $hezarfen_invoice_type ) {
 			add_filter(
@@ -335,7 +335,10 @@ class Checkout {
 	}
 
 	/**
-	 * Add tax fields (person or company selection and tax informations)
+	 * Add tax fields (person or company selection and tax informations).
+	 *
+	 * @param  array $fields the current WooCommerce checkout fields.
+	 * @return array
 	 */
 	public function add_tax_fields( $fields ) {
 		$invoice_type_value = ( new \WC_Checkout() )->get_value( 'billing_hez_invoice_type' );
@@ -412,17 +415,17 @@ class Checkout {
 	 *
 	 * Update district and neighborhood data after checkout submit
 	 *
-	 * @param $data
+	 * @param array $data the posted checkout data.
 	 * @return array
 	 */
-	function override_posted_data( $data ) {
-		// Check the T.C. Identitiy Field is active
+	public function override_posted_data( $data ) {
+		// Check if the T.C. Identitiy Field is active.
 		if ( $this->hezarfen_show_hezarfen_checkout_tax_fields && self::is_show_identity_field_on_checkout() ) {
 			if (
 				( new PostMetaEncryption() )->health_check() &&
 				( new PostMetaEncryption() )->test_the_encryption_key()
 			) {
-				// Encrypt the T.C. Identity fields
+				// Encrypt the T.C. Identity fields.
 				$data['billing_hez_TC_number'] = ( new PostMetaEncryption() )->encrypt(
 					$data['billing_hez_TC_number']
 				);
@@ -475,10 +478,10 @@ class Checkout {
 	/**
 	 * Show district and neighborhood fields on checkout page.
 	 *
-	 * @param $fields
+	 * @param array $fields the current checkout fields.
 	 * @return array
 	 */
-	function add_district_and_neighborhood_fields( $fields ) {
+	public function add_district_and_neighborhood_fields( $fields ) {
 		// if Mahalle.io not activated, return.
 		if ( ! MahalleIO::is_active() ) {
 			return $fields;
@@ -514,10 +517,10 @@ class Checkout {
 				$districts = $districts_response;
 			}
 
-			// remove WooCommerce default district field on checkout
+			// remove WooCommerce default district field on checkout.
 			unset( $fields[ $type ][ $city_field_name ] );
 
-			// update array keys for id:name format
+			// update array keys for id:name format.
 			$districts = hezarfen_wc_checkout_select2_option_format( $districts );
 
 			$fields[ $type ][ $city_field_name ] = array(
@@ -549,15 +552,15 @@ class Checkout {
 	/**
 	 * Get districts from mahalle.io
 	 *
-	 * @param $city_plate_number_with_TR
+	 * @param string $city_plate_with_prefix that begins with TR prefix such as TR18
 	 * @return array|bool
 	 */
-	private function get_districts( $city_plate_number_with_TR ) {
-		if ( ! $city_plate_number_with_TR ) {
+	private function get_districts( $city_plate_with_prefix ) {
+		if ( ! $city_plate_with_prefix ) {
 			return array();
 		}
 
-		$city_plate_number = explode( 'TR', $city_plate_number_with_TR );
+		$city_plate_number = explode( 'TR', $city_plate_with_prefix );
 
 		$city_plate_number = $city_plate_number[1];
 
