@@ -109,7 +109,7 @@ class Checkout {
 			'default_checkout_billing_hez_TC_number',
 			array(
 				$this,
-				'override_billing_hez_TC_number',
+				'override_billing_hez_identity_number',
 			),
 			10,
 			2
@@ -189,7 +189,7 @@ class Checkout {
 		$fields['billing']['billing_address_2']['priority']        = 9;
 		$fields['billing']['billing_hez_invoice_type']['priority'] = 10;
 
-		if ( self::is_show_TC_field_on_checkout() ) {
+		if ( self::is_show_identity_field_on_checkout() ) {
 			$fields['billing']['billing_hez_TC_number']['priority'] = 11;
 		}
 
@@ -225,12 +225,12 @@ class Checkout {
 	/**
 	 * Override billing TC Number.
 	 *
-	 * @param  mixed $value
-	 * @param  mixed $input
+	 * @param  string $value the current value of the input.
+	 * @param  string $input the input field name.
 	 * @return string
 	 */
-	public function override_billing_hez_TC_number( $value, $input ) {
-		if ( $input == 'billing_hez_TC_number' && $value !== null ) {
+	public function override_billing_hez_identity_number( $value, $input ) {
+		if ( 'billing_hez_TC_number' == $input && null !== $value ) {
 			// if the value encrypted, decrypt the value.
 			return ( new PostMetaEncryption() )->decrypt( $value );
 		}
@@ -244,8 +244,8 @@ class Checkout {
 	 *
 	 * @return boolean
 	 */
-	public static function is_show_TC_field_on_checkout() {
-		 $show = get_option( 'hezarfen_checkout_show_TC_identity_field', false ) ==
+	public static function is_show_identity_field_on_checkout() {
+		$show = get_option( 'hezarfen_checkout_show_TC_identity_field', false ) ==
 			'yes'
 			? true
 			: false;
@@ -296,7 +296,7 @@ class Checkout {
 	public function update_fields_required_options_for_invoice_type_company(
 		$fields
 	) {
-		if ( ! $this->hezarfen_show_hezarfen_checkout_tax_fields || ! self::is_show_TC_field_on_checkout() ) {
+		if ( ! $this->hezarfen_show_hezarfen_checkout_tax_fields || ! self::is_show_identity_field_on_checkout() ) {
 			return $fields;
 		}
 
@@ -311,7 +311,7 @@ class Checkout {
 	public function update_field_required_statuses_before_checkout_process() {
 		$hezarfen_invoice_type = sanitize_key( $_POST['billing_hez_invoice_type'] );
 
-		if ( $hezarfen_invoice_type == 'person' ) {
+		if ( 'person' == $hezarfen_invoice_type ) {
 			add_filter(
 				'woocommerce_checkout_fields',
 				array(
@@ -321,7 +321,7 @@ class Checkout {
 				999999,
 				1
 			);
-		} elseif ( $hezarfen_invoice_type == 'company' ) {
+		} elseif ( 'company' == $hezarfen_invoice_type ) {
 			add_filter(
 				'woocommerce_checkout_fields',
 				array(
@@ -353,7 +353,7 @@ class Checkout {
 			'priority' => $fields['billing']['billing_email']['priority'] + 1,
 		);
 
-		if ( self::is_show_TC_field_on_checkout() ) {
+		if ( self::is_show_identity_field_on_checkout() ) {
 			$fields['billing']['billing_hez_TC_number'] = array(
 				'id'          => 'hezarfen_TC_number',
 				'placeholder' => __( 'Enter T.C. Identity Number', 'hezarfen-for-woocommerce' ),
@@ -393,11 +393,11 @@ class Checkout {
 		);
 
 		// set the hidden tax fields according to the invoice_type value.
-		if ( $invoice_type_value == 'person' ) {
+		if ( 'person' == $invoice_type_value ) {
 			$fields['billing']['billing_company']['class'][]        = 'hezarfen-hide-form-field';
 			$fields['billing']['billing_hez_tax_office']['class'][] = 'hezarfen-hide-form-field';
 			$fields['billing']['billing_hez_tax_number']['class'][] = 'hezarfen-hide-form-field';
-		} elseif ( $invoice_type_value == 'company' ) {
+		} elseif ( 'company' == $invoice_type_value ) {
 			$fields['billing']['billing_hez_TC_number']['class'][] = 'hezarfen-hide-form-field';
 		} else {
 			$fields['billing']['billing_company']['class'][]        = 'hezarfen-hide-form-field';
@@ -417,7 +417,7 @@ class Checkout {
 	 */
 	function override_posted_data( $data ) {
 		// Check the T.C. Identitiy Field is active
-		if ( $this->hezarfen_show_hezarfen_checkout_tax_fields && self::is_show_TC_field_on_checkout() ) {
+		if ( $this->hezarfen_show_hezarfen_checkout_tax_fields && self::is_show_identity_field_on_checkout() ) {
 			if (
 				( new PostMetaEncryption() )->health_check() &&
 				( new PostMetaEncryption() )->test_the_encryption_key()
