@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class MahalleIO.
+ * 
+ * @package Hezarfen\Inc\Services
+ */
 
 namespace Hezarfen\Inc\Services;
 
@@ -6,6 +11,9 @@ defined( 'ABSPATH' ) || exit();
 
 use Hezarfen\Inc\Data\ServiceCredentialEncryption;
 
+/**
+ * MahalleIO
+ */
 class MahalleIO {
 
 	/**
@@ -33,10 +41,10 @@ class MahalleIO {
 	/**
 	 * Make HTTP - GET Request to mahalle.io
 	 *
-	 * @param $url
+	 * @param string $url the endpoint URL to make a request.
 	 * @return mixed
 	 */
-	public static function HTTP( $url ) {
+	private static function http( $url ) {
 		$args = array(
 			'headers' => array(
 				'Accept'        => 'application/json',
@@ -45,14 +53,15 @@ class MahalleIO {
 			),
 		);
 
+		// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
 		$result = wp_remote_get( $url, $args );
 
 		$status_code = wp_remote_retrieve_response_code( $result );
 
 		$response = json_decode( wp_remote_retrieve_body( $result ) );
 
-		// return error if exists any error
-		if ( $status_code != 200 || ! isset( $response->data ) ) {
+		// return error if exists any error.
+		if ( 200 != $status_code || ! isset( $response->data ) ) {
 			return new \WP_Error(
 				'connection_failed',
 				__( 'mahalle.io connection failed' )
@@ -70,7 +79,7 @@ class MahalleIO {
 	public static function get_cities() {
 		$url = 'https://api.mahalle.io/v2/il';
 
-		$result = self::HTTP( $url );
+		$result = self::http( $url );
 
 		if ( is_wp_error( $result ) ) {
 			return $result;
@@ -88,7 +97,7 @@ class MahalleIO {
 	/**
 	 * Get districts by TR city plate number from mahalle.io
 	 *
-	 * @param $city_plate_number
+	 * @param int $city_plate_number that city plate number.
 	 * @return array
 	 */
 	public static function get_districts( $city_plate_number ) {
@@ -97,7 +106,7 @@ class MahalleIO {
 			$city_plate_number
 		);
 
-		$result = self::HTTP( $url );
+		$result = self::http( $url );
 
 		if ( is_wp_error( $result ) ) {
 			return $result;
@@ -115,7 +124,7 @@ class MahalleIO {
 	/**
 	 * Get neighborhood from mahalle.io by district id
 	 *
-	 * @param $district_id
+	 * @param int $district_id the custom district ID provided by mahalle.io service.
 	 * @return array
 	 */
 	public static function get_neighborhoods( $district_id ) {
@@ -124,7 +133,7 @@ class MahalleIO {
 			$district_id
 		);
 
-		$result = self::HTTP( $url );
+		$result = self::http( $url );
 
 		if ( is_wp_error( $result ) ) {
 			return $result;

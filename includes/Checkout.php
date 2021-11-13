@@ -16,11 +16,21 @@ use Hezarfen\Inc\Data\PostMetaEncryption;
  * Checkout
  */
 class Checkout {
-
+	
+	/**
+	 * Should tax fields be shown on the checkout form?
+	 *
+	 * @var bool
+	 */
 	protected $hezarfen_show_hezarfen_checkout_tax_fields;
-
+	
+	/**
+	 * Constructor
+	 *
+	 * @return void
+	 */
 	public function __construct() {
-		 $this->hezarfen_show_hezarfen_checkout_tax_fields = ( get_option( 'hezarfen_show_hezarfen_checkout_tax_fields' ) == 'yes' ) ? true : false;
+		$this->hezarfen_show_hezarfen_checkout_tax_fields = ( get_option( 'hezarfen_show_hezarfen_checkout_tax_fields' ) == 'yes' ) ? true : false;
 
 		if ( $this->hezarfen_show_hezarfen_checkout_tax_fields ) {
 			add_filter( 'woocommerce_checkout_fields', array( $this, 'add_tax_fields' ), 110, 1 );
@@ -46,6 +56,8 @@ class Checkout {
 		if ( $hide_postcode_field ) {
 			add_filter( 'woocommerce_checkout_fields', array( $this, 'hide_postcode_fields' ), 90 );
 		}
+
+		// TODO: review the logic, if it's possible; define all fields in a single function.
 
 		add_filter(
 			'woocommerce_checkout_fields',
@@ -77,7 +89,7 @@ class Checkout {
 			1
 		);
 
-		add_action(
+		add_filter(
 			'woocommerce_checkout_posted_data',
 			array(
 				$this,
@@ -93,11 +105,11 @@ class Checkout {
 			)
 		);
 
-		add_action(
+		add_filter(
 			'default_checkout_billing_hez_TC_number',
 			array(
 				$this,
-				'override_billing_hez_TC_number',
+				'override_billing_hez_identity_number',
 			),
 			10,
 			2
@@ -107,8 +119,8 @@ class Checkout {
 	/**
 	 * Sort address fields forcelly.
 	 *
-	 * @param  mixed $fields
-	 * @return void
+	 * @param  array $fields current default address fields.
+	 * @return array
 	 */
 	public function sort_address_fields( $fields ) {
 		$fields['state']['priority']     = 6;
@@ -122,8 +134,8 @@ class Checkout {
 	/**
 	 * Make address 2 fields required.
 	 *
-	 * @param  mixed $fields
-	 * @return void
+	 * @param  array $fields current default address fields.
+	 * @return array
 	 */
 	public function make_address2_required_default_address_field( $fields ) {
 		// if Mahalle.io not activated, return.
@@ -139,8 +151,8 @@ class Checkout {
 	/**
 	 * Make address2 fields required.
 	 *
-	 * @param  mixed $fields
-	 * @return void
+	 * @param  array $fields current default address fields.
+	 * @return array
 	 */
 	public function make_address2_required_and_update_the_label( $fields ) {
 		// if Mahalle.io not activated, return.
@@ -148,7 +160,7 @@ class Checkout {
 			return $fields;
 		}
 
-		// if mahalle.io is active, make address2 required
+		// if mahalle.io is active, make address2 required.
 		$fields['billing']['billing_address_2']['required']      = true;
 		$fields['billing']['billing_address_2']['label']         = 'Adresiniz';
 		$fields['billing']['billing_address_2']['placeholder']   = 'Cadde, sokak, bina, daire no bilgilerinizi giriniz';
@@ -162,7 +174,7 @@ class Checkout {
 	/**
 	 * Auto Sort the Checkout Form Fields.
 	 *
-	 * @param  mixed $fields
+	 * @param  array $fields woocommerce checkout fields.
 	 * @return array
 	 */
 	public function auto_sort_checkout_fields( $fields ) {
@@ -177,7 +189,7 @@ class Checkout {
 		$fields['billing']['billing_address_2']['priority']        = 9;
 		$fields['billing']['billing_hez_invoice_type']['priority'] = 10;
 
-		if ( self::is_show_TC_field_on_checkout() ) {
+		if ( self::is_show_identity_field_on_checkout() ) {
 			$fields['billing']['billing_hez_TC_number']['priority'] = 11;
 		}
 
@@ -196,7 +208,13 @@ class Checkout {
 
 		return $fields;
 	}
-
+	
+	/**
+	 * Hide Post Code Fields where in the checkout form.
+	 *
+	 * @param  array $fields current checkout fields.
+	 * @return array
+	 */
 	public function hide_postcode_fields( $fields ) {
 		unset( $fields['billing']['billing_postcode'] );
 		unset( $fields['shipping']['shipping_postcode'] );
@@ -207,12 +225,12 @@ class Checkout {
 	/**
 	 * Override billing TC Number.
 	 *
-	 * @param  mixed $value
-	 * @param  mixed $input
+	 * @param  string $value the current value of the input.
+	 * @param  string $input the input field name.
 	 * @return string
 	 */
-	public function override_billing_hez_TC_number( $value, $input ) {
-		if ( $input == 'billing_hez_TC_number' && $value !== null ) {
+	public function override_billing_hez_identity_number( $value, $input ) {
+		if ( 'billing_hez_TC_number' == $input && null !== $value ) {
 			// if the value encrypted, decrypt the value.
 			return ( new PostMetaEncryption() )->decrypt( $value );
 		}
@@ -226,8 +244,8 @@ class Checkout {
 	 *
 	 * @return boolean
 	 */
-	public static function is_show_TC_field_on_checkout() {
-		 $show = get_option( 'hezarfen_checkout_show_TC_identity_field', false ) ==
+	public static function is_show_identity_field_on_checkout() {
+		$show = get_option( 'hezarfen_checkout_show_TC_identity_field', false ) ==
 			'yes'
 			? true
 			: false;
@@ -244,7 +262,7 @@ class Checkout {
 	 *
 	 * @return bool
 	 */
-	public static function is_TC_identity_number_field_required() {
+	public static function is_identity_number_field_required() {
 		return get_option(
 			'hezarfen_checkout_is_TC_identity_number_field_required',
 			false
@@ -256,7 +274,7 @@ class Checkout {
 	/**
 	 * Make non-required tax_number and tax_office fields.
 	 *
-	 * @param $fields
+	 * @param array $fields the current WooCommerce checkout fields.
 	 * @return array
 	 */
 	public function update_fields_required_options_for_invoice_type_person(
@@ -272,13 +290,13 @@ class Checkout {
 	/**
 	 * Make non-required TC_number field.
 	 *
-	 * @param $fields
+	 * @param array $fields current WooCommerce checkout fields.
 	 * @return array
 	 */
 	public function update_fields_required_options_for_invoice_type_company(
 		$fields
 	) {
-		if ( ! $this->hezarfen_show_hezarfen_checkout_tax_fields || ! self::is_show_TC_field_on_checkout() ) {
+		if ( ! $this->hezarfen_show_hezarfen_checkout_tax_fields || ! self::is_show_identity_field_on_checkout() ) {
 			return $fields;
 		}
 
@@ -291,9 +309,11 @@ class Checkout {
 	 * Update tax field required statuses according to the invoice type selection when checkout submit (before checkout processed.).
 	 */
 	public function update_field_required_statuses_before_checkout_process() {
-		$hezarfen_invoice_type = sanitize_key( $_POST['billing_hez_invoice_type'] );
+		// nonce verification phpcs error ignored since WooCommerce already doing the nonce verification before the woocommerce_before_checkout_process hook release.
+		//phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$hezarfen_invoice_type = isset( $_POST['billing_hez_invoice_type'] ) ? sanitize_key( $_POST['billing_hez_invoice_type'] ) : '';
 
-		if ( $hezarfen_invoice_type == 'person' ) {
+		if ( 'person' == $hezarfen_invoice_type ) {
 			add_filter(
 				'woocommerce_checkout_fields',
 				array(
@@ -303,7 +323,7 @@ class Checkout {
 				999999,
 				1
 			);
-		} elseif ( $hezarfen_invoice_type == 'company' ) {
+		} elseif ( 'company' == $hezarfen_invoice_type ) {
 			add_filter(
 				'woocommerce_checkout_fields',
 				array(
@@ -317,7 +337,10 @@ class Checkout {
 	}
 
 	/**
-	 * Add tax fields (person or company selection and tax informations)
+	 * Add tax fields (person or company selection and tax informations).
+	 *
+	 * @param  array $fields the current WooCommerce checkout fields.
+	 * @return array
 	 */
 	public function add_tax_fields( $fields ) {
 		$invoice_type_value = ( new \WC_Checkout() )->get_value( 'billing_hez_invoice_type' );
@@ -335,7 +358,7 @@ class Checkout {
 			'priority' => $fields['billing']['billing_email']['priority'] + 1,
 		);
 
-		if ( self::is_show_TC_field_on_checkout() ) {
+		if ( self::is_show_identity_field_on_checkout() ) {
 			$fields['billing']['billing_hez_TC_number'] = array(
 				'id'          => 'hezarfen_TC_number',
 				'placeholder' => __( 'Enter T.C. Identity Number', 'hezarfen-for-woocommerce' ),
@@ -343,8 +366,9 @@ class Checkout {
 					'T.C. Identity Number',
 					'hezarfen-for-woocommerce'
 				),
-				'required'    => self::is_TC_identity_number_field_required(),
-				'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_TC_number', array( 'form-row-wide' ) ),
+				'required'    => self::is_identity_number_field_required(),
+				// TODO: review the WP filter name table and if possible rename that as lowercase also remove phpcs ignore.
+				'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_TC_number', array( 'form-row-wide' ) ), //phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
 				'priority'    => $fields['billing']['billing_hez_invoice_type']['priority'] + 1,
 			);
 		}
@@ -375,11 +399,11 @@ class Checkout {
 		);
 
 		// set the hidden tax fields according to the invoice_type value.
-		if ( $invoice_type_value == 'person' ) {
+		if ( 'person' == $invoice_type_value ) {
 			$fields['billing']['billing_company']['class'][]        = 'hezarfen-hide-form-field';
 			$fields['billing']['billing_hez_tax_office']['class'][] = 'hezarfen-hide-form-field';
 			$fields['billing']['billing_hez_tax_number']['class'][] = 'hezarfen-hide-form-field';
-		} elseif ( $invoice_type_value == 'company' ) {
+		} elseif ( 'company' == $invoice_type_value ) {
 			$fields['billing']['billing_hez_TC_number']['class'][] = 'hezarfen-hide-form-field';
 		} else {
 			$fields['billing']['billing_company']['class'][]        = 'hezarfen-hide-form-field';
@@ -394,17 +418,17 @@ class Checkout {
 	 *
 	 * Update district and neighborhood data after checkout submit
 	 *
-	 * @param $data
+	 * @param array $data the posted checkout data.
 	 * @return array
 	 */
-	function override_posted_data( $data ) {
-		// Check the T.C. Identitiy Field is active
-		if ( $this->hezarfen_show_hezarfen_checkout_tax_fields && self::is_show_TC_field_on_checkout() ) {
+	public function override_posted_data( $data ) {
+		// Check if the T.C. Identitiy Field is active.
+		if ( $this->hezarfen_show_hezarfen_checkout_tax_fields && self::is_show_identity_field_on_checkout() ) {
 			if (
 				( new PostMetaEncryption() )->health_check() &&
 				( new PostMetaEncryption() )->test_the_encryption_key()
 			) {
-				// Encrypt the T.C. Identity fields
+				// Encrypt the T.C. Identity fields.
 				$data['billing_hez_TC_number'] = ( new PostMetaEncryption() )->encrypt(
 					$data['billing_hez_TC_number']
 				);
@@ -457,10 +481,10 @@ class Checkout {
 	/**
 	 * Show district and neighborhood fields on checkout page.
 	 *
-	 * @param $fields
+	 * @param array $fields the current checkout fields.
 	 * @return array
 	 */
-	function add_district_and_neighborhood_fields( $fields ) {
+	public function add_district_and_neighborhood_fields( $fields ) {
 		// if Mahalle.io not activated, return.
 		if ( ! MahalleIO::is_active() ) {
 			return $fields;
@@ -479,14 +503,15 @@ class Checkout {
 
 			$get_city_function = 'get_' . $type . '_state';
 
-			$current_city_plate_number_with_TR = $woocommerce->customer->$get_city_function();
+			// the value has TR prefix such as TR18.
+			$current_city_plate_number_prefixed = $woocommerce->customer->$get_city_function();
 
 			$districts_response = $this->get_districts(
-				$current_city_plate_number_with_TR
+				$current_city_plate_number_prefixed
 			);
 
 			/**
-			 * Todo: fire a notification about failed mahalle.io connection
+			 * TODO: fire a notification about failed mahalle.io connection
 			 */
 			// if get_districts failed, return empty array and disable mahalle.io - Hezarfen customizations.
 
@@ -496,10 +521,10 @@ class Checkout {
 				$districts = $districts_response;
 			}
 
-			// remove WooCommerce default district field on checkout
+			// remove WooCommerce default district field on checkout.
 			unset( $fields[ $type ][ $city_field_name ] );
 
-			// update array keys for id:name format
+			// update array keys for id:name format.
 			$districts = hezarfen_wc_checkout_select2_option_format( $districts );
 
 			$fields[ $type ][ $city_field_name ] = array(
@@ -507,7 +532,7 @@ class Checkout {
 				'type'     => 'select',
 				'label'    => __( 'İlçe', 'woocommerce' ),
 				'required' => true,
-				'class'    => apply_filters( 'hezarfen_checkout_fields_class_' . 'wc_hezarfen_' . $type . '_district', array( 'form-row-wide' ) ),
+				'class'    => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_district', array( 'form-row-wide' ) ),
 				'clear'    => true,
 				'priority' => $fields[ $type ][ $type . '_state' ]['priority'] + 1,
 				'options'  => $district_options + $districts,
@@ -518,7 +543,7 @@ class Checkout {
 				'type'     => 'select',
 				'label'    => __( 'Mahalle', 'woocommerce' ),
 				'required' => true,
-				'class'    => apply_filters( 'hezarfen_checkout_fields_class_' . 'wc_hezarfen_' . $type . '_neighborhood', array( 'form-row-wide' ) ),
+				'class'    => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_neighborhood', array( 'form-row-wide' ) ),
 				'clear'    => true,
 				'priority' => $fields[ $type ][ $type . '_state' ]['priority'] + 2,
 				'options'  => $neighborhood_options,
@@ -531,15 +556,15 @@ class Checkout {
 	/**
 	 * Get districts from mahalle.io
 	 *
-	 * @param $city_plate_number_with_TR
+	 * @param string $city_plate_with_prefix that begins with TR prefix such as TR18.
 	 * @return array|bool
 	 */
-	private function get_districts( $city_plate_number_with_TR ) {
-		if ( ! $city_plate_number_with_TR ) {
+	private function get_districts( $city_plate_with_prefix ) {
+		if ( ! $city_plate_with_prefix ) {
 			return array();
 		}
 
-		$city_plate_number = explode( 'TR', $city_plate_number_with_TR );
+		$city_plate_number = explode( 'TR', $city_plate_with_prefix );
 
 		$city_plate_number = $city_plate_number[1];
 

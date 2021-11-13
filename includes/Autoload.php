@@ -13,8 +13,13 @@ defined( 'ABSPATH' ) || exit();
  * Autoload
  */
 class Autoload {
-
-	function __construct() {
+	
+	/**
+	 * Constructor
+	 *
+	 * @return void
+	 */
+	public function __construct() {
 		$this->load_plugin_files();
 
 		$this->load_assets();
@@ -40,7 +45,7 @@ class Autoload {
 	 *
 	 * Load Hezarfen Settings Page
 	 *
-	 * @param $settings
+	 * @param array $settings the current WC setting page paths.
 	 * @return array
 	 */
 	public function add_hezarfen_setting_page( $settings ) {
@@ -49,8 +54,13 @@ class Autoload {
 
 		return $settings;
 	}
-
-	function load_assets() {
+	
+	/**
+	 * Load assets
+	 *
+	 * @return void
+	 */
+	public function load_assets() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_js_files' ) );
 
 		if ( is_admin() ) {
@@ -67,12 +77,13 @@ class Autoload {
 	/**
 	 * Load assets files for admin
 	 */
-	function load_admin_assets_files() {
+	public function load_admin_assets_files() {
 		wp_enqueue_script(
 			'wc_hezarfen_admin_order_details_js',
 			plugins_url( 'assets/admin/js/order-details.js', WC_HEZARFEN_FILE ),
 			array( 'jquery' ),
-			WC_HEZARFEN_VERSION
+			WC_HEZARFEN_VERSION,
+			true
 		);
 		wp_enqueue_style(
 			'wc_hezarfen_checkout_css',
@@ -81,8 +92,13 @@ class Autoload {
 			WC_HEZARFEN_VERSION
 		);
 	}
-
-	function load_js_files() {
+	
+	/**
+	 * Load js files
+	 *
+	 * @return void
+	 */
+	public function load_js_files() {
 		if ( is_checkout() ) {
 			wp_enqueue_style(
 				'wc_hezarfen_checkout_css',
@@ -91,17 +107,23 @@ class Autoload {
 				WC_HEZARFEN_VERSION
 			);
 
+			// TODO: load the js file only in checkout page.
 			wp_enqueue_script(
 				'wc_hezarfen_checkout_js',
 				plugins_url( 'assets/js/checkout.js', WC_HEZARFEN_FILE ),
 				array( 'jquery' ),
-				WC_HEZARFEN_VERSION
+				WC_HEZARFEN_VERSION,
+				true
 			);
 
+			// TODO: is that really required?
 			wp_enqueue_script(
 				'wc_hezarfen_checkout_TR_localization',
 				plugins_url( 'assets/packages/select2/i18n/tr.js', WC_HEZARFEN_FILE ),
-				array( 'jquery', 'select2' )
+				array( 'jquery', 'select2' ),
+				true,
+				'4.1.0-beta.1',
+				true
 			);
 
 			wp_localize_script(
@@ -114,8 +136,13 @@ class Autoload {
 			);
 		}
 	}
-
-	function load_plugin_files() {
+	
+	/**
+	 * Load plugin files.
+	 *
+	 * @return void
+	 */
+	public function load_plugin_files() {
 		require_once 'Data/Abstracts/Abstract_Encryption.php';
 		require_once 'Data/ServiceCredentialEncryption.php';
 		require_once 'Data/PostMetaEncryption.php';
