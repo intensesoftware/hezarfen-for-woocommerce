@@ -262,7 +262,7 @@ class Checkout {
 	 *
 	 * @return bool
 	 */
-	public static function is_TC_identity_number_field_required() {
+	public static function is_identity_number_field_required() {
 		return get_option(
 			'hezarfen_checkout_is_TC_identity_number_field_required',
 			false
@@ -364,7 +364,7 @@ class Checkout {
 					'T.C. Identity Number',
 					'hezarfen-for-woocommerce'
 				),
-				'required'    => self::is_TC_identity_number_field_required(),
+				'required'    => self::is_identity_number_field_required(),
 				'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_TC_number', array( 'form-row-wide' ) ),
 				'priority'    => $fields['billing']['billing_hez_invoice_type']['priority'] + 1,
 			);
