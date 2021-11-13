@@ -309,6 +309,8 @@ class Checkout {
 	 * Update tax field required statuses according to the invoice type selection when checkout submit (before checkout processed.).
 	 */
 	public function update_field_required_statuses_before_checkout_process() {
+		// nonce verification phpcs error ignored since WooCommerce already doing the nonce verification before the woocommerce_before_checkout_process hook release.
+		//phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$hezarfen_invoice_type = isset( $_POST['billing_hez_invoice_type'] ) ? sanitize_key( $_POST['billing_hez_invoice_type'] ) : '';
 
 		if ( 'person' == $hezarfen_invoice_type ) {
@@ -365,7 +367,8 @@ class Checkout {
 					'hezarfen-for-woocommerce'
 				),
 				'required'    => self::is_identity_number_field_required(),
-				'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_TC_number', array( 'form-row-wide' ) ),
+				// TODO: review the WP filter name table and if possible rename that as lowercase also remove phpcs ignore.
+				'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_TC_number', array( 'form-row-wide' ) ), //phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
 				'priority'    => $fields['billing']['billing_hez_invoice_type']['priority'] + 1,
 			);
 		}
