@@ -500,14 +500,15 @@ class Checkout {
 
 			$get_city_function = 'get_' . $type . '_state';
 
-			$current_city_plate_number_with_TR = $woocommerce->customer->$get_city_function();
+			// the value has TR prefix such as TR18.
+			$current_city_plate_number_prefixed = $woocommerce->customer->$get_city_function();
 
 			$districts_response = $this->get_districts(
-				$current_city_plate_number_with_TR
+				$current_city_plate_number_prefixed
 			);
 
 			/**
-			 * Todo: fire a notification about failed mahalle.io connection
+			 * TODO: fire a notification about failed mahalle.io connection
 			 */
 			// if get_districts failed, return empty array and disable mahalle.io - Hezarfen customizations.
 
@@ -528,7 +529,7 @@ class Checkout {
 				'type'     => 'select',
 				'label'    => __( 'İlçe', 'woocommerce' ),
 				'required' => true,
-				'class'    => apply_filters( 'hezarfen_checkout_fields_class_' . 'wc_hezarfen_' . $type . '_district', array( 'form-row-wide' ) ),
+				'class'    => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_district', array( 'form-row-wide' ) ),
 				'clear'    => true,
 				'priority' => $fields[ $type ][ $type . '_state' ]['priority'] + 1,
 				'options'  => $district_options + $districts,
@@ -539,7 +540,7 @@ class Checkout {
 				'type'     => 'select',
 				'label'    => __( 'Mahalle', 'woocommerce' ),
 				'required' => true,
-				'class'    => apply_filters( 'hezarfen_checkout_fields_class_' . 'wc_hezarfen_' . $type . '_neighborhood', array( 'form-row-wide' ) ),
+				'class'    => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_neighborhood', array( 'form-row-wide' ) ),
 				'clear'    => true,
 				'priority' => $fields[ $type ][ $type . '_state' ]['priority'] + 2,
 				'options'  => $neighborhood_options,
@@ -552,7 +553,7 @@ class Checkout {
 	/**
 	 * Get districts from mahalle.io
 	 *
-	 * @param string $city_plate_with_prefix that begins with TR prefix such as TR18
+	 * @param string $city_plate_with_prefix that begins with TR prefix such as TR18.
 	 * @return array|bool
 	 */
 	private function get_districts( $city_plate_with_prefix ) {
