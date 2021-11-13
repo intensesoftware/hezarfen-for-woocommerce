@@ -16,11 +16,21 @@ use Hezarfen\Inc\Data\PostMetaEncryption;
  * Checkout
  */
 class Checkout {
-
+	
+	/**
+	 * Should tax fields be shown on the checkout form?
+	 *
+	 * @var bool
+	 */
 	protected $hezarfen_show_hezarfen_checkout_tax_fields;
-
+	
+	/**
+	 * Constructor
+	 *
+	 * @return void
+	 */
 	public function __construct() {
-		 $this->hezarfen_show_hezarfen_checkout_tax_fields = ( get_option( 'hezarfen_show_hezarfen_checkout_tax_fields' ) == 'yes' ) ? true : false;
+		$this->hezarfen_show_hezarfen_checkout_tax_fields = ( get_option( 'hezarfen_show_hezarfen_checkout_tax_fields' ) == 'yes' ) ? true : false;
 
 		if ( $this->hezarfen_show_hezarfen_checkout_tax_fields ) {
 			add_filter( 'woocommerce_checkout_fields', array( $this, 'add_tax_fields' ), 110, 1 );
@@ -46,6 +56,8 @@ class Checkout {
 		if ( $hide_postcode_field ) {
 			add_filter( 'woocommerce_checkout_fields', array( $this, 'hide_postcode_fields' ), 90 );
 		}
+
+		// TODO: review the logic, if it's possible; define all fields in a single function.
 
 		add_filter(
 			'woocommerce_checkout_fields',
@@ -107,8 +119,8 @@ class Checkout {
 	/**
 	 * Sort address fields forcelly.
 	 *
-	 * @param  mixed $fields
-	 * @return void
+	 * @param  array $fields current default address fields.
+	 * @return array
 	 */
 	public function sort_address_fields( $fields ) {
 		$fields['state']['priority']     = 6;
@@ -122,8 +134,8 @@ class Checkout {
 	/**
 	 * Make address 2 fields required.
 	 *
-	 * @param  mixed $fields
-	 * @return void
+	 * @param  array $fields current default address fields.
+	 * @return array
 	 */
 	public function make_address2_required_default_address_field( $fields ) {
 		// if Mahalle.io not activated, return.
@@ -139,8 +151,8 @@ class Checkout {
 	/**
 	 * Make address2 fields required.
 	 *
-	 * @param  mixed $fields
-	 * @return void
+	 * @param  array $fields current default address fields.
+	 * @return array
 	 */
 	public function make_address2_required_and_update_the_label( $fields ) {
 		// if Mahalle.io not activated, return.
@@ -148,7 +160,7 @@ class Checkout {
 			return $fields;
 		}
 
-		// if mahalle.io is active, make address2 required
+		// if mahalle.io is active, make address2 required.
 		$fields['billing']['billing_address_2']['required']      = true;
 		$fields['billing']['billing_address_2']['label']         = 'Adresiniz';
 		$fields['billing']['billing_address_2']['placeholder']   = 'Cadde, sokak, bina, daire no bilgilerinizi giriniz';
@@ -162,7 +174,7 @@ class Checkout {
 	/**
 	 * Auto Sort the Checkout Form Fields.
 	 *
-	 * @param  mixed $fields
+	 * @param  array $fields woocommerce checkout fields.
 	 * @return array
 	 */
 	public function auto_sort_checkout_fields( $fields ) {
@@ -196,7 +208,13 @@ class Checkout {
 
 		return $fields;
 	}
-
+	
+	/**
+	 * Hide Post Code Fields where in the checkout form.
+	 *
+	 * @param  array $fields current checkout fields.
+	 * @return array
+	 */
 	public function hide_postcode_fields( $fields ) {
 		unset( $fields['billing']['billing_postcode'] );
 		unset( $fields['shipping']['shipping_postcode'] );

@@ -15,8 +15,13 @@ use Hezarfen\Inc\Services\MahalleIO;
  * The class handles AJAX operations.
  */
 class Ajax {
-
-	function __construct() {
+	
+	/**
+	 * Constructor
+	 *
+	 * @return void
+	 */
+	public function __construct() {
 		add_action(
 			'wp_ajax_wc_hezarfen_get_districts',
 			array(
@@ -62,13 +67,19 @@ class Ajax {
 			)
 		);
 	}
-
-	function get_districts() {
+	
+	/**
+	 * Get Districts AJAX Endpoint
+	 *
+	 * @return void
+	 */
+	public function get_districts() {
 		check_ajax_referer( 'mahalle-io-get-data', 'security' );
 
-		$city_plate_number_with_TR = sanitize_text_field( $_POST['city_plate_number'] );
+		// the variable begins with TR prefix.
+		$city_plate_number_with_prefix = isset( $_POST['city_plate_number'] ) ? sanitize_text_field( $_POST['city_plate_number'] ) : '';
 
-		$city_plate_number = explode( 'TR', $city_plate_number_with_TR );
+		$city_plate_number = explode( 'TR', $city_plate_number_with_prefix );
 
 		$city_plate_number = intval( $city_plate_number[1] );
 
@@ -89,16 +100,20 @@ class Ajax {
 			$districts = $get_districts_response;
 		}
 
-		// return result
 		echo wp_json_encode( $districts );
 
 		wp_die();
 	}
-
-	function get_neighborhoods() {
+	
+	/**
+	 * Get Neighborhoods AJAX endpoint
+	 *
+	 * @return void
+	 */
+	public function get_neighborhoods() {
 		check_ajax_referer( 'mahalle-io-get-data', 'security' );
 
-		$district_data = sanitize_text_field( $_POST['district_id'] );
+		$district_data = isset( $_POST['district_id'] ) ? sanitize_text_field( $_POST['district_id'] ) : '';
 
 		$district_data_array = explode( ':', $district_data );
 
@@ -123,18 +138,23 @@ class Ajax {
 			$neighborhoods = $get_neighborhoods_response;
 		}
 
-		// return result
 		echo wp_json_encode( $neighborhoods );
 
 		wp_die();
 	}
-
-	function neighborhood_changed() {
+	
+	/**
+	 * An event that releases when neighborhood data is changed.
+	 *
+	 * @return void
+	 */
+	public function neighborhood_changed() {
 		check_ajax_referer( 'mahalle-io-get-data', 'security' );
 
-		$type = sanitize_key( $_POST['type'] );
+		/** That is specify expresses the checkout form part. $type can be billing|shipping */
+		$type = isset( $_POST['type'] ) ? sanitize_key( $_POST['type'] ) : '';
 
-		$neighborhood_data = sanitize_text_field( $_POST['neighborhood_data'] );
+		$neighborhood_data = isset( $_POST['neighborhood_data'] ) ? sanitize_text_field( $_POST['neighborhood_data'] ) : '';
 
 		$neighborhood_data_arr = explode( ':', $neighborhood_data );
 
