@@ -33,4 +33,3 @@ function hezarfen_load_plugin_textdomain()
 		basename(dirname(__FILE__)) . '/languages/'
 	);
 }
-

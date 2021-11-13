@@ -110,6 +110,7 @@ class Autoload
 		require_once 'Hezarfen_Install.php';
 		require_once 'hezarfen-wc-helpers.php';
 		require_once 'Services/MahalleIO.php';
+		require_once 'packages/Manuel-Shipment/manual-shipment.php';
 
 		if (is_admin()) {
 			require_once 'admin/order/OrderDetails.php';
