@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '3f74174d470c4072a3ee359894d6d61bfea6c5ce',
+    'reference' => '215d578e8fa420032d0765cbbdeaa88e7f400edf',
     'name' => '__root__',
   ),
   'versions' => 
@@ -31,7 +31,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '3f74174d470c4072a3ee359894d6d61bfea6c5ce',
+      'reference' => '215d578e8fa420032d0765cbbdeaa88e7f400edf',
     ),
     'automattic/vipwpcs' => 
     array (

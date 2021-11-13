@@ -11,27 +11,17 @@ parameters:
 			path: includes/Ajax.php
 
 		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Ajax\\:\\:get_districts\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: includes/Ajax.php
-
-		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Ajax\\:\\:get_neighborhoods\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: includes/Ajax.php
-
-		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Ajax\\:\\:neighborhood_changed\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: includes/Ajax.php
-
-		-
 			message: "#^Right side of \\|\\| is always false\\.$#"
 			count: 1
 			path: includes/Ajax.php
 
 		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Autoload\\:\\:add_hezarfen_setting_page\\(\\) has parameter \\$settings with no typehint specified\\.$#"
+			message: "#^Function wp_enqueue_script invoked with 6 parameters, 1\\-5 required\\.$#"
+			count: 1
+			path: includes/Autoload.php
+
+		-
+			message: "#^Method Hezarfen\\\\Inc\\\\Autoload\\:\\:add_hezarfen_setting_page\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/Autoload.php
 
@@ -46,22 +36,7 @@ parameters:
 			path: includes/Autoload.php
 
 		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Autoload\\:\\:load_assets\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: includes/Autoload.php
-
-		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Autoload\\:\\:load_js_files\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: includes/Autoload.php
-
-		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Autoload\\:\\:load_plugin_files\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: includes/Autoload.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$settings\\)\\: Unexpected token \"\\$settings\", expected type at offset 55$#"
+			message: "#^Parameter \\#5 \\$in_footer of function wp_enqueue_script expects bool, string given\\.$#"
 			count: 1
 			path: includes/Autoload.php
 
@@ -76,7 +51,7 @@ parameters:
 			path: includes/Checkout.php
 
 		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:add_district_and_neighborhood_fields\\(\\) has parameter \\$fields with no typehint specified\\.$#"
+			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:add_district_and_neighborhood_fields\\(\\) has parameter \\$fields with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/Checkout.php
 
@@ -86,22 +61,22 @@ parameters:
 			path: includes/Checkout.php
 
 		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:add_tax_fields\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:add_tax_fields\\(\\) has parameter \\$fields with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/Checkout.php
 
 		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:add_tax_fields\\(\\) has parameter \\$fields with no typehint specified\\.$#"
+			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:add_tax_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Checkout.php
+
+		-
+			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:auto_sort_checkout_fields\\(\\) has parameter \\$fields with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/Checkout.php
 
 		-
 			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:auto_sort_checkout_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: includes/Checkout.php
-
-		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:get_districts\\(\\) has parameter \\$city_plate_number_with_TR with no typehint specified\\.$#"
 			count: 1
 			path: includes/Checkout.php
 
@@ -116,32 +91,42 @@ parameters:
 			path: includes/Checkout.php
 
 		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:hide_postcode_fields\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:hide_postcode_fields\\(\\) has parameter \\$fields with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/Checkout.php
 
 		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:hide_postcode_fields\\(\\) has parameter \\$fields with no typehint specified\\.$#"
+			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:hide_postcode_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/Checkout.php
 
 		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:make_address2_required_and_update_the_label\\(\\) with return type void returns mixed but should not return anything\\.$#"
-			count: 2
-			path: includes/Checkout.php
-
-		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:make_address2_required_default_address_field\\(\\) with return type void returns mixed but should not return anything\\.$#"
-			count: 2
-			path: includes/Checkout.php
-
-		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:override_billing_hez_TC_number\\(\\) should return string but returns bool\\|string\\.$#"
+			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:make_address2_required_and_update_the_label\\(\\) has parameter \\$fields with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/Checkout.php
 
 		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:override_posted_data\\(\\) has parameter \\$data with no typehint specified\\.$#"
+			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:make_address2_required_and_update_the_label\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Checkout.php
+
+		-
+			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:make_address2_required_default_address_field\\(\\) has parameter \\$fields with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Checkout.php
+
+		-
+			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:make_address2_required_default_address_field\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Checkout.php
+
+		-
+			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:override_billing_hez_identity_number\\(\\) should return string but returns bool\\|string\\.$#"
+			count: 1
+			path: includes/Checkout.php
+
+		-
+			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:override_posted_data\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/Checkout.php
 
@@ -151,7 +136,12 @@ parameters:
 			path: includes/Checkout.php
 
 		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:sort_address_fields\\(\\) with return type void returns mixed but should not return anything\\.$#"
+			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:sort_address_fields\\(\\) has parameter \\$fields with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/Checkout.php
+
+		-
+			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:sort_address_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/Checkout.php
 
@@ -161,7 +151,7 @@ parameters:
 			path: includes/Checkout.php
 
 		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:update_fields_required_options_for_invoice_type_company\\(\\) has parameter \\$fields with no typehint specified\\.$#"
+			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:update_fields_required_options_for_invoice_type_company\\(\\) has parameter \\$fields with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/Checkout.php
 
@@ -171,7 +161,7 @@ parameters:
 			path: includes/Checkout.php
 
 		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:update_fields_required_options_for_invoice_type_person\\(\\) has parameter \\$fields with no typehint specified\\.$#"
+			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:update_fields_required_options_for_invoice_type_person\\(\\) has parameter \\$fields with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/Checkout.php
 
@@ -181,32 +171,12 @@ parameters:
 			path: includes/Checkout.php
 
 		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$city_plate_number_with_TR\\)\\: Unexpected token \"\\$city_plate_number_with_TR\", expected type at offset 53$#"
+			message: "#^Parameter \\#1 \\$arr of function hezarfen_wc_checkout_select2_option_format expects array, array\\|bool given\\.$#"
 			count: 1
 			path: includes/Checkout.php
 
 		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$data\\)\\: Unexpected token \"\\$data\", expected type at offset 87$#"
-			count: 1
-			path: includes/Checkout.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$fields\\)\\: Unexpected token \"\\$fields\", expected type at offset 58$#"
-			count: 1
-			path: includes/Checkout.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$fields\\)\\: Unexpected token \"\\$fields\", expected type at offset 75$#"
-			count: 1
-			path: includes/Checkout.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$fields\\)\\: Unexpected token \"\\$fields\", expected type at offset 79$#"
-			count: 1
-			path: includes/Checkout.php
-
-		-
-			message: "#^Property Hezarfen\\\\Inc\\\\Checkout\\:\\:\\$hezarfen_show_hezarfen_checkout_tax_fields has no typehint specified\\.$#"
+			message: "#^Parameter \\#1 \\$city_plate_number of static method Hezarfen\\\\Inc\\\\Services\\\\MahalleIO\\:\\:get_districts\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: includes/Checkout.php
 
@@ -246,17 +216,17 @@ parameters:
 			path: includes/Data/Abstracts/Abstract_Encryption.php
 
 		-
-			message: "#^Parameter \\#2 \\$offset of function substr expects int, int\\|false given\\.$#"
+			message: "#^Parameter \\#2 \\$start of function substr expects int, int\\|false given\\.$#"
 			count: 1
 			path: includes/Data/Abstracts/Abstract_Encryption.php
 
 		-
-			message: "#^Parameter \\#3 \\$length of function substr expects int\\|null, int\\|false given\\.$#"
+			message: "#^Parameter \\#3 \\$length of function substr expects int, int\\|false given\\.$#"
 			count: 1
 			path: includes/Data/Abstracts/Abstract_Encryption.php
 
 		-
-			message: "#^Property Hezarfen\\\\Inc\\\\Data\\\\Abstracts\\\\Abstract_Encryption\\:\\:\\$encryption_key has no typehint specified\\.$#"
+			message: "#^Parameter \\#5 \\$iv of function openssl_encrypt expects string, string\\|false given\\.$#"
 			count: 1
 			path: includes/Data/Abstracts/Abstract_Encryption.php
 
@@ -271,16 +241,6 @@ parameters:
 			path: includes/Data/PostMetaEncryption.php
 
 		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Data\\\\PostMetaEncryption\\:\\:create_encryption_tester_text\\(\\) with return type void returns bool but should not return anything\\.$#"
-			count: 1
-			path: includes/Data/PostMetaEncryption.php
-
-		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Data\\\\PostMetaEncryption\\:\\:create_encryption_tester_text\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 1
-			path: includes/Data/PostMetaEncryption.php
-
-		-
 			message: "#^Method Hezarfen\\\\Inc\\\\Data\\\\PostMetaEncryption\\:\\:is_encryption_key_generated\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: includes/Data/PostMetaEncryption.php
@@ -291,7 +251,7 @@ parameters:
 			path: includes/Data/PostMetaEncryption.php
 
 		-
-			message: "#^Property Hezarfen\\\\Inc\\\\Data\\\\PostMetaEncryption\\:\\:\\$encryption_key has no typehint specified\\.$#"
+			message: "#^Parameter \\#1 \\$str of function base64_encode expects string, string\\|false given\\.$#"
 			count: 1
 			path: includes/Data/PostMetaEncryption.php
 
@@ -301,39 +261,14 @@ parameters:
 			path: includes/Data/PostMetaEncryption.php
 
 		-
-			message: "#^Property Hezarfen\\\\Inc\\\\Data\\\\ServiceCredentialEncryption\\:\\:\\$encryption_key has no typehint specified\\.$#"
+			message: "#^Right side of \\|\\| is always false\\.$#"
 			count: 1
 			path: includes/Data/ServiceCredentialEncryption.php
 
 		-
 			message: "#^Right side of \\|\\| is always false\\.$#"
 			count: 1
-			path: includes/Data/ServiceCredentialEncryption.php
-
-		-
-			message: "#^Method Hezarfen_Install\\:\\:install\\(\\) has no return typehint specified\\.$#"
-			count: 1
 			path: includes/Hezarfen_Install.php
-
-		-
-			message: "#^Method Hezarfen_Install\\:\\:update_db_version\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: includes/Hezarfen_Install.php
-
-		-
-			message: "#^Method Hezarfen_Install\\:\\:update_version\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: includes/Hezarfen_Install.php
-
-		-
-			message: "#^Right side of \\|\\| is always false\\.$#"
-			count: 1
-			path: includes/Hezarfen_Install.php
-
-		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Services\\\\MahalleIO\\:\\:HTTP\\(\\) has parameter \\$url with no typehint specified\\.$#"
-			count: 1
-			path: includes/Services/MahalleIO.php
 
 		-
 			message: "#^Method Hezarfen\\\\Inc\\\\Services\\\\MahalleIO\\:\\:get_api_token\\(\\) should return string\\|false but returns bool\\|string\\.$#"
@@ -351,22 +286,12 @@ parameters:
 			path: includes/Services/MahalleIO.php
 
 		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Services\\\\MahalleIO\\:\\:get_districts\\(\\) has parameter \\$city_plate_number with no typehint specified\\.$#"
-			count: 1
-			path: includes/Services/MahalleIO.php
-
-		-
 			message: "#^Method Hezarfen\\\\Inc\\\\Services\\\\MahalleIO\\:\\:get_districts\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/Services/MahalleIO.php
 
 		-
 			message: "#^Method Hezarfen\\\\Inc\\\\Services\\\\MahalleIO\\:\\:get_districts\\(\\) should return array but returns WP_Error\\.$#"
-			count: 1
-			path: includes/Services/MahalleIO.php
-
-		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Services\\\\MahalleIO\\:\\:get_neighborhoods\\(\\) has parameter \\$district_id with no typehint specified\\.$#"
 			count: 1
 			path: includes/Services/MahalleIO.php
 
@@ -381,32 +306,17 @@ parameters:
 			path: includes/Services/MahalleIO.php
 
 		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$city_plate_number\\)\\: Unexpected token \"\\$city_plate_number\", expected type at offset 77$#"
-			count: 1
-			path: includes/Services/MahalleIO.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$district_id\\)\\: Unexpected token \"\\$district_id\", expected type at offset 71$#"
-			count: 1
-			path: includes/Services/MahalleIO.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$url\\)\\: Unexpected token \"\\$url\", expected type at offset 61$#"
-			count: 1
-			path: includes/Services/MahalleIO.php
-
-		-
 			message: "#^Right side of \\|\\| is always false\\.$#"
 			count: 1
 			path: includes/Services/MahalleIO.php
 
 		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Admin\\\\OrderDetails\\:\\:add_tax_fields_to_order_details\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Hezarfen\\\\Inc\\\\Admin\\\\OrderDetails\\:\\:add_tax_fields_to_order_details\\(\\) has parameter \\$fields with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/admin/order/OrderDetails.php
 
 		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Admin\\\\OrderDetails\\:\\:add_tax_fields_to_order_details\\(\\) has parameter \\$fields with no typehint specified\\.$#"
+			message: "#^Method Hezarfen\\\\Inc\\\\Admin\\\\OrderDetails\\:\\:add_tax_fields_to_order_details\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/admin/order/OrderDetails.php
 
@@ -426,27 +336,17 @@ parameters:
 			path: includes/admin/settings/class-hezarfen-settings-hezarfen.php
 
 		-
+			message: "#^Method Hezarfen_Settings_Hezarfen\\:\\:get_settings\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: includes/admin/settings/class-hezarfen-settings-hezarfen.php
+
+		-
 			message: "#^Method Hezarfen_Settings_Hezarfen\\:\\:output\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: includes/admin/settings/class-hezarfen-settings-hezarfen.php
 
 		-
-			message: "#^Method Hezarfen_Settings_Hezarfen\\:\\:override_the_mahalle_io_apikey\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: includes/admin/settings/class-hezarfen-settings-hezarfen.php
-
-		-
-			message: "#^Method Hezarfen_Settings_Hezarfen\\:\\:override_the_mahalle_io_apikey\\(\\) has parameter \\$value with no typehint specified\\.$#"
-			count: 1
-			path: includes/admin/settings/class-hezarfen-settings-hezarfen.php
-
-		-
-			message: "#^Method Hezarfen_Settings_Hezarfen\\:\\:save\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: includes/admin/settings/class-hezarfen-settings-hezarfen.php
-
-		-
-			message: "#^Method Hezarfen_Settings_Hezarfen\\:\\:show_hezarfen_tax_fields\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Hezarfen_Settings_Hezarfen\\:\\:override_the_mahalle_io_apikey\\(\\) should return string but returns bool\\|string\\.$#"
 			count: 1
 			path: includes/admin/settings/class-hezarfen-settings-hezarfen.php
 
@@ -471,17 +371,12 @@ parameters:
 			path: includes/admin/settings/views/encryption.php
 
 		-
-			message: "#^Function hezarfen_wc_checkout_select2_option_format\\(\\) has parameter \\$arr with no typehint specified\\.$#"
+			message: "#^Function hezarfen_wc_checkout_select2_option_format\\(\\) has parameter \\$arr with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/hezarfen-wc-helpers.php
 
 		-
 			message: "#^Function hezarfen_wc_checkout_select2_option_format\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: includes/hezarfen-wc-helpers.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$arr\\)\\: Unexpected token \"\\$arr\", expected type at offset 66$#"
 			count: 1
 			path: includes/hezarfen-wc-helpers.php
 

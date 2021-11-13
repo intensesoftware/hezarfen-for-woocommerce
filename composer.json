@@ -1,7 +1,8 @@
 {
     "scripts": {
         "phpcs": "./vendor/bin/phpcs -s",
-        "phpcbf": "./vendor/bin/phpcbf"
+        "phpcbf": "./vendor/bin/phpcbf",
+        "phpstan": "./vendor/bin/phpstan"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "3.*",
