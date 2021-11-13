@@ -1,4 +1,9 @@
 <?php
+/**
+ * Helpers
+ * 
+ * @package Hezarfen\Inc
+ */
 
 defined( 'ABSPATH' ) || exit();
 
@@ -6,7 +11,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * Update array keys for select option values
  *
- * @param $arr
+ * @param array $arr array of the districts.
  * @return array
  */
 function hezarfen_wc_checkout_select2_option_format( $arr ) {
