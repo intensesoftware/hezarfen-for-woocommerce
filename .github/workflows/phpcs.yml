@@ -1,18 +1,14 @@
-on: [push]
-name: PHPCS
+name: PHPCS check
+
+on: push
 
 jobs:
   phpcs:
-    name: phpcs
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0 # important!
-      - name: Install PHP_CodeSniffer
-        run: |
-          curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
-          php phpcs.phar --version
-      - uses: tinovyatkin/action-php-codesniffer@v1
-        with:
-          standard: phpcs.xml.dist
+      name: PHPCS
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - name: PHPCS check
+          uses: chekalsky/phpcs-action@v1
+          with:
+            enable_warnings: true
