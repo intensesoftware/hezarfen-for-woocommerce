@@ -8,6 +8,7 @@ class Hez_Shipping_Tracking
 	public function __construct()
 	{
 		// Shipping Carriers Initialization
+
 		$this->shipping_carriers=[
 							'TR_YURTICI' => 
 								[
@@ -65,6 +66,9 @@ class Hez_Shipping_Tracking
 								'is_available'=>false
 								]
 							];
+
+		$this->shipping_carriers = $this->get_shipping_providers();
+
 		// Action to register custom order status
 		add_action( 'init', [$this,'hez_register_shipped_order_status'] );
 
@@ -83,6 +87,10 @@ class Hez_Shipping_Tracking
 		// Show Shipping fields in my account
 		add_action( 'woocommerce_order_details_after_order_table', [$this,'hezarfen_show_shipping_data'] );
 		
+	}
+
+	private function get_shipping_providers(){
+		return apply_filters( 'hezarfen_supported_shipping_carriers', $this->shipping_carriers );
 	}
 
 	// Function for register custom order status
@@ -108,7 +116,6 @@ class Hez_Shipping_Tracking
 	    }
 	    return $new_order_statuses;
 	}
-
 	// Add Custom fields for woocommerce order
 	public function hez_add_meta_boxes()
 	{
@@ -124,7 +131,6 @@ class Hez_Shipping_Tracking
 		    );		
 		}		
 	}
-
 	// Add Custom fields for woocommerce order
 	public function hez_order_shipping_options(){
 	    global $woocommerce,$wpdb;
@@ -238,14 +244,31 @@ class Hez_Shipping_Tracking
 	}
 
 	// Show Shipping fields in my account
-	public function hezarfen_show_shipping_data($order) {
-		
+	public function hezarfen_show_shipping_data($order) {		
 		$shipping_carriers=$this->shipping_carriers;
 		$order_id=$order->get_id();
 		$hez_ship_track_no= get_post_meta( $order_id, 'hez_ship_track_no', true );
 	    $hez_ship_carrier= get_post_meta( $order_id, 'hez_ship_carrier', true );
 	    if($hez_ship_track_no&&$hez_ship_carrier){
 		?>
+		<style type="text/css">
+			.img-logo{
+				width: 50px;
+			}
+			.shipping_carrier_title{
+				font-weight: 600;
+			}
+			a.btn.btn-success {
+			    background: #2271b1;
+			    border-color: #2271b1;
+			    color: #fff;
+			    text-decoration: none;
+			    display: inline-block;
+			    line-height: 2;
+			    padding: 0 10px;
+			    border-radius: 3px;
+			}
+		</style>
 		<h3>Tracking Details</h3>
 		<table class="table">
 			<tr>
@@ -254,8 +277,12 @@ class Hez_Shipping_Tracking
 			</tr>
 			<tr>
 				<td >
-					<img src="<?php echo $shipping_carriers[$hez_ship_carrier]['logo']; ?>">
-					<?php echo $shipping_carriers[$hez_ship_carrier]['name']; ?>
+					<?php 
+					if($shipping_carriers[$hez_ship_carrier]['logo']!=''){?>
+						<img src="<?php echo $shipping_carriers[$hez_ship_carrier]['logo']; ?>" class="img-logo">
+					<?php 
+					}
+					 echo '<span class="shipping_carrier_title">'.$shipping_carriers[$hez_ship_carrier]['name'].'</span>'; ?>
 				</td>	
 				<td>
 					<a href="<?php echo $shipping_carriers[$hez_ship_carrier]['tracking_link']."/".$hez_ship_track_no; ?>" class="btn btn-success" target='_blank'>Track</a>
