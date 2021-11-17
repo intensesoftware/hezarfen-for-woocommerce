@@ -80,9 +80,6 @@ class Hez_Shipping_Tracking
 		
 		// Ajax handler function
 		add_action( 'wp_ajax_hezarfen_shipping_data_action', [$this,'hezarfen_shipping_data_action'] );
-
-		// Add Custom fields for woocommerce order
-		add_action( 'wp_ajax_nopriv_hezarfen_shipping_data_action', [$this,'hezarfen_shipping_data_action'] );
 		
 		// Show Shipping fields in my account
 		add_action( 'woocommerce_order_details_after_order_table', [$this,'hezarfen_show_shipping_data'] );
@@ -96,12 +93,12 @@ class Hez_Shipping_Tracking
 	// Function for register custom order status
 	public function hez_register_shipped_order_status() {
 	    register_post_status( 'wc-hez_shipped', array(
-	        'label'                     => 'Kargolandı',
+	        'label'                     =>  __('Kargolandı','hezarfen-for-woocommerce'),
 	        'public'                    => true,
 	        'exclude_from_search'       => false,
 	        'show_in_admin_all_list'    => true,
 	        'show_in_admin_status_list' => true,
-	        'label_count'               => _n_noop( 'Kargolandı <span class="count">(%s)</span>', 'Kargolandı <span class="count">(%s)</span>' )
+	        'label_count'               => _n_noop( __('Kargolandı','hezarfen-for-woocommerce').' <span class="count">(%s)</span>', __('Kargolandı','hezarfen-for-woocommerce').' <span class="count">(%s)</span>' )
 	    ) );
 	}
 
@@ -110,9 +107,7 @@ class Hez_Shipping_Tracking
 	    $new_order_statuses = array();
 	    foreach ( $order_statuses as $key => $status ) {
 	        $new_order_statuses[ $key ] = $status;
-	        if ( 'wc-processing' === $key ) {
-	            $new_order_statuses['wc-hez_shipped'] = 'Kargolandı';
-	        }
+	        $new_order_statuses['wc-hez_shipped'] = __('Kargolandı','hezarfen-for-woocommerce');
 	    }
 	    return $new_order_statuses;
 	}
@@ -120,7 +115,7 @@ class Hez_Shipping_Tracking
 	public function hez_add_meta_boxes()
 	{
 		if(isset($_GET['post'])){
-			$order_id=$_GET['post'];
+			$order_id=sanitize_text_field( $_GET['post'] );
 		    add_meta_box(
 		        "woocommerce-order-my-custom",
 		        __( "Shipping Options" ),
@@ -135,7 +130,7 @@ class Hez_Shipping_Tracking
 	public function hez_order_shipping_options(){
 	    global $woocommerce,$wpdb;
 	    $shipping_carriers=$this->shipping_carriers;
-	    $order_id=$_GET['post'];
+	    $order_id=sanitize_text_field( $_GET['post'] );
 	    $hez_ship_track_no= get_post_meta( $order_id, 'hez_ship_track_no', true );
 	    $hez_ship_carrier= get_post_meta( $order_id, 'hez_ship_carrier', true );
 		?>
@@ -159,26 +154,26 @@ class Hez_Shipping_Tracking
 		</style>
 		<form action="" method="post" >
 		    <div class="wp-clearfix">
-			    <label>Shipping Carrier</label><br>
+			    <label><?php echo __('Shipping Carrier'); ?></label><br>
 			    <select name="hez_ship_carrier" class="shipping_fields hez_ship_carrier">
-			    	<option value="">Select Shippiing Carrier</option>
+			    	<option value=""><?php echo __('Select Shippiing Carrier','hezarfen-for-woocommerce'); ?></option>
 			    <?php 
 			    foreach($shipping_carriers as $key=>$shipping_carrier)
 			    {
 			    	if($shipping_carrier['is_available'])
-			    		echo "<option value='".$key."' ".($hez_ship_carrier==$key?'selected':'').">".$shipping_carrier['name']."</option>";
+			    		echo "<option value='".$key."' ".($hez_ship_carrier==$key?'selected':'').">".__($shipping_carrier['name'],'hezarfen-for-woocommerce')."</option>";
 			    }
 			    ?>
 			    </select>
 			</div>
 			
 		    <div class="wp-clearfix">
-		    	<label>Shipping Tracking Code</label><br>
+		    	<label><?php echo __('Shipping Tracking Code','hezarfen-for-woocommerce'); ?></label><br>
 		    	<input type="text" name="hez_ship_track_no"  value="<?php echo $hez_ship_track_no; ?>" class="shipping_fields hez_ship_track_no">	
 		    </div>
 		    <br>
 		    <div class="text-right">
-		    	<button type="button" name="update_shipping" class="button button-primary update-shipping">Update Shipping</button>	
+		    	<button type="button" name="update_shipping" class="button button-primary update-shipping"><?php echo __('Update Shipping','hezarfen-for-woocommerce'); ?></button>	
 		    </div>
 		    
 		</form>
@@ -209,8 +204,6 @@ class Hez_Shipping_Tracking
 		                           $('.update-shipping').removeAttr('disabled');
 		                           $('.hez_ship_track_no').removeClass('error');
 		                           $('.hez_ship_carrier').removeClass('error');
-		                           location.reload();
-
 		                    }
 		                });
 		            }else{
@@ -226,9 +219,9 @@ class Hez_Shipping_Tracking
 	// Store Custom fields for woocommerce order
 	public function hezarfen_shipping_data_action(){
 		global $wpdb;
-		$order_id=$_POST['id'];
-		update_post_meta( $order_id, 'hez_ship_carrier', $_POST['hez_ship_carrier'] );
-		update_post_meta( $order_id, 'hez_ship_track_no', $_POST['hez_ship_track_no'] );
+		$order_id=sanitize_text_field($_POST['id']);
+		update_post_meta( $order_id, 'hez_ship_carrier', sanitize_text_field($_POST['hez_ship_carrier']) );
+		update_post_meta( $order_id, 'hez_ship_track_no', sanitize_text_field($_POST['hez_ship_track_no']) );
 		
 		$order = wc_get_order( $order_id );
 
@@ -269,23 +262,23 @@ class Hez_Shipping_Tracking
 			    border-radius: 3px;
 			}
 		</style>
-		<h3>Tracking Details</h3>
+		<h3><?php echo __('Tracking Details','hezarfen-for-woocommerce'); ?></h3>
 		<table class="table">
 			<tr>
-				<th>Shipping Carrier</th>
-				<th>Tracking link</th>
+				<th><?php echo __('Shipping Carrier','hezarfen-for-woocommerce'); ?></th>
+				<th><?php echo __('Tracking link','hezarfen-for-woocommerce'); ?></th>
 			</tr>
 			<tr>
 				<td >
 					<?php 
 					if($shipping_carriers[$hez_ship_carrier]['logo']!=''){?>
-						<img src="<?php echo $shipping_carriers[$hez_ship_carrier]['logo']; ?>" class="img-logo">
+						<img src="<?php echo esc_url($shipping_carriers[$hez_ship_carrier]['logo']); ?>" class="img-logo">
 					<?php 
 					}
-					 echo '<span class="shipping_carrier_title">'.$shipping_carriers[$hez_ship_carrier]['name'].'</span>'; ?>
+					 echo '<span class="shipping_carrier_title">'.__(	$shipping_carriers[$hez_ship_carrier]['name'],'hezarfen-for-woocommerce').'</span>'; ?>
 				</td>	
 				<td>
-					<a href="<?php echo $shipping_carriers[$hez_ship_carrier]['tracking_link']."/".$hez_ship_track_no; ?>" class="btn btn-success" target='_blank'>Track</a>
+					<a href="<?php echo  __($shipping_carriers[$hez_ship_carrier]['tracking_link'],'hezarfen-for-woocommerce')."/".$hez_ship_track_no; ?>" class="btn btn-success" target='_blank'><?php echo __('Track','hezarfen-for-woocommerce'); ?></a>
 				</td>
 			</tr>
 			
