@@ -18,7 +18,7 @@ function hezarfen_wc_checkout_select2_option_format( $arr ) {
 	$values = array();
 
 	foreach ( $arr as $key => $value ) {
-		$values[ sprintf( '%d:%s', $key, $value ) ] = $value;
+		$values[ $value ] = $value;
 	}
 
 	return $values;

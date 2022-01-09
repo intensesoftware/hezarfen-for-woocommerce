@@ -10,6 +10,7 @@ namespace Hezarfen\Inc;
 defined( 'ABSPATH' ) || exit();
 
 use Hezarfen\Inc\Services\MahalleIO;
+use Hezarfen\Inc\Mahalle_Local;
 use Hezarfen\Inc\Data\PostMetaEncryption;
 
 /**
@@ -416,7 +417,7 @@ class Checkout {
 
 	/**
 	 *
-	 * Update district and neighborhood data after checkout submit
+	 * Update necessary data after checkout submit
 	 *
 	 * @param array $data the posted checkout data.
 	 * @return array
@@ -443,22 +444,7 @@ class Checkout {
 			$types = array( 'shipping', 'billing' );
 
 			foreach ( $types as $type ) {
-				$city_field_name = sprintf( '%s_city', $type );
-
 				$neighborhood_field_name = sprintf( '%s_address_1', $type );
-
-				if ( array_key_exists( $city_field_name, $data ) ) {
-					$value = $data[ $city_field_name ];
-
-					if ( $value && strpos( $value, ':' ) !== false ) {
-						$district_data_arr = explode( ':', $value );
-
-						$district_id   = $district_data_arr[0];
-						$district_name = $district_data_arr[1];
-
-						$data[ $city_field_name ] = $district_name;
-					}
-				}
 
 				if ( array_key_exists( $neighborhood_field_name, $data ) ) {
 					$value = $data[ $neighborhood_field_name ];
@@ -506,25 +492,18 @@ class Checkout {
 			// the value has TR prefix such as TR18.
 			$current_city_plate_number_prefixed = $woocommerce->customer->$get_city_function();
 
-			$districts_response = $this->get_districts(
+			$districts = $this->get_districts(
 				$current_city_plate_number_prefixed
 			);
 
-			/**
-			 * TODO: fire a notification about failed mahalle.io connection
-			 */
-			// if get_districts failed, return empty array and disable mahalle.io - Hezarfen customizations.
-
-			if ( is_wp_error( $districts_response ) ) {
+			if ( ! $districts ) {
 				continue;
-			} else {
-				$districts = $districts_response;
 			}
 
 			// remove WooCommerce default district field on checkout.
 			unset( $fields[ $type ][ $city_field_name ] );
 
-			// update array keys for id:name format.
+			// update array for name => name format.
 			$districts = hezarfen_wc_checkout_select2_option_format( $districts );
 
 			$fields[ $type ][ $city_field_name ] = array(
@@ -554,9 +533,10 @@ class Checkout {
 	}
 
 	/**
-	 * Get districts from mahalle.io
+	 * Get districts
 	 *
 	 * @param string $city_plate_with_prefix that begins with TR prefix such as TR18.
+	 *
 	 * @return array|bool
 	 */
 	private function get_districts( $city_plate_with_prefix ) {
@@ -564,11 +544,7 @@ class Checkout {
 			return array();
 		}
 
-		$city_plate_number = explode( 'TR', $city_plate_with_prefix );
-
-		$city_plate_number = $city_plate_number[1];
-
-		$districts = MahalleIO::get_districts( $city_plate_number );
+		$districts = Mahalle_Local::get_districts( $city_plate_with_prefix );
 
 		return $districts;
 	}

@@ -67,11 +67,11 @@ jQuery( function( $ ) {
 
                 var districts = JSON.parse(response);
 
-                $.each(districts, function (district_id, district_name) {
+                $.each(districts, function (index, district_name) {
 
                     $('#wc_hezarfen_'+type+'_district')
                         .append($("<option></option>")
-                            .attr("value", district_id+":"+district_name)
+                            .attr("value", district_name)
                             .text(district_name));
 
                 });

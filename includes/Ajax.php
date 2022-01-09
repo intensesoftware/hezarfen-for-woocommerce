@@ -10,6 +10,7 @@ namespace Hezarfen\Inc;
 defined( 'ABSPATH' ) || exit();
 
 use Hezarfen\Inc\Services\MahalleIO;
+use Hezarfen\Inc\Mahalle_Local;
 
 /**
  * The class handles AJAX operations.
@@ -79,28 +80,13 @@ class Ajax {
 		// the variable begins with TR prefix.
 		$city_plate_number_with_prefix = isset( $_POST['city_plate_number'] ) ? sanitize_text_field( $_POST['city_plate_number'] ) : '';
 
-		$city_plate_number = explode( 'TR', $city_plate_number_with_prefix );
+		if ( $city_plate_number_with_prefix ) {
+			$districts = Mahalle_Local::get_districts( $city_plate_number_with_prefix );
 
-		$city_plate_number = intval( $city_plate_number[1] );
-
-		if ( ! $city_plate_number ) {
-			echo wp_json_encode( array() );
-			wp_die();
-		}
-
-		$get_districts_response = MahalleIO::get_districts( $city_plate_number );
-
-		// if get_districts failed, return empty array.
-		/**
-		 * Todo: fire a notification about failed mahalle.io connection
-		 */
-		if ( is_wp_error( $get_districts_response ) ) {
-			$districts = array();
+			echo wp_json_encode( $districts );
 		} else {
-			$districts = $get_districts_response;
+			echo wp_json_encode( array() );
 		}
-
-		echo wp_json_encode( $districts );
 
 		wp_die();
 	}
