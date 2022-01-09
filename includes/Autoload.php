@@ -148,6 +148,7 @@ class Autoload {
 		require_once 'Data/PostMetaEncryption.php';
 		require_once 'Checkout.php';
 		require_once 'Ajax.php';
+		require_once 'class-mahalle-local.php';
 		require_once 'Hezarfen_Install.php';
 		require_once 'hezarfen-wc-helpers.php';
 		require_once 'Services/MahalleIO.php';
