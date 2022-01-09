@@ -9,7 +9,6 @@ namespace Hezarfen\Inc;
 
 defined( 'ABSPATH' ) || exit();
 
-use Hezarfen\Inc\Services\MahalleIO;
 use Hezarfen\Inc\Mahalle_Local;
 use Hezarfen\Inc\Data\PostMetaEncryption;
 
@@ -139,11 +138,6 @@ class Checkout {
 	 * @return array
 	 */
 	public function make_address2_required_default_address_field( $fields ) {
-		// if Mahalle.io not activated, return.
-		if ( ! MahalleIO::is_active() ) {
-			return $fields;
-		}
-
 		$fields['address_2']['required'] = true;
 
 		return $fields;
@@ -156,12 +150,6 @@ class Checkout {
 	 * @return array
 	 */
 	public function make_address2_required_and_update_the_label( $fields ) {
-		// if Mahalle.io not activated, return.
-		if ( ! MahalleIO::is_active() ) {
-			return $fields;
-		}
-
-		// if mahalle.io is active, make address2 required.
 		$fields['billing']['billing_address_2']['required']      = true;
 		$fields['billing']['billing_address_2']['label']         = 'Adresiniz';
 		$fields['billing']['billing_address_2']['placeholder']   = 'Cadde, sokak, bina, daire no bilgilerinizi giriniz';
@@ -469,11 +457,6 @@ class Checkout {
 	 * @return array
 	 */
 	public function add_district_and_neighborhood_fields( $fields ) {
-		// if Mahalle.io not activated, return.
-		if ( ! MahalleIO::is_active() ) {
-			return $fields;
-		}
-
 		$types = array( 'shipping', 'billing' );
 
 		$district_options     = array( '' => __( 'Lütfen seçiniz', 'woocommerce' ) );
