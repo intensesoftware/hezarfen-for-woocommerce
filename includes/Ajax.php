@@ -9,7 +9,6 @@ namespace Hezarfen\Inc;
 
 defined( 'ABSPATH' ) || exit();
 
-use Hezarfen\Inc\Services\MahalleIO;
 use Hezarfen\Inc\Mahalle_Local;
 
 /**
@@ -99,32 +98,16 @@ class Ajax {
 	public function get_neighborhoods() {
 		check_ajax_referer( 'mahalle-io-get-data', 'security' );
 
-		$district_data = isset( $_POST['district_id'] ) ? sanitize_text_field( $_POST['district_id'] ) : '';
+		$city_plate_number = isset( $_POST['city_plate_number'] ) ? $_POST['city_plate_number'] : '';
+		$district          = isset( $_POST['district'] ) ? $_POST['district'] : '';
 
-		$district_data_array = explode( ':', $district_data );
+		if ( $city_plate_number && $district ) {
+			$neighborhoods = Mahalle_Local::get_neighborhoods( $city_plate_number, $district );
 
-		$district_id = intval( $district_data_array[0] );
-
-		if ( ! $district_id ) {
-			echo wp_json_encode( array() );
-			wp_die();
-		}
-
-		$get_neighborhoods_response = MahalleIO::get_neighborhoods(
-			$district_id
-		);
-
-		// if get_neighborhoods failed, return empty array.
-		/**
-		 * Todo: fire a notification about failed mahalle.io connection
-		 */
-		if ( is_wp_error( $get_neighborhoods_response ) ) {
-			$neighborhoods = array();
+			echo wp_json_encode( $neighborhoods );
 		} else {
-			$neighborhoods = $get_neighborhoods_response;
+			echo wp_json_encode( array() );
 		}
-
-		echo wp_json_encode( $neighborhoods );
 
 		wp_die();
 	}

@@ -103,13 +103,14 @@ jQuery( function( $ ) {
             // get selected data
             var selected = e.params.data;
 
+            let checkout_fields_wrapper = $('.woocommerce-' + type + '-fields');
 
             var data = {
 
 				'action':'wc_hezarfen_get_neighborhoods',
 				'security': wc_hezarfen_ajax_object.mahalleio_nonce,
-                'district_id':selected.id
-
+                'city_plate_number': checkout_fields_wrapper.find('#' + type + '_state').val(),
+                'district': selected.id
             };
 
             jQuery.post(wc_hezarfen_ajax_object.ajax_url, data, function(response){

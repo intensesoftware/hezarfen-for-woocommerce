@@ -439,24 +439,22 @@ class Checkout {
 			}
 		}
 
-		// if Mahalle.io activated, update neighborhood fields.
-		if ( MahalleIO::is_active() ) {
-			$types = array( 'shipping', 'billing' );
+		// Update neighborhood field.
+		$types = array( 'shipping', 'billing' );
 
-			foreach ( $types as $type ) {
-				$neighborhood_field_name = sprintf( '%s_address_1', $type );
+		foreach ( $types as $type ) {
+			$neighborhood_field_name = sprintf( '%s_address_1', $type );
 
-				if ( array_key_exists( $neighborhood_field_name, $data ) ) {
-					$value = $data[ $neighborhood_field_name ];
+			if ( array_key_exists( $neighborhood_field_name, $data ) ) {
+				$value = $data[ $neighborhood_field_name ];
 
-					if ( $value && strpos( $value, ':' ) !== false ) {
-						$neighborhood_data_arr = explode( ':', $value );
+				if ( $value && strpos( $value, ':' ) !== false ) {
+					$neighborhood_data_arr = explode( ':', $value );
 
-						$neighborhood_id   = $neighborhood_data_arr[0];
-						$neighborhood_name = $neighborhood_data_arr[1];
+					$neighborhood_id   = $neighborhood_data_arr[0];
+					$neighborhood_name = $neighborhood_data_arr[1];
 
-						$data[ $neighborhood_field_name ] = $neighborhood_name;
-					}
+					$data[ $neighborhood_field_name ] = $neighborhood_name;
 				}
 			}
 		}
