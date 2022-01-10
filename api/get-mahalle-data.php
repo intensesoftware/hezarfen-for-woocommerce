@@ -16,15 +16,13 @@ require dirname( __DIR__ ) . '/includes/class-mahalle-local.php';
  * @return array|null
  */
 function get_data( $requested_data_type, $city_plate_number, $district = null ) {
-	$data = null;
-
 	if ( 'district' === $requested_data_type ) {
 		return Mahalle_Local::get_districts( $city_plate_number );
 	} else if ( 'neighborhood' === $requested_data_type && $district ) {
 		return Mahalle_Local::get_neighborhoods( $city_plate_number, $district );
 	}
 
-	return $data;
+	return null;
 }
 
 $data_type = isset( $_GET['dataType'] ) ? $_GET['dataType'] : null;
