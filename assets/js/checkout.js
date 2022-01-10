@@ -56,14 +56,11 @@ jQuery( function( $ ) {
 
 
             var data = {
-
-				'action':'wc_hezarfen_get_districts',
-				'security': wc_hezarfen_ajax_object.mahalleio_nonce,
-                'city_plate_number':selected.id
-
+                'dataType': 'district',
+                'cityPlateNumber': selected.id
             };
 
-            jQuery.post(wc_hezarfen_ajax_object.ajax_url, data, function(response){
+            jQuery.get(wc_hezarfen_ajax_object.api_url, data, function(response){
 
                 var districts = JSON.parse(response);
 
@@ -106,14 +103,12 @@ jQuery( function( $ ) {
             let checkout_fields_wrapper = $('.woocommerce-' + type + '-fields');
 
             var data = {
-
-				'action':'wc_hezarfen_get_neighborhoods',
-				'security': wc_hezarfen_ajax_object.mahalleio_nonce,
-                'city_plate_number': checkout_fields_wrapper.find('#' + type + '_state').val(),
+                'dataType': 'neighborhood',
+                'cityPlateNumber': checkout_fields_wrapper.find('#' + type + '_state').val(),
                 'district': selected.id
             };
 
-            jQuery.post(wc_hezarfen_ajax_object.ajax_url, data, function(response){
+            jQuery.get(wc_hezarfen_ajax_object.api_url, data, function(response){
 
                 var neighborhoods = JSON.parse(response);
 

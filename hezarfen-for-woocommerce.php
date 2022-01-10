@@ -20,6 +20,7 @@ defined('ABSPATH') || exit();
 define('WC_HEZARFEN_VERSION', '1.3.5');
 define('WC_HEZARFEN_FILE', __FILE__);
 define('WC_HEZARFEN_UYGULAMA_YOLU', plugin_dir_path(__FILE__));
+define('WC_HEZARFEN_API_URL', plugin_dir_url(__FILE__) . 'api/get-mahalle-data.php');
 
 include_once 'includes/Autoload.php';
 

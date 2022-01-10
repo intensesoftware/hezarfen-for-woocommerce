@@ -19,7 +19,7 @@ class Mahalle_Local {
 	 * @return array
 	 */
 	public static function get_cities() {
-		require WC_HEZARFEN_UYGULAMA_YOLU . 'includes/Data/mahalle/tr-provinces.php';
+		require dirname( __FILE__ ) . '/Data/mahalle/tr-provinces.php';
 
 		return $tr_provinces;
 	}
@@ -33,7 +33,7 @@ class Mahalle_Local {
 	 */
 	public static function get_districts( $city_plate_number ) {
 		if ( self::check_city_plate_number( $city_plate_number ) ) {
-			require WC_HEZARFEN_UYGULAMA_YOLU . 'includes/Data/mahalle/tr-province-districts.php';
+			require dirname( __FILE__ ) . '/Data/mahalle/tr-province-districts.php';
 
 			if ( isset( $tr_districts[ $city_plate_number ] ) ) {
 				return $tr_districts[ $city_plate_number ];
@@ -53,7 +53,7 @@ class Mahalle_Local {
 	 */
 	public static function get_neighborhoods( $city_plate_number, $district ) {
 		if ( self::check_city_plate_number( $city_plate_number ) ) {
-			require WC_HEZARFEN_UYGULAMA_YOLU . "includes/Data/mahalle/tr-neighborhoods/tr-district-nbrhood-$city_plate_number.php";
+			require dirname( __FILE__ ) . "/Data/mahalle/tr-neighborhoods/tr-district-nbrhood-$city_plate_number.php";
 
 			if ( isset( $tr_neighborhoods[ $district ] ) ) {
 				return $tr_neighborhoods[ $district ];
