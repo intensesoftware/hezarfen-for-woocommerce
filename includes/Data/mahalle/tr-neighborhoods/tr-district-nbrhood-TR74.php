@@ -1,7 +1,12 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
-	'AMASRA' => array(
+$tr_neighborhoods = array(
+	'AMASRA'     => array(
 		'11503' => 'BOZTEPE MAH',
 		'11504' => 'FATİH MAH',
 		'11505' => 'KALEİÇİ MAH',
@@ -97,7 +102,7 @@ $TRDN = array(
 		'11595' => 'YUKARI MAH (GÖMÜ KÖYÜ)',
 		'11596' => 'YUKARI MAH (SARAYDÜZÜ KÖYÜ)',
 		'11597' => 'YUKARI MAH (ŞENYURT KÖYÜ)',
-		'11598' => 'ZİCA MAH (YAHYAYAZICILAR KÖYÜ)'
+		'11598' => 'ZİCA MAH (YAHYAYAZICILAR KÖYÜ)',
 	),
 	'KURUCAŞİLE' => array(
 		'11599' => 'KARGACAK MAH',
@@ -154,9 +159,9 @@ $TRDN = array(
 		'11650' => 'YALI MAH (KARAMAN KÖYÜ)',
 		'11651' => 'YAYLACIK MAH (PAŞALILAR KÖYÜ)',
 		'11652' => 'YENİCE MAH (MEYDAN KÖYÜ)',
-		'11653' => 'YENİKÖY KÖYÜ'
+		'11653' => 'YENİKÖY KÖYÜ',
 	),
-	'MERKEZ' => array(
+	'MERKEZ'     => array(
 		'11654' => 'AĞDACI MAH',
 		'11655' => 'DEMİRCİLER MAH',
 		'11656' => 'GECEN MAH',
@@ -710,9 +715,9 @@ $TRDN = array(
 		'12204' => 'CUMHURİYET MAH',
 		'12205' => 'ÇAYDÜZÜ MAH',
 		'12206' => 'ESENTEPE MAH',
-		'12207' => 'KARAKÖY MAH'
+		'12207' => 'KARAKÖY MAH',
 	),
-	'ULUS' => array(
+	'ULUS'       => array(
 		'12208' => 'ABDALOĞLU MAH (ZAFER KÖYÜ)',
 		'12209' => 'AHMET SOFUOĞLU MAH (KONAK KÖYÜ)',
 		'12210' => 'AKSARAY MAH (AKÖRENSÖKÜLER KÖYÜ)',
@@ -1032,6 +1037,6 @@ $TRDN = array(
 		'12524' => 'KASIMLAR MAH',
 		'12525' => 'MEZGELLER MAH',
 		'12526' => 'SAMAT MAH',
-		'12527' => 'SAZ MAH'
-	)
+		'12527' => 'SAZ MAH',
+	),
 );

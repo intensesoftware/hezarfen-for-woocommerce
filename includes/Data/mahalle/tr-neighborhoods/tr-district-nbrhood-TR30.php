@@ -1,7 +1,12 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
-	'ÇUKURCA' => array(
+$tr_neighborhoods = array(
+	'ÇUKURCA'   => array(
 		'33384' => 'AŞAĞI AKKAYA KÖYÜ',
 		'33385' => 'ÇIĞLI KÖYÜ',
 		'33386' => 'SARİYER MAH (AKKAYA KÖYÜ)',
@@ -21,9 +26,9 @@ $TRDN = array(
 		'33400' => 'MEŞELİ MAH (KAYALIK KÖYÜ)',
 		'33401' => 'NARLI KÖYÜ',
 		'33402' => 'ORMANLI MAH (GÜNDEŞ KÖYÜ)',
-		'33403' => 'ÜZÜMLÜ KÖYÜ'
+		'33403' => 'ÜZÜMLÜ KÖYÜ',
 	),
-	'DERECİK' => array(
+	'DERECİK'   => array(
 		'33404' => 'BALKAYA MAH',
 		'33405' => 'GÜNEY MAH',
 		'33406' => 'GÜRMEŞE MAH',
@@ -51,9 +56,9 @@ $TRDN = array(
 		'33428' => 'TOKLU MAH (GELİŞEN KÖYÜ)',
 		'33429' => 'ULAŞAN MAH (USLU KÖYÜ)',
 		'33430' => 'USLU KÖYÜ',
-		'33431' => 'YEŞİLOVA MAH (ANADAĞ KÖYÜ)'
+		'33431' => 'YEŞİLOVA MAH (ANADAĞ KÖYÜ)',
 	),
-	'MERKEZ' => array(
+	'MERKEZ'    => array(
 		'33432' => 'BAĞLAR MAH',
 		'33433' => 'BERÇELAN MAH',
 		'33434' => 'BİÇER MAH',
@@ -187,9 +192,9 @@ $TRDN = array(
 		'33562' => 'YUKARI OTLUCA MAH (OTLUCA KÖYÜ)',
 		'33563' => 'YUMRUKAYA MAH (AKBULUT KÖYÜ)',
 		'33564' => 'ZAVİTE MAH (KONAK KÖYÜ)',
-		'33565' => 'ZAVİTE MEZRASI MAH (KONAK KÖYÜ)'
+		'33565' => 'ZAVİTE MEZRASI MAH (KONAK KÖYÜ)',
 	),
-	'ŞEMDİNLİ' => array(
+	'ŞEMDİNLİ'  => array(
 		'33566' => 'AKBAL MAH (KORGAN KÖYÜ)',
 		'33567' => 'AKKAVAK MAH (KORGAN KÖYÜ)',
 		'33568' => 'AKTÜTÜN MAH (KONUR KÖYÜ)',
@@ -278,7 +283,7 @@ $TRDN = array(
 		'33651' => 'KARŞIYAKA MAH',
 		'33652' => 'MODA MAH',
 		'33653' => 'YAYLA MAH',
-		'33654' => 'YENİ MAH'
+		'33654' => 'YENİ MAH',
 	),
 	'YÜKSEKOVA' => array(
 		'33655' => 'AKPINAR KÖYÜ',
@@ -445,6 +450,6 @@ $TRDN = array(
 		'33816' => 'İPEK MAH',
 		'33817' => 'MEZARLIK MAH',
 		'33818' => 'YENİ MAH',
-		'33819' => 'YEŞİLDERE MAH'
-	)
+		'33819' => 'YEŞİLDERE MAH',
+	),
 );

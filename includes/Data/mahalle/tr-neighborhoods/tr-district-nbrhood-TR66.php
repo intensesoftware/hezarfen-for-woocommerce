@@ -1,6 +1,11 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
+$tr_neighborhoods = array(
 	'AKDAĞMADENİ' => array(
 		'70977' => 'AHİSHAVİ MAH',
 		'70978' => 'ÇAMLIK MAH',
@@ -99,9 +104,9 @@ $TRDN = array(
 		'71071' => 'YEDİŞEHRİ KÖYÜ',
 		'71072' => 'YENİYAPAN KÖYÜ',
 		'71073' => 'YUKARIÇULHALI KÖYÜ',
-		'71074' => 'YÜNALANI KÖYÜ'
+		'71074' => 'YÜNALANI KÖYÜ',
 	),
-	'AYDINCIK' => array(
+	'AYDINCIK'    => array(
 		'71075' => 'BAŞTÜRK MAH',
 		'71076' => 'DANLIDAĞ MAH',
 		'71077' => 'YENİ MAH',
@@ -129,9 +134,9 @@ $TRDN = array(
 		'71099' => 'MERKEZ MAH (KÖSRELİK KÖYÜ)',
 		'71100' => 'MOLLAİSMAİL KÖYÜ',
 		'71101' => 'SAKIZLIK KÖYÜ',
-		'71102' => 'ÜZÜMLÜK KÖYÜ'
+		'71102' => 'ÜZÜMLÜK KÖYÜ',
 	),
-	'BOĞAZLIYAN' => array(
+	'BOĞAZLIYAN'  => array(
 		'71103' => 'AŞAĞI KARAKOÇ MAH',
 		'71104' => 'AŞAĞI MAH',
 		'71105' => 'BAĞLARBAŞI MAH',
@@ -189,9 +194,9 @@ $TRDN = array(
 		'71157' => 'YEŞİL MAH (YAMAÇLI KÖYÜ)',
 		'71158' => 'YEŞİLHİSAR KÖYÜ',
 		'71159' => 'YOĞUNHİSAR KÖYÜ',
-		'71160' => 'ZAFER MAH (YAMAÇLI KÖYÜ)'
+		'71160' => 'ZAFER MAH (YAMAÇLI KÖYÜ)',
 	),
-	'ÇANDIR' => array(
+	'ÇANDIR'      => array(
 		'71161' => 'ABDULLAH EFENDİ MAH',
 		'71162' => 'ATATÜRK MAH',
 		'71163' => 'BAHÇELİEVLER MAH',
@@ -207,9 +212,9 @@ $TRDN = array(
 		'71173' => 'KARŞIYAKA MAH (BÜYÜKKIŞLA KÖYÜ)',
 		'71174' => 'KOZAN KÖYÜ',
 		'71175' => 'TANDOĞAN MAH (BÜYÜKKIŞLA KÖYÜ)',
-		'71176' => 'ZAFER MAH (BÜYÜKKIŞLA KÖYÜ)'
+		'71176' => 'ZAFER MAH (BÜYÜKKIŞLA KÖYÜ)',
 	),
-	'ÇAYIRALAN' => array(
+	'ÇAYIRALAN'   => array(
 		'71177' => 'AVCILAR MAH',
 		'71178' => 'BAĞLARBAŞI MAH',
 		'71179' => 'CUMHURİYET MAH',
@@ -243,9 +248,9 @@ $TRDN = array(
 		'71207' => 'YEŞİLYURT MAH (CURALİ KÖYÜ)',
 		'71208' => 'YILDIRIM BEYAZIT MAH (KONUKLAR KÖYÜ)',
 		'71209' => 'YUKARITEKKE KÖYÜ',
-		'71210' => 'YUKARIYAHYASARAY KÖYÜ'
+		'71210' => 'YUKARIYAHYASARAY KÖYÜ',
 	),
-	'ÇEKEREK' => array(
+	'ÇEKEREK'     => array(
 		'71211' => 'BAĞLARBAŞI MAH',
 		'71212' => 'BAHÇELİEVLER MAH',
 		'71213' => 'MEVLANA MAH',
@@ -297,9 +302,9 @@ $TRDN = array(
 		'71259' => 'YUKARIKARAHACILI KÖYÜ',
 		'71260' => 'YUKARIKARAKAYA KÖYÜ',
 		'71261' => 'YUKARIOBA KÖYÜ',
-		'71262' => 'ZAFER MAH (BAYINDIRHÜYÜK KÖYÜ)'
+		'71262' => 'ZAFER MAH (BAYINDIRHÜYÜK KÖYÜ)',
 	),
-	'KADIŞEHRİ' => array(
+	'KADIŞEHRİ'   => array(
 		'71263' => 'ÇAYPINAR MAH',
 		'71264' => 'GÜMÜŞDİĞİN MAH',
 		'71265' => 'KADIOĞLU MAH',
@@ -333,9 +338,9 @@ $TRDN = array(
 		'71293' => 'YAVUHASAN KÖYÜ',
 		'71294' => 'YELTEN KÖYÜ',
 		'71295' => 'YONCALIK MAH (HALIKÖY KÖYÜ)',
-		'71296' => 'YUKARIKIZILÖZ MAH (HALIKÖY KÖYÜ)'
+		'71296' => 'YUKARIKIZILÖZ MAH (HALIKÖY KÖYÜ)',
 	),
-	'MERKEZ' => array(
+	'MERKEZ'      => array(
 		'71297' => 'AKTAŞ KÖYÜ',
 		'71298' => 'AKYAMAÇ KÖYÜ',
 		'71299' => 'ALEMDAR KÖYÜ',
@@ -472,9 +477,9 @@ $TRDN = array(
 		'71430' => 'TUZKAYA MAH',
 		'71431' => 'YENİCAMİ MAH',
 		'71432' => 'YUKARIÇATAK MAH',
-		'71433' => 'YUKARINOHUTLU MAH'
+		'71433' => 'YUKARINOHUTLU MAH',
 	),
-	'SARAYKENT' => array(
+	'SARAYKENT'   => array(
 		'71434' => 'ALTINSU KÖYÜ',
 		'71435' => 'BALKAYA MAH (DEDEFAKILI KÖYÜ)',
 		'71436' => 'BAŞPINAR KÖYÜ',
@@ -500,9 +505,9 @@ $TRDN = array(
 		'71456' => 'KARŞIYAKA MAH',
 		'71457' => 'M.FEVZİ ÇAKMAK MAH',
 		'71458' => 'SARAY MAH',
-		'71459' => 'YENİ MAH'
+		'71459' => 'YENİ MAH',
 	),
-	'SARIKAYA' => array(
+	'SARIKAYA'    => array(
 		'71460' => 'AKBENLİ KÖYÜ',
 		'71461' => 'AKBUCAK KÖYÜ',
 		'71462' => 'AKÇADAM KÖYÜ',
@@ -581,9 +586,9 @@ $TRDN = array(
 		'71535' => 'KAZIM KARABEKİR MAH',
 		'71536' => 'OSMAN GAZİ MAH',
 		'71537' => 'ŞEKERPINAR MAH',
-		'71538' => 'YENİDOĞAN MAH'
+		'71538' => 'YENİDOĞAN MAH',
 	),
-	'SORGUN' => array(
+	'SORGUN'      => array(
 		'71539' => 'AĞCIN KÖYÜ',
 		'71540' => 'AHMETFAKILI MAH (YENİYER KÖYÜ)',
 		'71541' => 'AKOCAK MAH (EYMİR KÖYÜ)',
@@ -707,9 +712,9 @@ $TRDN = array(
 		'71659' => 'YAZLAK MAH',
 		'71660' => 'YENİ MAH',
 		'71661' => 'YENİDOĞAN MAH',
-		'71662' => 'YEŞİLÖZ MAH'
+		'71662' => 'YEŞİLÖZ MAH',
 	),
-	'ŞEFAATLİ' => array(
+	'ŞEFAATLİ'    => array(
 		'71663' => 'AKCAMİ KÖYÜ',
 		'71664' => 'AKÇAKOYUNLU KÖYÜ',
 		'71665' => 'ALİFAKILI KÖYÜ',
@@ -767,9 +772,9 @@ $TRDN = array(
 		'71717' => 'KALE MAH',
 		'71718' => 'SAVAŞTEPE MAH (KUZAYCA KÖYÜ)',
 		'71719' => 'YAYLAPINAR MAH',
-		'71720' => 'YENİ MAH'
+		'71720' => 'YENİ MAH',
 	),
-	'YENİFAKILI' => array(
+	'YENİFAKILI'  => array(
 		'71721' => 'BAŞAĞA MAH (BEKTAŞLI KÖYÜ)',
 		'71722' => 'BAŞPINAR KÖYÜ',
 		'71723' => 'CAMİKEBİR MAH (BEKTAŞLI KÖYÜ)',
@@ -784,9 +789,9 @@ $TRDN = array(
 		'71732' => 'CANKURTARAN MAH',
 		'71733' => 'MEHMET AKİF ERSOY MAH',
 		'71734' => 'YAZLAK MAH',
-		'71735' => 'YENİ MAH'
+		'71735' => 'YENİ MAH',
 	),
-	'YERKÖY' => array(
+	'YERKÖY'      => array(
 		'71736' => 'ABDALLAR MAH (DELİCE KÖYÜ)',
 		'71737' => 'AKPINAR KÖYÜ',
 		'71738' => 'ARİFEOĞLU KÖYÜ',
@@ -867,6 +872,6 @@ $TRDN = array(
 		'71813' => 'KARACAŞAR MAH',
 		'71814' => 'SELÇUK MAH',
 		'71815' => 'ŞENTEPE MAH',
-		'71816' => 'VEFİ PANDIR MAH'
-	)
+		'71816' => 'VEFİ PANDIR MAH',
+	),
 );

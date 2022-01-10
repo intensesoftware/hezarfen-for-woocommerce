@@ -1,6 +1,11 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
+$tr_neighborhoods = array(
 	'KELKİT' => array(
 		'32242' => 'ATATÜRK MAH',
 		'32243' => 'BAHÇELİEVLER MAH',
@@ -112,9 +117,9 @@ $TRDN = array(
 		'32349' => 'YEŞİLYURT KÖYÜ',
 		'32350' => 'YOLÇATI KÖYÜ',
 		'32351' => 'YUKARIÖZLÜCE KÖYÜ',
-		'32352' => 'YUNUS EMRE MAH'
+		'32352' => 'YUNUS EMRE MAH',
 	),
-	'KÖSE' => array(
+	'KÖSE'   => array(
 		'32353' => 'BAHÇELİEVLER MAH',
 		'32354' => 'CUMHURİYET MAH',
 		'32355' => 'FATİH MAH',
@@ -134,7 +139,7 @@ $TRDN = array(
 		'32369' => 'ÖZBEYLİ MAH (ÖZBEYLİ KÖYÜ)',
 		'32370' => 'SUBAŞI MAH (SUBAŞI KÖYÜ)',
 		'32371' => 'YAYLIM MAH (YAYLIM KÖYÜ)',
-		'32372' => 'YUVACIK MAH (YUVACIK KÖYÜ)'
+		'32372' => 'YUVACIK MAH (YUVACIK KÖYÜ)',
 	),
 	'KÜRTÜN' => array(
 		'32373' => 'AŞAĞI ULUKÖY MAH',
@@ -387,7 +392,7 @@ $TRDN = array(
 		'32620' => 'YONCALIK MAH (KIZILCATAM KÖYÜ)',
 		'32621' => 'YUKARI ALAN MAH (KIZILOT KÖYÜ)',
 		'32622' => 'YUKARI-ORTA-KARŞI MAH (AŞAĞIKARADERE KÖYÜ)',
-		'32623' => 'YÜRÜMEZ MAH (YAYLALI KÖYÜ)'
+		'32623' => 'YÜRÜMEZ MAH (YAYLALI KÖYÜ)',
 	),
 	'MERKEZ' => array(
 		'32624' => 'BAĞLARBAŞI MAH',
@@ -782,9 +787,9 @@ $TRDN = array(
 		'33013' => 'YUKARI ZUVAS MAH (ARSLANCA KÖYÜ)',
 		'33014' => 'ZEYNEPLİ MAH (YEŞİLDERE KÖYÜ)',
 		'33015' => 'ZIRGANLI HANLARI MAH (DUMANLI KÖYÜ)',
-		'33016' => 'ZURNACİLİ MAH (DUMANLI KÖYÜ)'
+		'33016' => 'ZURNACİLİ MAH (DUMANLI KÖYÜ)',
 	),
-	'ŞİRAN' => array(
+	'ŞİRAN'  => array(
 		'33017' => 'AKBULAK YAYLASI MAH (AKBULAK KÖYÜ)',
 		'33018' => 'AKSARAY KÖYÜ',
 		'33019' => 'AKYAYLA MAH (YEŞİLBÜK KÖYÜ)',
@@ -887,9 +892,9 @@ $TRDN = array(
 		'33116' => 'KARACA MAH',
 		'33117' => 'MERTEKLİ MAH',
 		'33118' => 'ŞEHİT HAKAN MAH',
-		'33119' => 'TEKKE MAH'
+		'33119' => 'TEKKE MAH',
 	),
-	'TORUL' => array(
+	'TORUL'  => array(
 		'33120' => 'ACEKİSE MH. (İLECİK KÖYÜ)',
 		'33121' => 'ACENKİSE MAH (İLECİK KÖYÜ)',
 		'33122' => 'ADİSA YAYLASI MAH (YILDIZ KÖYÜ)',
@@ -1153,6 +1158,6 @@ $TRDN = array(
 		'33380' => 'MERKEZ MAH',
 		'33381' => 'SOĞUKSU MAH',
 		'33382' => 'TUFANİYE MAH',
-		'33383' => 'TUĞRULBEY MAH'
-	)
+		'33383' => 'TUĞRULBEY MAH',
+	),
 );

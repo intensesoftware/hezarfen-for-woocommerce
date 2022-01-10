@@ -1,6 +1,6 @@
 <?php
 /**
- * Class responsible for getting province, district and neighborhood data.
+ * Contains the class responsible for getting province, district and neighborhood data.
  * 
  * @package Hezarfen\Inc
  */
@@ -9,6 +9,9 @@ namespace Hezarfen\Inc;
 
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * The class responsible for getting province, district and neighborhood data.
+ */
 class Mahalle_Local {
 	/**
 	 * Returns cities
@@ -18,7 +21,7 @@ class Mahalle_Local {
 	public static function get_cities() {
 		require WC_HEZARFEN_UYGULAMA_YOLU . 'includes/Data/mahalle/tr-provinces.php';
 
-		return $TRProvinces;
+		return $tr_provinces;
 	}
 
 	/**
@@ -31,8 +34,8 @@ class Mahalle_Local {
 	public static function get_districts( $city_plate_number ) {
 		require WC_HEZARFEN_UYGULAMA_YOLU . 'includes/Data/mahalle/tr-province-districts.php';
 
-		if ( isset( $TRPD[ $city_plate_number ] ) ) {
-			return $TRPD[ $city_plate_number ];
+		if ( isset( $tr_districts[ $city_plate_number ] ) ) {
+			return $tr_districts[ $city_plate_number ];
 		}
 
 		return array();
@@ -50,8 +53,8 @@ class Mahalle_Local {
 		if ( $city_plate_number ) {
 			require WC_HEZARFEN_UYGULAMA_YOLU . "includes/Data/mahalle/tr-neighborhoods/tr-district-nbrhood-$city_plate_number.php";
 
-			if ( isset( $TRDN[ $district ] ) ) {
-				return $TRDN[ $district ];
+			if ( isset( $tr_neighborhoods[ $district ] ) ) {
+				return $tr_neighborhoods[ $district ];
 			}
 		}
 

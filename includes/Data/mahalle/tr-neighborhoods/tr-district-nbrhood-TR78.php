@@ -1,7 +1,12 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
-	'EFLANİ' => array(
+$tr_neighborhoods = array(
+	'EFLANİ'     => array(
 		'38227' => 'CANDAROĞULLARI MAH',
 		'38228' => 'ÇALIŞLAR MAH',
 		'38229' => 'ÇELEBİLER MAH',
@@ -237,9 +242,9 @@ $TRDN = array(
 		'38459' => 'YENİ MAH (OSMANLAR KÖYÜ)',
 		'38460' => 'YENİKÖPRÜ MAH (OSMANLAR KÖYÜ)',
 		'38461' => 'YUKARI KARLI MAH (KARLI KÖYÜ)',
-		'38462' => 'YUKARI MAH (YAĞLICA KÖYÜ)'
+		'38462' => 'YUKARI MAH (YAĞLICA KÖYÜ)',
 	),
-	'ESKİPAZAR' => array(
+	'ESKİPAZAR'  => array(
 		'38463' => 'BAHÇEPINAR MAH',
 		'38464' => 'İSTASYON MAH',
 		'38465' => 'KIRANKÖY MAH',
@@ -421,9 +426,9 @@ $TRDN = array(
 		'38641' => 'YUKARI KAZLAR MAH (HASLI KÖYÜ)',
 		'38642' => 'YUKARI KEÇELER MAH (YAZIKAVAK KÖYÜ)',
 		'38643' => 'YUKARI SARAY MAH (KARAHASANLAR KÖYÜ)',
-		'38644' => 'YUNİSLER MAH (DOĞLACIK KÖYÜ)'
+		'38644' => 'YUNİSLER MAH (DOĞLACIK KÖYÜ)',
 	),
-	'MERKEZ' => array(
+	'MERKEZ'     => array(
 		'38645' => '100.YIL MAH',
 		'38646' => 'KILAVUZLAR MAH',
 		'38647' => 'ÜNİVERSİTE MAH',
@@ -589,9 +594,9 @@ $TRDN = array(
 		'38807' => 'KURTULUŞ MAH',
 		'38808' => 'ŞİRİNEVLER MAH',
 		'38809' => 'YENİŞEHİR MAH',
-		'38810' => 'YEŞİL MAH'
+		'38810' => 'YEŞİL MAH',
 	),
-	'OVACIK' => array(
+	'OVACIK'     => array(
 		'38811' => 'AKBIYIK MAH (GÖKÇEDÜZ KÖYÜ)',
 		'38812' => 'AKCAPINAR MAH (ABDULLAR KÖYÜ)',
 		'38813' => 'AKHİSAR MAH (TAŞOĞLU KÖYÜ)',
@@ -731,7 +736,7 @@ $TRDN = array(
 		'38947' => 'YUNUSLAR MAH (SARILAR KÖYÜ)',
 		'38948' => 'YUVALAR MAH (DUDAŞ KÖYÜ)',
 		'38949' => 'YÜREKÖREN KÖYÜ',
-		'38950' => 'MERKEZ MAH'
+		'38950' => 'MERKEZ MAH',
 	),
 	'SAFRANBOLU' => array(
 		'38951' => 'ABDİOĞLU MAH (İNCEÇAY KÖYÜ)',
@@ -935,9 +940,9 @@ $TRDN = array(
 		'39149' => 'KARAALİ MAH',
 		'39150' => 'KİRKİLLE MAH',
 		'39151' => 'MUSALLA MAH',
-		'39152' => 'YENİMAHALLE MAH'
+		'39152' => 'YENİMAHALLE MAH',
 	),
-	'YENİCE' => array(
+	'YENİCE'     => array(
 		'39153' => 'ADA MAH (KAYADİBİ KÖYÜ)',
 		'39154' => 'AHATLAR DÜZÜ MAH (KADIKÖY KÖYÜ)',
 		'39155' => 'AHATLAR MAH (KADIKÖY KÖYÜ)',
@@ -1119,6 +1124,6 @@ $TRDN = array(
 		'39331' => 'MENDERES MAH',
 		'39332' => 'MERKEZ MAH',
 		'39333' => 'ÖZAL MAH',
-		'39334' => 'YİRMİBEŞLER MAH'
-	)
+		'39334' => 'YİRMİBEŞLER MAH',
+	),
 );

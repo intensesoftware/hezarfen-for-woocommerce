@@ -1,7 +1,12 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
-	'ARALIK' => array(
+$tr_neighborhoods = array(
+	'ARALIK'      => array(
 		'34415' => 'ARAS MAH',
 		'34416' => 'KARASU MAH',
 		'34417' => 'KARŞIYAKA MAH',
@@ -31,7 +36,7 @@ $TRDN = array(
 		'34441' => 'YUKARIARATAN KÖYÜ',
 		'34442' => 'YUKARIÇAMURLU KÖYÜ',
 		'34443' => 'YUKARIÇİFTLİK KÖYÜ',
-		'34444' => 'YUKARITOPRAKLI KÖYÜ'
+		'34444' => 'YUKARITOPRAKLI KÖYÜ',
 	),
 	'KARAKOYUNLU' => array(
 		'34445' => 'ERGENEKON MAH',
@@ -55,9 +60,9 @@ $TRDN = array(
 		'34463' => 'ŞIRACI KÖYÜ',
 		'34464' => 'YAZLIK KÖYÜ',
 		'34465' => 'YUKARIALİCAN KÖYÜ',
-		'34466' => 'ZÜLFİKARKÖY KÖYÜ'
+		'34466' => 'ZÜLFİKARKÖY KÖYÜ',
 	),
-	'MERKEZ' => array(
+	'MERKEZ'      => array(
 		'34467' => '14 KASIM MAH',
 		'34468' => 'ALİ KAMERLİ MAH',
 		'34469' => 'ATATÜRK MAH',
@@ -137,9 +142,9 @@ $TRDN = array(
 		'34543' => 'YUKARIERHACI MAH (AŞAĞIERHACI KÖYÜ)',
 		'34544' => 'YUNUS EMRE MAH (HALFELİ KÖYÜ)',
 		'34545' => 'YÜZBAŞILAR KÖYÜ',
-		'34546' => 'ZOR KÖYÜ'
+		'34546' => 'ZOR KÖYÜ',
 	),
-	'TUZLUCA' => array(
+	'TUZLUCA'     => array(
 		'34547' => 'ABBASGÖL KÖYÜ',
 		'34548' => 'ADALET MAH (CANDERVİŞ KÖYÜ)',
 		'34549' => 'AFET KONUTLARI MAH (KULA KÖYÜ)',
@@ -249,6 +254,6 @@ $TRDN = array(
 		'34653' => 'CUMHURİYET MAH',
 		'34654' => 'ORTA MAH',
 		'34655' => 'YENİ MAH',
-		'34656' => 'YUKARI MAH'
-	)
+		'34656' => 'YUKARI MAH',
+	),
 );

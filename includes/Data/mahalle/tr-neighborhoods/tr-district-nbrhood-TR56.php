@@ -1,7 +1,12 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
-	'BAYKAN' => array(
+$tr_neighborhoods = array(
+	'BAYKAN'   => array(
 		'59298' => 'CEFAN MAH',
 		'59299' => 'HAVEL MAH',
 		'59300' => 'İNÖNÜ MAH',
@@ -64,9 +69,9 @@ $TRDN = array(
 		'59357' => 'ŞEYHOSMAN MAH (VEYSELKARANİ KÖYÜ)',
 		'59358' => 'TÜTENOCAK KÖYÜ',
 		'59359' => 'ÜNLÜCE KÖYÜ',
-		'59360' => 'YARIMCA KÖYÜ'
+		'59360' => 'YARIMCA KÖYÜ',
 	),
-	'ERUH' => array(
+	'ERUH'     => array(
 		'59361' => 'AYDOĞMUŞ MAH (GÖNÜLALDI KÖYÜ)',
 		'59362' => 'BAĞGÖZE KÖYÜ',
 		'59363' => 'BALLIKAVAK KÖYÜ',
@@ -138,7 +143,7 @@ $TRDN = array(
 		'59429' => 'YANIKSES KÖYÜ',
 		'59430' => 'YANILMAZ KÖYÜ',
 		'59431' => 'YEDİYAPRAK KÖYÜ',
-		'59432' => 'YEŞİLÖREN KÖYÜ'
+		'59432' => 'YEŞİLÖREN KÖYÜ',
 	),
 	'KURTALAN' => array(
 		'59433' => 'BAHÇELİEVLER MAH',
@@ -254,9 +259,9 @@ $TRDN = array(
 		'59543' => 'YUVALI KÖYÜ',
 		'59544' => 'YUVALI MAH (BALLIKAYA KÖYÜ)',
 		'59545' => 'YUVALI MAH (GÖKDOĞAN KÖYÜ)',
-		'59546' => 'YÜREKVEREN KÖYÜ'
+		'59546' => 'YÜREKVEREN KÖYÜ',
 	),
-	'MERKEZ' => array(
+	'MERKEZ'   => array(
 		'59547' => 'AKARSU MAH (DEMİRKAYA KÖYÜ)',
 		'59548' => 'AKDOĞMUŞ KÖYÜ',
 		'59549' => 'AKINCILAR MAH (PINARCA KÖYÜ)',
@@ -337,9 +342,9 @@ $TRDN = array(
 		'59624' => 'ULUS MAH',
 		'59625' => 'ÜLKÜ MAH',
 		'59626' => 'VEYSEL KARANİ MAH',
-		'59627' => 'YENİ MAH'
+		'59627' => 'YENİ MAH',
 	),
-	'PERVARİ' => array(
+	'PERVARİ'  => array(
 		'59628' => 'AŞAĞIAYVALIBAĞ MAH (AYVALIBAĞ KÖYÜ)',
 		'59629' => 'AŞAĞIBALCILAR KÖYÜ',
 		'59630' => 'AYVALIBAĞ KÖYÜ',
@@ -405,9 +410,9 @@ $TRDN = array(
 		'59690' => 'YUKARIBALCILAR KÖYÜ',
 		'59691' => 'YUKARIEKİNDÜZÜ MAH (EKİNDÜZÜ KÖYÜ)',
 		'59692' => 'AYDIN MAH',
-		'59693' => 'ŞAKİRAN MAH'
+		'59693' => 'ŞAKİRAN MAH',
 	),
-	'ŞİRVAN' => array(
+	'ŞİRVAN'   => array(
 		'59694' => 'AKTAŞ MAH (YAMAÇLI KÖYÜ)',
 		'59695' => 'AYN KEBİR MAH (KESMETAŞ KÖYÜ)',
 		'59696' => 'BİNDAL MAH (KESMETAŞ KÖYÜ)',
@@ -514,9 +519,9 @@ $TRDN = array(
 		'59797' => 'FATİH MAH',
 		'59798' => 'KIRTEPE MAH',
 		'59799' => 'KÜFRE MAH',
-		'59800' => 'SİT MAH'
+		'59800' => 'SİT MAH',
 	),
-	'TİLLO' => array(
+	'TİLLO'    => array(
 		'59801' => 'FAKİRULLAH MAH',
 		'59802' => 'MÜCAHİT MAH',
 		'59803' => 'SAYDANLAR MAH',
@@ -529,6 +534,6 @@ $TRDN = array(
 		'59810' => 'KARGACIK MAH (AKYAYLA KÖYÜ)',
 		'59811' => 'KURŞUN MAH (HATRANT KÖYÜ)',
 		'59812' => 'SİNEP KÖYÜ',
-		'59813' => 'TAŞBALTA KÖYÜ'
-	)
+		'59813' => 'TAŞBALTA KÖYÜ',
+	),
 );

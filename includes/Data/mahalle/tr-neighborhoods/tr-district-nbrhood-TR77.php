@@ -1,7 +1,12 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
-	'ALTINOVA' => array(
+$tr_neighborhoods = array(
+	'ALTINOVA'   => array(
 		'70869' => 'CUMHURİYET MAH',
 		'70870' => 'HERSEK MAH',
 		'70871' => 'HÜRRİYET MAH',
@@ -24,9 +29,9 @@ $TRDN = array(
 		'70888' => 'ÖRENCİK KÖYÜ',
 		'70889' => 'SERMAYECİK KÖYÜ',
 		'70890' => 'SOĞUKSU KÖYÜ',
-		'70891' => 'ŞEHİTLİK MAH (TAVŞANLI KÖYÜ)'
+		'70891' => 'ŞEHİTLİK MAH (TAVŞANLI KÖYÜ)',
 	),
-	'ARMUTLU' => array(
+	'ARMUTLU'    => array(
 		'70892' => '50. YIL MAH',
 		'70893' => 'BAYIR MAH',
 		'70894' => 'KARŞIYAKA MAH',
@@ -36,9 +41,9 @@ $TRDN = array(
 		'70898' => 'KÖY MERKEZİ MAH (KAPAKLI KÖYÜ)',
 		'70899' => 'KÖY MERKEZİ MAH (MECİDİYE KÖYÜ)',
 		'70900' => 'KÖY MERKEZİ MAH (SELİMİYE KÖYÜ)',
-		'70901' => 'YALI MAH (FISTIKLI KÖYÜ)'
+		'70901' => 'YALI MAH (FISTIKLI KÖYÜ)',
 	),
-	'ÇINARCIK' => array(
+	'ÇINARCIK'   => array(
 		'70902' => 'ÇAMLIK MAH',
 		'70903' => 'HARMANLAR MAH',
 		'70904' => 'HASANBABA MAH',
@@ -56,7 +61,7 @@ $TRDN = array(
 		'70916' => 'MERKEZ MAH (ÇALICA KÖYÜ)',
 		'70917' => 'MERKEZ MAH (KOCADERE KÖYÜ)',
 		'70918' => 'MERKEZ MAH (ORTABURUN KÖYÜ)',
-		'70919' => 'YALI MAH (KOCADERE KÖYÜ)'
+		'70919' => 'YALI MAH (KOCADERE KÖYÜ)',
 	),
 	'ÇİFTLİKKÖY' => array(
 		'70920' => '500 EVLER MAH',
@@ -80,9 +85,9 @@ $TRDN = array(
 		'70938' => 'TAŞKÖPRÜ YENİ MAH (TAŞKÖPRÜ KÖYÜ)',
 		'70939' => 'YALOVA İZMİT KARAYOLU MAH (KILIÇ KÖYÜ)',
 		'70940' => 'YUKARI MAH (ÇUKURKÖY KÖYÜ)',
-		'70941' => 'YUKARI MAH (İLYASKÖY KÖYÜ)'
+		'70941' => 'YUKARI MAH (İLYASKÖY KÖYÜ)',
 	),
-	'MERKEZ' => array(
+	'MERKEZ'     => array(
 		'70942' => 'ADNAN MENDERES MAH',
 		'70943' => 'BAĞLARBAŞI MAH',
 		'70944' => 'BAHÇELİEVLER MAH',
@@ -113,12 +118,12 @@ $TRDN = array(
 		'70969' => 'SANAYİ MAH (KİRAZLI KÖYÜ)',
 		'70970' => 'SEYRANTEPE MAH',
 		'70971' => 'SUGÖREN MAH (SUGÖREN KÖYÜ)',
-		'70972' => 'SÜPÜRGELİK MAH (SUGÖREN KÖYÜ)'
+		'70972' => 'SÜPÜRGELİK MAH (SUGÖREN KÖYÜ)',
 	),
-	'TERMAL' => array(
+	'TERMAL'     => array(
 		'70973' => 'KÖYİÇİ MAH (AKKÖY KÖYÜ)',
 		'70974' => 'KÖYİÇİ MAH (YENİMAHALLE KÖYÜ)',
 		'70975' => 'GÖKÇEDERE MAH',
-		'70976' => 'ÜVEZPINAR MAH'
-	)
+		'70976' => 'ÜVEZPINAR MAH',
+	),
 );

@@ -1,7 +1,12 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
-	'AKKUŞ' => array(
+$tr_neighborhoods = array(
+	'AKKUŞ'      => array(
 		'54635' => 'AKPINAR MAH',
 		'54636' => 'ALAN MAH',
 		'54637' => 'AMBARGÜRGEN MAH',
@@ -45,9 +50,9 @@ $TRDN = array(
 		'54675' => 'YEŞİLGÜNEYCİK MAH',
 		'54676' => 'YEŞİLKÖY MAH',
 		'54677' => 'YOLBAŞI MAH',
-		'54678' => 'YUKARIDÜĞENCİLİ MAH'
+		'54678' => 'YUKARIDÜĞENCİLİ MAH',
 	),
-	'ALTINORDU' => array(
+	'ALTINORDU'  => array(
 		'54679' => 'AKYAZI MAH',
 		'54680' => 'BAHÇELİEVLER MAH',
 		'54681' => 'BUCAK MAH',
@@ -140,9 +145,9 @@ $TRDN = array(
 		'54768' => 'YEŞİLKÖY MAH',
 		'54769' => 'YILDIZLI MAH',
 		'54770' => 'YUKARITEPE MAH',
-		'54771' => 'ZAFER MAH'
+		'54771' => 'ZAFER MAH',
 	),
-	'AYBASTI' => array(
+	'AYBASTI'    => array(
 		'54772' => 'ALACALAR MAH',
 		'54773' => 'ARMUTLU MAH',
 		'54774' => 'BEŞTAM MAH',
@@ -163,9 +168,9 @@ $TRDN = array(
 		'54789' => 'SEFALIK MAH',
 		'54790' => 'TOYGAR MAH',
 		'54791' => 'UZUNDERE MAH',
-		'54792' => 'ZAFERİMİLLİ MAH'
+		'54792' => 'ZAFERİMİLLİ MAH',
 	),
-	'ÇAMAŞ' => array(
+	'ÇAMAŞ'      => array(
 		'54793' => 'AKKÖY MAH',
 		'54794' => 'AKPINAR MAH',
 		'54795' => 'BUDAK MAH',
@@ -188,7 +193,7 @@ $TRDN = array(
 		'54812' => 'TAŞOLUK MAH',
 		'54813' => 'TEPELİ MAH',
 		'54814' => 'UZUNALİ MAH',
-		'54815' => 'YENİ MAH'
+		'54815' => 'YENİ MAH',
 	),
 	'ÇATALPINAR' => array(
 		'54816' => 'AKKAYA MAH',
@@ -213,9 +218,9 @@ $TRDN = array(
 		'54835' => 'SAYACATÜRK MAH',
 		'54836' => 'ŞİRİNKÖY MAH',
 		'54837' => 'TERİMLİ MAH',
-		'54838' => 'YENİ MAH'
+		'54838' => 'YENİ MAH',
 	),
-	'ÇAYBAŞI' => array(
+	'ÇAYBAŞI'    => array(
 		'54839' => 'AKBABA MAH',
 		'54840' => 'AŞIKLI ÇAKILLI MAH',
 		'54841' => 'BORAS MAH',
@@ -241,9 +246,9 @@ $TRDN = array(
 		'54861' => 'NAMAZLI MAH',
 		'54862' => 'TAŞKESİĞİ MAH',
 		'54863' => 'TEKKE MAH',
-		'54864' => 'YENİCUMA MAH'
+		'54864' => 'YENİCUMA MAH',
 	),
-	'FATSA' => array(
+	'FATSA'      => array(
 		'54865' => 'AHMETLER MAH',
 		'54866' => 'ARPALIK MAH',
 		'54867' => 'ASLANCAMİ MAH',
@@ -333,9 +338,9 @@ $TRDN = array(
 		'54951' => 'YUKARIARDIÇ MAH',
 		'54952' => 'YUKARIBAHÇELER MAH',
 		'54953' => 'YUKARITEPE MAH',
-		'54954' => 'YUSUFLU MAH'
+		'54954' => 'YUSUFLU MAH',
 	),
-	'GÖLKÖY' => array(
+	'GÖLKÖY'     => array(
 		'54955' => 'AHMETLİ MAH',
 		'54956' => 'AKÇALI MAH',
 		'54957' => 'ALANYURT MAH',
@@ -365,9 +370,9 @@ $TRDN = array(
 		'54981' => 'PAŞAPINAR MAH',
 		'54982' => 'SARICA MAH',
 		'54983' => 'SÜLEYMANİYE MAH',
-		'54984' => 'YUVAPINAR MAH'
+		'54984' => 'YUVAPINAR MAH',
 	),
-	'GÜLYALI' => array(
+	'GÜLYALI'    => array(
 		'54985' => 'ALİBEY MAH',
 		'54986' => 'AMBARCILI MAH',
 		'54987' => 'AYRILIK MAH',
@@ -380,7 +385,7 @@ $TRDN = array(
 		'54994' => 'TEPEALTI MAH',
 		'54995' => 'TURNASUYU MAH',
 		'54996' => 'ÜRÜMBEY MAH',
-		'54997' => 'YENİKÖY MAH'
+		'54997' => 'YENİKÖY MAH',
 	),
 	'GÜRGENTEPE' => array(
 		'54998' => 'AĞIZLAR MAH',
@@ -405,9 +410,9 @@ $TRDN = array(
 		'55017' => 'TEPEKÖY MAH',
 		'55018' => 'TİKENLİCE MAH',
 		'55019' => 'TUZLA MAH',
-		'55020' => 'YURTSEVEN MAH'
+		'55020' => 'YURTSEVEN MAH',
 	),
-	'İKİZCE' => array(
+	'İKİZCE'     => array(
 		'55021' => 'AĞCAALAN MAH',
 		'55022' => 'AŞAĞI KARLITEPE MAH',
 		'55023' => 'AŞAĞI KAYNARTAŞ MAH',
@@ -439,9 +444,9 @@ $TRDN = array(
 		'55049' => 'YOĞUNOLUK MAH',
 		'55050' => 'YUKARI KARLITEPE MAH',
 		'55051' => 'YUKARI KAYNARTAŞ MAH',
-		'55052' => 'YUNUSKIRIĞI MAH'
+		'55052' => 'YUNUSKIRIĞI MAH',
 	),
-	'KABADÜZ' => array(
+	'KABADÜZ'    => array(
 		'55053' => 'AKGÜNEY MAH',
 		'55054' => 'BAŞKÖY MAH',
 		'55055' => 'DERİNÇAY MAH',
@@ -460,9 +465,9 @@ $TRDN = array(
 		'55068' => 'YEŞİLADA MAH',
 		'55069' => 'YEŞİLYURT MAH',
 		'55070' => 'YOKUŞDİBİ MAH',
-		'55071' => 'YUKARI KİRAZDERE MAH'
+		'55071' => 'YUKARI KİRAZDERE MAH',
 	),
-	'KABATAŞ' => array(
+	'KABATAŞ'    => array(
 		'55072' => 'ALANBAŞI MAH',
 		'55073' => 'ALANKENT MAH',
 		'55074' => 'ARDIÇ MAH',
@@ -480,9 +485,9 @@ $TRDN = array(
 		'55086' => 'MERKEZ MAH',
 		'55087' => 'ŞİFA SUYU MAH',
 		'55088' => 'YAKACIK MAH',
-		'55089' => 'YENİCELİ MAH'
+		'55089' => 'YENİCELİ MAH',
 	),
-	'KORGAN' => array(
+	'KORGAN'     => array(
 		'55090' => 'AŞAĞIKOZPINAR MAH',
 		'55091' => 'AŞAĞIYAYLACIK MAH',
 		'55092' => 'BELALAN MAH',
@@ -511,9 +516,9 @@ $TRDN = array(
 		'55115' => 'YEŞİLDERE MAH',
 		'55116' => 'YEŞİLYURT MAH',
 		'55117' => 'YUKARIKOZPINAR MAH',
-		'55118' => 'YUKARIYAYLACIK MAH'
+		'55118' => 'YUKARIYAYLACIK MAH',
 	),
-	'KUMRU' => array(
+	'KUMRU'      => array(
 		'55119' => 'AĞCAALANTÜRK MAH',
 		'55120' => 'AKÇADERE MAH',
 		'55121' => 'AVDULLU MAH',
@@ -553,9 +558,9 @@ $TRDN = array(
 		'55155' => 'YENİAKÇAALAN MAH',
 		'55156' => 'YENİDİVAN MAH',
 		'55157' => 'YENİERGEN MAH',
-		'55158' => 'YUKARIDAMLALI MAH'
+		'55158' => 'YUKARIDAMLALI MAH',
 	),
-	'MESUDİYE' => array(
+	'MESUDİYE'   => array(
 		'55159' => 'ABDİLİ MAH',
 		'55160' => 'AKKIRIK MAH',
 		'55161' => 'AKPINAR MAH',
@@ -625,9 +630,9 @@ $TRDN = array(
 		'55225' => 'YEŞİLÇİT MAH',
 		'55226' => 'YEVELİ MAH',
 		'55227' => 'YUKARIGÖKÇE MAH',
-		'55228' => 'YUVALI MAH'
+		'55228' => 'YUVALI MAH',
 	),
-	'PERŞEMBE' => array(
+	'PERŞEMBE'   => array(
 		'55229' => 'ALINCA MAH',
 		'55230' => 'ANAÇ MAH',
 		'55231' => 'AZİZİYE MAH',
@@ -681,9 +686,9 @@ $TRDN = array(
 		'55279' => 'YENİKÖY MAH',
 		'55280' => 'YENİÖZ MAH',
 		'55281' => 'YEŞİLKÖY MAH',
-		'55282' => 'YUMRUTAŞ MAH'
+		'55282' => 'YUMRUTAŞ MAH',
 	),
-	'ULUBEY' => array(
+	'ULUBEY'     => array(
 		'55283' => 'AKOLUK MAH',
 		'55284' => 'AKPINAR MAH',
 		'55285' => 'AYDINLAR MAH',
@@ -724,9 +729,9 @@ $TRDN = array(
 		'55320' => 'YENİMAHALLE MAH',
 		'55321' => 'YENİSAYACA MAH',
 		'55322' => 'YOLBAŞI MAH',
-		'55323' => 'YUKARIKIZILEN MAH'
+		'55323' => 'YUKARIKIZILEN MAH',
 	),
-	'ÜNYE' => array(
+	'ÜNYE'       => array(
 		'55324' => 'AĞIDERE MAH',
 		'55325' => 'ATAKÖY MAH',
 		'55326' => 'ATATÜRK MAH',
@@ -811,6 +816,6 @@ $TRDN = array(
 		'55405' => 'YEŞİLKENT MAH',
 		'55406' => 'YİĞİTLER MAH',
 		'55407' => 'YUNUS EMRE MAH',
-		'55408' => 'YÜCELER MAH'
-	)
+		'55408' => 'YÜCELER MAH',
+	),
 );

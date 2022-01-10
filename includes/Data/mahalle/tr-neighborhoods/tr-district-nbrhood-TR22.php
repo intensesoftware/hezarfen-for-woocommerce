@@ -1,7 +1,12 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
-	'ENEZ' => array(
+$tr_neighborhoods = array(
+	'ENEZ'      => array(
 		'24270' => 'ÇATALTEPE MAH',
 		'24271' => 'GAZİÖMERBEY MAH',
 		'24272' => 'YENİ MAH',
@@ -23,9 +28,9 @@ $TRDN = array(
 		'24288' => 'UMURBEY KÖYÜ',
 		'24289' => 'VAKIF KÖYÜ',
 		'24290' => 'YAZIR KÖYÜ',
-		'24291' => 'YENİCE KÖYÜ'
+		'24291' => 'YENİCE KÖYÜ',
 	),
-	'HAVSA' => array(
+	'HAVSA'     => array(
 		'24292' => 'ARPAÇ KÖYÜ',
 		'24293' => 'HABİLLER KÖYÜ',
 		'24294' => 'HASKÖY KÖYÜ',
@@ -55,9 +60,9 @@ $TRDN = array(
 		'24318' => 'ŞERBETTAR KÖYÜ',
 		'24319' => 'TAHAL KÖYÜ',
 		'24320' => 'TAPTIK KÖYÜ',
-		'24321' => 'YOLAGELDİ KÖYÜ'
+		'24321' => 'YOLAGELDİ KÖYÜ',
 	),
-	'İPSALA' => array(
+	'İPSALA'    => array(
 		'24322' => 'BAYRAMBEY MAH',
 		'24323' => 'BOZKURT MAH',
 		'24324' => 'FATİH MAH',
@@ -95,9 +100,9 @@ $TRDN = array(
 		'24356' => 'TEVFİKİYE KÖYÜ',
 		'24357' => 'TURPÇULAR KÖYÜ',
 		'24358' => 'YAPILDAK KÖYÜ',
-		'24359' => 'ZAFERİYE MAH (HACI KÖYÜ)'
+		'24359' => 'ZAFERİYE MAH (HACI KÖYÜ)',
 	),
-	'KEŞAN' => array(
+	'KEŞAN'     => array(
 		'24360' => 'AŞAĞI ZAFERİYE MAH',
 		'24361' => 'BÜYÜK CAMİ MAH',
 		'24362' => 'CUMHURİYET MAH',
@@ -168,9 +173,9 @@ $TRDN = array(
 		'24427' => 'SAZLIDERE MAH (SAZLIDERE KÖYÜ)',
 		'24428' => 'SEYDİKÖY KÖYÜ',
 		'24429' => 'ŞÜKRÜKÖY KÖYÜ',
-		'24430' => 'YERLİSU KÖYÜ'
+		'24430' => 'YERLİSU KÖYÜ',
 	),
-	'LALAPAŞA' => array(
+	'LALAPAŞA'  => array(
 		'24431' => 'MERKEZ MAH',
 		'24432' => 'BÜYÜNLÜ KÖYÜ',
 		'24433' => 'ÇALLIDERE KÖYÜ',
@@ -198,9 +203,9 @@ $TRDN = array(
 		'24455' => 'TUĞLALIK KÖYÜ',
 		'24456' => 'UZUNBAYIR KÖYÜ',
 		'24457' => 'VAYSAL KÖYÜ',
-		'24458' => 'YÜNLÜCE KÖYÜ'
+		'24458' => 'YÜNLÜCE KÖYÜ',
 	),
-	'MERİÇ' => array(
+	'MERİÇ'     => array(
 		'24459' => 'ADASARHANLI KÖYÜ',
 		'24460' => 'BÜYÜKALTIAĞAÇ KÖYÜ',
 		'24461' => 'GAZİ MAH (KÜPLÜ KÖYÜ)',
@@ -227,9 +232,9 @@ $TRDN = array(
 		'24482' => 'SEREM KÖYÜ',
 		'24483' => 'UMURCA KÖYÜ',
 		'24484' => 'YAKUPBEY KÖYÜ',
-		'24485' => 'YENİCEGÖRÜCE KÖYÜ'
+		'24485' => 'YENİCEGÖRÜCE KÖYÜ',
 	),
-	'MERKEZ' => array(
+	'MERKEZ'    => array(
 		'24486' => '1.MURAT MAH',
 		'24487' => 'ABDURRAHMAN MAH',
 		'24488' => 'BABADEMİRTAŞ MAH',
@@ -290,9 +295,9 @@ $TRDN = array(
 		'24543' => 'UZGAÇ KÖYÜ',
 		'24544' => 'ÜYÜKLÜTATAR KÖYÜ',
 		'24545' => 'YENİKADIN KÖYÜ',
-		'24546' => 'YOLÜSTÜ KÖYÜ'
+		'24546' => 'YOLÜSTÜ KÖYÜ',
 	),
-	'SÜLOĞLU' => array(
+	'SÜLOĞLU'   => array(
 		'24547' => 'AKARDERE KÖYÜ',
 		'24548' => 'BÜYÜK GERDELLİ KÖYÜ',
 		'24549' => 'DOMURCALI KÖYÜ',
@@ -307,7 +312,7 @@ $TRDN = array(
 		'24558' => 'MERKEZ MAH',
 		'24559' => 'ORGANİZE SANAYİ BÖLGESİ MAH',
 		'24560' => 'ŞAFAK MAH',
-		'24561' => 'YENİ MAH'
+		'24561' => 'YENİ MAH',
 	),
 	'UZUNKÖPRÜ' => array(
 		'24562' => 'AŞÇIOĞLU MAH',
@@ -385,6 +390,6 @@ $TRDN = array(
 		'24634' => 'MESCİT MAH',
 		'24635' => 'MURADİYE CAMİ MAH',
 		'24636' => 'RIZAEFENDİ MAH',
-		'24637' => 'YENİKÖY MAH'
-	)
+		'24637' => 'YENİKÖY MAH',
+	),
 );

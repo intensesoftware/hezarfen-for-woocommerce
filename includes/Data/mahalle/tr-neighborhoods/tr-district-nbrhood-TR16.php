@@ -1,7 +1,12 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
-	'BÜYÜKORHAN' => array(
+$tr_neighborhoods = array(
+	'BÜYÜKORHAN'       => array(
 		'17837' => 'AKÇASAZ MAH',
 		'17838' => 'AKTAŞ MAH',
 		'17839' => 'ARMUTÇUK MAH',
@@ -44,9 +49,9 @@ $TRDN = array(
 		'17876' => 'SARNIÇ MAH',
 		'17877' => 'TEKERLER MAH',
 		'17878' => 'YENİCE MAH',
-		'17879' => 'ZAFERİYE MAH'
+		'17879' => 'ZAFERİYE MAH',
 	),
-	'GEMLİK' => array(
+	'GEMLİK'           => array(
 		'17880' => 'ADLİYE MAH',
 		'17881' => 'ATA MAH',
 		'17882' => 'ATA SB MAH',
@@ -82,9 +87,9 @@ $TRDN = array(
 		'17912' => 'ŞÜKRİYE MAH',
 		'17913' => 'UMURBEY MAH',
 		'17914' => 'YENİ MAH',
-		'17915' => 'YENİKÖY MAH'
+		'17915' => 'YENİKÖY MAH',
 	),
-	'GÜRSU' => array(
+	'GÜRSU'            => array(
 		'17916' => 'ADAKÖY MAH',
 		'17917' => 'AĞAKÖY MAH',
 		'17918' => 'CAMBAZLARKÖYÜ MAH',
@@ -101,9 +106,9 @@ $TRDN = array(
 		'17929' => 'KURTULUŞOSB MAH',
 		'17930' => 'YENİDOĞAN MAH',
 		'17931' => 'YENİDOĞANOSB MAH',
-		'17932' => 'ZAFER MAH'
+		'17932' => 'ZAFER MAH',
 	),
-	'HARMANCIK' => array(
+	'HARMANCIK'        => array(
 		'17933' => 'AKPINAR MAH',
 		'17934' => 'ALUTCA MAH',
 		'17935' => 'BALATDANİŞMENT MAH',
@@ -134,9 +139,9 @@ $TRDN = array(
 		'17960' => 'OKÇULAR MAH',
 		'17961' => 'SAÇAKLI MAH',
 		'17962' => 'YAYABAŞI MAH',
-		'17963' => 'YEŞİLYURT MAH'
+		'17963' => 'YEŞİLYURT MAH',
 	),
-	'İNEGÖL' => array(
+	'İNEGÖL'           => array(
 		'17964' => 'AKBAŞLAR MAH',
 		'17965' => 'AKHİSAR MAH',
 		'17966' => 'AKINCILAR MAH',
@@ -254,9 +259,9 @@ $TRDN = array(
 		'18078' => 'YENİYÖRÜK MAH',
 		'18079' => 'YİĞİT MAH',
 		'18080' => 'YUKARIBALLIK MAH',
-		'18081' => 'YUNUSEMRE MAH'
+		'18081' => 'YUNUSEMRE MAH',
 	),
-	'İZNİK' => array(
+	'İZNİK'            => array(
 		'18082' => 'AYDINLAR MAH',
 		'18083' => 'BAYINDIR MAH',
 		'18084' => 'BEYLER MAH',
@@ -302,9 +307,9 @@ $TRDN = array(
 		'18124' => 'YENİ MAH',
 		'18125' => 'YENİŞEREFİYE MAH',
 		'18126' => 'YEŞİL CAMİİ MAH',
-		'18127' => 'YÜRÜKLER MAH'
+		'18127' => 'YÜRÜKLER MAH',
 	),
-	'KARACABEY' => array(
+	'KARACABEY'        => array(
 		'18128' => 'ABDULLAHPAŞA MAH',
 		'18129' => 'AKÇAKOYUN MAH',
 		'18130' => 'AKÇASUSURLUK MAH',
@@ -389,9 +394,9 @@ $TRDN = array(
 		'18209' => 'YENİKARAAĞAÇ MAH',
 		'18210' => 'YENİSARIBEY MAH',
 		'18211' => 'YEŞİLDERE MAH',
-		'18212' => 'YOLAĞZI MAH'
+		'18212' => 'YOLAĞZI MAH',
 	),
-	'KELES' => array(
+	'KELES'            => array(
 		'18213' => 'AKÇAPINAR MAH',
 		'18214' => 'ALPAĞUT MAH',
 		'18215' => 'AVDAN MAH',
@@ -433,9 +438,9 @@ $TRDN = array(
 		'18251' => 'YAĞCILAR MAH',
 		'18252' => 'YAZIBAŞI MAH',
 		'18253' => 'YENİCE MAH',
-		'18254' => 'YUNUSLAR MAH'
+		'18254' => 'YUNUSLAR MAH',
 	),
-	'KESTEL' => array(
+	'KESTEL'           => array(
 		'18255' => 'AĞLAŞAN MAH',
 		'18256' => 'AHMET VEFİK PAŞAOSB MAH',
 		'18257' => 'AHMETVEFİKPAŞA MAH',
@@ -471,9 +476,9 @@ $TRDN = array(
 		'18287' => 'ÜMİTALAN MAH',
 		'18288' => 'VANİMEHMET MAH',
 		'18289' => 'YAĞMURLU MAH',
-		'18290' => 'YENİ MAH'
+		'18290' => 'YENİ MAH',
 	),
-	'MUDANYA' => array(
+	'MUDANYA'          => array(
 		'18291' => 'AKKÖY MAH',
 		'18292' => 'ALTINTAŞ MAH',
 		'18293' => 'AYDINPINAR MAH',
@@ -520,7 +525,7 @@ $TRDN = array(
 		'18334' => 'YAYLACIK MAH',
 		'18335' => 'YENİ MAH',
 		'18336' => 'YÖRÜKALİ MAH',
-		'18337' => 'YÖRÜKYENİCESİ MAH'
+		'18337' => 'YÖRÜKYENİCESİ MAH',
 	),
 	'MUSTAFAKEMALPAŞA' => array(
 		'18338' => 'ADAKÖY MAH',
@@ -653,9 +658,9 @@ $TRDN = array(
 		'18465' => 'YUMURCAKLI MAH',
 		'18466' => 'YUNUS EMRE MAH',
 		'18467' => 'YÜZBAŞI SABRİBEY MAH',
-		'18468' => 'ZÜFERBEY MAH'
+		'18468' => 'ZÜFERBEY MAH',
 	),
-	'NİLÜFER' => array(
+	'NİLÜFER'          => array(
 		'18469' => 'ALAADDİNBEY MAH',
 		'18470' => 'ÜRÜNLÜ MAH',
 		'18471' => '19 MAYIS MAH',
@@ -725,9 +730,9 @@ $TRDN = array(
 		'18535' => 'IŞIKTEPE MAH',
 		'18536' => 'IŞIKTEPEOSB MAH',
 		'18537' => 'DEMİRCİ MAH',
-		'18538' => 'ÜÇEVLER MAH'
+		'18538' => 'ÜÇEVLER MAH',
 	),
-	'ORHANELİ' => array(
+	'ORHANELİ'         => array(
 		'18539' => '300 EVLER MAH',
 		'18540' => 'AĞAÇHİSAR MAH',
 		'18541' => 'AKALAN MAH',
@@ -788,9 +793,9 @@ $TRDN = array(
 		'18596' => 'YAKUPLAR MAH',
 		'18597' => 'YENİDANİŞMENT MAH',
 		'18598' => 'YEŞİLLER MAH',
-		'18599' => 'YÖRÜCEKLER MAH'
+		'18599' => 'YÖRÜCEKLER MAH',
 	),
-	'ORHANGAZİ' => array(
+	'ORHANGAZİ'        => array(
 		'18600' => 'AKHAREM MAH',
 		'18601' => 'ARAPZADE MAH',
 		'18602' => 'BAYIRKÖY MAH',
@@ -821,9 +826,9 @@ $TRDN = array(
 		'18627' => 'ÜREĞİL MAH',
 		'18628' => 'YENİGÜRLE MAH',
 		'18629' => 'YENİKÖY MAH',
-		'18630' => 'YENİSÖLÖZ MAH'
+		'18630' => 'YENİSÖLÖZ MAH',
 	),
-	'OSMANGAZİ' => array(
+	'OSMANGAZİ'        => array(
 		'18631' => 'ALEMDAR MAH',
 		'18632' => 'ARMUTKÖY MAH',
 		'18633' => 'ÇELTİKKÖY MAH',
@@ -960,9 +965,9 @@ $TRDN = array(
 		'18764' => 'ULU MAH',
 		'18765' => 'DEREÇAVUŞKÖY MAH',
 		'18766' => 'GÜNEŞTEPE MAH',
-		'18767' => 'YUNUSELİ MAH'
+		'18767' => 'YUNUSELİ MAH',
 	),
-	'YENİŞEHİR' => array(
+	'YENİŞEHİR'        => array(
 		'18768' => 'AFŞAR MAH',
 		'18769' => 'AKBIYIK MAH',
 		'18770' => 'AKÇAPINAR MAH',
@@ -1033,9 +1038,9 @@ $TRDN = array(
 		'18835' => 'YILDIRIM MAH',
 		'18836' => 'YILMAZ MAH',
 		'18837' => 'YOLÖREN MAH',
-		'18838' => 'YÜZÜNCÜYIL MAH'
+		'18838' => 'YÜZÜNCÜYIL MAH',
 	),
-	'YILDIRIM' => array(
+	'YILDIRIM'         => array(
 		'18839' => 'ARABAYATAĞI MAH',
 		'18840' => 'ÇINARÖNÜ MAH',
 		'18841' => 'DEMETEVLER MAH',
@@ -1104,6 +1109,6 @@ $TRDN = array(
 		'18904' => 'HACISEYFETTİN MAH',
 		'18905' => 'SELİMZADE MAH',
 		'18906' => 'SİNANDEDE MAH',
-		'18907' => 'YILDIRIM MAH'
-	)
+		'18907' => 'YILDIRIM MAH',
+	),
 );

@@ -1,7 +1,12 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
-	'ELBEYLİ' => array(
+$tr_neighborhoods = array(
+	'ELBEYLİ'   => array(
 		'46395' => 'AĞYÜZ MAH',
 		'46396' => 'HÜRRİYET MAH',
 		'46397' => 'İNÖNÜ MAH',
@@ -52,9 +57,9 @@ $TRDN = array(
 		'46442' => 'YAZILIBAHAR MAH (HAVUZLUÇAM KÖYÜ)',
 		'46443' => 'YENİDEĞİRMEN KÖYÜ',
 		'46444' => 'YEŞİLYURT MAH (AKÇAĞIL KÖYÜ)',
-		'46445' => 'YILANLI MAH (KALBURSAİT KÖYÜ)'
+		'46445' => 'YILANLI MAH (KALBURSAİT KÖYÜ)',
 	),
-	'MERKEZ' => array(
+	'MERKEZ'    => array(
 		'46446' => 'ABDİOYMAĞI MAH',
 		'46447' => 'AKPINAR MAH',
 		'46448' => 'ALBAY İBRAHİM KARAOĞLANOĞLU MAH',
@@ -209,7 +214,7 @@ $TRDN = array(
 		'46597' => 'UZUNLU KÖYÜ',
 		'46598' => 'YAMAÇ BEŞENLİ MAH (BEŞENLİ KÖYÜ)',
 		'46599' => 'YAVUZ MAH (YAVUZLU KÖYÜ)',
-		'46600' => 'YUKARI BEŞENLİ MAH (BEŞENLİ KÖYÜ)'
+		'46600' => 'YUKARI BEŞENLİ MAH (BEŞENLİ KÖYÜ)',
 	),
 	'MUSABEYLİ' => array(
 		'46601' => 'AĞCAKENT KÖYÜ',
@@ -272,9 +277,9 @@ $TRDN = array(
 		'46658' => 'ZEYTİNBAĞI KÖYÜ',
 		'46659' => 'CUMHURİYET MAH',
 		'46660' => 'MURATHÜYÜĞÜ MAH',
-		'46661' => 'PINAR MAH'
+		'46661' => 'PINAR MAH',
 	),
-	'POLATELİ' => array(
+	'POLATELİ'  => array(
 		'46662' => 'BAĞARASI KÖYÜ',
 		'46663' => 'BEKTAŞOĞLU KÖYÜ',
 		'46664' => 'BELENÖZÜ KÖYÜ',
@@ -306,6 +311,6 @@ $TRDN = array(
 		'46690' => 'EKREM ÇETİN MAH',
 		'46691' => 'KAYMAKAM KÜRŞAT AĞCA MAH',
 		'46692' => 'SOSYAL KONUTLAR MAH',
-		'46693' => 'ŞEHİT ALİ MAH'
-	)
+		'46693' => 'ŞEHİT ALİ MAH',
+	),
 );

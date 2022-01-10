@@ -1,7 +1,12 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
-	'AKÇAKENT' => array(
+$tr_neighborhoods = array(
+	'AKÇAKENT'  => array(
 		'45973' => 'ŞEHRİCEDİD MAH',
 		'45974' => 'YENİKENT MAH',
 		'45975' => 'YENİYAPAN MAH',
@@ -31,9 +36,9 @@ $TRDN = array(
 		'45999' => 'KÜÇÜKABDİUŞAĞI KÖYÜ',
 		'46000' => 'ÖDEMİŞLİ KÖYÜ',
 		'46001' => 'ÖMERUŞAĞI KÖYÜ',
-		'46002' => 'SOLAKUŞAĞI KÖYÜ'
+		'46002' => 'SOLAKUŞAĞI KÖYÜ',
 	),
-	'AKPINAR' => array(
+	'AKPINAR'   => array(
 		'46003' => 'ALİPAŞA MAH',
 		'46004' => 'CUMHURİYET MAH',
 		'46005' => 'HACI HÜSEYİN EFENDİ MAH',
@@ -76,9 +81,9 @@ $TRDN = array(
 		'46042' => 'ULUKIŞLA MAH (AŞAĞIHOMURLU KÖYÜ)',
 		'46043' => 'YAYLA MAZRASI MAH (ALİŞAR KÖYÜ)',
 		'46044' => 'YENİ MAH (KÖŞKER KÖYÜ)',
-		'46045' => 'YÜZBAŞIOĞLU MAH (KÖŞKER KÖYÜ)'
+		'46045' => 'YÜZBAŞIOĞLU MAH (KÖŞKER KÖYÜ)',
 	),
-	'BOZTEPE' => array(
+	'BOZTEPE'   => array(
 		'46046' => 'BAĞBAŞI MAH',
 		'46047' => 'ORTA MAH',
 		'46048' => 'YENİ MAH',
@@ -100,7 +105,7 @@ $TRDN = array(
 		'46064' => 'UZUNPINAR KÖYÜ',
 		'46065' => 'ÜÇKUYU KÖYÜ',
 		'46066' => 'YENİ DOĞANLI MAH (YENİDOĞANLI KÖYÜ)',
-		'46067' => 'YEŞİLYURT MAH (KARACAÖREN KÖYÜ)'
+		'46067' => 'YEŞİLYURT MAH (KARACAÖREN KÖYÜ)',
 	),
 	'ÇİÇEKDAĞI' => array(
 		'46068' => 'BAĞLARBAŞI MAH',
@@ -179,9 +184,9 @@ $TRDN = array(
 		'46141' => 'TOPALALİ KÖYÜ',
 		'46142' => 'YALNIZAĞAÇ KÖYÜ',
 		'46143' => 'YENİ MAH (BOĞAZEVCİ KÖYÜ)',
-		'46144' => 'YUKARIHACIAHMETLİ KÖYÜ'
+		'46144' => 'YUKARIHACIAHMETLİ KÖYÜ',
 	),
-	'KAMAN' => array(
+	'KAMAN'     => array(
 		'46145' => 'BAHÇELİEVLER MAH',
 		'46146' => 'BAHÇELİEVLER MAH (ÇAĞIRKAN KÖYÜ)',
 		'46147' => 'BAHÇELİEVLER MAH (KURANCILI KÖYÜ)',
@@ -270,9 +275,9 @@ $TRDN = array(
 		'46230' => 'YENİKÖY KÖYÜ',
 		'46231' => 'YENİYAPAN KÖYÜ',
 		'46232' => 'YUKARI ÇİFTLİK KÖYÜ',
-		'46233' => 'YUNUS EMRE MAH (DEMİRLİ KÖYÜ)'
+		'46233' => 'YUNUS EMRE MAH (DEMİRLİ KÖYÜ)',
 	),
-	'MERKEZ' => array(
+	'MERKEZ'    => array(
 		'46234' => 'AHİEVRAN MAH',
 		'46235' => 'AŞIKPAŞA MAH',
 		'46236' => 'BAĞBAŞI MAH',
@@ -369,9 +374,9 @@ $TRDN = array(
 		'46327' => 'YEŞİLLİ KÖYÜ',
 		'46328' => 'YEŞİLOBA KÖYÜ',
 		'46329' => 'YUKARI HOMURLU KÖYÜ',
-		'46330' => 'YUNUS EMRE MAH (ULUPINAR KÖYÜ)'
+		'46330' => 'YUNUS EMRE MAH (ULUPINAR KÖYÜ)',
 	),
-	'MUCUR' => array(
+	'MUCUR'     => array(
 		'46331' => 'AKSAKLI KÖYÜ',
 		'46332' => 'ALTINYAZI KÖYÜ',
 		'46333' => 'ASMA MAH (ASMAKARADAM KÖYÜ)',
@@ -435,6 +440,6 @@ $TRDN = array(
 		'46391' => 'OSMANGAZİ MAH',
 		'46392' => 'SOLAKLI MAH',
 		'46393' => 'ŞATIROĞLU MAH',
-		'46394' => 'YENİCE MAH'
-	)
+		'46394' => 'YENİCE MAH',
+	),
 );

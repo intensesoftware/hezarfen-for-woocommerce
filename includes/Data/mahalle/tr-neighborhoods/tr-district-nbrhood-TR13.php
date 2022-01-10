@@ -1,6 +1,11 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
+$tr_neighborhoods = array(
 	'ADİLCEVAZ' => array(
 		'14948' => 'ALACAATLI MAH',
 		'14949' => 'ATATÜRK MAH',
@@ -53,9 +58,9 @@ $TRDN = array(
 		'14996' => 'YOLÇATI KÖYÜ',
 		'14997' => 'YUKARI MAH (İPEKÇAYIR KÖYÜ)',
 		'14998' => 'YUKARI MAH (YARIMADA KÖYÜ)',
-		'14999' => 'YUKARISÜPHAN KÖYÜ'
+		'14999' => 'YUKARISÜPHAN KÖYÜ',
 	),
-	'AHLAT' => array(
+	'AHLAT'     => array(
 		'15000' => 'ERKİZAN MAH',
 		'15001' => 'HARABA ŞEHİR MAH',
 		'15002' => 'İKİ KUBBE MAH',
@@ -108,9 +113,9 @@ $TRDN = array(
 		'15049' => 'OTLUYAZI KÖYÜ',
 		'15050' => 'SARAY MAH (OVAKIŞLA KÖYÜ)',
 		'15051' => 'YILDIZLAR MAH (OVAKIŞLA KÖYÜ)',
-		'15052' => 'YOĞURTYEMEZ KÖYÜ'
+		'15052' => 'YOĞURTYEMEZ KÖYÜ',
 	),
-	'GÜROYMAK' => array(
+	'GÜROYMAK'  => array(
 		'15053' => 'BAĞLAR MAH',
 		'15054' => 'BARAJYOLU MAH',
 		'15055' => 'BARIŞ MAH',
@@ -172,9 +177,9 @@ $TRDN = array(
 		'15111' => 'YENİ MAH (GÖLBAŞI KÖYÜ)',
 		'15112' => 'YEŞİLTEPE MAH (GÖLBAŞI KÖYÜ)',
 		'15113' => 'YEŞİLYURT MAH (GÜNKIRI KÖYÜ)',
-		'15114' => 'YUKARIKOLBAŞI KÖYÜ'
+		'15114' => 'YUKARIKOLBAŞI KÖYÜ',
 	),
-	'HİZAN' => array(
+	'HİZAN'     => array(
 		'15115' => 'ALTINOLUK MAH',
 		'15116' => 'AŞAĞIKARASU MAH',
 		'15117' => 'BAHÇELİEVLER MAH',
@@ -368,9 +373,9 @@ $TRDN = array(
 		'15305' => 'YUKARIÇALI KÖYÜ',
 		'15306' => 'YUMACIK MAH (YENİCİK KÖYÜ)',
 		'15307' => 'YURTİÇİ MAH (SARPKAYA KÖYÜ)',
-		'15308' => 'ZİVİ MAH (GAYDA KÖYÜ)'
+		'15308' => 'ZİVİ MAH (GAYDA KÖYÜ)',
 	),
-	'MERKEZ' => array(
+	'MERKEZ'    => array(
 		'15309' => 'ATATÜRK MAH',
 		'15310' => 'BEŞ MİNARE MAH',
 		'15311' => 'GAZİ BEY MAH',
@@ -501,9 +506,9 @@ $TRDN = array(
 		'15436' => 'YUKARIYOLAK KÖYÜ',
 		'15437' => 'YUMURTATEPE KÖYÜ',
 		'15438' => 'YÜCEBAŞ KÖYÜ',
-		'15439' => 'ZİYARET MAH (SARPKAYA KÖYÜ)'
+		'15439' => 'ZİYARET MAH (SARPKAYA KÖYÜ)',
 	),
-	'MUTKİ' => array(
+	'MUTKİ'     => array(
 		'15440' => 'BAĞ MAH (ÇİĞDEMALAN KÖYÜ)',
 		'15441' => 'BEYAZ SU MAH (YUVALIDAM KÖYÜ)',
 		'15442' => 'ÇİĞDEMALAN KÖYÜ',
@@ -646,9 +651,9 @@ $TRDN = array(
 		'15579' => 'PINARBAŞI MAH',
 		'15580' => 'TAŞLI PINAR MAH',
 		'15581' => 'YENİ MAH',
-		'15582' => 'YENİBAĞ MAH'
+		'15582' => 'YENİBAĞ MAH',
 	),
-	'TATVAN' => array(
+	'TATVAN'    => array(
 		'15583' => '2.KM MAH (ADABAĞ KÖYÜ)',
 		'15584' => 'ADABAĞ KÖYÜ',
 		'15585' => 'BENEKLİ KÖYÜ',
@@ -765,6 +770,6 @@ $TRDN = array(
 		'15696' => 'YENİTOPRAK MAH (KORUKLU KÖYÜ)',
 		'15697' => 'YONCABAŞI KÖYÜ',
 		'15698' => 'YORGALAR MAH (SARIDAL KÖYÜ)',
-		'15699' => 'YUMRUKAYA KÖYÜ'
-	)
+		'15699' => 'YUMRUKAYA KÖYÜ',
+	),
 );

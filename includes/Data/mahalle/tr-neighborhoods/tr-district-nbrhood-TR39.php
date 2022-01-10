@@ -1,7 +1,12 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
-	'BABAESKİ' => array(
+$tr_neighborhoods = array(
+	'BABAESKİ'    => array(
 		'45673' => 'GÜLBAHÇE MAH (ALPULLU KÖYÜ)',
 		'45674' => 'ŞEKER MAH (ALPULLU KÖYÜ)',
 		'45675' => 'YENİ MAH (ALPULLU KÖYÜ)',
@@ -54,9 +59,9 @@ $TRDN = array(
 		'45722' => 'TAŞKÖPRÜ KÖYÜ',
 		'45723' => 'TERZİLİ KÖYÜ',
 		'45724' => 'YENİKÖY KÖYÜ',
-		'45725' => 'YENİMAHALLE KÖYÜ'
+		'45725' => 'YENİMAHALLE KÖYÜ',
 	),
-	'DEMİRKÖY' => array(
+	'DEMİRKÖY'    => array(
 		'45726' => 'HAMDİBEY MAH',
 		'45727' => 'ORHANİYE MAH',
 		'45728' => 'YENİ MAH',
@@ -80,9 +85,9 @@ $TRDN = array(
 		'45746' => 'SARPDERE KÖYÜ',
 		'45747' => 'SİVRİLER KÖYÜ',
 		'45748' => 'YEŞİLCE KÖYÜ',
-		'45749' => 'YİĞİTBAŞI KÖYÜ'
+		'45749' => 'YİĞİTBAŞI KÖYÜ',
 	),
-	'KOFÇAZ' => array(
+	'KOFÇAZ'      => array(
 		'45750' => 'YENİ MAH',
 		'45751' => 'YEŞİLLİK MAH',
 		'45752' => 'AHLATLI KÖYÜ',
@@ -100,9 +105,9 @@ $TRDN = array(
 		'45764' => 'TATLIPINAR KÖYÜ',
 		'45765' => 'TERZİDERE KÖYÜ',
 		'45766' => 'TOPÇULAR KÖYÜ',
-		'45767' => 'YUKARIKANARA KÖYÜ'
+		'45767' => 'YUKARIKANARA KÖYÜ',
 	),
-	'LÜLEBURGAZ' => array(
+	'LÜLEBURGAZ'  => array(
 		'45768' => 'DERE MAH (AHMETBEY KÖYÜ)',
 		'45769' => 'GÜNDOĞU MAH (AHMETBEY KÖYÜ)',
 		'45770' => 'KARŞIYAKA MAH (AHMETBEY KÖYÜ)',
@@ -169,9 +174,9 @@ $TRDN = array(
 		'45831' => 'TURGUTBEY KÖYÜ',
 		'45832' => 'UMURCA KÖYÜ',
 		'45833' => 'YENİBEDİR KÖYÜ',
-		'45834' => 'YENİTAŞLI KÖYÜ'
+		'45834' => 'YENİTAŞLI KÖYÜ',
 	),
-	'MERKEZ' => array(
+	'MERKEZ'      => array(
 		'45835' => 'ARMAĞAN KÖYÜ',
 		'45836' => 'ÇAĞALAYIK KÖYÜ',
 		'45837' => 'DEREKÖY  BUCAK MERKEZİ KÖYÜ',
@@ -237,7 +242,7 @@ $TRDN = array(
 		'45897' => 'KEMAL PAŞA MAH (ÜSKÜP KÖYÜ)',
 		'45898' => 'MEHMET ÇAVUŞ MAH (ÜSKÜP KÖYÜ)',
 		'45899' => 'ÜSKÜPDERE KÖYÜ',
-		'45900' => 'YÜNDALAN KÖYÜ'
+		'45900' => 'YÜNDALAN KÖYÜ',
 	),
 	'PEHLİVANKÖY' => array(
 		'45901' => 'AKARCA KÖYÜ',
@@ -250,9 +255,9 @@ $TRDN = array(
 		'45908' => 'YEŞİLPINAR KÖYÜ',
 		'45909' => 'ERGENE MAH',
 		'45910' => 'KAZIMDİRİK MAH',
-		'45911' => 'KURTULUŞ MAH'
+		'45911' => 'KURTULUŞ MAH',
 	),
-	'PINARHİSAR' => array(
+	'PINARHİSAR'  => array(
 		'45912' => 'AKARLAR MAH (KAYNARCA KÖYÜ)',
 		'45913' => 'AKÖREN KÖYÜ',
 		'45914' => 'ATAKÖY KÖYÜ',
@@ -274,9 +279,9 @@ $TRDN = array(
 		'45930' => 'BEYLİK MAH',
 		'45931' => 'CAMİİKEBİR MAH',
 		'45932' => 'DERE MAH',
-		'45933' => 'ORTA MAH'
+		'45933' => 'ORTA MAH',
 	),
-	'VİZE' => array(
+	'VİZE'        => array(
 		'45934' => 'AKINCILAR KÖYÜ',
 		'45935' => 'AKPINAR KÖYÜ',
 		'45936' => 'AKSİCİM KÖYÜ',
@@ -315,6 +320,6 @@ $TRDN = array(
 		'45969' => 'GAZİ MAH',
 		'45970' => 'KALE MAH',
 		'45971' => 'MEHMET AKİF MAH',
-		'45972' => 'NAMIK KEMAL MAH'
-	)
+		'45972' => 'NAMIK KEMAL MAH',
+	),
 );

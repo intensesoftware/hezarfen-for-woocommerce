@@ -1,7 +1,12 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
-	'BESNİ' => array(
+$tr_neighborhoods = array(
+	'BESNİ'    => array(
 		'833' => '15 TEMMUZ ŞEHİTLER MAH',
 		'834' => 'AŞAĞISARHAN MAH',
 		'835' => 'CİRİT MEYDANI MAH',
@@ -155,22 +160,22 @@ $TRDN = array(
 		'983' => 'ÖZBAĞLAR MAH (ATMALI KÖYÜ)',
 		'984' => 'TEKAĞAÇ KÖYÜ',
 		'985' => 'YAZIYALANGOZ MAH (TEKAĞAÇ KÖYÜ)',
-		'986' => 'YENİ MAH (ŞAMBAYAT KÖYÜ)'
+		'986' => 'YENİ MAH (ŞAMBAYAT KÖYÜ)',
 	),
 	'ÇELİKHAN' => array(
-		'987' => 'BAHÇELİ EVLER MAH',
-		'988' => 'BAŞPINAR MAH',
-		'989' => 'CAMİ MAH',
-		'990' => 'CUMHURİYET MAH',
-		'991' => 'FATİH MAH',
-		'992' => 'MAHMUT NEDİM ÖKMEN MAH',
-		'993' => 'MERKEZ MAH',
-		'994' => 'YUNUS EMRE MAH',
-		'995' => 'ZAFER MAH',
-		'996' => 'AKSU KÖYÜ',
-		'997' => 'AKTAŞ MAH (PINARBAŞI KÖYÜ)',
-		'998' => 'ALİGÜR MAH (GÖLBAĞI KÖYÜ)',
-		'999' => 'ALİSAHA KÜMESİ MAH (MUTLU KÖYÜ)',
+		'987'  => 'BAHÇELİ EVLER MAH',
+		'988'  => 'BAŞPINAR MAH',
+		'989'  => 'CAMİ MAH',
+		'990'  => 'CUMHURİYET MAH',
+		'991'  => 'FATİH MAH',
+		'992'  => 'MAHMUT NEDİM ÖKMEN MAH',
+		'993'  => 'MERKEZ MAH',
+		'994'  => 'YUNUS EMRE MAH',
+		'995'  => 'ZAFER MAH',
+		'996'  => 'AKSU KÖYÜ',
+		'997'  => 'AKTAŞ MAH (PINARBAŞI KÖYÜ)',
+		'998'  => 'ALİGÜR MAH (GÖLBAĞI KÖYÜ)',
+		'999'  => 'ALİSAHA KÜMESİ MAH (MUTLU KÖYÜ)',
 		'1000' => 'ALTINTAŞ KÖYÜ',
 		'1001' => 'ASKERHAN KÖYÜ',
 		'1002' => 'BAHÇE KÜMESİ MAH (MUTLU KÖYÜ)',
@@ -218,9 +223,9 @@ $TRDN = array(
 		'1044' => 'YAYLAEVLERİ MAH (ASKERHAN KÖYÜ)',
 		'1045' => 'YEŞİLOVA KÖYÜ',
 		'1046' => 'YEŞİLTEPE KÖYÜ',
-		'1047' => 'YEŞİLYAYLA KÖYÜ'
+		'1047' => 'YEŞİLYAYLA KÖYÜ',
 	),
-	'GERGER' => array(
+	'GERGER'   => array(
 		'1048' => 'FATİH MAH',
 		'1049' => 'KELEŞAN MAH',
 		'1050' => 'MERKEZ MAH',
@@ -356,9 +361,9 @@ $TRDN = array(
 		'1180' => 'YENİBARDAK KÖYÜ',
 		'1181' => 'YEŞİLYURT KÖYÜ',
 		'1182' => 'YUKARIDAĞLICA KÖYÜ',
-		'1183' => 'YUVACIK MAH (AÇMA KÖYÜ)'
+		'1183' => 'YUVACIK MAH (AÇMA KÖYÜ)',
 	),
-	'GÖLBAŞI' => array(
+	'GÖLBAŞI'  => array(
 		'1184' => 'CUMHURİYET MAH (BELÖREN KÖYÜ)',
 		'1185' => 'MERKEZ MAH (BELÖREN KÖYÜ)',
 		'1186' => 'ASFALT MAH',
@@ -437,9 +442,9 @@ $TRDN = array(
 		'1259' => 'YOLBAĞI MAH (ÇATALTEPE KÖYÜ)',
 		'1260' => 'YUKARIÇÖPLÜ KÖYÜ',
 		'1261' => 'YUKARIKARAKUYU KÖYÜ',
-		'1262' => 'YUKARINASIRLI KÖYÜ'
+		'1262' => 'YUKARINASIRLI KÖYÜ',
 	),
-	'KAHTA' => array(
+	'KAHTA'    => array(
 		'1263' => 'ACOĞLU MAH (GELDİBULDU KÖYÜ)',
 		'1264' => 'ADALI KÖYÜ',
 		'1265' => 'AKALIN KÖYÜ',
@@ -678,9 +683,9 @@ $TRDN = array(
 		'1498' => 'YÜKSEKYAYLA MAH (BELENLİ KÖYÜ)',
 		'1499' => 'ZEYNAN MAH (BOSTANLI KÖYÜ)',
 		'1500' => 'ZEYTİN KÖYÜ',
-		'1501' => 'ZİYARET KÖYÜ'
+		'1501' => 'ZİYARET KÖYÜ',
 	),
-	'MERKEZ' => array(
+	'MERKEZ'   => array(
 		'1502' => 'AĞCİN KÖYÜ',
 		'1503' => 'AKDERE KÖYÜ',
 		'1504' => 'AKINCILAR  MAH (ÇERÇİYAN MAH) (AKDERE KÖYÜ)',
@@ -988,9 +993,9 @@ $TRDN = array(
 		'1806' => 'TÜRKİYE PETROLLERİ MAH',
 		'1807' => 'YAVUZ SELİM MAH',
 		'1808' => 'YENİ MAH',
-		'1809' => 'YENİ SANAYİ MAH'
+		'1809' => 'YENİ SANAYİ MAH',
 	),
-	'SAMSAT' => array(
+	'SAMSAT'   => array(
 		'1810' => 'AĞAKÖY MAH (UZUNTEPE KÖYÜ)',
 		'1811' => 'AKDAMAR KÖYÜ',
 		'1812' => 'ALTINTEPE MAH (KIRMACIK KÖYÜ)',
@@ -1030,9 +1035,9 @@ $TRDN = array(
 		'1846' => 'BARAJ MAH',
 		'1847' => 'KALE MAH',
 		'1848' => 'ÖRENTAŞ MAH',
-		'1849' => 'YAVUZ SELİM MAH'
+		'1849' => 'YAVUZ SELİM MAH',
 	),
-	'SİNCİK' => array(
+	'SİNCİK'   => array(
 		'1850' => 'ADAKLAR MAH (ŞAHİNBEYLER KÖYÜ)',
 		'1851' => 'AKSU KÖYÜ',
 		'1852' => 'ALANCIK KÖYÜ',
@@ -1126,9 +1131,9 @@ $TRDN = array(
 		'1940' => 'KARAMAN MAH',
 		'1941' => 'MAHMUTOĞLU MAH',
 		'1942' => 'ONUR MAH',
-		'1943' => 'ZEYNEL ASLAN MAH'
+		'1943' => 'ZEYNEL ASLAN MAH',
 	),
-	'TUT' => array(
+	'TUT'      => array(
 		'1944' => 'AKBEL MAH (ÇİFTLİK KÖYÜ)',
 		'1945' => 'AKÇATEPE KÖYÜ',
 		'1946' => 'BOYUNDERE KÖYÜ',
@@ -1155,6 +1160,6 @@ $TRDN = array(
 		'1967' => 'ÇAMLICA MAH',
 		'1968' => 'FETHİYE MAH',
 		'1969' => 'REŞADİYE MAH',
-		'1970' => 'SALAH MAH'
-	)
+		'1970' => 'SALAH MAH',
+	),
 );

@@ -1,6 +1,11 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRPD = array(
+$tr_districts = array(
 	'TR01' => array(
 		'ALADAĞ',
 		'CEYHAN',
@@ -16,7 +21,7 @@ $TRPD = array(
 		'SEYHAN',
 		'TUFANBEYLİ',
 		'YUMURTALIK',
-		'YÜREĞİR'
+		'YÜREĞİR',
 	),
 	'TR02' => array(
 		'BESNİ',
@@ -27,7 +32,7 @@ $TRPD = array(
 		'MERKEZ',
 		'SAMSAT',
 		'SİNCİK',
-		'TUT'
+		'TUT',
 	),
 	'TR03' => array(
 		'BAŞMAKÇI',
@@ -47,7 +52,7 @@ $TRPD = array(
 		'SANDIKLI',
 		'SİNANPAŞA',
 		'SULTANDAĞI',
-		'ŞUHUT'
+		'ŞUHUT',
 	),
 	'TR04' => array(
 		'DİYADİN',
@@ -57,7 +62,7 @@ $TRPD = array(
 		'MERKEZ',
 		'PATNOS',
 		'TAŞLIÇAY',
-		'TUTAK'
+		'TUTAK',
 	),
 	'TR05' => array(
 		'GÖYNÜCEK',
@@ -66,7 +71,7 @@ $TRPD = array(
 		'MERKEZ',
 		'MERZİFON',
 		'SULUOVA',
-		'TAŞOVA'
+		'TAŞOVA',
 	),
 	'TR06' => array(
 		'AKYURT',
@@ -93,7 +98,7 @@ $TRPD = array(
 		'PURSAKLAR',
 		'SİNCAN',
 		'ŞEREFLİKOÇHİSAR',
-		'YENİMAHALLE'
+		'YENİMAHALLE',
 	),
 	'TR07' => array(
 		'AKSEKİ',
@@ -114,7 +119,7 @@ $TRPD = array(
 		'KUMLUCA',
 		'MANAVGAT',
 		'MURATPAŞA',
-		'SERİK'
+		'SERİK',
 	),
 	'TR08' => array(
 		'ARDANUÇ',
@@ -125,7 +130,7 @@ $TRPD = array(
 		'MERKEZ',
 		'MURGUL',
 		'ŞAVŞAT',
-		'YUSUFELİ'
+		'YUSUFELİ',
 	),
 	'TR09' => array(
 		'BOZDOĞAN',
@@ -144,7 +149,7 @@ $TRPD = array(
 		'NAZİLLİ',
 		'SÖKE',
 		'SULTANHİSAR',
-		'YENİPAZAR'
+		'YENİPAZAR',
 	),
 	'TR10' => array(
 		'ALTIEYLÜL',
@@ -166,7 +171,7 @@ $TRPD = array(
 		'MARMARA',
 		'SAVAŞTEPE',
 		'SINDIRGI',
-		'SUSURLUK'
+		'SUSURLUK',
 	),
 	'TR11' => array(
 		'BOZÜYÜK',
@@ -176,7 +181,7 @@ $TRPD = array(
 		'OSMANELİ',
 		'PAZARYERİ',
 		'SÖĞÜT',
-		'YENİPAZAR'
+		'YENİPAZAR',
 	),
 	'TR12' => array(
 		'ADAKLI',
@@ -186,7 +191,7 @@ $TRPD = array(
 		'MERKEZ',
 		'SOLHAN',
 		'YAYLADERE',
-		'YEDİSU'
+		'YEDİSU',
 	),
 	'TR13' => array(
 		'ADİLCEVAZ',
@@ -195,7 +200,7 @@ $TRPD = array(
 		'HİZAN',
 		'MERKEZ',
 		'MUTKİ',
-		'TATVAN'
+		'TATVAN',
 	),
 	'TR14' => array(
 		'DÖRTDİVAN',
@@ -206,7 +211,7 @@ $TRPD = array(
 		'MERKEZ',
 		'MUDURNU',
 		'SEBEN',
-		'YENİÇAĞA'
+		'YENİÇAĞA',
 	),
 	'TR15' => array(
 		'AĞLASUN',
@@ -219,7 +224,7 @@ $TRPD = array(
 		'KEMER',
 		'MERKEZ',
 		'TEFENNİ',
-		'YEŞİLOVA'
+		'YEŞİLOVA',
 	),
 	'TR16' => array(
 		'BÜYÜKORHAN',
@@ -238,7 +243,7 @@ $TRPD = array(
 		'ORHANGAZİ',
 		'OSMANGAZİ',
 		'YENİŞEHİR',
-		'YILDIRIM'
+		'YILDIRIM',
 	),
 	'TR17' => array(
 		'AYVACIK',
@@ -252,7 +257,7 @@ $TRPD = array(
 		'GÖKÇEADA',
 		'LAPSEKİ',
 		'MERKEZ',
-		'YENİCE'
+		'YENİCE',
 	),
 	'TR18' => array(
 		'ATKARACALAR',
@@ -266,7 +271,7 @@ $TRPD = array(
 		'MERKEZ',
 		'ORTA',
 		'ŞABANÖZÜ',
-		'YAPRAKLI'
+		'YAPRAKLI',
 	),
 	'TR19' => array(
 		'ALACA',
@@ -282,7 +287,7 @@ $TRPD = array(
 		'ORTAKÖY',
 		'OSMANCIK',
 		'SUNGURLU',
-		'UĞURLUDAĞ'
+		'UĞURLUDAĞ',
 	),
 	'TR20' => array(
 		'ACIPAYAM',
@@ -303,7 +308,7 @@ $TRPD = array(
 		'PAMUKKALE',
 		'SARAYKÖY',
 		'SERİNHİSAR',
-		'TAVAS'
+		'TAVAS',
 	),
 	'TR21' => array(
 		'BAĞLAR',
@@ -322,7 +327,7 @@ $TRPD = array(
 		'LİCE',
 		'SİLVAN',
 		'SUR',
-		'YENİŞEHİR'
+		'YENİŞEHİR',
 	),
 	'TR22' => array(
 		'ENEZ',
@@ -333,7 +338,7 @@ $TRPD = array(
 		'MERİÇ',
 		'MERKEZ',
 		'SÜLOĞLU',
-		'UZUNKÖPRÜ'
+		'UZUNKÖPRÜ',
 	),
 	'TR23' => array(
 		'AĞIN',
@@ -346,7 +351,7 @@ $TRPD = array(
 		'MADEN',
 		'MERKEZ',
 		'PALU',
-		'SİVRİCE'
+		'SİVRİCE',
 	),
 	'TR24' => array(
 		'ÇAYIRLI',
@@ -357,7 +362,7 @@ $TRPD = array(
 		'OTLUKBELİ',
 		'REFAHİYE',
 		'TERCAN',
-		'ÜZÜMLÜ'
+		'ÜZÜMLÜ',
 	),
 	'TR25' => array(
 		'AŞKALE',
@@ -379,7 +384,7 @@ $TRPD = array(
 		'TEKMAN',
 		'TORTUM',
 		'UZUNDERE',
-		'YAKUTİYE'
+		'YAKUTİYE',
 	),
 	'TR26' => array(
 		'ALPU',
@@ -395,7 +400,7 @@ $TRPD = array(
 		'SARICAKAYA',
 		'SEYİTGAZİ',
 		'SİVRİHİSAR',
-		'TEPEBAŞI'
+		'TEPEBAŞI',
 	),
 	'TR27' => array(
 		'ARABAN',
@@ -406,7 +411,7 @@ $TRPD = array(
 		'OĞUZELİ',
 		'ŞAHİNBEY',
 		'ŞEHİTKAMİL',
-		'YAVUZELİ'
+		'YAVUZELİ',
 	),
 	'TR28' => array(
 		'ALUCRA',
@@ -424,7 +429,7 @@ $TRPD = array(
 		'PİRAZİZ',
 		'ŞEBİNKARAHİSAR',
 		'TİREBOLU',
-		'YAĞLIDERE'
+		'YAĞLIDERE',
 	),
 	'TR29' => array(
 		'KELKİT',
@@ -432,14 +437,14 @@ $TRPD = array(
 		'KÜRTÜN',
 		'MERKEZ',
 		'ŞİRAN',
-		'TORUL'
+		'TORUL',
 	),
 	'TR30' => array(
 		'ÇUKURCA',
 		'DERECİK',
 		'MERKEZ',
 		'ŞEMDİNLİ',
-		'YÜKSEKOVA'
+		'YÜKSEKOVA',
 	),
 	'TR31' => array(
 		'ALTINÖZÜ',
@@ -456,7 +461,7 @@ $TRPD = array(
 		'PAYAS',
 		'REYHANLI',
 		'SAMANDAĞ',
-		'YAYLADAĞI'
+		'YAYLADAĞI',
 	),
 	'TR32' => array(
 		'AKSU',
@@ -471,7 +476,7 @@ $TRPD = array(
 		'ŞARKİKARAAĞAÇ',
 		'ULUBORLU',
 		'YALVAÇ',
-		'YENİŞARBADEMLİ'
+		'YENİŞARBADEMLİ',
 	),
 	'TR33' => array(
 		'AKDENİZ',
@@ -486,7 +491,7 @@ $TRPD = array(
 		'SİLİFKE',
 		'TARSUS',
 		'TOROSLAR',
-		'YENİŞEHİR'
+		'YENİŞEHİR',
 	),
 	'TR34' => array(
 		'ADALAR',
@@ -527,7 +532,7 @@ $TRPD = array(
 		'TUZLA',
 		'ÜMRANİYE',
 		'ÜSKÜDAR',
-		'ZEYTİNBURNU'
+		'ZEYTİNBURNU',
 	),
 	'TR35' => array(
 		'ALİAĞA',
@@ -559,7 +564,7 @@ $TRPD = array(
 		'SELÇUK',
 		'TİRE',
 		'TORBALI',
-		'URLA'
+		'URLA',
 	),
 	'TR36' => array(
 		'AKYAKA',
@@ -569,7 +574,7 @@ $TRPD = array(
 		'MERKEZ',
 		'SARIKAMIŞ',
 		'SELİM',
-		'SUSUZ'
+		'SUSUZ',
 	),
 	'TR37' => array(
 		'ABANA',
@@ -591,7 +596,7 @@ $TRPD = array(
 		'SEYDİLER',
 		'ŞENPAZAR',
 		'TAŞKÖPRÜ',
-		'TOSYA'
+		'TOSYA',
 	),
 	'TR38' => array(
 		'AKKIŞLA',
@@ -609,7 +614,7 @@ $TRPD = array(
 		'TALAS',
 		'TOMARZA',
 		'YAHYALI',
-		'YEŞİLHİSAR'
+		'YEŞİLHİSAR',
 	),
 	'TR39' => array(
 		'BABAESKİ',
@@ -619,7 +624,7 @@ $TRPD = array(
 		'MERKEZ',
 		'PEHLİVANKÖY',
 		'PINARHİSAR',
-		'VİZE'
+		'VİZE',
 	),
 	'TR40' => array(
 		'AKÇAKENT',
@@ -628,7 +633,7 @@ $TRPD = array(
 		'ÇİÇEKDAĞI',
 		'KAMAN',
 		'MERKEZ',
-		'MUCUR'
+		'MUCUR',
 	),
 	'TR41' => array(
 		'BAŞİSKELE',
@@ -642,7 +647,7 @@ $TRPD = array(
 		'KANDIRA',
 		'KARAMÜRSEL',
 		'KARTEPE',
-		'KÖRFEZ'
+		'KÖRFEZ',
 	),
 	'TR42' => array(
 		'AHIRLI',
@@ -675,7 +680,7 @@ $TRPD = array(
 		'TAŞKENT',
 		'TUZLUKÇU',
 		'YALIHÜYÜK',
-		'YUNAK'
+		'YUNAK',
 	),
 	'TR43' => array(
 		'ALTINTAŞ',
@@ -690,7 +695,7 @@ $TRPD = array(
 		'PAZARLAR',
 		'SİMAV',
 		'ŞAPHANE',
-		'TAVŞANLI'
+		'TAVŞANLI',
 	),
 	'TR44' => array(
 		'AKÇADAĞ',
@@ -705,7 +710,7 @@ $TRPD = array(
 		'KULUNCAK',
 		'PÜTÜRGE',
 		'YAZIHAN',
-		'YEŞİLYURT'
+		'YEŞİLYURT',
 	),
 	'TR45' => array(
 		'AHMETLİ',
@@ -724,7 +729,7 @@ $TRPD = array(
 		'SOMA',
 		'ŞEHZADELER',
 		'TURGUTLU',
-		'YUNUSEMRE'
+		'YUNUSEMRE',
 	),
 	'TR46' => array(
 		'AFŞİN',
@@ -737,7 +742,7 @@ $TRPD = array(
 		'NURHAK',
 		'ONİKİŞUBAT',
 		'PAZARCIK',
-		'TÜRKOĞLU'
+		'TÜRKOĞLU',
 	),
 	'TR47' => array(
 		'ARTUKLU',
@@ -749,7 +754,7 @@ $TRPD = array(
 		'NUSAYBİN',
 		'ÖMERLİ',
 		'SAVUR',
-		'YEŞİLLİ'
+		'YEŞİLLİ',
 	),
 	'TR48' => array(
 		'BODRUM',
@@ -764,7 +769,7 @@ $TRPD = array(
 		'ORTACA',
 		'SEYDİKEMER',
 		'ULA',
-		'YATAĞAN'
+		'YATAĞAN',
 	),
 	'TR49' => array(
 		'BULANIK',
@@ -772,7 +777,7 @@ $TRPD = array(
 		'KORKUT',
 		'MALAZGİRT',
 		'MERKEZ',
-		'VARTO'
+		'VARTO',
 	),
 	'TR50' => array(
 		'ACIGÖL',
@@ -782,7 +787,7 @@ $TRPD = array(
 		'HACIBEKTAŞ',
 		'KOZAKLI',
 		'MERKEZ',
-		'ÜRGÜP'
+		'ÜRGÜP',
 	),
 	'TR51' => array(
 		'ALTUNHİSAR',
@@ -790,7 +795,7 @@ $TRPD = array(
 		'ÇAMARDI',
 		'ÇİFTLİK',
 		'MERKEZ',
-		'ULUKIŞLA'
+		'ULUKIŞLA',
 	),
 	'TR52' => array(
 		'AKKUŞ',
@@ -811,7 +816,7 @@ $TRPD = array(
 		'MESUDİYE',
 		'PERŞEMBE',
 		'ULUBEY',
-		'ÜNYE'
+		'ÜNYE',
 	),
 	'TR53' => array(
 		'ARDEŞEN',
@@ -825,7 +830,7 @@ $TRPD = array(
 		'İYİDERE',
 		'KALKANDERE',
 		'MERKEZ',
-		'PAZAR'
+		'PAZAR',
 	),
 	'TR54' => array(
 		'ADAPAZARI',
@@ -843,7 +848,7 @@ $TRPD = array(
 		'SAPANCA',
 		'SERDİVAN',
 		'SÖĞÜTLÜ',
-		'TARAKLI'
+		'TARAKLI',
 	),
 	'TR55' => array(
 		'19 MAYIS',
@@ -862,7 +867,7 @@ $TRPD = array(
 		'TEKKEKÖY',
 		'TERME',
 		'VEZİRKÖPRÜ',
-		'YAKAKENT'
+		'YAKAKENT',
 	),
 	'TR56' => array(
 		'BAYKAN',
@@ -871,7 +876,7 @@ $TRPD = array(
 		'MERKEZ',
 		'PERVARİ',
 		'ŞİRVAN',
-		'TİLLO'
+		'TİLLO',
 	),
 	'TR57' => array(
 		'AYANCIK',
@@ -882,7 +887,7 @@ $TRPD = array(
 		'GERZE',
 		'MERKEZ',
 		'SARAYDÜZÜ',
-		'TÜRKELİ'
+		'TÜRKELİ',
 	),
 	'TR58' => array(
 		'AKINCILAR',
@@ -901,7 +906,7 @@ $TRPD = array(
 		'ŞARKIŞLA',
 		'ULAŞ',
 		'YILDIZELİ',
-		'ZARA'
+		'ZARA',
 	),
 	'TR59' => array(
 		'ÇERKEZKÖY',
@@ -914,7 +919,7 @@ $TRPD = array(
 		'MURATLI',
 		'SARAY',
 		'SÜLEYMANPAŞA',
-		'ŞARKÖY'
+		'ŞARKÖY',
 	),
 	'TR60' => array(
 		'ALMUS',
@@ -928,7 +933,7 @@ $TRPD = array(
 		'SULUSARAY',
 		'TURHAL',
 		'YEŞİLYURT',
-		'ZİLE'
+		'ZİLE',
 	),
 	'TR61' => array(
 		'AKÇAABAT',
@@ -948,7 +953,7 @@ $TRPD = array(
 		'ŞALPAZARI',
 		'TONYA',
 		'VAKFIKEBİR',
-		'YOMRA'
+		'YOMRA',
 	),
 	'TR62' => array(
 		'ÇEMİŞGEZEK',
@@ -958,7 +963,7 @@ $TRPD = array(
 		'NAZIMİYE',
 		'OVACIK',
 		'PERTEK',
-		'PÜLÜMÜR'
+		'PÜLÜMÜR',
 	),
 	'TR63' => array(
 		'AKÇAKALE',
@@ -973,7 +978,7 @@ $TRPD = array(
 		'KARAKÖPRÜ',
 		'SİVEREK',
 		'SURUÇ',
-		'VİRANŞEHİR'
+		'VİRANŞEHİR',
 	),
 	'TR64' => array(
 		'BANAZ',
@@ -981,7 +986,7 @@ $TRPD = array(
 		'KARAHALLI',
 		'MERKEZ',
 		'SİVASLI',
-		'ULUBEY'
+		'ULUBEY',
 	),
 	'TR65' => array(
 		'BAHÇESARAY',
@@ -996,7 +1001,7 @@ $TRPD = array(
 		'MURADİYE',
 		'ÖZALP',
 		'SARAY',
-		'TUŞBA'
+		'TUŞBA',
 	),
 	'TR66' => array(
 		'AKDAĞMADENİ',
@@ -1012,7 +1017,7 @@ $TRPD = array(
 		'SORGUN',
 		'ŞEFAATLİ',
 		'YENİFAKILI',
-		'YERKÖY'
+		'YERKÖY',
 	),
 	'TR67' => array(
 		'ALAPLI',
@@ -1022,7 +1027,7 @@ $TRPD = array(
 		'GÖKÇEBEY',
 		'KİLİMLİ',
 		'KOZLU',
-		'MERKEZ'
+		'MERKEZ',
 	),
 	'TR68' => array(
 		'AĞAÇÖREN',
@@ -1032,12 +1037,12 @@ $TRPD = array(
 		'MERKEZ',
 		'ORTAKÖY',
 		'SARIYAHŞİ',
-		'SULTANHANI'
+		'SULTANHANI',
 	),
 	'TR69' => array(
 		'AYDINTEPE',
 		'DEMİRÖZÜ',
-		'MERKEZ'
+		'MERKEZ',
 	),
 	'TR70' => array(
 		'AYRANCI',
@@ -1045,7 +1050,7 @@ $TRPD = array(
 		'ERMENEK',
 		'KAZIMKARABEKİR',
 		'MERKEZ',
-		'SARIVELİLER'
+		'SARIVELİLER',
 	),
 	'TR71' => array(
 		'BAHŞILI',
@@ -1056,7 +1061,7 @@ $TRPD = array(
 		'KESKİN',
 		'MERKEZ',
 		'SULAKYURT',
-		'YAHŞİHAN'
+		'YAHŞİHAN',
 	),
 	'TR72' => array(
 		'BEŞİRİ',
@@ -1064,7 +1069,7 @@ $TRPD = array(
 		'HASANKEYF',
 		'KOZLUK',
 		'MERKEZ',
-		'SASON'
+		'SASON',
 	),
 	'TR73' => array(
 		'BEYTÜŞŞEBAP',
@@ -1073,13 +1078,13 @@ $TRPD = array(
 		'İDİL',
 		'MERKEZ',
 		'SİLOPİ',
-		'ULUDERE'
+		'ULUDERE',
 	),
 	'TR74' => array(
 		'AMASRA',
 		'KURUCAŞİLE',
 		'MERKEZ',
-		'ULUS'
+		'ULUS',
 	),
 	'TR75' => array(
 		'ÇILDIR',
@@ -1087,13 +1092,13 @@ $TRPD = array(
 		'GÖLE',
 		'HANAK',
 		'MERKEZ',
-		'POSOF'
+		'POSOF',
 	),
 	'TR76' => array(
 		'ARALIK',
 		'KARAKOYUNLU',
 		'MERKEZ',
-		'TUZLUCA'
+		'TUZLUCA',
 	),
 	'TR77' => array(
 		'ALTINOVA',
@@ -1101,7 +1106,7 @@ $TRPD = array(
 		'ÇINARCIK',
 		'ÇİFTLİKKÖY',
 		'MERKEZ',
-		'TERMAL'
+		'TERMAL',
 	),
 	'TR78' => array(
 		'EFLANİ',
@@ -1109,13 +1114,13 @@ $TRPD = array(
 		'MERKEZ',
 		'OVACIK',
 		'SAFRANBOLU',
-		'YENİCE'
+		'YENİCE',
 	),
 	'TR79' => array(
 		'ELBEYLİ',
 		'MERKEZ',
 		'MUSABEYLİ',
-		'POLATELİ'
+		'POLATELİ',
 	),
 	'TR80' => array(
 		'BAHÇE',
@@ -1124,7 +1129,7 @@ $TRPD = array(
 		'KADİRLİ',
 		'MERKEZ',
 		'SUMBAS',
-		'TOPRAKKALE'
+		'TOPRAKKALE',
 	),
 	'TR81' => array(
 		'AKÇAKOCA',
@@ -1134,6 +1139,6 @@ $TRPD = array(
 		'GÜMÜŞOVA',
 		'KAYNAŞLI',
 		'MERKEZ',
-		'YIĞILCA'
-	)
+		'YIĞILCA',
+	),
 );

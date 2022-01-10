@@ -1,6 +1,11 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
+$tr_neighborhoods = array(
 	'DÖRTDİVAN' => array(
 		'15700' => 'ADAKINIK MAH',
 		'15701' => 'BAYRAMLAR MAH',
@@ -106,9 +111,9 @@ $TRDN = array(
 		'15801' => 'YUKARI MAH (YUKARIDÜĞER KÖYÜ)',
 		'15802' => 'YUKARI MANDIRA MAH (SORKUN KÖYÜ)',
 		'15803' => 'YUKARI YAYLA MAH (GÖBÜLER KÖYÜ)',
-		'15804' => 'YUKARISAYIK MERKEZ MAH (YUKARISAYIK KÖYÜ)'
+		'15804' => 'YUKARISAYIK MERKEZ MAH (YUKARISAYIK KÖYÜ)',
 	),
-	'GEREDE' => array(
+	'GEREDE'    => array(
 		'15805' => 'BAHÇELİEVLER MAH',
 		'15806' => 'DAYIOĞLU MAH',
 		'15807' => 'DEMİRCİLER MAH',
@@ -400,9 +405,9 @@ $TRDN = array(
 		'16093' => 'YUKARI MAH (HALAÇLAR KÖYÜ)',
 		'16094' => 'YUKARI MAH (ORTACA KÖYÜ)',
 		'16095' => 'YUNUSLAR MAH (YAKAKAYA KÖYÜ)',
-		'16096' => 'ZADATLAR MAH (ENSELİLER KÖYÜ)'
+		'16096' => 'ZADATLAR MAH (ENSELİLER KÖYÜ)',
 	),
-	'GÖYNÜK' => array(
+	'GÖYNÜK'    => array(
 		'16097' => 'CUMA MAH',
 		'16098' => 'ÇEŞME MAH',
 		'16099' => 'HACI ABDİ MAH',
@@ -556,7 +561,7 @@ $TRDN = array(
 		'16247' => 'YEŞİLOVA MAHALLESİ (BÖLÜCEKOVA KÖYÜ)',
 		'16248' => 'YEŞİLYAZI  MERKEZ MAH (YEŞİLYAZI KÖYÜ)',
 		'16249' => 'YÖRÜKLER MAH (TEKİRLER KÖYÜ)',
-		'16250' => 'YUKARIKINIK MERKEZ MAH (YUKARIKINIK KÖYÜ)'
+		'16250' => 'YUKARIKINIK MERKEZ MAH (YUKARIKINIK KÖYÜ)',
 	),
 	'KIBRISCIK' => array(
 		'16251' => 'KARADOĞAN MAH',
@@ -621,9 +626,9 @@ $TRDN = array(
 		'16310' => 'YAYLA BÖLGESİ MAH (BELEN KÖYÜ)',
 		'16311' => 'YAZICA KÖYÜ',
 		'16312' => 'YUKARI ALADAĞ YAYLASI MAH (ÇÖKELER KÖYÜ)',
-		'16313' => 'YUKARI BEDESTEN MAH (BELEN KÖYÜ)'
+		'16313' => 'YUKARI BEDESTEN MAH (BELEN KÖYÜ)',
 	),
-	'MENGEN' => array(
+	'MENGEN'    => array(
 		'16314' => 'ADASAL MAH (GÖKÇESU KÖYÜ)',
 		'16315' => 'AKMEHMETOĞLU MAH (KAYABAŞI KÖYÜ)',
 		'16316' => 'ALİOĞLU MAH (ÇORAKKADİRLER KÖYÜ)',
@@ -919,9 +924,9 @@ $TRDN = array(
 		'16606' => 'YUKARI MAH (TEBERİKLER KÖYÜ)',
 		'16607' => 'ZAYIMLAR MAH (KARAŞEYHLER KÖYÜ)',
 		'16608' => 'ZEBUNLAR MAH (KARAŞEYHLER KÖYÜ)',
-		'16609' => 'ZİLFEROĞLU MAH (AKÖREN KÖYÜ)'
+		'16609' => 'ZİLFEROĞLU MAH (AKÖREN KÖYÜ)',
 	),
-	'MERKEZ' => array(
+	'MERKEZ'    => array(
 		'16610' => 'ALPAĞUT MAH',
 		'16611' => 'ALPAĞUTBEY MAH',
 		'16612' => 'AŞAĞISOKU MAH',
@@ -1267,9 +1272,9 @@ $TRDN = array(
 		'16952' => 'YUVA MERKEZ MAH (YUVA KÖYÜ)',
 		'16953' => 'YUVALCA MAH (KUZÖRENEMİRLER KÖYÜ)',
 		'16954' => 'ZAHMANLAR MAH (BÜRNÜK KÖYÜ)',
-		'16955' => 'ZAHMANLAR YAYLASI MAH (BÜRNÜK KÖYÜ)'
+		'16955' => 'ZAHMANLAR YAYLASI MAH (BÜRNÜK KÖYÜ)',
 	),
-	'MUDURNU' => array(
+	'MUDURNU'   => array(
 		'16956' => 'MAH (HAYALLAR MAH)YAYLA EVLERİ (ALPAGUT KÖYÜ)',
 		'16957' => '100.YIL MAH (BOSTANCILAR KÖYÜ)',
 		'16958' => '100.YIL MAH (KURTLAR KÖYÜ)',
@@ -1490,9 +1495,9 @@ $TRDN = array(
 		'17173' => 'KAYGANA MAH',
 		'17174' => 'MUSALLA MAH',
 		'17175' => 'SEYRANCIK MAH',
-		'17176' => 'YILDIRIM BAYAZID MAH'
+		'17176' => 'YILDIRIM BAYAZID MAH',
 	),
-	'SEBEN' => array(
+	'SEBEN'     => array(
 		'17177' => 'ALPAGUT KÖYÜ',
 		'17178' => 'AŞAĞI MAH (DEĞİRMENKAYA KÖYÜ)',
 		'17179' => 'AŞAĞI MAH (KIZIK KÖYÜ)',
@@ -1596,9 +1601,9 @@ $TRDN = array(
 		'17277' => 'YUKARI YAYLA MAH (KUZGÖLCÜK KÖYÜ)',
 		'17278' => 'YUVA KÖYÜ',
 		'17279' => 'ÇARŞI MAH',
-		'17280' => 'KESKİNLİ MAH'
+		'17280' => 'KESKİNLİ MAH',
 	),
-	'YENİÇAĞA' => array(
+	'YENİÇAĞA'  => array(
 		'17281' => 'ACISU MAH (AŞAĞIKULDAN KÖYÜ)',
 		'17282' => 'AHMETLER MAH (ÖREN KÖYÜ)',
 		'17283' => 'AKINCILAR KÖYÜ',
@@ -1655,6 +1660,6 @@ $TRDN = array(
 		'17334' => 'YUKARI MAH (ŞAHNALAR KÖYÜ)',
 		'17335' => 'ASİL BEY MAH',
 		'17336' => 'CAMİATİK MAH',
-		'17337' => 'GÖLYÜZÜ MAH'
-	)
+		'17337' => 'GÖLYÜZÜ MAH',
+	),
 );

@@ -1,6 +1,11 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
+$tr_neighborhoods = array(
 	'ÇILDIR' => array(
 		'7496' => 'AŞIKŞENLİK MAH',
 		'7497' => 'ÇANKAYA MAH',
@@ -46,9 +51,9 @@ $TRDN = array(
 		'7537' => 'SEMİHAŞAKİR KÖYÜ',
 		'7538' => 'TAŞDEĞİRMEN KÖYÜ',
 		'7539' => 'YENİBEYREHATUN KÖYÜ',
-		'7540' => 'YUKARICAMBAZ KÖYÜ'
+		'7540' => 'YUKARICAMBAZ KÖYÜ',
 	),
-	'DAMAL' => array(
+	'DAMAL'  => array(
 		'7541' => 'ATA MAH',
 		'7542' => 'CUMHURİYET MAH',
 		'7543' => 'ÇAYBAŞI MAH',
@@ -67,9 +72,9 @@ $TRDN = array(
 		'7556' => 'OTAĞLI KÖYÜ',
 		'7557' => 'SEYİTÖREN KÖYÜ',
 		'7558' => 'TEPEKÖY KÖYÜ MERKEZ',
-		'7559' => 'TEPEKÖY YAYLA EVLERİ MAH (TEPEKÖY KÖYÜ)'
+		'7559' => 'TEPEKÖY YAYLA EVLERİ MAH (TEPEKÖY KÖYÜ)',
 	),
-	'GÖLE' => array(
+	'GÖLE'   => array(
 		'7560' => 'FEVZİ ÇAKMAK MAH',
 		'7561' => 'KAZIM KARABEKİR MAH',
 		'7562' => 'KUBİLAY BEY MAH',
@@ -129,9 +134,9 @@ $TRDN = array(
 		'7616' => 'YELEÇLİ KÖYÜ',
 		'7617' => 'YENİDEMİRKAPI KÖYÜ',
 		'7618' => 'YENİKÖY KÖYÜ',
-		'7619' => 'YİĞİTKONAĞI KÖYÜ'
+		'7619' => 'YİĞİTKONAĞI KÖYÜ',
 	),
-	'HANAK' => array(
+	'HANAK'  => array(
 		'7620' => 'ALAÇAM MAH',
 		'7621' => 'ATALAR MAH',
 		'7622' => 'AVCILAR MAH',
@@ -175,7 +180,7 @@ $TRDN = array(
 		'7660' => 'YAYLA MAH (İNCEDERE KÖYÜ)',
 		'7661' => 'YUKARI ÇAT MAH (ÇATKÖY KÖYÜ)',
 		'7662' => 'YUKARIAYDERE KÖYÜ',
-		'7663' => 'YÜNBÜKEN KÖYÜ'
+		'7663' => 'YÜNBÜKEN KÖYÜ',
 	),
 	'MERKEZ' => array(
 		'7664' => 'ATATÜRK MAH',
@@ -268,9 +273,9 @@ $TRDN = array(
 		'7751' => 'KIRAÇ KÖYÜ',
 		'7752' => 'TEPELER KÖYÜ',
 		'7753' => 'UZUNOVA KÖYÜ',
-		'7754' => 'YANLIZÇAM KÖYÜ'
+		'7754' => 'YANLIZÇAM KÖYÜ',
 	),
-	'POSOF' => array(
+	'POSOF'  => array(
 		'7755' => 'AKBALLI KÖYÜ',
 		'7756' => 'ALABALIK KÖYÜ',
 		'7757' => 'ALKÖY KÖYÜ',
@@ -358,6 +363,6 @@ $TRDN = array(
 		'7839' => 'YURTBAŞI KÖYÜ',
 		'7840' => 'YURTBEKLER KÖYÜ',
 		'7841' => 'DOĞRULAR MAH',
-		'7842' => 'MERKEZ MAH'
-	)
+		'7842' => 'MERKEZ MAH',
+	),
 );

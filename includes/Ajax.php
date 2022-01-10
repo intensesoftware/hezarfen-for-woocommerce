@@ -98,8 +98,8 @@ class Ajax {
 	public function get_neighborhoods() {
 		check_ajax_referer( 'mahalle-io-get-data', 'security' );
 
-		$city_plate_number = isset( $_POST['city_plate_number'] ) ? $_POST['city_plate_number'] : '';
-		$district          = isset( $_POST['district'] ) ? $_POST['district'] : '';
+		$city_plate_number = isset( $_POST['city_plate_number'] ) ? sanitize_text_field( $_POST['city_plate_number'] ) : '';
+		$district          = isset( $_POST['district'] ) ? sanitize_text_field( $_POST['district'] ) : '';
 
 		if ( $city_plate_number && $district ) {
 			$neighborhoods = Mahalle_Local::get_neighborhoods( $city_plate_number, $district );

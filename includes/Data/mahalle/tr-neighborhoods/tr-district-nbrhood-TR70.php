@@ -1,7 +1,12 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
-	'AYRANCI' => array(
+$tr_neighborhoods = array(
+	'AYRANCI'        => array(
 		'39335' => 'DEDE MAH',
 		'39336' => 'MUSA MAH',
 		'39337' => 'ULU MAH',
@@ -37,9 +42,9 @@ $TRDN = array(
 		'39367' => 'SARAYKÖY KÖYÜ',
 		'39368' => 'SARIKAYA MAH (BERENDİ KÖYÜ)',
 		'39369' => 'SAVRAN MAH (BÖĞECİK KÖYÜ)',
-		'39370' => 'YARIKKUYU KÖYÜ'
+		'39370' => 'YARIKKUYU KÖYÜ',
 	),
-	'BAŞYAYLA' => array(
+	'BAŞYAYLA'       => array(
 		'39371' => 'BAŞKÖY MAH',
 		'39372' => 'GÖZTEPE MAH',
 		'39373' => 'KİRAZLIYAYLA MAH',
@@ -50,9 +55,9 @@ $TRDN = array(
 		'39378' => 'KIŞLAKÖY KÖYÜ',
 		'39379' => 'SÖĞÜTLÜ MAH (ÜZÜMLÜ KÖYÜ)',
 		'39380' => 'ÜZÜMLÜ KÖYÜ',
-		'39381' => 'YENİCE MAH (KIŞLAKÖY KÖYÜ)'
+		'39381' => 'YENİCE MAH (KIŞLAKÖY KÖYÜ)',
 	),
-	'ERMENEK' => array(
+	'ERMENEK'        => array(
 		'39382' => 'AKCAMESCİT MAH',
 		'39383' => 'BAŞPINAR MAH',
 		'39384' => 'ÇINARLISU MAH',
@@ -135,7 +140,7 @@ $TRDN = array(
 		'39461' => 'YENİMAHALLE MAH (GÜNEYYURT KÖYÜ)',
 		'39462' => 'YERBAĞ KÖYÜ',
 		'39463' => 'YOLÇATI MAH (ELMAYURDU KÖYÜ)',
-		'39464' => 'YUKARIÇAĞLAR KÖYÜ'
+		'39464' => 'YUKARIÇAĞLAR KÖYÜ',
 	),
 	'KAZIMKARABEKİR' => array(
 		'39465' => 'BOYACI MAH',
@@ -151,9 +156,9 @@ $TRDN = array(
 		'39475' => 'KIZILKUYU KÖYÜ',
 		'39476' => 'MECİDİYE KÖYÜ',
 		'39477' => 'ÖZYURT KÖYÜ',
-		'39478' => 'SİNCİ KÖYÜ'
+		'39478' => 'SİNCİ KÖYÜ',
 	),
-	'MERKEZ' => array(
+	'MERKEZ'         => array(
 		'39479' => 'ATATÜRK MAH',
 		'39480' => 'FATİH MAH',
 		'39481' => 'HÜRRİYET MAH',
@@ -387,9 +392,9 @@ $TRDN = array(
 		'39709' => 'ÜNİVERSİTE MAH',
 		'39710' => 'VALİDE SULTAN MAH',
 		'39711' => 'YENİMAHALLE MAH',
-		'39712' => 'YENİŞEHİR MAH'
+		'39712' => 'YENİŞEHİR MAH',
 	),
-	'SARIVELİLER' => array(
+	'SARIVELİLER'    => array(
 		'39713' => 'BOYUNAĞIL MAH (UĞURLU KÖYÜ)',
 		'39714' => 'CUMHURİYET MAH (GÖKTEPE KÖYÜ)',
 		'39715' => 'ÇETİNCE ÖNÜ MAH (UĞURLU KÖYÜ)',
@@ -431,6 +436,6 @@ $TRDN = array(
 		'39751' => 'ORTAKÖY MAH',
 		'39752' => 'TURCALAR MAH',
 		'39753' => 'ULUCAMİ MAH',
-		'39754' => 'YEŞİLYURT MAH'
-	)
+		'39754' => 'YEŞİLYURT MAH',
+	),
 );

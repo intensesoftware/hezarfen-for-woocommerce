@@ -1,6 +1,11 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRProvinces = array(
+$tr_provinces = array(
 	'TR01' => 'ADANA',
 	'TR02' => 'ADIYAMAN',
 	'TR03' => 'AFYONKARAHİSAR',
@@ -81,5 +86,5 @@ $TRProvinces = array(
 	'TR78' => 'KARABÜK',
 	'TR79' => 'KİLİS',
 	'TR80' => 'OSMANİYE',
-	'TR81' => 'DÜZCE'
+	'TR81' => 'DÜZCE',
 );

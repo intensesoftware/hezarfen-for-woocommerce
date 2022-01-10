@@ -1,6 +1,11 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
+$tr_neighborhoods = array(
 	'AYDINTEPE' => array(
 		'13266' => 'AHMET YESEVİ MAH',
 		'13267' => 'AYDINTEPE YAYLASI MAH',
@@ -32,9 +37,9 @@ $TRDN = array(
 		'13293' => 'YANOBA KÖYÜ',
 		'13294' => 'YAPRACIK KÖYÜ',
 		'13295' => 'YAZLIK KÖYÜ',
-		'13296' => 'YUKARIKIRZI KÖYÜ'
+		'13296' => 'YUKARIKIRZI KÖYÜ',
 	),
-	'DEMİRÖZÜ' => array(
+	'DEMİRÖZÜ'  => array(
 		'13297' => 'ÇİFTETAŞ MAH',
 		'13298' => 'ESENTEPE MAH',
 		'13299' => 'GÜNEŞLİ MAH',
@@ -68,9 +73,9 @@ $TRDN = array(
 		'13327' => 'YELPINAR KÖYÜ',
 		'13328' => 'YEŞİLYURT MAH (BEŞPINAR KÖYÜ)',
 		'13329' => 'YEŞİLYURT MAH (GÖKÇEDERE KÖYÜ)',
-		'13330' => 'YUKARIPINARLI KÖYÜ'
+		'13330' => 'YUKARIPINARLI KÖYÜ',
 	),
-	'MERKEZ' => array(
+	'MERKEZ'    => array(
 		'13331' => 'CAMİİKEBİR MAH',
 		'13332' => 'ESENTEPE MAH',
 		'13333' => 'GENÇOSMAN MAH',
@@ -243,6 +248,6 @@ $TRDN = array(
 		'13500' => 'YOLALTI OSB MAH (YOLALTI KÖYÜ)',
 		'13501' => 'YUKARI DARICA MAH (DARICA KÖYÜ)',
 		'13502' => 'YUKARI UĞRAK MAH (UĞRAK KÖYÜ)',
-		'13503' => 'YUKARIKIŞLAK KÖYÜ'
-	)
+		'13503' => 'YUKARIKIŞLAK KÖYÜ',
+	),
 );

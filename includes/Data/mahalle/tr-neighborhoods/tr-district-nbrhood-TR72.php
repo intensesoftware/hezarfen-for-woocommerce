@@ -1,7 +1,12 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
-	'BEŞİRİ' => array(
+$tr_neighborhoods = array(
+	'BEŞİRİ'    => array(
 		'12528' => 'BAĞDU MAH',
 		'12529' => 'BEHREM YOĞUN MAH',
 		'12530' => 'CUMHURİYET MAH',
@@ -115,9 +120,9 @@ $TRDN = array(
 		'12638' => 'YUKARI BAYRAMLI MAH (ESKİHAMUR KÖYÜ)',
 		'12639' => 'YUKARI KÜRSÜ MAH (OTLUCA KÖYÜ)',
 		'12640' => 'YUKARI ÜRÜNLÜ MAH (DURUCAK KÖYÜ)',
-		'12641' => 'YUMRUKAYA MAH (İKİYAKA KÖYÜ)'
+		'12641' => 'YUMRUKAYA MAH (İKİYAKA KÖYÜ)',
 	),
-	'GERCÜŞ' => array(
+	'GERCÜŞ'    => array(
 		'12642' => 'BAĞLARBAŞI MAH',
 		'12643' => 'ÇUKURÇEŞME MAH',
 		'12644' => 'PINARBAŞI MAH',
@@ -199,7 +204,7 @@ $TRDN = array(
 		'12720' => 'YENİCE KÖYÜ',
 		'12721' => 'YEŞİLYURT MAH (KAYAPINAR KÖYÜ)',
 		'12722' => 'YOLAĞZI MAH',
-		'12723' => 'YÜCEKÖY KÖYÜ'
+		'12723' => 'YÜCEKÖY KÖYÜ',
 	),
 	'HASANKEYF' => array(
 		'12724' => 'BAHÇELİEVLER MAH',
@@ -231,9 +236,9 @@ $TRDN = array(
 		'12750' => 'UZUNDERE KÖYÜ',
 		'12751' => 'ÜÇYOL KÖYÜ',
 		'12752' => 'YAKAKÖY KÖYÜ',
-		'12753' => 'YOLÜSTÜ KÖYÜ'
+		'12753' => 'YOLÜSTÜ KÖYÜ',
 	),
-	'KOZLUK' => array(
+	'KOZLUK'    => array(
 		'12754' => 'AŞAĞIGÜNEŞLİ MAH',
 		'12755' => 'ÇAYBAŞI MAH',
 		'12756' => 'DEĞİRMENDERE MAH',
@@ -448,9 +453,9 @@ $TRDN = array(
 		'12965' => 'YUKARIKIRATLI KÖYÜ',
 		'12966' => 'YUVACIK MAH (TAŞLIDERE KÖYÜ)',
 		'12967' => 'ZİYARET KÖYÜ',
-		'12968' => 'ZORLUCA MAH (ULAŞLI KÖYÜ)'
+		'12968' => 'ZORLUCA MAH (ULAŞLI KÖYÜ)',
 	),
-	'MERKEZ' => array(
+	'MERKEZ'    => array(
 		'12969' => '19 MAYIS MAH',
 		'12970' => 'AYDINLIKEVLER MAH',
 		'12971' => 'BEŞEVLER MAH',
@@ -562,9 +567,9 @@ $TRDN = array(
 		'13077' => 'PETROL MAH',
 		'13078' => 'PETROLKENT MAH',
 		'13079' => 'SEYİTLER MAH',
-		'13080' => 'SİTE MAH'
+		'13080' => 'SİTE MAH',
 	),
-	'SASON' => array(
+	'SASON'     => array(
 		'13081' => 'ACAR KÖYÜ',
 		'13082' => 'AĞAKÜNÜK MAH (DÖRTBÖLÜK KÖYÜ)',
 		'13083' => 'AHKAR MEZRA MAH (DERİNCE KÖYÜ)',
@@ -749,6 +754,6 @@ $TRDN = array(
 		'13262' => 'YEŞİLTEPE MAH',
 		'13263' => 'YILDIZ MAH',
 		'13264' => 'YUKARI MAH',
-		'13265' => 'ZAFER MAH'
-	)
+		'13265' => 'ZAFER MAH',
+	),
 );

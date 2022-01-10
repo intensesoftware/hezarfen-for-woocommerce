@@ -1,7 +1,12 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
-	'BULANIK' => array(
+$tr_neighborhoods = array(
+	'BULANIK'   => array(
 		'53183' => 'BAHÇELİEVLER MAH',
 		'53184' => 'GÜLLÜOVA MAH',
 		'53185' => 'İNÖNÜ MAH',
@@ -130,9 +135,9 @@ $TRDN = array(
 		'53308' => 'YEŞİL YAYLA MEZRASI MAH (ARAKONAK KÖYÜ)',
 		'53309' => 'YILANDERE MAH (ŞATIRLAR KÖYÜ)',
 		'53310' => 'YILDIZ MAH (KARAAĞIL KÖYÜ)',
-		'53311' => 'ZAFER MAH (RÜSTEMGEDİK KÖYÜ)'
+		'53311' => 'ZAFER MAH (RÜSTEMGEDİK KÖYÜ)',
 	),
-	'HASKÖY' => array(
+	'HASKÖY'    => array(
 		'53312' => 'KÜLTÜR MAH',
 		'53313' => 'SAYANLAR MAH',
 		'53314' => 'SUNAY MAH',
@@ -164,9 +169,9 @@ $TRDN = array(
 		'53340' => 'YENİ MAH (DÜZKIŞLA KÖYÜ)',
 		'53341' => 'YEŞİLDERE MAH (YARKAYA KÖYÜ)',
 		'53342' => 'YUKARIÜÇDAM KÖYÜ',
-		'53343' => 'ZAFER MAH'
+		'53343' => 'ZAFER MAH',
 	),
-	'KORKUT' => array(
+	'KORKUT'    => array(
 		'53344' => 'BAHÇELİEVLER MAH',
 		'53345' => 'KÜLTÜR MAH',
 		'53346' => 'ŞEHİTLER MAH',
@@ -211,7 +216,7 @@ $TRDN = array(
 		'53385' => 'YENİ MAH (ALTINOVA KÖYÜ)',
 		'53386' => 'YOLGÖZLER KÖYÜ',
 		'53387' => 'YÜNÖREN KÖYÜ',
-		'53388' => 'YÜREKLİ KÖYÜ'
+		'53388' => 'YÜREKLİ KÖYÜ',
 	),
 	'MALAZGİRT' => array(
 		'53389' => '1 MAH (AĞILBAŞI KÖYÜ)',
@@ -318,9 +323,9 @@ $TRDN = array(
 		'53490' => 'TAŞLIÇEŞME MAH (NURETTİN KÖYÜ)',
 		'53491' => 'YENİ MAH (KONAKKURAN KÖYÜ)',
 		'53492' => 'YUKARIKICIK KÖYÜ',
-		'53493' => 'ZİYARET MAH (KONAKKURAN KÖYÜ)'
+		'53493' => 'ZİYARET MAH (KONAKKURAN KÖYÜ)',
 	),
-	'MERKEZ' => array(
+	'MERKEZ'    => array(
 		'53494' => 'DERE MAH',
 		'53495' => 'HÜRRİYET MAH',
 		'53496' => 'KALE MAH',
@@ -551,9 +556,9 @@ $TRDN = array(
 		'53721' => 'YUKARISOĞUKSU MAH (BEŞPARMAK KÖYÜ)',
 		'53722' => 'YUKARIYONGALI KÖYÜ',
 		'53723' => 'YÜCETEPE KÖYÜ',
-		'53724' => 'ZİYARET KÖYÜ'
+		'53724' => 'ZİYARET KÖYÜ',
 	),
-	'VARTO' => array(
+	'VARTO'     => array(
 		'53725' => 'ABBAS MAH (KARTALDERE KÖYÜ)',
 		'53726' => 'ALABALIK KÖYÜ',
 		'53727' => 'ALİ MAH (KÖPRÜCÜK KÖYÜ)',
@@ -697,6 +702,6 @@ $TRDN = array(
 		'53865' => 'HÜRRİYET MAH',
 		'53866' => 'İNÖNÜ MAH',
 		'53867' => 'KÜLTÜR MAH',
-		'53868' => 'YENİ MAH'
-	)
+		'53868' => 'YENİ MAH',
+	),
 );

@@ -1,7 +1,12 @@
 <?php
+/**
+ * Output file.
+ *
+ * @package Hezarfen\Inc\Data\mahalle
+ */
 
-$TRDN = array(
-	'BANAZ' => array(
+$tr_neighborhoods = array(
+	'BANAZ'     => array(
 		'69485' => '31 AĞUSTOS MAH',
 		'69486' => 'CUMHURİYET MAH',
 		'69487' => 'DİLEK MAH',
@@ -86,9 +91,9 @@ $TRDN = array(
 		'69566' => 'YEŞİLYURT KÖYÜ',
 		'69567' => 'YUKARI MAH (DERBENT KÖYÜ)',
 		'69568' => 'YUKARI MAH (HATIPLAR KÖYÜ)',
-		'69569' => 'YUKARI MAH (KIZILHİSAR KÖYÜ)'
+		'69569' => 'YUKARI MAH (KIZILHİSAR KÖYÜ)',
 	),
-	'EŞME' => array(
+	'EŞME'      => array(
 		'69570' => 'CUMHURİYET MAH',
 		'69571' => 'ELVANLAR MAH',
 		'69572' => 'İSTASYON MAH',
@@ -305,7 +310,7 @@ $TRDN = array(
 		'69783' => 'YEŞİLKAVAK KÖYÜ',
 		'69784' => 'YILDIRIMLAR MAH (YELEĞEN KÖYÜ)',
 		'69785' => 'YÖRÜK KOÇ MAH (KARABACAKLI KÖYÜ)',
-		'69786' => 'ZABDİYELİ MAH (OYMALI KÖYÜ)'
+		'69786' => 'ZABDİYELİ MAH (OYMALI KÖYÜ)',
 	),
 	'KARAHALLI' => array(
 		'69787' => 'BOĞAZ MAH',
@@ -331,9 +336,9 @@ $TRDN = array(
 		'69807' => 'KÜLKÖY KÖYÜ',
 		'69808' => 'PAŞALAR KÖYÜ',
 		'69809' => 'PINAR MAH (ALFAKLAR KÖYÜ)',
-		'69810' => 'YEDİDEĞİRMEN MAH (DURAKLI KÖYÜ)'
+		'69810' => 'YEDİDEĞİRMEN MAH (DURAKLI KÖYÜ)',
 	),
-	'MERKEZ' => array(
+	'MERKEZ'    => array(
 		'69811' => 'ATATÜRK MAH',
 		'69812' => 'AYBEY MAH',
 		'69813' => 'BOZKURT MAH',
@@ -607,9 +612,9 @@ $TRDN = array(
 		'70081' => 'YUKARI MAH (MESUDİYE KÖYÜ)',
 		'70082' => 'YUKARI MAH (YENİ MAH) (ÜÇKUYULAR KÖYÜ)',
 		'70083' => 'ZAHMAN KÖYÜ',
-		'70084' => 'ZEPDERESİ MAH (MESUDİYE KÖYÜ)'
+		'70084' => 'ZEPDERESİ MAH (MESUDİYE KÖYÜ)',
 	),
-	'SİVASLI' => array(
+	'SİVASLI'   => array(
 		'70085' => 'AKARCA KÖYÜ',
 		'70086' => 'AKTEPE MAH (AZİZLER KÖYÜ)',
 		'70087' => 'ATATÜRK MAH (TATAR KÖYÜ)',
@@ -657,9 +662,9 @@ $TRDN = array(
 		'70129' => 'EVRENLİ MAH',
 		'70130' => 'GÖLBAHÇE MAH',
 		'70131' => 'GÜRSEL MAH (AĞAÇBEYLİ KÖYÜ)',
-		'70132' => 'KONAK MAH'
+		'70132' => 'KONAK MAH',
 	),
-	'ULUBEY' => array(
+	'ULUBEY'    => array(
 		'70133' => 'AKKEÇİLİ KÖYÜ',
 		'70134' => 'AKSAZ KÖYÜ',
 		'70135' => 'AKSAZ MAH (AKSAZ KÖYÜ)',
@@ -703,6 +708,6 @@ $TRDN = array(
 		'70173' => 'DİLAVER MAH',
 		'70174' => 'EMİRLER MAH',
 		'70175' => 'GÖLBAŞI MAH',
-		'70176' => 'ÜYÜKBAŞI MAH'
-	)
+		'70176' => 'ÜYÜKBAŞI MAH',
+	),
 );
