@@ -1,6 +1,6 @@
 <?php
 /**
- * Contains the class responsible for getting province, district and neighborhood data.
+ * Contains the class responsible for getting city, district and neighborhood data.
  * 
  * @package Hezarfen\Inc
  */
@@ -10,7 +10,7 @@ namespace Hezarfen\Inc;
 defined( 'ABSPATH' ) || exit();
 
 /**
- * The class responsible for getting province, district and neighborhood data.
+ * The class responsible for getting city, district and neighborhood data.
  */
 class Mahalle_Local {
 	/**
@@ -19,9 +19,9 @@ class Mahalle_Local {
 	 * @return array
 	 */
 	public static function get_cities() {
-		require dirname( __FILE__ ) . '/Data/mahalle/tr-provinces.php';
+		require dirname( __FILE__ ) . '/Data/mahalle/tr-cities.php';
 
-		return $tr_provinces;
+		return $tr_cities;
 	}
 
 	/**
@@ -33,7 +33,7 @@ class Mahalle_Local {
 	 */
 	public static function get_districts( $city_plate_number ) {
 		if ( self::check_city_plate_number( $city_plate_number ) ) {
-			require dirname( __FILE__ ) . '/Data/mahalle/tr-province-districts.php';
+			require dirname( __FILE__ ) . '/Data/mahalle/tr-districts.php';
 
 			if ( isset( $tr_districts[ $city_plate_number ] ) ) {
 				return $tr_districts[ $city_plate_number ];
@@ -44,7 +44,7 @@ class Mahalle_Local {
 	}
 
 	/**
-	 * Get neighborhoods by province and district
+	 * Get neighborhoods by city and district
 	 *
 	 * @param string $city_plate_number The city plate number.
 	 * @param string $district The district.
@@ -53,7 +53,7 @@ class Mahalle_Local {
 	 */
 	public static function get_neighborhoods( $city_plate_number, $district ) {
 		if ( self::check_city_plate_number( $city_plate_number ) ) {
-			require dirname( __FILE__ ) . "/Data/mahalle/tr-neighborhoods/tr-district-nbrhood-$city_plate_number.php";
+			require dirname( __FILE__ ) . "/Data/mahalle/tr-neighborhoods/tr-neighborhood-$city_plate_number.php";
 
 			if ( isset( $tr_neighborhoods[ $district ] ) ) {
 				return $tr_neighborhoods[ $district ];
