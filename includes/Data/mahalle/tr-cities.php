@@ -5,7 +5,7 @@
  * @package Hezarfen\Inc\Data\mahalle
  */
 
-$tr_provinces = array(
+$tr_cities = array(
 	'TR01' => 'ADANA',
 	'TR02' => 'ADIYAMAN',
 	'TR03' => 'AFYONKARAHİSAR',
