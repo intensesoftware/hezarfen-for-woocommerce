@@ -25,10 +25,10 @@ function get_data( $requested_data_type, $city_plate_number, $district = null ) 
 	return null;
 }
 
-$data_type = isset( $_GET['dataType'] ) ? $_GET['dataType'] : null;
+$requested_data_type = isset( $_GET['dataType'] ) ? $_GET['dataType'] : null;
 $city_plate_number = isset( $_GET['cityPlateNumber'] ) ? $_GET['cityPlateNumber'] : null;
 $district = isset( $_GET['district'] ) ? $_GET['district'] : null;
 
-if ( $data_type && $city_plate_number ) {
-	echo json_encode( get_data( $data_type, $city_plate_number, $district ) );
+if ( $requested_data_type && $city_plate_number ) {
+	echo json_encode( get_data( $requested_data_type, $city_plate_number, $district ) );
 }
