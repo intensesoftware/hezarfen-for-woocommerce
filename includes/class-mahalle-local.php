@@ -64,6 +64,22 @@ class Mahalle_Local {
 	}
 
 	/**
+	 * Returns city name by plate number.
+	 * 
+	 * @param string $city_plate_number City plate number (e.g "TR34").
+	 * 
+	 * @return string
+	 */
+	public static function get_city_name_by_plate_num( $city_plate_number ) {
+		if ( self::check_city_plate_number( $city_plate_number ) ) {
+			$cities = self::get_cities();
+			return isset( $cities[ $city_plate_number ] ) ? $cities[ $city_plate_number ] : '';
+		}
+
+		return '';
+	}
+
+	/**
 	 * Checks validity of the city plate number.
 	 * 
 	 * @param string $city_plate_number City plate number.
