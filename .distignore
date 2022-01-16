@@ -22,3 +22,4 @@ phpstan.neon
 phpunit
 phpunit.xml.dist
 readme.md
+bin
