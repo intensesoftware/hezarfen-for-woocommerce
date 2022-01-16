@@ -1,0 +1,50 @@
+name: PR build
+on:
+  pull_request:
+    types: [labeled]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get current time
+        uses: josStorer/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYYMMDD-HHmmss
+          utcOffset: "+03:00"
+      - uses: actions/checkout@v2
+      - name: Install WP CLI
+        run: | 
+          curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          php wp-cli.phar --info
+          chmod +x wp-cli.phar
+          sudo mv wp-cli.phar /usr/local/bin/wp
+      - name: Install WP Dist Archive
+        run: wp package install wp-cli/dist-archive-command:@stable
+      - name: Create Dist Package
+        run: wp dist-archive . dist.zip
+      - uses: montudor/action-zip@v1
+        with:
+          args: unzip -qq dist.zip -d dist-plugin-package
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ github.event.repository.name }}-build-pr#${{ github.event.pull_request.number }}-${{ steps.current-time.outputs.formattedTime }}
+          path: dist-plugin-package
+          retention-days: 3
+  comment:
+    needs: [build]
+    if: "${{ github.event.label.name == 'command: build' }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: mshick/add-pr-comment@v1
+        with:
+          message: |
+            Build package is ready!
+            [Download build package](https://github.com/intensesoftware/${{ github.event.repository.name }}/actions/runs/${{github.run_id}})
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: 'github-actions[bot]' # The user.login for temporary GitHub tokens
+          allow-repeats: true # This is the default
+      - uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          labels: |
+            command: build
