@@ -460,7 +460,6 @@ class Checkout {
 		$types = array( 'shipping', 'billing' );
 
 		$district_options     = array( '' => __( 'Lütfen seçiniz', 'woocommerce' ) );
-		$neighborhood_options = array( '' => __( 'Lütfen seçiniz', 'woocommerce' ) );
 
 		global $woocommerce;
 
@@ -469,9 +468,11 @@ class Checkout {
 			$neighborhood_field_name = sprintf( '%s_address_1', $type );
 
 			$get_city_function = 'get_' . $type . '_state';
+			$get_district_function = 'get_' . $type . '_city';
 
 			// the value has TR prefix such as TR18.
 			$current_city_plate_number_prefixed = $woocommerce->customer->$get_city_function();
+			$current_district = $woocommerce->customer->$get_district_function();
 
 			$districts = $this->get_districts(
 				$current_city_plate_number_prefixed
@@ -506,7 +507,7 @@ class Checkout {
 				'class'    => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_neighborhood', array( 'form-row-wide' ) ),
 				'clear'    => true,
 				'priority' => $fields[ $type ][ $type . '_state' ]['priority'] + 2,
-				'options'  => $neighborhood_options,
+				'options'  => $this->get_neighborhood_options( $current_city_plate_number_prefixed, $current_district ),
 			);
 		}
 
@@ -518,7 +519,7 @@ class Checkout {
 	 *
 	 * @param string $city_plate_with_prefix that begins with TR prefix such as TR18.
 	 *
-	 * @return array|bool
+	 * @return array
 	 */
 	private function get_districts( $city_plate_with_prefix ) {
 		if ( ! $city_plate_with_prefix ) {
@@ -528,6 +529,30 @@ class Checkout {
 		$districts = Mahalle_Local::get_districts( $city_plate_with_prefix );
 
 		return $districts;
+	}
+
+	/**
+	 * Returns neighborhoods of a district in select2 option format.
+	 * 
+	 * @param string $city_plate_with_prefix that begins with TR prefix such as TR18.
+	 * @param string $district District.
+	 * 
+	 * @return array
+	 */
+	private function get_neighborhood_options( $city_plate_with_prefix, $district ) {
+		$neighborhood_options = array( '' => __( 'Lütfen seçiniz', 'woocommerce' ) );
+
+		if ( ! $city_plate_with_prefix || ! $district ) {
+			return $neighborhood_options;
+		}
+
+		$neighborhoods = Mahalle_Local::get_neighborhoods( $city_plate_with_prefix, $district );
+
+		foreach ( $neighborhoods as $neighborhood_id => $neighborhood ) {
+			$neighborhood_options[$neighborhood_id . ':' . $neighborhood] = $neighborhood;
+		}
+
+		return $neighborhood_options;
 	}
 }
 
