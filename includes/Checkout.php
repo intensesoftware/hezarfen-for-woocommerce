@@ -459,7 +459,7 @@ class Checkout {
 	public function add_district_and_neighborhood_fields( $fields ) {
 		$types = array( 'shipping', 'billing' );
 
-		$district_options     = array( '' => __( 'Lütfen seçiniz', 'woocommerce' ) );
+		$district_options = array( '' => __( 'Lütfen seçiniz', 'woocommerce' ) );
 
 		global $woocommerce;
 
@@ -467,12 +467,12 @@ class Checkout {
 			$city_field_name         = sprintf( '%s_city', $type );
 			$neighborhood_field_name = sprintf( '%s_address_1', $type );
 
-			$get_city_function = 'get_' . $type . '_state';
+			$get_city_function     = 'get_' . $type . '_state';
 			$get_district_function = 'get_' . $type . '_city';
 
 			// the value has TR prefix such as TR18.
 			$current_city_plate_number_prefixed = $woocommerce->customer->$get_city_function();
-			$current_district = $woocommerce->customer->$get_district_function();
+			$current_district                   = $woocommerce->customer->$get_district_function();
 
 			$districts = $this->get_districts(
 				$current_city_plate_number_prefixed
@@ -549,7 +549,7 @@ class Checkout {
 		$neighborhoods = Mahalle_Local::get_neighborhoods( $city_plate_with_prefix, $district );
 
 		foreach ( $neighborhoods as $neighborhood_id => $neighborhood ) {
-			$neighborhood_options[$neighborhood_id . ':' . $neighborhood] = $neighborhood;
+			$neighborhood_options[ $neighborhood_id . ':' . $neighborhood ] = $neighborhood;
 		}
 
 		return $neighborhood_options;
