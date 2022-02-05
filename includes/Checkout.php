@@ -489,25 +489,27 @@ class Checkout {
 			$districts = hezarfen_wc_checkout_select2_option_format( $districts );
 
 			$fields[ $type ][ $city_field_name ] = array(
-				'id'       => 'wc_hezarfen_' . $type . '_district',
-				'type'     => 'select',
-				'label'    => __( 'İlçe', 'woocommerce' ),
-				'required' => true,
-				'class'    => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_district', array( 'form-row-wide' ) ),
-				'clear'    => true,
-				'priority' => $fields[ $type ][ $type . '_state' ]['priority'] + 1,
-				'options'  => $district_options + $districts,
+				'id'           => 'wc_hezarfen_' . $type . '_district',
+				'type'         => 'select',
+				'label'        => __( 'İlçe', 'woocommerce' ),
+				'required'     => true,
+				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_district', array( 'form-row-wide' ) ),
+				'clear'        => true,
+				'autocomplete' => 'address-level2',
+				'priority'     => $fields[ $type ][ $type . '_state' ]['priority'] + 1,
+				'options'      => $district_options + $districts,
 			);
 
 			$fields[ $type ][ $neighborhood_field_name ] = array(
-				'id'       => 'wc_hezarfen_' . $type . '_neighborhood',
-				'type'     => 'select',
-				'label'    => __( 'Mahalle', 'woocommerce' ),
-				'required' => true,
-				'class'    => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_neighborhood', array( 'form-row-wide' ) ),
-				'clear'    => true,
-				'priority' => $fields[ $type ][ $type . '_state' ]['priority'] + 2,
-				'options'  => $this->get_neighborhood_options( $current_city_plate_number_prefixed, $current_district ),
+				'id'           => 'wc_hezarfen_' . $type . '_neighborhood',
+				'type'         => 'select',
+				'label'        => __( 'Mahalle', 'woocommerce' ),
+				'required'     => true,
+				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_neighborhood', array( 'form-row-wide' ) ),
+				'clear'        => true,
+				'autocomplete' => 'address-level3',
+				'priority'     => $fields[ $type ][ $type . '_state' ]['priority'] + 2,
+				'options'      => $this->get_neighborhood_options( $current_city_plate_number_prefixed, $current_district ),
 			);
 		}
 
