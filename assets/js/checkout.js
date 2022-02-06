@@ -2,9 +2,9 @@ jQuery(document).ready(function($){
     $.each(["billing", "shipping"], function(index, type){
         $('#wc_hezarfen_' + type + '_district').select2({ language: "tr" });
         $('#wc_hezarfen_' + type + '_neighborhood').select2({ language: "tr" });
-	});
+    });
 
-	$('#hezarfen_invoice_type').select2({ language: "tr" });
+    $('#hezarfen_invoice_type').select2({ language: "tr" });
 });
 
 jQuery( function( $ ) {
@@ -19,8 +19,8 @@ jQuery( function( $ ) {
         }else if( invoice_type == 'company' ){
             $('#hezarfen_TC_number_field').addClass('hezarfen-hide-form-field');
             $('#hezarfen_tax_number_field').removeClass('hezarfen-hide-form-field');
-			$('#hezarfen_tax_office_field').removeClass('hezarfen-hide-form-field');
-			$('#billing_company_field').removeClass('hezarfen-hide-form-field');
+            $('#hezarfen_tax_office_field').removeClass('hezarfen-hide-form-field');
+            $('#billing_company_field').removeClass('hezarfen-hide-form-field');
         }
     });
 
@@ -101,12 +101,12 @@ jQuery( function( $ ) {
             var selected = e.params.data;
 
             var data = {
-				'action':'wc_hezarfen_neighborhood_changed',
-				'security': wc_hezarfen_ajax_object.mahalleio_nonce,
+                'action':'wc_hezarfen_neighborhood_changed',
+                'security': wc_hezarfen_ajax_object.mahalleio_nonce,
                 'cityPlateNumber': checkout_fields_wrapper.find('#' + type + '_state').val(),
                 'district': checkout_fields_wrapper.find('#wc_hezarfen_' + type + '_district').val(),
-				'neighborhood': selected.id,
-				'type': type
+                'neighborhood': selected.id,
+                'type': type
             };
 
             jQuery.post(wc_hezarfen_ajax_object.ajax_url, data, function(response){
