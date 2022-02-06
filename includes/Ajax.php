@@ -50,7 +50,7 @@ class Ajax {
 
 		$city_plate_number = isset( $_POST['cityPlateNumber'] ) ? sanitize_text_field( $_POST['cityPlateNumber'] ) : '';
 		$district          = isset( $_POST['district'] ) ? sanitize_text_field( $_POST['district'] ) : '';
-		$neighborhood      = isset( $_POST['neighborhood'] ) ? sanitize_text_field( $_POST['neighborhood'] ) : '';
+		$neighborhood      = isset( $_POST['neighborhood'] ) ? stripslashes( sanitize_text_field( $_POST['neighborhood'] ) ) : '';
 
 		$neighborhood_id = Mahalle_Local::get_neighborhood_id( $city_plate_number, $district, $neighborhood );
 
