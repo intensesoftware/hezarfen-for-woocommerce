@@ -25,6 +25,8 @@ jQuery( function( $ ) {
     });
 
     $.each(["billing", "shipping"], function(index, type){
+        let checkout_fields_wrapper = $('.woocommerce-' + type + '-fields');
+
         $("#"+type+"_state").on("select2:select", function(e){
             $('#wc_hezarfen_'+type+'_district').prop("disabled", true);
 
@@ -74,8 +76,6 @@ jQuery( function( $ ) {
             // get selected data
             var selected = e.params.data;
 
-            let checkout_fields_wrapper = $('.woocommerce-' + type + '-fields');
-
             var data = {
                 'dataType': 'neighborhood',
                 'cityPlateNumber': checkout_fields_wrapper.find('#' + type + '_state').val(),
@@ -88,7 +88,7 @@ jQuery( function( $ ) {
                 $.each(neighborhoods, function (neighborhood_id, neighborhood_name) {
                     $('#wc_hezarfen_'+type+'_neighborhood')
                         .append($("<option></option>")
-                            .attr("value", neighborhood_id+":"+neighborhood_name)
+                            .attr("value", neighborhood_name)
                             .text(neighborhood_name));
                 });
 
@@ -103,7 +103,9 @@ jQuery( function( $ ) {
             var data = {
 				'action':'wc_hezarfen_neighborhood_changed',
 				'security': wc_hezarfen_ajax_object.mahalleio_nonce,
-				'neighborhood_data':selected.id,
+                'cityPlateNumber': checkout_fields_wrapper.find('#' + type + '_state').val(),
+                'district': checkout_fields_wrapper.find('#wc_hezarfen_' + type + '_district').val(),
+				'neighborhood': selected.id,
 				'type': type
             };
 

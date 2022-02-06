@@ -48,23 +48,21 @@ class Ajax {
 		/** That is specify expresses the checkout form part. $type can be billing|shipping */
 		$type = isset( $_POST['type'] ) ? sanitize_key( $_POST['type'] ) : '';
 
-		$neighborhood_data = isset( $_POST['neighborhood_data'] ) ? sanitize_text_field( $_POST['neighborhood_data'] ) : '';
+		$city_plate_number = isset( $_POST['cityPlateNumber'] ) ? sanitize_text_field( $_POST['cityPlateNumber'] ) : '';
+		$district          = isset( $_POST['district'] ) ? sanitize_text_field( $_POST['district'] ) : '';
+		$neighborhood      = isset( $_POST['neighborhood'] ) ? sanitize_text_field( $_POST['neighborhood'] ) : '';
 
-		$neighborhood_data_arr = explode( ':', $neighborhood_data );
-
-		$neighborhood_id = intval( $neighborhood_data_arr[0] );
+		$neighborhood_id = Mahalle_Local::get_neighborhood_id( $city_plate_number, $district, $neighborhood );
 
 		if ( ! $neighborhood_id ) {
 			echo wp_json_encode( array() );
 			wp_die();
 		}
 
-		$neighborhood_name = $neighborhood_data_arr[1];
-
 		do_action(
 			'hezarfen_checkout_neighborhood_changed',
 			$neighborhood_id,
-			$neighborhood_name,
+			$neighborhood,
 			$type
 		);
 
@@ -77,7 +75,7 @@ class Ajax {
 				'hezarfen_checkout_neighborhood_changed_output_args',
 				$args,
 				$neighborhood_id,
-				$neighborhood_name
+				$neighborhood
 			)
 		);
 

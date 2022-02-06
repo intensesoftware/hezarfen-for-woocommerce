@@ -427,26 +427,6 @@ class Checkout {
 			}
 		}
 
-		// Update neighborhood field.
-		$types = array( 'shipping', 'billing' );
-
-		foreach ( $types as $type ) {
-			$neighborhood_field_name = sprintf( '%s_address_1', $type );
-
-			if ( array_key_exists( $neighborhood_field_name, $data ) ) {
-				$value = $data[ $neighborhood_field_name ];
-
-				if ( $value && strpos( $value, ':' ) !== false ) {
-					$neighborhood_data_arr = explode( ':', $value );
-
-					$neighborhood_id   = $neighborhood_data_arr[0];
-					$neighborhood_name = $neighborhood_data_arr[1];
-
-					$data[ $neighborhood_field_name ] = $neighborhood_name;
-				}
-			}
-		}
-
 		return $data;
 	}
 
@@ -534,7 +514,7 @@ class Checkout {
 	}
 
 	/**
-	 * Returns neighborhoods of a district in select2 option format.
+	 * Returns neighborhood options.
 	 * 
 	 * @param string $city_plate_with_prefix that begins with TR prefix such as TR18.
 	 * @param string $district District.
@@ -550,8 +530,8 @@ class Checkout {
 
 		$neighborhoods = Mahalle_Local::get_neighborhoods( $city_plate_with_prefix, $district );
 
-		foreach ( $neighborhoods as $neighborhood_id => $neighborhood ) {
-			$neighborhood_options[ $neighborhood_id . ':' . $neighborhood ] = $neighborhood;
+		foreach ( $neighborhoods as $neighborhood ) {
+			$neighborhood_options[ $neighborhood ] = $neighborhood;
 		}
 
 		return $neighborhood_options;

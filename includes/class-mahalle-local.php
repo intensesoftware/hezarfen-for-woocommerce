@@ -64,6 +64,27 @@ class Mahalle_Local {
 	}
 
 	/**
+	 * Returns the ID of the given neighborhood.
+	 * 
+	 * @param string $city_plate_number The city plate number.
+	 * @param string $district The district.
+	 * @param string $neighborhood The neighborhood.
+	 * 
+	 * @return int|null
+	 */
+	public static function get_neighborhood_id( $city_plate_number, $district, $neighborhood ) {
+		$neighborhoods = self::get_neighborhoods( $city_plate_number, $district );
+
+		foreach ( $neighborhoods as $id => $_neighborhood ) {
+			if ( $neighborhood === $_neighborhood ) {
+				return intval( $id );
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Returns city name by plate number.
 	 * 
 	 * @param string $city_plate_number City plate number (e.g "TR34").
