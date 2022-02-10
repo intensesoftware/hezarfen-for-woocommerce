@@ -93,7 +93,7 @@ class Checkout {
 			'woocommerce_default_address_fields',
 			array(
 				$this,
-				'override_district_label',
+				'override_labels',
 			),
 			99999
 		);
@@ -153,14 +153,15 @@ class Checkout {
 	}
 
 	/**
-	 * Overrides district label.
+	 * Overrides default address fields' labels.
 	 * 
 	 * @param array $fields Default address fields.
 	 * 
 	 * @return array
 	 */
-	public function override_district_label( $fields ) {
-		$fields['city']['label'] = __( 'Town / City', 'hezarfen-for-woocommerce' );
+	public function override_labels( $fields ) {
+		$fields['city']['label']      = __( 'Town / City', 'hezarfen-for-woocommerce' );
+		$fields['address_1']['label'] = __( 'Neighborhood', 'hezarfen-for-woocommerce' );
 		return $fields;
 	}
 
@@ -501,7 +502,6 @@ class Checkout {
 			);
 
 			$fields[ $type ][ $neighborhood_field_name ] = array(
-				'id'           => 'wc_hezarfen_' . $type . '_neighborhood',
 				'type'         => 'select',
 				'label'        => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
 				'required'     => true,

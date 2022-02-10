@@ -1,7 +1,7 @@
 jQuery(document).ready(function($){
     $.each(["billing", "shipping"], function(index, type){
         $('#' + type + '_city').select2();
-        $('#wc_hezarfen_' + type + '_neighborhood').select2({ language: "tr" });
+        $('#' + type + '_address_1').select2({ language: "tr" });
     });
 
     $('#hezarfen_invoice_type').select2({ language: "tr" });
@@ -62,13 +62,13 @@ jQuery( function( $ ) {
         });
 
         $('#' + type + '_city').on("select2:select", function(e){
-            $('#wc_hezarfen_'+type+'_neighborhood').prop("disabled", true);
+            $('#' + type + '_address_1').prop("disabled", true);
 
             // empty neighborhood select box
-            $('#wc_hezarfen_'+type+'_neighborhood').empty();
+            $('#' + type + '_address_1').empty();
 
             // push placeholder data
-            $('#wc_hezarfen_'+type+'_neighborhood')
+            $('#' + type + '_address_1')
                 .append($("<option></option>")
                     .attr("value", "")
                     .text("Lütfen seçiniz"));
@@ -86,17 +86,17 @@ jQuery( function( $ ) {
                 var neighborhoods = JSON.parse(response);
 
                 $.each(neighborhoods, function (neighborhood_id, neighborhood_name) {
-                    $('#wc_hezarfen_'+type+'_neighborhood')
+                    $('#' + type + '_address_1')
                         .append($("<option></option>")
                             .attr("value", neighborhood_name)
                             .text(neighborhood_name));
                 });
 
-                $('#wc_hezarfen_'+type+'_neighborhood').prop("disabled", false);
+                $('#' + type + '_address_1').prop("disabled", false);
             });
         });
 
-        $("#wc_hezarfen_"+type+"_neighborhood").on("select2:select", function(e){
+        $('#' + type + '_address_1').on("select2:select", function(e){
             // get selected data
             var selected = e.params.data;
 
