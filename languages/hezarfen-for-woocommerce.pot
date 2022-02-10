@@ -1,245 +1,205 @@
-#, fuzzy
+# Copyright (C) 2022 Intense Yazılım Ltd.
+# This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Hezarfen For Woocommerce\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-14 17:11+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Project-Id-Version: Hezarfen For Woocommerce 1.3.5\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/hezarfen-for-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: \n"
-"Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.4.3; wp-5.4.2"
+"POT-Creation-Date: 2022-02-10T13:56:35+01:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.5.0\n"
+"X-Domain: hezarfen-for-woocommerce\n"
 
-#: includes/Checkout.php:265
-msgid "Invoice Type"
-msgstr ""
-
-#: includes/Checkout.php:270 includes/admin/order/OrderDetails.php:44
-#: includes/admin/order/OrderDetails.php:58
+#: includes/admin/order/OrderDetails.php:61
+#: includes/admin/order/OrderDetails.php:73
+#: includes/Checkout.php:344
 msgid "Personal"
 msgstr ""
 
-#: includes/Checkout.php:271 includes/admin/order/OrderDetails.php:47
-#: includes/admin/order/OrderDetails.php:59
+#: includes/admin/order/OrderDetails.php:63
+#: includes/admin/order/OrderDetails.php:74
+#: includes/Checkout.php:345
 msgid "Company"
 msgstr ""
 
-#: includes/Checkout.php:279
-msgid "Enter T.C. Identity Number"
-msgstr ""
-
-#: includes/Checkout.php:280 includes/admin/order/OrderDetails.php:66
-msgid "T.C. Identity Number"
-msgstr ""
-
-#: includes/Checkout.php:291
-msgid "Title"
-msgstr ""
-
-#: includes/Checkout.php:292
-msgid "Enter invoice title"
-msgstr ""
-
-#: includes/Checkout.php:299 includes/admin/order/OrderDetails.php:75
-msgid "Tax Number"
-msgstr ""
-
-#: includes/Checkout.php:300
-msgid "Enter tax number"
-msgstr ""
-
-#: includes/Checkout.php:308 includes/admin/order/OrderDetails.php:80
-msgid "TAX Office"
-msgstr ""
-
-#: includes/Checkout.php:309
-msgid "Enter tax office"
-msgstr ""
-
-#: includes/admin/order/OrderDetails.php:55
+#: includes/admin/order/OrderDetails.php:70
 msgid "Invoice type"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:50
+#: includes/admin/order/OrderDetails.php:81
+#: includes/Checkout.php:354
+msgid "T.C. Identity Number"
+msgstr ""
+
+#: includes/admin/order/OrderDetails.php:90
+#: includes/Checkout.php:374
+msgid "Tax Number"
+msgstr ""
+
+#: includes/admin/order/OrderDetails.php:95
+#: includes/Checkout.php:383
+msgid "TAX Office"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:49
 msgid "General"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:52
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:50
 msgid "Encryption"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:53
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:51
 msgid "Checkout Page Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:59
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:56
 msgid "Checkout Tax Fields"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:81
-msgid "mahalle.io Settings"
-msgstr ""
-
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:86
-msgid ""
-"mahalle.io is a optional and paid service for show Turkey neighbors in "
-"checkout page. If the mahalle.io service is activated, neighborhood data "
-"will be written in the address 1 field on the payment form. For this reason, "
-"the address2 field will be required for remain address."
-msgstr ""
-
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:93
-msgid "API key"
-msgstr ""
-
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:95
-msgid "API key may be created on mahalle.io my account page"
-msgstr ""
-
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:111
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:77
 msgid "Checkout Tax Fields Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:116
-msgid ""
-"You can update the checkout TAX fields. Note: T.C. number field requires "
-"encryption feature. If you do not activate the encryption feature, T.C. "
-"number field does not appear on the checkout."
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:82
+msgid "You can update the checkout TAX fields. Note: T.C. number field requires encryption feature. If you do not activate the encryption feature, T.C. number field does not appear on the checkout."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:124
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:90
 msgid "Show T.C. Identity Field on checkout page "
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:129
-msgid ""
-"T.C. Identity Field optionally shows on checkout field when invoice type "
-"selected as person. (T.C. field requires encryption. If encryption is not "
-"enabled, this field is not displayed.)"
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:95
+msgid "T.C. Identity Field optionally shows on checkout field when invoice type selected as person. (T.C. field requires encryption. If encryption is not enabled, this field is not displayed.)"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:139
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:105
 msgid "Checkout T.C. Identity Number Fields Required Statuses"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:143
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:109
 msgid "Is T.C. Identity Number field required?"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:176
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:141
 msgid "Encryption Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:181
-msgid ""
-"If the T.C. Identity Field is active, an encryption key must be generated. "
-"The following encryption key generated will be lost upon saving the form. "
-"Please back up the generated encryption key to a secure area, then paste it "
-"anywhere in the wp-config.php file. In case of deletion of the hezarfen-"
-"encryption-key line from wp-config.php, retrospectively, the orders will be "
-"sent to T.C. no values will become unreadable."
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:146
+msgid "If the T.C. Identity Field is active, an encryption key must be generated. The following encryption key generated will be lost upon saving the form. Please back up the generated encryption key to a secure area, then paste it anywhere in the wp-config.php file. In case of deletion of the hezarfen-encryption-key line from wp-config.php, retrospectively, the orders will be sent to T.C. no values will become unreadable."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:188
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:153
 msgid "Encryption Key"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:198
-msgid ""
-"Back up the phrase in the box to a safe area, then place it in wp-config.php "
-"file."
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:163
+msgid "Back up the phrase in the box to a safe area, then place it in wp-config.php file."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:204
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:169
 msgid "Encryption Key Confirmation"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:209
-msgid ""
-"I backed up the key to a secure area and placed it in the wp-config file. In "
-"case the encryption key value is deleted from the wp-config.php file, all "
-"past orders will be transferred to T.C. I know I cannot access ID data."
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:174
+msgid "I backed up the key to a secure area and placed it in the wp-config file. In case the encryption key value is deleted from the wp-config.php file, all past orders will be transferred to T.C. I know I cannot access ID data."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:228
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:193
 msgid "Checkout Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:233
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:198
 msgid "You can set general checkout settings."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:240
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:205
 msgid "Hide postcode fields?"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:254
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:216
 msgid "Auto sort fields in checkout form?"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:277
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:236
 msgid "General Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:282
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:241
 msgid "You can edit the general settings from this page."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:289
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:248
 msgid "Show hezarfen checkout tax fields?"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:1
+#: includes/admin/settings/views/encryption.php:10
 msgid "Encryption Key Health"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:6
+#: includes/admin/settings/views/encryption.php:17
 msgid "Is the encryption key genereated and placed the wp-config.php?"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:10
+#: includes/admin/settings/views/encryption.php:25
 msgid "It checks encryption key whetever placed to the wp-config.php"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:20
-#: includes/admin/settings/views/encryption.php:41
+#: includes/admin/settings/views/encryption.php:40
+#: includes/admin/settings/views/encryption.php:73
 msgid "Yes"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:21
-#: includes/admin/settings/views/encryption.php:42
+#: includes/admin/settings/views/encryption.php:41
+#: includes/admin/settings/views/encryption.php:74
 msgid "No"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:27
+#: includes/admin/settings/views/encryption.php:50
 msgid "Key comparison success?"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:31
-msgid ""
-"Checks if the key created when the plugin was first installed is still the "
-"same key."
+#: includes/admin/settings/views/encryption.php:58
+msgid "Checks if the key created when the plugin was first installed is still the same key."
 msgstr ""
 
-#. Name of the plugin
-msgid "Hezarfen For Woocommerce"
+#: includes/Checkout.php:339
+msgid "Invoice Type"
 msgstr ""
 
-#. Description of the plugin
-msgid ""
-"Hezarfen, WooCommerce eklentisini Türkiye için daha kullanılabilir kılmayı "
-"amaçlar."
+#: includes/Checkout.php:353
+msgid "Enter T.C. Identity Number"
 msgstr ""
 
-#. Author of the plugin
-msgid "Intense Yazılım Ltd."
+#: includes/Checkout.php:366
+msgid "Title"
 msgstr ""
 
-#. Author URI of the plugin
-msgid "http://intense.com.tr"
+#: includes/Checkout.php:367
+msgid "Enter invoice title"
+msgstr ""
+
+#: includes/Checkout.php:375
+msgid "Enter tax number"
+msgstr ""
+
+#: includes/Checkout.php:384
+msgid "Enter tax office"
+msgstr ""
+
+#: includes/Checkout.php:442
+#: includes/Checkout.php:524
+msgid "Select an option"
+msgstr ""
+
+#: includes/Checkout.php:473
+msgid "Town / City"
+msgstr ""
+
+#: includes/Checkout.php:485
+msgid "Neighborhood"
 msgstr ""
