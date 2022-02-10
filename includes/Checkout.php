@@ -439,7 +439,7 @@ class Checkout {
 	public function add_district_and_neighborhood_fields( $fields ) {
 		$types = array( 'shipping', 'billing' );
 
-		$district_options = array( '' => __( 'Lütfen seçiniz', 'hezarfen-for-woocommerce' ) );
+		$district_options = array( '' => __( 'Select an option', 'hezarfen-for-woocommerce' ) );
 
 		global $woocommerce;
 
@@ -470,7 +470,7 @@ class Checkout {
 
 			$fields[ $type ][ $city_field_name ] = array(
 				'type'         => 'select',
-				'label'        => __( 'İlçe', 'hezarfen-for-woocommerce' ),
+				'label'        => __( 'Town / City', 'hezarfen-for-woocommerce' ),
 				'required'     => true,
 				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_district', array( 'form-row-wide' ) ),
 				'clear'        => true,
@@ -482,7 +482,7 @@ class Checkout {
 			$fields[ $type ][ $neighborhood_field_name ] = array(
 				'id'           => 'wc_hezarfen_' . $type . '_neighborhood',
 				'type'         => 'select',
-				'label'        => __( 'Mahalle', 'hezarfen-for-woocommerce' ),
+				'label'        => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
 				'required'     => true,
 				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_neighborhood', array( 'form-row-wide' ) ),
 				'clear'        => true,
@@ -521,7 +521,7 @@ class Checkout {
 	 * @return array
 	 */
 	private function get_neighborhood_options( $city_plate_with_prefix, $district ) {
-		$neighborhood_options = array( '' => __( 'Lütfen seçiniz', 'hezarfen-for-woocommerce' ) );
+		$neighborhood_options = array( '' => __( 'Select an option', 'hezarfen-for-woocommerce' ) );
 
 		if ( ! $city_plate_with_prefix || ! $district ) {
 			return $neighborhood_options;
