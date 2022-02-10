@@ -469,7 +469,6 @@ class Checkout {
 			$districts = hezarfen_wc_checkout_select2_option_format( $districts );
 
 			$fields[ $type ][ $city_field_name ] = array(
-				'id'           => 'wc_hezarfen_' . $type . '_district',
 				'type'         => 'select',
 				'label'        => __( 'İlçe', 'hezarfen-for-woocommerce' ),
 				'required'     => true,

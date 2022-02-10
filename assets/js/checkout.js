@@ -1,6 +1,6 @@
 jQuery(document).ready(function($){
     $.each(["billing", "shipping"], function(index, type){
-        $('#wc_hezarfen_' + type + '_district').select2({ language: "tr" });
+        $('#' + type + '_city').select2();
         $('#wc_hezarfen_' + type + '_neighborhood').select2({ language: "tr" });
     });
 
@@ -28,13 +28,13 @@ jQuery( function( $ ) {
         let checkout_fields_wrapper = $('.woocommerce-' + type + '-fields');
 
         $("#"+type+"_state").on("select2:select", function(e){
-            $('#wc_hezarfen_'+type+'_district').prop("disabled", true);
+            $('#' + type + '_city').prop("disabled", true);
 
             // empty district select box
-            $('#wc_hezarfen_'+type+'_district').empty();
+            $('#' + type + '_city').empty();
 
             // push placeholder data
-            $('#wc_hezarfen_'+type+'_district')
+            $('#' + type + '_city')
                 .append($("<option></option>")
                     .attr("value", "")
                     .text("Lütfen seçiniz"));
@@ -51,17 +51,17 @@ jQuery( function( $ ) {
                 var districts = JSON.parse(response);
 
                 $.each(districts, function (index, district_name) {
-                    $('#wc_hezarfen_'+type+'_district')
+                    $('#' + type + '_city')
                         .append($("<option></option>")
                             .attr("value", district_name)
                             .text(district_name));
                 });
 
-                $('#wc_hezarfen_'+type+'_district').prop("disabled", false);
+                $('#' + type + '_city').prop("disabled", false);
             });
         });
 
-        $("#wc_hezarfen_"+type+"_district").on("select2:select", function(e){
+        $('#' + type + '_city').on("select2:select", function(e){
             $('#wc_hezarfen_'+type+'_neighborhood').prop("disabled", true);
 
             // empty neighborhood select box
@@ -104,7 +104,7 @@ jQuery( function( $ ) {
                 'action':'wc_hezarfen_neighborhood_changed',
                 'security': wc_hezarfen_ajax_object.mahalleio_nonce,
                 'cityPlateNumber': checkout_fields_wrapper.find('#' + type + '_state').val(),
-                'district': checkout_fields_wrapper.find('#wc_hezarfen_' + type + '_district').val(),
+                'district': checkout_fields_wrapper.find('#' + type + '_city').val(),
                 'neighborhood': selected.id,
                 'type': type
             };
