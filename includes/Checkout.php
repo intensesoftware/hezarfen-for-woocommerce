@@ -90,6 +90,15 @@ class Checkout {
 		);
 
 		add_filter(
+			'woocommerce_default_address_fields',
+			array(
+				$this,
+				'override_district_label',
+			),
+			99999
+		);
+
+		add_filter(
 			'woocommerce_checkout_posted_data',
 			array(
 				$this,
@@ -140,6 +149,18 @@ class Checkout {
 	public function make_address2_required_default_address_field( $fields ) {
 		$fields['address_2']['required'] = true;
 
+		return $fields;
+	}
+
+	/**
+	 * Overrides district label.
+	 * 
+	 * @param array $fields Default address fields.
+	 * 
+	 * @return array
+	 */
+	public function override_district_label( $fields ) {
+		$fields['city']['label'] = __( 'Town / City', 'hezarfen-for-woocommerce' );
 		return $fields;
 	}
 
