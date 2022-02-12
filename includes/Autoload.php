@@ -15,9 +15,9 @@ defined( 'ABSPATH' ) || exit();
 class Autoload {
 	const ADDONS = array(
 		array(
-			'file' => 'mahalle-bazli-gonderim-bedeli-for-hezarfen/mahalle-bazli-gonderim-bedeli-for-hezarfen.php',
-			'min_version' => WC_HEZARFEN_MIN_MBGB_VERSION
-		)
+			'file'        => 'mahalle-bazli-gonderim-bedeli-for-hezarfen/mahalle-bazli-gonderim-bedeli-for-hezarfen.php',
+			'min_version' => WC_HEZARFEN_MIN_MBGB_VERSION,
+		),
 	);
 	
 	/**
@@ -49,15 +49,25 @@ class Autoload {
 		add_action( 'admin_notices', array( $this, 'show_admin_notices' ) );
 	}
 
+	/**
+	 * Displays admin notices.
+	 * 
+	 * @return void
+	 */
 	public function show_admin_notices() {
 		foreach ( $this->check_addons() as $notice ) {
-			$class = $notice['type'] === 'error' ? 'notice-error' : 'notice-warning';
+			$class = 'error' === $notice['type'] ? 'notice-error' : 'notice-warning';
 			printf( '<div class="notice %s is-dismissible"><p>%s</p></div>', esc_attr( $class ), esc_html( $notice['message'] ) );
 		}
 	}
 
+	/**
+	 * Checks installed Hezarfen addons' versions. Returns notices if there are outdated addons.
+	 * 
+	 * @return array
+	 */
 	private function check_addons() {
-		$notices = array();
+		$notices        = array();
 		$active_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
 
 		foreach ( self::ADDONS as $addon ) {
@@ -66,12 +76,13 @@ class Autoload {
 					require_once ABSPATH . 'wp-admin/includes/plugin.php';
 				}
 
-				$addon_info = get_plugins()[$addon['file']];
+				$addon_info = get_plugins()[ $addon['file'] ];
 
 				if ( $addon_info['Version'] && version_compare( $addon_info['Version'], $addon['min_version'], '<' ) ) {
 					$notices[] = array(
+						/* translators: %s plugin name */
 						'message' => sprintf( __( '%s plugin has a new version available. Please update it.', 'hezarfen-for-woocommerce' ), $addon_info['Name'] ),
-						'type'    => 'warning'
+						'type'    => 'warning',
 					);
 				}
 			}
