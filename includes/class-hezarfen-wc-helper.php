@@ -47,32 +47,49 @@ class Helper {
 	/**
 	 * Checks installed Hezarfen addons' versions. Returns notices if there are outdated addons.
 	 * 
-	 * @param array $addons Addons.
+	 * @param array $addons Addons. Example array: [['file' => 'some_dir/some_file.php', 'min_version' => '1.2.3']].
 	 * 
 	 * @return array
 	 */
 	public static function check_addons( $addons ) {
-		$notices        = array();
-		$active_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
+		$notices = array();
 
-		foreach ( $addons as $addon ) {
-			if ( in_array( $addon['file'], $active_plugins ) ) {
-				if ( ! function_exists( 'get_plugins' ) ) {
-					require_once ABSPATH . 'wp-admin/includes/plugin.php';
-				}
+		foreach ( self::find_outdated( $addons ) as $outdated_addon ) {
+			$notices[] = array(
+				/* translators: %s plugin name */
+				'message' => sprintf( __( '%s plugin has a new version available. Please update it.', 'hezarfen-for-woocommerce' ), $outdated_addon ),
+				'type'    => 'warning',
+			);
+		}
 
-				$addon_info = get_plugins()[ $addon['file'] ];
+		return $notices;
+	}
 
-				if ( $addon_info['Version'] && version_compare( $addon_info['Version'], $addon['min_version'], '<' ) ) {
-					$notices[] = array(
-						/* translators: %s plugin name */
-						'message' => sprintf( __( '%s plugin has a new version available. Please update it.', 'hezarfen-for-woocommerce' ), $addon_info['Name'] ),
-						'type'    => 'warning',
-					);
+	/**
+	 * Finds outdated plugins
+	 * 
+	 * @param array $plugins Plugins to check. Example array: [['file' => 'some_dir/some_file.php', 'min_version' => '1.2.3']].
+	 * 
+	 * @return array
+	 */
+	public static function find_outdated( $plugins ) {
+		if ( ! function_exists( 'get_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		$outdated          = array();
+		$installed_plugins = get_plugins();
+		$active_plugins    = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
+
+		foreach ( $plugins as $plugin ) {
+			if ( in_array( $plugin['file'], $active_plugins ) ) {
+				$plugin_info = $installed_plugins[ $plugin['file'] ];
+				if ( $plugin_info['Version'] && version_compare( $plugin_info['Version'], $plugin['min_version'], '<' ) ) {
+					$outdated[] = $plugin_info['Name'];
 				}
 			}
 		}
 
-		return $notices;
+		return $outdated;
 	}
 }
