@@ -10,6 +10,7 @@ namespace Hezarfen\Inc;
 defined( 'ABSPATH' ) || exit();
 
 use Hezarfen\Inc\Mahalle_Local;
+use Hezarfen\Inc\Helper;
 use Hezarfen\Inc\Data\PostMetaEncryption;
 
 /**
@@ -488,7 +489,7 @@ class Checkout {
 			unset( $fields[ $type ][ $city_field_name ] );
 
 			// update array for name => name format.
-			$districts = hezarfen_wc_checkout_select2_option_format( $districts );
+			$districts = Helper::hezarfen_wc_checkout_select2_option_format( $districts );
 
 			$fields[ $type ][ $city_field_name ] = array(
 				'type'         => 'select',
