@@ -46,12 +46,14 @@ class Autoload {
 			)
 		);
 
-		add_action(
-			'admin_notices',
-			function () {
-				Helper::show_admin_notices( Helper::check_addons( self::ADDONS ) );
-			}
-		);
+		if ( is_admin() ) {
+			add_action(
+				'admin_notices',
+				function () {
+					Helper::show_admin_notices( Helper::check_addons( self::ADDONS ) );
+				}
+			);
+		}
 	}
 
 	/**
