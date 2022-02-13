@@ -103,6 +103,11 @@ class Helper {
 		return $outdated;
 	}
 
+	/**
+	 * Empties the notices transient.
+	 * 
+	 * @return void
+	 */
 	public static function empty_notices_transient() {
 		delete_transient( self::ADDONS_NOTICES_TRANSIENT );
 	}
