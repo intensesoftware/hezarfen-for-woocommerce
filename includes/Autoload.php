@@ -146,7 +146,7 @@ class Autoload {
 				'wc_hezarfen_ajax_object',
 				array(
 					'ajax_url'        => admin_url( 'admin-ajax.php' ),
-					'api_url'         => WC_HEZARFEN_API_URL,
+					'api_url'         => WC_HEZARFEN_NEIGH_API_URL,
 					'mahalleio_nonce' => wp_create_nonce( 'mahalle-io-get-data' ),
 				)
 			);
