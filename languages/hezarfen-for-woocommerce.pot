@@ -9,20 +9,20 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-02-10T13:56:35+01:00\n"
+"POT-Creation-Date: 2022-02-13T13:31:33+01:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: hezarfen-for-woocommerce\n"
 
 #: includes/admin/order/OrderDetails.php:61
 #: includes/admin/order/OrderDetails.php:73
-#: includes/Checkout.php:344
+#: includes/Checkout.php:367
 msgid "Personal"
 msgstr ""
 
 #: includes/admin/order/OrderDetails.php:63
 #: includes/admin/order/OrderDetails.php:74
-#: includes/Checkout.php:345
+#: includes/Checkout.php:368
 msgid "Company"
 msgstr ""
 
@@ -31,17 +31,17 @@ msgid "Invoice type"
 msgstr ""
 
 #: includes/admin/order/OrderDetails.php:81
-#: includes/Checkout.php:354
+#: includes/Checkout.php:377
 msgid "T.C. Identity Number"
 msgstr ""
 
 #: includes/admin/order/OrderDetails.php:90
-#: includes/Checkout.php:374
+#: includes/Checkout.php:397
 msgid "Tax Number"
 msgstr ""
 
 #: includes/admin/order/OrderDetails.php:95
-#: includes/Checkout.php:383
+#: includes/Checkout.php:406
 msgid "TAX Office"
 msgstr ""
 
@@ -167,39 +167,46 @@ msgstr ""
 msgid "Checks if the key created when the plugin was first installed is still the same key."
 msgstr ""
 
-#: includes/Checkout.php:339
-msgid "Invoice Type"
-msgstr ""
-
-#: includes/Checkout.php:353
-msgid "Enter T.C. Identity Number"
-msgstr ""
-
-#: includes/Checkout.php:366
-msgid "Title"
-msgstr ""
-
-#: includes/Checkout.php:367
-msgid "Enter invoice title"
-msgstr ""
-
-#: includes/Checkout.php:375
-msgid "Enter tax number"
-msgstr ""
-
-#: includes/Checkout.php:384
-msgid "Enter tax office"
-msgstr ""
-
-#: includes/Checkout.php:442
-#: includes/Checkout.php:524
-msgid "Select an option"
-msgstr ""
-
-#: includes/Checkout.php:473
+#: includes/Checkout.php:164
+#: includes/Checkout.php:496
 msgid "Town / City"
 msgstr ""
 
-#: includes/Checkout.php:485
+#: includes/Checkout.php:165
+#: includes/Checkout.php:507
 msgid "Neighborhood"
+msgstr ""
+
+#: includes/Checkout.php:362
+msgid "Invoice Type"
+msgstr ""
+
+#: includes/Checkout.php:376
+msgid "Enter T.C. Identity Number"
+msgstr ""
+
+#: includes/Checkout.php:389
+msgid "Title"
+msgstr ""
+
+#: includes/Checkout.php:390
+msgid "Enter invoice title"
+msgstr ""
+
+#: includes/Checkout.php:398
+msgid "Enter tax number"
+msgstr ""
+
+#: includes/Checkout.php:407
+msgid "Enter tax office"
+msgstr ""
+
+#: includes/Checkout.php:465
+#: includes/Checkout.php:546
+msgid "Select an option"
+msgstr ""
+
+#. translators: %s plugin name
+#: includes/class-hezarfen-wc-helper.php:60
+msgid "%s plugin has a new version available. Please update it."
 msgstr ""

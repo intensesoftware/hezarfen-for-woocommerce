@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-14 17:11+0000\n"
-"PO-Revision-Date: 2022-02-10 13:06+0000\n"
+"PO-Revision-Date: 2022-02-13 12:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: Türkçe\n"
 "Language: tr_TR\n"
@@ -13,6 +13,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.4.3; wp-5.4.2"
+
+#. translators: %s plugin name
+#: includes/class-hezarfen-wc-helper.php:60
+msgid "%s plugin has a new version available. Please update it."
+msgstr ""
+"%s eklentisinin yeni bir versiyonu mevcut. Lütfen eklentiyi güncelleyiniz."
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:216
 msgid "Auto sort fields in checkout form?"
@@ -55,7 +61,7 @@ msgstr ""
 "anahtar ile aynı olup olmadığını kontrol eder."
 
 #: includes/admin/order/OrderDetails.php:63
-#: includes/admin/order/OrderDetails.php:74 includes/Checkout.php:345
+#: includes/admin/order/OrderDetails.php:74 includes/Checkout.php:368
 msgid "Company"
 msgstr "Kurumsal"
 
@@ -79,19 +85,19 @@ msgstr "Şifreleme Anahtarı (Encryption Key) Sağlığı"
 msgid "Encryption Settings"
 msgstr "Şifreleme Anahtarı (Encryption Key) Ayarları"
 
-#: includes/Checkout.php:367
+#: includes/Checkout.php:390
 msgid "Enter invoice title"
 msgstr "Fatura ünvanını giriniz"
 
-#: includes/Checkout.php:353
+#: includes/Checkout.php:376
 msgid "Enter T.C. Identity Number"
 msgstr "T.C. Kimlik numaranızı giriniz"
 
-#: includes/Checkout.php:375
+#: includes/Checkout.php:398
 msgid "Enter tax number"
 msgstr "Vergi numaranızı giriniz"
 
-#: includes/Checkout.php:384
+#: includes/Checkout.php:407
 msgid "Enter tax office"
 msgstr "Vergi dairesini giriniz"
 
@@ -136,7 +142,7 @@ msgstr ""
 "alana yapıştırın. Bu satırın wp-config.php dosyasından silinmesi durumunda, "
 "daha önceki siparişlere ait T.C. no bilgileri okunamaz hale gelecektir."
 
-#: includes/Checkout.php:339
+#: includes/Checkout.php:362
 msgid "Invoice Type"
 msgstr "Fatura tipi"
 
@@ -164,7 +170,7 @@ msgstr ""
 msgid "Key comparison success?"
 msgstr "Anahtar doğrulaması başarılı mı?"
 
-#: includes/Checkout.php:485
+#: includes/Checkout.php:165 includes/Checkout.php:507
 msgid "Neighborhood"
 msgstr "Mahalle"
 
@@ -174,11 +180,11 @@ msgid "No"
 msgstr "Hayır"
 
 #: includes/admin/order/OrderDetails.php:61
-#: includes/admin/order/OrderDetails.php:73 includes/Checkout.php:344
+#: includes/admin/order/OrderDetails.php:73 includes/Checkout.php:367
 msgid "Personal"
 msgstr "Bireysel"
 
-#: includes/Checkout.php:442 includes/Checkout.php:524
+#: includes/Checkout.php:465 includes/Checkout.php:546
 msgid "Select an option"
 msgstr "Lütfen seçiniz"
 
@@ -202,23 +208,23 @@ msgstr ""
 "şifreleme özelliğini aktif etmezseniz, ödeme ekranında T.C. no alanı "
 "gösterilmez.)"
 
-#: includes/admin/order/OrderDetails.php:81 includes/Checkout.php:354
+#: includes/admin/order/OrderDetails.php:81 includes/Checkout.php:377
 msgid "T.C. Identity Number"
 msgstr "T.C. Kimlik Numarası"
 
-#: includes/admin/order/OrderDetails.php:90 includes/Checkout.php:374
+#: includes/admin/order/OrderDetails.php:90 includes/Checkout.php:397
 msgid "Tax Number"
 msgstr "Vergi Numarası"
 
-#: includes/admin/order/OrderDetails.php:95 includes/Checkout.php:383
+#: includes/admin/order/OrderDetails.php:95 includes/Checkout.php:406
 msgid "TAX Office"
 msgstr "Vergi Dairesi"
 
-#: includes/Checkout.php:366
+#: includes/Checkout.php:389
 msgid "Title"
 msgstr "Ünvan"
 
-#: includes/Checkout.php:473
+#: includes/Checkout.php:164 includes/Checkout.php:496
 msgid "Town / City"
 msgstr "İlçe"
 
