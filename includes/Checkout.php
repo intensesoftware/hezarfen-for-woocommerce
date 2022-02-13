@@ -489,7 +489,7 @@ class Checkout {
 			unset( $fields[ $type ][ $city_field_name ] );
 
 			// update array for name => name format.
-			$districts = Helper::hezarfen_wc_checkout_select2_option_format( $districts );
+			$districts = Helper::checkout_select2_option_format( $districts );
 
 			$fields[ $type ][ $city_field_name ] = array(
 				'type'         => 'select',

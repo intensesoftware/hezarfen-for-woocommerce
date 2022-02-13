@@ -20,7 +20,7 @@ class Helper {
 	 * @param array $arr array of the districts.
 	 * @return array
 	 */
-	public static function hezarfen_wc_checkout_select2_option_format( $arr ) {
+	public static function checkout_select2_option_format( $arr ) {
 		$values = array();
 
 		foreach ( $arr as $key => $value ) {
