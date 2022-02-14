@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-14 17:11+0000\n"
-"PO-Revision-Date: 2022-02-13 12:36+0000\n"
+"PO-Revision-Date: 2022-02-14 09:40+0000\n"
 "Last-Translator: \n"
 "Language-Team: Türkçe\n"
 "Language: tr_TR\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.4.3; wp-5.4.2"
+"X-Loco-Version: 2.5.8; wp-5.9"
 
 #. translators: %s plugin name
 #: includes/class-hezarfen-wc-helper.php:60
