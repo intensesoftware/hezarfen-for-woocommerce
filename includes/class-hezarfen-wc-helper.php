@@ -49,7 +49,7 @@ class Helper {
 	/**
 	 * Checks installed Hezarfen addons' versions. Returns notices if there are outdated addons.
 	 * 
-	 * @param array $addons Addons. Example array: [['file' => 'some_dir/some_file.php', 'min_version' => '1.2.3']].
+	 * @param array $addons Addons data to check.
 	 * 
 	 * @return array
 	 */
@@ -78,24 +78,17 @@ class Helper {
 	/**
 	 * Finds outdated plugins
 	 * 
-	 * @param array $plugins Plugins to check. Example array: [['file' => 'some_dir/some_file.php', 'min_version' => '1.2.3']].
+	 * @param array $plugins Plugins data to check.
 	 * 
 	 * @return array
 	 */
 	public static function find_outdated( $plugins ) {
-		if ( ! function_exists( 'get_plugins' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}
-
-		$outdated          = array();
-		$installed_plugins = get_plugins();
-		$active_plugins    = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
+		$outdated = array();
 
 		foreach ( $plugins as $plugin ) {
-			if ( in_array( $plugin['file'], $active_plugins ) ) {
-				$plugin_info = $installed_plugins[ $plugin['file'] ];
-				if ( $plugin_info['Version'] && version_compare( $plugin_info['Version'], $plugin['min_version'], '<' ) ) {
-					$outdated[] = $plugin_info['Name'];
+			if ( $plugin['activated']() ) {
+				if ( $plugin['version']() && version_compare( $plugin['version'](), $plugin['min_version'], '<' ) ) {
+					$outdated[] = $plugin['name'];
 				}
 			}
 		}

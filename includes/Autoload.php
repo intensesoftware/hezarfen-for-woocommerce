@@ -13,19 +13,32 @@ defined( 'ABSPATH' ) || exit();
  * Autoload
  */
 class Autoload {
-	const ADDONS = array(
-		array(
-			'file'        => 'mahalle-bazli-gonderim-bedeli-for-hezarfen/mahalle-bazli-gonderim-bedeli-for-hezarfen.php',
-			'min_version' => WC_HEZARFEN_MIN_MBGB_VERSION,
-		),
-	);
-	
+	/**
+	 * Addons info
+	 * 
+	 * @var array
+	 */
+	private $addons;
+
 	/**
 	 * Constructor
 	 *
 	 * @return void
 	 */
 	public function __construct() {
+		$this->addons = array(
+			array(
+				'name'        => 'Mahalle Bazlı Gönderim Bedeli for Hezarfen',
+				'version'     => function () {
+					return defined( 'WC_HEZARFEN_MBGB_VERSION' ) ? WC_HEZARFEN_MBGB_VERSION : null;
+				},
+				'min_version' => WC_HEZARFEN_MIN_MBGB_VERSION,
+				'activated'   => function () {
+					return defined( 'WC_HEZARFEN_MBGB_VERSION' );
+				},
+			),
+		);
+
 		$this->load_plugin_files();
 
 		$this->load_assets();
@@ -74,7 +87,7 @@ class Autoload {
 			add_action(
 				'admin_notices',
 				function () {
-					Helper::show_admin_notices( Helper::check_addons( self::ADDONS ) );
+					Helper::show_admin_notices( Helper::check_addons( $this->addons ) );
 				}
 			);
 		}
