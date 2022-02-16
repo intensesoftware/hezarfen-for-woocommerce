@@ -51,30 +51,6 @@ class Autoload {
 			)
 		);
 
-		register_activation_hook(
-			WC_HEZARFEN_FILE,
-			array(
-				Helper::class,
-				'empty_notices_transient',
-			)
-		);
-
-		register_deactivation_hook(
-			WC_HEZARFEN_FILE,
-			array(
-				Helper::class,
-				'empty_notices_transient',
-			)
-		);
-
-		add_action(
-			'upgrader_process_complete',
-			array(
-				Helper::class,
-				'empty_notices_transient',
-			)
-		);
-
 		add_filter(
 			'woocommerce_get_settings_pages',
 			array(

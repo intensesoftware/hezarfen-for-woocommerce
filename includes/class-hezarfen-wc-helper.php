@@ -13,8 +13,6 @@ defined( 'ABSPATH' ) || exit();
  * Helper class
  */
 class Helper {
-	const ADDONS_NOTICES_TRANSIENT = 'hezarfen_addons_notices';
-
 	/**
 	 *
 	 * Update array keys for select option values
@@ -54,25 +52,17 @@ class Helper {
 	 * @return array
 	 */
 	public static function check_addons( $addons ) {
-		$notices = get_transient( self::ADDONS_NOTICES_TRANSIENT );
+		$notices = array();
 
-		if ( is_array( $notices ) ) {
-			return $notices;
-		} else {
-			$notices = array();
-
-			foreach ( self::find_outdated( $addons ) as $outdated_addon ) {
-				$notices[] = array(
-					/* translators: %s plugin name */
-					'message' => sprintf( __( '%s plugin has a new version available. Please update it.', 'hezarfen-for-woocommerce' ), $outdated_addon ),
-					'type'    => 'warning',
-				);
-			}
-
-			set_transient( self::ADDONS_NOTICES_TRANSIENT, $notices );
-
-			return $notices;
+		foreach ( self::find_outdated( $addons ) as $outdated_addon ) {
+			$notices[] = array(
+				/* translators: %s plugin name */
+				'message' => sprintf( __( '%s plugin has a new version available. Please update it.', 'hezarfen-for-woocommerce' ), $outdated_addon ),
+				'type'    => 'warning',
+			);
 		}
+
+		return $notices;
 	}
 
 	/**
@@ -95,14 +85,5 @@ class Helper {
 		}
 
 		return $outdated;
-	}
-
-	/**
-	 * Empties the notices transient.
-	 * 
-	 * @return void
-	 */
-	public static function empty_notices_transient() {
-		delete_transient( self::ADDONS_NOTICES_TRANSIENT );
 	}
 }
