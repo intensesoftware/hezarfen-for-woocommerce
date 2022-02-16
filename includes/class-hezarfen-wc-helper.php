@@ -87,7 +87,8 @@ class Helper {
 
 		foreach ( $plugins as $plugin ) {
 			if ( $plugin['activated']() ) {
-				if ( $plugin['version']() && version_compare( $plugin['version'](), $plugin['min_version'], '<' ) ) {
+				$version = $plugin['version']();
+				if ( $version && version_compare( $version, $plugin['min_version'], '<' ) ) {
 					$outdated[] = $plugin['name'];
 				}
 			}
