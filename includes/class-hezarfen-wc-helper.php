@@ -56,9 +56,10 @@ class Helper {
 
 		foreach ( self::find_outdated( $addons ) as $outdated_addon ) {
 			$notices[] = array(
+				'addon_short_name' => $outdated_addon['short_name'],
 				/* translators: %s plugin name */
-				'message' => sprintf( __( '%s plugin has a new version available. Please update it.', 'hezarfen-for-woocommerce' ), $outdated_addon ),
-				'type'    => 'warning',
+				'message' => sprintf( __( '%s plugin has a new version available. In order to use the plugin, you must update it.', 'hezarfen-for-woocommerce' ), $outdated_addon['name'] ),
+				'type'    => 'error',
 			);
 		}
 
@@ -79,7 +80,10 @@ class Helper {
 			if ( $plugin['activated']() ) {
 				$version = $plugin['version']();
 				if ( $version && version_compare( $version, $plugin['min_version'], '<' ) ) {
-					$outdated[] = $plugin['name'];
+					$outdated[] = array(
+						'name' => $plugin['name'],
+						'short_name' => isset( $plugin['short_name'] ) ? $plugin['short_name'] : '',
+					);
 				}
 			}
 		}

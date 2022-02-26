@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-02-13T13:31:33+01:00\n"
+"POT-Creation-Date: 2022-02-26T14:21:59+01:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: hezarfen-for-woocommerce\n"
@@ -207,6 +207,6 @@ msgid "Select an option"
 msgstr ""
 
 #. translators: %s plugin name
-#: includes/class-hezarfen-wc-helper.php:60
-msgid "%s plugin has a new version available. Please update it."
+#: includes/class-hezarfen-wc-helper.php:61
+msgid "%s plugin has a new version available. In order to use the plugin, you must update it."
 msgstr ""

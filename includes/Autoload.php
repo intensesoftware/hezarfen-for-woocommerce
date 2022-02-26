@@ -21,6 +21,13 @@ class Autoload {
 	private $addons;
 
 	/**
+	 * Notices related to addons.
+	 * 
+	 * @var array
+	 */
+	private $addon_notices;
+
+	/**
 	 * Constructor
 	 *
 	 * @return void
@@ -29,6 +36,7 @@ class Autoload {
 		$this->addons = array(
 			array(
 				'name'        => 'Mahalle Bazlı Gönderim Bedeli for Hezarfen',
+				'short_name'  => 'MBGB',
 				'version'     => function () {
 					return defined( 'WC_HEZARFEN_MBGB_VERSION' ) ? WC_HEZARFEN_MBGB_VERSION : null;
 				},
@@ -51,6 +59,14 @@ class Autoload {
 			)
 		);
 
+		add_action(
+			'plugins_loaded',
+			array(
+				$this,
+				'check_addons_and_show_notices',
+			)
+		);
+
 		add_filter(
 			'woocommerce_get_settings_pages',
 			array(
@@ -58,15 +74,6 @@ class Autoload {
 				'add_hezarfen_setting_page',
 			)
 		);
-
-		if ( is_admin() ) {
-			add_action(
-				'admin_notices',
-				function () {
-					Helper::show_admin_notices( Helper::check_addons( $this->addons ) );
-				}
-			);
-		}
 	}
 
 	/**
@@ -183,6 +190,28 @@ class Autoload {
 
 		if ( is_admin() ) {
 			require_once 'admin/order/OrderDetails.php';
+		}
+	}
+
+	/**
+	 * Checks addons and shows notices if necessary.
+	 * Defines constants to disable outdated addons.
+	 * 
+	 * @return void
+	 */
+	public function check_addons_and_show_notices() {
+		$this->addon_notices = Helper::check_addons( $this->addons );
+		if ( $this->addon_notices ) {
+			foreach ( $this->addon_notices as $notice ) {
+				define( 'WC_HEZARFEN_OUTDATED_ADDON_' . $notice['addon_short_name'], true );
+			}
+
+			add_action(
+				'admin_notices',
+				function () {
+					Helper::show_admin_notices( $this->addon_notices );
+				}
+			);
 		}
 	}
 }

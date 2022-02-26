@@ -3,9 +3,9 @@ msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-14 17:11+0000\n"
-"PO-Revision-Date: 2022-02-14 09:40+0000\n"
+"PO-Revision-Date: 2022-02-26 13:28+0000\n"
 "Last-Translator: \n"
-"Language-Team: Türkçe\n"
+"Language-Team: Turkish\n"
 "Language: tr_TR\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
@@ -15,10 +15,13 @@ msgstr ""
 "X-Loco-Version: 2.5.8; wp-5.9"
 
 #. translators: %s plugin name
-#: includes/class-hezarfen-wc-helper.php:60
-msgid "%s plugin has a new version available. Please update it."
+#: includes/class-hezarfen-wc-helper.php:61
+msgid ""
+"%s plugin has a new version available. In order to use the plugin, you must "
+"update it."
 msgstr ""
-"%s eklentisinin yeni bir versiyonu mevcut. Lütfen eklentiyi güncelleyiniz."
+"%s eklentisinin yeni bir versiyonu mevcut. Eklentiyi kullanmaya devam "
+"edebilmek için lütfen eklentiyi güncelleyiniz."
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:216
 msgid "Auto sort fields in checkout form?"
