@@ -13,13 +13,40 @@ defined( 'ABSPATH' ) || exit();
  * Autoload
  */
 class Autoload {
-	
+	/**
+	 * Addons info
+	 * 
+	 * @var array
+	 */
+	private $addons;
+
+	/**
+	 * Notices related to addons.
+	 * 
+	 * @var array
+	 */
+	private $addon_notices;
+
 	/**
 	 * Constructor
 	 *
 	 * @return void
 	 */
 	public function __construct() {
+		$this->addons = array(
+			array(
+				'name'        => 'Mahalle Bazlı Gönderim Bedeli for Hezarfen',
+				'short_name'  => 'MBGB',
+				'version'     => function () {
+					return defined( 'WC_HEZARFEN_MBGB_VERSION' ) ? WC_HEZARFEN_MBGB_VERSION : null;
+				},
+				'min_version' => WC_HEZARFEN_MIN_MBGB_VERSION,
+				'activated'   => function () {
+					return defined( 'WC_HEZARFEN_MBGB_VERSION' );
+				},
+			),
+		);
+
 		$this->load_plugin_files();
 
 		$this->load_assets();
@@ -29,6 +56,14 @@ class Autoload {
 			array(
 				'Hezarfen_Install',
 				'install',
+			)
+		);
+
+		add_action(
+			'plugins_loaded',
+			array(
+				$this,
+				'check_addons_and_show_notices',
 			)
 		);
 
@@ -131,6 +166,7 @@ class Autoload {
 				'wc_hezarfen_ajax_object',
 				array(
 					'ajax_url'        => admin_url( 'admin-ajax.php' ),
+					'api_url'         => WC_HEZARFEN_NEIGH_API_URL,
 					'mahalleio_nonce' => wp_create_nonce( 'mahalle-io-get-data' ),
 				)
 			);
@@ -148,12 +184,34 @@ class Autoload {
 		require_once 'Data/PostMetaEncryption.php';
 		require_once 'Checkout.php';
 		require_once 'Ajax.php';
+		require_once 'class-mahalle-local.php';
 		require_once 'Hezarfen_Install.php';
-		require_once 'hezarfen-wc-helpers.php';
-		require_once 'Services/MahalleIO.php';
+		require_once 'class-hezarfen-wc-helper.php';
 
 		if ( is_admin() ) {
 			require_once 'admin/order/OrderDetails.php';
+		}
+	}
+
+	/**
+	 * Checks addons and shows notices if necessary.
+	 * Defines constants to disable outdated addons.
+	 * 
+	 * @return void
+	 */
+	public function check_addons_and_show_notices() {
+		$this->addon_notices = Helper::check_addons( $this->addons );
+		if ( $this->addon_notices ) {
+			foreach ( $this->addon_notices as $notice ) {
+				define( 'WC_HEZARFEN_OUTDATED_ADDON_' . $notice['addon_short_name'], true );
+			}
+
+			add_action(
+				'admin_notices',
+				function () {
+					Helper::show_admin_notices( $this->addon_notices );
+				}
+			);
 		}
 	}
 }

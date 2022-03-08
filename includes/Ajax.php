@@ -9,7 +9,6 @@ namespace Hezarfen\Inc;
 
 defined( 'ABSPATH' ) || exit();
 
-use Hezarfen\Inc\Services\MahalleIO;
 
 /**
  * The class handles AJAX operations.
@@ -22,36 +21,6 @@ class Ajax {
 	 * @return void
 	 */
 	public function __construct() {
-		add_action(
-			'wp_ajax_wc_hezarfen_get_districts',
-			array(
-				$this,
-				'get_districts',
-			)
-		);
-		add_action(
-			'wp_ajax_nopriv_wc_hezarfen_get_districts',
-			array(
-				$this,
-				'get_districts',
-			)
-		);
-
-		add_action(
-			'wp_ajax_wc_hezarfen_get_neighborhoods',
-			array(
-				$this,
-				'get_neighborhoods',
-			)
-		);
-		add_action(
-			'wp_ajax_nopriv_wc_hezarfen_get_neighborhoods',
-			array(
-				$this,
-				'get_neighborhoods',
-			)
-		);
-
 		add_action(
 			'wp_ajax_wc_hezarfen_neighborhood_changed',
 			array(
@@ -67,82 +36,7 @@ class Ajax {
 			)
 		);
 	}
-	
-	/**
-	 * Get Districts AJAX Endpoint
-	 *
-	 * @return void
-	 */
-	public function get_districts() {
-		check_ajax_referer( 'mahalle-io-get-data', 'security' );
 
-		// the variable begins with TR prefix.
-		$city_plate_number_with_prefix = isset( $_POST['city_plate_number'] ) ? sanitize_text_field( $_POST['city_plate_number'] ) : '';
-
-		$city_plate_number = explode( 'TR', $city_plate_number_with_prefix );
-
-		$city_plate_number = intval( $city_plate_number[1] );
-
-		if ( ! $city_plate_number ) {
-			echo wp_json_encode( array() );
-			wp_die();
-		}
-
-		$get_districts_response = MahalleIO::get_districts( $city_plate_number );
-
-		// if get_districts failed, return empty array.
-		/**
-		 * Todo: fire a notification about failed mahalle.io connection
-		 */
-		if ( is_wp_error( $get_districts_response ) ) {
-			$districts = array();
-		} else {
-			$districts = $get_districts_response;
-		}
-
-		echo wp_json_encode( $districts );
-
-		wp_die();
-	}
-	
-	/**
-	 * Get Neighborhoods AJAX endpoint
-	 *
-	 * @return void
-	 */
-	public function get_neighborhoods() {
-		check_ajax_referer( 'mahalle-io-get-data', 'security' );
-
-		$district_data = isset( $_POST['district_id'] ) ? sanitize_text_field( $_POST['district_id'] ) : '';
-
-		$district_data_array = explode( ':', $district_data );
-
-		$district_id = intval( $district_data_array[0] );
-
-		if ( ! $district_id ) {
-			echo wp_json_encode( array() );
-			wp_die();
-		}
-
-		$get_neighborhoods_response = MahalleIO::get_neighborhoods(
-			$district_id
-		);
-
-		// if get_neighborhoods failed, return empty array.
-		/**
-		 * Todo: fire a notification about failed mahalle.io connection
-		 */
-		if ( is_wp_error( $get_neighborhoods_response ) ) {
-			$neighborhoods = array();
-		} else {
-			$neighborhoods = $get_neighborhoods_response;
-		}
-
-		echo wp_json_encode( $neighborhoods );
-
-		wp_die();
-	}
-	
 	/**
 	 * An event that releases when neighborhood data is changed.
 	 *
@@ -154,23 +48,21 @@ class Ajax {
 		/** That is specify expresses the checkout form part. $type can be billing|shipping */
 		$type = isset( $_POST['type'] ) ? sanitize_key( $_POST['type'] ) : '';
 
-		$neighborhood_data = isset( $_POST['neighborhood_data'] ) ? sanitize_text_field( $_POST['neighborhood_data'] ) : '';
+		$city_plate_number = isset( $_POST['cityPlateNumber'] ) ? sanitize_text_field( $_POST['cityPlateNumber'] ) : '';
+		$district          = isset( $_POST['district'] ) ? sanitize_text_field( $_POST['district'] ) : '';
+		$neighborhood      = isset( $_POST['neighborhood'] ) ? stripslashes( sanitize_text_field( $_POST['neighborhood'] ) ) : '';
 
-		$neighborhood_data_arr = explode( ':', $neighborhood_data );
-
-		$neighborhood_id = intval( $neighborhood_data_arr[0] );
+		$neighborhood_id = Mahalle_Local::get_neighborhood_id( $city_plate_number, $district, $neighborhood );
 
 		if ( ! $neighborhood_id ) {
 			echo wp_json_encode( array() );
 			wp_die();
 		}
 
-		$neighborhood_name = $neighborhood_data_arr[1];
-
 		do_action(
 			'hezarfen_checkout_neighborhood_changed',
 			$neighborhood_id,
-			$neighborhood_name,
+			$neighborhood,
 			$type
 		);
 
@@ -183,7 +75,7 @@ class Ajax {
 				'hezarfen_checkout_neighborhood_changed_output_args',
 				$args,
 				$neighborhood_id,
-				$neighborhood_name
+				$neighborhood
 			)
 		);
 
