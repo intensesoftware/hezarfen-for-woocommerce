@@ -9,7 +9,8 @@ namespace Hezarfen\Inc;
 
 defined( 'ABSPATH' ) || exit();
 
-use Hezarfen\Inc\Services\MahalleIO;
+use Hezarfen\Inc\Mahalle_Local;
+use Hezarfen\Inc\Helper;
 use Hezarfen\Inc\Data\PostMetaEncryption;
 
 /**
@@ -90,6 +91,15 @@ class Checkout {
 		);
 
 		add_filter(
+			'woocommerce_default_address_fields',
+			array(
+				$this,
+				'override_labels',
+			),
+			99999
+		);
+
+		add_filter(
 			'woocommerce_checkout_posted_data',
 			array(
 				$this,
@@ -138,13 +148,21 @@ class Checkout {
 	 * @return array
 	 */
 	public function make_address2_required_default_address_field( $fields ) {
-		// if Mahalle.io not activated, return.
-		if ( ! MahalleIO::is_active() ) {
-			return $fields;
-		}
-
 		$fields['address_2']['required'] = true;
 
+		return $fields;
+	}
+
+	/**
+	 * Overrides default address fields' labels.
+	 * 
+	 * @param array $fields Default address fields.
+	 * 
+	 * @return array
+	 */
+	public function override_labels( $fields ) {
+		$fields['city']['label']      = __( 'Town / City', 'hezarfen-for-woocommerce' );
+		$fields['address_1']['label'] = __( 'Neighborhood', 'hezarfen-for-woocommerce' );
 		return $fields;
 	}
 
@@ -155,12 +173,6 @@ class Checkout {
 	 * @return array
 	 */
 	public function make_address2_required_and_update_the_label( $fields ) {
-		// if Mahalle.io not activated, return.
-		if ( ! MahalleIO::is_active() ) {
-			return $fields;
-		}
-
-		// if mahalle.io is active, make address2 required.
 		$fields['billing']['billing_address_2']['required']      = true;
 		$fields['billing']['billing_address_2']['label']         = 'Adresiniz';
 		$fields['billing']['billing_address_2']['placeholder']   = 'Cadde, sokak, bina, daire no bilgilerinizi giriniz';
@@ -416,7 +428,7 @@ class Checkout {
 
 	/**
 	 *
-	 * Update district and neighborhood data after checkout submit
+	 * Update necessary data after checkout submit
 	 *
 	 * @param array $data the posted checkout data.
 	 * @return array
@@ -438,43 +450,6 @@ class Checkout {
 			}
 		}
 
-		// if Mahalle.io activated, update neighborhood fields.
-		if ( MahalleIO::is_active() ) {
-			$types = array( 'shipping', 'billing' );
-
-			foreach ( $types as $type ) {
-				$city_field_name = sprintf( '%s_city', $type );
-
-				$neighborhood_field_name = sprintf( '%s_address_1', $type );
-
-				if ( array_key_exists( $city_field_name, $data ) ) {
-					$value = $data[ $city_field_name ];
-
-					if ( $value && strpos( $value, ':' ) !== false ) {
-						$district_data_arr = explode( ':', $value );
-
-						$district_id   = $district_data_arr[0];
-						$district_name = $district_data_arr[1];
-
-						$data[ $city_field_name ] = $district_name;
-					}
-				}
-
-				if ( array_key_exists( $neighborhood_field_name, $data ) ) {
-					$value = $data[ $neighborhood_field_name ];
-
-					if ( $value && strpos( $value, ':' ) !== false ) {
-						$neighborhood_data_arr = explode( ':', $value );
-
-						$neighborhood_id   = $neighborhood_data_arr[0];
-						$neighborhood_name = $neighborhood_data_arr[1];
-
-						$data[ $neighborhood_field_name ] = $neighborhood_name;
-					}
-				}
-			}
-		}
-
 		return $data;
 	}
 
@@ -485,15 +460,9 @@ class Checkout {
 	 * @return array
 	 */
 	public function add_district_and_neighborhood_fields( $fields ) {
-		// if Mahalle.io not activated, return.
-		if ( ! MahalleIO::is_active() ) {
-			return $fields;
-		}
-
 		$types = array( 'shipping', 'billing' );
 
-		$district_options     = array( '' => __( 'Lütfen seçiniz', 'woocommerce' ) );
-		$neighborhood_options = array( '' => __( 'Lütfen seçiniz', 'woocommerce' ) );
+		$district_options = array( '' => __( 'Select an option', 'hezarfen-for-woocommerce' ) );
 
 		global $woocommerce;
 
@@ -501,52 +470,47 @@ class Checkout {
 			$city_field_name         = sprintf( '%s_city', $type );
 			$neighborhood_field_name = sprintf( '%s_address_1', $type );
 
-			$get_city_function = 'get_' . $type . '_state';
+			$get_city_function     = 'get_' . $type . '_state';
+			$get_district_function = 'get_' . $type . '_city';
 
 			// the value has TR prefix such as TR18.
 			$current_city_plate_number_prefixed = $woocommerce->customer->$get_city_function();
+			$current_district                   = $woocommerce->customer->$get_district_function();
 
-			$districts_response = $this->get_districts(
+			$districts = $this->get_districts(
 				$current_city_plate_number_prefixed
 			);
 
-			/**
-			 * TODO: fire a notification about failed mahalle.io connection
-			 */
-			// if get_districts failed, return empty array and disable mahalle.io - Hezarfen customizations.
-
-			if ( is_wp_error( $districts_response ) ) {
+			if ( ! $districts ) {
 				continue;
-			} else {
-				$districts = $districts_response;
 			}
 
 			// remove WooCommerce default district field on checkout.
 			unset( $fields[ $type ][ $city_field_name ] );
 
-			// update array keys for id:name format.
-			$districts = hezarfen_wc_checkout_select2_option_format( $districts );
+			// update array for name => name format.
+			$districts = Helper::checkout_select2_option_format( $districts );
 
 			$fields[ $type ][ $city_field_name ] = array(
-				'id'       => 'wc_hezarfen_' . $type . '_district',
-				'type'     => 'select',
-				'label'    => __( 'İlçe', 'woocommerce' ),
-				'required' => true,
-				'class'    => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_district', array( 'form-row-wide' ) ),
-				'clear'    => true,
-				'priority' => $fields[ $type ][ $type . '_state' ]['priority'] + 1,
-				'options'  => $district_options + $districts,
+				'type'         => 'select',
+				'label'        => __( 'Town / City', 'hezarfen-for-woocommerce' ),
+				'required'     => true,
+				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_district', array( 'form-row-wide' ) ),
+				'clear'        => true,
+				'autocomplete' => 'address-level2',
+				'priority'     => $fields[ $type ][ $type . '_state' ]['priority'] + 1,
+				'options'      => $district_options + $districts,
 			);
 
 			$fields[ $type ][ $neighborhood_field_name ] = array(
-				'id'       => 'wc_hezarfen_' . $type . '_neighborhood',
-				'type'     => 'select',
-				'label'    => __( 'Mahalle', 'woocommerce' ),
-				'required' => true,
-				'class'    => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_neighborhood', array( 'form-row-wide' ) ),
-				'clear'    => true,
-				'priority' => $fields[ $type ][ $type . '_state' ]['priority'] + 2,
-				'options'  => $neighborhood_options,
+				'type'         => 'select',
+				'label'        => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
+				'required'     => true,
+				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_neighborhood', array( 'form-row-wide' ) ),
+				'clear'        => true,
+				'autocomplete' => 'address-level3',
+				'priority'     => $fields[ $type ][ $type . '_state' ]['priority'] + 2,
+				'options'      => $this->get_neighborhood_options( $current_city_plate_number_prefixed, $current_district ),
 			);
 		}
 
@@ -554,23 +518,44 @@ class Checkout {
 	}
 
 	/**
-	 * Get districts from mahalle.io
+	 * Get districts
 	 *
 	 * @param string $city_plate_with_prefix that begins with TR prefix such as TR18.
-	 * @return array|bool
+	 *
+	 * @return array
 	 */
 	private function get_districts( $city_plate_with_prefix ) {
 		if ( ! $city_plate_with_prefix ) {
 			return array();
 		}
 
-		$city_plate_number = explode( 'TR', $city_plate_with_prefix );
-
-		$city_plate_number = $city_plate_number[1];
-
-		$districts = MahalleIO::get_districts( $city_plate_number );
+		$districts = Mahalle_Local::get_districts( $city_plate_with_prefix );
 
 		return $districts;
+	}
+
+	/**
+	 * Returns neighborhood options.
+	 * 
+	 * @param string $city_plate_with_prefix that begins with TR prefix such as TR18.
+	 * @param string $district District.
+	 * 
+	 * @return array
+	 */
+	private function get_neighborhood_options( $city_plate_with_prefix, $district ) {
+		$neighborhood_options = array( '' => __( 'Select an option', 'hezarfen-for-woocommerce' ) );
+
+		if ( ! $city_plate_with_prefix || ! $district ) {
+			return $neighborhood_options;
+		}
+
+		$neighborhoods = Mahalle_Local::get_neighborhoods( $city_plate_with_prefix, $district );
+
+		foreach ( $neighborhoods as $neighborhood ) {
+			$neighborhood_options[ $neighborhood ] = $neighborhood;
+		}
+
+		return $neighborhood_options;
 	}
 }
 

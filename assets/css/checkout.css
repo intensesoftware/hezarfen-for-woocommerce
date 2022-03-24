@@ -4,10 +4,6 @@
 
 }
 
-select#wc_hezarfen_shipping_district,
-select#wc_hezarfen_billing_district,
-select#wc_hezarfen_shipping_neighborhood,
-select#hezarfen_invoice_type,
-select#wc_hezarfen_billing_neighborhood {
+select#hezarfen_invoice_type {
 	width:100% !important
 }

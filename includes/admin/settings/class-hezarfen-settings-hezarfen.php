@@ -28,18 +28,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		$this->label = 'Hezarfen';
 
 		parent::__construct();
-
-		add_filter( 'woocommerce_admin_settings_sanitize_option_hezarfen_mahalle_io_api_key', array( $this, 'override_the_mahalle_io_apikey' ), 10, 1 );
-	}
-	
-	/**
-	 * Override the mahale.io API Key value before the set (encrypt before the saving)
-	 *
-	 * @param  string $value the decrypted API Key.
-	 * @return string
-	 */
-	public function override_the_mahalle_io_apikey( $value ) {
-		return ( new ServiceCredentialEncryption() )->encrypt( $value );
 	}
 	
 	/**
@@ -59,7 +47,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	public function get_sections() {
 		$sections = array(
 			'general'       => __( 'General', 'hezarfen-for-woocommerce' ),
-			'mahalle_io'    => 'mahalle.io',
 			'encryption'    => __( 'Encryption', 'hezarfen-for-woocommerce' ),
 			'checkout-page' => __( 'Checkout Page Settings', 'hezarfen-for-woocommerce' ),
 		);
@@ -82,42 +69,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 * @return array
 	 */
 	public function get_settings( $current_section = '' ) {
-		if ( 'mahalle_io' == $current_section ) {
-			$api_key_value = get_option( 'hezarfen_mahalle_io_api_key', null );
-
-			$settings = apply_filters(
-				'hezarfen_mahalle_io_settings',
-				array(
-					array(
-						'title' => __(
-							'mahalle.io Settings',
-							'hezarfen-for-woocommerce'
-						),
-						'type'  => 'title',
-						'desc'  => __(
-							'mahalle.io is a optional and paid service for show Turkey neighbors in checkout page. If the mahalle.io service is activated, neighborhood data will be written in the address 1 field on the payment form. For this reason, the address2 field will be required for remain address.',
-							'hezarfen-for-woocommerce'
-						),
-						'id'    => 'hezarfen_mahalleio_options',
-					),
-					array(
-						'title' => __( 'API key', 'hezarfen-for-woocommerce' ),
-						'type'  => 'text',
-						'desc'  => __(
-							'API key may be created on mahalle.io my account page',
-							'hezarfen-for-woocommerce'
-						),
-						'id'    => 'hezarfen_mahalle_io_api_key',
-						'value' => ! is_null( $api_key_value ) ? ( new ServiceCredentialEncryption() )->decrypt( $api_key_value ) : '',
-					),
-
-					array(
-						'type' => 'sectionend',
-						'id'   => 'hezarfen_mahalleio_options',
-					),
-				)
-			);
-		} elseif ( 'checkout_tax' == $current_section ) {
+		if ( 'checkout_tax' == $current_section ) {
 			$settings = apply_filters(
 				'hezarfen_checkout_tax_settings',
 				array(
