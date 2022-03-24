@@ -1,9 +1,9 @@
 === Hezarfen for WooCommerce ===
-Contributors: intenseyazilim,mskapusuz
-Tags: vergi alanları, posta kodu, il ilçe, mahalle, Türkiye, Turkish, Turkey, intense
+Contributors: intenseyazilim
+Tags: vergi alanları, posta kodu, il ilçe, mahalle, Türkiye, Turkish, Turkey, intense, hezerfen, kargo, vergi
 Donate link: https://www.intense.com.tr
 Requires at least: 5.3
-Tested up to: 5.5.3
+Tested up to: 5.9.2
 Requires PHP: 7.0
 License: GPL2
 Stable tag: 1.3.4
@@ -12,34 +12,33 @@ Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabil
 
 == Description ==
 = ÖZELLİKLER =
-- Opsiyonel olarak ödeme ekranına mahalle alanının eklenmesi (mahalle.io üyeliği gerektirir.)
+- Opsiyonel olarak ödeme ekranına mahalle alanının eklenmesi (ücretsiz)
 - Ödeme ekranında vergi bilgileri (kurumsal ve bireysel fatura tercihine göre)
 - Encrypt edilebilir T.C. kimlik no alanı (T.C. no verileri veritabanına encrypt edilerek yazılır.)
 - Posta kodu alanını ödeme ekranından tek tuşla kaldırabilme
 - Ödeme formundaki alanları tek tuşla, Türkiye için otomatik sıralayabilme
+- Mahalleye göre kurye ücretlendirmesi yapabilme (Ücretli: https://intense.com.tr/urun/hezarfen-mahalleye-gore-ucretlendirme-addon/)
 
 = Geliştirmeye katkıda bulunmak istiyorum =
-Hezarfen projesi Intense Yazılım ekibi tarafından geliştirilmektedir, dilerseniz siz de yazılım geliştirici olarak veya kullanıcı olarak geri besleme yapmak için [Github Repository'e](https://github.com/intensesoftware/hezarfen-for-woocommerce) katkı sağlayabilirsiniz.
+Hezarfen projesi Intense Yazılım ekibi tarafından geliştirilmektedir.
 
 == Installation ==
 Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hezarfen menüsünden eklentinin ayarlarını kontrol edebilirsiniz.
 
-= mahalle.io Kurulumu =
-Eğer ödeme sayfasında il ilçe ve mahalle verilerini seçilebilir olarak göstermek istiyorsanız, [mahalle.io](https://mahalle.io)\'ya kayıt olduktan sonra oluşturacağınız API anahtarını, WooCommerce->Ayarlar->Hezarfen->mahalle.io bölümüne yazmanız yeterlidir.
-
-mahalle verileri billing_address_1 ve shipping_address_1 alanlarına otomatik olarak yazılacaktır.
-
-mahalle.io özelliğini aktif ettiğinizde; adres2 alanını Hezarfen tarafından otomatik olarak görünür ve zorunlu yapılacaktır ve alan ismi 'adresiniz' olarak güncellenecektir. Kullanıcıların bu alana mahalle harici verileri yazması beklenmektedir.
-
 == Screenshots ==
 1. Ödeme formu ayarlar ekranı
-2. (Opsiyonel) mahalle.io ayarları
 3. Opsiyonel mahalle.io servisi aktifken ödeme ekranı
 4. Opsiyonel mahalle.io servisi kullanılmadığında ödeme ekranı
 5. Kurumsal vergi bilgileri
 6. Bireysel vergi bilgileri
 
 == Changelog ==
+= 1.4.0 - 2022-03-24 =
+* Hezarfen'e lokal mahalle desteği eklendi ve mahalle.io bağımlığı kaldırıldı. Artık ilçe/mahalle desteği ücretsiz ve varsayılan olarak sunuluyor.
+* Performans iyileştirmeleri
+* Ödeme ekranındaki ilçe ve mahalle alanlarının html element ID değerleri standartlara uygun hale getirildi.
+* Ödeme ekranındaki ilçe ve mahalle bilgisinin kaydedilmesi sağlanarak, kayıtlı kullanıcıların her sefer mahalle ve ilçe seçme gereksinimi kaldırıldı.
+
 = 1.3.4 - 2020-11-24 =
 * İyileştirme: hezarfen_checkout_neighborhood_changed WP action için, tip (billing veya shipping) desteği 3.parametre olarak eklendi.
 
