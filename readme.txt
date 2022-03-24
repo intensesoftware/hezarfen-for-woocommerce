@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 5.9.2
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 1.3.4
+Stable tag: 1.4.0
 
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
