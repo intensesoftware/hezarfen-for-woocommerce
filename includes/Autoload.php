@@ -146,7 +146,7 @@ class Autoload {
 			wp_enqueue_script(
 				'wc_hezarfen_checkout_js',
 				plugins_url( 'assets/js/checkout.js', WC_HEZARFEN_FILE ),
-				array( 'jquery' ),
+				array( 'jquery', 'wc-checkout' ),
 				WC_HEZARFEN_VERSION,
 				true
 			);
