@@ -6,13 +6,13 @@ Requires at least: 5.3
 Tested up to: 5.9.2
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 1.4.0
+Stable tag: 1.4.2
 
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
 == Description ==
 = ÖZELLİKLER =
-- Opsiyonel olarak ödeme ekranına mahalle alanının eklenmesi (ücretsiz)
+- Ödeme ekranına Türkiye için mahalle alanlarının eklenmesi (ücretsiz)
 - Ödeme ekranında vergi bilgileri (kurumsal ve bireysel fatura tercihine göre)
 - Encrypt edilebilir T.C. kimlik no alanı (T.C. no verileri veritabanına encrypt edilerek yazılır.)
 - Posta kodu alanını ödeme ekranından tek tuşla kaldırabilme
@@ -33,6 +33,12 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 6. Bireysel vergi bilgileri
 
 == Changelog ==
+= 1.4.2 - 2022-03-26 =
+* Hata giderme: Ödeme ekranında mahalle/ilçe alanlarında sınırlı kullanıcıda yaşanan sorun giderildi.
+
+= 1.4.1 - 2022-03-24 =
+* readme.txt güncellendi.
+
 = 1.4.0 - 2022-03-24 =
 * Hezarfen'e lokal mahalle desteği eklendi ve mahalle.io bağımlığı kaldırıldı. Artık ilçe/mahalle desteği ücretsiz ve varsayılan olarak sunuluyor.
 * Performans iyileştirmeleri
