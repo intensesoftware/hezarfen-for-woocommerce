@@ -481,10 +481,6 @@ class Checkout {
 				$current_city_plate_number_prefixed
 			);
 
-			if ( ! $districts ) {
-				continue;
-			}
-
 			// remove WooCommerce default district field on checkout.
 			unset( $fields[ $type ][ $city_field_name ] );
 
