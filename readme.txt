@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 5.9.2
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
@@ -33,6 +33,9 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 6. Bireysel vergi bilgileri
 
 == Changelog ==
+= 1.4.3 - 2022-04-01 =
+* Hata giderme: Ödeme ekranında sayfa yüklendiğinde il alanı boşsa, il seçildikten sonra mahalle ve ilçe alanlarının içeriğinin boş görünmesi problemi giderildi.
+
 = 1.4.2 - 2022-03-26 =
 * Hata giderme: Ödeme ekranında mahalle/ilçe alanlarında sınırlı kullanıcıda yaşanan sorun giderildi.
 
