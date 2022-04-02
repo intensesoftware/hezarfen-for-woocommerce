@@ -1,7 +1,11 @@
 jQuery(document).ready(function($){
     $.each(["billing", "shipping"], function(index, type){
-        $('#' + type + '_city').select2();
-        $('#' + type + '_address_1').select2({ language: "tr" });
+        let current_country_code = $('#' + type + '_country').val();
+
+        if (!current_country_code || current_country_code === 'TR') {
+            $('#' + type + '_city').select2();
+            $('#' + type + '_address_1').select2({ language: "tr" });
+        }
     });
 
     $('#hezarfen_invoice_type').select2({ language: "tr" });

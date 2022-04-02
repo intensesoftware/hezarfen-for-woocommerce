@@ -470,8 +470,14 @@ class Checkout {
 			$city_field_name         = sprintf( '%s_city', $type );
 			$neighborhood_field_name = sprintf( '%s_address_1', $type );
 
+			$get_country_function = 'get_' . $type . '_country';
 			$get_city_function     = 'get_' . $type . '_state';
 			$get_district_function = 'get_' . $type . '_city';
+
+			$current_country_code = $woocommerce->customer->$get_country_function();
+			if ( $current_country_code && 'TR' !== $current_country_code ) {
+				continue;
+			}
 
 			// the value has TR prefix such as TR18.
 			$current_city_plate_number_prefixed = $woocommerce->customer->$get_city_function();
