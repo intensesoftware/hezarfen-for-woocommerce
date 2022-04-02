@@ -470,7 +470,7 @@ class Checkout {
 			$city_field_name         = sprintf( '%s_city', $type );
 			$neighborhood_field_name = sprintf( '%s_address_1', $type );
 
-			$get_country_function = 'get_' . $type . '_country';
+			$get_country_function  = 'get_' . $type . '_country';
 			$get_city_function     = 'get_' . $type . '_state';
 			$get_district_function = 'get_' . $type . '_city';
 
