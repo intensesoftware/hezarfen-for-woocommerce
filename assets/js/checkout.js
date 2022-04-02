@@ -30,11 +30,11 @@ jQuery( function( $ ) {
 
     $(document.body).on('country_to_state_changing', function (event, country_code, wrapper) {
         function replaceWithInput(element) {
-            parent_element = element.closest('.form-row'),
-            input_name     = element.attr('name'),
-            input_id       = element.attr('id'),
-            input_classes  = element.attr('data-input-classes'),
-            placeholder    = element.attr('placeholder') || element.attr('data-placeholder') || '',
+            let parent_element = element.closest('.form-row'),
+                input_name     = element.attr('name'),
+                input_id       = element.attr('id'),
+                input_classes  = element.attr('data-input-classes'),
+                placeholder    = element.attr('placeholder') || element.attr('data-placeholder') || '';
 
             new_element = $('<input type="text" />')
                 .prop('id', input_id)
