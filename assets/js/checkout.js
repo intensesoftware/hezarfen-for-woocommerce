@@ -28,6 +28,36 @@ jQuery( function( $ ) {
         }
     });
 
+    $(document.body).on('country_to_state_changing', function (event, country_code, wrapper) {
+        function replaceWithInput(element) {
+            parent_element = element.closest('.form-row'),
+            input_name     = element.attr('name'),
+            input_id       = element.attr('id'),
+            input_classes  = element.attr('data-input-classes'),
+            placeholder    = element.attr('placeholder') || element.attr('data-placeholder') || '',
+
+            new_element = $('<input type="text" />')
+                .prop('id', input_id)
+                .prop('name', input_name)
+                .prop('placeholder', placeholder)
+                .attr('data-input-classes', input_classes)
+                .addClass('input-text  ' + input_classes);
+            parent_element.show().find('.select2-container').remove();
+            element.replaceWith(new_element);
+        }
+
+        // If a country other than Turkey is selected, handle this situation.
+        if (country_code !== 'TR') {
+            let elements = wrapper.find('#billing_city, #shipping_city, #billing_address_1, #shipping_address_1');
+            elements.each(function () {
+                let $this = $(this);
+                if ($this.is('select')) {
+                    replaceWithInput($this);
+                }
+            });
+        }
+    });
+
     $.each(["billing", "shipping"], function(index, type){
         let checkout_fields_wrapper = $('.woocommerce-' + type + '-fields');
 
