@@ -29,35 +29,38 @@ jQuery( function( $ ) {
     });
 
     $(document.body).on('country_to_state_changing', function (event, country_code, wrapper) {
-        function replaceElementWith(element, type) {
-            let parent_element = element.closest('.form-row'),
-                input_name     = element.attr('name'),
-                input_id       = element.attr('id'),
-                input_classes  = element.attr('data-input-classes') || '',
-                placeholder    = element.attr('placeholder') || element.attr('data-placeholder') || '';
+        function replaceElementsWith(elements, type) {
+            elements.each(function () {
+                let element = $(this);
 
-            if (type === 'input') {
-                new_element = $('<input type="text" />').addClass('input-text ' + input_classes);
-            }
+                if ( element.is( type ) ) {
+                    return;
+                }
 
-            new_element
-                .prop('id', input_id)
-                .prop('name', input_name)
-                .prop('placeholder', placeholder)
-                .attr('data-input-classes', input_classes);
-            parent_element.show().find('.select2-container').remove();
-            element.replaceWith(new_element);
+                let parent_element = element.closest('.form-row'),
+                    input_name     = element.attr('name'),
+                    input_id       = element.attr('id'),
+                    input_classes  = element.attr('data-input-classes') || '',
+                    placeholder    = element.attr('placeholder') || element.attr('data-placeholder') || '';
+
+                if (type === 'input') {
+                    new_element = $('<input type="text" />').addClass('input-text ' + input_classes);
+                }
+
+                new_element
+                    .prop('id', input_id)
+                    .prop('name', input_name)
+                    .prop('placeholder', placeholder)
+                    .attr('data-input-classes', input_classes);
+                parent_element.show().find('.select2-container').remove();
+                element.replaceWith(new_element);
+            });
         }
 
         // If a country other than Turkey is selected, handle this situation.
         if (country_code !== 'TR') {
             let elements = wrapper.find('#billing_city, #shipping_city, #billing_address_1, #shipping_address_1');
-            elements.each(function () {
-                let $this = $(this);
-                if ($this.is('select')) {
-                    replaceElementWith($this, 'input');
-                }
-            });
+            replaceElementsWith(elements, 'input');
         }
     });
 
