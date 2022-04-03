@@ -440,10 +440,12 @@ class Checkout {
 				( new PostMetaEncryption() )->health_check() &&
 				( new PostMetaEncryption() )->test_the_encryption_key()
 			) {
-				// Encrypt the T.C. Identity fields.
-				$data['billing_hez_TC_number'] = ( new PostMetaEncryption() )->encrypt(
-					$data['billing_hez_TC_number']
-				);
+				if ( $data['billing_hez_TC_number'] ) {
+					// Encrypt the T.C. Identity fields.
+					$data['billing_hez_TC_number'] = ( new PostMetaEncryption() )->encrypt(
+						$data['billing_hez_TC_number']
+					);
+				}
 			} else {
 				// do not save the T.C. identitiy fields.
 				$data['billing_hez_TC_number'] = '******';
