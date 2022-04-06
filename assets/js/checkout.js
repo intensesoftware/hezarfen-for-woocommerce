@@ -29,61 +29,13 @@ jQuery( function( $ ) {
     });
 
     $(document.body).on('country_to_state_changing', function (event, country_code, wrapper) {
-        function replaceElementsWith(elements, type) {
-            elements.each(function () {
-                let element = $(this);
-                let new_element;
-
-                if (element.is(type)) {
-                    return;
-                }
-
-                let parent_element = element.closest('.form-row'),
-                    element_name   = element.attr('name'),
-                    element_id     = element.attr('id');
-
-                if (type === 'input') {
-                    parent_element.show().find('.select2-container').remove();
-                    new_element = $('<input type="text" />').addClass('input-text');
-                } else if (type === 'select') {
-                    new_element = $('<select></select>');
-
-                    let hezarfen_classes = '';
-                    if (element_id.includes('billing')) {
-                        hezarfen_classes = element_id.includes('_city') ? wc_hezarfen_ajax_object.billing_district_field_classes : wc_hezarfen_ajax_object.billing_neighborhood_field_classes;
-                    } else {
-                        hezarfen_classes = element_id.includes('_city') ? wc_hezarfen_ajax_object.shipping_district_field_classes : wc_hezarfen_ajax_object.shipping_neighborhood_field_classes;
-                    }
-
-                    new_element.addClass(hezarfen_classes);
-                }
-
-                new_element
-                    .prop('id', element_id)
-                    .prop('name', element_name)
-                element.replaceWith(new_element);
-
-                if (type === 'select') {
-                    element = wrapper.find('#' + element_id);
-
-                    let default_option = $('<option value=""></option>').text(wc_hezarfen_ajax_object.select_option_text);
-                    element.append(default_option);
-
-                    element.select2({
-                        width: '100%',
-                        placeholder: wc_hezarfen_ajax_object.select_option_text
-                    });
-                }
-            });
-        }
-
         let elements = wrapper.find('#billing_city, #shipping_city, #billing_address_1, #shipping_address_1');
 
         if (country_code === 'TR') {
-            replaceElementsWith(elements, 'select');
+            replaceElementsWith(wrapper, elements, 'select');
         } else {
             // If a country other than Turkey is selected, handle this situation.
-            replaceElementsWith(elements, 'input');
+            replaceElementsWith(wrapper, elements, 'input');
         }
     });
 
@@ -190,6 +142,54 @@ jQuery( function( $ ) {
 
             if(args.update_checkout)
                 jQuery('body').trigger('update_checkout');
+        });
+    }
+
+    function replaceElementsWith(wrapper, elements, type) {
+        elements.each(function () {
+            let element = $(this);
+            let new_element;
+
+            if (element.is(type)) {
+                return;
+            }
+
+            let parent_element = element.closest('.form-row'),
+                element_name   = element.attr('name'),
+                element_id     = element.attr('id');
+
+            if (type === 'input') {
+                parent_element.show().find('.select2-container').remove();
+                new_element = $('<input type="text" />').addClass('input-text');
+            } else if (type === 'select') {
+                new_element = $('<select></select>');
+
+                let hezarfen_classes = '';
+                if (element_id.includes('billing')) {
+                    hezarfen_classes = element_id.includes('_city') ? wc_hezarfen_ajax_object.billing_district_field_classes : wc_hezarfen_ajax_object.billing_neighborhood_field_classes;
+                } else {
+                    hezarfen_classes = element_id.includes('_city') ? wc_hezarfen_ajax_object.shipping_district_field_classes : wc_hezarfen_ajax_object.shipping_neighborhood_field_classes;
+                }
+
+                new_element.addClass(hezarfen_classes);
+            }
+
+            new_element
+                .prop('id', element_id)
+                .prop('name', element_name)
+            element.replaceWith(new_element);
+
+            if (type === 'select') {
+                element = wrapper.find('#' + element_id);
+
+                let default_option = $('<option value=""></option>').text(wc_hezarfen_ajax_object.select_option_text);
+                element.append(default_option);
+
+                element.select2({
+                    width: '100%',
+                    placeholder: wc_hezarfen_ajax_object.select_option_text
+                });
+            }
         });
     }
 } );
