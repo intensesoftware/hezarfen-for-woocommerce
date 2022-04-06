@@ -50,15 +50,18 @@ jQuery( function( $ ) {
     function add_event_handlers(type) {
         let checkout_fields_wrapper = $('.woocommerce-' + type + '-fields');
 
-        $("#"+type+"_state").on("select2:select", function(e){
+        // prevent adding event handlers multiple times.
+        $('#' + type + '_state' + ', #' + type + '_city' + ', #' + type + '_address_1').off('select2:select.hezarfen');
+
+        $("#"+type+"_state").on("select2:select.hezarfen", function(e){
             province_on_change(e, type);
         });
 
-        $('#' + type + '_city').on("select2:select", function(e){
+        $('#' + type + '_city').on("select2:select.hezarfen", function(e){
             district_on_change(e, type, checkout_fields_wrapper);
         });
 
-        $('#' + type + '_address_1').on("select2:select", function(e){
+        $('#' + type + '_address_1').on("select2:select.hezarfen", function(e){
             neighborhood_on_change(e, type, checkout_fields_wrapper);
         });
     }
