@@ -91,93 +91,105 @@ jQuery( function( $ ) {
         let checkout_fields_wrapper = $('.woocommerce-' + type + '-fields');
 
         $("#"+type+"_state").on("select2:select", function(e){
-            $('#' + type + '_city').prop("disabled", true);
-
-            // empty district select box
-            $('#' + type + '_city').empty();
-
-            // push placeholder data
-            $('#' + type + '_city')
-                .append($("<option></option>")
-                    .attr("value", "")
-                    .text("Lütfen seçiniz"));
-
-            // get selected data
-            var selected = e.params.data;
-
-            var data = {
-                'dataType': 'district',
-                'cityPlateNumber': selected.id
-            };
-
-            jQuery.get(wc_hezarfen_ajax_object.api_url, data, function(response){
-                var districts = JSON.parse(response);
-
-                $.each(districts, function (index, district_name) {
-                    $('#' + type + '_city')
-                        .append($("<option></option>")
-                            .attr("value", district_name)
-                            .text(district_name));
-                });
-
-                $('#' + type + '_city').prop("disabled", false);
-            });
+            province_on_change(e, type);
         });
 
         $('#' + type + '_city').on("select2:select", function(e){
-            $('#' + type + '_address_1').prop("disabled", true);
-
-            // empty neighborhood select box
-            $('#' + type + '_address_1').empty();
-
-            // push placeholder data
-            $('#' + type + '_address_1')
-                .append($("<option></option>")
-                    .attr("value", "")
-                    .text("Lütfen seçiniz"));
-
-            // get selected data
-            var selected = e.params.data;
-
-            var data = {
-                'dataType': 'neighborhood',
-                'cityPlateNumber': checkout_fields_wrapper.find('#' + type + '_state').val(),
-                'district': selected.id
-            };
-
-            jQuery.get(wc_hezarfen_ajax_object.api_url, data, function(response){
-                var neighborhoods = JSON.parse(response);
-
-                $.each(neighborhoods, function (neighborhood_id, neighborhood_name) {
-                    $('#' + type + '_address_1')
-                        .append($("<option></option>")
-                            .attr("value", neighborhood_name)
-                            .text(neighborhood_name));
-                });
-
-                $('#' + type + '_address_1').prop("disabled", false);
-            });
+            district_on_change(e, type, checkout_fields_wrapper);
         });
 
         $('#' + type + '_address_1').on("select2:select", function(e){
-            // get selected data
-            var selected = e.params.data;
-
-            var data = {
-                'action':'wc_hezarfen_neighborhood_changed',
-                'security': wc_hezarfen_ajax_object.mahalleio_nonce,
-                'cityPlateNumber': checkout_fields_wrapper.find('#' + type + '_state').val(),
-                'district': checkout_fields_wrapper.find('#' + type + '_city').val(),
-                'neighborhood': selected.id,
-                'type': type
-            };
-
-            jQuery.post(wc_hezarfen_ajax_object.ajax_url, data, function(response){
-                var args = JSON.parse(response);
-
-                if(args.update_checkout)
-                    jQuery('body').trigger('update_checkout');
-            });
+            neighborhood_on_change(e, type, checkout_fields_wrapper);
         });
     });
+
+    function province_on_change(e, type) {
+        $('#' + type + '_city').prop("disabled", true);
+
+        // empty district select box
+        $('#' + type + '_city').empty();
+
+        // push placeholder data
+        $('#' + type + '_city')
+            .append($("<option></option>")
+                .attr("value", "")
+                .text("Lütfen seçiniz"));
+
+        // get selected data
+        var selected = e.params.data;
+
+        var data = {
+            'dataType': 'district',
+            'cityPlateNumber': selected.id
+        };
+
+        jQuery.get(wc_hezarfen_ajax_object.api_url, data, function(response){
+            var districts = JSON.parse(response);
+
+            $.each(districts, function (index, district_name) {
+                $('#' + type + '_city')
+                    .append($("<option></option>")
+                        .attr("value", district_name)
+                        .text(district_name));
+            });
+
+            $('#' + type + '_city').prop("disabled", false);
+        });
+    }
+
+    function district_on_change(e, type, checkout_fields_wrapper) {
+        $('#' + type + '_address_1').prop("disabled", true);
+
+        // empty neighborhood select box
+        $('#' + type + '_address_1').empty();
+
+        // push placeholder data
+        $('#' + type + '_address_1')
+            .append($("<option></option>")
+                .attr("value", "")
+                .text("Lütfen seçiniz"));
+
+        // get selected data
+        var selected = e.params.data;
+
+        var data = {
+            'dataType': 'neighborhood',
+            'cityPlateNumber': checkout_fields_wrapper.find('#' + type + '_state').val(),
+            'district': selected.id
+        };
+
+        jQuery.get(wc_hezarfen_ajax_object.api_url, data, function(response){
+            var neighborhoods = JSON.parse(response);
+
+            $.each(neighborhoods, function (neighborhood_id, neighborhood_name) {
+                $('#' + type + '_address_1')
+                    .append($("<option></option>")
+                        .attr("value", neighborhood_name)
+                        .text(neighborhood_name));
+            });
+
+            $('#' + type + '_address_1').prop("disabled", false);
+        });
+    }
+
+    function neighborhood_on_change(e, type, checkout_fields_wrapper) {
+        // get selected data
+        var selected = e.params.data;
+
+        var data = {
+            'action':'wc_hezarfen_neighborhood_changed',
+            'security': wc_hezarfen_ajax_object.mahalleio_nonce,
+            'cityPlateNumber': checkout_fields_wrapper.find('#' + type + '_state').val(),
+            'district': checkout_fields_wrapper.find('#' + type + '_city').val(),
+            'neighborhood': selected.id,
+            'type': type
+        };
+
+        jQuery.post(wc_hezarfen_ajax_object.ajax_url, data, function(response){
+            var args = JSON.parse(response);
+
+            if(args.update_checkout)
+                jQuery('body').trigger('update_checkout');
+        });
+    }
 } );
