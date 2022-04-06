@@ -31,8 +31,8 @@ jQuery( function( $ ) {
     $(document.body).on('country_to_state_changing', function (event, country_code, wrapper) {
         function replaceElementsWith(elements, type) {
             elements.each(function () {
-                let element     = $(this);
-                let new_element = null;
+                let element = $(this);
+                let new_element;
 
                 if (element.is(type)) {
                     return;
@@ -46,11 +46,7 @@ jQuery( function( $ ) {
                     parent_element.show().find('.select2-container').remove();
                     new_element = $('<input type="text" />').addClass('input-text');
                 } else if (type === 'select') {
-                    let placeholder = wc_hezarfen_ajax_object.select_option_text;
-
-                    new_element = $('<select></select>')
-                        .attr('placeholder', placeholder)
-                        .attr('data-placeholder', placeholder);
+                    new_element = $('<select></select>');
 
                     let hezarfen_classes = '';
                     if (element_id.includes('billing')) {
@@ -72,8 +68,10 @@ jQuery( function( $ ) {
 
                     let default_option = $('<option value=""></option>').text(wc_hezarfen_ajax_object.select_option_text);
                     element.append(default_option);
+
                     element.select2({
-                        width: '100%'
+                        width: '100%',
+                        placeholder: wc_hezarfen_ajax_object.select_option_text
                     });
                 }
             });
