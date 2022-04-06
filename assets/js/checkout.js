@@ -32,14 +32,22 @@ jQuery( function( $ ) {
         let elements = wrapper.find('#billing_city, #shipping_city, #billing_address_1, #shipping_address_1');
 
         if (country_code === 'TR') {
+            // If Turkey is selected, replace city and address_1 fields with select fields.
             replaceElementsWith(wrapper, elements, 'select');
+
+            let type = wrapper.hasClass('woocommerce-billing-fields') ? 'billing' : 'shipping';
+            add_event_handlers(type);
         } else {
-            // If a country other than Turkey is selected, handle this situation.
+            // If a country other than Turkey is selected, replace city and address_1 fields with input fields.
             replaceElementsWith(wrapper, elements, 'input');
         }
     });
 
     $.each(["billing", "shipping"], function(index, type){
+        add_event_handlers(type);
+    });
+
+    function add_event_handlers(type) {
         let checkout_fields_wrapper = $('.woocommerce-' + type + '-fields');
 
         $("#"+type+"_state").on("select2:select", function(e){
@@ -53,7 +61,7 @@ jQuery( function( $ ) {
         $('#' + type + '_address_1').on("select2:select", function(e){
             neighborhood_on_change(e, type, checkout_fields_wrapper);
         });
-    });
+    }
 
     function province_on_change(e, type) {
         $('#' + type + '_city').prop("disabled", true);
