@@ -31,35 +31,60 @@ jQuery( function( $ ) {
     $(document.body).on('country_to_state_changing', function (event, country_code, wrapper) {
         function replaceElementsWith(elements, type) {
             elements.each(function () {
-                let element = $(this);
+                let element     = $(this);
+                let new_element = null;
 
-                if ( element.is( type ) ) {
+                if (element.is(type)) {
                     return;
                 }
 
                 let parent_element = element.closest('.form-row'),
-                    input_name     = element.attr('name'),
-                    input_id       = element.attr('id'),
-                    input_classes  = element.attr('data-input-classes') || '',
-                    placeholder    = element.attr('placeholder') || element.attr('data-placeholder') || '';
+                    element_name   = element.attr('name'),
+                    element_id     = element.attr('id');
 
                 if (type === 'input') {
-                    new_element = $('<input type="text" />').addClass('input-text ' + input_classes);
+                    parent_element.show().find('.select2-container').remove();
+                    new_element = $('<input type="text" />').addClass('input-text');
+                } else if (type === 'select') {
+                    let placeholder = wc_hezarfen_ajax_object.select_option_text;
+
+                    new_element = $('<select></select>')
+                        .attr('placeholder', placeholder)
+                        .attr('data-placeholder', placeholder);
+
+                    let hezarfen_classes = '';
+                    if (element_id.includes('billing')) {
+                        hezarfen_classes = element_id.includes('_city') ? wc_hezarfen_ajax_object.billing_district_field_classes : wc_hezarfen_ajax_object.billing_neighborhood_field_classes;
+                    } else {
+                        hezarfen_classes = element_id.includes('_city') ? wc_hezarfen_ajax_object.shipping_district_field_classes : wc_hezarfen_ajax_object.shipping_neighborhood_field_classes;
+                    }
+
+                    new_element.addClass(hezarfen_classes);
                 }
 
                 new_element
-                    .prop('id', input_id)
-                    .prop('name', input_name)
-                    .prop('placeholder', placeholder)
-                    .attr('data-input-classes', input_classes);
-                parent_element.show().find('.select2-container').remove();
+                    .prop('id', element_id)
+                    .prop('name', element_name)
                 element.replaceWith(new_element);
+
+                if (type === 'select') {
+                    element = wrapper.find('#' + element_id);
+
+                    let default_option = $('<option value=""></option>').text(wc_hezarfen_ajax_object.select_option_text);
+                    element.append(default_option);
+                    element.select2({
+                        width: '100%'
+                    });
+                }
             });
         }
 
-        // If a country other than Turkey is selected, handle this situation.
-        if (country_code !== 'TR') {
-            let elements = wrapper.find('#billing_city, #shipping_city, #billing_address_1, #shipping_address_1');
+        let elements = wrapper.find('#billing_city, #shipping_city, #billing_address_1, #shipping_address_1');
+
+        if (country_code === 'TR') {
+            replaceElementsWith(elements, 'select');
+        } else {
+            // If a country other than Turkey is selected, handle this situation.
             replaceElementsWith(elements, 'input');
         }
     });

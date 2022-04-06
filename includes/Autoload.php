@@ -168,6 +168,11 @@ class Autoload {
 					'ajax_url'        => admin_url( 'admin-ajax.php' ),
 					'api_url'         => WC_HEZARFEN_NEIGH_API_URL,
 					'mahalleio_nonce' => wp_create_nonce( 'mahalle-io-get-data' ),
+					'select_option_text' => __( 'Select an option', 'hezarfen-for-woocommerce' ),
+					'billing_district_field_classes' => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_billing_district', array( 'form-row-wide' ) ),
+					'shipping_district_field_classes' => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_shipping_district', array( 'form-row-wide' ) ),
+					'billing_neighborhood_field_classes' => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_billing_neighborhood', array( 'form-row-wide' ) ),
+					'shipping_neighborhood_field_classes' => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_shipping_neighborhood', array( 'form-row-wide' ) ),
 				)
 			);
 		}
