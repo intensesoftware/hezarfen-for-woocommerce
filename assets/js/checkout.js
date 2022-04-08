@@ -175,20 +175,27 @@ jQuery( function( $ ) {
 
             let parent_element = element.closest('.form-row'),
                 element_name   = element.attr('name'),
-                element_id     = element.attr('id');
+                element_id     = element.attr('id'),
+                hezarfen_classes = '';
+
+            if (element_id.includes('billing')) {
+                hezarfen_classes = element_id.includes('_city') ? wc_hezarfen_ajax_object.billing_district_field_classes : wc_hezarfen_ajax_object.billing_neighborhood_field_classes;
+            } else {
+                hezarfen_classes = element_id.includes('_city') ? wc_hezarfen_ajax_object.shipping_district_field_classes : wc_hezarfen_ajax_object.shipping_neighborhood_field_classes;
+            }
 
             if (type === 'input') {
                 parent_element.show().find('.select2-container').remove();
                 new_element = $('<input type="text" />').addClass('input-text');
+
+                // remove 'form-row-wide' class from the hezarfen_classes array
+                hezarfen_classes = jQuery.grep(hezarfen_classes, function (value) {
+                    return value != 'form-row-wide';
+                });
+
+                parent_element.removeClass(hezarfen_classes);
             } else if (type === 'select') {
                 new_element = $('<select></select>');
-
-                let hezarfen_classes = '';
-                if (element_id.includes('billing')) {
-                    hezarfen_classes = element_id.includes('_city') ? wc_hezarfen_ajax_object.billing_district_field_classes : wc_hezarfen_ajax_object.billing_neighborhood_field_classes;
-                } else {
-                    hezarfen_classes = element_id.includes('_city') ? wc_hezarfen_ajax_object.shipping_district_field_classes : wc_hezarfen_ajax_object.shipping_neighborhood_field_classes;
-                }
 
                 parent_element.addClass(hezarfen_classes);
             }
