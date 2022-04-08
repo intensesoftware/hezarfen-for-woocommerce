@@ -91,12 +91,11 @@ class Checkout {
 		);
 
 		add_filter(
-			'woocommerce_default_address_fields',
+			'woocommerce_get_country_locale',
 			array(
 				$this,
-				'override_labels',
-			),
-			99999
+				'modify_tr_locale'
+			)
 		);
 
 		add_filter(
@@ -154,16 +153,22 @@ class Checkout {
 	}
 
 	/**
-	 * Overrides default address fields' labels.
+	 * Modifies TR country locale data.
 	 * 
-	 * @param array $fields Default address fields.
+	 * @param array $locales Locale data of all countries.
 	 * 
 	 * @return array
 	 */
-	public function override_labels( $fields ) {
-		$fields['city']['label']      = __( 'Town / City', 'hezarfen-for-woocommerce' );
-		$fields['address_1']['label'] = __( 'Neighborhood', 'hezarfen-for-woocommerce' );
-		return $fields;
+	public function modify_tr_locale( $locales ) {
+		$locales['TR']['city'] = array(
+			'label' => __( 'Town / City', 'hezarfen-for-woocommerce' )
+		);
+
+		$locales['TR']['address_1'] = array(
+			'label' => __( 'Neighborhood', 'hezarfen-for-woocommerce' )
+		);
+
+		return $locales;
 	}
 
 	/**
