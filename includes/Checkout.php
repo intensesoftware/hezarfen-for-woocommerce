@@ -94,7 +94,7 @@ class Checkout {
 			'woocommerce_get_country_locale',
 			array(
 				$this,
-				'modify_tr_locale'
+				'modify_tr_locale',
 			)
 		);
 
@@ -161,11 +161,11 @@ class Checkout {
 	 */
 	public function modify_tr_locale( $locales ) {
 		$locales['TR']['city'] = array(
-			'label' => __( 'Town / City', 'hezarfen-for-woocommerce' )
+			'label' => __( 'Town / City', 'hezarfen-for-woocommerce' ),
 		);
 
 		$locales['TR']['address_1'] = array(
-			'label' => __( 'Neighborhood', 'hezarfen-for-woocommerce' )
+			'label' => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
 		);
 
 		return $locales;
