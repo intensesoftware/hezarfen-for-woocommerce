@@ -190,7 +190,7 @@ jQuery( function( $ ) {
                     hezarfen_classes = element_id.includes('_city') ? wc_hezarfen_ajax_object.shipping_district_field_classes : wc_hezarfen_ajax_object.shipping_neighborhood_field_classes;
                 }
 
-                new_element.addClass(hezarfen_classes);
+                parent_element.addClass(hezarfen_classes);
             }
 
             new_element
