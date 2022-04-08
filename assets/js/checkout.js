@@ -33,21 +33,26 @@ jQuery( function( $ ) {
 
     $(document.body).on('country_to_state_changing', function (event, country_code, wrapper) {
         let elements = wrapper.find('#billing_city, #shipping_city, #billing_address_1, #shipping_address_1');
+        let type = wrapper.hasClass('woocommerce-billing-fields') ? 'billing' : 'shipping';
 
         if (country_code === 'TR') {
             // If Turkey is selected, replace city and address_1 fields with select fields.
             replaceElementsWith(wrapper, elements, 'select');
 
-            let type = wrapper.hasClass('woocommerce-billing-fields') ? 'billing' : 'shipping';
             add_event_handlers(type);
         } else {
-            // If a country other than Turkey is selected, replace city and address_1 fields with input fields.
+            // Remove select2:select event handler from state field.
+            $('#' + type + '_state').off('select2:select.hezarfen');
+
+            // Replace city and address_1 fields with input fields.
             replaceElementsWith(wrapper, elements, 'input');
         }
     });
 
     $.each(["billing", "shipping"], function(index, type){
-        add_event_handlers(type);
+        if ( $('#' + type + '_country').val() === 'TR' ) {
+            add_event_handlers(type);
+        }
     });
 
     function add_event_handlers(type) {
