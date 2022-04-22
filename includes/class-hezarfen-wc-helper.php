@@ -34,13 +34,15 @@ class Helper {
 	 * Displays admin notices.
 	 * 
 	 * @param array $notices Notices.
+	 * @param bool  $use_kses Use wp_kses_post for escaping.
 	 * 
 	 * @return void
 	 */
-	public static function show_admin_notices( $notices ) {
+	public static function show_admin_notices( $notices, $use_kses = false ) {
 		foreach ( $notices as $notice ) {
 			$class = 'error' === $notice['type'] ? 'notice-error' : 'notice-warning';
-			printf( '<div class="notice %s is-dismissible"><p>%s</p></div>', esc_attr( $class ), esc_html( $notice['message'] ) );
+			$msg   = $use_kses ? wp_kses_post( $notice['message'] ) : esc_html( $notice['message'] );
+			printf( '<div class="notice %s is-dismissible"><p>%s</p></div>', esc_attr( $class ), $msg ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
 
