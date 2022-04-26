@@ -1,5 +1,6 @@
 jQuery(document).ready(function($){
     $.each(["billing", "shipping"], function(index, type){
+        $('#' + type + '_state').select2();
         $('#' + type + '_city').select2();
         $('#' + type + '_address_1').select2({ language: "tr" });
     });
