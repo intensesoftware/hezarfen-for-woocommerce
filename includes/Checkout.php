@@ -91,12 +91,11 @@ class Checkout {
 		);
 
 		add_filter(
-			'woocommerce_default_address_fields',
+			'woocommerce_get_country_locale',
 			array(
 				$this,
-				'override_labels',
-			),
-			99999
+				'modify_tr_locale',
+			)
 		);
 
 		add_filter(
@@ -154,16 +153,22 @@ class Checkout {
 	}
 
 	/**
-	 * Overrides default address fields' labels.
+	 * Modifies TR country locale data.
 	 * 
-	 * @param array $fields Default address fields.
+	 * @param array $locales Locale data of all countries.
 	 * 
 	 * @return array
 	 */
-	public function override_labels( $fields ) {
-		$fields['city']['label']      = __( 'Town / City', 'hezarfen-for-woocommerce' );
-		$fields['address_1']['label'] = __( 'Neighborhood', 'hezarfen-for-woocommerce' );
-		return $fields;
+	public function modify_tr_locale( $locales ) {
+		$locales['TR']['city'] = array(
+			'label' => __( 'Town / City', 'hezarfen-for-woocommerce' ),
+		);
+
+		$locales['TR']['address_1'] = array(
+			'label' => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
+		);
+
+		return $locales;
 	}
 
 	/**
@@ -470,8 +475,14 @@ class Checkout {
 			$city_field_name         = sprintf( '%s_city', $type );
 			$neighborhood_field_name = sprintf( '%s_address_1', $type );
 
+			$get_country_function  = 'get_' . $type . '_country';
 			$get_city_function     = 'get_' . $type . '_state';
 			$get_district_function = 'get_' . $type . '_city';
+
+			$current_country_code = $woocommerce->customer->$get_country_function();
+			if ( $current_country_code && 'TR' !== $current_country_code ) {
+				continue;
+			}
 
 			// the value has TR prefix such as TR18.
 			$current_city_plate_number_prefixed = $woocommerce->customer->$get_city_function();
