@@ -214,7 +214,10 @@ class Checkout {
 		$fields['billing']['billing_hez_tax_number']['priority'] = 13;
 		$fields['billing']['billing_hez_tax_office']['priority'] = 14;
 
-		$fields['shipping']['shipping_company']['priority']    = 0;
+		if ( isset( $fields['shipping']['shipping_company'] ) ) {
+			$fields['shipping']['shipping_company']['priority'] = 0;
+		}
+
 		$fields['shipping']['shipping_first_name']['priority'] = 1;
 		$fields['shipping']['shipping_last_name']['priority']  = 2;
 		$fields['shipping']['shipping_country']['priority']    = 5;
