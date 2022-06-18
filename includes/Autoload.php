@@ -218,6 +218,21 @@ class Autoload {
 				}
 			);
 		}
+
+		// Check Intense Türkiye İl İlçe Eklentisi For WooCommerce plugin.
+		if ( defined( 'INTENSE_IL_ILCE_PLUGIN_PATH' ) ) {
+			add_action(
+				'admin_notices',
+				function () {
+					$notice = array(
+						'message' => __( '<strong>Hezarfen for WooCommerce</strong> eklentisinin sağıklı çalışabilmesi için <strong>Intense Türkiye İl İlçe Eklentisi For WooCommerce</strong> eklentisini siliniz. <strong>Hezarfen</strong> eklentisi zaten bünyesinde İl, ilçe ve mahalle verilerini barındırmaktadır.', 'hezarfen-for-woocommerce' ),
+						'type'    => 'error',
+					);
+
+					Helper::show_admin_notices( array( $notice ), true );
+				}
+			);
+		}
 	}
 }
 
