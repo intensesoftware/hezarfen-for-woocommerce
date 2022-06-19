@@ -91,12 +91,11 @@ class Checkout {
 		);
 
 		add_filter(
-			'woocommerce_default_address_fields',
+			'woocommerce_get_country_locale',
 			array(
 				$this,
-				'override_labels',
-			),
-			99999
+				'modify_tr_locale',
+			)
 		);
 
 		add_filter(
@@ -154,16 +153,22 @@ class Checkout {
 	}
 
 	/**
-	 * Overrides default address fields' labels.
+	 * Modifies TR country locale data.
 	 * 
-	 * @param array $fields Default address fields.
+	 * @param array $locales Locale data of all countries.
 	 * 
 	 * @return array
 	 */
-	public function override_labels( $fields ) {
-		$fields['city']['label']      = __( 'Town / City', 'hezarfen-for-woocommerce' );
-		$fields['address_1']['label'] = __( 'Neighborhood', 'hezarfen-for-woocommerce' );
-		return $fields;
+	public function modify_tr_locale( $locales ) {
+		$locales['TR']['city'] = array(
+			'label' => __( 'Town / City', 'hezarfen-for-woocommerce' ),
+		);
+
+		$locales['TR']['address_1'] = array(
+			'label' => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
+		);
+
+		return $locales;
 	}
 
 	/**
@@ -209,7 +214,10 @@ class Checkout {
 		$fields['billing']['billing_hez_tax_number']['priority'] = 13;
 		$fields['billing']['billing_hez_tax_office']['priority'] = 14;
 
-		$fields['shipping']['shipping_company']['priority']    = 0;
+		if ( isset( $fields['shipping']['shipping_company'] ) ) {
+			$fields['shipping']['shipping_company']['priority'] = 0;
+		}
+
 		$fields['shipping']['shipping_first_name']['priority'] = 1;
 		$fields['shipping']['shipping_last_name']['priority']  = 2;
 		$fields['shipping']['shipping_country']['priority']    = 5;
@@ -440,10 +448,12 @@ class Checkout {
 				( new PostMetaEncryption() )->health_check() &&
 				( new PostMetaEncryption() )->test_the_encryption_key()
 			) {
-				// Encrypt the T.C. Identity fields.
-				$data['billing_hez_TC_number'] = ( new PostMetaEncryption() )->encrypt(
-					$data['billing_hez_TC_number']
-				);
+				if ( $data['billing_hez_TC_number'] ) {
+					// Encrypt the T.C. Identity fields.
+					$data['billing_hez_TC_number'] = ( new PostMetaEncryption() )->encrypt(
+						$data['billing_hez_TC_number']
+					);
+				}
 			} else {
 				// do not save the T.C. identitiy fields.
 				$data['billing_hez_TC_number'] = '******';
@@ -470,8 +480,14 @@ class Checkout {
 			$city_field_name         = sprintf( '%s_city', $type );
 			$neighborhood_field_name = sprintf( '%s_address_1', $type );
 
+			$get_country_function  = 'get_' . $type . '_country';
 			$get_city_function     = 'get_' . $type . '_state';
 			$get_district_function = 'get_' . $type . '_city';
+
+			$current_country_code = $woocommerce->customer->$get_country_function();
+			if ( $current_country_code && 'TR' !== $current_country_code ) {
+				continue;
+			}
 
 			// the value has TR prefix such as TR18.
 			$current_city_plate_number_prefixed = $woocommerce->customer->$get_city_function();
