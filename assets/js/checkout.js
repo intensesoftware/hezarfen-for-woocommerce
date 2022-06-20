@@ -6,6 +6,7 @@ jQuery(document).ready(function($){
         let current_country_code = $('#' + type + '_country').val();
 
         if (!current_country_code || current_country_code === 'TR') {
+            $('#' + type + '_state').select2(select2_args);
             $('#' + type + '_city').select2(select2_args);
             $('#' + type + '_address_1').select2(select2_tr_args);
         }
