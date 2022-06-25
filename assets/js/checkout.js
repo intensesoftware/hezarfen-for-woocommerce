@@ -1,3 +1,23 @@
+var wc_hezarfen_checkout = {
+    notify_neighborhood_changed: function (province_plate_number, district, neighborhood, type) {
+        var data = {
+            'action':'wc_hezarfen_neighborhood_changed',
+            'security': wc_hezarfen_ajax_object.mahalleio_nonce,
+            'cityPlateNumber': province_plate_number,
+            'district': district,
+            'neighborhood': neighborhood,
+            'type': type
+        };
+
+        jQuery.post(wc_hezarfen_ajax_object.ajax_url, data, function(response){
+            var args = JSON.parse(response);
+
+            if(args.update_checkout)
+                jQuery('body').trigger('update_checkout');
+        });
+    }
+};
+
 jQuery(document).ready(function($){
     $.each(["billing", "shipping"], function(index, type){
         $('#' + type + '_city').select2();
@@ -97,24 +117,11 @@ jQuery( function( $ ) {
         });
 
         $('#' + type + '_address_1').on("select2:select", function(e){
-            // get selected data
-            var selected = e.params.data;
+            let province_plate_number = checkout_fields_wrapper.find('#' + type + '_state').val();
+            let district = checkout_fields_wrapper.find('#' + type + '_city').val();
+            let neighborhood = e.params.data.id;
 
-            var data = {
-                'action':'wc_hezarfen_neighborhood_changed',
-                'security': wc_hezarfen_ajax_object.mahalleio_nonce,
-                'cityPlateNumber': checkout_fields_wrapper.find('#' + type + '_state').val(),
-                'district': checkout_fields_wrapper.find('#' + type + '_city').val(),
-                'neighborhood': selected.id,
-                'type': type
-            };
-
-            jQuery.post(wc_hezarfen_ajax_object.ajax_url, data, function(response){
-                var args = JSON.parse(response);
-
-                if(args.update_checkout)
-                    jQuery('body').trigger('update_checkout');
-            });
+            wc_hezarfen_checkout.notify_neighborhood_changed(province_plate_number, district, neighborhood, type);
         });
     });
 } );
