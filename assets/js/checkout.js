@@ -122,7 +122,7 @@ jQuery( function( $ ) {
                 (wc_hezarfen_mbgb_backend.address_source === 'shipping' && !wc_hezarfen_checkout.ship_to_different_checked())) {
                 let province_plate_number = $('#' + type + '_state').val();
                 let district = $('#' + type + '_city').val();
-                let neighborhood = e.params.data.id;
+                let neighborhood = $(this).val();
 
                 wc_hezarfen_checkout.notify_neighborhood_changed(province_plate_number, district, neighborhood, type);
             }
