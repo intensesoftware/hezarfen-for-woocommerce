@@ -111,7 +111,7 @@ jQuery( function( $ ) {
         });
 
         $('#' + type + '_address_1').on("select2:select", function(e){
-            if (typeof wc_hezarfen_mbgb_backend === 'undefined') {
+            if (typeof wc_hezarfen_mbgb_backend === 'undefined' || wc_hezarfen_mbgb_backend.address_source !== type) {
                 return;
             }
 
