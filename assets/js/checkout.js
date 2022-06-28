@@ -18,16 +18,14 @@ var wc_hezarfen_checkout = {
     }
 };
 
-jQuery(document).ready(function($){
+jQuery( function( $ ) {
     $.each(["billing", "shipping"], function(index, type){
         $('#' + type + '_city').select2();
         $('#' + type + '_address_1').select2({ language: "tr" });
     });
 
     $('#hezarfen_invoice_type').select2({ language: "tr" });
-});
 
-jQuery( function( $ ) {
     $('#hezarfen_invoice_type').change(function(){
         var invoice_type = $(this).val();
 
