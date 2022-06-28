@@ -15,6 +15,9 @@ var wc_hezarfen_checkout = {
             if(args.update_checkout)
                 jQuery('body').trigger('update_checkout');
         });
+    },
+    ship_to_different_checked: function () {
+        return jQuery('#ship-to-different-address input').is(':checked');
     }
 };
 
@@ -111,15 +114,18 @@ jQuery( function( $ ) {
         });
 
         $('#' + type + '_address_1').on("select2:select", function(e){
-            if (typeof wc_hezarfen_mbgb_backend === 'undefined' || wc_hezarfen_mbgb_backend.address_source !== type) {
+            if (typeof wc_hezarfen_mbgb_backend === 'undefined') {
                 return;
             }
 
-            let province_plate_number = $('#' + type + '_state').val();
-            let district = $('#' + type + '_city').val();
-            let neighborhood = e.params.data.id;
+            if (wc_hezarfen_mbgb_backend.address_source === type ||
+                (wc_hezarfen_mbgb_backend.address_source === 'shipping' && !wc_hezarfen_checkout.ship_to_different_checked())) {
+                let province_plate_number = $('#' + type + '_state').val();
+                let district = $('#' + type + '_city').val();
+                let neighborhood = e.params.data.id;
 
-            wc_hezarfen_checkout.notify_neighborhood_changed(province_plate_number, district, neighborhood, type);
+                wc_hezarfen_checkout.notify_neighborhood_changed(province_plate_number, district, neighborhood, type);
+            }
         });
     });
 } );
