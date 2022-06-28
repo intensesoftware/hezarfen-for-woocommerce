@@ -19,11 +19,6 @@ var wc_hezarfen_checkout = {
 };
 
 jQuery( function( $ ) {
-    $.each(["billing", "shipping"], function(index, type){
-        $('#' + type + '_city').select2();
-        $('#' + type + '_address_1').select2({ language: "tr" });
-    });
-
     $('#hezarfen_invoice_type').select2({ language: "tr" });
 
     $('#hezarfen_invoice_type').change(function(){
@@ -43,6 +38,9 @@ jQuery( function( $ ) {
     });
 
     $.each(["billing", "shipping"], function(index, type){
+        $('#' + type + '_city').select2();
+        $('#' + type + '_address_1').select2({ language: "tr" });
+
         $("#"+type+"_state").on("select2:select", function(e){
             $('#' + type + '_city').prop("disabled", true);
 
