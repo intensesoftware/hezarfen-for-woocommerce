@@ -128,4 +128,15 @@ jQuery( function( $ ) {
             }
         });
     });
+
+	$('form.checkout').on('change', '#ship-to-different-address input', function () {
+		if (wc_hezarfen_mbgb_backend.address_source === 'shipping') {
+			let address_type = $(this).is(':checked') ? 'shipping' : 'billing';
+            let neighborhood_select = $(`#${address_type}_address_1`);
+
+            if (neighborhood_select.val()) {
+                neighborhood_select.trigger('select2:select');
+            }
+		}
+	});
 } );
