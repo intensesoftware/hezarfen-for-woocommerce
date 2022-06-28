@@ -43,8 +43,6 @@ jQuery( function( $ ) {
     });
 
     $.each(["billing", "shipping"], function(index, type){
-        let checkout_fields_wrapper = $('.woocommerce-' + type + '-fields');
-
         $("#"+type+"_state").on("select2:select", function(e){
             $('#' + type + '_city').prop("disabled", true);
 
@@ -96,7 +94,7 @@ jQuery( function( $ ) {
 
             var data = {
                 'dataType': 'neighborhood',
-                'cityPlateNumber': checkout_fields_wrapper.find('#' + type + '_state').val(),
+                'cityPlateNumber': $('#' + type + '_state').val(),
                 'district': selected.id
             };
 
@@ -115,8 +113,8 @@ jQuery( function( $ ) {
         });
 
         $('#' + type + '_address_1').on("select2:select", function(e){
-            let province_plate_number = checkout_fields_wrapper.find('#' + type + '_state').val();
-            let district = checkout_fields_wrapper.find('#' + type + '_city').val();
+            let province_plate_number = $('#' + type + '_state').val();
+            let district = $('#' + type + '_city').val();
             let neighborhood = e.params.data.id;
 
             wc_hezarfen_checkout.notify_neighborhood_changed(province_plate_number, district, neighborhood, type);
