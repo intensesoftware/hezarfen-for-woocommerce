@@ -111,6 +111,10 @@ jQuery( function( $ ) {
         });
 
         $('#' + type + '_address_1').on("select2:select", function(e){
+            if (typeof wc_hezarfen_mbgb_backend === 'undefined') {
+                return;
+            }
+
             let province_plate_number = $('#' + type + '_state').val();
             let district = $('#' + type + '_city').val();
             let neighborhood = e.params.data.id;
