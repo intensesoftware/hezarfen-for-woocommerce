@@ -137,7 +137,10 @@ jQuery( function( $ ) {
             let neighborhood_select = $(`#${address_type}_address_1`);
 
             if (neighborhood_select.val()) {
-                neighborhood_select.trigger('select2:select');
+                // set a small timeout to prevent conflict with the Woocommerce's "update_checkout" trigger.
+                setTimeout(() => {
+                    neighborhood_select.trigger('select2:select');
+                }, 300);
             }
 		}
 	});
