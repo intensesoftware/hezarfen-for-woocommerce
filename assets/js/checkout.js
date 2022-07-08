@@ -182,7 +182,7 @@ jQuery( function( $ ) {
     }
 
     function ship_to_different_on_change(checkbox) {
-        if (wc_hezarfen_mbgb_backend.address_source === 'shipping') {
+        if (wc_hezarfen_checkout.mbgb_plugin_active && wc_hezarfen_mbgb_backend.address_source === 'shipping') {
             let address_type = $(checkbox).is(':checked') ? 'shipping' : 'billing';
             let neighborhood_select = $(`#${address_type}_address_1`);
 
