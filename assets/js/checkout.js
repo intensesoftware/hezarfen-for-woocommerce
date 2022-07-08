@@ -16,8 +16,9 @@ var wc_hezarfen_checkout = {
                 jQuery('body').trigger('update_checkout');
         });
     },
+    mbgb_plugin_active: typeof wc_hezarfen_mbgb_backend !== 'undefined',
     should_notify_neighborhood_changed: function (type) {
-        return wc_hezarfen_mbgb_backend.address_source === type || (wc_hezarfen_mbgb_backend.address_source === 'shipping' && !wc_hezarfen_checkout.ship_to_different_checked())
+        return this.mbgb_plugin_active && (wc_hezarfen_mbgb_backend.address_source === type || (wc_hezarfen_mbgb_backend.address_source === 'shipping' && !wc_hezarfen_checkout.ship_to_different_checked()))
     },
     ship_to_different_checked: function () {
         return jQuery('#ship-to-different-address input').is(':checked');
@@ -172,10 +173,6 @@ jQuery( function( $ ) {
     }
 
     function neighborhood_on_change(neighborhood, type, checkout_fields_wrapper) {
-        if (typeof wc_hezarfen_mbgb_backend === 'undefined') {
-            return;
-        }
-
         if (wc_hezarfen_checkout.should_notify_neighborhood_changed(type)) {
             let province_plate_number = checkout_fields_wrapper.find('#' + type + '_state').val();
             let district = checkout_fields_wrapper.find('#' + type + '_city').val();
