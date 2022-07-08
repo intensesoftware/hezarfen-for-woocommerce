@@ -1,5 +1,9 @@
 var wc_hezarfen_checkout = {
     notify_neighborhood_changed: function (province_plate_number, district, neighborhood, type) {
+        if (!province_plate_number || !district || !neighborhood) {
+            return;
+        }
+
         var data = {
             'action':'wc_hezarfen_neighborhood_changed',
             'security': wc_hezarfen_ajax_object.mahalleio_nonce,
@@ -186,12 +190,10 @@ jQuery( function( $ ) {
             let address_type = $(checkbox).is(':checked') ? 'shipping' : 'billing';
             let neighborhood_select = $(`#${address_type}_address_1`);
 
-            if (neighborhood_select.val()) {
-                // set a small timeout to prevent conflict with the Woocommerce's "update_checkout" trigger.
-                setTimeout(() => {
-                    neighborhood_select.trigger('select2:select');
-                }, 300);
-            }
+            // set a small timeout to prevent conflict with the Woocommerce's "update_checkout" trigger.
+            setTimeout(() => {
+                neighborhood_select.trigger('select2:select');
+            }, 300);
         }
     }
 
