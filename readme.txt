@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.0
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 1.4.4
+Stable tag: 1.4.5
 
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
@@ -33,6 +33,11 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 6. Bireysel vergi bilgileri
 
 == Changelog ==
+= 1.4.5 - 2022-08-13 =
+* Hata Giderme: Ödeme ekranında başlıksız ve gereksiz ödeme alanlarının (text input) görünmesi problemi giderildi.
+* İyileştirme: Checkout Field Editor ve benzeri eklentilerle uyumluluğun iyileştirilmesi
+* Hezarfen Mahalle Addon v0.6.1 için uyumluluk
+
 = 1.4.4 - 2022-07-03 =
 * Hata giderme: Ödeme sayfasında Türkiye harici bir ülke seçildiğinde ortaya çıkan sorunların giderilmesi
 * Hata giderme: T.C. Kimlik Zorunluysa ve alan boşsa sipariş oluşturabilme sorunun giderilmesi
