@@ -1,4 +1,35 @@
-jQuery(document).ready(function($){
+var wc_hezarfen_checkout = {
+    notify_neighborhood_changed: function (province_plate_number, district, neighborhood, type) {
+        if (!province_plate_number || !district || !neighborhood) {
+            return;
+        }
+
+        var data = {
+            'action':'wc_hezarfen_neighborhood_changed',
+            'security': wc_hezarfen_ajax_object.mahalleio_nonce,
+            'cityPlateNumber': province_plate_number,
+            'district': district,
+            'neighborhood': neighborhood,
+            'type': type
+        };
+
+        jQuery.post(wc_hezarfen_ajax_object.ajax_url, data, function(response){
+            var args = JSON.parse(response);
+
+            if(args.update_checkout)
+                jQuery('body').trigger('update_checkout');
+        });
+    },
+    mbgb_plugin_active: typeof wc_hezarfen_mbgb_backend !== 'undefined',
+    should_notify_neighborhood_changed: function (type) {
+        return this.mbgb_plugin_active && (wc_hezarfen_mbgb_backend.address_source === type || (wc_hezarfen_mbgb_backend.address_source === 'shipping' && !this.ship_to_different_checked()))
+    },
+    ship_to_different_checked: function () {
+        return jQuery('#ship-to-different-address input').is(':checked');
+    }
+};
+
+jQuery( function( $ ) {
     let select2_args = {width: '100%'};
     let select2_tr_args = Object.assign(select2_args, { language: "tr" });
 
@@ -10,12 +41,14 @@ jQuery(document).ready(function($){
             $('#' + type + '_city').select2(select2_args);
             $('#' + type + '_address_1').select2(select2_tr_args);
         }
+
+        if ( $('#' + type + '_country').val() === 'TR' ) {
+            add_event_handlers(type);
+        }
     });
 
     $('#hezarfen_invoice_type').select2(select2_tr_args);
-});
 
-jQuery( function( $ ) {
     $('#hezarfen_invoice_type').change(function(){
         var invoice_type = $(this).val();
 
@@ -50,17 +83,12 @@ jQuery( function( $ ) {
         }
     });
 
-    $.each(["billing", "shipping"], function(index, type){
-        if ( $('#' + type + '_country').val() === 'TR' ) {
-            add_event_handlers(type);
-        }
-    });
-
     function add_event_handlers(type) {
         let checkout_fields_wrapper = $('.woocommerce-' + type + '-fields');
 
         // prevent adding event handlers multiple times.
         $('#' + type + '_state' + ', #' + type + '_city' + ', #' + type + '_address_1').off('select2:select.hezarfen');
+        $('#ship-to-different-address input').off('change.hezarfen');
 
         $("#"+type+"_state").on("select2:select.hezarfen", function(e){
             province_on_change(e, type);
@@ -71,7 +99,11 @@ jQuery( function( $ ) {
         });
 
         $('#' + type + '_address_1').on("select2:select.hezarfen", function(e){
-            neighborhood_on_change(e, type, checkout_fields_wrapper);
+            neighborhood_on_change($(this).val(), type, checkout_fields_wrapper);
+        });
+
+        $('#ship-to-different-address input').on('change.hezarfen', function () {
+            ship_to_different_on_change(this);
         });
     }
 
@@ -144,25 +176,25 @@ jQuery( function( $ ) {
         });
     }
 
-    function neighborhood_on_change(e, type, checkout_fields_wrapper) {
-        // get selected data
-        var selected = e.params.data;
+    function neighborhood_on_change(neighborhood, type, checkout_fields_wrapper) {
+        if (wc_hezarfen_checkout.should_notify_neighborhood_changed(type)) {
+            let province_plate_number = checkout_fields_wrapper.find('#' + type + '_state').val();
+            let district = checkout_fields_wrapper.find('#' + type + '_city').val();
 
-        var data = {
-            'action':'wc_hezarfen_neighborhood_changed',
-            'security': wc_hezarfen_ajax_object.mahalleio_nonce,
-            'cityPlateNumber': checkout_fields_wrapper.find('#' + type + '_state').val(),
-            'district': checkout_fields_wrapper.find('#' + type + '_city').val(),
-            'neighborhood': selected.id,
-            'type': type
-        };
+            wc_hezarfen_checkout.notify_neighborhood_changed(province_plate_number, district, neighborhood, type);
+        }
+    }
 
-        jQuery.post(wc_hezarfen_ajax_object.ajax_url, data, function(response){
-            var args = JSON.parse(response);
+    function ship_to_different_on_change(checkbox) {
+        if (wc_hezarfen_checkout.mbgb_plugin_active && wc_hezarfen_mbgb_backend.address_source === 'shipping') {
+            let address_type = $(checkbox).is(':checked') ? 'shipping' : 'billing';
+            let neighborhood_select = $(`#${address_type}_address_1`);
 
-            if(args.update_checkout)
-                jQuery('body').trigger('update_checkout');
-        });
+            // set a small timeout to prevent conflict with the Woocommerce's "update_checkout" trigger.
+            setTimeout(() => {
+                neighborhood_select.trigger('select2:select');
+            }, 300);
+        }
     }
 
     function replaceElementsWith(wrapper, elements, type) {
