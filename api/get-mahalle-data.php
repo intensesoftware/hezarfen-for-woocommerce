@@ -19,7 +19,7 @@ function get_data( $requested_data_type, $city_plate_number, $district = null ) 
 	if ( 'district' === $requested_data_type ) {
 		return Mahalle_Local::get_districts( $city_plate_number );
 	} else if ( 'neighborhood' === $requested_data_type && $district ) {
-		return Mahalle_Local::get_neighborhoods( $city_plate_number, $district );
+		return Mahalle_Local::get_neighborhoods( $city_plate_number, $district, false );
 	}
 
 	return null;

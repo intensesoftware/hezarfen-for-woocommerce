@@ -165,7 +165,7 @@ jQuery( function( $ ) {
         jQuery.get(wc_hezarfen_ajax_object.api_url, data, function(response){
             var neighborhoods = JSON.parse(response);
 
-            $.each(neighborhoods, function (neighborhood_id, neighborhood_name) {
+            $.each(neighborhoods, function (i, neighborhood_name) {
                 $('#' + type + '_address_1')
                     .append($("<option></option>")
                         .attr("value", neighborhood_name)
