@@ -48,15 +48,20 @@ class Mahalle_Local {
 	 *
 	 * @param string $city_plate_number The city plate number.
 	 * @param string $district The district.
+	 * @param bool   $return_ids Return neighborhood ids.
 	 * 
 	 * @return array
 	 */
-	public static function get_neighborhoods( $city_plate_number, $district ) {
+	public static function get_neighborhoods( $city_plate_number, $district, $return_ids = true ) {
 		if ( self::check_city_plate_number( $city_plate_number ) ) {
 			require dirname( __FILE__ ) . "/Data/mahalle/tr-neighborhoods/tr-neighborhood-$city_plate_number.php";
 
 			if ( isset( $tr_neighborhoods[ $district ] ) ) {
-				return $tr_neighborhoods[ $district ];
+				if ( $return_ids ) {
+					return $tr_neighborhoods[ $district ];
+				} else {
+					return array_values( $tr_neighborhoods[ $district ] );
+				}
 			}
 		}
 
