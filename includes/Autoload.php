@@ -28,6 +28,15 @@ class Autoload {
 	private $addon_notices;
 
 	/**
+	 * Package names and their main classes.
+	 * 
+	 * @var array
+	 */
+	private $packages = array(
+		'manual-shipment-tracking' => '\Hezarfen\ManualShipmentTracking\Manual_Shipment_Tracking',
+	);
+
+	/**
 	 * Constructor
 	 *
 	 * @return void
@@ -48,6 +57,7 @@ class Autoload {
 		);
 
 		$this->load_plugin_files();
+		$this->load_packages();
 
 		$this->load_assets();
 
@@ -195,6 +205,18 @@ class Autoload {
 
 		if ( is_admin() ) {
 			require_once 'admin/order/OrderDetails.php';
+		}
+	}
+
+	/**
+	 * Loads and initializes packages.
+	 * 
+	 * @return void
+	 */
+	public function load_packages() {
+		foreach ( $this->packages as $package_name => $package_class ) {
+			require_once WC_HEZARFEN_UYGULAMA_YOLU . "packages/$package_name/class-$package_name.php";
+			call_user_func( array( $package_class, 'init' ) );
 		}
 	}
 
