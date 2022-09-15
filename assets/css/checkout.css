@@ -1,5 +1,5 @@
 .hezarfen-hide-form-field {
 
-    display: none
+    display: none !important;
 
 }
