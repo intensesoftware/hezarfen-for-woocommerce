@@ -14,11 +14,11 @@ defined( 'ABSPATH' ) || exit;
  */
 class Manual_Shipment_Tracking {
 	/**
-	 * Initializes the package.
+	 * Constructor
 	 * 
 	 * @return void
 	 */
-	public static function init() {
+	public function __construct() {
 		
 	}
 }

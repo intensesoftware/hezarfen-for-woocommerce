@@ -216,7 +216,7 @@ class Autoload {
 	public function load_packages() {
 		foreach ( $this->packages as $package_name => $package_class ) {
 			require_once WC_HEZARFEN_UYGULAMA_YOLU . "packages/$package_name/class-$package_name.php";
-			call_user_func( array( $package_class, 'init' ) );
+			new $package_class(); // run the constructor.
 		}
 	}
 
