@@ -38,7 +38,7 @@ class Helper {
 	 * 
 	 * @return void
 	 */
-	public static function show_admin_notices( $notices, $use_kses = false ) {
+	public static function render_admin_notices( $notices, $use_kses = false ) {
 		foreach ( $notices as $notice ) {
 			$class = 'error' === $notice['type'] ? 'notice-error' : 'notice-warning';
 			$msg   = $use_kses ? wp_kses_post( $notice['message'] ) : esc_html( $notice['message'] );

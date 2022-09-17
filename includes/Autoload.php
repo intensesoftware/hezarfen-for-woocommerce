@@ -236,7 +236,7 @@ class Autoload {
 			add_action(
 				'admin_notices',
 				function () {
-					Helper::show_admin_notices( $this->addon_notices );
+					Helper::render_admin_notices( $this->addon_notices );
 				}
 			);
 		}
@@ -251,7 +251,7 @@ class Autoload {
 						'type'    => 'error',
 					);
 
-					Helper::show_admin_notices( array( $notice ), true );
+					Helper::render_admin_notices( array( $notice ), true );
 				}
 			);
 		}
