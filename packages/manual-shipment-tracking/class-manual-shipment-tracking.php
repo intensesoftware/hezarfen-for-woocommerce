@@ -13,6 +13,8 @@ defined( 'ABSPATH' ) || exit;
  * Manual Shipment Tracking package main class.
  */
 class Manual_Shipment_Tracking {
+	const ENABLE_DISABLE_OPTION = 'hezarfen_enable_manual_shipment_tracking';
+
 	const DB_SHIPPED_ORDER_STATUS = 'wc-shipping-progress';
 	const SHIPPED_ORDER_STATUS    = 'shipping-progress';
 
@@ -22,7 +24,46 @@ class Manual_Shipment_Tracking {
 	 * @return void
 	 */
 	public function __construct() {
-		$this->assign_callbacks_to_hooks();
+		$this->add_enable_disable_option();
+
+		if ( $this->is_enabled() ) {
+			$this->assign_callbacks_to_hooks();
+		}
+	}
+
+	/**
+	 * Adds a checkbox to enable/disable the package.
+	 * 
+	 * @return void
+	 */
+	private function add_enable_disable_option() {
+		add_filter(
+			'hezarfen_general_settings',
+			function ( $hezarfen_settings ) {
+				$hezarfen_settings[] = array(
+					'title'   => __(
+						'Enable Manual Shipment Tracking feature',
+						'hezarfen-for-woocommerce'
+					),
+					'type'    => 'checkbox',
+					'desc'    => '',
+					'id'      => self::ENABLE_DISABLE_OPTION,
+					'default' => 'yes',
+					'std'     => 'yes',
+				);
+	
+				return $hezarfen_settings;
+			} 
+		);
+	}
+
+	/**
+	 * Is package enabled?
+	 * 
+	 * @return bool
+	 */
+	public static function is_enabled() {
+		return filter_var( get_option( self::ENABLE_DISABLE_OPTION, true ), FILTER_VALIDATE_BOOLEAN );
 	}
 
 	/**
