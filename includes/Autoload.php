@@ -33,7 +33,7 @@ class Autoload {
 	 * @var array
 	 */
 	private $packages = array(
-		'manual-shipment-tracking' => '\Hezarfen\ManualShipmentTracking\Manual_Shipment_Tracking',
+		'manual-shipment-tracking',
 	);
 
 	/**
@@ -214,9 +214,8 @@ class Autoload {
 	 * @return void
 	 */
 	public function load_packages() {
-		foreach ( $this->packages as $package_name => $package_class ) {
-			require_once WC_HEZARFEN_UYGULAMA_YOLU . "packages/$package_name/class-$package_name.php";
-			new $package_class(); // run the constructor.
+		foreach ( $this->packages as $package_name ) {
+			require_once WC_HEZARFEN_UYGULAMA_YOLU . "packages/$package_name/$package_name.php";
 		}
 	}
 
