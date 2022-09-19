@@ -44,41 +44,6 @@ class Manual_Shipment_Tracking {
 	}
 
 	/**
-	 * Adds a checkbox to enable/disable the package.
-	 * 
-	 * @return void
-	 */
-	private function add_enable_disable_option() {
-		add_filter(
-			'hezarfen_general_settings',
-			function ( $hezarfen_settings ) {
-				$hezarfen_settings[] = array(
-					'title'   => __(
-						'Enable Manual Shipment Tracking feature',
-						'hezarfen-for-woocommerce'
-					),
-					'type'    => 'checkbox',
-					'desc'    => '',
-					'id'      => self::ENABLE_DISABLE_OPTION,
-					'default' => 'yes',
-					'std'     => 'yes',
-				);
-	
-				return $hezarfen_settings;
-			} 
-		);
-	}
-
-	/**
-	 * Is package enabled?
-	 * 
-	 * @return bool
-	 */
-	public static function is_enabled() {
-		return filter_var( get_option( self::ENABLE_DISABLE_OPTION, true ), FILTER_VALIDATE_BOOLEAN );
-	}
-
-	/**
 	 * Assigns callbacks to hooks.
 	 * 
 	 * @return void
@@ -132,5 +97,40 @@ class Manual_Shipment_Tracking {
 	public function append_order_status_to_reports( $statuses ) {
 		$statuses[] = self::SHIPPED_ORDER_STATUS;
 		return $statuses;
+	}
+
+	/**
+	 * Adds a checkbox to enable/disable the package.
+	 * 
+	 * @return void
+	 */
+	private function add_enable_disable_option() {
+		add_filter(
+			'hezarfen_general_settings',
+			function ( $hezarfen_settings ) {
+				$hezarfen_settings[] = array(
+					'title'   => __(
+						'Enable Manual Shipment Tracking feature',
+						'hezarfen-for-woocommerce'
+					),
+					'type'    => 'checkbox',
+					'desc'    => '',
+					'id'      => self::ENABLE_DISABLE_OPTION,
+					'default' => 'yes',
+					'std'     => 'yes',
+				);
+	
+				return $hezarfen_settings;
+			} 
+		);
+	}
+
+	/**
+	 * Is package enabled?
+	 * 
+	 * @return bool
+	 */
+	public static function is_enabled() {
+		return filter_var( get_option( self::ENABLE_DISABLE_OPTION, true ), FILTER_VALIDATE_BOOLEAN );
 	}
 }
