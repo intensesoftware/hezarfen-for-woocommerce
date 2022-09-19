@@ -225,7 +225,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				),
 			);
 
-			$settings = apply_filters( 'hezarfen_checkout_settings', $fields );
+			$settings   = apply_filters( 'hezarfen_checkout_settings', $fields );
 			$settings[] = array(
 				'type' => 'sectionend',
 				'id'   => 'hezarfen_checkout_settings_section_end',
@@ -257,7 +257,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				),
 			);
 
-			$settings = apply_filters( 'hezarfen_general_settings', $fields );
+			$settings   = apply_filters( 'hezarfen_general_settings', $fields );
 			$settings[] = array(
 				'type' => 'sectionend',
 				'id'   => 'hezarfen_general_settings_section_end',
