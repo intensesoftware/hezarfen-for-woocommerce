@@ -118,7 +118,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 
 					array(
 						'type' => 'sectionend',
-						'id'   => 'hezarfen_checkout_tax_fields_options',
+						'id'   => 'hezarfen_checkout_tax_fields_section_end',
 					),
 				)
 			);
@@ -147,7 +147,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 							'If the T.C. Identity Field is active, an encryption key must be generated. The following encryption key generated will be lost upon saving the form. Please back up the generated encryption key to a secure area, then paste it anywhere in the wp-config.php file. In case of deletion of the hezarfen-encryption-key line from wp-config.php, retrospectively, the orders will be sent to T.C. no values will become unreadable.',
 							'hezarfen-for-woocommerce'
 						),
-						'id'    => 'hezarfen_checkout_tax_fields_options',
+						'id'    => 'hezarfen_checkout_encryption_fields_options',
 					),
 					array(
 						'title'   => __(
@@ -181,12 +181,12 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					),
 					array(
 						'type' => 'sectionend',
-						'id'   => 'hezarfen_checkout_tax_fields_options',
+						'id'   => 'hezarfen_checkout_encryption_fields_section_end',
 					),
 				);
 			}
 
-			$settings = apply_filters( 'hezarfen_checkout_tax_settings', $fields );
+			$settings = apply_filters( 'hezarfen_checkout_encryption_settings', $fields );
 		} elseif ( 'checkout-page' == $current_section ) {
 			$fields = array(
 				array(
@@ -223,13 +223,13 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					'default' => 'no',
 					'std'     => 'yes',
 				),
-				array(
-					'type' => 'sectionend',
-					'id'   => 'hezarfen_checkout_settings_section_end',
-				),
 			);
 
 			$settings = apply_filters( 'hezarfen_checkout_settings', $fields );
+			$settings[] = array(
+				'type' => 'sectionend',
+				'id'   => 'hezarfen_checkout_settings_section_end',
+			);
 		} else {
 			$fields = array(
 				array(
@@ -255,13 +255,13 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					'default' => 'no',
 					'std'     => 'yes',
 				),
-				array(
-					'type' => 'sectionend',
-					'id'   => 'hezarfen_general_settings_section_end',
-				),
 			);
 
 			$settings = apply_filters( 'hezarfen_general_settings', $fields );
+			$settings[] = array(
+				'type' => 'sectionend',
+				'id'   => 'hezarfen_general_settings_section_end',
+			);
 		}
 
 		return apply_filters(
