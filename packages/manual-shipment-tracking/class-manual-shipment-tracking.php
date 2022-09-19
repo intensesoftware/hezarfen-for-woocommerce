@@ -9,6 +9,8 @@ namespace Hezarfen\ManualShipmentTracking;
 
 defined( 'ABSPATH' ) || exit;
 
+require_once 'admin/class-settings.php';
+
 /**
  * Manual Shipment Tracking package main class.
  */
@@ -27,8 +29,18 @@ class Manual_Shipment_Tracking {
 		$this->add_enable_disable_option();
 
 		if ( $this->is_enabled() ) {
+			$this->initialize_classes();
 			$this->assign_callbacks_to_hooks();
 		}
+	}
+
+	/**
+	 * Initializes classes.
+	 * 
+	 * @return void
+	 */
+	public function initialize_classes() {
+		new Settings();
 	}
 
 	/**
