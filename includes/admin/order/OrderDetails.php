@@ -29,31 +29,18 @@ class OrderDetails {
 				'add_tax_fields_to_order_details',
 			)
 		);
+
+		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'add_tc_number_field_to_order_details' ) );
 	}
-	
+
 	/**
-	 * Adds tax fields to billing form where in the admin order edit screen.
+	 * Adds tax fields (except TC Number field) to billing form where in the admin order edit screen.
 	 *
 	 * @param  array $fields WooCommerce current fields.
 	 * @return array
 	 */
 	public function add_tax_fields_to_order_details( $fields ) {
 		global $post;
-
-		$identity_number_field_value = get_post_meta(
-			$post->ID,
-			'_billing_hez_TC_number',
-			true
-		);
-
-		if ( $identity_number_field_value ) {
-			// Try to decrypt the T.C number.
-			$identity_number_field_decrypted_value = ( new PostMetaEncryption() )->decrypt(
-				$identity_number_field_value
-			);
-		} else {
-			$identity_number_field_decrypted_value = '';
-		}
 
 		$invoice_type = get_post_meta( $post->ID, '_billing_hez_invoice_type', true );
 
@@ -77,15 +64,6 @@ class OrderDetails {
 				'show'    => true,
 				'value'   => $invoice_type_human,
 			),
-			'hez_TC_number'    => array(
-				'label' => __(
-					'T.C. Identity Number',
-					'hezarfen-for-woocommerce'
-				),
-				'show'  => true,
-				'value' => $identity_number_field_decrypted_value,
-				'class' => 'hezarfen_billing_TC_number_field',
-			),
 			'hez_tax_number'   => array(
 				'label' => __( 'Tax Number', 'hezarfen-for-woocommerce' ),
 				'show'  => true,
@@ -99,6 +77,30 @@ class OrderDetails {
 		);
 
 		return array_merge( $fields, $tax_fields );
+	}
+
+	/**
+	 * Adds decrypted TC Number information to the order details page.
+	 * 
+	 * @param WC_Order $order Order object.
+	 * 
+	 * @return void
+	 */
+	public function add_tc_number_field_to_order_details( $order ) {
+		if ( 'person' === $order->get_meta( '_billing_hez_invoice_type', true ) ) {
+			$identity_number_field_value = $order->get_meta( '_billing_hez_TC_number', true );
+
+			if ( $identity_number_field_value ) {
+				// Try to decrypt the T.C number.
+				$identity_number_field_decrypted_value = ( new PostMetaEncryption() )->decrypt(
+					$identity_number_field_value
+				);
+			} else {
+				$identity_number_field_decrypted_value = '';
+			}
+
+			printf( '<p class="hezarfen-tc-num-field"><strong>%s:</strong>%s</p>', esc_html__( 'T.C. Identity Number', 'hezarfen-for-woocommerce' ), esc_html( $identity_number_field_decrypted_value ) );
+		}
 	}
 }
 

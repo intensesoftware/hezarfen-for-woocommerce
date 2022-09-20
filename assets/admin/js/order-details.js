@@ -1,5 +1,9 @@
 jQuery(document).ready(function($){
 
+  $('a.edit_address').on('click', function () {
+    $('.hezarfen-tc-num-field').hide();
+  });
+
   update_field_showing_statuses($('.hezarfen_billing_invoice_type_field').val());
 
   $('.hezarfen_billing_invoice_type_field').change(function(){
