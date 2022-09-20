@@ -83,7 +83,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 							'You can update the checkout TAX fields. Note: T.C. number field requires encryption feature. If you do not activate the encryption feature, T.C. number field does not appear on the checkout.',
 							'hezarfen-for-woocommerce'
 						),
-						'id'    => 'hezarfen_checkout_tax_fields_options',
+						'id'    => 'hezarfen_checkout_tax_fields_title',
 					),
 
 					array(
@@ -118,7 +118,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 
 					array(
 						'type' => 'sectionend',
-						'id'   => 'hezarfen_checkout_tax_fields_options',
+						'id'   => 'hezarfen_checkout_tax_fields_section_end',
 					),
 				)
 			);
@@ -147,7 +147,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 							'If the T.C. Identity Field is active, an encryption key must be generated. The following encryption key generated will be lost upon saving the form. Please back up the generated encryption key to a secure area, then paste it anywhere in the wp-config.php file. In case of deletion of the hezarfen-encryption-key line from wp-config.php, retrospectively, the orders will be sent to T.C. no values will become unreadable.',
 							'hezarfen-for-woocommerce'
 						),
-						'id'    => 'hezarfen_checkout_tax_fields_options',
+						'id'    => 'hezarfen_checkout_encryption_fields_title',
 					),
 					array(
 						'title'   => __(
@@ -181,7 +181,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					),
 					array(
 						'type' => 'sectionend',
-						'id'   => 'hezarfen_checkout_tax_fields_options',
+						'id'   => 'hezarfen_checkout_encryption_fields_section_end',
 					),
 				);
 			}
