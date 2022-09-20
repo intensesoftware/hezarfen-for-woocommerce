@@ -5,7 +5,7 @@ var wc_hezarfen_checkout = {
         }
 
         var data = {
-            'action':'wc_hezarfen_neighborhood_changed',
+            'action': 'wc_hezarfen_neighborhood_changed',
             'security': wc_hezarfen_ajax_object.mahalleio_nonce,
             'cityPlateNumber': province_plate_number,
             'district': district,
@@ -13,10 +13,10 @@ var wc_hezarfen_checkout = {
             'type': type
         };
 
-        jQuery.post(wc_hezarfen_ajax_object.ajax_url, data, function(response){
+        jQuery.post(wc_hezarfen_ajax_object.ajax_url, data, function (response) {
             var args = JSON.parse(response);
 
-            if(args.update_checkout)
+            if (args.update_checkout)
                 jQuery('body').trigger('update_checkout');
         });
     },
@@ -29,11 +29,11 @@ var wc_hezarfen_checkout = {
     }
 };
 
-jQuery( function( $ ) {
-    let select2_args = {width: '100%'};
+jQuery(function ($) {
+    let select2_args = { width: '100%' };
     let select2_tr_args = Object.assign(select2_args, { language: "tr" });
 
-    $.each(["billing", "shipping"], function(index, type){
+    $.each(["billing", "shipping"], function (index, type) {
         let current_country_code = $('#' + type + '_country').val();
 
         if (!current_country_code || current_country_code === 'TR') {
@@ -42,22 +42,22 @@ jQuery( function( $ ) {
             $('#' + type + '_address_1').select2(select2_tr_args);
         }
 
-        if ( $('#' + type + '_country').val() === 'TR' ) {
+        if ($('#' + type + '_country').val() === 'TR') {
             add_event_handlers(type);
         }
     });
 
     $('#hezarfen_invoice_type').select2(select2_tr_args);
 
-    $('#hezarfen_invoice_type').change(function(){
+    $('#hezarfen_invoice_type').change(function () {
         var invoice_type = $(this).val();
 
-        if( invoice_type == 'person' ){
+        if (invoice_type == 'person') {
             $('#hezarfen_TC_number_field').removeClass('hezarfen-hide-form-field');
             $('#hezarfen_tax_number_field').addClass('hezarfen-hide-form-field');
             $('#hezarfen_tax_office_field').addClass('hezarfen-hide-form-field');
             $('#billing_company_field').addClass('hezarfen-hide-form-field');
-        }else if( invoice_type == 'company' ){
+        } else if (invoice_type == 'company') {
             $('#hezarfen_TC_number_field').addClass('hezarfen-hide-form-field');
             $('#hezarfen_tax_number_field').removeClass('hezarfen-hide-form-field');
             $('#hezarfen_tax_office_field').removeClass('hezarfen-hide-form-field');
@@ -90,15 +90,15 @@ jQuery( function( $ ) {
         $('#' + type + '_state' + ', #' + type + '_city' + ', #' + type + '_address_1').off('select2:select.hezarfen');
         $('#ship-to-different-address input').off('change.hezarfen');
 
-        $("#"+type+"_state").on("select2:select.hezarfen", function(e){
+        $("#" + type + "_state").on("select2:select.hezarfen", function (e) {
             province_on_change(e, type);
         });
 
-        $('#' + type + '_city').on("select2:select.hezarfen", function(e){
+        $('#' + type + '_city').on("select2:select.hezarfen", function (e) {
             district_on_change(e, type, checkout_fields_wrapper);
         });
 
-        $('#' + type + '_address_1').on("select2:select.hezarfen", function(e){
+        $('#' + type + '_address_1').on("select2:select.hezarfen", function (e) {
             neighborhood_on_change($(this).val(), type, checkout_fields_wrapper);
         });
 
@@ -129,7 +129,7 @@ jQuery( function( $ ) {
             'cityPlateNumber': selected.id
         };
 
-        jQuery.get(wc_hezarfen_ajax_object.api_url, data, function(response){
+        jQuery.get(wc_hezarfen_ajax_object.api_url, data, function (response) {
             var districts = JSON.parse(response);
 
             $.each(districts, function (index, district_name) {
@@ -165,7 +165,7 @@ jQuery( function( $ ) {
             'return_nbrhood_ids': false
         };
 
-        jQuery.get(wc_hezarfen_ajax_object.api_url, data, function(response){
+        jQuery.get(wc_hezarfen_ajax_object.api_url, data, function (response) {
             var neighborhoods = JSON.parse(response);
 
             $.each(neighborhoods, function (i, neighborhood_name) {
@@ -210,8 +210,8 @@ jQuery( function( $ ) {
             }
 
             let parent_element = element.closest('.form-row'),
-                element_name   = element.attr('name'),
-                element_id     = element.attr('id'),
+                element_name = element.attr('name'),
+                element_id = element.attr('id'),
                 hezarfen_classes = '';
 
             if (element_id.includes('billing')) {
@@ -254,4 +254,4 @@ jQuery( function( $ ) {
             }
         });
     }
-} );
+});
