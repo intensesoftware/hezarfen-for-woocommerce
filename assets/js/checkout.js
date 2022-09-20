@@ -109,9 +109,11 @@ jQuery( function( $ ) {
 
     function province_on_change(e, type) {
         $('#' + type + '_city').prop("disabled", true);
+        $('#' + type + '_address_1').prop("disabled", true);
 
-        // empty district select box
+        // empty district and neighborhood select boxes
         $('#' + type + '_city').empty();
+        $('#' + type + '_address_1').empty();
 
         // push placeholder data
         $('#' + type + '_city')
