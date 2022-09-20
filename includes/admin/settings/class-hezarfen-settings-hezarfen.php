@@ -175,7 +175,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 							'I backed up the key to a secure area and placed it in the wp-config file. In case the encryption key value is deleted from the wp-config.php file, all past orders will be transferred to T.C. I know I cannot access ID data.',
 							'hezarfen-for-woocommerce'
 						),
-						'id'      => 'hezarfen_checkout_show_TC_identity_field',
+						'id'      => 'hezarfen_checkout_encryption_key_confirmation',
 						'default' => 'no',
 						'std'     => 'yes',
 					),
@@ -329,7 +329,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 
 		if ( 'encryption' == $current_section ) {
 			if (
-				get_option( 'hezarfen_checkout_show_TC_identity_field', false ) ==
+				get_option( 'hezarfen_checkout_encryption_key_confirmation', false ) ==
 				'yes'
 			) {
 				update_option( 'hezarfen_encryption_key_generated', 'yes' );
