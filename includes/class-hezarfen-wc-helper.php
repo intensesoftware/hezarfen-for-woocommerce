@@ -20,8 +20,8 @@ class Helper {
 	 * @param array $arr array of the districts.
 	 * @return array
 	 */
-	public static function checkout_select2_option_format( $arr ) {
-		$values = array();
+	public static function select2_option_format( $arr ) {
+		$values = array( '' => __( 'Select an option', 'hezarfen-for-woocommerce' ) );
 
 		foreach ( $arr as $key => $value ) {
 			$values[ $value ] = $value;

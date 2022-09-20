@@ -489,8 +489,6 @@ class Checkout {
 	public function add_district_and_neighborhood_fields( $fields ) {
 		$types = array( 'shipping', 'billing' );
 
-		$district_options = array( '' => __( 'Select an option', 'hezarfen-for-woocommerce' ) );
-
 		global $woocommerce;
 
 		foreach ( $types as $type ) {
@@ -518,7 +516,7 @@ class Checkout {
 			unset( $fields[ $type ][ $city_field_name ] );
 
 			// update array for name => name format.
-			$districts = Helper::checkout_select2_option_format( $districts );
+			$districts = Helper::select2_option_format( $districts );
 
 			$fields[ $type ][ $city_field_name ] = array(
 				'type'         => 'select',
@@ -528,7 +526,7 @@ class Checkout {
 				'clear'        => true,
 				'autocomplete' => 'address-level2',
 				'priority'     => $fields[ $type ][ $type . '_state' ]['priority'] + 1,
-				'options'      => $district_options + $districts,
+				'options'      => $districts,
 			);
 
 			$fields[ $type ][ $neighborhood_field_name ] = array(
