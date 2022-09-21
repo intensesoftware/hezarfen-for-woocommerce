@@ -1,0 +1,92 @@
+<?php
+/**
+ * Contains the class that provides compatibility with third party themes and plugins.
+ * 
+ * @package Hezarfen\Inc
+ */
+
+namespace Hezarfen\Inc;
+
+defined( 'ABSPATH' ) || exit();
+
+/**
+ * Provides compatibility with third party themes and plugins.
+ */
+class Compatibility {
+	/**
+	 * Constructor
+	 * 
+	 * @return void
+	 */
+	public function __construct() {
+		$active_theme = wp_get_theme();
+		if ( 'Cartzilla' === $active_theme->name || 'Cartzilla' === $active_theme->parent_theme ) {
+			$this->cartzilla_support();
+		}
+	}
+
+	/**
+	 * Adds Cartzilla theme support by adding necessary HTML classes.
+	 * 
+	 * @return void
+	 */
+	public function cartzilla_support() {
+		add_filter( 'hezarfen_checkout_fields_class_billing_hez_invoice_type', array( $this, 'add_bootstrap_col_sm_12_class' ) );
+		add_filter( 'hezarfen_checkout_fields_class_billing_hez_TC_number', array( $this, 'add_bootstrap_col_sm_6_class' ) );
+		add_filter( 'hezarfen_checkout_fields_class_billing_hez_company', array( $this, 'add_bootstrap_col_sm_6_class' ) );
+		add_filter( 'hezarfen_checkout_fields_class_billing_hez_tax_number', array( $this, 'add_bootstrap_col_sm_6_class' ) );
+		add_filter( 'hezarfen_checkout_fields_class_billing_hez_tax_office', array( $this, 'add_bootstrap_col_sm_6_class' ) );
+
+		add_filter( 'hezarfen_checkout_fields_input_class_billing_hez_tc_number', array( $this, 'add_bootstrap_form_control_class' ) );
+		add_filter( 'hezarfen_checkout_fields_input_class_billing_hez_company', array( $this, 'add_bootstrap_form_control_class' ) );
+		add_filter( 'hezarfen_checkout_fields_input_class_billing_hez_tax_number', array( $this, 'add_bootstrap_form_control_class' ) );
+		add_filter( 'hezarfen_checkout_fields_input_class_billing_hez_tax_office', array( $this, 'add_bootstrap_form_control_class' ) );
+	}
+
+	/**
+	 * Adds bootstrap's "col-sm-12" HTML class.
+	 * 
+	 * @param string[] $classes HTML classes.
+	 * 
+	 * @return string[]
+	 */
+	public function add_bootstrap_col_sm_12_class( $classes ) {
+		return $this->add_classes( $classes, 'col-sm-12' );
+	}
+
+	/**
+	 * Adds bootstrap's "col-sm-6" HTML class.
+	 * 
+	 * @param string[] $classes HTML classes.
+	 * 
+	 * @return string[]
+	 */
+	public function add_bootstrap_col_sm_6_class( $classes ) {
+		return $this->add_classes( $classes, 'col-sm-6' );
+	}
+
+	/**
+	 * Adds bootstrap's "form-control" HTML class.
+	 * 
+	 * @param string[] $classes HTML classes.
+	 * 
+	 * @return string[]
+	 */
+	public function add_bootstrap_form_control_class( $classes ) {
+		return $this->add_classes( $classes, 'form-control' );
+	}
+
+	/**
+	 * Adds given HTML classes to the given array.
+	 * 
+	 * @param string[]        $classes HTML classes.
+	 * @param string|string[] $classes_to_add Classes to add.
+	 * 
+	 * @return string[]
+	 */
+	private function add_classes( $classes, $classes_to_add ) {
+		return array_merge( $classes, (array) $classes_to_add );
+	}
+}
+
+new Compatibility();
