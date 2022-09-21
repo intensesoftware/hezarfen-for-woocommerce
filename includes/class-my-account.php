@@ -29,21 +29,18 @@ class My_Account {
 	 * @return array
 	 */
 	public function convert_to_select_elements( $address, $load_address ) {
-		$address[ $load_address . '_city' ]['type']      = 'select';
-		$address[ $load_address . '_address_1' ]['type'] = 'select';
+		$province_key = $load_address . '_state';
+		$district_key = $load_address . '_city';
+		$nbrhood_key  = $load_address . '_address_1';
 
-		$province_code = $address[ $load_address . '_state' ]['value'];
+		$address[ $district_key ]['type']       = 'select';
+		$address[ $nbrhood_key ]['type']        = 'select';
+		$address[ $nbrhood_key ]['placeholder'] = __( 'Neighborhood', 'hezarfen-for-woocommerce' );
 
-		if ( $province_code ) {
-			$districts                                     = Mahalle_Local::get_districts( $province_code );
-			$address[ $load_address . '_city' ]['options'] = Helper::select2_option_format( $districts );
-
-			$district = $address[ $load_address . '_city' ]['value'];
-			if ( $district ) {
-				$nbrhoods = Mahalle_Local::get_neighborhoods( $province_code, $district, false );
-				$address[ $load_address . '_address_1' ]['options'] = Helper::select2_option_format( $nbrhoods );
-			}
-		}       
+		$customer_province_code              = $address[ $province_key ]['value'];
+		$customer_district                   = $address[ $district_key ]['value'];
+		$address[ $district_key ]['options'] = Helper::select2_option_format( Mahalle_Local::get_districts( $customer_province_code ) );
+		$address[ $nbrhood_key ]['options']  = Helper::select2_option_format( Mahalle_Local::get_neighborhoods( $customer_province_code, $customer_district, false ) );
 
 		return $address;
 	}
