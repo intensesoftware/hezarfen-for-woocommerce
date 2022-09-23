@@ -1,1 +1,5 @@
 .hezarfen-hide-form-field {display:none !important;}
+
+.hezarfen-tc-num-field strong {
+	display: block;
+}
