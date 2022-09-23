@@ -406,6 +406,7 @@ class Checkout {
 				'required'    => self::is_identity_number_field_required(),
 				// TODO: review the WP filter name table and if possible rename that as lowercase also remove phpcs ignore.
 				'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_TC_number', array( 'form-row-wide' ) ), //phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
+				'input_class' => apply_filters( 'hezarfen_checkout_fields_input_class_billing_hez_tc_number', array() ),
 				'priority'    => $fields['billing']['billing_hez_invoice_type']['priority'] + 1,
 			);
 		}
@@ -414,6 +415,8 @@ class Checkout {
 			'label'       => __( 'Title', 'hezarfen-for-woocommerce' ),
 			'placeholder' => __( 'Enter invoice title', 'hezarfen-for-woocommerce' ),
 			'required'    => true,
+			'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_company', array( 'form-row-wide' ) ),
+			'input_class' => apply_filters( 'hezarfen_checkout_fields_input_class_billing_hez_company', array() ),
 			'priority'    => $fields['billing']['billing_hez_invoice_type']['priority'] + 1,
 		);
 
@@ -423,6 +426,7 @@ class Checkout {
 			'placeholder' => __( 'Enter tax number', 'hezarfen-for-woocommerce' ),
 			'required'    => true,
 			'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_tax_number', array( 'form-row-wide' ) ),
+			'input_class' => apply_filters( 'hezarfen_checkout_fields_input_class_billing_hez_tax_number', array() ),
 			'priority'    => $fields['billing']['billing_company']['priority'] + 1,
 		);
 
@@ -432,6 +436,7 @@ class Checkout {
 			'placeholder' => __( 'Enter tax office', 'hezarfen-for-woocommerce' ),
 			'required'    => true,
 			'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_tax_office', array( 'form-row-wide' ) ),
+			'input_class' => apply_filters( 'hezarfen_checkout_fields_input_class_billing_hez_tax_office', array() ),
 			'priority'    => $fields['billing']['billing_hez_tax_number']['priority'] + 1,
 		);
 
