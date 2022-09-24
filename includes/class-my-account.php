@@ -18,6 +18,7 @@ class My_Account {
 	 */
 	public function __construct() {
 		add_filter( 'woocommerce_address_to_edit', array( $this, 'convert_to_select_elements' ), PHP_INT_MAX - 1, 2 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 	}
 
 	/**
@@ -43,6 +44,14 @@ class My_Account {
 		$address[ $nbrhood_key ]['options']  = Helper::select2_option_format( Mahalle_Local::get_neighborhoods( $customer_province_code, $customer_district, false ) );
 
 		return $address;
+	}
+
+	public function enqueue_scripts() {
+		global $wp;
+
+		if ( is_account_page() && ! empty( $wp->query_vars['edit-address'] ) ) {
+			wp_enqueue_script( 'wc_hezarfen_my_account_addresses_js', plugins_url( 'assets/js/my-account-addresses.js', WC_HEZARFEN_FILE ), array( 'jquery' ), WC_HEZARFEN_VERSION, true );
+		}
 	}
 }
 
