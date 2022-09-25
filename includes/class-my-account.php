@@ -46,11 +46,16 @@ class My_Account {
 		return $address;
 	}
 
+	/**
+	 * Enqueues scripts.
+	 * 
+	 * @return void
+	 */
 	public function enqueue_scripts() {
 		global $wp;
 
 		if ( is_account_page() && ! empty( $wp->query_vars['edit-address'] ) ) {
-			wp_enqueue_script( 'wc_hezarfen_my_account_addresses_js', plugins_url( 'assets/js/my-account-addresses.js', WC_HEZARFEN_FILE ), array( 'jquery' ), WC_HEZARFEN_VERSION, true );
+			wp_enqueue_script( 'wc_hezarfen_my_account_addresses_js', plugins_url( 'assets/js/my-account-addresses.js', WC_HEZARFEN_FILE ), array( 'jquery', 'wc_hezarfen_mahalle_helper_js' ), WC_HEZARFEN_VERSION, true );
 		}
 	}
 }
