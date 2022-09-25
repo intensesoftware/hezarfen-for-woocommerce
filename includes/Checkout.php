@@ -160,13 +160,13 @@ class Checkout {
 	 * @return array
 	 */
 	public function modify_tr_locale( $locales ) {
-		//TODO: bu method (add_filter() ile birlikte) ayrı bir class'a çekilse daha iyi olur. Çünkü sadece checkout'u ilgilendirmiyor, aynı zamanda Hesabım > Adres düzenleme sayfalarındaki fieldları ve başka şeyleri de ilgilendiriyor.
+		// TODO: bu method (add_filter() ile birlikte) ayrı bir class'a çekilse daha iyi olur. Çünkü sadece checkout'u ilgilendirmiyor, aynı zamanda Hesabım > Adres düzenleme sayfalarındaki fieldları ve başka şeyleri de ilgilendiriyor.
 		$locales['TR']['city'] = array(
 			'label' => __( 'Town / City', 'hezarfen-for-woocommerce' ),
 		);
 
 		$locales['TR']['address_1'] = array(
-			'label' => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
+			'label'       => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
 			'placeholder' => __( 'Select an option', 'hezarfen-for-woocommerce' ),
 		);
 
