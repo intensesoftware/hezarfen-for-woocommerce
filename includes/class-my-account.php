@@ -36,7 +36,6 @@ class My_Account {
 
 		$address[ $district_key ]['type']       = 'select';
 		$address[ $nbrhood_key ]['type']        = 'select';
-		$address[ $nbrhood_key ]['placeholder'] = __( 'Select an option', 'hezarfen-for-woocommerce' );
 
 		$customer_province_code              = $address[ $province_key ]['value'];
 		$customer_district                   = $address[ $district_key ]['value'];
