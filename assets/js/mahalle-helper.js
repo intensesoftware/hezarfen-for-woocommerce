@@ -90,21 +90,20 @@ class hezarfen_mahalle_helper {
 		}, 'json');
 	}
 
-	on_country_change(event, country_code) {
-		let thisHelper = event.data.thisHelper;
-		let elements = [thisHelper.get_city_field(), thisHelper.get_nbrhood_field()];
+	on_country_change(country_code) {
+		let elements = [this.get_city_field(), this.get_nbrhood_field()];
 
 		if (country_code === 'TR') {
 			// If Turkey is selected, replace city and address_1 fields with select elements.
-			thisHelper.replaceElementsWith(elements, 'select');
+			this.replaceElementsWith(elements, 'select');
 
-			thisHelper.add_event_handlers();
+			this.add_event_handlers();
 		} else {
 			// Remove select2:select event handler from the state field.
-			thisHelper.get_state_field().off('select2:select.hezarfen');
+			this.get_state_field().off('select2:select.hezarfen');
 
 			// Replace city and address_1 fields with input elements.
-			thisHelper.replaceElementsWith(elements, 'input');
+			this.replaceElementsWith(elements, 'input');
 		}
 	}
 
