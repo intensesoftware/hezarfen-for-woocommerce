@@ -27,9 +27,9 @@ class hezarfen_mahalle_helper {
 		// prevent adding event handlers multiple times.
 		this.get_fields().off('select2:select.hezarfen');
 
-		this.get_state_field().on('select2:select.hezarfen', {thisHelper: this}, this.province_on_change);
+		this.get_state_field().on('select2:select.hezarfen', { thisHelper: this }, this.province_on_change);
 
-		this.get_city_field().on('select2:select.hezarfen', {thisHelper: this}, this.district_on_change);
+		this.get_city_field().on('select2:select.hezarfen', { thisHelper: this }, this.district_on_change);
 	}
 
 	province_on_change(event) {
@@ -94,18 +94,18 @@ class hezarfen_mahalle_helper {
 		let thisHelper = event.data.thisHelper;
 		let elements = [thisHelper.get_city_field(), thisHelper.get_nbrhood_field()];
 
-        if (country_code === 'TR') {
-            // If Turkey is selected, replace city and address_1 fields with select elements.
-            thisHelper.replaceElementsWith(elements, 'select');
+		if (country_code === 'TR') {
+			// If Turkey is selected, replace city and address_1 fields with select elements.
+			thisHelper.replaceElementsWith(elements, 'select');
 
-            thisHelper.add_event_handlers();
-        } else {
-            // Remove select2:select event handler from the state field.
-            thisHelper.get_state_field().off('select2:select.hezarfen');
+			thisHelper.add_event_handlers();
+		} else {
+			// Remove select2:select event handler from the state field.
+			thisHelper.get_state_field().off('select2:select.hezarfen');
 
-            // Replace city and address_1 fields with input elements.
-            thisHelper.replaceElementsWith(elements, 'input');
-        }
+			// Replace city and address_1 fields with input elements.
+			thisHelper.replaceElementsWith(elements, 'input');
+		}
 	}
 
 	replaceElementsWith(elements, element_type) {
