@@ -28,8 +28,8 @@ class hezarfen_mahalle_helper {
 		this.get_city_field().on('select2:select.hezarfen', {thisHelper: this}, this.district_on_change);
 	}
 
-	province_on_change(e) {
-		let thisHelper = e.data.thisHelper;
+	province_on_change(event) {
+		let thisHelper = event.data.thisHelper;
 
 		thisHelper.get_city_field().prop("disabled", true);
 
@@ -43,7 +43,7 @@ class hezarfen_mahalle_helper {
 				.text(hezarfen_mahalle_helper_backend.select_option_text));
 
 		// get selected data
-		var selected = e.params.data;
+		var selected = event.params.data;
 
 		var data = {
 			'dataType': 'district',
@@ -62,8 +62,8 @@ class hezarfen_mahalle_helper {
 		}, 'json');
 	}
 
-	district_on_change(e) {
-		let thisHelper = e.data.thisHelper;
+	district_on_change(event) {
+		let thisHelper = event.data.thisHelper;
 
 		thisHelper.get_nbrhood_field().prop("disabled", true);
 
@@ -77,7 +77,7 @@ class hezarfen_mahalle_helper {
 				.text(hezarfen_mahalle_helper_backend.select_option_text));
 
 		// get selected data
-		var selected = e.params.data;
+		var selected = event.params.data;
 
 		var data = {
 			'dataType': 'neighborhood',
