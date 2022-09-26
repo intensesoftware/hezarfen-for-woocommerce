@@ -34,7 +34,7 @@ class hezarfen_mahalle_helper {
 		thisHelper.get_city_field().prop("disabled", true);
 
 		// empty district select box
-		thisHelper.get_city_field().empty();
+		thisHelper.get_city_field().empty().trigger('change');
 
 		// push placeholder data
 		thisHelper.get_city_field()
@@ -68,7 +68,7 @@ class hezarfen_mahalle_helper {
 		thisHelper.get_nbrhood_field().prop("disabled", true);
 
 		// empty neighborhood select box
-		thisHelper.get_nbrhood_field().empty();
+		thisHelper.get_nbrhood_field().empty().trigger('change');
 
 		// push placeholder data
 		thisHelper.get_nbrhood_field()
