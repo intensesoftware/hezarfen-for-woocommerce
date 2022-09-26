@@ -13,5 +13,5 @@ jQuery(function ($) {
 		mahalle_helper.add_event_handlers();
 	}
 
-	$(document.body).on('country_to_state_changing', {thisHelper: mahalle_helper}, mahalle_helper.on_country_change);
+	$(document.body).on('country_to_state_changing', { thisHelper: mahalle_helper }, mahalle_helper.on_country_change);
 });
