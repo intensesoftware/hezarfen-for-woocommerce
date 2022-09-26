@@ -41,10 +41,7 @@ class hezarfen_mahalle_helper {
 		thisHelper.get_city_field().empty().trigger('change');
 
 		// push placeholder data
-		thisHelper.get_city_field()
-			.append(jQuery("<option></option>")
-				.attr("value", "")
-				.text(hezarfen_mahalle_helper_backend.select_option_text));
+		thisHelper.get_city_field().append(thisHelper.create_default_option());
 
 		// get selected data
 		var selected = event.params.data;
@@ -56,10 +53,7 @@ class hezarfen_mahalle_helper {
 
 		jQuery.get(hezarfen_mahalle_helper_backend.api_url, data, function (response) {
 			jQuery.each(response, function (index, district_name) {
-				thisHelper.get_city_field()
-					.append(jQuery("<option></option>")
-						.attr("value", district_name)
-						.text(district_name));
+				thisHelper.get_city_field().append(thisHelper.create_option(district_name, district_name));
 			});
 
 			thisHelper.get_city_field().prop("disabled", false);
@@ -75,10 +69,7 @@ class hezarfen_mahalle_helper {
 		thisHelper.get_nbrhood_field().empty().trigger('change');
 
 		// push placeholder data
-		thisHelper.get_nbrhood_field()
-			.append(jQuery("<option></option>")
-				.attr("value", "")
-				.text(hezarfen_mahalle_helper_backend.select_option_text));
+		thisHelper.get_nbrhood_field().append(thisHelper.create_default_option());
 
 		// get selected data
 		var selected = event.params.data;
@@ -92,10 +83,7 @@ class hezarfen_mahalle_helper {
 
 		jQuery.get(hezarfen_mahalle_helper_backend.api_url, data, function (response) {
 			jQuery.each(response, function (i, neighborhood_name) {
-				thisHelper.get_nbrhood_field()
-					.append(jQuery("<option></option>")
-						.attr("value", neighborhood_name)
-						.text(neighborhood_name));
+				thisHelper.get_nbrhood_field().append(thisHelper.create_option(neighborhood_name, neighborhood_name));
 			});
 
 			thisHelper.get_nbrhood_field().prop("disabled", false);
@@ -146,13 +134,19 @@ class hezarfen_mahalle_helper {
 
 			if (element_type === 'select') {
 				element = this.fields_wrapper.find('#' + element_id);
-
-				let default_option = jQuery('<option value=""></option>').text(hezarfen_mahalle_helper_backend.select_option_text);
-				element.append(default_option);
+				element.append(this.create_default_option());
 
 				this.convert_field_to_selectwoo(element);
 			}
 		}
+	}
+
+	create_default_option() {
+		return this.create_option('', hezarfen_mahalle_helper_backend.select_option_text);
+	}
+
+	create_option(value, text) {
+		return jQuery('<option></option>').prop('value', value).text(text);
 	}
 
 	get_fields(returnArray = false) {
