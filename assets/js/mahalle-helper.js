@@ -52,9 +52,9 @@ class hezarfen_mahalle_helper {
 		};
 
 		jQuery.get(hezarfen_mahalle_helper_backend.api_url, data, function (response) {
-			jQuery.each(response, function (index, district_name) {
+			for (const district_name of response) {
 				thisHelper.get_city_field().append(thisHelper.create_option(district_name, district_name));
-			});
+			}
 
 			thisHelper.get_city_field().prop("disabled", false);
 		}, 'json');
@@ -82,9 +82,9 @@ class hezarfen_mahalle_helper {
 		};
 
 		jQuery.get(hezarfen_mahalle_helper_backend.api_url, data, function (response) {
-			jQuery.each(response, function (i, neighborhood_name) {
+			for (const neighborhood_name of response) {
 				thisHelper.get_nbrhood_field().append(thisHelper.create_option(neighborhood_name, neighborhood_name));
-			});
+			}
 
 			thisHelper.get_nbrhood_field().prop("disabled", false);
 		}, 'json');
