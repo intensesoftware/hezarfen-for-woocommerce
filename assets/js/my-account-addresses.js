@@ -13,20 +13,5 @@ jQuery(function ($) {
 		mahalle_helper.add_event_handlers();
 	}
 
-	$(document.body).on('country_to_state_changing', function (event, country_code) {
-		let elements = [mahalle_helper.get_city_field(), mahalle_helper.get_nbrhood_field()];
-
-        if (country_code === 'TR') {
-            // If Turkey is selected, replace city and address_1 fields with select elements.
-            mahalle_helper.replaceElementsWith(elements, 'select');
-
-            mahalle_helper.add_event_handlers();
-        } else {
-            // Remove select2:select event handler from the state field.
-            mahalle_helper.get_state_field().off('select2:select.hezarfen');
-
-            // Replace city and address_1 fields with input elements.
-            mahalle_helper.replaceElementsWith(elements, 'input');
-        }
-    });
+	$(document.body).on('country_to_state_changing', {thisHelper: mahalle_helper}, mahalle_helper.on_country_change);
 });
