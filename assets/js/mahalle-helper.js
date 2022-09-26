@@ -10,12 +10,16 @@ class hezarfen_mahalle_helper {
 	}
 
 	convert_fields_to_selectwoo() {
-		this.get_fields().each(function () {
-			let self = jQuery(this);
-			self.selectWoo({
-				placeholder: self.attr('data-placeholder') || self.attr('placeholder') || '',
-				width: '100%'
-			});
+		for (let field of this.get_fields(true)) {
+			this.convert_field_to_selectwoo(field);
+		}
+	}
+
+	convert_field_to_selectwoo(field) {
+		field = jQuery(field);
+		field.selectWoo({
+			width: '100%',
+			placeholder: hezarfen_mahalle_helper_backend.select_option_text
 		});
 	}
 
@@ -146,16 +150,19 @@ class hezarfen_mahalle_helper {
 				let default_option = jQuery('<option value=""></option>').text(hezarfen_mahalle_helper_backend.select_option_text);
 				element.append(default_option);
 
-				element.select2({
-					width: '100%',
-					placeholder: hezarfen_mahalle_helper_backend.select_option_text
-				});
+				this.convert_field_to_selectwoo(element);
 			}
 		}
 	}
 
-	get_fields() {
-		return this.fields_wrapper.find(`#${this.type}_state, #${this.type}_city, #${this.type}_address_1`);
+	get_fields(returnArray = false) {
+		let fields = this.fields_wrapper.find(`#${this.type}_state, #${this.type}_city, #${this.type}_address_1`);
+
+		if (returnArray) {
+			return fields.toArray();
+		}
+
+		return fields;
 	}
 
 	get_country_field() {
