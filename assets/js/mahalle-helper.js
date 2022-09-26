@@ -40,7 +40,7 @@ class hezarfen_mahalle_helper {
 		thisHelper.get_city_field()
 			.append(jQuery("<option></option>")
 				.attr("value", "")
-				.text("Lütfen seçiniz"));
+				.text(hezarfen_mahalle_helper_backend.select_option_text));
 
 		// get selected data
 		var selected = e.params.data;
@@ -76,7 +76,7 @@ class hezarfen_mahalle_helper {
 		thisHelper.get_nbrhood_field()
 			.append(jQuery("<option></option>")
 				.attr("value", "")
-				.text("Lütfen seçiniz"));
+				.text(hezarfen_mahalle_helper_backend.select_option_text));
 
 		// get selected data
 		var selected = e.params.data;
@@ -129,12 +129,12 @@ class hezarfen_mahalle_helper {
 			if (element_type === 'select') {
 				element = this.fields_wrapper.find('#' + element_id);
 
-				let default_option = jQuery('<option value=""></option>').text(hezarfen_mahalle_helper_backend.select_option_text); //TODO: bunu wc_address_i18n_params vs'den veya orjinal elementten çek?
+				let default_option = jQuery('<option value=""></option>').text(hezarfen_mahalle_helper_backend.select_option_text);
 				element.append(default_option);
 
 				element.select2({
 					width: '100%',
-					placeholder: hezarfen_mahalle_helper_backend.select_option_text //TODO: bunu wc_address_i18n_params vs'den veya orjinal elementten çek?
+					placeholder: hezarfen_mahalle_helper_backend.select_option_text
 				});
 			}
 		}
