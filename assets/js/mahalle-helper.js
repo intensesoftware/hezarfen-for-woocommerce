@@ -51,9 +51,7 @@ class hezarfen_mahalle_helper {
 		};
 
 		jQuery.get(hezarfen_mahalle_helper_backend.api_url, data, function (response) {
-			var districts = JSON.parse(response);
-
-			jQuery.each(districts, function (index, district_name) {
+			jQuery.each(response, function (index, district_name) {
 				thisHelper.get_city_field()
 					.append(jQuery("<option></option>")
 						.attr("value", district_name)
@@ -61,7 +59,7 @@ class hezarfen_mahalle_helper {
 			});
 
 			thisHelper.get_city_field().prop("disabled", false);
-		});
+		}, 'json');
 	}
 
 	district_on_change(e) {
@@ -89,9 +87,7 @@ class hezarfen_mahalle_helper {
 		};
 
 		jQuery.get(hezarfen_mahalle_helper_backend.api_url, data, function (response) {
-			var neighborhoods = JSON.parse(response);
-
-			jQuery.each(neighborhoods, function (i, neighborhood_name) {
+			jQuery.each(response, function (i, neighborhood_name) {
 				thisHelper.get_nbrhood_field()
 					.append(jQuery("<option></option>")
 						.attr("value", neighborhood_name)
@@ -99,7 +95,7 @@ class hezarfen_mahalle_helper {
 			});
 
 			thisHelper.get_nbrhood_field().prop("disabled", false);
-		});
+		}, 'json');
 	}
 
 	replaceElementsWith(elements, element_type) {
