@@ -38,7 +38,10 @@ class hezarfen_mahalle_helper {
 		thisHelper.get_city_field().prop("disabled", true);
 
 		// empty district select box
-		thisHelper.get_city_field().empty().trigger('change');
+		thisHelper.get_city_field().empty();
+		if (this.page === 'edit-address') {
+			thisHelper.get_city_field().trigger('change');
+		}
 
 		// push placeholder data
 		thisHelper.get_city_field().append(thisHelper.create_default_option());
@@ -66,7 +69,10 @@ class hezarfen_mahalle_helper {
 		thisHelper.get_nbrhood_field().prop("disabled", true);
 
 		// empty neighborhood select box
-		thisHelper.get_nbrhood_field().empty().trigger('change');
+		thisHelper.get_nbrhood_field().empty();
+		if (this.page === 'edit-address') {
+			thisHelper.get_nbrhood_field().trigger('change');
+		}
 
 		// push placeholder data
 		thisHelper.get_nbrhood_field().append(thisHelper.create_default_option());
@@ -90,12 +96,12 @@ class hezarfen_mahalle_helper {
 		}, 'json');
 	}
 
-	on_country_change(country_code) {
+	on_country_change(country_code, additional_classes = {}) {
 		let elements = [this.get_city_field(), this.get_nbrhood_field()];
 
 		if (country_code === 'TR') {
 			// If Turkey is selected, replace city and address_1 fields with select elements.
-			this.replaceElementsWith(elements, 'select');
+			this.replaceElementsWith(elements, 'select', additional_classes);
 
 			this.add_event_handlers();
 		} else {
@@ -103,11 +109,11 @@ class hezarfen_mahalle_helper {
 			this.get_state_field().off('select2:select.hezarfen');
 
 			// Replace city and address_1 fields with input elements.
-			this.replaceElementsWith(elements, 'input');
+			this.replaceElementsWith(elements, 'input', additional_classes);
 		}
 	}
 
-	replaceElementsWith(elements, element_type) {
+	replaceElementsWith(elements, element_type, additional_classes) {
 		for (let element of elements) {
 			let new_element;
 
@@ -124,6 +130,16 @@ class hezarfen_mahalle_helper {
 				new_element = jQuery('<input type="text" />').addClass('input-text');
 			} else if (element_type === 'select') {
 				new_element = jQuery('<select></select>');
+			}
+
+			if (!jQuery.isEmptyObject(additional_classes)) {
+				additional_classes = element_id.includes('_city') ? additional_classes['district'] : additional_classes['neighborhood'];
+
+				if (element_type === 'input') {
+					parent_element.removeClass(additional_classes);
+				} else {
+					parent_element.addClass(additional_classes);
+				}
 			}
 
 			new_element
