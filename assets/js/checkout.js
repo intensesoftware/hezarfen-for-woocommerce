@@ -34,7 +34,7 @@ jQuery(function ($) {
 
         $('#hezarfen_invoice_type').select2({ width: '100%' });
 
-        $('#hezarfen_invoice_type').change(function () {
+        $('#hezarfen_invoice_type').on('change', function () {
             var invoice_type = $(this).val();
 
             if (invoice_type == 'person') {
