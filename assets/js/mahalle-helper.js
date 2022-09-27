@@ -36,11 +36,14 @@ class hezarfen_mahalle_helper {
 		let thisHelper = event.data.thisHelper;
 
 		thisHelper.get_city_field().prop("disabled", true);
+		thisHelper.get_nbrhood_field().prop("disabled", true);
 
-		// empty district select box
+		// empty district and neighborhood select boxes
 		thisHelper.get_city_field().empty();
+		thisHelper.get_nbrhood_field().empty();
 		if (this.page === 'edit-address') {
 			thisHelper.get_city_field().trigger('change');
+			thisHelper.get_nbrhood_field().trigger('change');
 		}
 
 		// push placeholder data
