@@ -5,7 +5,7 @@ var wc_hezarfen_checkout = {
         }
 
         var data = {
-            'action':'wc_hezarfen_neighborhood_changed',
+            'action': 'wc_hezarfen_neighborhood_changed',
             'security': wc_hezarfen_ajax_object.mahalleio_nonce,
             'cityPlateNumber': province_plate_number,
             'district': district,
@@ -13,10 +13,10 @@ var wc_hezarfen_checkout = {
             'type': type
         };
 
-        jQuery.post(wc_hezarfen_ajax_object.ajax_url, data, function(response){
+        jQuery.post(wc_hezarfen_ajax_object.ajax_url, data, function (response) {
             var args = JSON.parse(response);
 
-            if(args.update_checkout)
+            if (args.update_checkout)
                 jQuery('body').trigger('update_checkout');
         });
     },
@@ -29,8 +29,8 @@ var wc_hezarfen_checkout = {
     }
 };
 
-jQuery( function( $ ) {
-    $.each(["billing", "shipping"], function(index, type){
+jQuery(function ($) {
+    $.each(["billing", "shipping"], function (index, type) {
         let wrapper = $('.woocommerce-' + type + '-fields');
         let mahalle_helper = new hezarfen_mahalle_helper(wrapper, type, 'checkout');
 
@@ -54,15 +54,15 @@ jQuery( function( $ ) {
 
     $('#hezarfen_invoice_type').select2({ width: '100%' });
 
-    $('#hezarfen_invoice_type').change(function(){
+    $('#hezarfen_invoice_type').change(function () {
         var invoice_type = $(this).val();
 
-        if( invoice_type == 'person' ){
+        if (invoice_type == 'person') {
             $('#hezarfen_TC_number_field').removeClass('hezarfen-hide-form-field');
             $('#hezarfen_tax_number_field').addClass('hezarfen-hide-form-field');
             $('#hezarfen_tax_office_field').addClass('hezarfen-hide-form-field');
             $('#billing_company_field').addClass('hezarfen-hide-form-field');
-        }else if( invoice_type == 'company' ){
+        } else if (invoice_type == 'company') {
             $('#hezarfen_TC_number_field').addClass('hezarfen-hide-form-field');
             $('#hezarfen_tax_number_field').removeClass('hezarfen-hide-form-field');
             $('#hezarfen_tax_office_field').removeClass('hezarfen-hide-form-field');
@@ -75,7 +75,7 @@ jQuery( function( $ ) {
         $('#' + type + '_address_1').off('select2:select.hezarfen');
         $('#ship-to-different-address input').off('change.hezarfen');
 
-        $('#' + type + '_address_1').on("select2:select.hezarfen", function(e){
+        $('#' + type + '_address_1').on("select2:select.hezarfen", function (e) {
             neighborhood_on_change($(this).val(), type, wrapper);
         });
 
@@ -117,4 +117,4 @@ jQuery( function( $ ) {
             neighborhood: type === 'billing' ? wc_hezarfen_ajax_object.billing_neighborhood_field_classes : wc_hezarfen_ajax_object.shipping_neighborhood_field_classes
         };
     }
-} );
+});
