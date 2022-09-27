@@ -14,11 +14,9 @@ var wc_hezarfen_checkout = {
         };
 
         jQuery.post(wc_hezarfen_ajax_object.ajax_url, data, function (response) {
-            var args = JSON.parse(response);
-
-            if (args.update_checkout)
+            if (response.update_checkout)
                 jQuery('body').trigger('update_checkout');
-        });
+        }, 'json');
     },
     mbgb_plugin_active: typeof wc_hezarfen_mbgb_backend !== 'undefined',
     should_notify_neighborhood_changed: function (type) {
@@ -31,7 +29,7 @@ var wc_hezarfen_checkout = {
 
 jQuery(function ($) {
     $(document).ready(function () {
-        $.each(["billing", "shipping"], function (index, type) {
+        for (const type of ['billing', 'shipping']) {
             let wrapper = $('.woocommerce-' + type + '-fields');
             let mahalle_helper = new hezarfen_mahalle_helper(wrapper, type, 'checkout');
 
@@ -45,7 +43,7 @@ jQuery(function ($) {
                 mahalle_helper.add_event_handlers();
                 add_checkout_event_handlers(type, wrapper);
             }
-        });
+        }
 
         $(document.body).on('country_to_state_changing', function (event, country_code, wrapper) {
             let type = wrapper.hasClass('woocommerce-billing-fields') ? 'billing' : 'shipping';
