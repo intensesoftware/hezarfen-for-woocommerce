@@ -34,8 +34,8 @@ class My_Account {
 		$district_key = $load_address . '_city';
 		$nbrhood_key  = $load_address . '_address_1';
 
-		$address[ $district_key ]['type']       = 'select';
-		$address[ $nbrhood_key ]['type']        = 'select';
+		$address[ $district_key ]['type'] = 'select';
+		$address[ $nbrhood_key ]['type']  = 'select';
 
 		$customer_province_code              = $address[ $province_key ]['value'];
 		$customer_district                   = $address[ $district_key ]['value'];
