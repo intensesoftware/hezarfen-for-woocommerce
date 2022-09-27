@@ -1,23 +1,4 @@
 var wc_hezarfen_checkout = {
-    notify_neighborhood_changed: function (province_plate_number, district, neighborhood, type) {
-        if (!province_plate_number || !district || !neighborhood) {
-            return;
-        }
-
-        var data = {
-            'action': 'wc_hezarfen_neighborhood_changed',
-            'security': wc_hezarfen_ajax_object.mahalleio_nonce,
-            'cityPlateNumber': province_plate_number,
-            'district': district,
-            'neighborhood': neighborhood,
-            'type': type
-        };
-
-        jQuery.post(wc_hezarfen_ajax_object.ajax_url, data, function (response) {
-            if (response.update_checkout)
-                jQuery('body').trigger('update_checkout');
-        }, 'json');
-    },
     mbgb_plugin_active: typeof wc_hezarfen_mbgb_backend !== 'undefined',
     should_notify_neighborhood_changed: function (type) {
         return this.mbgb_plugin_active && (wc_hezarfen_mbgb_backend.address_source === type || (wc_hezarfen_mbgb_backend.address_source === 'shipping' && !this.ship_to_different_checked()))
@@ -95,7 +76,7 @@ jQuery(function ($) {
             let province_plate_number = checkout_fields_wrapper.find('#' + type + '_state').val();
             let district = checkout_fields_wrapper.find('#' + type + '_city').val();
 
-            wc_hezarfen_checkout.notify_neighborhood_changed(province_plate_number, district, neighborhood, type);
+            notify_neighborhood_changed(province_plate_number, district, neighborhood, type);
         }
     }
 
@@ -109,6 +90,26 @@ jQuery(function ($) {
                 neighborhood_select.trigger('select2:select');
             }, 300);
         }
+    }
+
+    function notify_neighborhood_changed(province_plate_number, district, neighborhood, type) {
+        if (!province_plate_number || !district || !neighborhood) {
+            return;
+        }
+
+        var data = {
+            'action': 'wc_hezarfen_neighborhood_changed',
+            'security': wc_hezarfen_ajax_object.mahalleio_nonce,
+            'cityPlateNumber': province_plate_number,
+            'district': district,
+            'neighborhood': neighborhood,
+            'type': type
+        };
+
+        jQuery.post(wc_hezarfen_ajax_object.ajax_url, data, function (response) {
+            if (response.update_checkout)
+                jQuery('body').trigger('update_checkout');
+        }, 'json');
     }
 
     function get_additional_classes(type) {
