@@ -47,8 +47,6 @@ jQuery(function ($) {
         }
     });
 
-    $('#hezarfen_invoice_type').select2(select2_tr_args);
-
     $('#hezarfen_invoice_type').change(function () {
         var invoice_type = $(this).val();
 
