@@ -160,12 +160,14 @@ class Checkout {
 	 * @return array
 	 */
 	public function modify_tr_locale( $locales ) {
+		// TODO: bu method (add_filter() ile birlikte) ayrı bir class'a çekilse daha iyi olur. Çünkü sadece checkout'u ilgilendirmiyor, aynı zamanda Hesabım > Adres düzenleme sayfalarındaki fieldları ve başka şeyleri de ilgilendiriyor.
 		$locales['TR']['city'] = array(
 			'label' => __( 'Town / City', 'hezarfen-for-woocommerce' ),
 		);
 
 		$locales['TR']['address_1'] = array(
-			'label' => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
+			'label'       => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
+			'placeholder' => __( 'Select an option', 'hezarfen-for-woocommerce' ),
 		);
 
 		return $locales;
@@ -494,8 +496,6 @@ class Checkout {
 	public function add_district_and_neighborhood_fields( $fields ) {
 		$types = array( 'shipping', 'billing' );
 
-		$district_options = array( '' => __( 'Select an option', 'hezarfen-for-woocommerce' ) );
-
 		global $woocommerce;
 
 		foreach ( $types as $type ) {
@@ -523,24 +523,24 @@ class Checkout {
 			unset( $fields[ $type ][ $city_field_name ] );
 
 			// update array for name => name format.
-			$districts = Helper::checkout_select2_option_format( $districts );
+			$districts = Helper::select2_option_format( $districts );
 
 			$fields[ $type ][ $city_field_name ] = array(
 				'type'         => 'select',
 				'label'        => __( 'Town / City', 'hezarfen-for-woocommerce' ),
 				'required'     => true,
-				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_district', array( 'form-row-wide' ) ),
+				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_district', array() ),
 				'clear'        => true,
 				'autocomplete' => 'address-level2',
 				'priority'     => $fields[ $type ][ $type . '_state' ]['priority'] + 1,
-				'options'      => $district_options + $districts,
+				'options'      => $districts,
 			);
 
 			$fields[ $type ][ $neighborhood_field_name ] = array(
 				'type'         => 'select',
 				'label'        => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
 				'required'     => true,
-				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_neighborhood', array( 'form-row-wide' ) ),
+				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_neighborhood', array() ),
 				'clear'        => true,
 				'autocomplete' => 'address-level3',
 				'priority'     => $fields[ $type ][ $type . '_state' ]['priority'] + 2,
