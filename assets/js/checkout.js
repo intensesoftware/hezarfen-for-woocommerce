@@ -32,8 +32,6 @@ jQuery(function ($) {
             country_on_change(type, country_code, wrapper);
         });
 
-        $('#hezarfen_invoice_type').select2({ width: '100%' });
-
         $('#hezarfen_invoice_type').on('change', function () {
             var invoice_type = $(this).val();
 
