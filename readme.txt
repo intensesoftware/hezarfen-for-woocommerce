@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.0
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 1.4.9
+Stable tag: 1.5.0
 
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
@@ -31,6 +31,11 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 6. Bireysel vergi bilgileri
 
 == Changelog ==
+= 1.5.0 - 2022-10-11 =
+* Müşteri Hesabım ekranına, seçilebilir ilçe ve mahalle desteği eklendi.
+* Ödeme ekranındaki bireysel/kurumsal seçim alanındaki select2 desteği kaldırıldı.
+* Ödeme ekranında Hezarfen fonksiyonlarında iyileştirmeler yapıldı.
+
 = 1.4.9 - 2022-09-24 =
 * Readme.txt güncellendi.
 
