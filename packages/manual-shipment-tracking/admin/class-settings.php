@@ -63,7 +63,7 @@ class Settings {
 				),
 				array(
 					'type'        => 'text',
-					'title'       => __( 'Kargo Bildirim E-Postası Çoklu Alıcı Ayarları', 'hezarfen-for-woocommerce' ),
+					'title'       => __( 'Shipment Notification Email Extra Recipients', 'hezarfen-for-woocommerce' ),
 					'placeholder' => __( 'Enter BCC', 'hezarfen-for-woocommerce' ),
 					'id'          => 'hezarfen_manual_shipment_tracking_bcc',
 				),
@@ -74,7 +74,7 @@ class Settings {
 				),
 				array(
 					'type' => 'info',
-					'text' => __( 'Ürün kargoya verildiğinde; müşterinize gönderilen "kargoya verildi" bildirimini başka alıcılara göndermek istiyorsanız araya virgül koyarak BCC(gizli alıcı), CC(Alıcı) alanlarına yazınız.', 'hezarfen-for-woocommerce' ),
+					'text' => __( 'If you want to send the shipment notification email to additional recipients, type the emails separated with comma.', 'hezarfen-for-woocommerce' ),
 				),
 				array(
 					'type' => 'sectionend',
