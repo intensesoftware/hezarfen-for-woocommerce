@@ -134,6 +134,22 @@ class Autoload {
 	 * @return void
 	 */
 	public function load_js_files() {
+		wp_register_script(
+			'wc_hezarfen_mahalle_helper_js',
+			plugins_url( 'assets/js/mahalle-helper.js', WC_HEZARFEN_FILE ),
+			array( 'jquery' ),
+			WC_HEZARFEN_VERSION,
+			true
+		);
+		wp_localize_script(
+			'wc_hezarfen_mahalle_helper_js',
+			'hezarfen_mahalle_helper_backend',
+			array(
+				'api_url'            => WC_HEZARFEN_NEIGH_API_URL,
+				'select_option_text' => __( 'Select an option', 'hezarfen-for-woocommerce' ),
+			)
+		);
+
 		if ( is_checkout() ) {
 			wp_enqueue_style(
 				'wc_hezarfen_checkout_css',
@@ -142,11 +158,10 @@ class Autoload {
 				WC_HEZARFEN_VERSION
 			);
 
-			// TODO: load the js file only in checkout page.
 			wp_enqueue_script(
 				'wc_hezarfen_checkout_js',
 				plugins_url( 'assets/js/checkout.js', WC_HEZARFEN_FILE ),
-				array( 'jquery', 'wc-checkout' ),
+				array( 'jquery', 'wc-checkout', 'wc_hezarfen_mahalle_helper_js' ),
 				WC_HEZARFEN_VERSION,
 				true
 			);
@@ -166,13 +181,11 @@ class Autoload {
 				'wc_hezarfen_ajax_object',
 				array(
 					'ajax_url'                            => admin_url( 'admin-ajax.php' ),
-					'api_url'                             => WC_HEZARFEN_NEIGH_API_URL,
 					'mahalleio_nonce'                     => wp_create_nonce( 'mahalle-io-get-data' ),
-					'select_option_text'                  => __( 'Select an option', 'hezarfen-for-woocommerce' ),
-					'billing_district_field_classes'      => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_billing_district', array( 'form-row-wide' ) ),
-					'shipping_district_field_classes'     => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_shipping_district', array( 'form-row-wide' ) ),
-					'billing_neighborhood_field_classes'  => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_billing_neighborhood', array( 'form-row-wide' ) ),
-					'shipping_neighborhood_field_classes' => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_shipping_neighborhood', array( 'form-row-wide' ) ),
+					'billing_district_field_classes'      => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_billing_district', array() ),
+					'shipping_district_field_classes'     => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_shipping_district', array() ),
+					'billing_neighborhood_field_classes'  => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_billing_neighborhood', array() ),
+					'shipping_neighborhood_field_classes' => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_shipping_neighborhood', array() ),
 				)
 			);
 		}
@@ -188,6 +201,7 @@ class Autoload {
 		require_once 'Data/ServiceCredentialEncryption.php';
 		require_once 'Data/PostMetaEncryption.php';
 		require_once 'Checkout.php';
+		require_once 'class-my-account.php';
 		require_once 'Ajax.php';
 		require_once 'class-mahalle-local.php';
 		require_once 'Hezarfen_Install.php';
