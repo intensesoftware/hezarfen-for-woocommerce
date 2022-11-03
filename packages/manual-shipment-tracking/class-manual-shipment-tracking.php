@@ -9,6 +9,7 @@ namespace Hezarfen\ManualShipmentTracking;
 
 defined( 'ABSPATH' ) || exit;
 
+require_once 'class-helper.php';
 require_once 'admin/class-settings.php';
 
 /**
@@ -52,6 +53,9 @@ class Manual_Shipment_Tracking {
 		add_filter( 'woocommerce_register_shop_order_post_statuses', array( $this, 'register_order_status' ) );
 		add_filter( 'wc_order_statuses', array( $this, 'append_order_status' ) );
 		add_filter( 'woocommerce_reports_order_statuses', array( $this, 'append_order_status_to_reports' ), 20 );
+
+		add_action( 'woocommerce_admin_order_data_after_order_details', array( $this, 'order_details' ) );
+		add_action( 'woocommerce_process_shop_order_meta', array( $this, 'save' ), PHP_INT_MAX - 1 );
 	}
 
 	/**
@@ -97,6 +101,81 @@ class Manual_Shipment_Tracking {
 	public function append_order_status_to_reports( $statuses ) {
 		$statuses[] = self::SHIPPED_ORDER_STATUS;
 		return $statuses;
+	}
+
+	/**
+	 * Adds necessary HTML to the order details page.
+	 * 
+	 * @param WC_Order $order Order.
+	 * 
+	 * @return void
+	 */
+	public function order_details( $order ) {
+		?>
+		<br class="clear" />
+		<h4><?php esc_html_e( 'Cargo Informations', 'hezarfen-for-woocommerce' ); ?> <a href="#" class="edit_address"><?php esc_html_e( 'Edit', 'hezarfen-for-woocommerce' ); ?></a></h4>
+		<?php
+		$courier_company = Helper::get_courier_company( $order->get_id() );
+		$tracking_num    = Helper::get_tracking_num( $order->get_id() );
+		?>
+		<div class="address">
+			<p><strong><?php esc_html_e( 'Courier Company', 'hezarfen-for-woocommerce' ); ?>:</strong> <?php echo esc_html( $courier_company ); ?></p>
+			<p><strong><?php esc_html_e( 'Tracking Number', 'hezarfen-for-woocommerce' ); ?>:</strong> <?php echo esc_html( $tracking_num ); ?></p>
+		</div>
+		<div class="edit_address">
+		<?php
+			woocommerce_wp_select(
+				array(
+					'id'            => 'shipping_company',
+					'label'         => __( 'Courier Company', 'hezarfen-for-woocommerce' ) . ':',
+					'value'         => $courier_company,
+					'options'       => Helper::courier_companies(),
+					'wrapper_class' => 'form-field-wide',
+				)
+			);
+
+			woocommerce_wp_text_input(
+				array(
+					'id'            => 'shipping_number',
+					'label'         => __( 'Tracking Number', 'hezarfen-for-woocommerce' ) . ':',
+					'value'         => $tracking_num,
+					'wrapper_class' => 'form-field-wide',
+				)
+			);
+		?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Saves the data.
+	 * 
+	 * @param int|string $order_id Order ID.
+	 * 
+	 * @return void
+	 */
+	public function save( $order_id ) {
+		$order               = new \WC_Order( $order_id );
+		$old_courier_company = Helper::get_courier_company( $order_id );
+		$old_tracking_num    = Helper::get_tracking_num( $order_id );
+		$new_courier_company = ! empty( $_POST['shipping_company'] ) ? sanitize_text_field( $_POST['shipping_company'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$new_tracking_num    = ! empty( $_POST['shipping_number'] ) ? sanitize_text_field( $_POST['shipping_number'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+		if (
+			( $new_courier_company && $new_courier_company !== $old_courier_company ) ||
+			( $new_tracking_num && $new_tracking_num !== $old_tracking_num )
+		) {
+			update_post_meta( $order_id, Helper::COURIER_COMPANY_KEY, $new_courier_company );
+			update_post_meta( $order_id, Helper::TRACKING_NUM_KEY, $new_tracking_num );
+
+			do_action( 'in_hez_mst_tracking_data_saved', $order, $new_courier_company, $new_tracking_num );
+
+			if ( $new_courier_company && ( $new_tracking_num || 'Kurye' === $new_courier_company ) ) {
+				$order->update_status( apply_filters( 'in_hez_mst_new_order_status', 'shipping-progress', $order, $new_courier_company, $new_tracking_num ) );
+			}
+
+			do_action( 'in_hez_mst_order_shipped', $order_id );
+		}
 	}
 
 	/**
