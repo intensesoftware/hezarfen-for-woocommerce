@@ -8,10 +8,12 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2
-        - name: Install dependencies
-          run: composer install --dev --prefer-dist --no-progress --no-suggest
-        - name: PHPCS check
-          uses: chekalsky/phpcs-action@v1
+
+        - name: Setup PHP
+          uses: shivammathur/setup-php@v2
           with:
-            enable_warnings: true
-            phpcs_bin_path: './vendor/bin/phpcs'
+            php-version: '7.3'
+            tools: cs2pr
+
+        - name: Run PHPCS
+          run: vendor/bin/phpcs -q --report=checkstyle --ignore=*/mahalle/* | cs2pr
