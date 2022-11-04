@@ -355,4 +355,20 @@ class HasAttributes
 
     #[ORM\Column(ORM\Column::T_INTEGER)]
     protected $height;
+
+    #[SingleAttribute]
+    protected $propertySingle;
+
+    #[FirstAttribute]
+    #[SecondAttribute]
+    protected $propertyDouble;
+    #[ThirdAttribute]
+    protected $propertyWithoutSpacing;
+}
+
+enum SomeEnum
+{
+    // Enum cannot have properties
+
+    case ONE = 'one';
 }

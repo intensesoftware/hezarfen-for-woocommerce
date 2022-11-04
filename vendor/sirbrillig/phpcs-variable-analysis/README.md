@@ -1,6 +1,8 @@
 # PHP_CodeSniffer VariableAnalysis
 
-[![CircleCI](https://circleci.com/gh/sirbrillig/phpcs-variable-analysis.svg?style=svg)](https://circleci.com/gh/sirbrillig/phpcs-variable-analysis)
+[![CS and QA Build Status](https://github.com/sirbrillig/phpcs-variable-analysis/actions/workflows/csqa.yml/badge.svg)](https://github.com/sirbrillig/phpcs-variable-analysis/actions/workflows/csqa.yml)
+[![Test Build Status](https://github.com/sirbrillig/phpcs-variable-analysis/actions/workflows/test.yml/badge.svg)](https://github.com/sirbrillig/phpcs-variable-analysis/actions/workflows/test.yml)
+[![Coverage Status](https://coveralls.io/repos/github/sirbrillig/phpcs-variable-analysis/badge.svg)](https://coveralls.io/github/sirbrillig/phpcs-variable-analysis)
 
 Plugin for PHP_CodeSniffer static analysis tool that adds analysis of problematic variable use.
 
@@ -13,15 +15,16 @@ Plugin for PHP_CodeSniffer static analysis tool that adds analysis of problemati
 
 ### Requirements
 
-VariableAnalysis requires PHP 5.4 or higher and [PHP CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) version 3.5.0 or higher.
+VariableAnalysis requires PHP 5.4 or higher and [PHP CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) version 3.5.6 or higher.
 
 ### With PHPCS Composer Installer
 
 This is the easiest method.
 
-First, install [phpcodesniffer-composer-installer](https://github.com/DealerDirect/phpcodesniffer-composer-installer) for your project if you have not already. This will also install PHPCS.
+First, install [phpcodesniffer-composer-installer](https://github.com/PHPCSStandards/composer-installer) for your project if you have not already. This will also install PHPCS.
 
 ```
+composer config allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
 composer require --dev dealerdirect/phpcodesniffer-composer-installer
 ```
 

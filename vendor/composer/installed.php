@@ -1,130 +1,128 @@
-<?php return array (
-  'root' => 
-  array (
-    'pretty_version' => 'dev-master',
-    'version' => 'dev-master',
-    'aliases' => 
-    array (
+<?php return array(
+    'root' => array(
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'reference' => '5a0c0c2e66022e7aafceb1b1a038b944f51460d8',
+        'name' => '__root__',
+        'dev' => true,
     ),
-    'reference' => '215d578e8fa420032d0765cbbdeaa88e7f400edf',
-    'name' => '__root__',
-  ),
-  'versions' => 
-  array (
-    '__root__' => 
-    array (
-      'pretty_version' => 'dev-master',
-      'version' => 'dev-master',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '215d578e8fa420032d0765cbbdeaa88e7f400edf',
+    'versions' => array(
+        '__root__' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'reference' => '5a0c0c2e66022e7aafceb1b1a038b944f51460d8',
+            'dev_requirement' => false,
+        ),
+        'automattic/vipwpcs' => array(
+            'pretty_version' => '2.3.3',
+            'version' => '2.3.3.0',
+            'type' => 'phpcodesniffer-standard',
+            'install_path' => __DIR__ . '/../automattic/vipwpcs',
+            'aliases' => array(),
+            'reference' => '6cd0a6a82bc0ac988dbf9d6a7c2e293dc8ac640b',
+            'dev_requirement' => true,
+        ),
+        'dealerdirect/phpcodesniffer-composer-installer' => array(
+            'pretty_version' => 'v0.7.2',
+            'version' => '0.7.2.0',
+            'type' => 'composer-plugin',
+            'install_path' => __DIR__ . '/../dealerdirect/phpcodesniffer-composer-installer',
+            'aliases' => array(),
+            'reference' => '1c968e542d8843d7cd71de3c5c9c3ff3ad71a1db',
+            'dev_requirement' => true,
+        ),
+        'giacocorsiglia/wordpress-stubs' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => '*',
+            ),
+        ),
+        'php-stubs/woocommerce-stubs' => array(
+            'pretty_version' => 'v5.9.1',
+            'version' => '5.9.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../php-stubs/woocommerce-stubs',
+            'aliases' => array(),
+            'reference' => '486ccff117badfab94c404065d37a77d632d7db5',
+            'dev_requirement' => true,
+        ),
+        'php-stubs/wordpress-stubs' => array(
+            'pretty_version' => 'v5.9.4',
+            'version' => '5.9.4.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../php-stubs/wordpress-stubs',
+            'aliases' => array(),
+            'reference' => '3e481f4c8195fb3ca9e3e4e52e5305bf59c74cdb',
+            'dev_requirement' => true,
+        ),
+        'phpstan/extension-installer' => array(
+            'pretty_version' => '1.2.0',
+            'version' => '1.2.0.0',
+            'type' => 'composer-plugin',
+            'install_path' => __DIR__ . '/../phpstan/extension-installer',
+            'aliases' => array(),
+            'reference' => 'f06dbb052ddc394e7896fcd1cfcd533f9f6ace40',
+            'dev_requirement' => true,
+        ),
+        'phpstan/phpstan' => array(
+            'pretty_version' => '1.9.0',
+            'version' => '1.9.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpstan/phpstan',
+            'aliases' => array(),
+            'reference' => 'e08de53a5eec983de78a787a88e72518cf8fe43a',
+            'dev_requirement' => true,
+        ),
+        'sirbrillig/phpcs-variable-analysis' => array(
+            'pretty_version' => 'v2.11.9',
+            'version' => '2.11.9.0',
+            'type' => 'phpcodesniffer-standard',
+            'install_path' => __DIR__ . '/../sirbrillig/phpcs-variable-analysis',
+            'aliases' => array(),
+            'reference' => '62730888d225d55a613854b6a76fb1f9f57d1618',
+            'dev_requirement' => true,
+        ),
+        'squizlabs/php_codesniffer' => array(
+            'pretty_version' => '3.7.1',
+            'version' => '3.7.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../squizlabs/php_codesniffer',
+            'aliases' => array(),
+            'reference' => '1359e176e9307e906dc3d890bcc9603ff6d90619',
+            'dev_requirement' => true,
+        ),
+        'symfony/polyfill-php73' => array(
+            'pretty_version' => 'v1.26.0',
+            'version' => '1.26.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/polyfill-php73',
+            'aliases' => array(),
+            'reference' => 'e440d35fa0286f77fb45b79a03fedbeda9307e85',
+            'dev_requirement' => true,
+        ),
+        'szepeviktor/phpstan-wordpress' => array(
+            'pretty_version' => 'v1.1.3',
+            'version' => '1.1.3.0',
+            'type' => 'phpstan-extension',
+            'install_path' => __DIR__ . '/../szepeviktor/phpstan-wordpress',
+            'aliases' => array(),
+            'reference' => 'e644df734e1bbe95810e0f617d17df091048a94e',
+            'dev_requirement' => true,
+        ),
+        'wp-coding-standards/wpcs' => array(
+            'pretty_version' => '2.3.0',
+            'version' => '2.3.0.0',
+            'type' => 'phpcodesniffer-standard',
+            'install_path' => __DIR__ . '/../wp-coding-standards/wpcs',
+            'aliases' => array(),
+            'reference' => '7da1894633f168fe244afc6de00d141f27517b62',
+            'dev_requirement' => true,
+        ),
     ),
-    'automattic/vipwpcs' => 
-    array (
-      'pretty_version' => '2.3.3',
-      'version' => '2.3.3.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '6cd0a6a82bc0ac988dbf9d6a7c2e293dc8ac640b',
-    ),
-    'dealerdirect/phpcodesniffer-composer-installer' => 
-    array (
-      'pretty_version' => 'v0.7.1',
-      'version' => '0.7.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'fe390591e0241955f22eb9ba327d137e501c771c',
-    ),
-    'giacocorsiglia/wordpress-stubs' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '*',
-      ),
-    ),
-    'php-stubs/woocommerce-stubs' => 
-    array (
-      'pretty_version' => 'v5.9.0',
-      'version' => '5.9.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'a7204cfbb5fa90720773122cb68530087de5bc78',
-    ),
-    'php-stubs/wordpress-stubs' => 
-    array (
-      'pretty_version' => 'v5.8.1',
-      'version' => '5.8.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '8b333464d3183bccde2fdbb814e3cae592434943',
-    ),
-    'phpstan/extension-installer' => 
-    array (
-      'pretty_version' => '1.1.0',
-      'version' => '1.1.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '66c7adc9dfa38b6b5838a9fb728b68a7d8348051',
-    ),
-    'phpstan/phpstan' => 
-    array (
-      'pretty_version' => '1.1.2',
-      'version' => '1.1.2.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'bcea0ae85868a89d5789c75f012c93129f842934',
-    ),
-    'sirbrillig/phpcs-variable-analysis' => 
-    array (
-      'pretty_version' => 'v2.11.2',
-      'version' => '2.11.2.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '3fad28475bfbdbf8aa5c440f8a8f89824983d85e',
-    ),
-    'squizlabs/php_codesniffer' => 
-    array (
-      'pretty_version' => '3.6.1',
-      'version' => '3.6.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'f268ca40d54617c6e06757f83f699775c9b3ff2e',
-    ),
-    'symfony/polyfill-php73' => 
-    array (
-      'pretty_version' => 'v1.23.0',
-      'version' => '1.23.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'fba8933c384d6476ab14fb7b8526e5287ca7e010',
-    ),
-    'szepeviktor/phpstan-wordpress' => 
-    array (
-      'pretty_version' => 'v1.0.0',
-      'version' => '1.0.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'ae7f2676776000b7627f2644ab05e0f233061509',
-    ),
-    'wp-coding-standards/wpcs' => 
-    array (
-      'pretty_version' => '2.3.0',
-      'version' => '2.3.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '7da1894633f168fe244afc6de00d141f27517b62',
-    ),
-  ),
 );

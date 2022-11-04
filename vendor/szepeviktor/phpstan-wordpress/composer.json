@@ -1,7 +1,8 @@
 {
     "name": "szepeviktor/phpstan-wordpress",
-    "type": "phpstan-extension",
     "description": "WordPress extensions for PHPStan",
+    "license": "MIT",
+    "type": "phpstan-extension",
     "keywords": [
         "static analysis",
         "code analysis",
@@ -9,32 +10,35 @@
         "wordpress",
         "phpstan"
     ],
-    "license": "MIT",
     "require": {
-        "php": "^7.1 || ^8.0",
-        "php-stubs/wordpress-stubs": "^4.7 || ^5.0",
-        "phpstan/phpstan": "^1.0",
+        "php": "^7.2 || ^8.0",
+        "php-stubs/wordpress-stubs": "^4.7 || ^5.0 || ^6.0",
+        "phpstan/phpstan": "^1.6",
         "symfony/polyfill-php73": "^1.12.0"
     },
     "require-dev": {
-        "composer/composer": "^1.10.23",
+        "composer/composer": "^2.1.14",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
-        "nikic/php-parser": "< 4.13.0",
         "php-parallel-lint/php-parallel-lint": "^1.1",
-        "phpstan/phpstan-strict-rules": "^1.0",
-        "phpunit/phpunit": "^7 || ^9",
+        "phpstan/phpstan-strict-rules": "^1.2",
+        "phpunit/phpunit": "^8 || ^9",
         "szepeviktor/phpcs-psr-12-neutron-hybrid-ruleset": "^0.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "SzepeViktor\\PHPStan\\WordPress\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     },
     "extra": {
         "phpstan": {
             "includes": [
                 "extension.neon"
             ]
-        }
-    },
-    "autoload": {
-        "psr-4": {
-            "SzepeViktor\\PHPStan\\WordPress\\": "src/"
         }
     },
     "scripts": {
@@ -44,9 +48,10 @@
             "@test:cs",
             "@test:phpstan"
         ],
-        "test:phpunit": "phpunit",
-        "test:cs": "phpcs --standard=PSR12NeutronRuleset --exclude=PEAR.Commenting.ClassComment,PEAR.Commenting.FileComment,Generic.Files.LineLength bootstrap.php src/",
+        "test:cs": "phpcs",
+        "test:cs:fix": "phpcbf",
         "test:phpstan": "phpstan analyze",
-        "test:syntax": "parallel-lint bootstrap.php src/"
+        "test:phpunit": "phpunit",
+        "test:syntax": "parallel-lint bootstrap.php src/ tests/"
     }
 }

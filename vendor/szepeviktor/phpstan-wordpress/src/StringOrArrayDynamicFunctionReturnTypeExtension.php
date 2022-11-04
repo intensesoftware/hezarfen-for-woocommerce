@@ -14,6 +14,7 @@ use PHPStan\Reflection\FunctionReflection;
 use PHPStan\Reflection\ParametersAcceptorSelector;
 use PHPStan\Type\StringType;
 use PHPStan\Type\ArrayType;
+use PHPStan\Type\IntegerType;
 use PHPStan\Type\Type;
 
 class StringOrArrayDynamicFunctionReturnTypeExtension implements \PHPStan\Type\DynamicFunctionReturnTypeExtension
@@ -25,21 +26,23 @@ class StringOrArrayDynamicFunctionReturnTypeExtension implements \PHPStan\Type\D
 
     public function getTypeFromFunctionCall(FunctionReflection $functionReflection, FuncCall $functionCall, Scope $scope): Type
     {
-        $argsCount = count($functionCall->args);
+        $args = $functionCall->getArgs();
+        $argsCount = count($args);
         if ($argsCount === 0) {
             return ParametersAcceptorSelector::selectFromArgs(
                 $scope,
-                $functionCall->args,
+                $args,
                 $functionReflection->getVariants()
             )->getReturnType();
         }
-
-        $dataArg = $functionCall->args[0]->value;
+        $dataArg = $args[0]->value;
         $dataArgType = $scope->getType($dataArg);
-        if ($dataArgType instanceof ArrayType) {
+        if ($dataArgType->isArray()->yes()) {
             $keyType = $dataArgType->getIterableKeyType();
-            $itemType = $dataArgType->getIterableValueType();
-            return new ArrayType($keyType, $itemType);
+            if ($keyType instanceof StringType) {
+                return new ArrayType(new StringType(), new StringType());
+            }
+            return new ArrayType(new IntegerType(), new StringType());
         }
         return new StringType();
     }
