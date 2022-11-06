@@ -121,11 +121,6 @@ parameters:
 			path: includes/Checkout.php
 
 		-
-			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:override_billing_hez_identity_number\\(\\) should return string but returns bool\\|string\\.$#"
-			count: 1
-			path: includes/Checkout.php
-
-		-
 			message: "#^Method Hezarfen\\\\Inc\\\\Checkout\\:\\:override_posted_data\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: includes/Checkout.php
@@ -187,26 +182,6 @@ parameters:
 
 		-
 			message: "#^Method Hezarfen\\\\Inc\\\\Data\\\\Abstracts\\\\Abstract_Encryption\\:\\:encrypt\\(\\) should return bool\\|string but returns WP_Error\\.$#"
-			count: 1
-			path: includes/Data/Abstracts/Abstract_Encryption.php
-
-		-
-			message: "#^Parameter \\#1 \\$length of function openssl_random_pseudo_bytes expects int, int\\|false given\\.$#"
-			count: 1
-			path: includes/Data/Abstracts/Abstract_Encryption.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of function hash_hmac expects string, string\\|false given\\.$#"
-			count: 1
-			path: includes/Data/Abstracts/Abstract_Encryption.php
-
-		-
-			message: "#^Parameter \\#2 \\$offset of function substr expects int, int\\|false given\\.$#"
-			count: 1
-			path: includes/Data/Abstracts/Abstract_Encryption.php
-
-		-
-			message: "#^Parameter \\#3 \\$length of function substr expects int\\|null, int\\|false given\\.$#"
 			count: 1
 			path: includes/Data/Abstracts/Abstract_Encryption.php
 
