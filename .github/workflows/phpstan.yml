@@ -10,3 +10,5 @@ jobs:
         uses: actions/checkout@v2
       - name: Analyse
         uses: actions-x/phpstan@v1
+        with:
+          arguments: --memory-limit=512M
