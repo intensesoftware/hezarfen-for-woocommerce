@@ -8,8 +8,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Analyse
-        uses: actions-x/phpstan@v1
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          configPath: phpstan.neon
-          arguments: --memory-limit=512M
+          php-version: '8.1'
+
+      - name: Run PHPSTAN
+        run: vendor/bin/phpstan --memory-limit=512M
