@@ -201,17 +201,12 @@ parameters:
 			path: includes/Data/Abstracts/Abstract_Encryption.php
 
 		-
-			message: "#^Parameter \\#2 \\$start of function substr expects int, int\\|false given\\.$#"
+			message: "#^Parameter \\#2 \\$offset of function substr expects int, int\\|false given\\.$#"
 			count: 1
 			path: includes/Data/Abstracts/Abstract_Encryption.php
 
 		-
-			message: "#^Parameter \\#3 \\$length of function substr expects int, int\\|false given\\.$#"
-			count: 1
-			path: includes/Data/Abstracts/Abstract_Encryption.php
-
-		-
-			message: "#^Parameter \\#5 \\$iv of function openssl_encrypt expects string, string\\|false given\\.$#"
+			message: "#^Parameter \\#3 \\$length of function substr expects int\\|null, int\\|false given\\.$#"
 			count: 1
 			path: includes/Data/Abstracts/Abstract_Encryption.php
 
@@ -227,11 +222,6 @@ parameters:
 
 		-
 			message: "#^Method Hezarfen\\\\Inc\\\\Data\\\\PostMetaEncryption\\:\\:setEncryptionKey\\(\\) should return bool\\|string but return statement is missing\\.$#"
-			count: 1
-			path: includes/Data/PostMetaEncryption.php
-
-		-
-			message: "#^Parameter \\#1 \\$str of function base64_encode expects string, string\\|false given\\.$#"
 			count: 1
 			path: includes/Data/PostMetaEncryption.php
 
