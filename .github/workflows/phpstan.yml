@@ -11,4 +11,5 @@ jobs:
       - name: Analyse
         uses: actions-x/phpstan@v1
         with:
+          configPath: phpstan.neon
           arguments: --memory-limit=512M
