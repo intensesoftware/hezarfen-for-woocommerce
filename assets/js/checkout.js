@@ -43,6 +43,8 @@ jQuery(function ($) {
                 $('#hezarfen_tax_number_field, #hezarfen_tax_office_field, #billing_company_field').removeClass('hezarfen-hide-form-field');
             }
         });
+
+        $('#hezarfen_TC_number').on('blur', validate);
     });
 
     function add_checkout_event_handlers(type, wrapper) {
@@ -111,5 +113,25 @@ jQuery(function ($) {
             district: type === 'billing' ? wc_hezarfen_ajax_object.billing_district_field_classes : wc_hezarfen_ajax_object.shipping_district_field_classes,
             neighborhood: type === 'billing' ? wc_hezarfen_ajax_object.billing_neighborhood_field_classes : wc_hezarfen_ajax_object.shipping_neighborhood_field_classes
         };
+    }
+
+    function validate() {
+        const $this = $(this);
+        const value = $this.val();
+        const parent = $this.closest('.form-row');
+        let validated = true;
+
+        if ($this.is('#hezarfen_TC_number')) {
+            if (value && value.length !== 11) {
+                validated = false;
+            }
+        }
+
+        if (!validated) {
+            parent.removeClass('woocommerce-validated').addClass('woocommerce-invalid');
+            if ($this.hasClass('validate-required')) {
+                parent.addClass('woocommerce-invalid-required-field');
+            }
+        }
     }
 });
