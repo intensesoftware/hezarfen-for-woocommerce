@@ -467,17 +467,15 @@ class Checkout {
 	 */
 	public function override_posted_data( $data ) {
 		// Check if the T.C. Identitiy Field is active.
-		if ( $this->hezarfen_show_hezarfen_checkout_tax_fields && self::is_show_identity_field_on_checkout() ) {
+		if ( ! empty( $data['billing_hez_TC_number'] ) && $this->hezarfen_show_hezarfen_checkout_tax_fields && self::is_show_identity_field_on_checkout() ) {
 			if (
 				( new PostMetaEncryption() )->health_check() &&
 				( new PostMetaEncryption() )->test_the_encryption_key()
 			) {
-				if ( $data['billing_hez_TC_number'] ) {
-					// Encrypt the T.C. Identity fields.
-					$data['billing_hez_TC_number'] = ( new PostMetaEncryption() )->encrypt(
-						$data['billing_hez_TC_number']
-					);
-				}
+				// Encrypt the T.C. Identity fields.
+				$data['billing_hez_TC_number'] = ( new PostMetaEncryption() )->encrypt(
+					$data['billing_hez_TC_number']
+				);
 			} else {
 				// do not save the T.C. identitiy fields.
 				$data['billing_hez_TC_number'] = '******';
