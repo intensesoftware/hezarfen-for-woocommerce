@@ -11,7 +11,7 @@ var wc_hezarfen_checkout = {
 jQuery(function ($) {
     $(document).ready(function () {
         for (const type of ['billing', 'shipping']) {
-            let wrapper = $('.woocommerce-' + type + '-fields');
+            let wrapper = $(`.woocommerce-${type}-fields`);
             let mahalle_helper = new hezarfen_mahalle_helper(wrapper, type, 'checkout');
 
             let current_country_code = mahalle_helper.get_country_field().val();
@@ -47,10 +47,10 @@ jQuery(function ($) {
 
     function add_checkout_event_handlers(type, wrapper) {
         // prevent adding event handlers multiple times.
-        $('#' + type + '_address_1').off('select2:select.hezarfen');
+        $(`#${type}_address_1`).off('select2:select.hezarfen');
         $('#ship-to-different-address input').off('change.hezarfen');
 
-        $('#' + type + '_address_1').on("select2:select.hezarfen", function (e) {
+        $(`#${type}_address_1`).on("select2:select.hezarfen", function () {
             neighborhood_on_change($(this).val(), type, wrapper);
         });
 
@@ -67,8 +67,8 @@ jQuery(function ($) {
 
     function neighborhood_on_change(neighborhood, type, checkout_fields_wrapper) {
         if (wc_hezarfen_checkout.should_notify_neighborhood_changed(type)) {
-            let province_plate_number = checkout_fields_wrapper.find('#' + type + '_state').val();
-            let district = checkout_fields_wrapper.find('#' + type + '_city').val();
+            let province_plate_number = checkout_fields_wrapper.find(`#${type}_state`).val();
+            let district = checkout_fields_wrapper.find(`#${type}_city`).val();
 
             notify_neighborhood_changed(province_plate_number, district, neighborhood, type);
         }
