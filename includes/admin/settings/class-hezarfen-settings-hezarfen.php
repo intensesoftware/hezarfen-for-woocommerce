@@ -291,22 +291,18 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		global $current_section;
 		global $hide_save_button;
 
-		if ( 'encryption' == $current_section ) {
-			if ( ( new PostMetaEncryption() )->is_encryption_key_generated() ) {
-				$hide_save_button = true;
+		$post_meta_encryption = new PostMetaEncryption();
 
-				// is key generated and placed to the wp-config.php?
-				$health_check_status = ( new PostMetaEncryption() )->health_check();
+		if ( 'encryption' == $current_section && $post_meta_encryption->is_encryption_key_generated() ) {
+			$hide_save_button = true;
 
-				// is key correct and is it equal to the key that generated first time?
-				$test_the_key = ( new PostMetaEncryption() )->test_the_encryption_key();
+			// is key generated and placed to the wp-config.php?
+			$health_check_status = $post_meta_encryption->health_check();
 
-				require 'views/encryption.php';
-			} else {
-				// load the key generate view.
-				$settings = $this->get_settings_for_section( $current_section );
-				WC_Admin_Settings::output_fields( $settings );
-			}
+			// is key correct and is it equal to the key that generated first time?
+			$test_the_key = $post_meta_encryption->test_the_encryption_key();
+
+			require 'views/encryption.php';
 		} else {
 			$settings = $this->get_settings_for_section( $current_section );
 			WC_Admin_Settings::output_fields( $settings );
