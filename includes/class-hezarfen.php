@@ -45,29 +45,10 @@ class Hezarfen {
 			),
 		);
 
-		add_action(
-			'plugins_loaded',
-			array(
-				$this,
-				'check_addons_and_show_notices',
-			)
-		);
+		add_action( 'plugins_loaded', array( $this, 'check_addons_and_show_notices' ) );
+		add_filter( 'woocommerce_get_settings_pages', array( $this, 'add_hezarfen_setting_page' ) );
 
-		add_filter(
-			'woocommerce_get_settings_pages',
-			array(
-				$this,
-				'add_hezarfen_setting_page',
-			)
-		);
-
-		register_activation_hook(
-			WC_HEZARFEN_FILE,
-			array(
-				'Hezarfen_Install',
-				'install',
-			)
-		);
+		register_activation_hook( WC_HEZARFEN_FILE, array( 'Hezarfen_Install', 'install' ) );
 	}
 
 	/**
