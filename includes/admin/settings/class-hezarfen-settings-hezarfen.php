@@ -186,7 +186,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				);
 			}
 
-			$settings = apply_filters( 'hezarfen_checkout_tax_settings', $fields );
+			$settings = apply_filters( 'hezarfen_checkout_encryption_settings', $fields );
 		} elseif ( 'checkout-page' == $current_section ) {
 			$fields = array(
 				array(
