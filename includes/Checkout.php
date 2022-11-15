@@ -42,16 +42,6 @@ class Checkout {
 
 		if ( $checkout_fields_auto_sort ) {
 			add_filter( 'woocommerce_checkout_fields', array( $this, 'auto_sort_checkout_fields' ), 999999, 1 );
-
-			add_filter(
-				'woocommerce_default_address_fields',
-				array(
-					$this,
-					'sort_address_fields',
-				),
-				100000,
-				1
-			);
 		}
 
 		if ( $hide_postcode_field ) {
@@ -91,14 +81,6 @@ class Checkout {
 		);
 
 		add_filter(
-			'woocommerce_get_country_locale',
-			array(
-				$this,
-				'modify_tr_locale',
-			)
-		);
-
-		add_filter(
 			'woocommerce_checkout_posted_data',
 			array(
 				$this,
@@ -126,21 +108,6 @@ class Checkout {
 	}
 
 	/**
-	 * Sort address fields forcelly.
-	 *
-	 * @param  array $fields current default address fields.
-	 * @return array
-	 */
-	public function sort_address_fields( $fields ) {
-		$fields['state']['priority']     = 6;
-		$fields['city']['priority']      = 7;
-		$fields['address_1']['priority'] = 8;
-		$fields['address_2']['priority'] = 9;
-
-		return $fields;
-	}
-
-	/**
 	 * Make address 2 fields required.
 	 *
 	 * @param  array $fields current default address fields.
@@ -150,27 +117,6 @@ class Checkout {
 		$fields['address_2']['required'] = true;
 
 		return $fields;
-	}
-
-	/**
-	 * Modifies TR country locale data.
-	 * 
-	 * @param array $locales Locale data of all countries.
-	 * 
-	 * @return array
-	 */
-	public function modify_tr_locale( $locales ) {
-		// TODO: bu method (add_filter() ile birlikte) ayrı bir class'a çekilse daha iyi olur. Çünkü sadece checkout'u ilgilendirmiyor, aynı zamanda Hesabım > Adres düzenleme sayfalarındaki fieldları ve başka şeyleri de ilgilendiriyor.
-		$locales['TR']['city'] = array(
-			'label' => __( 'Town / City', 'hezarfen-for-woocommerce' ),
-		);
-
-		$locales['TR']['address_1'] = array(
-			'label'       => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
-			'placeholder' => __( 'Select an option', 'hezarfen-for-woocommerce' ),
-		);
-
-		return $locales;
 	}
 
 	/**
