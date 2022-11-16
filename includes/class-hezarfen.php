@@ -49,7 +49,7 @@ class Hezarfen {
 
 		add_action( 'plugins_loaded', array( $this, 'check_addons_and_show_notices' ) );
 		add_filter( 'woocommerce_get_settings_pages', array( $this, 'add_hezarfen_setting_page' ) );
-		add_filter( 'woocommerce_get_country_locale', array( $this, 'modify_tr_locale' ) );
+		add_filter( 'woocommerce_get_country_locale', array( $this, 'modify_tr_locale' ), PHP_INT_MAX - 2 );
 
 		if ( 'yes' === get_option( 'hezarfen_checkout_fields_auto_sort', 'no' ) ) {
 			add_filter( 'woocommerce_default_address_fields', array( $this, 'sort_address_fields' ), 100000, 1 );
@@ -64,13 +64,19 @@ class Hezarfen {
 	 * @return array
 	 */
 	public function modify_tr_locale( $locales ) {
-		$locales['TR']['city'] = array(
-			'label' => __( 'Town / City', 'hezarfen-for-woocommerce' ),
+		$locales['TR']['city'] = array_merge(
+			$locales['TR']['city'] ?? array(),
+			array(
+				'label' => __( 'Town / City', 'hezarfen-for-woocommerce' ),
+			)
 		);
 
-		$locales['TR']['address_1'] = array(
-			'label'       => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
-			'placeholder' => __( 'Select an option', 'hezarfen-for-woocommerce' ),
+		$locales['TR']['address_1'] = array_merge(
+			$locales['TR']['address_1'] ?? array(),
+			array(
+				'label'       => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
+				'placeholder' => __( 'Select an option', 'hezarfen-for-woocommerce' ),
+			)
 		);
 
 		return $locales;
