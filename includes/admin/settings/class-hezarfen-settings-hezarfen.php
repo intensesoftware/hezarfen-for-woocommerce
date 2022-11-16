@@ -251,6 +251,16 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					'default' => 'no',
 				),
 				array(
+					'title'   => __(
+						'Sort address fields in My Account > Address pages?',
+						'hezarfen-for-woocommerce'
+					),
+					'type'    => 'checkbox',
+					'desc'    => '',
+					'id'      => 'hezarfen_sort_my_account_fields',
+					'default' => 'no',
+				),
+				array(
 					'type' => 'sectionend',
 					'id'   => 'hezarfen_general_settings_section_end',
 				),

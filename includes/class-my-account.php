@@ -1,6 +1,6 @@
 <?php
 /**
- * Contains the class that adds district and neighborhood select elements to the My Account edit address pages.
+ * Contains the class that adds features related to the My Account edit address pages.
  * 
  * @package Hezarfen\Inc
  */
@@ -10,7 +10,7 @@ namespace Hezarfen\Inc;
 defined( 'ABSPATH' ) || exit();
 
 /**
- * Adds district and neighborhood select elements to the My Account edit address pages.
+ * Adds features related to the My Account edit address pages.
  */
 class My_Account {
 	/**
@@ -19,6 +19,11 @@ class My_Account {
 	public function __construct() {
 		add_filter( 'woocommerce_address_to_edit', array( $this, 'convert_to_select_elements' ), PHP_INT_MAX - 1, 2 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+
+		if ( 'yes' === get_option( 'hezarfen_sort_my_account_fields', 'no' ) ) {
+			// we need to use an action that fires after the 'posts_selection' action to access the is_account_page() function. (https://woocommerce.com/document/conditional-tags/).
+			add_action( 'wp', array( $this, 'sort_address_fields' ) );
+		}
 	}
 
 	/**
@@ -43,6 +48,12 @@ class My_Account {
 		$address[ $nbrhood_key ]['options']  = Helper::select2_option_format( Mahalle_Local::get_neighborhoods( $customer_province_code, $customer_district, false ) );
 
 		return $address;
+	}
+
+	public function sort_address_fields() {
+		if ( Helper::is_edit_address_page() ) {
+			Helper::sort_address_fields();
+		}
 	}
 
 	/**

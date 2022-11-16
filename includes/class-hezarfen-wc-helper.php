@@ -47,6 +47,55 @@ class Helper {
 	}
 
 	/**
+	 * Hooks into the necessary filters to sort address fields.
+	 * 
+	 * @return void
+	 */
+	public static function sort_address_fields() {
+		add_filter( 'woocommerce_get_country_locale', array( __CLASS__, 'assign_priorities_to_address_fields' ), PHP_INT_MAX - 1 );
+		add_filter( 'woocommerce_billing_fields', array( __CLASS__, 'assign_priorities_to_phone_and_email' ), PHP_INT_MAX - 1, 2 );
+	}
+
+	/**
+	 * Assigns priorities to the address fields.
+	 * 
+	 * @param array<string, array<string, array<string, mixed>>> $locales Locale data of all countries.
+	 * 
+	 * @return array<string, array<string, array<string, mixed>>>
+	 */
+	public static function assign_priorities_to_address_fields( $locales ) {
+		$locales['TR']['state']['priority']     = 50;
+		$locales['TR']['city']['priority']      = 60;
+		$locales['TR']['address_1']['priority'] = 70;
+
+		$locales['TR']['address_2'] = array_merge(
+			$locales['TR']['address_2'] ?? array(),
+			array( 'priority' => 80 )
+		);
+
+		$locales['TR']['postcode']['priority'] = 90;
+
+		return $locales;
+	}
+
+	/**
+	 * Assigns priorities to the phone and email fields.
+	 * 
+	 * @param array<string, array<string, mixed>> $address_fields Address fields.
+	 * @param string                              $country Country.
+	 * 
+	 * @return array<string, array<string, mixed>>
+	 */
+	public static function assign_priorities_to_phone_and_email( $address_fields, $country ) {
+		if ( 'TR' === $country ) {
+			$address_fields['billing_phone']['priority'] = 32;
+			$address_fields['billing_email']['priority'] = 34;
+		}
+
+		return $address_fields;
+	}
+
+	/**
 	 * Is My Account > Edit Address page? (billing or shipping address).
 	 * 
 	 * @return bool
