@@ -47,6 +47,16 @@ class Helper {
 	}
 
 	/**
+	 * Is My Account > Edit Address page? (billing or shipping address).
+	 * 
+	 * @return bool
+	 */
+	public static function is_edit_address_page() {
+		global $wp;
+		return is_account_page() && ! empty( $wp->query_vars['edit-address'] );
+	}
+
+	/**
 	 * Checks installed Hezarfen addons' versions. Returns notices if there are outdated addons.
 	 * 
 	 * @param array $addons Addons data to check.
