@@ -52,18 +52,21 @@ class Helper {
 	 * @return void
 	 */
 	public static function sort_address_fields() {
-		add_filter( 'woocommerce_get_country_locale', array( __CLASS__, 'assign_priorities_to_address_fields' ), PHP_INT_MAX - 1 );
-		add_filter( 'woocommerce_billing_fields', array( __CLASS__, 'assign_priorities_to_phone_and_email' ), PHP_INT_MAX - 1, 2 );
+		add_filter( 'woocommerce_get_country_locale', array( __CLASS__, 'assign_priorities_to_locale_fields' ), PHP_INT_MAX - 1 );
+		add_filter( 'woocommerce_billing_fields', array( __CLASS__, 'assign_priorities_to_non_locale_fields' ), PHP_INT_MAX - 1, 2 );
+		if ( is_checkout() ) {
+			add_filter( 'woocommerce_shipping_fields', array( __CLASS__, 'assign_priorities_to_non_locale_fields' ), PHP_INT_MAX - 1, 2 );
+		}
 	}
 
 	/**
-	 * Assigns priorities to the address fields.
+	 * Assigns priorities to the locale address fields.
 	 * 
 	 * @param array<string, array<string, array<string, mixed>>> $locales Locale data of all countries.
 	 * 
 	 * @return array<string, array<string, array<string, mixed>>>
 	 */
-	public static function assign_priorities_to_address_fields( $locales ) {
+	public static function assign_priorities_to_locale_fields( $locales ) {
 		$locales['TR']['state']['priority']     = 50;
 		$locales['TR']['city']['priority']      = 60;
 		$locales['TR']['address_1']['priority'] = 70;
@@ -79,17 +82,24 @@ class Helper {
 	}
 
 	/**
-	 * Assigns priorities to the phone and email fields.
+	 * Assigns priorities to the billing phone, billing email and shipping company fields.
+	 * These fields are not part of country locale fields by default. (see WC_Countries::get_country_locale_field_selectors() method)
 	 * 
 	 * @param array<string, array<string, mixed>> $address_fields Address fields.
 	 * @param string                              $country Country.
 	 * 
 	 * @return array<string, array<string, mixed>>
 	 */
-	public static function assign_priorities_to_phone_and_email( $address_fields, $country ) {
+	public static function assign_priorities_to_non_locale_fields( $address_fields, $country ) {
 		if ( 'TR' === $country ) {
-			$address_fields['billing_phone']['priority'] = 32;
-			$address_fields['billing_email']['priority'] = 34;
+			$type = isset( $address_fields['billing_country'] ) ? 'billing' : 'shipping';
+
+			if ( 'billing' === $type ) {
+				$address_fields['billing_phone']['priority'] = 32;
+				$address_fields['billing_email']['priority'] = 34;
+			} elseif ( isset( $address_fields['shipping_company'] ) ) {
+				$address_fields['shipping_company']['priority'] = 5;
+			}
 		}
 
 		return $address_fields;

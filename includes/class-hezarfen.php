@@ -50,10 +50,6 @@ class Hezarfen {
 		add_action( 'plugins_loaded', array( $this, 'check_addons_and_show_notices' ) );
 		add_filter( 'woocommerce_get_settings_pages', array( $this, 'add_hezarfen_setting_page' ) );
 		add_filter( 'woocommerce_get_country_locale', array( $this, 'modify_tr_locale' ), PHP_INT_MAX - 2 );
-
-		if ( 'yes' === get_option( 'hezarfen_checkout_fields_auto_sort', 'no' ) ) {
-			add_filter( 'woocommerce_default_address_fields', array( $this, 'sort_address_fields' ), 100000, 1 );
-		}
 	}
 
 	/**
@@ -80,21 +76,6 @@ class Hezarfen {
 		);
 
 		return $locales;
-	}
-
-	/**
-	 * Sort address fields forcelly
-	 *
-	 * @param  array $fields current default address fields.
-	 * @return array
-	 */
-	public function sort_address_fields( $fields ) {
-		$fields['state']['priority']     = 6;
-		$fields['city']['priority']      = 7;
-		$fields['address_1']['priority'] = 8;
-		$fields['address_2']['priority'] = 9;
-
-		return $fields;
 	}
 
 	/**

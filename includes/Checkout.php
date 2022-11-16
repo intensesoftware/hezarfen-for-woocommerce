@@ -37,14 +37,12 @@ class Checkout {
 			add_filter( 'woocommerce_checkout_fields', array( $this, 'add_tax_fields' ), 110, 1 );
 		}
 
-		$hide_postcode_field       = get_option( 'hezarfen_hide_checkout_postcode_fields', 'no' ) == 'yes';
-		$checkout_fields_auto_sort = get_option( 'hezarfen_checkout_fields_auto_sort', 'no' ) == 'yes';
-
-		if ( $checkout_fields_auto_sort ) {
-			add_filter( 'woocommerce_checkout_fields', array( $this, 'auto_sort_checkout_fields' ), 999999, 1 );
+		if ( 'yes' === get_option( 'hezarfen_checkout_fields_auto_sort', 'no' ) ) {
+			// we need to use an action that fires after the 'posts_selection' action to access the is_checkout() function. (https://woocommerce.com/document/conditional-tags/).
+			add_action( 'wp', array( $this, 'sort_checkout_fields' ) );
 		}
 
-		if ( $hide_postcode_field ) {
+		if ( 'yes' === get_option( 'hezarfen_hide_checkout_postcode_fields', 'no' ) ) {
 			add_filter( 'woocommerce_checkout_fields', array( $this, 'hide_postcode_fields' ), 90 );
 		}
 
@@ -108,6 +106,17 @@ class Checkout {
 	}
 
 	/**
+	 * Sorts the Checkout Form Fields.
+	 *
+	 * @return void
+	 */
+	public function sort_checkout_fields() {
+		if ( is_checkout() ) {
+			Helper::sort_address_fields();
+		}
+	}
+
+	/**
 	 * Make address 2 fields required.
 	 *
 	 * @param  array $fields current default address fields.
@@ -136,64 +145,6 @@ class Checkout {
 		return $fields;
 	}
 
-	/**
-	 * Auto Sort the Checkout Form Fields.
-	 *
-	 * @param  array $fields woocommerce checkout fields.
-	 * @return array
-	 */
-	public function auto_sort_checkout_fields( $fields ) {
-		$fields['billing']['billing_first_name']['priority'] = 1;
-		$fields['billing']['billing_last_name']['priority']  = 2;
-		$fields['billing']['billing_phone']['priority']      = 3;
-		$fields['billing']['billing_email']['priority']      = 4;
-		$fields['billing']['billing_country']['priority']    = 5;
-		$fields['billing']['billing_state']['priority']      = 6;
-		$fields['billing']['billing_city']['priority']       = 7;
-		$fields['billing']['billing_address_1']['priority']  = 8;
-
-		if ( isset( $fields['billing']['billing_address_2'] ) ) {
-			$fields['billing']['billing_address_2']['priority'] = 9;
-		}
-
-		if ( isset( $fields['billing']['billing_hez_invoice_type'] ) ) {
-			$fields['billing']['billing_hez_invoice_type']['priority'] = 10;
-		}
-
-		if ( self::is_show_identity_field_on_checkout() ) {
-			$fields['billing']['billing_hez_TC_number']['priority'] = 11;
-		}
-
-		if ( isset( $fields['billing']['billing_company'] ) ) {
-			$fields['billing']['billing_company']['priority'] = 12;
-		}
-
-		if ( isset( $fields['billing']['billing_hez_tax_number'] ) ) {
-			$fields['billing']['billing_hez_tax_number']['priority'] = 13;
-		}
-
-		if ( isset( $fields['billing']['billing_hez_tax_office'] ) ) {
-			$fields['billing']['billing_hez_tax_office']['priority'] = 14;
-		}
-
-		if ( isset( $fields['shipping']['shipping_company'] ) ) {
-			$fields['shipping']['shipping_company']['priority'] = 0;
-		}
-
-		$fields['shipping']['shipping_first_name']['priority'] = 1;
-		$fields['shipping']['shipping_last_name']['priority']  = 2;
-		$fields['shipping']['shipping_country']['priority']    = 5;
-		$fields['shipping']['shipping_state']['priority']      = 6;
-		$fields['shipping']['shipping_city']['priority']       = 7;
-		$fields['shipping']['shipping_address_1']['priority']  = 8;
-
-		if ( isset( $fields['shipping']['shipping_address_2'] ) ) {
-			$fields['shipping']['shipping_address_2']['priority'] = 9;
-		}
-
-		return $fields;
-	}
-	
 	/**
 	 * Hide Post Code Fields where in the checkout form.
 	 *
@@ -330,6 +281,9 @@ class Checkout {
 	public function add_tax_fields( $fields ) {
 		$invoice_type_value = ( new \WC_Checkout() )->get_value( 'billing_hez_invoice_type' );
 
+		$address_2_priority = $fields['billing']['billing_address_2']['priority'] ?? 0;
+		$address_1_priority = $fields['billing']['billing_address_1']['priority'];
+
 		$fields['billing']['billing_hez_invoice_type'] = array(
 			'id'       => 'hezarfen_invoice_type',
 			'label'    => __( 'Invoice Type', 'hezarfen-for-woocommerce' ),
@@ -340,7 +294,7 @@ class Checkout {
 				'person'  => __( 'Personal', 'hezarfen-for-woocommerce' ),
 				'company' => __( 'Company', 'hezarfen-for-woocommerce' ),
 			),
-			'priority' => $fields['billing']['billing_email']['priority'] + 1,
+			'priority' => $address_2_priority ? $address_2_priority + 1 : $address_1_priority + 1,
 		);
 
 		if ( self::is_show_identity_field_on_checkout() ) {
