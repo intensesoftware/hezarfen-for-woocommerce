@@ -50,6 +50,11 @@ class My_Account {
 		return $address;
 	}
 
+	/**
+	 * Sorts the address fields.
+	 * 
+	 * @return void
+	 */
 	public function sort_address_fields() {
 		if ( Helper::is_edit_address_page() ) {
 			Helper::sort_address_fields();
