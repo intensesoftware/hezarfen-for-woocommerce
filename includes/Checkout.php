@@ -415,15 +415,8 @@ class Checkout {
 			$current_city_plate_number_prefixed = $woocommerce->customer->$get_city_function();
 			$current_district                   = $woocommerce->customer->$get_district_function();
 
-			$districts = $this->get_districts(
-				$current_city_plate_number_prefixed
-			);
-
 			// remove WooCommerce default district field on checkout.
 			unset( $fields[ $type ][ $city_field_name ] );
-
-			// update array for name => name format.
-			$districts = Helper::select2_option_format( $districts );
 
 			$fields[ $type ][ $city_field_name ] = array(
 				'type'         => 'select',
@@ -433,7 +426,7 @@ class Checkout {
 				'clear'        => true,
 				'autocomplete' => 'address-level2',
 				'priority'     => $fields[ $type ][ $type . '_state' ]['priority'] + 1,
-				'options'      => $districts,
+				'options'      => Helper::select2_option_format( Mahalle_Local::get_districts( $current_city_plate_number_prefixed ) ),
 			);
 
 			$fields[ $type ][ $neighborhood_field_name ] = array(
@@ -444,52 +437,11 @@ class Checkout {
 				'clear'        => true,
 				'autocomplete' => 'address-level3',
 				'priority'     => $fields[ $type ][ $type . '_state' ]['priority'] + 2,
-				'options'      => $this->get_neighborhood_options( $current_city_plate_number_prefixed, $current_district ),
+				'options'      => Helper::select2_option_format( Mahalle_Local::get_neighborhoods( $current_city_plate_number_prefixed, $current_district, false ) ),
 			);
 		}
 
 		return $fields;
-	}
-
-	/**
-	 * Get districts
-	 *
-	 * @param string $city_plate_with_prefix that begins with TR prefix such as TR18.
-	 *
-	 * @return array
-	 */
-	private function get_districts( $city_plate_with_prefix ) {
-		if ( ! $city_plate_with_prefix ) {
-			return array();
-		}
-
-		$districts = Mahalle_Local::get_districts( $city_plate_with_prefix );
-
-		return $districts;
-	}
-
-	/**
-	 * Returns neighborhood options.
-	 * 
-	 * @param string $city_plate_with_prefix that begins with TR prefix such as TR18.
-	 * @param string $district District.
-	 * 
-	 * @return array
-	 */
-	private function get_neighborhood_options( $city_plate_with_prefix, $district ) {
-		$neighborhood_options = array( '' => __( 'Select an option', 'hezarfen-for-woocommerce' ) );
-
-		if ( ! $city_plate_with_prefix || ! $district ) {
-			return $neighborhood_options;
-		}
-
-		$neighborhoods = Mahalle_Local::get_neighborhoods( $city_plate_with_prefix, $district );
-
-		foreach ( $neighborhoods as $neighborhood ) {
-			$neighborhood_options[ $neighborhood ] = $neighborhood;
-		}
-
-		return $neighborhood_options;
 	}
 }
 
