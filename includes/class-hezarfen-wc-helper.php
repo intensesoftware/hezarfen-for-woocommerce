@@ -106,6 +106,24 @@ class Helper {
 	}
 
 	/**
+	 * Hides the postcode field.
+	 * 
+	 * @return void
+	 */
+	public static function hide_postcode_field() {
+		add_filter(
+			'woocommerce_get_country_locale',
+			function ( $locales ) {
+				$locales['TR']['postcode']['required'] = false;
+				$locales['TR']['postcode']['hidden']   = true;
+	
+				return $locales;
+			},
+			PHP_INT_MAX - 1 
+		);
+	}
+
+	/**
 	 * Is My Account > Edit Address page? (billing or shipping address).
 	 * 
 	 * @return bool

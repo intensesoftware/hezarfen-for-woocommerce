@@ -24,6 +24,10 @@ class My_Account {
 			// we need to use an action that fires after the 'posts_selection' action to access the is_account_page() function. (https://woocommerce.com/document/conditional-tags/).
 			add_action( 'wp', array( $this, 'sort_address_fields' ) );
 		}
+
+		if ( 'yes' === get_option( 'hezarfen_hide_my_account_postcode_fields', 'no' ) ) {
+			add_action( 'wp', array( $this, 'hide_postcode_field' ) );
+		}
 	}
 
 	/**
@@ -58,6 +62,17 @@ class My_Account {
 	public function sort_address_fields() {
 		if ( Helper::is_edit_address_page() ) {
 			Helper::sort_address_fields();
+		}
+	}
+
+	/**
+	 * Hides the postcode field.
+	 * 
+	 * @return void
+	 */
+	public function hide_postcode_field() {
+		if ( Helper::is_edit_address_page() ) {
+			Helper::hide_postcode_field();
 		}
 	}
 
