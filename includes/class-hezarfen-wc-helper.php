@@ -76,7 +76,10 @@ class Helper {
 			array( 'priority' => 80 )
 		);
 
-		$locales['TR']['postcode']['priority'] = 90;
+		$locales['TR']['postcode'] = array_merge(
+			$locales['TR']['postcode'] ?? array(),
+			array( 'priority' => 90 )
+		);
 
 		return $locales;
 	}
@@ -95,10 +98,15 @@ class Helper {
 			$type = isset( $address_fields['billing_country'] ) ? 'billing' : 'shipping';
 
 			if ( 'billing' === $type ) {
-				$address_fields['billing_phone']['priority'] = 32;
+				if ( isset( $address_fields['billing_phone'] ) ) {
+					$address_fields['billing_phone']['priority'] = 32;
+				}
+
 				$address_fields['billing_email']['priority'] = 34;
 			} elseif ( isset( $address_fields['shipping_company'] ) ) {
-				$address_fields['shipping_company']['priority'] = 5;
+				if ( isset( $address_fields['shipping_company'] ) ) {
+					$address_fields['shipping_company']['priority'] = 5;
+				}
 			}
 		}
 
@@ -114,8 +122,10 @@ class Helper {
 		add_filter(
 			'woocommerce_get_country_locale',
 			function ( $locales ) {
-				$locales['TR']['postcode']['required'] = false;
-				$locales['TR']['postcode']['hidden']   = true;
+				if ( isset( $locales['TR']['postcode'] ) ) {
+					$locales['TR']['postcode']['required'] = false;
+					$locales['TR']['postcode']['hidden']   = true;
+				}
 	
 				return $locales;
 			},
