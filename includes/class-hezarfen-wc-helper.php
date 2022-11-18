@@ -104,9 +104,7 @@ class Helper {
 
 				$address_fields['billing_email']['priority'] = 34;
 			} elseif ( isset( $address_fields['shipping_company'] ) ) {
-				if ( isset( $address_fields['shipping_company'] ) ) {
-					$address_fields['shipping_company']['priority'] = 5;
-				}
+				$address_fields['shipping_company']['priority'] = 5;
 			}
 		}
 
