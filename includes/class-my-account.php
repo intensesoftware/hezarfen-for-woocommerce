@@ -18,6 +18,7 @@ class My_Account {
 	 */
 	public function __construct() {
 		add_filter( 'woocommerce_address_to_edit', array( $this, 'convert_to_select_elements' ), PHP_INT_MAX - 1, 2 );
+		add_action( 'woocommerce_after_save_address_validation', array( $this, 'save_customer_object' ), PHP_INT_MAX - 1, 4 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		if ( 'yes' === get_option( 'hezarfen_sort_my_account_fields', 'no' ) ) {
@@ -52,6 +53,20 @@ class My_Account {
 		$address[ $nbrhood_key ]['options']  = Helper::select2_option_format( Mahalle_Local::get_neighborhoods( $customer_province_code, $customer_district, false ) );
 
 		return $address;
+	}
+
+	/**
+	 * Saves the customer object to prevent problems if there are errors when saving address.
+	 *
+	 * @param int         $user_id User ID being saved.
+	 * @param string      $load_address Type of address e.g. billing or shipping.
+	 * @param array       $address The address fields.
+	 * @param WC_Customer $customer The customer object being saved.
+	 */
+	public function save_customer_object( $user_id, $load_address, $address, $customer ) {
+		if ( wc_notice_count( 'error' ) > 0 ) {
+			$customer->save();
+		}
 	}
 
 	/**
