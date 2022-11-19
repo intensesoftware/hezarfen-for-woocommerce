@@ -43,7 +43,7 @@ class Checkout {
 		}
 
 		if ( 'yes' === get_option( 'hezarfen_hide_checkout_postcode_fields', 'no' ) ) {
-			add_filter( 'woocommerce_checkout_fields', array( $this, 'hide_postcode_fields' ), 90 );
+			add_action( 'wp', array( $this, 'hide_postcode_fields' ) );
 		}
 
 		// TODO: review the logic, if it's possible; define all fields in a single function.
@@ -146,16 +146,14 @@ class Checkout {
 	}
 
 	/**
-	 * Hide Post Code Fields where in the checkout form.
+	 * Hides Post Code Fields in the checkout form.
 	 *
-	 * @param  array $fields current checkout fields.
-	 * @return array
+	 * @return void
 	 */
-	public function hide_postcode_fields( $fields ) {
-		unset( $fields['billing']['billing_postcode'] );
-		unset( $fields['shipping']['shipping_postcode'] );
-
-		return $fields;
+	public function hide_postcode_fields() {
+		if ( is_checkout() ) {
+			Helper::hide_postcode_field();
+		}
 	}
 
 	/**
