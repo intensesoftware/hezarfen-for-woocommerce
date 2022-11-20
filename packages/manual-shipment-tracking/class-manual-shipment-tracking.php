@@ -50,6 +50,8 @@ class Manual_Shipment_Tracking {
 	 * @return void
 	 */
 	public function assign_callbacks_to_hooks() {
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+
 		add_filter( 'woocommerce_register_shop_order_post_statuses', array( $this, 'register_order_status' ) );
 		add_filter( 'wc_order_statuses', array( $this, 'append_order_status' ) );
 		add_filter( 'woocommerce_reports_order_statuses', array( $this, 'append_order_status_to_reports' ), 20 );
@@ -58,6 +60,24 @@ class Manual_Shipment_Tracking {
 		add_action( 'woocommerce_process_shop_order_meta', array( $this, 'order_save' ), PHP_INT_MAX - 1 );
 
 		add_action( 'woocommerce_view_order', array( $this, 'customer_order_details_tracking_info' ), 0 );
+	}
+
+	/**
+	 * Enqueues CSS files.
+	 * 
+	 * @return void
+	 */
+	public function enqueue_styles() {
+		global $wp;
+
+		if ( is_account_page() && ! empty( $wp->query_vars['view-order'] ) ) {
+			wp_enqueue_style(
+				'hezarfen_mst_customer_order_details_css',
+				HEZARFEN_MST_ASSETS_URL . 'css/customer-order-details.css',
+				array(),
+				WC_HEZARFEN_VERSION
+			);
+		}
 	}
 
 	/**

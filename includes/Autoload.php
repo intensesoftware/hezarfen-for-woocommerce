@@ -178,17 +178,6 @@ class Autoload {
 				)
 			);
 		}
-
-		global $wp;
-
-		if ( is_account_page() && ! empty( $wp->query_vars['view-order'] ) ) {
-			wp_enqueue_style(
-				'wc_hezarfen_customer_order_details_css',
-				plugins_url( 'assets/css/customer-order-details.css', WC_HEZARFEN_FILE ),
-				array(),
-				WC_HEZARFEN_VERSION
-			);
-		}
 	}
 	
 	/**
