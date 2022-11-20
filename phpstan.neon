@@ -3,10 +3,8 @@ parameters:
     paths:
         - hezarfen-for-woocommerce.php
         - includes
+        - packages
     excludePaths:
         - includes/Data/mahalle/
     bootstrapFiles:
-        - hezarfen-for-woocommerce.php
         - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
-includes:
-    - phpstan-baseline.neon
