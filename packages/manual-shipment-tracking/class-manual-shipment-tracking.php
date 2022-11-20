@@ -56,6 +56,8 @@ class Manual_Shipment_Tracking {
 
 		add_action( 'woocommerce_admin_order_data_after_order_details', array( $this, 'order_details' ) );
 		add_action( 'woocommerce_process_shop_order_meta', array( $this, 'order_save' ), PHP_INT_MAX - 1 );
+
+		add_action( 'woocommerce_view_order', array( $this, 'customer_order_details_tracking_info' ), 0 );
 	}
 
 	/**
@@ -177,6 +179,36 @@ class Manual_Shipment_Tracking {
 
 			do_action( 'in_hez_mst_order_shipped', $order_id );
 		}
+	}
+
+	/**
+	 * Adds tracking information to the customer order details page.
+	 * 
+	 * @param string|int $order_id Order ID.
+	 * 
+	 * @return void
+	 */
+	public function customer_order_details_tracking_info( $order_id ) {
+		$courier_company = Helper::get_courier_company( $order_id );
+		$tracking_num    = Helper::get_tracking_num( $order_id );
+		$tracking_url    = Helper::get_tracking_url( $order_id );
+		?>
+		<div style="padding-bottom:30px">
+			<h2 class="woocommerce-order-details__title"><?php esc_html_e( 'Tracking Information', 'hezarfen-for-woocommerce' ); ?></h2>		
+			<?php if ( ! empty( $courier_company ) || ! empty( $tracking_num ) ) : ?>
+				<h4><?php echo sprintf( '%s: %s', esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ), esc_html( $courier_company ) ); ?></h4>
+				<h4><?php echo sprintf( '%s: %s', esc_html__( 'Tracking Number', 'hezarfen-for-woocommerce' ), esc_html( $tracking_num ) ); ?></h4>
+
+				<?php if ( $tracking_url ) : ?>
+					<h4><a style="color:blue" href="<?php echo esc_url( $tracking_url ); ?>" target="_blank"><?php esc_html_e( 'Click here to find out where your cargo is.', 'hezarfen-for-woocommerce' ); ?></a></h4>
+					<?php 
+				endif;
+			else : 
+				?>
+				<p><?php esc_html_e( "Your order hasn't been shipped yet.", 'hezarfen-for-woocommerce' ); ?></p>
+			<?php endif; ?>
+		</div>
+		<?php
 	}
 
 	/**

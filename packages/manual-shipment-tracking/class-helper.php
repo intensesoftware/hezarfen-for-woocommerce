@@ -117,4 +117,15 @@ class Helper {
 	public static function get_tracking_num( $order_id ) {
 		return get_post_meta( $order_id, self::TRACKING_NUM_KEY, true );
 	}
+
+	/**
+	 * Returns tracking URL of the order.
+	 * 
+	 * @param int|string $order_id Order ID.
+	 * 
+	 * @return string|false
+	 */
+	public static function get_tracking_url( $order_id ) {
+		return get_post_meta( $order_id, self::TRACKING_URL_KEY, true );
+	}
 }
