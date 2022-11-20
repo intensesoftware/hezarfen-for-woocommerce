@@ -9,3 +9,9 @@ parameters:
     bootstrapFiles:
         - tests/phpstan/constants.php
         - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+    ignoreErrors:
+        -
+            messages: 
+                - '#Undefined variable: \$tr_.*#'
+                - '#Variable \$tr_.* in isset\(\) is never defined#'
+            path: includes/class-mahalle-local.php
