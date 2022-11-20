@@ -41,7 +41,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	/**
 	 * Get sections
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	public function get_sections() {
 		$sections = array(
@@ -65,7 +65,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 * Get setting fields.
 	 *
 	 * @param string $current_section the current setting section.
-	 * @return array
+	 * @return array<array<string, string>>
 	 */
 	public function get_settings( $current_section = '' ) {
 		if ( 'checkout_tax' == $current_section ) {
@@ -130,6 +130,8 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				$settings = apply_filters( 'hezarfen_checkout_tax_settings', array() );
 			}       
 		} elseif ( 'encryption' == $current_section ) {
+			$fields = array();
+
 			// if encryption key not generated before, generate a new key.
 			if ( ! ( new PostMetaEncryption() )->is_encryption_key_generated() ) {
 				// create a new random key.
@@ -274,6 +276,8 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 * Output the settings
 	 *
 	 * @since 1.0
+	 * 
+	 * @return void
 	 */
 	public function output() {
 		global $current_section;
