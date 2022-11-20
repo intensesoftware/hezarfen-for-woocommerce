@@ -34,8 +34,8 @@ class OrderDetails {
 	/**
 	 * Adds tax fields to billing form where in the admin order edit screen.
 	 *
-	 * @param  array $fields WooCommerce current fields.
-	 * @return array
+	 * @param  array<string, mixed> $fields WooCommerce current fields.
+	 * @return array<string, mixed>
 	 */
 	public function add_tax_fields_to_order_details( $fields ) {
 		global $post;
