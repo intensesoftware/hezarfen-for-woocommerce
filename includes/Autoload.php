@@ -16,21 +16,21 @@ class Autoload {
 	/**
 	 * Addons info
 	 * 
-	 * @var array
+	 * @var array<array<string, mixed>>
 	 */
 	private $addons;
 
 	/**
 	 * Notices related to addons.
 	 * 
-	 * @var array
+	 * @var array<string, string>
 	 */
 	private $addon_notices;
 
 	/**
 	 * Package names and their main classes.
 	 * 
-	 * @var array
+	 * @var string[]
 	 */
 	private $packages = array(
 		'manual-shipment-tracking',
@@ -90,8 +90,9 @@ class Autoload {
 	 *
 	 * Load Hezarfen Settings Page
 	 *
-	 * @param array $settings the current WC setting page paths.
-	 * @return array
+	 * @param \WC_Settings_Page[] $settings the current WC setting page paths.
+	 *
+	 * @return \WC_Settings_Page[]
 	 */
 	public function add_hezarfen_setting_page( $settings ) {
 		$settings[] = include_once WC_HEZARFEN_UYGULAMA_YOLU .
@@ -121,6 +122,8 @@ class Autoload {
 
 	/**
 	 * Load assets files for admin
+	 * 
+	 * @return void
 	 */
 	public function load_admin_assets_files() {
 		wp_enqueue_script(
@@ -158,16 +161,6 @@ class Autoload {
 				plugins_url( 'assets/js/checkout.js', WC_HEZARFEN_FILE ),
 				array( 'jquery', 'wc-checkout' ),
 				WC_HEZARFEN_VERSION,
-				true
-			);
-
-			// TODO: is that really required?
-			wp_enqueue_script(
-				'wc_hezarfen_checkout_TR_localization',
-				plugins_url( 'assets/packages/select2/i18n/tr.js', WC_HEZARFEN_FILE ),
-				array( 'jquery', 'select2' ),
-				true,
-				'4.1.0-beta.1',
 				true
 			);
 
