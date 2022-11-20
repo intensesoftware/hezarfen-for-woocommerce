@@ -128,8 +128,8 @@ class Checkout {
 	/**
 	 * Sort address fields forcelly.
 	 *
-	 * @param  array $fields current default address fields.
-	 * @return array
+	 * @param  array<string, mixed> $fields current default address fields.
+	 * @return array<string, mixed>
 	 */
 	public function sort_address_fields( $fields ) {
 		$fields['state']['priority']     = 6;
@@ -143,8 +143,8 @@ class Checkout {
 	/**
 	 * Make address 2 fields required.
 	 *
-	 * @param  array $fields current default address fields.
-	 * @return array
+	 * @param  array<string, mixed> $fields current default address fields.
+	 * @return array<string, mixed>
 	 */
 	public function make_address2_required_default_address_field( $fields ) {
 		$fields['address_2']['required'] = true;
@@ -155,9 +155,9 @@ class Checkout {
 	/**
 	 * Modifies TR country locale data.
 	 * 
-	 * @param array $locales Locale data of all countries.
+	 * @param array<string, mixed> $locales Locale data of all countries.
 	 * 
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function modify_tr_locale( $locales ) {
 		$locales['TR']['city'] = array(
@@ -174,8 +174,8 @@ class Checkout {
 	/**
 	 * Make address2 fields required.
 	 *
-	 * @param  array $fields current default address fields.
-	 * @return array
+	 * @param  array<string, mixed> $fields current default address fields.
+	 * @return array<string, mixed>
 	 */
 	public function make_address2_required_and_update_the_label( $fields ) {
 		$fields['billing']['billing_address_2']['required']      = true;
@@ -191,8 +191,8 @@ class Checkout {
 	/**
 	 * Auto Sort the Checkout Form Fields.
 	 *
-	 * @param  array $fields woocommerce checkout fields.
-	 * @return array
+	 * @param  array<string, mixed> $fields woocommerce checkout fields.
+	 * @return array<string, mixed>
 	 */
 	public function auto_sort_checkout_fields( $fields ) {
 		$fields['billing']['billing_first_name']['priority'] = 1;
@@ -249,8 +249,8 @@ class Checkout {
 	/**
 	 * Hide Post Code Fields where in the checkout form.
 	 *
-	 * @param  array $fields current checkout fields.
-	 * @return array
+	 * @param  array<string, mixed> $fields current checkout fields.
+	 * @return array<string, mixed>
 	 */
 	public function hide_postcode_fields( $fields ) {
 		unset( $fields['billing']['billing_postcode'] );
@@ -311,8 +311,8 @@ class Checkout {
 	/**
 	 * Make non-required tax_number and tax_office fields.
 	 *
-	 * @param array $fields the current WooCommerce checkout fields.
-	 * @return array
+	 * @param array<string, mixed> $fields the current WooCommerce checkout fields.
+	 * @return array<string, mixed>
 	 */
 	public function update_fields_required_options_for_invoice_type_person(
 		$fields
@@ -327,8 +327,8 @@ class Checkout {
 	/**
 	 * Make non-required TC_number field.
 	 *
-	 * @param array $fields current WooCommerce checkout fields.
-	 * @return array
+	 * @param array<string, mixed> $fields current WooCommerce checkout fields.
+	 * @return array<string, mixed>
 	 */
 	public function update_fields_required_options_for_invoice_type_company(
 		$fields
@@ -344,6 +344,8 @@ class Checkout {
 
 	/**
 	 * Update tax field required statuses according to the invoice type selection when checkout submit (before checkout processed.).
+	 * 
+	 * @return void
 	 */
 	public function update_field_required_statuses_before_checkout_process() {
 		// nonce verification phpcs error ignored since WooCommerce already doing the nonce verification before the woocommerce_before_checkout_process hook release.
@@ -376,8 +378,8 @@ class Checkout {
 	/**
 	 * Add tax fields (person or company selection and tax informations).
 	 *
-	 * @param  array $fields the current WooCommerce checkout fields.
-	 * @return array
+	 * @param  array<string, mixed> $fields the current WooCommerce checkout fields.
+	 * @return array<string, mixed>
 	 */
 	public function add_tax_fields( $fields ) {
 		$invoice_type_value = ( new \WC_Checkout() )->get_value( 'billing_hez_invoice_type' );
@@ -455,8 +457,8 @@ class Checkout {
 	 *
 	 * Update necessary data after checkout submit
 	 *
-	 * @param array $data the posted checkout data.
-	 * @return array
+	 * @param array<string, mixed> $data the posted checkout data.
+	 * @return array<string, mixed>
 	 */
 	public function override_posted_data( $data ) {
 		// Check if the T.C. Identitiy Field is active.
@@ -483,8 +485,8 @@ class Checkout {
 	/**
 	 * Show district and neighborhood fields on checkout page.
 	 *
-	 * @param array $fields the current checkout fields.
-	 * @return array
+	 * @param array<string, mixed> $fields the current checkout fields.
+	 * @return array<string, mixed>
 	 */
 	public function add_district_and_neighborhood_fields( $fields ) {
 		$types = array( 'shipping', 'billing' );
@@ -551,7 +553,7 @@ class Checkout {
 	 *
 	 * @param string $city_plate_with_prefix that begins with TR prefix such as TR18.
 	 *
-	 * @return array
+	 * @return string[]
 	 */
 	private function get_districts( $city_plate_with_prefix ) {
 		if ( ! $city_plate_with_prefix ) {
@@ -569,7 +571,7 @@ class Checkout {
 	 * @param string $city_plate_with_prefix that begins with TR prefix such as TR18.
 	 * @param string $district District.
 	 * 
-	 * @return array
+	 * @return array<string, string>
 	 */
 	private function get_neighborhood_options( $city_plate_with_prefix, $district ) {
 		$neighborhood_options = array( '' => __( 'Select an option', 'hezarfen-for-woocommerce' ) );
