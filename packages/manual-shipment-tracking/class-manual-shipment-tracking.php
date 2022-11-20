@@ -167,6 +167,7 @@ class Manual_Shipment_Tracking {
 		) {
 			update_post_meta( $order_id, Helper::COURIER_COMPANY_KEY, $new_courier_company );
 			update_post_meta( $order_id, Helper::TRACKING_NUM_KEY, $new_tracking_num );
+			update_post_meta( $order_id, Helper::TRACKING_URL_KEY, Helper::create_tracking_url( $new_courier_company, $new_tracking_num ) );
 
 			do_action( 'in_hez_mst_tracking_data_saved', $order, $new_courier_company, $new_tracking_num );
 

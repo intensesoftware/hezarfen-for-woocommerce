@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
 class Helper {
 	const COURIER_COMPANY_KEY = 'in_hez_mst_courier_company';
 	const TRACKING_NUM_KEY    = 'in_hez_mst_tracking_number';
+	const TRACKING_URL_KEY    = 'in_hez_mst_tracking_url';
 
 	/**
 	 * Returns courier companies array.
@@ -49,6 +50,50 @@ class Helper {
 			'BRINKS'           => __( 'BRINKS Kargo', 'hezarfen-for-woocommerce' ),
 			'Sendeo'           => __( 'Sendeo Kargo', 'hezarfen-for-woocommerce' ),
 		);
+	}
+
+	/**
+	 * Creates tracking URL.
+	 * 
+	 * @param string $courier_company Courier company.
+	 * @param string $tracking_number Tracking number.
+	 * 
+	 * @return string
+	 */
+	public static function create_tracking_url( $courier_company, $tracking_number ) {
+		if ( $courier_company && $tracking_number ) {
+			switch ( $courier_company ) {
+				case 'MNG Kargo':
+					$tracking_url = 'http://service.mngkargo.com.tr/iactive/popup/kargotakip.asp?k=' . $tracking_number;
+					break;
+				case 'Yurtiçi Kargo':
+					$tracking_url = 'https://yurticikargo.com/tr/online-servisler/gonderi-sorgula?code=' . $tracking_number;
+					break;
+				case 'Aras Kargo':
+					$tracking_url = 'http://kargotakip.araskargo.com.tr/mainpage.aspx?code=' . $tracking_number;
+					break;
+				case 'UPS Kargo':
+					$tracking_url = 'https://www.ups.com/track?loc=tr_TR&tracknum=' . $tracking_number . '&requester=WT/trackdetails';
+					break;
+				case 'SÜRAT Kargo':
+					$tracking_url = 'http://www.suratkargo.com.tr/kargoweb/bireysel.aspx?no=' . $tracking_number;
+					break;
+				case 'Sürat Kargo':
+					$tracking_url = 'http://www.suratkargo.com.tr/kargoweb/bireysel.aspx?no=' . $tracking_number;
+					break;
+				case 'PTT Kargo':
+					$tracking_url = 'https://gonderitakip.ptt.gov.tr/Track/Verify?q=' . $tracking_number;
+					break;
+				case 'hepsiJET':
+					$tracking_url = 'https://www.hepsijet.com/gonderi-takibi/' . $tracking_number;
+					break;
+				case 'Sendeo':
+					$tracking_url = 'https://kargotakip.sendeo.com.tr/kargo-takip-popup';
+					break;
+			}
+		}
+
+		return isset( $tracking_url ) ? $tracking_url : '';
 	}
 
 	/**
