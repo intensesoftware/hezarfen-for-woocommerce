@@ -209,6 +209,6 @@ class Manual_Shipment_Tracking {
 	 * @return bool
 	 */
 	public static function is_enabled() {
-		return filter_var( get_option( self::ENABLE_DISABLE_OPTION, true ), FILTER_VALIDATE_BOOLEAN );
+		return 'yes' === get_option( self::ENABLE_DISABLE_OPTION, true );
 	}
 }
