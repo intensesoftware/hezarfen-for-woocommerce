@@ -148,7 +148,7 @@ class Manual_Shipment_Tracking {
 		<?php
 			woocommerce_wp_select(
 				array(
-					'id'            => 'shipping_company',
+					'id'            => 'courier_company',
 					'label'         => __( 'Courier Company', 'hezarfen-for-woocommerce' ) . ':',
 					'value'         => $courier_company,
 					'options'       => Helper::courier_companies(),
@@ -158,7 +158,7 @@ class Manual_Shipment_Tracking {
 
 			woocommerce_wp_text_input(
 				array(
-					'id'            => 'shipping_number',
+					'id'            => 'tracking_number',
 					'label'         => __( 'Tracking Number', 'hezarfen-for-woocommerce' ) . ':',
 					'value'         => $tracking_num,
 					'wrapper_class' => 'form-field-wide',
@@ -180,8 +180,8 @@ class Manual_Shipment_Tracking {
 		$order               = new \WC_Order( $order_id );
 		$old_courier_company = Helper::get_courier_company( $order_id );
 		$old_tracking_num    = Helper::get_tracking_num( $order_id );
-		$new_courier_company = ! empty( $_POST['shipping_company'] ) ? sanitize_text_field( $_POST['shipping_company'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$new_tracking_num    = ! empty( $_POST['shipping_number'] ) ? sanitize_text_field( $_POST['shipping_number'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$new_courier_company = ! empty( $_POST['courier_company'] ) ? sanitize_text_field( $_POST['courier_company'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$new_tracking_num    = ! empty( $_POST['tracking_number'] ) ? sanitize_text_field( $_POST['tracking_number'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		if (
 			( $new_courier_company && $new_courier_company !== $old_courier_company ) ||
