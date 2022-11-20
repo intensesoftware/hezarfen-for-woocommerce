@@ -193,14 +193,14 @@ class Manual_Shipment_Tracking {
 		$tracking_num    = Helper::get_tracking_num( $order_id );
 		$tracking_url    = Helper::get_tracking_url( $order_id );
 		?>
-		<div style="padding-bottom:30px">
+		<div class="hezarfen-mst-tracking-info-wrapper">
 			<h2 class="woocommerce-order-details__title"><?php esc_html_e( 'Tracking Information', 'hezarfen-for-woocommerce' ); ?></h2>		
 			<?php if ( ! empty( $courier_company ) || ! empty( $tracking_num ) ) : ?>
 				<h4><?php echo sprintf( '%s: %s', esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ), esc_html( $courier_company ) ); ?></h4>
 				<h4><?php echo sprintf( '%s: %s', esc_html__( 'Tracking Number', 'hezarfen-for-woocommerce' ), esc_html( $tracking_num ) ); ?></h4>
 
 				<?php if ( $tracking_url ) : ?>
-					<h4><a style="color:blue" href="<?php echo esc_url( $tracking_url ); ?>" target="_blank"><?php esc_html_e( 'Click here to find out where your cargo is.', 'hezarfen-for-woocommerce' ); ?></a></h4>
+					<h4><a class="hezarfen-mst-tracking-url" href="<?php echo esc_url( $tracking_url ); ?>" target="_blank"><?php esc_html_e( 'Click here to find out where your cargo is.', 'hezarfen-for-woocommerce' ); ?></a></h4>
 					<?php 
 				endif;
 			else : 

@@ -107,7 +107,7 @@ class Autoload {
 	 * @return void
 	 */
 	public function load_assets() {
-		add_action( 'wp_enqueue_scripts', array( $this, 'load_js_files' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'load_js_and_css_files' ) );
 
 		if ( is_admin() ) {
 			add_action(
@@ -142,11 +142,11 @@ class Autoload {
 	}
 	
 	/**
-	 * Load js files
+	 * Load js and css files
 	 *
 	 * @return void
 	 */
-	public function load_js_files() {
+	public function load_js_and_css_files() {
 		if ( is_checkout() ) {
 			wp_enqueue_style(
 				'wc_hezarfen_checkout_css',
@@ -155,7 +155,6 @@ class Autoload {
 				WC_HEZARFEN_VERSION
 			);
 
-			// TODO: load the js file only in checkout page.
 			wp_enqueue_script(
 				'wc_hezarfen_checkout_js',
 				plugins_url( 'assets/js/checkout.js', WC_HEZARFEN_FILE ),
@@ -177,6 +176,17 @@ class Autoload {
 					'billing_neighborhood_field_classes'  => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_billing_neighborhood', array( 'form-row-wide' ) ),
 					'shipping_neighborhood_field_classes' => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_shipping_neighborhood', array( 'form-row-wide' ) ),
 				)
+			);
+		}
+
+		global $wp;
+
+		if ( is_account_page() && ! empty( $wp->query_vars['view-order'] ) ) {
+			wp_enqueue_style(
+				'wc_hezarfen_customer_order_details_css',
+				plugins_url( 'assets/css/customer-order-details.css', WC_HEZARFEN_FILE ),
+				array(),
+				WC_HEZARFEN_VERSION
 			);
 		}
 	}
