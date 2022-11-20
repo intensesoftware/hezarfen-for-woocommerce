@@ -1,6 +1,7 @@
 parameters:
     level: 6
     paths:
+        - hezarfen-for-woocommerce.php
         - includes
     excludePaths:
         - includes/Data/mahalle/
