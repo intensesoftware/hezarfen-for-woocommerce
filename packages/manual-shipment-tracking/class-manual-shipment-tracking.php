@@ -106,7 +106,7 @@ class Manual_Shipment_Tracking {
 	/**
 	 * Adds necessary HTML to the order details page.
 	 * 
-	 * @param WC_Order $order Order.
+	 * @param \WC_Order $order Order.
 	 * 
 	 * @return void
 	 */
