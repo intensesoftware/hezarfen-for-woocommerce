@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <ruleset name="PHP Code Sniffer">
+    <file>hezarfen-for-woocommerce.php</file>
     <file>includes</file>
     <file>packages</file>
 
