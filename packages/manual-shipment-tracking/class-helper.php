@@ -13,9 +13,9 @@ defined( 'ABSPATH' ) || exit;
  * Helper class.
  */
 class Helper {
-	const COURIER_COMPANY_KEY = 'in_hez_mst_courier_company';
-	const TRACKING_NUM_KEY    = 'in_hez_mst_tracking_number';
-	const TRACKING_URL_KEY    = 'in_hez_mst_tracking_url';
+	const COURIER_COMPANY_KEY = 'hezarfen_mst_courier_company';
+	const TRACKING_NUM_KEY    = 'hezarfen_mst_tracking_number';
+	const TRACKING_URL_KEY    = 'hezarfen_mst_tracking_url';
 
 	/**
 	 * Returns courier companies array.
