@@ -55,7 +55,7 @@ class Manual_Shipment_Tracking {
 		add_filter( 'woocommerce_reports_order_statuses', array( $this, 'append_order_status_to_reports' ), 20 );
 
 		add_action( 'woocommerce_admin_order_data_after_order_details', array( $this, 'order_details' ) );
-		add_action( 'woocommerce_process_shop_order_meta', array( $this, 'save' ), PHP_INT_MAX - 1 );
+		add_action( 'woocommerce_process_shop_order_meta', array( $this, 'order_save' ), PHP_INT_MAX - 1 );
 	}
 
 	/**
@@ -154,7 +154,7 @@ class Manual_Shipment_Tracking {
 	 * 
 	 * @return void
 	 */
-	public function save( $order_id ) {
+	public function order_save( $order_id ) {
 		$order               = new \WC_Order( $order_id );
 		$old_courier_company = Helper::get_courier_company( $order_id );
 		$old_tracking_num    = Helper::get_tracking_num( $order_id );
