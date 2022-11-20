@@ -7,4 +7,5 @@ parameters:
     excludePaths:
         - includes/Data/mahalle/
     bootstrapFiles:
+        - tests/phpstan/constants.php
         - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
