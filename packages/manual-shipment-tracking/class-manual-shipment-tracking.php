@@ -196,7 +196,6 @@ class Manual_Shipment_Tracking {
 					'desc'    => '',
 					'id'      => self::ENABLE_DISABLE_OPTION,
 					'default' => 'yes',
-					'std'     => 'yes',
 				);
 	
 				return $hezarfen_settings;
