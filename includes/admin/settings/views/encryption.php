@@ -5,6 +5,13 @@
  * @package includes/admin/settings/views/encryption.php
  */
 
+/**
+ * Variables
+ *
+ * @var bool $health_check_status Health check status.
+ * @var bool $test_the_key Key test status.
+ */
+
 ?>
 
 <h2><?php echo esc_html__( 'Encryption Key Health', 'hezarfen-for-woocommerce' ); ?></h2>
