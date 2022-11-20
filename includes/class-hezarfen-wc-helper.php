@@ -17,8 +17,8 @@ class Helper {
 	 *
 	 * Update array keys for select option values
 	 *
-	 * @param array $arr array of the districts.
-	 * @return array
+	 * @param string[]|array<string, string> $arr array of the districts.
+	 * @return array<string, string>
 	 */
 	public static function checkout_select2_option_format( $arr ) {
 		$values = array();
@@ -33,8 +33,8 @@ class Helper {
 	/**
 	 * Displays admin notices.
 	 * 
-	 * @param array $notices Notices.
-	 * @param bool  $use_kses Use wp_kses_post for escaping.
+	 * @param array<array<string, string>> $notices Notices.
+	 * @param bool                         $use_kses Use wp_kses_post for escaping.
 	 * 
 	 * @return void
 	 */
@@ -49,9 +49,9 @@ class Helper {
 	/**
 	 * Checks installed Hezarfen addons' versions. Returns notices if there are outdated addons.
 	 * 
-	 * @param array $addons Addons data to check.
+	 * @param array<array<string, mixed>> $addons Addons data to check.
 	 * 
-	 * @return array
+	 * @return array<array<string, string>>
 	 */
 	public static function check_addons( $addons ) {
 		$notices = array();
@@ -71,9 +71,9 @@ class Helper {
 	/**
 	 * Finds outdated plugins
 	 * 
-	 * @param array $plugins Plugins data to check.
+	 * @param array<array<string, mixed>> $plugins Plugins data to check.
 	 * 
-	 * @return array
+	 * @return array<array<string, string>>
 	 */
 	public static function find_outdated( $plugins ) {
 		$outdated = array();

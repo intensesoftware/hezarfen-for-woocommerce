@@ -23,7 +23,7 @@ class Autoload {
 	/**
 	 * Notices related to addons.
 	 * 
-	 * @var array<string, string>
+	 * @var array<array<string, string>>
 	 */
 	private $addon_notices;
 
