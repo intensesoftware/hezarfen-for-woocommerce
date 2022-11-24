@@ -62,21 +62,6 @@ class Settings {
 					'title' => __( 'Manual Shipment Tracking Settings', 'hezarfen-for-woocommerce' ),
 				),
 				array(
-					'type'        => 'text',
-					'title'       => __( 'Shipment Notification Email Extra Recipients', 'hezarfen-for-woocommerce' ),
-					'placeholder' => __( 'Enter BCC', 'hezarfen-for-woocommerce' ),
-					'id'          => 'hezarfen_manual_shipment_tracking_bcc',
-				),
-				array(
-					'type'        => 'text',
-					'placeholder' => __( 'Enter CC', 'hezarfen-for-woocommerce' ),
-					'id'          => 'hezarfen_manual_shipment_tracking_cc',
-				),
-				array(
-					'type' => 'info',
-					'text' => __( 'If you want to send the shipment notification email to additional recipients, type the emails separated with comma.', 'hezarfen-for-woocommerce' ),
-				),
-				array(
 					'type' => 'sectionend',
 					'id'   => 'hezarfen_manual_shipment_tracking_section_end',
 				),

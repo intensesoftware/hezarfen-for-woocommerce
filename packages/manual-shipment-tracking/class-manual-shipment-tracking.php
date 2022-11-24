@@ -11,6 +11,7 @@ defined( 'ABSPATH' ) || exit;
 
 require_once 'class-helper.php';
 require_once 'admin/class-settings.php';
+require_once 'email/class-email.php';
 
 /**
  * Manual Shipment Tracking package main class.
@@ -42,6 +43,7 @@ class Manual_Shipment_Tracking {
 	 */
 	public function initialize_classes() {
 		new Settings();
+		new Email();
 	}
 
 	/**
