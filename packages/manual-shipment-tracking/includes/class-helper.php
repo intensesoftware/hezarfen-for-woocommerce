@@ -13,6 +13,9 @@ defined( 'ABSPATH' ) || exit;
  * Helper class.
  */
 class Helper {
+	const DB_SHIPPED_ORDER_STATUS = 'wc-shipping-progress';
+	const SHIPPED_ORDER_STATUS    = 'shipping-progress';
+
 	const COURIER_COMPANY_KEY = 'hezarfen_mst_courier_company';
 	const TRACKING_NUM_KEY    = 'hezarfen_mst_tracking_number';
 	const TRACKING_URL_KEY    = 'hezarfen_mst_tracking_url';
