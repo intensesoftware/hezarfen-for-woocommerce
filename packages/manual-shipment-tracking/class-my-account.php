@@ -24,7 +24,7 @@ class My_Account {
 			add_action( 'woocommerce_my_account_my_orders_column_hezarfen-mst-shipment-tracking', array( $this, 'add_tracking_info_to_column' ) );
 		}
 
-		add_action( 'woocommerce_view_order', array( $this, 'customer_order_details_tracking_info' ), 0 );
+		add_action( 'woocommerce_view_order', array( $this, 'add_tracking_info_to_order_details' ), 0 );
 	}
 
 	/**
@@ -71,7 +71,7 @@ class My_Account {
 	 * 
 	 * @return void
 	 */
-	public function customer_order_details_tracking_info( $order_id ) {
+	public function add_tracking_info_to_order_details( $order_id ) {
 		$courier_company_label = Helper::get_courier_company( $order_id, true )['label'];
 		$tracking_num          = Helper::get_tracking_num( $order_id );
 		$tracking_url          = Helper::get_tracking_url( $order_id );
