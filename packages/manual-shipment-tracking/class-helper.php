@@ -139,11 +139,21 @@ class Helper {
 	 * Returns courier company of the order.
 	 * 
 	 * @param int|string $order_id Order ID.
+	 * @param bool       $return_label Return label also?.
 	 * 
-	 * @return string|false
+	 * @return string|array<string, string>
 	 */
-	public static function get_courier_company( $order_id ) {
-		return get_post_meta( $order_id, self::COURIER_COMPANY_KEY, true );
+	public static function get_courier_company( $order_id, $return_label = false ) {
+		$courier_company = get_post_meta( $order_id, self::COURIER_COMPANY_KEY, true );
+		if ( $return_label ) {
+			$label = $courier_company ? self::courier_companies()[ $courier_company ] ?? '' : '';
+			return array(
+				'value' => $courier_company,
+				'label' => $label,
+			);
+		}
+
+		return $courier_company;
 	}
 
 	/**

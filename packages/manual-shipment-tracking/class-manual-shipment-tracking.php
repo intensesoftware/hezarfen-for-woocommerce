@@ -142,12 +142,12 @@ class Manual_Shipment_Tracking {
 		<br class="clear" />
 		<h4><?php esc_html_e( 'Cargo Informations', 'hezarfen-for-woocommerce' ); ?> <a href="#" class="edit_address"><?php esc_html_e( 'Edit', 'hezarfen-for-woocommerce' ); ?></a></h4>
 		<?php
-		$courier_company = Helper::get_courier_company( $order_id );
-		$tracking_num    = Helper::get_tracking_num( $order_id );
-		$tracking_url    = Helper::get_tracking_url( $order_id );
+		$courier_company_info = Helper::get_courier_company( $order_id, true );
+		$tracking_num         = Helper::get_tracking_num( $order_id );
+		$tracking_url         = Helper::get_tracking_url( $order_id );
 		?>
 		<div class="address">
-			<p><strong><?php esc_html_e( 'Courier Company', 'hezarfen-for-woocommerce' ); ?>:</strong> <?php echo esc_html( $courier_company ); ?></p>
+			<p><strong><?php esc_html_e( 'Courier Company', 'hezarfen-for-woocommerce' ); ?>:</strong> <?php echo esc_html( $courier_company_info['label'] ); ?></p>
 			<p>
 				<strong><?php esc_html_e( 'Tracking Number', 'hezarfen-for-woocommerce' ); ?>:</strong>
 				<?php if ( $tracking_url ) : ?>
@@ -163,7 +163,7 @@ class Manual_Shipment_Tracking {
 				array(
 					'id'            => 'courier_company',
 					'label'         => __( 'Courier Company', 'hezarfen-for-woocommerce' ) . ':',
-					'value'         => $courier_company ? $courier_company : Helper::get_default_courier_company(),
+					'value'         => $courier_company_info['value'] ? $courier_company_info['value'] : Helper::get_default_courier_company(),
 					'options'       => Helper::courier_companies(),
 					'wrapper_class' => 'form-field-wide',
 				)
@@ -222,14 +222,14 @@ class Manual_Shipment_Tracking {
 	 * @return void
 	 */
 	public function customer_order_details_tracking_info( $order_id ) {
-		$courier_company = Helper::get_courier_company( $order_id );
-		$tracking_num    = Helper::get_tracking_num( $order_id );
-		$tracking_url    = Helper::get_tracking_url( $order_id );
+		$courier_company_label = Helper::get_courier_company( $order_id, true )['label'];
+		$tracking_num          = Helper::get_tracking_num( $order_id );
+		$tracking_url          = Helper::get_tracking_url( $order_id );
 		?>
 		<div class="hezarfen-mst-tracking-info-wrapper">
 			<h2 class="woocommerce-order-details__title"><?php esc_html_e( 'Tracking Information', 'hezarfen-for-woocommerce' ); ?></h2>		
-			<?php if ( ! empty( $courier_company ) || ! empty( $tracking_num ) ) : ?>
-				<h4><?php echo sprintf( '%s: %s', esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ), esc_html( $courier_company ) ); ?></h4>
+			<?php if ( ! empty( $courier_company_label ) || ! empty( $tracking_num ) ) : ?>
+				<h4><?php echo sprintf( '%s: %s', esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ), esc_html( $courier_company_label ) ); ?></h4>
 				<h4><?php echo sprintf( '%s: %s', esc_html__( 'Tracking Number', 'hezarfen-for-woocommerce' ), esc_html( $tracking_num ) ); ?></h4>
 
 				<?php if ( $tracking_url ) : ?>
