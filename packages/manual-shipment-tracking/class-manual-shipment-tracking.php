@@ -242,13 +242,13 @@ class Manual_Shipment_Tracking {
 	 * @return void
 	 */
 	public function add_tracking_info_to_column( $order ) {
-		$order_id             = $order->get_id();
-		$courier_company_info = Helper::get_courier_company( $order_id, true );
-		$tracking_num         = Helper::get_tracking_num( $order_id );
-		$tracking_url         = Helper::get_tracking_url( $order_id );
+		$order_id              = $order->get_id();
+		$courier_company_label = Helper::get_courier_company( $order_id, true )['label'];
+		$tracking_num          = Helper::get_tracking_num( $order_id );
+		$tracking_url          = Helper::get_tracking_url( $order_id );
 
-		if ( $courier_company_info['label'] ) {
-			printf( '<span style="display: block">%s</span>', esc_html( $courier_company_info['label'] ) );
+		if ( $courier_company_label ) {
+			printf( '<span style="display: block">%s</span>', esc_html( $courier_company_label ) );
 		}
 
 		if ( $tracking_url ) {
