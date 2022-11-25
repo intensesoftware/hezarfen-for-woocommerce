@@ -159,7 +159,7 @@ class Helper {
 	/**
 	 * Returns the default courier company.
 	 * 
-	 * @return string|false
+	 * @return string
 	 */
 	public static function get_default_courier_company() {
 		return get_option( 'hezarfen_mst_default_courier_company', '' );
