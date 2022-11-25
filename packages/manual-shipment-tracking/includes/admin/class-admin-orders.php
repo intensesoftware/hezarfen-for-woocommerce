@@ -19,7 +19,7 @@ class Admin_Orders {
 	public function __construct() {
 		if ( is_admin() ) {
 			add_filter( 'woocommerce_reports_order_statuses', array( $this, 'append_order_status_to_reports' ), 20 );
-			add_action( 'woocommerce_admin_order_data_after_order_details', array( $this, 'admin_order_details' ) );
+			add_action( 'woocommerce_admin_order_data_after_order_details', array( $this, 'order_details' ) );
 			add_action( 'woocommerce_process_shop_order_meta', array( $this, 'order_save' ), PHP_INT_MAX - 1 );
 		}
 	}
@@ -43,7 +43,7 @@ class Admin_Orders {
 	 * 
 	 * @return void
 	 */
-	public function admin_order_details( $order ) {
+	public function order_details( $order ) {
 		$order_id = $order->get_id();
 		?>
 		<br class="clear" />
@@ -114,7 +114,7 @@ class Admin_Orders {
 			do_action( 'hezarfen_mst_tracking_data_saved', $order, $new_courier_company, $new_tracking_num );
 
 			if ( $new_courier_company && ( $new_tracking_num || 'Kurye' === $new_courier_company ) ) {
-				$order->update_status( apply_filters( 'hezarfen_mst_new_order_status', 'shipping-progress', $order, $new_courier_company, $new_tracking_num ) );
+				$order->update_status( apply_filters( 'hezarfen_mst_new_order_status', Helper::SHIPPED_ORDER_STATUS, $order, $new_courier_company, $new_tracking_num ) );
 			}
 
 			do_action( 'hezarfen_mst_order_shipped', $order );
