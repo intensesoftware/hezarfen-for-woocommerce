@@ -87,6 +87,45 @@ class Helper {
 				case 'hepsiJET':
 					$tracking_url = 'https://www.hepsijet.com/gonderi-takibi/' . $tracking_number;
 					break;
+				case 'Trendyol Express':
+					$tracking_url = 'https://kargotakip.trendyol.com/?orderNumber=' . $tracking_number;
+					break;
+				case 'Kargoist':
+					$tracking_url = 'https://kargotakip.kargoist.com/tracking?har_kod=' . $tracking_number;
+					break;
+				case 'Jetizz':
+					$tracking_url = 'https://app.jetizz.com/JetizzEvrakTakip';
+					break;
+				case 'Gelal':
+					$tracking_url = 'https://gelal.com/api/map/v1/map/' . $tracking_number;
+					break;
+				case 'Birgünde Kargo':
+					$response = wp_remote_post(
+						'https://birgundekargo.com/tr-TR/KargoApi/Gonder',
+						array(
+							'body'    => wp_json_encode( array( 'takipno' => $tracking_number ) ),
+							'headers' => array( 'Content-Type' => 'application/json' ),
+						)
+					);
+					$body     = json_decode( wp_remote_retrieve_body( $response ), true );
+
+					$tracking_url = ! empty( $body['url'] ) ? $body['url'] : 'https://www.birgundekargo.com/online-takip';
+					break;
+				case 'Scotty':
+					$tracking_url = 'https://nerede.scotty.com.tr/kargom-nerede?tracking_code=' . $tracking_number;
+					break;
+				case 'PackUpp':
+					$tracking_url = 'https://tracking.packupp.com/' . $tracking_number;
+					break;
+				case 'Kolay Gelsin':
+					$tracking_url = 'https://esube.kolaygelsin.com/shipments?trackingId=' . $tracking_number;
+					break;
+				case 'CDEK':
+					$tracking_url = 'https://cdek.com.tr/tr#tracking';
+					break;
+				case 'FedEx':
+					$tracking_url = 'https://www.fedex.com/tr-tr/home.html';
+					break;
 				case 'Sendeo':
 					$tracking_url = 'https://kargotakip.sendeo.com.tr/kargo-takip-popup';
 					break;
