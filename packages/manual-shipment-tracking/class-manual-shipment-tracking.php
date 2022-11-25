@@ -59,7 +59,7 @@ class Manual_Shipment_Tracking {
 
 		if ( is_admin() ) {
 			add_filter( 'woocommerce_reports_order_statuses', array( $this, 'append_order_status_to_reports' ), 20 );
-			add_action( 'woocommerce_admin_order_data_after_order_details', array( $this, 'order_details' ) );
+			add_action( 'woocommerce_admin_order_data_after_order_details', array( $this, 'admin_order_details' ) );
 			add_action( 'woocommerce_process_shop_order_meta', array( $this, 'order_save' ), PHP_INT_MAX - 1 );
 		}
 
@@ -130,13 +130,13 @@ class Manual_Shipment_Tracking {
 	}
 
 	/**
-	 * Adds necessary HTML to the order details page.
+	 * Adds necessary HTML to the admin order details page.
 	 * 
 	 * @param \WC_Order $order Order.
 	 * 
 	 * @return void
 	 */
-	public function order_details( $order ) {
+	public function admin_order_details( $order ) {
 		$order_id = $order->get_id();
 		?>
 		<br class="clear" />
