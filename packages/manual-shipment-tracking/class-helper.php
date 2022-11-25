@@ -147,6 +147,15 @@ class Helper {
 	}
 
 	/**
+	 * Returns the default courier company.
+	 * 
+	 * @return string|false
+	 */
+	public static function get_default_courier_company() {
+		return get_option( 'hezarfen_mst_default_courier_company', '' );
+	}
+
+	/**
 	 * Returns tracking number of the order.
 	 * 
 	 * @param int|string $order_id Order ID.

@@ -163,7 +163,7 @@ class Manual_Shipment_Tracking {
 				array(
 					'id'            => 'courier_company',
 					'label'         => __( 'Courier Company', 'hezarfen-for-woocommerce' ) . ':',
-					'value'         => $courier_company,
+					'value'         => $courier_company ? $courier_company : Helper::get_default_courier_company(),
 					'options'       => Helper::courier_companies(),
 					'wrapper_class' => 'form-field-wide',
 				)

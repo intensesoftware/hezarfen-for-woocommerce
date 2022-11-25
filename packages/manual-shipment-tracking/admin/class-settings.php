@@ -62,6 +62,12 @@ class Settings {
 					'title' => __( 'Manual Shipment Tracking Settings', 'hezarfen-for-woocommerce' ),
 				),
 				array(
+					'type'    => 'select',
+					'title'   => __( 'Default Courier Company', 'hezarfen-for-woocommerce' ),
+					'id'      => 'hezarfen_mst_default_courier_company',
+					'options' => Helper::courier_companies(),
+				),
+				array(
 					'type' => 'sectionend',
 					'id'   => 'hezarfen_manual_shipment_tracking_section_end',
 				),
