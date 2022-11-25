@@ -94,7 +94,7 @@ class Helper {
 					$tracking_url = 'https://kargotakip.kargoist.com/tracking?har_kod=' . $tracking_number;
 					break;
 				case 'Jetizz':
-					$tracking_url = 'https://app.jetizz.com/JetizzEvrakTakip';
+					$tracking_url = 'https://app.jetizz.com/gonderi-takip';
 					break;
 				case 'Gelal':
 					$tracking_url = 'https://gelal.com/api/map/v1/map/' . $tracking_number;
