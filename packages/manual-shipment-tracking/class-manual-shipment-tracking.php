@@ -56,10 +56,12 @@ class Manual_Shipment_Tracking {
 
 		add_filter( 'woocommerce_register_shop_order_post_statuses', array( $this, 'register_order_status' ) );
 		add_filter( 'wc_order_statuses', array( $this, 'append_order_status' ) );
-		add_filter( 'woocommerce_reports_order_statuses', array( $this, 'append_order_status_to_reports' ), 20 );
 
-		add_action( 'woocommerce_admin_order_data_after_order_details', array( $this, 'order_details' ) );
-		add_action( 'woocommerce_process_shop_order_meta', array( $this, 'order_save' ), PHP_INT_MAX - 1 );
+		if ( is_admin() ) {
+			add_filter( 'woocommerce_reports_order_statuses', array( $this, 'append_order_status_to_reports' ), 20 );
+			add_action( 'woocommerce_admin_order_data_after_order_details', array( $this, 'order_details' ) );
+			add_action( 'woocommerce_process_shop_order_meta', array( $this, 'order_save' ), PHP_INT_MAX - 1 );
+		}
 
 		add_action( 'woocommerce_view_order', array( $this, 'customer_order_details_tracking_info' ), 0 );
 	}
