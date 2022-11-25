@@ -63,6 +63,11 @@ class Manual_Shipment_Tracking {
 			add_action( 'woocommerce_process_shop_order_meta', array( $this, 'order_save' ), PHP_INT_MAX - 1 );
 		}
 
+		if ( 'yes' === get_option( 'hezarfen_mst_show_shipment_tracking_column' ) ) {
+			add_filter( 'woocommerce_account_orders_columns', array( $this, 'add_new_column' ), PHP_INT_MAX - 1 );
+			add_action( 'woocommerce_my_account_my_orders_column_hezarfen-mst-shipment-tracking', array( $this, 'add_tracking_info_to_column' ) );
+		}
+
 		add_action( 'woocommerce_view_order', array( $this, 'customer_order_details_tracking_info' ), 0 );
 	}
 
@@ -211,6 +216,43 @@ class Manual_Shipment_Tracking {
 			}
 
 			do_action( 'hezarfen_mst_order_shipped', $order );
+		}
+	}
+
+	/**
+	 * Adds tracking information column to My Account > Orders page.
+	 * 
+	 * @param array<string, string> $columns Columns.
+	 * 
+	 * @return array<string, string>
+	 */
+	public function add_new_column( $columns ) {
+		$offset      = 4;
+		$first_part  = array_slice( $columns, 0, $offset );
+		$second_part = array_slice( $columns, $offset );
+
+		return $first_part + array( 'hezarfen-mst-shipment-tracking' => __( 'Tracking Information', 'hezarfen-for-woocommerce' ) ) + $second_part;
+	}
+
+	/**
+	 * Adds tracking information to the "Tracking Information" column in the My Account > Orders page.
+	 * 
+	 * @param \WC_Order $order Order instance.
+	 * 
+	 * @return void
+	 */
+	public function add_tracking_info_to_column( $order ) {
+		$order_id             = $order->get_id();
+		$courier_company_info = Helper::get_courier_company( $order_id, true );
+		$tracking_num         = Helper::get_tracking_num( $order_id );
+		$tracking_url         = Helper::get_tracking_url( $order_id );
+
+		if ( $courier_company_info['label'] ) {
+			printf( '<span style="display: block">%s</span>', esc_html( $courier_company_info['label'] ) );
+		}
+
+		if ( $tracking_url ) {
+			printf( '<a href="%s" target="_blank">%s</a>', esc_url( $tracking_url ), esc_html( $tracking_num ) );
 		}
 	}
 

@@ -68,6 +68,11 @@ class Settings {
 					'options' => Helper::courier_companies(),
 				),
 				array(
+					'type'  => 'checkbox',
+					'title' => __( 'Show Shipment Tracking Column On My Account > Orders Page', 'hezarfen-for-woocommerce' ),
+					'id'    => 'hezarfen_mst_show_shipment_tracking_column',
+				),
+				array(
 					'type' => 'sectionend',
 					'id'   => 'hezarfen_manual_shipment_tracking_section_end',
 				),
