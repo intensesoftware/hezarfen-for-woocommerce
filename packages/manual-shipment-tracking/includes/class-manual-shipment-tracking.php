@@ -66,13 +66,13 @@ class Manual_Shipment_Tracking {
 	 */
 	public function register_order_status( $wc_order_statuses ) {
 		$wc_order_statuses[ Helper::DB_SHIPPED_ORDER_STATUS ] = array(
-			'label'                     => _x( 'Kargoya Verildi', 'WooCommerce Order status', 'hezarfen-for-woocommerce' ),
+			'label'                     => _x( 'Shipped', 'WooCommerce Order status', 'hezarfen-for-woocommerce' ),
 			'public'                    => true,
 			'exclude_from_search'       => false,
 			'show_in_admin_all_list'    => true,
 			'show_in_admin_status_list' => true,
 			/* translators: %s: number of orders */
-			'label_count'               => _n_noop( 'Kargoya Verildi (%s)', 'Kargoya Verildi (%s)', 'hezarfen-for-woocommerce' ),
+			'label_count'               => _n_noop( 'Shipped (%s)', 'Shipped (%s)', 'hezarfen-for-woocommerce' ),
 		);
 
 		return $wc_order_statuses;
@@ -86,7 +86,7 @@ class Manual_Shipment_Tracking {
 	 * @return array<string, string>
 	 */
 	public function append_order_status( $wc_order_statuses ) {
-		$wc_order_statuses[ Helper::DB_SHIPPED_ORDER_STATUS ] = _x( 'Kargoya Verildi', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
+		$wc_order_statuses[ Helper::DB_SHIPPED_ORDER_STATUS ] = _x( 'Shipped', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
 		return $wc_order_statuses;
 	}
 
