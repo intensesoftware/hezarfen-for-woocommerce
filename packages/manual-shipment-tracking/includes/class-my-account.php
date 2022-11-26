@@ -103,12 +103,7 @@ class My_Account {
 		global $wp;
 
 		if ( is_account_page() && ! empty( $wp->query_vars['view-order'] ) ) {
-			wp_enqueue_style(
-				'hezarfen_mst_customer_order_details_css',
-				HEZARFEN_MST_ASSETS_URL . 'css/customer-order-details.css',
-				array(),
-				WC_HEZARFEN_VERSION
-			);
+			wp_enqueue_style( 'hezarfen_mst_customer_order_details_css', HEZARFEN_MST_ASSETS_URL . 'css/customer-order-details.css', array(), WC_HEZARFEN_VERSION );
 		}
 	}
 }
