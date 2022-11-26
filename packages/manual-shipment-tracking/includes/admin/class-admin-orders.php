@@ -18,6 +18,8 @@ class Admin_Orders {
 	 */
 	public function __construct() {
 		if ( is_admin() ) {
+			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+
 			add_filter( 'woocommerce_reports_order_statuses', array( $this, 'append_order_status_to_reports' ), 20 );
 			add_action( 'woocommerce_admin_order_data_after_order_details', array( $this, 'order_details' ) );
 			add_action( 'woocommerce_process_shop_order_meta', array( $this, 'order_save' ), PHP_INT_MAX - 1 );
@@ -118,6 +120,21 @@ class Admin_Orders {
 			}
 
 			do_action( 'hezarfen_mst_order_shipped', $order );
+		}
+	}
+
+	/**
+	 * Enqueues CSS files.
+	 * 
+	 * @param string $hook_suffix Hook suffix.
+	 * 
+	 * @return void
+	 */
+	public function enqueue_styles( $hook_suffix ) {
+		global $typenow;
+
+		if ( 'edit.php' === $hook_suffix && 'shop_order' === $typenow ) {
+			wp_enqueue_style( 'hezarfen_mst_admin_orders_page_css', HEZARFEN_MST_ASSETS_URL . 'css/admin/orders-page.css', array(), WC_HEZARFEN_VERSION );
 		}
 	}
 }
