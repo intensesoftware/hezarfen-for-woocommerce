@@ -67,7 +67,7 @@ class Manual_Shipment_Tracking {
 	public function register_order_status( $wc_order_statuses ) {
 		$wc_order_statuses[ Helper::DB_SHIPPED_ORDER_STATUS ] = array(
 			'label'                     => _x( 'Shipped', 'WooCommerce Order status', 'hezarfen-for-woocommerce' ),
-			'public'                    => true,
+			'public'                    => false,
 			'exclude_from_search'       => false,
 			'show_in_admin_all_list'    => true,
 			'show_in_admin_status_list' => true,
