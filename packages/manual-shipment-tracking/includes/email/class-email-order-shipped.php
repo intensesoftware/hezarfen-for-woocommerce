@@ -88,14 +88,14 @@ class Email_Order_Shipped extends \WC_Email {
 		return wc_get_template_html(
 			$this->template_html,
 			array(
-				'order'                 => $this->object,
-				'email_heading'         => $this->get_heading(),
-				'additional_content'    => $this->get_additional_content(),
-				'sent_to_admin'         => false,
-				'plain_text'            => false,
-				'email'                 => $this,
-				'courier_company_title' => Helper::get_courier_class( $order_id )::get_title(),
-				'tracking_number'       => Helper::get_tracking_num( $order_id ),
+				'order'              => $this->object,
+				'email_heading'      => $this->get_heading(),
+				'additional_content' => $this->get_additional_content(),
+				'sent_to_admin'      => false,
+				'plain_text'         => false,
+				'email'              => $this,
+				'courier_title'      => Helper::get_courier_class( $order_id )::get_title(),
+				'tracking_number'    => Helper::get_tracking_num( $order_id ),
 			),
 			'hezarfen-for-woocommerce/',
 			HEZARFEN_MST_PATH . 'templates/'
