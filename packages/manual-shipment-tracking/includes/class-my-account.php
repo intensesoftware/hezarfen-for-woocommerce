@@ -51,12 +51,12 @@ class My_Account {
 	 */
 	public function add_tracking_info_to_column( $order ) {
 		$order_id              = $order->get_id();
-		$courier_company_label = Helper::get_courier_company( $order_id, true )['label'];
+		$courier_company_title = Helper::get_courier_company_class( $order_id )::get_title();
 		$tracking_num          = Helper::get_tracking_num( $order_id );
 		$tracking_url          = Helper::get_tracking_url( $order_id );
 
-		if ( $courier_company_label ) {
-			printf( '<span style="display: block">%s</span>', esc_html( $courier_company_label ) );
+		if ( $courier_company_title ) {
+			printf( '<span style="display: block">%s</span>', esc_html( $courier_company_title ) );
 		}
 
 		if ( $tracking_url ) {
@@ -72,14 +72,14 @@ class My_Account {
 	 * @return void
 	 */
 	public function add_tracking_info_to_order_details( $order_id ) {
-		$courier_company_label = Helper::get_courier_company( $order_id, true )['label'];
+		$courier_company_title = Helper::get_courier_company_class( $order_id )::get_title();
 		$tracking_num          = Helper::get_tracking_num( $order_id );
 		$tracking_url          = Helper::get_tracking_url( $order_id );
 		?>
 		<div class="hezarfen-mst-tracking-info-wrapper">
 			<h2 class="woocommerce-order-details__title"><?php esc_html_e( 'Tracking Information', 'hezarfen-for-woocommerce' ); ?></h2>		
-			<?php if ( ! empty( $courier_company_label ) || ! empty( $tracking_num ) ) : ?>
-				<h4><?php echo sprintf( '%s: %s', esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ), esc_html( $courier_company_label ) ); ?></h4>
+			<?php if ( ! empty( $courier_company_title ) || ! empty( $tracking_num ) ) : ?>
+				<h4><?php echo sprintf( '%s: %s', esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ), esc_html( $courier_company_title ) ); ?></h4>
 				<h4><?php echo sprintf( '%s: %s', esc_html__( 'Tracking Number', 'hezarfen-for-woocommerce' ), esc_html( $tracking_num ) ); ?></h4>
 
 				<?php if ( $tracking_url ) : ?>

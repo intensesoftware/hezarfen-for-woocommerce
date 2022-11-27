@@ -65,7 +65,7 @@ class Settings {
 					'type'    => 'select',
 					'title'   => __( 'Default Courier Company', 'hezarfen-for-woocommerce' ),
 					'id'      => 'hezarfen_mst_default_courier_company',
-					'options' => Helper::courier_companies(),
+					'options' => Helper::courier_company_options(),
 				),
 				array(
 					'type'  => 'checkbox',

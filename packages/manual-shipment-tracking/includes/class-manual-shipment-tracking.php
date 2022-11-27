@@ -9,6 +9,7 @@ namespace Hezarfen\ManualShipmentTracking;
 
 defined( 'ABSPATH' ) || exit;
 
+require_once 'class-courier-company.php';
 require_once 'class-helper.php';
 require_once 'admin/class-settings.php';
 require_once 'email/class-email.php';

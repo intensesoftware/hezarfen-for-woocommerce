@@ -12,7 +12,7 @@
  * 
  * @var WC_Email $email
  * @var string $email_heading Email heading.
- * @var string $courier_company Courier company.
+ * @var string $courier_company_title Courier company title.
  * @var string $tracking_number Tracking number.
  * @var WC_Order $order Order instance.
  * @var bool $plain_text If is plain text email.
@@ -29,7 +29,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 	<?php esc_html_e( 'Your order has been shipped. Tracking information is below:', 'hezarfen-for-woocommerce' ); ?>
 </p>
 <p>
-	<?php esc_html_e( 'Courier Company', 'hezarfen-for-woocommerce' ); ?>: <strong><?php echo esc_html( $courier_company ); ?></strong>
+	<?php esc_html_e( 'Courier Company', 'hezarfen-for-woocommerce' ); ?>: <strong><?php echo esc_html( $courier_company_title ); ?></strong>
 </p>
 <p>
 	<?php esc_html_e( 'Tracking Number', 'hezarfen-for-woocommerce' ); ?>: <strong><?php echo esc_html( $tracking_number ); ?></strong>

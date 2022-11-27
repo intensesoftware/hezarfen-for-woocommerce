@@ -21,37 +21,52 @@ class Helper {
 	const TRACKING_URL_KEY    = 'hezarfen_mst_tracking_url';
 
 	/**
-	 * Returns courier companies array.
+	 * Returns courier companies array for using as select options.
+	 * 
+	 * @return array<string, string>
+	 */
+	public static function courier_company_options() {
+		// prepare the "ID => Courier title" array.
+		foreach ( self::courier_companies() as $id => $courier_class ) {
+			$options[ $id ] = $courier_class::get_title();
+		}
+
+		$options[''] = __( 'Please choose a courier company', 'hezarfen-for-woocommerce' );
+
+		return $options;
+	}
+
+	/**
+	 * Returns courier companies array (ID => Class name).
 	 * 
 	 * @return array<string, string>
 	 */
 	public static function courier_companies() {
 		return array(
-			''                 => __( 'Please choose a courier company', 'hezarfen-for-woocommerce' ),
-			'Aras Kargo'       => __( 'Aras Kargo', 'hezarfen-for-woocommerce' ),
-			'MNG Kargo'        => __( 'MNG Kargo', 'hezarfen-for-woocommerce' ),
-			'Yurtiçi Kargo'    => __( 'Yurtiçi Kargo', 'hezarfen-for-woocommerce' ),
-			'PTT Kargo'        => __( 'PTT Kargo', 'hezarfen-for-woocommerce' ),
-			'UPS Kargo'        => __( 'UPS Kargo', 'hezarfen-for-woocommerce' ),
-			'SÜRAT Kargo'      => __( 'SÜRAT Kargo', 'hezarfen-for-woocommerce' ),
-			'hepsiJET'         => __( 'hepsiJET', 'hezarfen-for-woocommerce' ),
-			'Trendyol Express' => __( 'Trendyol Express', 'hezarfen-for-woocommerce' ),
-			'Kargoist'         => __( 'Kargoist', 'hezarfen-for-woocommerce' ),
-			'Jetizz'           => __( 'Jetizz', 'hezarfen-for-woocommerce' ),
-			'Gelal'            => __( 'Gelal', 'hezarfen-for-woocommerce' ),
-			'Birgünde Kargo'   => __( 'Birgünde Kargo', 'hezarfen-for-woocommerce' ),
-			'Scotty'           => __( 'Scotty', 'hezarfen-for-woocommerce' ),
-			'PackUpp'          => __( 'PackUpp', 'hezarfen-for-woocommerce' ),
-			'Kolay Gelsin'     => __( 'Kolay Gelsin', 'hezarfen-for-woocommerce' ),
-			'CDEK'             => __( 'CDEK', 'hezarfen-for-woocommerce' ),
-			'FedEx'            => __( 'FedEx', 'hezarfen-for-woocommerce' ),
-			'Horoz Lojistik'   => __( 'Horoz Lojistik', 'hezarfen-for-woocommerce' ),
-			'Kargo Türk'       => __( 'Kargo Türk', 'hezarfen-for-woocommerce' ),
-			'Kurye'            => __( 'Kurye', 'hezarfen-for-woocommerce' ),
-			'DHL'              => __( 'DHL', 'hezarfen-for-woocommerce' ),
-			'TNT'              => __( 'TNT', 'hezarfen-for-woocommerce' ),
-			'BRINKS'           => __( 'BRINKS Kargo', 'hezarfen-for-woocommerce' ),
-			'Sendeo'           => __( 'Sendeo Kargo', 'hezarfen-for-woocommerce' ),
+			''                            => __NAMESPACE__ . '\Courier_Empty',
+			Courier_Aras::$id             => __NAMESPACE__ . '\Courier_Aras',
+			Courier_MNG::$id              => __NAMESPACE__ . '\Courier_MNG',
+			Courier_Yurtici::$id          => __NAMESPACE__ . '\Courier_Yurtici',
+			Courier_PTT::$id              => __NAMESPACE__ . '\Courier_PTT',
+			Courier_UPS::$id              => __NAMESPACE__ . '\Courier_UPS',
+			Courier_Surat::$id            => __NAMESPACE__ . '\Courier_Surat',
+			Courier_Hepsijet::$id         => __NAMESPACE__ . '\Courier_Hepsijet',
+			Courier_Trendyol_Express::$id => __NAMESPACE__ . '\Courier_Trendyol_Express',
+			Courier_Kargoist::$id         => __NAMESPACE__ . '\Courier_Kargoist',
+			Courier_Jetizz::$id           => __NAMESPACE__ . '\Courier_Jetizz',
+			Courier_Gelal::$id            => __NAMESPACE__ . '\Courier_Gelal',
+			Courier_Birgunde::$id         => __NAMESPACE__ . '\Courier_Birgunde',
+			Courier_Scotty::$id           => __NAMESPACE__ . '\Courier_Scotty',
+			Courier_Packupp::$id          => __NAMESPACE__ . '\Courier_Packupp',
+			Courier_Kolay_Gelsin::$id     => __NAMESPACE__ . '\Courier_Kolay_Gelsin',
+			Courier_CDEK::$id             => __NAMESPACE__ . '\Courier_CDEK',
+			Courier_Fedex::$id            => __NAMESPACE__ . '\Courier_Fedex',
+			Courier_Horoz_Lojistik::$id   => __NAMESPACE__ . '\Courier_Horoz_Lojistik',
+			Courier_Kargo_Turk::$id       => __NAMESPACE__ . '\Courier_Kargo_Turk',
+			Courier_Sendeo::$id           => __NAMESPACE__ . '\Courier_Sendeo',
+			Courier_Brinks::$id           => __NAMESPACE__ . '\Courier_Brinks',
+			Courier_DHL::$id              => __NAMESPACE__ . '\Courier_DHL',
+			Courier_TNT::$id              => __NAMESPACE__ . '\Courier_TNT',
 		);
 	}
 
@@ -139,28 +154,33 @@ class Helper {
 	}
 
 	/**
-	 * Returns courier company of the order.
+	 * Returns the courier company class.
 	 * 
-	 * @param int|string $order_id Order ID.
-	 * @param bool       $return_label Return label also?.
+	 * @param int|string $id Order ID or Courier ID.
 	 * 
-	 * @return string|array<string, string>
+	 * @return string
 	 */
-	public static function get_courier_company( $order_id, $return_label = false ) {
-		$courier_company = get_post_meta( $order_id, self::COURIER_COMPANY_KEY, true );
-		if ( $return_label ) {
-			$label = $courier_company ? self::courier_companies()[ $courier_company ] ?? '' : '';
-			return array(
-				'value' => $courier_company,
-				'label' => $label,
-			);
+	public static function get_courier_company_class( $id ) {
+		if ( is_numeric( $id ) ) { // $id is an oder ID.
+			return self::courier_companies()[ self::get_courier_company_id( $id ) ];
+		} else { // $id is a courier company ID.
+			return self::courier_companies()[ $id ];
 		}
-
-		return $courier_company;
 	}
 
 	/**
-	 * Returns the default courier company.
+	 * Returns the courier company ID of the order.
+	 * 
+	 * @param int|string $order_id Order ID.
+	 * 
+	 * @return string
+	 */
+	public static function get_courier_company_id( $order_id ) {
+		return get_post_meta( $order_id, self::COURIER_COMPANY_KEY, true );
+	}
+
+	/**
+	 * Returns the default courier company ID.
 	 * 
 	 * @return string
 	 */
