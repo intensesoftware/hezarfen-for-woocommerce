@@ -161,10 +161,12 @@ class Helper {
 	 * @return string
 	 */
 	public static function get_courier_company_class( $id ) {
+		$courier_companies = self::courier_companies();
+
 		if ( is_numeric( $id ) ) { // $id is an oder ID.
-			return self::courier_companies()[ self::get_courier_company_id( $id ) ];
+			return $courier_companies[ self::get_courier_company_id( $id ) ] ?? $courier_companies[''];
 		} else { // $id is a courier company ID.
-			return self::courier_companies()[ $id ];
+			return $courier_companies[ $id ] ?? $courier_companies[''];
 		}
 	}
 
