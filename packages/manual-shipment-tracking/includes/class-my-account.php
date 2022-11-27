@@ -51,7 +51,7 @@ class My_Account {
 	 */
 	public function add_tracking_info_to_column( $order ) {
 		$order_id              = $order->get_id();
-		$courier_company_title = Helper::get_courier_company_class( $order_id )::get_title();
+		$courier_company_title = Helper::get_courier_class( $order_id )::get_title();
 		$tracking_num          = Helper::get_tracking_num( $order_id );
 		$tracking_url          = Helper::get_tracking_url( $order_id );
 
@@ -72,7 +72,7 @@ class My_Account {
 	 * @return void
 	 */
 	public function add_tracking_info_to_order_details( $order_id ) {
-		$courier_company_title = Helper::get_courier_company_class( $order_id )::get_title();
+		$courier_company_title = Helper::get_courier_class( $order_id )::get_title();
 		$tracking_num          = Helper::get_tracking_num( $order_id );
 		$tracking_url          = Helper::get_tracking_url( $order_id );
 		?>

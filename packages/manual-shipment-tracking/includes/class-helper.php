@@ -160,11 +160,11 @@ class Helper {
 	 * 
 	 * @return string
 	 */
-	public static function get_courier_company_class( $id ) {
+	public static function get_courier_class( $id ) {
 		$courier_companies = self::courier_companies();
 
 		if ( is_numeric( $id ) ) { // $id is an oder ID.
-			return $courier_companies[ self::get_courier_company_id( $id ) ] ?? $courier_companies[''];
+			return $courier_companies[ self::get_courier_id( $id ) ] ?? $courier_companies[''];
 		} else { // $id is a courier company ID.
 			return $courier_companies[ $id ] ?? $courier_companies[''];
 		}
@@ -177,7 +177,7 @@ class Helper {
 	 * 
 	 * @return string
 	 */
-	public static function get_courier_company_id( $order_id ) {
+	public static function get_courier_id( $order_id ) {
 		return get_post_meta( $order_id, self::COURIER_COMPANY_KEY, true );
 	}
 
@@ -186,7 +186,7 @@ class Helper {
 	 * 
 	 * @return string
 	 */
-	public static function get_default_courier_company() {
+	public static function get_default_courier_id() {
 		return get_option( 'hezarfen_mst_default_courier_company', '' );
 	}
 

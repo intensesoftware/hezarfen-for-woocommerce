@@ -51,7 +51,7 @@ class Admin_Orders {
 		<br class="clear" />
 		<h4><?php esc_html_e( 'Cargo Informations', 'hezarfen-for-woocommerce' ); ?> <a href="#" class="edit_address"><?php esc_html_e( 'Edit', 'hezarfen-for-woocommerce' ); ?></a></h4>
 		<?php
-		$courier_company = Helper::get_courier_company_class( $order_id );
+		$courier_company = Helper::get_courier_class( $order_id );
 		$tracking_num    = Helper::get_tracking_num( $order_id );
 		$tracking_url    = Helper::get_tracking_url( $order_id );
 		?>
@@ -72,7 +72,7 @@ class Admin_Orders {
 				array(
 					'id'            => 'courier_company',
 					'label'         => __( 'Courier Company', 'hezarfen-for-woocommerce' ) . ':',
-					'value'         => $courier_company::$id ? $courier_company::$id : Helper::get_default_courier_company(),
+					'value'         => $courier_company::$id ? $courier_company::$id : Helper::get_default_courier_id(),
 					'options'       => Helper::courier_company_options(),
 					'wrapper_class' => 'form-field-wide',
 				)
@@ -100,25 +100,25 @@ class Admin_Orders {
 	 */
 	public function order_save( $order_id ) {
 		$order                  = new \WC_Order( $order_id );
-		$old_courier_company    = Helper::get_courier_company_class( $order_id );
+		$old_courier    = Helper::get_courier_class( $order_id );
 		$old_tracking_num       = Helper::get_tracking_num( $order_id );
-		$new_courier_company_id = ! empty( $_POST['courier_company'] ) ? sanitize_text_field( $_POST['courier_company'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$new_courier_id = ! empty( $_POST['courier_company'] ) ? sanitize_text_field( $_POST['courier_company'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$new_tracking_num       = ! empty( $_POST['tracking_number'] ) ? sanitize_text_field( $_POST['tracking_number'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		if (
-			( $new_courier_company_id && $new_courier_company_id !== $old_courier_company::$id ) ||
+			( $new_courier_id && $new_courier_id !== $old_courier::$id ) ||
 			( $new_tracking_num && $new_tracking_num !== $old_tracking_num )
 		) {
-			update_post_meta( $order_id, Helper::COURIER_COMPANY_KEY, $new_courier_company_id );
+			update_post_meta( $order_id, Helper::COURIER_COMPANY_KEY, $new_courier_id );
 			update_post_meta( $order_id, Helper::TRACKING_NUM_KEY, $new_tracking_num );
 
-			$new_courier_company = Helper::get_courier_company_class( $new_courier_company_id );
-			update_post_meta( $order_id, Helper::TRACKING_URL_KEY, $new_courier_company::create_tracking_url( $new_tracking_num ) );
+			$new_courier = Helper::get_courier_class( $new_courier_id );
+			update_post_meta( $order_id, Helper::TRACKING_URL_KEY, $new_courier::create_tracking_url( $new_tracking_num ) );
 
-			do_action( 'hezarfen_mst_tracking_data_saved', $order, $new_courier_company_id, $new_tracking_num );
+			do_action( 'hezarfen_mst_tracking_data_saved', $order, $new_courier_id, $new_tracking_num );
 
-			if ( $new_courier_company_id && ( $new_tracking_num || 'Kurye' === $new_courier_company_id ) ) {
-				$order->update_status( apply_filters( 'hezarfen_mst_new_order_status', Helper::SHIPPED_ORDER_STATUS, $order, $new_courier_company_id, $new_tracking_num ) );
+			if ( $new_courier_id && ( $new_tracking_num || 'Kurye' === $new_courier_id ) ) {
+				$order->update_status( apply_filters( 'hezarfen_mst_new_order_status', Helper::SHIPPED_ORDER_STATUS, $order, $new_courier_id, $new_tracking_num ) );
 			}
 
 			do_action( 'hezarfen_mst_order_shipped', $order );

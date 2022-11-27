@@ -94,7 +94,7 @@ class Email_Order_Shipped extends \WC_Email {
 				'sent_to_admin'         => false,
 				'plain_text'            => false,
 				'email'                 => $this,
-				'courier_company_title' => Helper::get_courier_company_class( $order_id )::get_title(),
+				'courier_company_title' => Helper::get_courier_class( $order_id )::get_title(),
 				'tracking_number'       => Helper::get_tracking_num( $order_id ),
 			),
 			'hezarfen-for-woocommerce/',
