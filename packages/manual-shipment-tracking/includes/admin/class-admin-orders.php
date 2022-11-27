@@ -99,11 +99,11 @@ class Admin_Orders {
 	 * @return void
 	 */
 	public function order_save( $order_id ) {
-		$order                  = new \WC_Order( $order_id );
-		$old_courier    = Helper::get_courier_class( $order_id );
-		$old_tracking_num       = Helper::get_tracking_num( $order_id );
-		$new_courier_id = ! empty( $_POST['courier_company'] ) ? sanitize_text_field( $_POST['courier_company'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$new_tracking_num       = ! empty( $_POST['tracking_number'] ) ? sanitize_text_field( $_POST['tracking_number'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$order            = new \WC_Order( $order_id );
+		$old_courier      = Helper::get_courier_class( $order_id );
+		$old_tracking_num = Helper::get_tracking_num( $order_id );
+		$new_courier_id   = ! empty( $_POST['courier_company'] ) ? sanitize_text_field( $_POST['courier_company'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$new_tracking_num = ! empty( $_POST['tracking_number'] ) ? sanitize_text_field( $_POST['tracking_number'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		if (
 			( $new_courier_id && $new_courier_id !== $old_courier::$id ) ||
