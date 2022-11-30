@@ -63,13 +63,13 @@ class Settings {
 				),
 				array(
 					'type'    => 'select',
-					'title'   => __( 'Default Courier Company', 'hezarfen-for-woocommerce' ),
+					'title'   => __( 'Default courier company', 'hezarfen-for-woocommerce' ),
 					'id'      => 'hezarfen_mst_default_courier_company',
 					'options' => Helper::courier_company_options(),
 				),
 				array(
 					'type'  => 'checkbox',
-					'title' => __( 'Show Shipment Tracking Column On My Account > Orders Page', 'hezarfen-for-woocommerce' ),
+					'title' => __( 'Show Shipment Tracking column on My Account > Orders page', 'hezarfen-for-woocommerce' ),
 					'id'    => 'hezarfen_mst_show_shipment_tracking_column',
 				),
 				array(
