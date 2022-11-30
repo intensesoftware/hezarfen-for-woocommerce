@@ -14,4 +14,4 @@ define( 'HEZARFEN_MST_ASSETS_URL', plugins_url( 'assets/', __FILE__ ) );
 
 require_once 'includes/class-manual-shipment-tracking.php';
 
-new Manual_Shipment_Tracking();
+Manual_Shipment_Tracking::init();

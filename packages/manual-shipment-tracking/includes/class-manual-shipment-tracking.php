@@ -23,17 +23,46 @@ class Manual_Shipment_Tracking {
 	const ENABLE_DISABLE_OPTION = 'hezarfen_enable_manual_shipment_tracking';
 
 	/**
+	 * The single instance of the class
+	 *
+	 * @var Manual_Shipment_Tracking
+	 */
+	private static $instance = null;
+
+	/**
 	 * Constructor
 	 * 
 	 * @return void
 	 */
-	public function __construct() {
+	private function __construct() {
 		$this->add_enable_disable_option();
 
 		if ( $this->is_enabled() ) {
 			$this->initialize_classes();
 			$this->assign_callbacks_to_hooks();
 		}
+	}
+
+	/**
+	 * Initializes the package.
+	 * 
+	 * @return void
+	 */
+	public static function init() {
+		self::instance();
+	}
+
+	/**
+	 * Returns the class instance.
+	 * 
+	 * @return Manual_Shipment_Tracking
+	 */
+	public static function instance() {
+		if ( null === self::$instance ) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
 	}
 
 	/**
