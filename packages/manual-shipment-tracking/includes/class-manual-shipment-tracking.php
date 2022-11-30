@@ -35,9 +35,9 @@ class Manual_Shipment_Tracking {
 	 * @return void
 	 */
 	private function __construct() {
-		$this->add_enable_disable_option();
+		self::add_enable_disable_option();
 
-		if ( $this->is_enabled() ) {
+		if ( self::is_enabled() ) {
 			$this->initialize_classes();
 			$this->assign_callbacks_to_hooks();
 		}
@@ -83,8 +83,8 @@ class Manual_Shipment_Tracking {
 	 * @return void
 	 */
 	public function assign_callbacks_to_hooks() {
-		add_filter( 'woocommerce_register_shop_order_post_statuses', array( $this, 'register_order_status' ) );
-		add_filter( 'wc_order_statuses', array( $this, 'append_order_status' ) );
+		add_filter( 'woocommerce_register_shop_order_post_statuses', array( __CLASS__, 'register_order_status' ) );
+		add_filter( 'wc_order_statuses', array( __CLASS__, 'append_order_status' ) );
 	}
 
 	/**
@@ -94,7 +94,7 @@ class Manual_Shipment_Tracking {
 	 * 
 	 * @return array<string, array<string, mixed>>
 	 */
-	public function register_order_status( $wc_order_statuses ) {
+	public static function register_order_status( $wc_order_statuses ) {
 		$wc_order_statuses[ Helper::DB_SHIPPED_ORDER_STATUS ] = array(
 			'label'                     => _x( 'Shipped', 'WooCommerce Order status', 'hezarfen-for-woocommerce' ),
 			'public'                    => false,
@@ -115,7 +115,7 @@ class Manual_Shipment_Tracking {
 	 * 
 	 * @return array<string, string>
 	 */
-	public function append_order_status( $wc_order_statuses ) {
+	public static function append_order_status( $wc_order_statuses ) {
 		$wc_order_statuses[ Helper::DB_SHIPPED_ORDER_STATUS ] = _x( 'Shipped', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
 		return $wc_order_statuses;
 	}
@@ -125,7 +125,7 @@ class Manual_Shipment_Tracking {
 	 * 
 	 * @return void
 	 */
-	private function add_enable_disable_option() {
+	private static function add_enable_disable_option() {
 		add_filter(
 			'hezarfen_general_settings',
 			function ( $hezarfen_settings ) {
