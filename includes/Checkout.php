@@ -151,7 +151,8 @@ class Checkout {
 	 * @return void
 	 */
 	public function hide_postcode_fields() {
-		if ( is_checkout() ) {
+		$wc_ajax = $_GET['wc-ajax'] ?? ''; // phpcs:ignore
+		if ( is_checkout() || ( defined( 'WC_DOING_AJAX' ) && 'checkout' === $wc_ajax ) ) {
 			Helper::hide_postcode_field();
 		}
 	}
