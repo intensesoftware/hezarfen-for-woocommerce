@@ -193,6 +193,7 @@ class Autoload {
 		require_once 'class-mahalle-local.php';
 		require_once 'Hezarfen_Install.php';
 		require_once 'class-hezarfen-wc-helper.php';
+		require_once 'class-notification-provider.php';
 
 		if ( is_admin() ) {
 			require_once 'admin/order/OrderDetails.php';

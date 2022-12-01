@@ -21,6 +21,31 @@ class Helper {
 	const TRACKING_URL_KEY    = 'hezarfen_mst_tracking_url';
 
 	/**
+	 * Sends notification.
+	 * 
+	 * @param \WC_Order $order Order instance.
+	 * 
+	 * @return void
+	 */
+	public static function send_notification( $order ) {
+		$notification_provider = Manual_Shipment_Tracking::instance()->active_notif_provider;
+		if ( $notification_provider ) {
+			$notification_provider->send( $order, self::SHIPPED_ORDER_STATUS );
+		}
+	}
+
+	/**
+	 * Returns notification providers (ID => Title).
+	 * 
+	 * @return array<string, string>
+	 */
+	public static function get_notification_providers() {
+		return array(
+			Netgsm::$id => Netgsm::$title,
+		);
+	}
+
+	/**
 	 * Returns courier companies array for using as select options.
 	 * 
 	 * @return array<string, string>

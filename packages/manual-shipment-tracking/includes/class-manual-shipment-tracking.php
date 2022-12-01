@@ -15,6 +15,7 @@ require_once 'admin/class-settings.php';
 require_once 'email/class-email.php';
 require_once 'class-my-account.php';
 require_once 'admin/class-admin-orders.php';
+require_once 'class-netgsm.php';
 
 /**
  * Manual Shipment Tracking package main class.
@@ -28,6 +29,13 @@ class Manual_Shipment_Tracking {
 	 * @var Manual_Shipment_Tracking
 	 */
 	private static $instance = null;
+
+	/**
+	 * Currently active SMS notification provider.
+	 * 
+	 * @var null|\Hezarfen\Inc\Notification_Provider
+	 */
+	public $active_notif_provider;
 
 	/**
 	 * Constructor
@@ -75,6 +83,10 @@ class Manual_Shipment_Tracking {
 		new Email();
 		new My_Account();
 		new Admin_Orders();
+
+		if ( 'yes' === get_option( 'hezarfen_mst_enable_sms_notification' ) && 'netgsm' === get_option( 'hezarfen_mst_notification_provider' ) ) {
+			$this->active_notif_provider = new Netgsm();
+		}
 	}
 
 	/**

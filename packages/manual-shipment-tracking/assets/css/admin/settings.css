@@ -1,0 +1,15 @@
+.notification th {
+	padding-left: 24px;
+}
+
+.sms-variables-wrapper {
+	width: 50%;
+}
+
+.sms-variables-wrapper .sms-variable {
+	margin-top: 5px;
+}
+
+.netgsm.sms-content {
+	padding: 6px !important;
+}

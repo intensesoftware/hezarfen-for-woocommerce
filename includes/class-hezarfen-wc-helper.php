@@ -92,4 +92,19 @@ class Helper {
 
 		return $outdated;
 	}
+
+	/**
+	 * Checks if plugin is active.
+	 * 
+	 * @param string $plugin Plugin.
+	 * 
+	 * @return bool
+	 */
+	public static function is_plugin_active( $plugin ) {
+		if ( in_array( $plugin, apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+			return true;
+		}
+	
+		return false;
+	}
 }

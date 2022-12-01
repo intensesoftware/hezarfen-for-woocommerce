@@ -11,4 +11,6 @@
         <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
     </rule>
     <rule ref="WordPress-VIP-Go"/>
+
+    <exclude-pattern>*.js</exclude-pattern>
 </ruleset>

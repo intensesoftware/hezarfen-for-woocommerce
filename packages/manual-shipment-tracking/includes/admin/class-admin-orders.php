@@ -122,6 +122,10 @@ class Admin_Orders {
 			}
 
 			do_action( 'hezarfen_mst_order_shipped', $order );
+
+			if ( 'yes' === get_option( 'hezarfen_mst_enable_sms_notification' ) ) {
+				Helper::send_notification( $order );
+			}
 		}
 	}
 
