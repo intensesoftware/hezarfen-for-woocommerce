@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Settings {
 	const HEZARFEN_WC_SETTINGS_ID = 'hezarfen';
+	const SECTION = 'manual_shipment_tracking';
 
 	/**
 	 * Constructor
@@ -46,7 +47,7 @@ class Settings {
 	 * @return array<string, string>
 	 */
 	public function add_section( $hezarfen_sections ) {
-		$hezarfen_sections['manual_shipment_tracking'] = __( 'Manual Shipment Tracking', 'hezarfen-for-woocommerce' );
+		$hezarfen_sections[self::SECTION] = __( 'Manual Shipment Tracking', 'hezarfen-for-woocommerce' );
 		return $hezarfen_sections;
 	}
 
@@ -59,7 +60,7 @@ class Settings {
 	 * @return array<array<string, string>>
 	 */
 	public function add_settings_to_section( $settings, $current_section ) {
-		if ( 'manual_shipment_tracking' === $current_section ) {
+		if ( self::SECTION === $current_section ) {
 			add_action( 'woocommerce_admin_field_hezarfen_mst_netgsm_sms_content_textarea', array( $this, 'render_netgsm_sms_content_setting' ) );
 
 			foreach ( Helper::get_notification_providers() as $id => $title ) {
@@ -177,7 +178,7 @@ class Settings {
 	public static function convert_variables() {
 		global $current_section;
 
-		if ( 'manual_shipment_tracking' === $current_section && ! empty( $_POST['hezarfen_mst_netgsm_sms_content'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( self::SECTION === $current_section && ! empty( $_POST['hezarfen_mst_netgsm_sms_content'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			$_POST['hezarfen_mst_netgsm_sms_content'] = Netgsm::convert_hezarfen_variables_to_netgsm_metas( sanitize_text_field( $_POST['hezarfen_mst_netgsm_sms_content'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		}
 	}
@@ -192,7 +193,7 @@ class Settings {
 	public function enqueue_scripts_and_styles( $hook_suffix ) {
 		global $current_section;
 
-		if ( 'woocommerce_page_wc-settings' === $hook_suffix && 'manual_shipment_tracking' === $current_section ) {
+		if ( 'woocommerce_page_wc-settings' === $hook_suffix && self::SECTION === $current_section ) {
 			wp_enqueue_script( 'hezarfen_mst_settings_js', HEZARFEN_MST_ASSETS_URL . 'js/admin/settings.js', array(), WC_HEZARFEN_VERSION, false );
 			wp_enqueue_style( 'hezarfen_mst_settings_css', HEZARFEN_MST_ASSETS_URL . 'css/admin/settings.css', array(), WC_HEZARFEN_VERSION );
 		}
