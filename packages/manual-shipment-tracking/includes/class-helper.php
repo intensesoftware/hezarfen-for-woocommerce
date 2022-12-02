@@ -16,7 +16,8 @@ class Helper {
 	const DB_SHIPPED_ORDER_STATUS = 'wc-hezarfen-shipped';
 	const SHIPPED_ORDER_STATUS    = 'hezarfen-shipped';
 
-	const COURIER_COMPANY_KEY = 'hezarfen_mst_courier_company';
+	const COURIER_COMPANY_ID_KEY = 'hezarfen_mst_courier_company_id';
+	const COURIER_COMPANY_TITLE_KEY = 'hezarfen_mst_courier_company_title';
 	const TRACKING_NUM_KEY    = 'hezarfen_mst_tracking_number';
 	const TRACKING_URL_KEY    = 'hezarfen_mst_tracking_url';
 
@@ -203,7 +204,7 @@ class Helper {
 	 * @return string
 	 */
 	public static function get_courier_id( $order_id ) {
-		return get_post_meta( $order_id, self::COURIER_COMPANY_KEY, true );
+		return get_post_meta( $order_id, self::COURIER_COMPANY_ID_KEY, true );
 	}
 
 	/**
