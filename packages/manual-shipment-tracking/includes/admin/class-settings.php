@@ -47,7 +47,7 @@ class Settings {
 	 * @return array<string, string>
 	 */
 	public function add_section( $hezarfen_sections ) {
-		$hezarfen_sections[self::SECTION] = __( 'Manual Shipment Tracking', 'hezarfen-for-woocommerce' );
+		$hezarfen_sections[ self::SECTION ] = __( 'Manual Shipment Tracking', 'hezarfen-for-woocommerce' );
 		return $hezarfen_sections;
 	}
 
