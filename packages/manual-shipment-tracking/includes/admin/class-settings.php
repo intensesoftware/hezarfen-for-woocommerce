@@ -34,6 +34,8 @@ class Settings {
 
 		add_filter( 'woocommerce_get_sections_' . self::HEZARFEN_WC_SETTINGS_ID, array( $this, 'add_section' ) );
 		add_filter( 'woocommerce_get_settings_' . self::HEZARFEN_WC_SETTINGS_ID, array( $this, 'add_settings_to_section' ), 10, 2 );
+
+		add_action( 'woocommerce_settings_save_hezarfen', array( __CLASS__, 'convert_variables' ) );
 	}
 
 	/**
@@ -165,6 +167,19 @@ class Settings {
 			</td>
 		</tr>
 		<?php
+	}
+
+	/**
+	 * Converts hezarfen SMS variables to NetGSM metas before saving to the database.
+	 * 
+	 * @return void
+	 */
+	public static function convert_variables() {
+		global $current_section;
+
+		if ( 'manual_shipment_tracking' === $current_section && ! empty( $_POST['hezarfen_mst_netgsm_sms_content'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$_POST['hezarfen_mst_netgsm_sms_content'] = Netgsm::convert_hezarfen_variables_to_netgsm_metas( sanitize_text_field( $_POST['hezarfen_mst_netgsm_sms_content'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		}
 	}
 
 	/**

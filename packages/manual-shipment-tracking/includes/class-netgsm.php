@@ -53,8 +53,6 @@ class Netgsm extends \Hezarfen\Inc\Notification_Provider {
 		if ( self::is_netgsm_ready() ) {
 			add_filter( 'pre_option_netgsm_order_status_text_' . Helper::DB_SHIPPED_ORDER_STATUS, array( __CLASS__, 'override_netgsm_sms_content' ), PHP_INT_MAX - 1, 3 );
 			add_action( 'woocommerce_order_status_changed', array( __CLASS__, 'remove_netgsm_callback' ), 1, 4 );
-
-			add_action( 'woocommerce_settings_save_hezarfen', array( __CLASS__, 'convert_variables' ) );
 		}
 	}
 
@@ -99,19 +97,6 @@ class Netgsm extends \Hezarfen\Inc\Notification_Provider {
 	public static function remove_netgsm_callback( $order_id, $from, $to, $order ) {
 		if ( Helper::SHIPPED_ORDER_STATUS === $to ) {
 			remove_action( 'woocommerce_order_status_changed', 'netgsm_order_status_changed' );
-		}
-	}
-
-	/**
-	 * Converts hezarfen SMS variables to NetGSM metas before saving to the database.
-	 * 
-	 * @return void
-	 */
-	public static function convert_variables() {
-		global $current_section;
-
-		if ( 'manual_shipment_tracking' === $current_section && ! empty( $_POST['hezarfen_mst_netgsm_sms_content'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$_POST['hezarfen_mst_netgsm_sms_content'] = self::convert_hezarfen_variables_to_netgsm_metas( sanitize_text_field( $_POST['hezarfen_mst_netgsm_sms_content'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		}
 	}
 
