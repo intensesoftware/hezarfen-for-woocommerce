@@ -163,6 +163,6 @@ class Manual_Shipment_Tracking {
 	 * @return bool
 	 */
 	public static function is_enabled() {
-		return 'yes' === get_option( self::ENABLE_DISABLE_OPTION, true );
+		return 'yes' === get_option( self::ENABLE_DISABLE_OPTION, 'yes' );
 	}
 }
