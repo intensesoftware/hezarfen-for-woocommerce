@@ -30,7 +30,7 @@ class Helper {
 	public static function send_notification( $order ) {
 		$notification_provider = Manual_Shipment_Tracking::instance()->active_notif_provider;
 		if ( $notification_provider ) {
-			$notification_provider->send( $order, self::SHIPPED_ORDER_STATUS );
+			$notification_provider->send( $order, self::DB_SHIPPED_ORDER_STATUS );
 		}
 	}
 
