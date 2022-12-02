@@ -1,6 +1,6 @@
 <?php
 /**
- * Contains the Notification_Provider class.
+ * Contains the Notification_Provider abstract class.
  * 
  * @package Hezarfen\Inc
  */
