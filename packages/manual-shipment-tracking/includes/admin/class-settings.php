@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Settings {
 	const HEZARFEN_WC_SETTINGS_ID = 'hezarfen';
-	const SECTION = 'manual_shipment_tracking';
+	const SECTION                 = 'manual_shipment_tracking';
 
 	/**
 	 * Constructor
