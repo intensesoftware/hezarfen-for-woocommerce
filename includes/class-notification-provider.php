@@ -36,4 +36,13 @@ abstract class Notification_Provider {
 	 * @return void
 	 */
 	abstract public function send( $order, $status_transition = '');
+
+	/**
+	 * Override this method if notification provider requires 3rd party plugin(s) to work.
+	 * 
+	 * @return bool
+	 */
+	public static function is_plugin_ready() {
+		return true;
+	}
 }
