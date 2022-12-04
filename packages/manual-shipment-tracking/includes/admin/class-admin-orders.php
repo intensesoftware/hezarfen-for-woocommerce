@@ -105,10 +105,7 @@ class Admin_Orders {
 		$new_courier_id   = ! empty( $_POST['courier_company'] ) ? sanitize_text_field( $_POST['courier_company'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$new_tracking_num = ! empty( $_POST['tracking_number'] ) ? sanitize_text_field( $_POST['tracking_number'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
-		if (
-			( $new_courier_id && $new_courier_id !== $old_courier::$id ) ||
-			( $new_tracking_num && $new_tracking_num !== $old_tracking_num )
-		) {
+		if ( ( $new_courier_id !== $old_courier::$id ) || ( $new_tracking_num !== $old_tracking_num ) ) {
 			$new_courier = Helper::get_courier_class( $new_courier_id );
 
 			update_post_meta( $order_id, Helper::COURIER_COMPANY_ID_KEY, $new_courier_id );
@@ -118,14 +115,14 @@ class Admin_Orders {
 
 			do_action( 'hezarfen_mst_tracking_data_saved', $order, $new_courier_id, $new_tracking_num );
 
-			if ( $new_courier_id && ( $new_tracking_num || 'Kurye' === $new_courier_id ) ) {
+			if ( ( $new_courier_id && $new_tracking_num ) || Courier_Kurye::$id === $new_courier_id ) {
 				$order->update_status( apply_filters( 'hezarfen_mst_new_order_status', Helper::SHIPPED_ORDER_STATUS, $order, $new_courier_id, $new_tracking_num ) );
-			}
 
-			do_action( 'hezarfen_mst_order_shipped', $order );
+				if ( 'yes' === get_option( 'hezarfen_mst_enable_sms_notification' ) ) {
+					Helper::send_notification( $order );
+				}
 
-			if ( 'yes' === get_option( 'hezarfen_mst_enable_sms_notification' ) ) {
-				Helper::send_notification( $order );
+				do_action( 'hezarfen_mst_order_shipped', $order );
 			}
 		}
 	}
