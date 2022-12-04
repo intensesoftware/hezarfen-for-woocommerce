@@ -50,7 +50,7 @@ class Netgsm extends \Hezarfen\Inc\Notification_Provider {
 	 * Constructor
 	 */
 	public function __construct() {
-		add_filter( 'pre_option_netgsm_order_status_text_' . Helper::DB_SHIPPED_ORDER_STATUS, array( __CLASS__, 'override_netgsm_sms_content' ), PHP_INT_MAX - 1, 3 );
+		add_filter( 'pre_option_netgsm_order_status_text_' . Manual_Shipment_Tracking::DB_SHIPPED_ORDER_STATUS, array( __CLASS__, 'override_netgsm_sms_content' ), PHP_INT_MAX - 1, 3 );
 		add_action( 'woocommerce_order_status_changed', array( __CLASS__, 'remove_netgsm_callback' ), 1, 4 );
 	}
 
@@ -82,7 +82,7 @@ class Netgsm extends \Hezarfen\Inc\Notification_Provider {
 	}
 
 	/**
-	 * Removes a Netgsm callback that runs when order status changes to Helper::SHIPPED_ORDER_STATUS.
+	 * Removes a Netgsm callback that runs when order status changes to Manual_Shipment_Tracking::SHIPPED_ORDER_STATUS.
 	 * We need to remove that callback to prevent sending SMS twice.
 	 * 
 	 * @param string|int $order_id Order ID.
@@ -93,7 +93,7 @@ class Netgsm extends \Hezarfen\Inc\Notification_Provider {
 	 * @return void
 	 */
 	public static function remove_netgsm_callback( $order_id, $from, $to, $order ) {
-		if ( Helper::SHIPPED_ORDER_STATUS === $to ) {
+		if ( Manual_Shipment_Tracking::SHIPPED_ORDER_STATUS === $to ) {
 			remove_action( 'woocommerce_order_status_changed', 'netgsm_order_status_changed' );
 		}
 	}
@@ -106,9 +106,9 @@ class Netgsm extends \Hezarfen\Inc\Notification_Provider {
 	 * @return string
 	 */
 	public static function convert_hezarfen_variables_to_netgsm_metas( $sms_content ) {
-		$sms_content = str_replace( self::COURIER_COMPANY_VAR, '[meta:' . Helper::COURIER_COMPANY_TITLE_KEY . ']', $sms_content );
-		$sms_content = str_replace( self::TRACKING_NUM_VAR, '[meta:' . Helper::TRACKING_NUM_KEY . ']', $sms_content );
-		$sms_content = str_replace( self::TRACKING_URL_VAR, '[meta:' . Helper::TRACKING_URL_KEY . ']', $sms_content );
+		$sms_content = str_replace( self::COURIER_COMPANY_VAR, '[meta:' . Manual_Shipment_Tracking::COURIER_COMPANY_TITLE_KEY . ']', $sms_content );
+		$sms_content = str_replace( self::TRACKING_NUM_VAR, '[meta:' . Manual_Shipment_Tracking::TRACKING_NUM_KEY . ']', $sms_content );
+		$sms_content = str_replace( self::TRACKING_URL_VAR, '[meta:' . Manual_Shipment_Tracking::TRACKING_URL_KEY . ']', $sms_content );
 		return $sms_content;
 	}
 
@@ -120,9 +120,9 @@ class Netgsm extends \Hezarfen\Inc\Notification_Provider {
 	 * @return string
 	 */
 	public static function convert_netgsm_metas_to_hezarfen_variables( $db_sms_content ) {
-		$db_sms_content = str_replace( '[meta:' . Helper::COURIER_COMPANY_TITLE_KEY . ']', self::COURIER_COMPANY_VAR, $db_sms_content );
-		$db_sms_content = str_replace( '[meta:' . Helper::TRACKING_NUM_KEY . ']', self::TRACKING_NUM_VAR, $db_sms_content );
-		$db_sms_content = str_replace( '[meta:' . Helper::TRACKING_URL_KEY . ']', self::TRACKING_URL_VAR, $db_sms_content );
+		$db_sms_content = str_replace( '[meta:' . Manual_Shipment_Tracking::COURIER_COMPANY_TITLE_KEY . ']', self::COURIER_COMPANY_VAR, $db_sms_content );
+		$db_sms_content = str_replace( '[meta:' . Manual_Shipment_Tracking::TRACKING_NUM_KEY . ']', self::TRACKING_NUM_VAR, $db_sms_content );
+		$db_sms_content = str_replace( '[meta:' . Manual_Shipment_Tracking::TRACKING_URL_KEY . ']', self::TRACKING_URL_VAR, $db_sms_content );
 		return $db_sms_content;
 	}
 

@@ -13,14 +13,6 @@ defined( 'ABSPATH' ) || exit;
  * Helper class.
  */
 class Helper {
-	const DB_SHIPPED_ORDER_STATUS = 'wc-hezarfen-shipped';
-	const SHIPPED_ORDER_STATUS    = 'hezarfen-shipped';
-
-	const COURIER_COMPANY_ID_KEY    = 'hezarfen_mst_courier_company_id';
-	const COURIER_COMPANY_TITLE_KEY = 'hezarfen_mst_courier_company_title';
-	const TRACKING_NUM_KEY          = 'hezarfen_mst_tracking_number';
-	const TRACKING_URL_KEY          = 'hezarfen_mst_tracking_url';
-
 	/**
 	 * Sends notification.
 	 * 
@@ -31,7 +23,7 @@ class Helper {
 	public static function send_notification( $order ) {
 		$notification_provider = Manual_Shipment_Tracking::instance()->active_notif_provider;
 		if ( $notification_provider ) {
-			$notification_provider->send( $order, self::DB_SHIPPED_ORDER_STATUS );
+			$notification_provider->send( $order, Manual_Shipment_Tracking::DB_SHIPPED_ORDER_STATUS );
 		}
 	}
 
@@ -92,7 +84,7 @@ class Helper {
 	 * @return string
 	 */
 	public static function get_courier_id( $order_id ) {
-		return get_post_meta( $order_id, self::COURIER_COMPANY_ID_KEY, true );
+		return get_post_meta( $order_id, Manual_Shipment_Tracking::COURIER_COMPANY_ID_KEY, true );
 	}
 
 	/**
@@ -112,7 +104,7 @@ class Helper {
 	 * @return string|false
 	 */
 	public static function get_tracking_num( $order_id ) {
-		return get_post_meta( $order_id, self::TRACKING_NUM_KEY, true );
+		return get_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_NUM_KEY, true );
 	}
 
 	/**
@@ -123,6 +115,6 @@ class Helper {
 	 * @return string|false
 	 */
 	public static function get_tracking_url( $order_id ) {
-		return get_post_meta( $order_id, self::TRACKING_URL_KEY, true );
+		return get_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_URL_KEY, true );
 	}
 }

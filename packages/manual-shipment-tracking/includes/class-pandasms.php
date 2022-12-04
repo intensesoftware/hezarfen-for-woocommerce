@@ -58,9 +58,9 @@ class Pandasms extends \Hezarfen\Inc\Notification_Provider {
 				$order,
 				self::TRIGGER_NAME,
 				array(
-					self::COURIER_COMPANY_VAR => get_post_meta( $order_id, Helper::COURIER_COMPANY_TITLE_KEY, true ),
-					self::TRACKING_NUM_VAR    => get_post_meta( $order_id, Helper::TRACKING_NUM_KEY, true ),
-					self::TRACKING_URL_VAR    => get_post_meta( $order_id, Helper::TRACKING_URL_KEY, true ),
+					self::COURIER_COMPANY_VAR => get_post_meta( $order_id, Manual_Shipment_Tracking::COURIER_COMPANY_TITLE_KEY, true ),
+					self::TRACKING_NUM_VAR    => get_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_NUM_KEY, true ),
+					self::TRACKING_URL_VAR    => get_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_URL_KEY, true ),
 				)
 			);
 		}

@@ -34,7 +34,7 @@ class Admin_Orders {
 	 * @return string[]
 	 */
 	public function append_order_status_to_reports( $statuses ) {
-		$statuses[] = Helper::SHIPPED_ORDER_STATUS;
+		$statuses[] = Manual_Shipment_Tracking::SHIPPED_ORDER_STATUS;
 		return $statuses;
 	}
 
@@ -108,15 +108,15 @@ class Admin_Orders {
 		if ( ( $new_courier_id !== $old_courier::$id ) || ( $new_tracking_num !== $old_tracking_num ) ) {
 			$new_courier = Helper::get_courier_class( $new_courier_id );
 
-			update_post_meta( $order_id, Helper::COURIER_COMPANY_ID_KEY, $new_courier_id );
-			update_post_meta( $order_id, Helper::COURIER_COMPANY_TITLE_KEY, $new_courier::get_title() );
-			update_post_meta( $order_id, Helper::TRACKING_NUM_KEY, $new_tracking_num );
-			update_post_meta( $order_id, Helper::TRACKING_URL_KEY, $new_courier::create_tracking_url( $new_tracking_num ) );
+			update_post_meta( $order_id, Manual_Shipment_Tracking::COURIER_COMPANY_ID_KEY, $new_courier_id );
+			update_post_meta( $order_id, Manual_Shipment_Tracking::COURIER_COMPANY_TITLE_KEY, $new_courier::get_title() );
+			update_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_NUM_KEY, $new_tracking_num );
+			update_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_URL_KEY, $new_courier::create_tracking_url( $new_tracking_num ) );
 
 			do_action( 'hezarfen_mst_tracking_data_saved', $order, $new_courier_id, $new_tracking_num );
 
 			if ( ( $new_courier_id && $new_tracking_num ) || Courier_Kurye::$id === $new_courier_id ) {
-				$order->update_status( apply_filters( 'hezarfen_mst_new_order_status', Helper::SHIPPED_ORDER_STATUS, $order, $new_courier_id, $new_tracking_num ) );
+				$order->update_status( apply_filters( 'hezarfen_mst_new_order_status', Manual_Shipment_Tracking::SHIPPED_ORDER_STATUS, $order, $new_courier_id, $new_tracking_num ) );
 
 				if ( 'yes' === get_option( 'hezarfen_mst_enable_sms_notification' ) ) {
 					Helper::send_notification( $order );

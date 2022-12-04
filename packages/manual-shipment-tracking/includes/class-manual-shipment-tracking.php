@@ -24,6 +24,14 @@ require_once 'class-pandasms.php';
 class Manual_Shipment_Tracking {
 	const ENABLE_DISABLE_OPTION = 'hezarfen_enable_manual_shipment_tracking';
 
+	const DB_SHIPPED_ORDER_STATUS = 'wc-hezarfen-shipped';
+	const SHIPPED_ORDER_STATUS    = 'hezarfen-shipped';
+
+	const COURIER_COMPANY_ID_KEY    = 'hezarfen_mst_courier_company_id';
+	const COURIER_COMPANY_TITLE_KEY = 'hezarfen_mst_courier_company_title';
+	const TRACKING_NUM_KEY          = 'hezarfen_mst_tracking_number';
+	const TRACKING_URL_KEY          = 'hezarfen_mst_tracking_url';
+
 	/**
 	 * The single instance of the class
 	 *
@@ -114,7 +122,7 @@ class Manual_Shipment_Tracking {
 	 * @return array<string, array<string, mixed>>
 	 */
 	public static function register_order_status( $wc_order_statuses ) {
-		$wc_order_statuses[ Helper::DB_SHIPPED_ORDER_STATUS ] = array(
+		$wc_order_statuses[ self::DB_SHIPPED_ORDER_STATUS ] = array(
 			'label'                     => _x( 'Shipped', 'WooCommerce Order status', 'hezarfen-for-woocommerce' ),
 			'public'                    => false,
 			'exclude_from_search'       => false,
@@ -135,7 +143,7 @@ class Manual_Shipment_Tracking {
 	 * @return array<string, string>
 	 */
 	public static function append_order_status( $wc_order_statuses ) {
-		$wc_order_statuses[ Helper::DB_SHIPPED_ORDER_STATUS ] = _x( 'Shipped', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
+		$wc_order_statuses[ self::DB_SHIPPED_ORDER_STATUS ] = _x( 'Shipped', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
 		return $wc_order_statuses;
 	}
 
