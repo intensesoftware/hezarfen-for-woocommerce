@@ -16,6 +16,7 @@ require_once 'email/class-email.php';
 require_once 'class-my-account.php';
 require_once 'admin/class-admin-orders.php';
 require_once 'class-netgsm.php';
+require_once 'class-pandasms.php';
 
 /**
  * Manual Shipment Tracking package main class.
@@ -84,8 +85,14 @@ class Manual_Shipment_Tracking {
 		new My_Account();
 		new Admin_Orders();
 
-		if ( 'yes' === get_option( 'hezarfen_mst_enable_sms_notification' ) && 'netgsm' === get_option( 'hezarfen_mst_notification_provider' ) ) {
-			$this->active_notif_provider = new Netgsm();
+		if ( 'yes' === get_option( 'hezarfen_mst_enable_sms_notification' ) ) {
+			$selected_provider = get_option( 'hezarfen_mst_notification_provider' );
+
+			if ( Netgsm::$id === $selected_provider && Netgsm::is_plugin_ready() ) {
+				$this->active_notif_provider = new Netgsm();
+			} elseif ( Pandasms::$id === $selected_provider && Pandasms::is_plugin_ready() ) {
+				$this->active_notif_provider = new Pandasms();
+			}
 		}
 	}
 

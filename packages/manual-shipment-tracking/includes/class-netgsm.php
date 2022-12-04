@@ -50,10 +50,8 @@ class Netgsm extends \Hezarfen\Inc\Notification_Provider {
 	 * Constructor
 	 */
 	public function __construct() {
-		if ( self::is_netgsm_ready() ) {
-			add_filter( 'pre_option_netgsm_order_status_text_' . Helper::DB_SHIPPED_ORDER_STATUS, array( __CLASS__, 'override_netgsm_sms_content' ), PHP_INT_MAX - 1, 3 );
-			add_action( 'woocommerce_order_status_changed', array( __CLASS__, 'remove_netgsm_callback' ), 1, 4 );
-		}
+		add_filter( 'pre_option_netgsm_order_status_text_' . Helper::DB_SHIPPED_ORDER_STATUS, array( __CLASS__, 'override_netgsm_sms_content' ), PHP_INT_MAX - 1, 3 );
+		add_action( 'woocommerce_order_status_changed', array( __CLASS__, 'remove_netgsm_callback' ), 1, 4 );
 	}
 
 	/**
@@ -133,7 +131,7 @@ class Netgsm extends \Hezarfen\Inc\Notification_Provider {
 	 * 
 	 * @return bool
 	 */
-	public static function is_netgsm_ready() {
+	public static function is_plugin_ready() {
 		return self::is_netgsm_active() && self::is_netgsm_order_status_change_notif_active();
 	}
 

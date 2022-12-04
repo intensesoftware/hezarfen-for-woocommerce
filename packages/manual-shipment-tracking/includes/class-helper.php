@@ -36,14 +36,31 @@ class Helper {
 	}
 
 	/**
-	 * Returns notification providers (ID => Title).
+	 * Returns notification providers (ID => Class name).
 	 * 
 	 * @return array<string, string>
 	 */
 	public static function get_notification_providers() {
 		return array(
-			Netgsm::$id => Netgsm::$title,
+			Pandasms::$id => Pandasms::class,
+			Netgsm::$id   => Netgsm::class,
 		);
+	}
+
+	/**
+	 * Returns the providers that are not ready to be used as a notification provider.
+	 * 
+	 * @return string[]
+	 */
+	public static function get_not_ready_providers() {
+		$not_ready = array();
+		foreach ( self::get_notification_providers() as $id => $class ) {
+			if ( ! $class::is_plugin_ready() ) {
+				$not_ready[] = $id;
+			}
+		}
+
+		return $not_ready;
 	}
 
 	/**

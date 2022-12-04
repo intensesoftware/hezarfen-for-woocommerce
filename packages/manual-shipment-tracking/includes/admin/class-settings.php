@@ -63,20 +63,20 @@ class Settings {
 		if ( self::SECTION === $current_section ) {
 			add_action( 'woocommerce_admin_field_hezarfen_mst_netgsm_sms_content_textarea', array( $this, 'render_netgsm_sms_content_setting' ) );
 
-			foreach ( Helper::get_notification_providers() as $id => $title ) {
-				$label = $title;
+			foreach ( Helper::get_notification_providers() as $id => $class ) {
+				$notice = '';
 
-				if ( 'netgsm' === $id ) {
-					$notice = '';
-					if ( ! Netgsm::is_netgsm_active() ) {
-						$notice = __( 'In order to NetGSM integration work, the NetGSM plugin must be activated.', 'hezarfen-for-woocommerce' );
-					} elseif ( ! Netgsm::is_netgsm_order_status_change_notif_active() ) {
-						$notice = __( 'In order to NetGSM integration work, the "send SMS to the customer when order status changed" option must be activated from the NetGSM plugin settings.', 'hezarfen-for-woocommerce' );
-					}
+				if ( ! $class::is_plugin_ready() ) {
+					/* translators: %s SMS notification provider */
+					$notice = sprintf( __( 'In order to %1$s integration work, the %2$s plugin must be activated.', 'hezarfen-for-woocommerce' ), $class::$title, $class::$title );
 
-					$label = $notice ? sprintf( '%s (%s)', $label, $notice ) : $label;
 				}
 
+				if ( Netgsm::$id === $id && ! Netgsm::is_netgsm_order_status_change_notif_active() ) {
+					$notice = __( 'In order to NetGSM integration work, the "send SMS to the customer when order status changed" option must be activated from the NetGSM plugin settings.', 'hezarfen-for-woocommerce' );
+				}
+
+				$label                         = $notice ? sprintf( '%s (%s)', $class::$title, $notice ) : $class::$title;
 				$notification_providers[ $id ] = $label;
 			}
 
@@ -116,7 +116,7 @@ class Settings {
 					'id'       => 'hezarfen_mst_notification_provider',
 					'class'    => 'notification notif-provider',
 					'options'  => isset( $notification_providers ) ? $notification_providers : array(),
-					'disabled' => ! Netgsm::is_netgsm_ready() ? array( Netgsm::$id ) : array(),
+					'disabled' => Helper::get_not_ready_providers(),
 				),
 				array(
 					'type'        => 'hezarfen_mst_netgsm_sms_content_textarea',
@@ -157,7 +157,7 @@ class Settings {
 					placeholder="<?php echo esc_attr( $setting['placeholder'] ); ?>"
 					rows="5"
 					cols="30"
-					<?php disabled( ! Netgsm::is_netgsm_ready() ); ?>
+					<?php disabled( ! Netgsm::is_plugin_ready() ); ?>
 					><?php echo esc_textarea( $sms_content ); ?></textarea>
 				<p class="description"><?php esc_html_e( 'Available Variables', 'hezarfen-for-woocommerce' ); ?>:</p>
 				<div class="sms-variables-wrapper">
