@@ -53,6 +53,7 @@ class Manual_Shipment_Tracking {
 	 */
 	private function __construct() {
 		self::add_enable_disable_option();
+		new Settings();
 
 		if ( self::is_enabled() ) {
 			$this->initialize_classes();
@@ -88,7 +89,6 @@ class Manual_Shipment_Tracking {
 	 * @return void
 	 */
 	public function initialize_classes() {
-		new Settings();
 		new Email();
 		new My_Account();
 		new Admin_Orders();
