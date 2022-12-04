@@ -110,6 +110,7 @@ class Helper {
 			Courier_Brinks::$id           => Courier_Brinks::class,
 			Courier_DHL::$id              => Courier_DHL::class,
 			Courier_TNT::$id              => Courier_TNT::class,
+			Courier_Kurye::$id            => Courier_Kurye::class,
 		);
 	}
 
