@@ -15,8 +15,8 @@ require_once 'admin/class-settings.php';
 require_once 'email/class-email.php';
 require_once 'class-my-account.php';
 require_once 'admin/class-admin-orders.php';
-require_once 'class-netgsm.php';
-require_once 'class-pandasms.php';
+require_once 'notification-providers/class-netgsm.php';
+require_once 'notification-providers/class-pandasms.php';
 
 /**
  * Manual Shipment Tracking package main class.
