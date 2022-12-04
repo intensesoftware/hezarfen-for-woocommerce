@@ -22,21 +22,13 @@ class Settings {
 	 * @return void
 	 */
 	public function __construct() {
-		$this->assign_callbacks_to_hooks();
-	}
+		add_filter( 'woocommerce_get_sections_' . self::HEZARFEN_WC_SETTINGS_ID, array( __CLASS__, 'add_section' ) );
 
-	/**
-	 * Assigns callbacks to hooks.
-	 * 
-	 * @return void
-	 */
-	public function assign_callbacks_to_hooks() {
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_and_styles' ) );
-
-		add_filter( 'woocommerce_get_sections_' . self::HEZARFEN_WC_SETTINGS_ID, array( $this, 'add_section' ) );
-		add_filter( 'woocommerce_get_settings_' . self::HEZARFEN_WC_SETTINGS_ID, array( $this, 'add_settings_to_section' ), 10, 2 );
-
-		add_action( 'woocommerce_settings_save_hezarfen', array( __CLASS__, 'convert_variables' ) );
+		if ( Manual_Shipment_Tracking::is_enabled() ) {
+			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_scripts_and_styles' ) );
+			add_filter( 'woocommerce_get_settings_' . self::HEZARFEN_WC_SETTINGS_ID, array( __CLASS__, 'add_settings_to_section' ), 10, 2 );
+			add_action( 'woocommerce_settings_save_hezarfen', array( __CLASS__, 'convert_variables' ) );
+		}
 	}
 
 	/**
@@ -46,7 +38,7 @@ class Settings {
 	 * 
 	 * @return array<string, string>
 	 */
-	public function add_section( $hezarfen_sections ) {
+	public static function add_section( $hezarfen_sections ) {
 		if ( Manual_Shipment_Tracking::is_enabled() ) {
 			$hezarfen_sections[ self::SECTION ] = __( 'Manual Shipment Tracking', 'hezarfen-for-woocommerce' );
 		}
@@ -62,9 +54,9 @@ class Settings {
 	 * 
 	 * @return array<array<string, string>>
 	 */
-	public function add_settings_to_section( $settings, $current_section ) {
+	public static function add_settings_to_section( $settings, $current_section ) {
 		if ( self::SECTION === $current_section ) {
-			add_action( 'woocommerce_admin_field_hezarfen_mst_netgsm_sms_content_textarea', array( $this, 'render_netgsm_sms_content_setting' ) );
+			add_action( 'woocommerce_admin_field_hezarfen_mst_netgsm_sms_content_textarea', array( __CLASS__, 'render_netgsm_sms_content_setting' ) );
 
 			foreach ( Manual_Shipment_Tracking::notification_providers() as $id => $class ) {
 				$notice = '';
@@ -145,7 +137,7 @@ class Settings {
 	 * 
 	 * @return void
 	 */
-	public function render_netgsm_sms_content_setting( $setting ) {
+	public static function render_netgsm_sms_content_setting( $setting ) {
 		$sms_content = $setting['value'] ? Netgsm::convert_netgsm_metas_to_hezarfen_variables( $setting['value'] ) : '';
 		?>
 		<tr valign="top">
@@ -193,7 +185,7 @@ class Settings {
 	 * 
 	 * @return void
 	 */
-	public function enqueue_scripts_and_styles( $hook_suffix ) {
+	public static function enqueue_scripts_and_styles( $hook_suffix ) {
 		global $current_section;
 
 		if ( 'woocommerce_page_wc-settings' === $hook_suffix && self::SECTION === $current_section ) {
