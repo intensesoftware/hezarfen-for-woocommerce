@@ -63,7 +63,7 @@ class Settings {
 		if ( self::SECTION === $current_section ) {
 			add_action( 'woocommerce_admin_field_hezarfen_mst_netgsm_sms_content_textarea', array( $this, 'render_netgsm_sms_content_setting' ) );
 
-			foreach ( Helper::get_notification_providers() as $id => $class ) {
+			foreach ( Manual_Shipment_Tracking::notification_providers() as $id => $class ) {
 				$notice = '';
 
 				if ( ! $class::is_plugin_ready() ) {

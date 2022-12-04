@@ -36,25 +36,13 @@ class Helper {
 	}
 
 	/**
-	 * Returns notification providers (ID => Class name).
-	 * 
-	 * @return array<string, string>
-	 */
-	public static function get_notification_providers() {
-		return array(
-			Pandasms::$id => Pandasms::class,
-			Netgsm::$id   => Netgsm::class,
-		);
-	}
-
-	/**
 	 * Returns the providers that are not ready to be used as a notification provider.
 	 * 
 	 * @return string[]
 	 */
 	public static function get_not_ready_providers() {
 		$not_ready = array();
-		foreach ( self::get_notification_providers() as $id => $class ) {
+		foreach ( Manual_Shipment_Tracking::notification_providers() as $id => $class ) {
 			if ( ! $class::is_plugin_ready() ) {
 				$not_ready[] = $id;
 			}
@@ -70,50 +58,13 @@ class Helper {
 	 */
 	public static function courier_company_options() {
 		// prepare the "ID => Courier title" array.
-		foreach ( self::courier_companies() as $id => $courier_class ) {
+		foreach ( Manual_Shipment_Tracking::courier_companies() as $id => $courier_class ) {
 			$options[ $id ] = $courier_class::get_title();
 		}
 
 		$options[''] = __( 'Please choose a courier company', 'hezarfen-for-woocommerce' );
 
 		return $options;
-	}
-
-	/**
-	 * Returns courier companies array (ID => Class name).
-	 * 
-	 * @return array<string, string>
-	 */
-	public static function courier_companies() {
-		$courier_companies = array(
-			''                            => Courier_Empty::class,
-			Courier_Aras::$id             => Courier_Aras::class,
-			Courier_MNG::$id              => Courier_MNG::class,
-			Courier_Yurtici::$id          => Courier_Yurtici::class,
-			Courier_PTT::$id              => Courier_PTT::class,
-			Courier_UPS::$id              => Courier_UPS::class,
-			Courier_Surat::$id            => Courier_Surat::class,
-			Courier_Hepsijet::$id         => Courier_Hepsijet::class,
-			Courier_Trendyol_Express::$id => Courier_Trendyol_Express::class,
-			Courier_Kargoist::$id         => Courier_Kargoist::class,
-			Courier_Jetizz::$id           => Courier_Jetizz::class,
-			Courier_Gelal::$id            => Courier_Gelal::class,
-			Courier_Birgunde::$id         => Courier_Birgunde::class,
-			Courier_Scotty::$id           => Courier_Scotty::class,
-			Courier_Packupp::$id          => Courier_Packupp::class,
-			Courier_Kolay_Gelsin::$id     => Courier_Kolay_Gelsin::class,
-			Courier_CDEK::$id             => Courier_CDEK::class,
-			Courier_Fedex::$id            => Courier_Fedex::class,
-			Courier_Horoz_Lojistik::$id   => Courier_Horoz_Lojistik::class,
-			Courier_Kargo_Turk::$id       => Courier_Kargo_Turk::class,
-			Courier_Sendeo::$id           => Courier_Sendeo::class,
-			Courier_Brinks::$id           => Courier_Brinks::class,
-			Courier_DHL::$id              => Courier_DHL::class,
-			Courier_TNT::$id              => Courier_TNT::class,
-			Courier_Kurye::$id            => Courier_Kurye::class,
-		);
-
-		return apply_filters( 'hezarfen_mst_courier_companies', $courier_companies );
 	}
 
 	/**
@@ -124,7 +75,7 @@ class Helper {
 	 * @return string
 	 */
 	public static function get_courier_class( $id ) {
-		$courier_companies = self::courier_companies();
+		$courier_companies = Manual_Shipment_Tracking::courier_companies();
 
 		if ( is_numeric( $id ) ) { // $id is an oder ID.
 			return $courier_companies[ self::get_courier_id( $id ) ] ?? $courier_companies[''];

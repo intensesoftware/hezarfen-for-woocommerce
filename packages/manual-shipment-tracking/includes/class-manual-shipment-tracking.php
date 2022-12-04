@@ -140,6 +140,55 @@ class Manual_Shipment_Tracking {
 	}
 
 	/**
+	 * Returns courier companies array (ID => Class name).
+	 * 
+	 * @return array<string, string>
+	 */
+	public static function courier_companies() {
+		$courier_companies = array(
+			''                            => Courier_Empty::class,
+			Courier_Aras::$id             => Courier_Aras::class,
+			Courier_MNG::$id              => Courier_MNG::class,
+			Courier_Yurtici::$id          => Courier_Yurtici::class,
+			Courier_PTT::$id              => Courier_PTT::class,
+			Courier_UPS::$id              => Courier_UPS::class,
+			Courier_Surat::$id            => Courier_Surat::class,
+			Courier_Hepsijet::$id         => Courier_Hepsijet::class,
+			Courier_Trendyol_Express::$id => Courier_Trendyol_Express::class,
+			Courier_Kargoist::$id         => Courier_Kargoist::class,
+			Courier_Jetizz::$id           => Courier_Jetizz::class,
+			Courier_Gelal::$id            => Courier_Gelal::class,
+			Courier_Birgunde::$id         => Courier_Birgunde::class,
+			Courier_Scotty::$id           => Courier_Scotty::class,
+			Courier_Packupp::$id          => Courier_Packupp::class,
+			Courier_Kolay_Gelsin::$id     => Courier_Kolay_Gelsin::class,
+			Courier_CDEK::$id             => Courier_CDEK::class,
+			Courier_Fedex::$id            => Courier_Fedex::class,
+			Courier_Horoz_Lojistik::$id   => Courier_Horoz_Lojistik::class,
+			Courier_Kargo_Turk::$id       => Courier_Kargo_Turk::class,
+			Courier_Sendeo::$id           => Courier_Sendeo::class,
+			Courier_Brinks::$id           => Courier_Brinks::class,
+			Courier_DHL::$id              => Courier_DHL::class,
+			Courier_TNT::$id              => Courier_TNT::class,
+			Courier_Kurye::$id            => Courier_Kurye::class,
+		);
+
+		return apply_filters( 'hezarfen_mst_courier_companies', $courier_companies );
+	}
+
+	/**
+	 * Returns notification providers (ID => Class name).
+	 * 
+	 * @return array<string, string>
+	 */
+	public static function notification_providers() {
+		return array(
+			Pandasms::$id => Pandasms::class,
+			Netgsm::$id   => Netgsm::class,
+		);
+	}
+
+	/**
 	 * Adds a checkbox to enable/disable the package.
 	 * 
 	 * @return void
