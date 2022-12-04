@@ -85,7 +85,7 @@ class Helper {
 	 * @return array<string, string>
 	 */
 	public static function courier_companies() {
-		return array(
+		$courier_companies = array(
 			''                            => Courier_Empty::class,
 			Courier_Aras::$id             => Courier_Aras::class,
 			Courier_MNG::$id              => Courier_MNG::class,
@@ -112,6 +112,8 @@ class Helper {
 			Courier_TNT::$id              => Courier_TNT::class,
 			Courier_Kurye::$id            => Courier_Kurye::class,
 		);
+
+		return apply_filters( 'hezarfen_mst_courier_companies', $courier_companies );
 	}
 
 	/**
