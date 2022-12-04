@@ -84,7 +84,8 @@ class Helper {
 	 * @return string
 	 */
 	public static function get_courier_id( $order_id ) {
-		return get_post_meta( $order_id, Manual_Shipment_Tracking::COURIER_COMPANY_ID_KEY, true );
+		$courier_id = get_post_meta( $order_id, Manual_Shipment_Tracking::COURIER_COMPANY_ID_KEY, true );
+		return apply_filters( 'hezarfen_mst_get_courier_id', $courier_id, $order_id );
 	}
 
 	/**
@@ -104,7 +105,8 @@ class Helper {
 	 * @return string
 	 */
 	public static function get_courier_title( $order_id ) {
-		return get_post_meta( $order_id, Manual_Shipment_Tracking::COURIER_COMPANY_TITLE_KEY, true );
+		$courier_title = get_post_meta( $order_id, Manual_Shipment_Tracking::COURIER_COMPANY_TITLE_KEY, true );
+		return apply_filters( 'hezarfen_mst_get_courier_title', $courier_title, $order_id );
 	}
 
 	/**
@@ -115,7 +117,8 @@ class Helper {
 	 * @return string|false
 	 */
 	public static function get_tracking_num( $order_id ) {
-		return get_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_NUM_KEY, true );
+		$tracking_number = get_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_NUM_KEY, true );
+		return apply_filters( 'hezarfen_mst_get_tracking_num', $tracking_number, $order_id );
 	}
 
 	/**
@@ -126,6 +129,7 @@ class Helper {
 	 * @return string|false
 	 */
 	public static function get_tracking_url( $order_id ) {
-		return get_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_URL_KEY, true );
+		$tracking_url = get_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_URL_KEY, true );
+		return apply_filters( 'hezarfen_mst_get_tracking_url', $tracking_url, $order_id );
 	}
 }
