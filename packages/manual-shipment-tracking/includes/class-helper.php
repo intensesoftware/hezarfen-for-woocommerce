@@ -97,6 +97,17 @@ class Helper {
 	}
 
 	/**
+	 * Returns the courier company title of the order.
+	 * 
+	 * @param int|string $order_id Order ID.
+	 * 
+	 * @return string
+	 */
+	public static function get_courier_title( $order_id ) {
+		return get_post_meta( $order_id, Manual_Shipment_Tracking::COURIER_COMPANY_TITLE_KEY, true );
+	}
+
+	/**
 	 * Returns tracking number of the order.
 	 * 
 	 * @param int|string $order_id Order ID.
