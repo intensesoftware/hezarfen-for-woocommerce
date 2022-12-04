@@ -77,6 +77,15 @@ class Helper {
 	}
 
 	/**
+	 * Returns the default courier company ID.
+	 * 
+	 * @return string
+	 */
+	public static function get_default_courier_id() {
+		return get_option( 'hezarfen_mst_default_courier_company', '' );
+	}
+
+	/**
 	 * Returns the courier company ID of the order.
 	 * 
 	 * @param int|string $order_id Order ID.
@@ -86,15 +95,6 @@ class Helper {
 	public static function get_courier_id( $order_id ) {
 		$courier_id = get_post_meta( $order_id, Manual_Shipment_Tracking::COURIER_COMPANY_ID_KEY, true );
 		return apply_filters( 'hezarfen_mst_get_courier_id', $courier_id, $order_id );
-	}
-
-	/**
-	 * Returns the default courier company ID.
-	 * 
-	 * @return string
-	 */
-	public static function get_default_courier_id() {
-		return get_option( 'hezarfen_mst_default_courier_company', '' );
 	}
 
 	/**
