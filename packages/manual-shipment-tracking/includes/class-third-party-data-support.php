@@ -13,13 +13,18 @@ defined( 'ABSPATH' ) || exit;
  * The Third_Party_Data_Support class.
  */
 class Third_Party_Data_Support {
+	const INTENSE_KARGO_TAKIP = 'intense_kargo_takip';
+	const KARGO_TAKIP_TURKIYE = 'kargo_takip_turkiye';
+
 	const INTENSE_KARGO_TAKIP_ORDER_STATUS = 'wc-shipping-progress';
+	const KARGO_TAKIP_TURKIYE_ORDER_STATUS = 'wc-kargo-verildi';
 
 	/**
 	 * Constructor
 	 */
 	public function __construct() {
 		self::intense_kargo_takip_support();
+		self::kargo_takip_turkiye_support();
 	}
 
 	/**
@@ -28,7 +33,7 @@ class Third_Party_Data_Support {
 	 * @return void
 	 */
 	public static function intense_kargo_takip_support() {
-		self::register_intense_kargo_takip_order_status();
+		self::register_order_status( self::INTENSE_KARGO_TAKIP );
 
 		add_filter( 'hezarfen_mst_get_courier_id', array( __CLASS__, 'get_intense_kargo_takip_data' ), 10, 2 );
 		add_filter( 'hezarfen_mst_get_courier_title', array( __CLASS__, 'get_intense_kargo_takip_data' ), 10, 2 );
@@ -37,25 +42,54 @@ class Third_Party_Data_Support {
 	}
 
 	/**
-	 * Registers the Intense Kargo Takip for WooCommerce plugin's order status.
+	 * Adds support for the Kargo Takip Türkiye plugin's data.
 	 * 
 	 * @return void
 	 */
-	public static function register_intense_kargo_takip_order_status() {
-		$label       = _x( 'Shipped (Kargo Takip Plugin)', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
+	public static function kargo_takip_turkiye_support() {
+		self::register_order_status( self::KARGO_TAKIP_TURKIYE );
+
+		add_filter( 'hezarfen_mst_get_courier_id', array( __CLASS__, 'get_kargo_takip_turkiye_data' ), 11, 2 );
+		add_filter( 'hezarfen_mst_get_courier_title', array( __CLASS__, 'get_kargo_takip_turkiye_data' ), 11, 2 );
+		add_filter( 'hezarfen_mst_get_tracking_num', array( __CLASS__, 'get_kargo_takip_turkiye_data' ), 11, 2 );
+		add_filter( 'hezarfen_mst_get_tracking_url', array( __CLASS__, 'get_kargo_takip_turkiye_data' ), 11, 2 );
+	}
+
+	/**
+	 * Registers order status of the given third party plugin.
+	 * 
+	 * @param string $plugin Plugin.
+	 * 
+	 * @return void
+	 */
+	public static function register_order_status( $plugin ) {
 		$status_data = array(
-			'id'    => self::INTENSE_KARGO_TAKIP_ORDER_STATUS,
-			'label' => $label,
-			'data'  => array(
-				'label'                     => $label,
+			'data' => array(
 				'public'                    => false,
 				'exclude_from_search'       => false,
 				'show_in_admin_all_list'    => true,
 				'show_in_admin_status_list' => true,
-				/* translators: %s: number of orders */
-				'label_count'               => _n_noop( 'Shipped (Kargo Takip Plugin) (%s)', 'Shipped (Kargo Takip Plugin) (%s)', 'hezarfen-for-woocommerce' ),
 			),
 		);
+
+		$label = '';
+
+		if ( self::INTENSE_KARGO_TAKIP === $plugin ) {
+			$label = _x( 'Shipped (Intense Kargo Takip Plugin)', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
+
+			$status_data['id'] = self::INTENSE_KARGO_TAKIP_ORDER_STATUS;
+			/* translators: %s: number of orders */
+			$status_data['label_count'] = _n_noop( 'Shipped (Intense Kargo Takip Plugin) (%s)', 'Shipped (Intense Kargo Takip Plugin) (%s)', 'hezarfen-for-woocommerce' );
+		} elseif ( self::KARGO_TAKIP_TURKIYE === $plugin ) {
+			$label = _x( 'Shipped (Kargo Takip Turkey Plugin)', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
+
+			$status_data['id'] = self::KARGO_TAKIP_TURKIYE_ORDER_STATUS;
+			/* translators: %s: number of orders */
+			$status_data['label_count'] = _n_noop( 'Shipped (Kargo Takip Turkey Plugin) (%s)', 'Shipped (Kargo Takip Turkey Plugin) (%s)', 'hezarfen-for-woocommerce' );
+		}
+
+		$status_data['label']         = $label;
+		$status_data['data']['label'] = $label;
 
 		Helper::register_new_order_status( $status_data );
 	}
@@ -69,45 +103,86 @@ class Third_Party_Data_Support {
 	 * @return string
 	 */
 	public static function get_intense_kargo_takip_data( $hezarfen_data, $order_id ) {
+		return self::get_third_party_data( $hezarfen_data, $order_id, self::INTENSE_KARGO_TAKIP );
+	}
+
+	/**
+	 * Returns Kargo Takip Türkiye plugin's data.
+	 * 
+	 * @param string     $hezarfen_data Hezarfen's order data.
+	 * @param string|int $order_id Order ID.
+	 * 
+	 * @return string
+	 */
+	public static function get_kargo_takip_turkiye_data( $hezarfen_data, $order_id ) {
+		return self::get_third_party_data( $hezarfen_data, $order_id, self::KARGO_TAKIP_TURKIYE );
+	}
+
+	/**
+	 * Returns a third party plugin's data.
+	 * 
+	 * @param string     $hezarfen_data Hezarfen's order data.
+	 * @param string|int $order_id Order ID.
+	 * @param string     $plugin Plugin.
+	 * 
+	 * @return string
+	 */
+	public static function get_third_party_data( $hezarfen_data, $order_id, $plugin ) {
 		if ( $hezarfen_data ) {
 			return $hezarfen_data;
 		}
+
+		$data = array(
+			self::INTENSE_KARGO_TAKIP => array(
+				'courier_company_key' => 'shipping_company',
+				'courier_title_key'   => 'shipping_company',
+				'tracking_number_key' => 'shipping_number',
+				'tracking_url_key'    => 'in_kargotakip_tracking_url',
+			),
+			self::KARGO_TAKIP_TURKIYE => array(
+				'courier_company_key' => 'tracking_company',
+				'courier_title_key'   => 'tracking_company',
+				'tracking_number_key' => 'tracking_code',
+			),
+		);
 
 		$filter_name = str_replace( 'hezarfen_mst_', '', current_filter() );
 
 		switch ( $filter_name ) {
 			case 'get_courier_id':
+				$meta_key = $data[ $plugin ]['courier_company_key'];
+				break;
 			case 'get_courier_title':
-				$meta_key = 'shipping_company';
+				$meta_key = $data[ $plugin ]['courier_title_key'];
 				break;
 			case 'get_tracking_num':
-				$meta_key = 'shipping_number';
+				$meta_key = $data[ $plugin ]['tracking_number_key'];
 				break;
 			case 'get_tracking_url':
-				$meta_key = 'in_kargotakip_tracking_url';
+				$meta_key = $data[ $plugin ]['tracking_url_key'] ?? '';
 				break;
 			default:
 				$meta_key = '';
 				break;  
 		}
 
-		$data = self::get_third_party_data( $order_id, $meta_key );     
+		$data = $meta_key ? get_post_meta( $order_id, $meta_key, true ) : '';
 
-		if ( 'get_courier_id' === $filter_name ) {
-			return self::convert_intense_kargo_takip_courier( $data );
+		if ( $data && 'get_courier_id' === $filter_name ) {
+			return self::convert_courier( $data );
 		}
 
 		return $data;
 	}
 
 	/**
-	 * Converts Intense Kargo Takip for WooCommerce plugin's courier company data to Hezarfen's courier company ID.
+	 * Converts courier company data to Hezarfen's courier company ID.
 	 * 
 	 * @param string $courier Courier company data.
 	 * 
 	 * @return string
 	 */
-	public static function convert_intense_kargo_takip_courier( $courier ) {
+	public static function convert_courier( $courier ) {
 		$conversion_data = array(
 			''                 => Courier_Empty::$id,
 			'Aras Kargo'       => Courier_Aras::$id,
@@ -118,6 +193,7 @@ class Third_Party_Data_Support {
 			'SÜRAT Kargo'      => Courier_Surat::$id,
 			'hepsiJET'         => Courier_Hepsijet::$id,
 			'Trendyol Express' => Courier_Trendyol_Express::$id,
+			'tex'              => Courier_Trendyol_Express::$id,
 			'Kargoist'         => Courier_Kargoist::$id,
 			'Jetizz'           => Courier_Jetizz::$id,
 			'Gelal'            => Courier_Gelal::$id,
@@ -128,6 +204,7 @@ class Third_Party_Data_Support {
 			'CDEK'             => Courier_CDEK::$id,
 			'FedEx'            => Courier_Fedex::$id,
 			'Horoz Lojistik'   => Courier_Horoz_Lojistik::$id,
+			'horoz'            => Courier_Horoz_Lojistik::$id,
 			'Kargo Türk'       => Courier_Kargo_Turk::$id,
 			'Kurye'            => Courier_Kurye::$id,
 			'DHL'              => Courier_DHL::$id,
@@ -136,18 +213,6 @@ class Third_Party_Data_Support {
 			'Sendeo'           => Courier_Sendeo::$id,
 		);
 
-		return $conversion_data[ $courier ] ?? '';
-	}
-
-	/**
-	 * Returns a third party plugin's data.
-	 * 
-	 * @param string|int $order_id Order ID.
-	 * @param string     $meta_key Meta key.
-	 * 
-	 * @return string
-	 */
-	public static function get_third_party_data( $order_id, $meta_key ) {
-		return $meta_key ? get_post_meta( $order_id, $meta_key, true ) : '';
+		return $conversion_data[ $courier ] ?? $courier;
 	}
 }
