@@ -66,14 +66,14 @@ class Third_Party_Data_Support {
 		$data = array(
 			self::INTENSE_KARGO_TAKIP => array(
 				'id'          => self::INTENSE_KARGO_TAKIP_ORDER_STATUS,
-				/* translators: %s: number of orders */
 				'label'       => _x( 'Shipped (Intense Kargo Takip Plugin)', 'WooCommerce Order status', 'hezarfen-for-woocommerce' ),
+				/* translators: %s: number of orders */
 				'label_count' => _n_noop( 'Shipped (Intense Kargo Takip Plugin) (%s)', 'Shipped (Intense Kargo Takip Plugin) (%s)', 'hezarfen-for-woocommerce' ),
 			),
 			self::KARGO_TAKIP_TURKIYE => array(
 				'id'          => self::KARGO_TAKIP_TURKIYE_ORDER_STATUS,
-				/* translators: %s: number of orders */
 				'label'       => _x( 'Shipped (Kargo Takip Turkey Plugin)', 'WooCommerce Order status', 'hezarfen-for-woocommerce' ),
+				/* translators: %s: number of orders */
 				'label_count' => _n_noop( 'Shipped (Kargo Takip Turkey Plugin) (%s)', 'Shipped (Kargo Takip Turkey Plugin) (%s)', 'hezarfen-for-woocommerce' ),
 			),
 		);
