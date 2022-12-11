@@ -101,18 +101,6 @@ class Third_Party_Data_Support {
 	}
 
 	/**
-	 * Returns a third party plugin's data.
-	 * 
-	 * @param string|int $order_id Order ID.
-	 * @param string     $meta_key Meta key.
-	 * 
-	 * @return string
-	 */
-	public static function get_third_party_data( $order_id, $meta_key ) {
-		return $meta_key ? get_post_meta( $order_id, $meta_key, true ) : '';
-	}
-
-	/**
 	 * Converts Intense Kargo Takip for WooCommerce plugin's courier company data to Hezarfen's courier company ID.
 	 * 
 	 * @param string $courier Courier company data.
@@ -149,5 +137,17 @@ class Third_Party_Data_Support {
 		);
 
 		return $conversion_data[ $courier ] ?? '';
+	}
+
+	/**
+	 * Returns a third party plugin's data.
+	 * 
+	 * @param string|int $order_id Order ID.
+	 * @param string     $meta_key Meta key.
+	 * 
+	 * @return string
+	 */
+	public static function get_third_party_data( $order_id, $meta_key ) {
+		return $meta_key ? get_post_meta( $order_id, $meta_key, true ) : '';
 	}
 }
