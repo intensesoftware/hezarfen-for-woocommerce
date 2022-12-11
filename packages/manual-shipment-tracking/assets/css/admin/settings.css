@@ -1,4 +1,5 @@
-.notification th {
+.notification th,
+.custom-meta th {
 	padding-left: 24px;
 }
 

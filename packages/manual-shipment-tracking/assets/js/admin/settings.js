@@ -34,5 +34,12 @@ jQuery(function ($) {
 
 			sms_textarea.val(inserted).prop('selectionEnd', end + this.innerText.length).focus();
 		}
+
+		const custom_meta_rows = $('.custom-meta').closest('tr');
+		custom_meta_rows.addClass('custom-meta'); // add classes to the "tr" elements to style them with CSS.
+
+		$('.recognize-custom-meta').on('change', function () {
+			custom_meta_rows.toggle($(this).is(':checked')); // toggle visibility of the "Recognize custom post meta data" settings.
+		}).trigger('change');
 	});
 });

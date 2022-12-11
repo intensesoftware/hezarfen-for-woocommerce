@@ -16,12 +16,15 @@ class Settings {
 	const HEZARFEN_WC_SETTINGS_ID = 'hezarfen';
 	const SECTION                 = 'manual_shipment_tracking';
 
-	const OPT_DEFAULT_COURIER      = 'hezarfen_mst_default_courier_company';
-	const OPT_SHOW_TRACKING_COLUMN = 'hezarfen_mst_show_shipment_tracking_column';
-	const OPT_ENABLE_SMS           = 'hezarfen_mst_enable_sms_notification';
-	const OPT_NOTIF_PROVIDER       = 'hezarfen_mst_notification_provider';
-	const OPT_NETGSM_CONTENT       = 'hezarfen_mst_netgsm_sms_content';
-	const OPT_RECOGNIZE_PLUGINS    = 'hezarfen_mst_recognize_shipping_plugins';
+	const OPT_DEFAULT_COURIER          = 'hezarfen_mst_default_courier_company';
+	const OPT_SHOW_TRACKING_COLUMN     = 'hezarfen_mst_show_shipment_tracking_column';
+	const OPT_ENABLE_SMS               = 'hezarfen_mst_enable_sms_notification';
+	const OPT_NOTIF_PROVIDER           = 'hezarfen_mst_notification_provider';
+	const OPT_NETGSM_CONTENT           = 'hezarfen_mst_netgsm_sms_content';
+	const OPT_RECOGNIZE_PLUGINS        = 'hezarfen_mst_recognize_shipping_plugins';
+	const OPT_RECOGNIZE_CUSTOM_META    = 'hezarfen_mst_recognize_custom_meta';
+	const OPT_COURIER_CUSTOM_META      = 'hezarfen_mst_courier_company_custom_meta';
+	const OPT_TRACKING_NUM_CUSTOM_META = 'hezarfen_mst_tracking_num_custom_meta';
 
 	/**
 	 * Constructor
@@ -167,6 +170,26 @@ class Settings {
 					'title'    => __( "Recognize supported shipping plugins' data", 'hezarfen-for-woocommerce' ),
 					'id'       => self::OPT_RECOGNIZE_PLUGINS,
 					'desc_tip' => __( 'Supported plugins: Intense Kargo Takip, Kargo Takip Turkiye', 'hezarfen-for-woocommerce' ),
+				),
+				array(
+					'type'  => 'checkbox',
+					'title' => __( 'Recognize custom post meta data', 'hezarfen-for-woocommerce' ),
+					'id'    => self::OPT_RECOGNIZE_CUSTOM_META,
+					'class' => 'recognize-custom-meta',
+				),
+				array(
+					'type'        => 'text',
+					'title'       => __( 'Courier company post meta', 'hezarfen-for-woocommerce' ),
+					'id'          => self::OPT_COURIER_CUSTOM_META,
+					'class'       => 'custom-meta',
+					'placeholder' => __( 'Enter post meta for courier company', 'hezarfen-for-woocommerce' ),
+				),
+				array(
+					'type'        => 'text',
+					'title'       => __( 'Tracking number post meta', 'hezarfen-for-woocommerce' ),
+					'id'          => self::OPT_TRACKING_NUM_CUSTOM_META,
+					'class'       => 'custom-meta',
+					'placeholder' => __( 'Enter post meta for tracking number', 'hezarfen-for-woocommerce' ),
 				),
 				array(
 					'type' => 'sectionend',
