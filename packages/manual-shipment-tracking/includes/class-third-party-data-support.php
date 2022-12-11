@@ -74,9 +74,9 @@ class Third_Party_Data_Support {
 			),
 			self::KARGO_TAKIP_TURKIYE => array(
 				'id'          => self::KARGO_TAKIP_TURKIYE_ORDER_STATUS,
-				'label'       => _x( 'Shipped (Kargo Takip Turkey Plugin)', 'WooCommerce Order status', 'hezarfen-for-woocommerce' ),
+				'label'       => _x( 'Shipped (Kargo Takip Turkiye Plugin)', 'WooCommerce Order status', 'hezarfen-for-woocommerce' ),
 				/* translators: %s: number of orders */
-				'label_count' => _n_noop( 'Shipped (Kargo Takip Turkey Plugin) (%s)', 'Shipped (Kargo Takip Turkey Plugin) (%s)', 'hezarfen-for-woocommerce' ),
+				'label_count' => _n_noop( 'Shipped (Kargo Takip Turkiye Plugin) (%s)', 'Shipped (Kargo Takip Turkiye Plugin) (%s)', 'hezarfen-for-woocommerce' ),
 			),
 		);
 
