@@ -58,7 +58,7 @@ class Manual_Shipment_Tracking {
 
 		if ( self::is_enabled() ) {
 			$this->initialize_classes();
-			$this->assign_callbacks_to_hooks();
+			self::assign_callbacks_to_hooks();
 		}
 	}
 
@@ -89,7 +89,7 @@ class Manual_Shipment_Tracking {
 	 * 
 	 * @return void
 	 */
-	public function initialize_classes() {
+	private function initialize_classes() {
 		new Email();
 		new My_Account();
 		new Admin_Orders();
@@ -111,7 +111,7 @@ class Manual_Shipment_Tracking {
 	 * 
 	 * @return void
 	 */
-	public function assign_callbacks_to_hooks() {
+	private static function assign_callbacks_to_hooks() {
 		self::register_order_status();
 	}
 
@@ -120,7 +120,7 @@ class Manual_Shipment_Tracking {
 	 * 
 	 * @return void
 	 */
-	public static function register_order_status() {
+	private static function register_order_status() {
 		$label       = _x( 'Shipped', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
 		$status_data = array(
 			'id'    => self::DB_SHIPPED_ORDER_STATUS,
