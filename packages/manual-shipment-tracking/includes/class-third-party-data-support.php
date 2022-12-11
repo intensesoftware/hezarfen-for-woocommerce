@@ -132,7 +132,7 @@ class Third_Party_Data_Support {
 			return $hezarfen_data;
 		}
 
-		$data = array(
+		$plugin_data = array(
 			self::INTENSE_KARGO_TAKIP => array(
 				'courier_company_key' => 'shipping_company',
 				'tracking_number_key' => 'shipping_number',
@@ -149,13 +149,13 @@ class Third_Party_Data_Support {
 		switch ( $filter_name ) {
 			case 'get_courier_id':
 			case 'get_courier_title':
-				$meta_key = $data[ $plugin ]['courier_company_key'];
+				$meta_key = $plugin_data[ $plugin ]['courier_company_key'];
 				break;
 			case 'get_tracking_num':
-				$meta_key = $data[ $plugin ]['tracking_number_key'];
+				$meta_key = $plugin_data[ $plugin ]['tracking_number_key'];
 				break;
 			case 'get_tracking_url':
-				$meta_key = $data[ $plugin ]['tracking_url_key'] ?? '';
+				$meta_key = $plugin_data[ $plugin ]['tracking_url_key'] ?? '';
 				break;
 			default:
 				$meta_key = '';
@@ -170,6 +170,10 @@ class Third_Party_Data_Support {
 			} elseif ( 'get_courier_title' === $filter_name ) {
 				return Helper::get_courier_class( self::convert_courier( $data ) )::get_title();
 			}
+		} elseif ( 'get_tracking_url' === $filter_name ) { // try to get the tracking url data.
+			$courier_company = self::convert_courier( get_post_meta( $order_id, $plugin_data[ $plugin ]['courier_company_key'], true ) );
+			$tracking_number = $courier_company ? get_post_meta( $order_id, $plugin_data[ $plugin ]['tracking_number_key'], true ) : '';
+			return $tracking_number ? Helper::get_courier_class( $courier_company )::create_tracking_url( $tracking_number ) : '';
 		}
 
 		return $data;
