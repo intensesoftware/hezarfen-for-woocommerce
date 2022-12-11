@@ -134,13 +134,13 @@ class Helper {
 	}
 
 	/**
-	 * Adds a new order status.
+	 * Registers a new order status.
 	 * 
 	 * @param array<string, mixed> $status_data Status data.
 	 * 
 	 * @return void
 	 */
-	public static function add_new_order_status( $status_data ) {
+	public static function register_new_order_status( $status_data ) {
 		add_filter(
 			'woocommerce_register_shop_order_post_statuses',
 			function ( $wc_order_statuses ) use ( $status_data ) {

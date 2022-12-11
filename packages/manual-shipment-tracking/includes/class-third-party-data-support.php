@@ -28,7 +28,7 @@ class Third_Party_Data_Support {
 	 * @return void
 	 */
 	public static function intense_kargo_takip_support() {
-		self::add_kargo_takip_order_status();
+		self::register_kargo_takip_order_status();
 
 		add_filter( 'hezarfen_mst_get_courier_id', array( __CLASS__, 'get_intense_kargo_takip_data' ), 10, 2 );
 		add_filter( 'hezarfen_mst_get_courier_title', array( __CLASS__, 'get_intense_kargo_takip_data' ), 10, 2 );
@@ -37,11 +37,11 @@ class Third_Party_Data_Support {
 	}
 
 	/**
-	 * Adds Intense Kargo Takip for WooCommerce plugin's order status.
+	 * Registers the Intense Kargo Takip for WooCommerce plugin's order status.
 	 * 
 	 * @return void
 	 */
-	public static function add_kargo_takip_order_status() {
+	public static function register_kargo_takip_order_status() {
 		$label       = _x( 'Shipped (Kargo Takip Plugin)', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
 		$status_data = array(
 			'id'    => self::INTENSE_KARGO_TAKIP_ORDER_STATUS,
@@ -57,7 +57,7 @@ class Third_Party_Data_Support {
 			),
 		);
 
-		Helper::add_new_order_status( $status_data );
+		Helper::register_new_order_status( $status_data );
 	}
 
 	/**
