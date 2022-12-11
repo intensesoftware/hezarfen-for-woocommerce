@@ -17,6 +17,7 @@ require_once 'class-my-account.php';
 require_once 'admin/class-admin-orders.php';
 require_once 'notification-providers/class-netgsm.php';
 require_once 'notification-providers/class-pandasms.php';
+require_once 'class-third-party-data-support.php';
 
 /**
  * Manual Shipment Tracking package main class.
@@ -92,6 +93,7 @@ class Manual_Shipment_Tracking {
 		new Email();
 		new My_Account();
 		new Admin_Orders();
+		new Third_Party_Data_Support();
 
 		if ( 'yes' === get_option( 'hezarfen_mst_enable_sms_notification' ) ) {
 			$selected_provider = get_option( 'hezarfen_mst_notification_provider' );
