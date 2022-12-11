@@ -37,7 +37,6 @@ class Third_Party_Data_Support {
 	 * 
 	 * @param string     $hezarfen_data Hezarfen's order data.
 	 * @param string|int $order_id Order ID.
-	 * @param string     $data_type Data type.
 	 * 
 	 * @return string
 	 */
