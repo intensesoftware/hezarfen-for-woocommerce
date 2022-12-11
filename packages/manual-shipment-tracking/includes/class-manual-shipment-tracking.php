@@ -118,9 +118,7 @@ class Manual_Shipment_Tracking {
 	/**
 	 * Registers new order status.
 	 * 
-	 * @param array<string, array<string, mixed>> $wc_order_statuses WC order status properties.
-	 * 
-	 * @return array<string, array<string, mixed>>
+	 * @return void
 	 */
 	public static function register_order_status() {
 		$label       = _x( 'Shipped', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
