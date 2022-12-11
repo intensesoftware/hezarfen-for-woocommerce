@@ -21,6 +21,7 @@ class Settings {
 	const OPT_ENABLE_SMS           = 'hezarfen_mst_enable_sms_notification';
 	const OPT_NOTIF_PROVIDER       = 'hezarfen_mst_notification_provider';
 	const OPT_NETGSM_CONTENT       = 'hezarfen_mst_netgsm_sms_content';
+	const OPT_RECOGNIZE_PLUGINS    = 'hezarfen_mst_recognize_shipping_plugins';
 
 	/**
 	 * Constructor
@@ -123,6 +124,11 @@ class Settings {
 					'type'  => 'checkbox',
 					'title' => __( 'Show Shipment Tracking column on My Account > Orders page', 'hezarfen-for-woocommerce' ),
 					'id'    => self::OPT_SHOW_TRACKING_COLUMN,
+				),
+				array(
+					'type'  => 'checkbox',
+					'title' => __( "Recognize other shipping plugins' data", 'hezarfen-for-woocommerce' ),
+					'id'    => self::OPT_RECOGNIZE_PLUGINS,
 				),
 				array(
 					'type' => 'sectionend',
