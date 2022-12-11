@@ -53,7 +53,6 @@ class Manual_Shipment_Tracking {
 	 * @return void
 	 */
 	private function __construct() {
-		self::add_enable_disable_option();
 		new Settings();
 
 		if ( self::is_enabled() ) {
@@ -185,31 +184,6 @@ class Manual_Shipment_Tracking {
 		return array(
 			Pandasms::$id => Pandasms::class,
 			Netgsm::$id   => Netgsm::class,
-		);
-	}
-
-	/**
-	 * Adds a checkbox to enable/disable the package.
-	 * 
-	 * @return void
-	 */
-	private static function add_enable_disable_option() {
-		add_filter(
-			'hezarfen_general_settings',
-			function ( $hezarfen_settings ) {
-				$hezarfen_settings[] = array(
-					'title'   => __(
-						'Enable Manual Shipment Tracking feature',
-						'hezarfen-for-woocommerce'
-					),
-					'type'    => 'checkbox',
-					'desc'    => '',
-					'id'      => self::ENABLE_DISABLE_OPTION,
-					'default' => 'yes',
-				);
-	
-				return $hezarfen_settings;
-			} 
 		);
 	}
 
