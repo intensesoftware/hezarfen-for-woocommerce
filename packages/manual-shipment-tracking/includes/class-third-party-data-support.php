@@ -135,13 +135,11 @@ class Third_Party_Data_Support {
 		$data = array(
 			self::INTENSE_KARGO_TAKIP => array(
 				'courier_company_key' => 'shipping_company',
-				'courier_title_key'   => 'shipping_company',
 				'tracking_number_key' => 'shipping_number',
 				'tracking_url_key'    => 'in_kargotakip_tracking_url',
 			),
 			self::KARGO_TAKIP_TURKIYE => array(
 				'courier_company_key' => 'tracking_company',
-				'courier_title_key'   => 'tracking_company',
 				'tracking_number_key' => 'tracking_code',
 			),
 		);
@@ -150,10 +148,8 @@ class Third_Party_Data_Support {
 
 		switch ( $filter_name ) {
 			case 'get_courier_id':
-				$meta_key = $data[ $plugin ]['courier_company_key'];
-				break;
 			case 'get_courier_title':
-				$meta_key = $data[ $plugin ]['courier_title_key'];
+				$meta_key = $data[ $plugin ]['courier_company_key'];
 				break;
 			case 'get_tracking_num':
 				$meta_key = $data[ $plugin ]['tracking_number_key'];
