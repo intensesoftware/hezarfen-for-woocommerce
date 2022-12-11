@@ -94,8 +94,8 @@ class Manual_Shipment_Tracking {
 		new Admin_Orders();
 		new Third_Party_Data_Support();
 
-		if ( 'yes' === get_option( 'hezarfen_mst_enable_sms_notification' ) ) {
-			$selected_provider = get_option( 'hezarfen_mst_notification_provider' );
+		if ( 'yes' === get_option( Settings::OPT_ENABLE_SMS ) ) {
+			$selected_provider = get_option( Settings::OPT_NOTIF_PROVIDER );
 
 			if ( Netgsm::$id === $selected_provider && Netgsm::is_plugin_ready() ) {
 				$this->active_notif_provider = new Netgsm();

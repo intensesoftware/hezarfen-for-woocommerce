@@ -82,7 +82,7 @@ class Helper {
 	 * @return string
 	 */
 	public static function get_default_courier_id() {
-		return get_option( 'hezarfen_mst_default_courier_company', '' );
+		return get_option( Settings::OPT_DEFAULT_COURIER, '' );
 	}
 
 	/**

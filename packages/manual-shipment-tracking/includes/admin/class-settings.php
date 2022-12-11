@@ -16,6 +16,12 @@ class Settings {
 	const HEZARFEN_WC_SETTINGS_ID = 'hezarfen';
 	const SECTION                 = 'manual_shipment_tracking';
 
+	const OPT_DEFAULT_COURIER      = 'hezarfen_mst_default_courier_company';
+	const OPT_SHOW_TRACKING_COLUMN = 'hezarfen_mst_show_shipment_tracking_column';
+	const OPT_ENABLE_SMS           = 'hezarfen_mst_enable_sms_notification';
+	const OPT_NOTIF_PROVIDER       = 'hezarfen_mst_notification_provider';
+	const OPT_NETGSM_CONTENT       = 'hezarfen_mst_netgsm_sms_content';
+
 	/**
 	 * Constructor
 	 * 
@@ -110,13 +116,13 @@ class Settings {
 				array(
 					'type'    => 'select',
 					'title'   => __( 'Default courier company', 'hezarfen-for-woocommerce' ),
-					'id'      => 'hezarfen_mst_default_courier_company',
+					'id'      => self::OPT_DEFAULT_COURIER,
 					'options' => Helper::courier_company_options(),
 				),
 				array(
 					'type'  => 'checkbox',
 					'title' => __( 'Show Shipment Tracking column on My Account > Orders page', 'hezarfen-for-woocommerce' ),
-					'id'    => 'hezarfen_mst_show_shipment_tracking_column',
+					'id'    => self::OPT_SHOW_TRACKING_COLUMN,
 				),
 				array(
 					'type' => 'sectionend',
@@ -129,13 +135,13 @@ class Settings {
 				array(
 					'type'  => 'checkbox',
 					'title' => __( 'Enable SMS notification when order shipped', 'hezarfen-for-woocommerce' ),
-					'id'    => 'hezarfen_mst_enable_sms_notification',
+					'id'    => self::OPT_ENABLE_SMS,
 					'class' => 'enable-sms-notif',
 				),
 				array(
 					'type'     => 'radio',
 					'title'    => __( 'Notification Provider', 'hezarfen-for-woocommerce' ),
-					'id'       => 'hezarfen_mst_notification_provider',
+					'id'       => self::OPT_NOTIF_PROVIDER,
 					'class'    => 'notification notif-provider',
 					'options'  => isset( $notification_providers ) ? $notification_providers : array(),
 					'disabled' => Helper::get_not_ready_providers(),
@@ -143,7 +149,7 @@ class Settings {
 				array(
 					'type'        => 'hezarfen_mst_netgsm_sms_content_textarea',
 					'title'       => __( 'NetGSM SMS content', 'hezarfen-for-woocommerce' ),
-					'id'          => 'hezarfen_mst_netgsm_sms_content',
+					'id'          => self::OPT_NETGSM_CONTENT,
 					'class'       => 'notification netgsm sms-content',
 					'placeholder' => __( 'Enter SMS content.', 'hezarfen-for-woocommerce' ),
 				),
@@ -200,8 +206,8 @@ class Settings {
 	public static function convert_variables() {
 		global $current_section;
 
-		if ( self::SECTION === $current_section && ! empty( $_POST['hezarfen_mst_netgsm_sms_content'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$_POST['hezarfen_mst_netgsm_sms_content'] = Netgsm::convert_hezarfen_variables_to_netgsm_metas( sanitize_text_field( $_POST['hezarfen_mst_netgsm_sms_content'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( self::SECTION === $current_section && ! empty( $_POST[ self::OPT_NETGSM_CONTENT ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$_POST[ self::OPT_NETGSM_CONTENT ] = Netgsm::convert_hezarfen_variables_to_netgsm_metas( sanitize_text_field( $_POST[ self::OPT_NETGSM_CONTENT ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		}
 	}
 

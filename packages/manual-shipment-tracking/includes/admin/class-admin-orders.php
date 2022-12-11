@@ -118,7 +118,7 @@ class Admin_Orders {
 			if ( ( $new_courier_id && $new_tracking_num ) || Courier_Kurye::$id === $new_courier_id ) {
 				$order->update_status( apply_filters( 'hezarfen_mst_new_order_status', Manual_Shipment_Tracking::SHIPPED_ORDER_STATUS, $order, $new_courier_id, $new_tracking_num ) );
 
-				if ( 'yes' === get_option( 'hezarfen_mst_enable_sms_notification' ) ) {
+				if ( 'yes' === get_option( Settings::OPT_ENABLE_SMS ) ) {
 					Helper::send_notification( $order );
 				}
 

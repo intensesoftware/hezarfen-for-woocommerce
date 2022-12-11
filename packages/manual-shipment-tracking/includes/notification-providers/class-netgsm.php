@@ -63,7 +63,7 @@ class Netgsm extends \Hezarfen\Inc\Notification_Provider {
 	 * @return void
 	 */
 	public function send( $order, $status_transition = '' ) {
-		if ( function_exists( 'netgsm_order_status_changed_sendSMS' ) && get_option( 'hezarfen_mst_netgsm_sms_content' ) ) {
+		if ( function_exists( 'netgsm_order_status_changed_sendSMS' ) && get_option( Settings::OPT_NETGSM_CONTENT ) ) {
 			netgsm_order_status_changed_sendSMS( $order->get_id(), 'netgsm_order_status_text_' . $status_transition, $status_transition );
 		}
 	}
@@ -78,7 +78,7 @@ class Netgsm extends \Hezarfen\Inc\Notification_Provider {
 	 * @return string|false
 	 */
 	public static function override_netgsm_sms_content( $boolean_false, $option, $default ) {
-		return get_option( 'hezarfen_mst_netgsm_sms_content' );
+		return get_option( Settings::OPT_NETGSM_CONTENT );
 	}
 
 	/**

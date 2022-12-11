@@ -19,7 +19,7 @@ class My_Account {
 	public function __construct() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 
-		if ( 'yes' === get_option( 'hezarfen_mst_show_shipment_tracking_column' ) ) {
+		if ( 'yes' === get_option( Settings::OPT_SHOW_TRACKING_COLUMN ) ) {
 			add_filter( 'woocommerce_account_orders_columns', array( $this, 'add_new_column' ), PHP_INT_MAX - 1 );
 			add_action( 'woocommerce_my_account_my_orders_column_hezarfen-mst-shipment-tracking', array( $this, 'add_tracking_info_to_column' ) );
 		}
