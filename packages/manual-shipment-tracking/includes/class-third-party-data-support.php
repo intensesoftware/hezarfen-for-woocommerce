@@ -63,33 +63,33 @@ class Third_Party_Data_Support {
 	 * @return void
 	 */
 	public static function register_order_status( $plugin ) {
+		$data = array(
+			self::INTENSE_KARGO_TAKIP => array(
+				'id'          => self::INTENSE_KARGO_TAKIP_ORDER_STATUS,
+				/* translators: %s: number of orders */
+				'label'       => _x( 'Shipped (Intense Kargo Takip Plugin)', 'WooCommerce Order status', 'hezarfen-for-woocommerce' ),
+				'label_count' => _n_noop( 'Shipped (Intense Kargo Takip Plugin) (%s)', 'Shipped (Intense Kargo Takip Plugin) (%s)', 'hezarfen-for-woocommerce' ),
+			),
+			self::KARGO_TAKIP_TURKIYE => array(
+				'id'          => self::KARGO_TAKIP_TURKIYE_ORDER_STATUS,
+				/* translators: %s: number of orders */
+				'label'       => _x( 'Shipped (Kargo Takip Turkey Plugin)', 'WooCommerce Order status', 'hezarfen-for-woocommerce' ),
+				'label_count' => _n_noop( 'Shipped (Kargo Takip Turkey Plugin) (%s)', 'Shipped (Kargo Takip Turkey Plugin) (%s)', 'hezarfen-for-woocommerce' ),
+			),
+		);
+
 		$status_data = array(
-			'data' => array(
+			'id'    => $data[ $plugin ]['id'],
+			'label' => $data[ $plugin ]['label'],
+			'data'  => array(
+				'label'                     => $data[ $plugin ]['label'],
 				'public'                    => false,
 				'exclude_from_search'       => false,
 				'show_in_admin_all_list'    => true,
 				'show_in_admin_status_list' => true,
+				'label_count'               => $data[ $plugin ]['label_count'],
 			),
 		);
-
-		$label = '';
-
-		if ( self::INTENSE_KARGO_TAKIP === $plugin ) {
-			$label = _x( 'Shipped (Intense Kargo Takip Plugin)', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
-
-			$status_data['id'] = self::INTENSE_KARGO_TAKIP_ORDER_STATUS;
-			/* translators: %s: number of orders */
-			$status_data['label_count'] = _n_noop( 'Shipped (Intense Kargo Takip Plugin) (%s)', 'Shipped (Intense Kargo Takip Plugin) (%s)', 'hezarfen-for-woocommerce' );
-		} elseif ( self::KARGO_TAKIP_TURKIYE === $plugin ) {
-			$label = _x( 'Shipped (Kargo Takip Turkey Plugin)', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
-
-			$status_data['id'] = self::KARGO_TAKIP_TURKIYE_ORDER_STATUS;
-			/* translators: %s: number of orders */
-			$status_data['label_count'] = _n_noop( 'Shipped (Kargo Takip Turkey Plugin) (%s)', 'Shipped (Kargo Takip Turkey Plugin) (%s)', 'hezarfen-for-woocommerce' );
-		}
-
-		$status_data['label']         = $label;
-		$status_data['data']['label'] = $label;
 
 		Helper::register_new_order_status( $status_data );
 	}
