@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * The Third_Party_Data_Support class.
  */
 class Third_Party_Data_Support {
-	const KARGO_TAKIP_ORDER_STATUS = 'wc-shipping-progress';
+	const INTENSE_KARGO_TAKIP_ORDER_STATUS = 'wc-shipping-progress';
 
 	/**
 	 * Constructor
@@ -44,7 +44,7 @@ class Third_Party_Data_Support {
 	public static function add_kargo_takip_order_status() {
 		$label       = _x( 'Shipped (Kargo Takip Plugin)', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
 		$status_data = array(
-			'id'    => self::KARGO_TAKIP_ORDER_STATUS,
+			'id'    => self::INTENSE_KARGO_TAKIP_ORDER_STATUS,
 			'label' => $label,
 			'data'  => array(
 				'label'                     => $label,
