@@ -132,4 +132,29 @@ class Helper {
 		$tracking_url = get_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_URL_KEY, true );
 		return apply_filters( 'hezarfen_mst_get_tracking_url', $tracking_url, $order_id );
 	}
+
+	/**
+	 * Adds a new order status.
+	 * 
+	 * @param array<string, mixed> $status_data Status data.
+	 * 
+	 * @return void
+	 */
+	public static function add_new_order_status( $status_data ) {
+		add_filter(
+			'woocommerce_register_shop_order_post_statuses',
+			function ( $wc_order_statuses ) use ( $status_data ) {
+				$wc_order_statuses[ $status_data['id'] ] = $status_data['data'];
+				return $wc_order_statuses;
+			} 
+		);
+
+		add_filter(
+			'wc_order_statuses',
+			function ( $wc_order_statuses ) use ( $status_data ) {
+				$wc_order_statuses[ $status_data['id'] ] = $status_data['label'];
+				return $wc_order_statuses;
+			} 
+		);
+	}
 }

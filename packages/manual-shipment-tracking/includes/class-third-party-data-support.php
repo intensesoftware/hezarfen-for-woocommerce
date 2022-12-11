@@ -13,6 +13,8 @@ defined( 'ABSPATH' ) || exit;
  * The Third_Party_Data_Support class.
  */
 class Third_Party_Data_Support {
+	const KARGO_TAKIP_ORDER_STATUS = 'wc-shipping-progress';
+
 	/**
 	 * Constructor
 	 */
@@ -26,10 +28,36 @@ class Third_Party_Data_Support {
 	 * @return void
 	 */
 	public static function intense_kargo_takip_support() {
+		self::add_kargo_takip_order_status();
+
 		add_filter( 'hezarfen_mst_get_courier_id', array( __CLASS__, 'get_intense_kargo_takip_data' ), 10, 2 );
 		add_filter( 'hezarfen_mst_get_courier_title', array( __CLASS__, 'get_intense_kargo_takip_data' ), 10, 2 );
 		add_filter( 'hezarfen_mst_get_tracking_num', array( __CLASS__, 'get_intense_kargo_takip_data' ), 10, 2 );
 		add_filter( 'hezarfen_mst_get_tracking_url', array( __CLASS__, 'get_intense_kargo_takip_data' ), 10, 2 );
+	}
+
+	/**
+	 * Adds Intense Kargo Takip for WooCommerce plugin's order status.
+	 * 
+	 * @return void
+	 */
+	public static function add_kargo_takip_order_status() {
+		$label       = _x( 'Shipped (Kargo Takip Plugin)', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
+		$status_data = array(
+			'id'    => self::KARGO_TAKIP_ORDER_STATUS,
+			'label' => $label,
+			'data'  => array(
+				'label'                     => $label,
+				'public'                    => false,
+				'exclude_from_search'       => false,
+				'show_in_admin_all_list'    => true,
+				'show_in_admin_status_list' => true,
+				/* translators: %s: number of orders */
+				'label_count'               => _n_noop( 'Shipped (Kargo Takip Plugin) (%s)', 'Shipped (Kargo Takip Plugin) (%s)', 'hezarfen-for-woocommerce' ),
+			),
+		);
+
+		Helper::add_new_order_status( $status_data );
 	}
 
 	/**
