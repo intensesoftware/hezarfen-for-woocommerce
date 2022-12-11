@@ -126,11 +126,6 @@ class Settings {
 					'id'    => self::OPT_SHOW_TRACKING_COLUMN,
 				),
 				array(
-					'type'  => 'checkbox',
-					'title' => __( "Recognize other shipping plugins' data", 'hezarfen-for-woocommerce' ),
-					'id'    => self::OPT_RECOGNIZE_PLUGINS,
-				),
-				array(
 					'type' => 'sectionend',
 					'id'   => 'hezarfen_mst_general',
 				),
@@ -162,6 +157,20 @@ class Settings {
 				array(
 					'type' => 'sectionend',
 					'id'   => 'hezarfen_mst_sms_notification',
+				),
+				array(
+					'type'  => 'title',
+					'title' => __( 'Advanced Settings', 'hezarfen-for-woocommerce' ),
+				),
+				array(
+					'type'     => 'checkbox',
+					'title'    => __( "Recognize supported shipping plugins' data", 'hezarfen-for-woocommerce' ),
+					'id'       => self::OPT_RECOGNIZE_PLUGINS,
+					'desc_tip' => __( 'Supported plugins: Intense Kargo Takip, Kargo Takip Turkiye', 'hezarfen-for-woocommerce' ),
+				),
+				array(
+					'type' => 'sectionend',
+					'id'   => 'hezarfen_mst_advanced',
 				),
 			);
 		}
