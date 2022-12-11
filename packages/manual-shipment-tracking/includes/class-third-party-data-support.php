@@ -164,16 +164,19 @@ class Third_Party_Data_Support {
 
 		$data = $meta_key ? get_post_meta( $order_id, $meta_key, true ) : '';
 
-		if ( $data ) {
-			if ( 'get_courier_id' === $filter_name ) {
-				return self::convert_courier( $data );
-			} elseif ( 'get_courier_title' === $filter_name ) {
-				return Helper::get_courier_class( self::convert_courier( $data ) )::get_title();
-			}
-		} elseif ( 'get_tracking_url' === $filter_name ) { // try to get the tracking url data.
+		if ( ! $data && 'get_tracking_url' === $filter_name ) {
+			// try to create tracking url.
 			$courier_company = self::convert_courier( get_post_meta( $order_id, $plugin_data[ $plugin ]['courier_company_key'], true ) );
 			$tracking_number = $courier_company ? get_post_meta( $order_id, $plugin_data[ $plugin ]['tracking_number_key'], true ) : '';
 			return $tracking_number ? Helper::get_courier_class( $courier_company )::create_tracking_url( $tracking_number ) : '';
+		}
+
+		if ( $data ) {
+			if ( 'get_courier_id' === $filter_name ) {
+				$data = self::convert_courier( $data );
+			} elseif ( 'get_courier_title' === $filter_name ) {
+				$data = Helper::get_courier_class( self::convert_courier( $data ) )::get_title();
+			}
 		}
 
 		return $data;
