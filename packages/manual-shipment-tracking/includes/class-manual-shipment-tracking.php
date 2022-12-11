@@ -112,8 +112,7 @@ class Manual_Shipment_Tracking {
 	 * @return void
 	 */
 	public function assign_callbacks_to_hooks() {
-		add_filter( 'woocommerce_register_shop_order_post_statuses', array( __CLASS__, 'register_order_status' ) );
-		add_filter( 'wc_order_statuses', array( __CLASS__, 'append_order_status' ) );
+		self::register_order_status();
 	}
 
 	/**
@@ -123,30 +122,23 @@ class Manual_Shipment_Tracking {
 	 * 
 	 * @return array<string, array<string, mixed>>
 	 */
-	public static function register_order_status( $wc_order_statuses ) {
-		$wc_order_statuses[ self::DB_SHIPPED_ORDER_STATUS ] = array(
-			'label'                     => _x( 'Shipped', 'WooCommerce Order status', 'hezarfen-for-woocommerce' ),
-			'public'                    => false,
-			'exclude_from_search'       => false,
-			'show_in_admin_all_list'    => true,
-			'show_in_admin_status_list' => true,
-			/* translators: %s: number of orders */
-			'label_count'               => _n_noop( 'Shipped (%s)', 'Shipped (%s)', 'hezarfen-for-woocommerce' ),
+	public static function register_order_status() {
+		$label       = _x( 'Shipped', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
+		$status_data = array(
+			'id'    => self::DB_SHIPPED_ORDER_STATUS,
+			'label' => $label,
+			'data'  => array(
+				'label'                     => $label,
+				'public'                    => false,
+				'exclude_from_search'       => false,
+				'show_in_admin_all_list'    => true,
+				'show_in_admin_status_list' => true,
+				/* translators: %s: number of orders */
+				'label_count'               => _n_noop( 'Shipped (%s)', 'Shipped (%s)', 'hezarfen-for-woocommerce' ),
+			),
 		);
 
-		return $wc_order_statuses;
-	}
-
-	/**
-	 * Appends new order status to WC order statuses.
-	 * 
-	 * @param array<string, string> $wc_order_statuses WC order statuses.
-	 * 
-	 * @return array<string, string>
-	 */
-	public static function append_order_status( $wc_order_statuses ) {
-		$wc_order_statuses[ self::DB_SHIPPED_ORDER_STATUS ] = _x( 'Shipped', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
-		return $wc_order_statuses;
+		Helper::register_new_order_status( $status_data );
 	}
 
 	/**
