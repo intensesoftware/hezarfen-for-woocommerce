@@ -164,8 +164,12 @@ class Third_Party_Data_Support {
 
 		$data = $meta_key ? get_post_meta( $order_id, $meta_key, true ) : '';
 
-		if ( $data && 'get_courier_id' === $filter_name ) {
-			return self::convert_courier( $data );
+		if ( $data ) {
+			if ( 'get_courier_id' === $filter_name ) {
+				return self::convert_courier( $data );
+			} elseif ( 'get_courier_title' === $filter_name ) {
+				return Helper::get_courier_class( self::convert_courier( $data ) )::get_title();
+			}
 		}
 
 		return $data;
