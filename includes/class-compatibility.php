@@ -23,6 +23,8 @@ class Compatibility {
 		if ( 'Cartzilla' === $active_theme->name || 'Cartzilla' === $active_theme->parent_theme ) {
 			$this->cartzilla_support();
 		}
+
+		add_action( 'wp', array( $this, 'wp_action' ) );
 	}
 
 	/**
@@ -41,6 +43,29 @@ class Compatibility {
 		add_filter( 'hezarfen_checkout_fields_input_class_billing_hez_company', array( $this, 'add_bootstrap_form_control_class' ) );
 		add_filter( 'hezarfen_checkout_fields_input_class_billing_hez_tax_number', array( $this, 'add_bootstrap_form_control_class' ) );
 		add_filter( 'hezarfen_checkout_fields_input_class_billing_hez_tax_office', array( $this, 'add_bootstrap_form_control_class' ) );
+	}
+
+	/**
+	 * Adds Checkout Field Editor for WooCommerce plugin support.
+	 * 
+	 * @return void
+	 */
+	public function checkout_field_editor_support() {
+		add_filter( 'thwcfd_address_field_override_priority', '__return_false' );
+		add_filter( 'thwcfd_address_field_override_label', '__return_false' );
+		add_filter( 'thwcfd_address_field_override_placeholder', '__return_false' );
+		add_filter( 'thwcfd_address_field_override_class', '__return_false' );
+	}
+
+	/**
+	 * Runs when 'wp' action triggered.
+	 * 
+	 * @return void
+	 */
+	public function wp_action() {
+		if ( defined( 'THWCFD_VERSION' ) && 'yes' === get_option( 'hezarfen_sort_my_account_fields', 'no' ) && Helper::is_edit_address_page() ) {
+			$this->checkout_field_editor_support();
+		}
 	}
 
 	/**

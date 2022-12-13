@@ -78,7 +78,26 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				'desc'    => '',
 				'id'      => 'hezarfen_show_hezarfen_checkout_tax_fields',
 				'default' => 'no',
-				'std'     => 'yes',
+			),
+			array(
+				'title'   => __(
+					'Sort address fields in My Account > Address pages?',
+					'hezarfen-for-woocommerce'
+				),
+				'type'    => 'checkbox',
+				'desc'    => '',
+				'id'      => 'hezarfen_sort_my_account_fields',
+				'default' => 'no',
+			),
+			array(
+				'title'   => __(
+					'Hide postcode fields in My Account > Address pages?',
+					'hezarfen-for-woocommerce'
+				),
+				'type'    => 'checkbox',
+				'desc'    => '',
+				'id'      => 'hezarfen_hide_my_account_postcode_fields',
+				'default' => 'no',
 			),
 			array(
 				'type' => 'sectionend',
@@ -141,7 +160,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					),
 					'id'      => 'hezarfen_checkout_encryption_key_confirmation',
 					'default' => 'no',
-					'std'     => 'yes',
 				),
 				array(
 					'type' => 'sectionend',
@@ -181,7 +199,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				'desc'    => '',
 				'id'      => 'hezarfen_hide_checkout_postcode_fields',
 				'default' => 'no',
-				'std'     => 'yes',
 			),
 			array(
 				'title'   => esc_html__(
@@ -192,7 +209,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				'desc'    => '',
 				'id'      => 'hezarfen_checkout_fields_auto_sort',
 				'default' => 'no',
-				'std'     => 'yes',
 			),
 			array(
 				'type' => 'sectionend',
@@ -238,7 +254,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 						),
 						'id'      => 'hezarfen_checkout_show_TC_identity_field',
 						'default' => 'no',
-						'std'     => 'yes',
 					),
 	
 					array(

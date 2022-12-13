@@ -3,10 +3,10 @@ msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-14 17:11+0000\n"
-"PO-Revision-Date: 2022-02-26 13:28+0000\n"
+"PO-Revision-Date: 2022-11-12 08:58+0000\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
-"Language: tr_TR\n"
+"Language: tr-TR\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -15,13 +15,21 @@ msgstr ""
 "X-Loco-Version: 2.5.8; wp-5.9"
 
 #. translators: %s plugin name
-#: includes/class-hezarfen-wc-helper.php:61
+#: includes/class-hezarfen-wc-helper.php:63
 msgid ""
 "%s plugin has a new version available. In order to use the plugin, you must "
 "update it."
 msgstr ""
 "%s eklentisinin yeni bir versiyonu mevcut. Eklentiyi kullanmaya devam "
 "edebilmek için lütfen eklentiyi güncelleyiniz."
+
+#: includes/Autoload.php:243
+msgid ""
+"<strong>Hezarfen for WooCommerce</strong> eklentisinin sağıklı çalışabilmesi "
+"için <strong>Intense Türkiye İl İlçe Eklentisi For WooCommerce</strong> "
+"eklentisini siliniz. <strong>Hezarfen</strong> eklentisi zaten bünyesinde İl,"
+" ilçe ve mahalle verilerini barındırmaktadır."
+msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:216
 msgid "Auto sort fields in checkout form?"
@@ -63,8 +71,8 @@ msgstr ""
 "Şifreleme Anahtarının (Encryption Key), eklenti ilk kurulduğunda oluşan "
 "anahtar ile aynı olup olmadığını kontrol eder."
 
-#: includes/admin/order/OrderDetails.php:63
-#: includes/admin/order/OrderDetails.php:74 includes/Checkout.php:368
+#: includes/admin/order/OrderDetails.php:50 
+#: includes/admin/order/OrderDetails.php:61 includes/Checkout.php:405
 msgid "Company"
 msgstr "Kurumsal"
 
@@ -88,19 +96,19 @@ msgstr "Şifreleme Anahtarı (Encryption Key) Sağlığı"
 msgid "Encryption Settings"
 msgstr "Şifreleme Anahtarı (Encryption Key) Ayarları"
 
-#: includes/Checkout.php:390
+#: includes/Checkout.php:428
 msgid "Enter invoice title"
 msgstr "Fatura ünvanını giriniz"
 
-#: includes/Checkout.php:376
+#: includes/Checkout.php:413
 msgid "Enter T.C. Identity Number"
 msgstr "T.C. Kimlik numaranızı giriniz"
 
-#: includes/Checkout.php:398
+#: includes/Checkout.php:438
 msgid "Enter tax number"
 msgstr "Vergi numaranızı giriniz"
 
-#: includes/Checkout.php:407
+#: includes/Checkout.php:448
 msgid "Enter tax office"
 msgstr "Vergi dairesini giriniz"
 
@@ -111,6 +119,12 @@ msgstr "Genel"
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:236
 msgid "General Settings"
 msgstr "Genel Ayarlar"
+
+#. Description of the plugin
+msgid ""
+"Hezarfen, WooCommerce eklentisini Türkiye için daha kullanılabilir kılmayı "
+"amaçlar."
+msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:205
 msgid "Hide postcode fields?"
@@ -145,11 +159,15 @@ msgstr ""
 "alana yapıştırın. Bu satırın wp-config.php dosyasından silinmesi durumunda, "
 "daha önceki siparişlere ait T.C. no bilgileri okunamaz hale gelecektir."
 
-#: includes/Checkout.php:362
+#. Author of the plugin
+msgid "Intense Yazılım Ltd."
+msgstr ""
+
+#: includes/Checkout.php:399
 msgid "Invoice Type"
 msgstr "Fatura tipi"
 
-#: includes/admin/order/OrderDetails.php:70
+#: includes/admin/order/OrderDetails.php:57
 msgid "Invoice type"
 msgstr "Fatura tipi"
 
@@ -173,21 +191,22 @@ msgstr ""
 msgid "Key comparison success?"
 msgstr "Anahtar doğrulaması başarılı mı?"
 
-#: includes/Checkout.php:165 includes/Checkout.php:507
+#: includes/Checkout.php:179 includes/Checkout.php:565
 msgid "Neighborhood"
 msgstr "Mahalle"
 
-#: includes/admin/settings/views/encryption.php:41
+#: includes/admin/settings/views/encryption.php:41 
 #: includes/admin/settings/views/encryption.php:74
 msgid "No"
 msgstr "Hayır"
 
-#: includes/admin/order/OrderDetails.php:61
-#: includes/admin/order/OrderDetails.php:73 includes/Checkout.php:367
+#: includes/admin/order/OrderDetails.php:48 
+#: includes/admin/order/OrderDetails.php:60 includes/Checkout.php:404
 msgid "Personal"
 msgstr "Bireysel"
 
-#: includes/Checkout.php:465 includes/Checkout.php:546
+#: includes/Autoload.php:149 includes/Checkout.php:180 
+#: includes/Checkout.php:604 includes/class-hezarfen-wc-helper.php:24
 msgid "Select an option"
 msgstr "Lütfen seçiniz"
 
@@ -211,27 +230,31 @@ msgstr ""
 "şifreleme özelliğini aktif etmezseniz, ödeme ekranında T.C. no alanı "
 "gösterilmez.)"
 
-#: includes/admin/order/OrderDetails.php:81 includes/Checkout.php:377
+#: includes/admin/order/OrderDetails.php:102 includes/Checkout.php:414
 msgid "T.C. Identity Number"
 msgstr "T.C. Kimlik Numarası"
 
-#: includes/admin/order/OrderDetails.php:90 includes/Checkout.php:397
+#: includes/admin/order/OrderDetails.php:68 includes/Checkout.php:437
 msgid "Tax Number"
 msgstr "Vergi Numarası"
 
-#: includes/admin/order/OrderDetails.php:95 includes/Checkout.php:406
+#: includes/admin/order/OrderDetails.php:73 includes/Checkout.php:447
 msgid "TAX Office"
 msgstr "Vergi Dairesi"
 
-#: includes/Checkout.php:389
+#: includes/Checkout.php:510
+msgid "TC ID number is not valid"
+msgstr "TC Kimlik numarası hatalı"
+
+#: includes/Checkout.php:427
 msgid "Title"
 msgstr "Ünvan"
 
-#: includes/Checkout.php:164 includes/Checkout.php:496
+#: includes/Checkout.php:175 includes/Checkout.php:554
 msgid "Town / City"
 msgstr "İlçe"
 
-#: includes/admin/settings/views/encryption.php:40
+#: includes/admin/settings/views/encryption.php:40 
 #: includes/admin/settings/views/encryption.php:73
 msgid "Yes"
 msgstr "Evet"
