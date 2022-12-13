@@ -107,6 +107,16 @@ class Checkout {
 		);
 
 		add_action(
+			'woocommerce_after_checkout_validation',
+			array(
+				$this,
+				'validate_posted_data',
+			),
+			10,
+			2
+		);
+
+		add_action(
 			'woocommerce_before_checkout_process',
 			array(
 				$this,
@@ -467,17 +477,15 @@ class Checkout {
 	 */
 	public function override_posted_data( $data ) {
 		// Check if the T.C. Identitiy Field is active.
-		if ( $this->hezarfen_show_hezarfen_checkout_tax_fields && self::is_show_identity_field_on_checkout() ) {
+		if ( ! empty( $data['billing_hez_TC_number'] ) && $this->hezarfen_show_hezarfen_checkout_tax_fields && self::is_show_identity_field_on_checkout() ) {
 			if (
 				( new PostMetaEncryption() )->health_check() &&
 				( new PostMetaEncryption() )->test_the_encryption_key()
 			) {
-				if ( $data['billing_hez_TC_number'] ) {
-					// Encrypt the T.C. Identity fields.
-					$data['billing_hez_TC_number'] = ( new PostMetaEncryption() )->encrypt(
-						$data['billing_hez_TC_number']
-					);
-				}
+				// Encrypt the T.C. Identity fields.
+				$data['billing_hez_TC_number'] = ( new PostMetaEncryption() )->encrypt(
+					$data['billing_hez_TC_number']
+				);
 			} else {
 				// do not save the T.C. identitiy fields.
 				$data['billing_hez_TC_number'] = '******';
@@ -485,6 +493,22 @@ class Checkout {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Validates necessary data after checkout submit.
+	 *
+	 * @param array     $data the posted checkout data.
+	 * @param \WP_Error $errors Validation errors.
+	 *
+	 * @return void
+	 */
+	public function validate_posted_data( $data, $errors ) {
+		$tc_id_number = ! empty( $data['billing_hez_TC_number'] ) ? ( new PostMetaEncryption() )->decrypt( $data['billing_hez_TC_number'] ) : '';
+
+		if ( $tc_id_number && 11 !== strlen( $tc_id_number ) ) {
+			$errors->add( 'billing_hez_TC_number_validation', '<strong>' . __( 'TC ID number is not valid', 'hezarfen-for-woocommerce' ) . '</strong>', array( 'id' => 'billing_hez_TC_number' ) );
+		}
 	}
 
 	/**
