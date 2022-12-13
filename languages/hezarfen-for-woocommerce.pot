@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-12T09:55:26+01:00\n"
+"POT-Creation-Date: 2022-12-13T14:31:44+01:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: hezarfen-for-woocommerce\n"
@@ -24,13 +24,13 @@ msgstr ""
 
 #: includes/admin/order/OrderDetails.php:48
 #: includes/admin/order/OrderDetails.php:60
-#: includes/Checkout.php:404
+#: includes/Checkout.php:303
 msgid "Personal"
 msgstr ""
 
 #: includes/admin/order/OrderDetails.php:50
 #: includes/admin/order/OrderDetails.php:61
-#: includes/Checkout.php:405
+#: includes/Checkout.php:304
 msgid "Company"
 msgstr ""
 
@@ -39,17 +39,17 @@ msgid "Invoice type"
 msgstr ""
 
 #: includes/admin/order/OrderDetails.php:68
-#: includes/Checkout.php:437
+#: includes/Checkout.php:336
 msgid "Tax Number"
 msgstr ""
 
 #: includes/admin/order/OrderDetails.php:73
-#: includes/Checkout.php:447
+#: includes/Checkout.php:346
 msgid "TAX Office"
 msgstr ""
 
 #: includes/admin/order/OrderDetails.php:102
-#: includes/Checkout.php:414
+#: includes/Checkout.php:313
 msgid "T.C. Identity Number"
 msgstr ""
 
@@ -85,64 +85,72 @@ msgstr ""
 msgid "T.C. Identity Field optionally shows on checkout field when invoice type selected as person. (T.C. field requires encryption. If encryption is not enabled, this field is not displayed.)"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:105
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:104
 msgid "Checkout T.C. Identity Number Fields Required Statuses"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:109
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:108
 msgid "Is T.C. Identity Number field required?"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:141
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:140
 msgid "Encryption Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:146
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:145
 msgid "If the T.C. Identity Field is active, an encryption key must be generated. The following encryption key generated will be lost upon saving the form. Please back up the generated encryption key to a secure area, then paste it anywhere in the wp-config.php file. In case of deletion of the hezarfen-encryption-key line from wp-config.php, retrospectively, the orders will be sent to T.C. no values will become unreadable."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:153
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:152
 msgid "Encryption Key"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:163
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:162
 msgid "Back up the phrase in the box to a safe area, then place it in wp-config.php file."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:169
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:168
 msgid "Encryption Key Confirmation"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:174
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:173
 msgid "I backed up the key to a secure area and placed it in the wp-config file. In case the encryption key value is deleted from the wp-config.php file, all past orders will be transferred to T.C. I know I cannot access ID data."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:193
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:191
 msgid "Checkout Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:198
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:196
 msgid "You can set general checkout settings."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:205
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:203
 msgid "Hide postcode fields?"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:216
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:213
 msgid "Auto sort fields in checkout form?"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:236
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:232
 msgid "General Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:241
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:237
 msgid "You can edit the general settings from this page."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:248
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:244
 msgid "Show hezarfen checkout tax fields?"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:254
+msgid "Sort address fields in My Account > Address pages?"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:264
+msgid "Hide postcode fields in My Account > Address pages?"
 msgstr ""
 
 #: includes/admin/settings/views/encryption.php:10
@@ -175,56 +183,55 @@ msgstr ""
 msgid "Checks if the key created when the plugin was first installed is still the same key."
 msgstr ""
 
-#: includes/Autoload.php:149
-#: includes/Checkout.php:180
-#: includes/Checkout.php:604
+#: includes/Autoload.php:83
 #: includes/class-hezarfen-wc-helper.php:24
+#: includes/class-hezarfen.php:74
 msgid "Select an option"
 msgstr ""
 
-#: includes/Autoload.php:243
-msgid "<strong>Hezarfen for WooCommerce</strong> eklentisinin sağıklı çalışabilmesi için <strong>Intense Türkiye İl İlçe Eklentisi For WooCommerce</strong> eklentisini siliniz. <strong>Hezarfen</strong> eklentisi zaten bünyesinde İl, ilçe ve mahalle verilerini barındırmaktadır."
-msgstr ""
-
-#: includes/Checkout.php:175
-#: includes/Checkout.php:554
-msgid "Town / City"
-msgstr ""
-
-#: includes/Checkout.php:179
-#: includes/Checkout.php:565
-msgid "Neighborhood"
-msgstr ""
-
-#: includes/Checkout.php:399
+#: includes/Checkout.php:298
 msgid "Invoice Type"
 msgstr ""
 
-#: includes/Checkout.php:413
+#: includes/Checkout.php:312
 msgid "Enter T.C. Identity Number"
 msgstr ""
 
-#: includes/Checkout.php:427
+#: includes/Checkout.php:326
 msgid "Title"
 msgstr ""
 
-#: includes/Checkout.php:428
+#: includes/Checkout.php:327
 msgid "Enter invoice title"
 msgstr ""
 
-#: includes/Checkout.php:438
+#: includes/Checkout.php:337
 msgid "Enter tax number"
 msgstr ""
 
-#: includes/Checkout.php:448
+#: includes/Checkout.php:347
 msgid "Enter tax office"
 msgstr ""
 
-#: includes/Checkout.php:510
+#: includes/Checkout.php:409
 msgid "TC ID number is not valid"
 msgstr ""
 
+#: includes/Checkout.php:446
+#: includes/class-hezarfen.php:66
+msgid "Town / City"
+msgstr ""
+
+#: includes/Checkout.php:457
+#: includes/class-hezarfen.php:73
+msgid "Neighborhood"
+msgstr ""
+
 #. translators: %s plugin name
-#: includes/class-hezarfen-wc-helper.php:63
+#: includes/class-hezarfen-wc-helper.php:158
 msgid "%s plugin has a new version available. In order to use the plugin, you must update it."
+msgstr ""
+
+#: includes/class-hezarfen.php:108
+msgid "In order to <strong>Hezarfen for WooCommerce</strong> plugin work, please remove the <strong>Intense Türkiye İl İlçe Eklentisi For WooCommerce</strong> plugin. The <strong>Hezarfen</strong> plugin already has province, district and neighborhood data in it."
 msgstr ""
