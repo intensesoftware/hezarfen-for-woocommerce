@@ -262,13 +262,13 @@ class Settings {
 			$_POST[ self::OPT_ENABLE_SMS ] = '';
 		}
 
+		if ( ! empty( $_POST[ self::OPT_NETGSM_CONTENT ] ) ) {
+			$_POST[ self::OPT_NETGSM_CONTENT ] = Netgsm::convert_hezarfen_variables_to_netgsm_metas( sanitize_text_field( $_POST[ self::OPT_NETGSM_CONTENT ] ) );
+		}
+
 		if ( empty( $_POST[ self::OPT_RECOGNITION_TYPE ] ) || ( self::RECOG_TYPE_CUSTOM_META === $_POST[ self::OPT_RECOGNITION_TYPE ] && ! self::check_posted_custom_meta_keys() ) ) {
 			$_POST[ self::OPT_RECOG_DATA ]       = '';
 			$_POST[ self::OPT_RECOGNITION_TYPE ] = '';
-		}
-
-		if ( ! empty( $_POST[ self::OPT_NETGSM_CONTENT ] ) ) {
-			$_POST[ self::OPT_NETGSM_CONTENT ] = Netgsm::convert_hezarfen_variables_to_netgsm_metas( sanitize_text_field( $_POST[ self::OPT_NETGSM_CONTENT ] ) );
 		}
 
 		// phpcs:enable
