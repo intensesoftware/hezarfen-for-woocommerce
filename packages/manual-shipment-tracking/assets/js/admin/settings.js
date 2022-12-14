@@ -11,10 +11,10 @@ jQuery(function ($) {
 		recognition_settings_rows.addClass('recognition');
 
 		checkbox_show_hide_related_settings($('.enable-sms-notif'), notif_settings_rows, notif_providers);
-		radio_show_hide_related_settings(notif_providers, $('.netgsm').closest('tr'), 'netgsm');
+		radio_show_hide_related_settings(notif_providers, $('.netgsm').closest('tr'), hezarfen_mst_backend.netgsm_key);
 
 		checkbox_show_hide_related_settings($('.recogize-data'), recognition_settings_rows, recognition_types);
-		radio_show_hide_related_settings(recognition_types, $('.custom-meta').closest('tr'), 'hezarfen_mst_recognize_custom_meta');
+		radio_show_hide_related_settings(recognition_types, $('.custom-meta').closest('tr'), hezarfen_mst_backend.recognize_custom_meta_key);
 
 		if (sms_textarea.is(':enabled')) {
 			$('.sms-variable').on('click', function () { // Insert variable to textarea.

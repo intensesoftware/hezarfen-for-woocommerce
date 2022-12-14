@@ -268,6 +268,15 @@ class Settings {
 		if ( 'woocommerce_page_wc-settings' === $hook_suffix && self::SECTION === $current_section ) {
 			wp_enqueue_script( 'hezarfen_mst_settings_js', HEZARFEN_MST_ASSETS_URL . 'js/admin/settings.js', array(), WC_HEZARFEN_VERSION, false );
 			wp_enqueue_style( 'hezarfen_mst_settings_css', HEZARFEN_MST_ASSETS_URL . 'css/admin/settings.css', array(), WC_HEZARFEN_VERSION );
+
+			wp_localize_script(
+				'hezarfen_mst_settings_js',
+				'hezarfen_mst_backend',
+				array(
+					'netgsm_key'                => Netgsm::$id,
+					'recognize_custom_meta_key' => self::OPT_RECOG_CUSTOM_META,
+				),
+			);
 		}
 	}
 }
