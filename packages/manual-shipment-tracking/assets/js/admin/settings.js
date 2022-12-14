@@ -4,6 +4,7 @@ jQuery(function ($) {
 		const notif_providers = $('.notif-provider');
 		const recognition_settings_rows = $('.recognition').closest('tr');
 		const recognition_types = $('.recognition-type');
+		const sms_textarea = $('.netgsm.sms-content');
 
 		// add classes to the "tr" elements to style them with CSS.
 		notif_settings_rows.addClass('notification');
@@ -15,19 +16,15 @@ jQuery(function ($) {
 		checkbox_show_hide_related_settings($('.recogize-data'), recognition_settings_rows, recognition_types);
 		radio_show_hide_related_settings(recognition_types, $('.custom-meta').closest('tr'), 'hezarfen_mst_recognize_custom_meta');
 
-		const sms_textarea = $('.netgsm.sms-content');
-
 		if (sms_textarea.is(':enabled')) {
-			$('.sms-variable').on('click', insertVariable);
-		}
+			$('.sms-variable').on('click', function () { // Insert variable to textarea.
+				const start = sms_textarea.prop('selectionStart');
+				const end = sms_textarea.prop('selectionEnd');
+				const textarea_text = sms_textarea.val();
+				const inserted = textarea_text.substring(0, start) + this.innerText + textarea_text.substring(end);
 
-		function insertVariable() {
-			const start = sms_textarea.prop('selectionStart');
-			const end = sms_textarea.prop('selectionEnd');
-			const textarea_text = sms_textarea.val();
-			const inserted = textarea_text.substring(0, start) + this.innerText + textarea_text.substring(end);
-
-			sms_textarea.val(inserted).prop('selectionEnd', end + this.innerText.length).focus();
+				sms_textarea.val(inserted).prop('selectionEnd', end + this.innerText.length).focus();
+			});
 		}
 	});
 
