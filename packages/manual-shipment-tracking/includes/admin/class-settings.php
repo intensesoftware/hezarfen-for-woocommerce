@@ -41,7 +41,7 @@ class Settings {
 		if ( Manual_Shipment_Tracking::is_enabled() ) {
 			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_scripts_and_styles' ) );
 			add_filter( 'woocommerce_get_settings_' . self::HEZARFEN_WC_SETTINGS_ID, array( __CLASS__, 'add_settings_to_section' ), 10, 2 );
-			add_action( 'woocommerce_settings_save_hezarfen', array( __CLASS__, 'convert_variables' ) );
+			add_action( 'woocommerce_settings_save_hezarfen', array( __CLASS__, 'settings_save' ) );
 		}
 	}
 
@@ -243,16 +243,39 @@ class Settings {
 	}
 
 	/**
-	 * Converts hezarfen SMS variables to NetGSM metas before saving to the database.
+	 * Performs some checks and operations before saving.
 	 * 
 	 * @return void
 	 */
-	public static function convert_variables() {
+	public static function settings_save() {
 		global $current_section;
 
-		if ( self::SECTION === $current_section && ! empty( $_POST[ self::OPT_NETGSM_CONTENT ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$_POST[ self::OPT_NETGSM_CONTENT ] = Netgsm::convert_hezarfen_variables_to_netgsm_metas( sanitize_text_field( $_POST[ self::OPT_NETGSM_CONTENT ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+
+		if ( empty( $_POST[ self::OPT_NOTIF_PROVIDER ] ) ) {
+			$_POST[ self::OPT_ENABLE_SMS ] = '';
 		}
+
+		if ( empty( $_POST[ self::OPT_RECOGNITION_TYPE ] ) || ( self::OPT_RECOG_CUSTOM_META === $_POST[ self::OPT_RECOGNITION_TYPE ] && ! self::check_posted_custom_meta_keys() ) ) {
+			$_POST[ self::OPT_RECOG_DATA ]       = '';
+			$_POST[ self::OPT_RECOGNITION_TYPE ] = '';
+		}
+
+		if ( self::SECTION === $current_section && ! empty( $_POST[ self::OPT_NETGSM_CONTENT ] ) ) {
+			$_POST[ self::OPT_NETGSM_CONTENT ] = Netgsm::convert_hezarfen_variables_to_netgsm_metas( sanitize_text_field( $_POST[ self::OPT_NETGSM_CONTENT ] ) );
+		}
+
+		// phpcs:enable
+	}
+
+	/**
+	 * Checks the posted custom meta keys. Returns false if all of them are empty.
+	 * 
+	 * @return bool
+	 */
+	private static function check_posted_custom_meta_keys() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		return ! empty( $_POST[ self::OPT_COURIER_CUSTOM_META ] ) || ! empty( $_POST[ self::OPT_TRACKING_NUM_CUSTOM_META ] );
 	}
 
 	/**
