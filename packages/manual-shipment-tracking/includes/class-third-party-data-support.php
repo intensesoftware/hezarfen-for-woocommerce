@@ -60,6 +60,30 @@ class Third_Party_Data_Support {
 	}
 
 	/**
+	 * Returns Intense Kargo Takip for WooCommerce plugin's data.
+	 * 
+	 * @param string     $hezarfen_data Hezarfen's order data.
+	 * @param string|int $order_id Order ID.
+	 * 
+	 * @return string
+	 */
+	public static function get_intense_kargo_takip_data( $hezarfen_data, $order_id ) {
+		return self::get_third_party_data( $hezarfen_data, $order_id, self::INTENSE_KARGO_TAKIP );
+	}
+
+	/**
+	 * Returns Kargo Takip Türkiye plugin's data.
+	 * 
+	 * @param string     $hezarfen_data Hezarfen's order data.
+	 * @param string|int $order_id Order ID.
+	 * 
+	 * @return string
+	 */
+	public static function get_kargo_takip_turkiye_data( $hezarfen_data, $order_id ) {
+		return self::get_third_party_data( $hezarfen_data, $order_id, self::KARGO_TAKIP_TURKIYE );
+	}
+
+	/**
 	 * Registers order status of the given third party plugin.
 	 * 
 	 * @param string $plugin Plugin.
@@ -96,30 +120,6 @@ class Third_Party_Data_Support {
 		);
 
 		Helper::register_new_order_status( $status_data );
-	}
-
-	/**
-	 * Returns Intense Kargo Takip for WooCommerce plugin's data.
-	 * 
-	 * @param string     $hezarfen_data Hezarfen's order data.
-	 * @param string|int $order_id Order ID.
-	 * 
-	 * @return string
-	 */
-	public static function get_intense_kargo_takip_data( $hezarfen_data, $order_id ) {
-		return self::get_third_party_data( $hezarfen_data, $order_id, self::INTENSE_KARGO_TAKIP );
-	}
-
-	/**
-	 * Returns Kargo Takip Türkiye plugin's data.
-	 * 
-	 * @param string     $hezarfen_data Hezarfen's order data.
-	 * @param string|int $order_id Order ID.
-	 * 
-	 * @return string
-	 */
-	public static function get_kargo_takip_turkiye_data( $hezarfen_data, $order_id ) {
-		return self::get_third_party_data( $hezarfen_data, $order_id, self::KARGO_TAKIP_TURKIYE );
 	}
 
 	/**
