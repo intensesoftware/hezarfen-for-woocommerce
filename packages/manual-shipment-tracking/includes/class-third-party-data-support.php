@@ -25,9 +25,17 @@ class Third_Party_Data_Support {
 	 * Constructor
 	 */
 	public function __construct() {
-		if ( 'yes' === get_option( Settings::OPT_RECOG_DATA ) && Settings::RECOG_TYPE_SUPPORTED_PLUGINS === get_option( Settings::OPT_RECOGNITION_TYPE ) ) {
+		if ( 'yes' !== get_option( Settings::OPT_RECOG_DATA ) ) {
+			return;
+		}
+
+		$recognition_type = get_option( Settings::OPT_RECOGNITION_TYPE );
+
+		if ( Settings::RECOG_TYPE_SUPPORTED_PLUGINS === $recognition_type ) {
 			self::intense_kargo_takip_support();
 			self::kargo_takip_turkiye_support();
+		} elseif ( Settings::RECOG_TYPE_CUSTOM_META === $recognition_type ) {
+			self::custom_meta_support();
 		}
 	}
 
@@ -60,6 +68,18 @@ class Third_Party_Data_Support {
 	}
 
 	/**
+	 * Adds custom data support.
+	 * 
+	 * @return void
+	 */
+	public static function custom_meta_support() {
+		$order_status_id = get_option( Settings::OPT_ORDER_STATUS_ID );
+		if ( $order_status_id ) {
+			self::register_order_status( 'custom', $order_status_id );
+		}
+	}
+
+	/**
 	 * Returns Intense Kargo Takip for WooCommerce plugin's data.
 	 * 
 	 * @param string     $hezarfen_data Hezarfen's order data.
@@ -87,10 +107,11 @@ class Third_Party_Data_Support {
 	 * Registers order status of the given third party plugin.
 	 * 
 	 * @param string $plugin Plugin.
+	 * @param string $order_status_id Order status ID.
 	 * 
 	 * @return void
 	 */
-	public static function register_order_status( $plugin ) {
+	public static function register_order_status( $plugin, $order_status_id = '' ) {
 		$data = array(
 			self::INTENSE_KARGO_TAKIP => array(
 				'id'          => self::INTENSE_KARGO_TAKIP_ORDER_STATUS,
@@ -103,6 +124,12 @@ class Third_Party_Data_Support {
 				'label'       => _x( 'Shipped (Kargo Takip Turkiye Plugin)', 'WooCommerce Order status', 'hezarfen-for-woocommerce' ),
 				/* translators: %s: number of orders */
 				'label_count' => _n_noop( 'Shipped (Kargo Takip Turkiye Plugin) (%s)', 'Shipped (Kargo Takip Turkiye Plugin) (%s)', 'hezarfen-for-woocommerce' ),
+			),
+			'custom'                  => array(
+				'id'          => $order_status_id,
+				'label'       => _x( 'Shipped (Custom Status)', 'WooCommerce Order status', 'hezarfen-for-woocommerce' ),
+				/* translators: %s: number of orders */
+				'label_count' => _n_noop( 'Shipped (Custom Status) (%s)', 'Shipped (Custom Status) (%s)', 'hezarfen-for-woocommerce' ),
 			),
 		);
 
