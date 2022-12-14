@@ -1,24 +1,19 @@
 jQuery(function ($) {
 	$(document).ready(function () {
 		const notif_settings_rows = $('.notification').closest('tr');
-		const notif_providers_row = $('.notif-provider').closest('tr');
-		const recognition_type_row = $('.recognition-type').closest('tr');
-		const custom_meta_rows = $('.custom-meta').closest('tr');
+		const notif_providers = $('.notif-provider');
+		const recognition_settings_rows = $('.recognition').closest('tr');
+		const recognition_types = $('.recognition-type');
 
 		// add classes to the "tr" elements to style them with CSS.
 		notif_settings_rows.addClass('notification');
-		recognition_type_row.addClass('recognition-type');
-		custom_meta_rows.addClass('custom-meta');
+		recognition_settings_rows.addClass('recognition');
 
-		show_hide_related_settings($('.enable-sms-notif'), notif_settings_rows, notif_providers_row);
+		checkbox_show_hide_related_settings($('.enable-sms-notif'), notif_settings_rows, notif_providers);
+		radio_show_hide_related_settings(notif_providers, $('.netgsm').closest('tr'), 'netgsm');
 
-		notif_providers_row.on('change', function () {
-			const $this = $(this);
-			if ($this.is(':visible')) {
-				const is_netgsm_selected = $this.find('.notif-provider:checked').val() === 'netgsm';
-				$('.netgsm').closest('tr').toggle(is_netgsm_selected); // toggle visibility of the NetGSM settings.
-			}
-		}).trigger('change');
+		checkbox_show_hide_related_settings($('.recogize-data'), recognition_settings_rows, recognition_types);
+		radio_show_hide_related_settings(recognition_types, $('.custom-meta').closest('tr'), 'hezarfen_mst_recognize_custom_meta');
 
 		const sms_textarea = $('.netgsm.sms-content');
 
@@ -34,23 +29,20 @@ jQuery(function ($) {
 
 			sms_textarea.val(inserted).prop('selectionEnd', end + this.innerText.length).focus();
 		}
-
-		show_hide_related_settings($('.recogize-data'), $('.recognition').closest('tr'), recognition_type_row);
-
-		recognition_type_row.on('change', function () {
-			const $this = $(this);
-			if ($this.is(':visible')) {
-				const is_custom_meta_selected = $this.find('.recognition-type:checked').val() === 'hezarfen_mst_recognize_custom_meta';
-				custom_meta_rows.toggle(is_custom_meta_selected); // toggle visibility of the custom meta settings.
-			}
-		}).trigger('change');
 	});
 
-	function show_hide_related_settings(checkbox, related_settings, trigger_change_elements = null) {
+	function checkbox_show_hide_related_settings(checkbox, related_settings, trigger_change_elements) {
 		checkbox.on('change', function () {
 			related_settings.toggle($(this).is(':checked')); // toggle visibility of the related settings.
-			if (trigger_change_elements) {
-				trigger_change_elements.trigger('change');
+			trigger_change_elements.trigger('change');
+		}).trigger('change');
+	}
+
+	function radio_show_hide_related_settings(radio_buttons, related_settings, radio_button_value) {
+		radio_buttons.on('change', function () {
+			const $this = $(this);
+			if ($this.is(':visible')) {
+				related_settings.toggle($this.val() === radio_button_value && $this.is(':checked'));
 			}
 		}).trigger('change');
 	}
