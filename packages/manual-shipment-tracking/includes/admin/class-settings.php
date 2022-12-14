@@ -23,6 +23,7 @@ class Settings {
 	const OPT_NETGSM_CONTENT           = 'hezarfen_mst_netgsm_sms_content';
 	const OPT_RECOG_DATA               = 'hezarfen_mst_recognize_data';
 	const OPT_RECOGNITION_TYPE         = 'hezarfen_mst_recognition_type';
+	const OPT_ORDER_STATUS_ID          = 'hezarfen_mst_custom_order_status_id';
 	const OPT_COURIER_CUSTOM_META      = 'hezarfen_mst_courier_company_custom_meta';
 	const OPT_TRACKING_NUM_CUSTOM_META = 'hezarfen_mst_tracking_num_custom_meta';
 
@@ -187,6 +188,13 @@ class Settings {
 				),
 				array(
 					'type'        => 'text',
+					'title'       => __( 'Order status ID (optional)', 'hezarfen-for-woocommerce' ),
+					'id'          => self::OPT_ORDER_STATUS_ID,
+					'class'       => 'recognition custom-meta',
+					'placeholder' => __( 'Enter order status id. E.g: wc-shipped', 'hezarfen-for-woocommerce' ),
+				),
+				array(
+					'type'        => 'text',
 					'title'       => __( 'Courier company post meta', 'hezarfen-for-woocommerce' ),
 					'id'          => self::OPT_COURIER_CUSTOM_META,
 					'class'       => 'recognition custom-meta',
@@ -269,6 +277,12 @@ class Settings {
 		if ( empty( $_POST[ self::OPT_RECOGNITION_TYPE ] ) || ( self::RECOG_TYPE_CUSTOM_META === $_POST[ self::OPT_RECOGNITION_TYPE ] && ! self::check_posted_custom_meta_keys() ) ) {
 			$_POST[ self::OPT_RECOG_DATA ]       = '';
 			$_POST[ self::OPT_RECOGNITION_TYPE ] = '';
+		}
+
+		if ( ! empty( $_POST[ self::OPT_ORDER_STATUS_ID ] ) ) {
+			if ( 'wc-' !== substr( $_POST[ self::OPT_ORDER_STATUS_ID ], 0, 3 ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				$_POST[ self::OPT_ORDER_STATUS_ID ] = sanitize_key( 'wc-' . $_POST[ self::OPT_ORDER_STATUS_ID ] );
+			}
 		}
 
 		// phpcs:enable
