@@ -13,8 +13,10 @@ defined( 'ABSPATH' ) || exit;
  * The Third_Party_Data_Support class.
  */
 class Third_Party_Data_Support {
-	const INTENSE_KARGO_TAKIP = 'intense_kargo_takip';
-	const KARGO_TAKIP_TURKIYE = 'kargo_takip_turkiye';
+	const INTENSE_KARGO_TAKIP = 'Intense Kargo Takip';
+	const KARGO_TAKIP_TURKIYE = 'Kargo Takip Turkiye';
+
+	const SUPPORTED_PLUGINS = array( self::INTENSE_KARGO_TAKIP, self::KARGO_TAKIP_TURKIYE );
 
 	const INTENSE_KARGO_TAKIP_ORDER_STATUS = 'wc-shipping-progress';
 	const KARGO_TAKIP_TURKIYE_ORDER_STATUS = 'wc-kargo-verildi';

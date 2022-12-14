@@ -181,7 +181,7 @@ class Settings {
 					'class'   => 'recognition recognition-type',
 					'options' => array(
 						/* translators: %s Supported plugins. */
-						self::RECOG_TYPE_SUPPORTED_PLUGINS => sprintf( __( 'Recognize supported plugins: (%s)', 'hezarfen-for-woocommerce' ), implode( ', ', Manual_Shipment_Tracking::SUPPORTED_PLUGINS ) ),
+						self::RECOG_TYPE_SUPPORTED_PLUGINS => sprintf( __( 'Recognize supported plugins: (%s)', 'hezarfen-for-woocommerce' ), implode( ', ', Third_Party_Data_Support::SUPPORTED_PLUGINS ) ),
 						self::RECOG_TYPE_CUSTOM_META       => __( 'Recognize custom post meta data', 'hezarfen-for-woocommerce' ),
 					),
 				),
