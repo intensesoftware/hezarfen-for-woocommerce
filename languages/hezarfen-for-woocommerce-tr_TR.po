@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-14 17:11+0000\n"
-"PO-Revision-Date: 2022-12-13 13:33+0000\n"
+"PO-Revision-Date: 2022-12-14 08:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -23,11 +23,11 @@ msgstr ""
 "%s eklentisinin yeni bir versiyonu mevcut. Eklentiyi kullanmaya devam "
 "edebilmek için lütfen eklentiyi güncelleyiniz."
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:213
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:204
 msgid "Auto sort fields in checkout form?"
 msgstr "Ödeme formundaki alanlar otomatik olarak sıralansın mı?"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:162
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:146
 msgid ""
 "Back up the phrase in the box to a safe area, then place it in wp-config.php "
 "file."
@@ -35,23 +35,23 @@ msgstr ""
 "Kutunun içindekileri güvenli bir alana yedekleyin, ardından wp-config.php "
 "dosyasında herhangi bir alana yerleştirin."
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:51
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:42
 msgid "Checkout Page Settings"
 msgstr "Ödeme Sayfası Ayarları"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:191
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:182
 msgid "Checkout Settings"
 msgstr "Ödeme Sayfası Ayarları"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:104
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:260
 msgid "Checkout T.C. Identity Number Fields Required Statuses"
 msgstr "Ödeme Ekranında, T.C. Kimlik Numarasının Zorunluluk Durumlar"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:56
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:47
 msgid "Checkout Tax Fields"
 msgstr "Ödeme Vergi Alanları"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:77
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:233
 msgid "Checkout Tax Fields Settings"
 msgstr "Ödeme Vergi Alan Ayarları"
 
@@ -68,15 +68,15 @@ msgstr ""
 msgid "Company"
 msgstr "Kurumsal"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:50
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:41
 msgid "Encryption"
 msgstr "Şifreleme (Encryption)"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:152
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:136
 msgid "Encryption Key"
 msgstr "Şifreleme Anahtarı (Encryption Key)"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:168
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:152
 msgid "Encryption Key Confirmation"
 msgstr "Şifreleme Anahtarı (Encryption Key) Onayı"
 
@@ -84,7 +84,7 @@ msgstr "Şifreleme Anahtarı (Encryption Key) Onayı"
 msgid "Encryption Key Health"
 msgstr "Şifreleme Anahtarı (Encryption Key) Sağlığı"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:140
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:124
 msgid "Encryption Settings"
 msgstr "Şifreleme Anahtarı (Encryption Key) Ayarları"
 
@@ -104,11 +104,11 @@ msgstr "Vergi numaranızı giriniz"
 msgid "Enter tax office"
 msgstr "Vergi dairesini giriniz"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:49
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:40
 msgid "General"
 msgstr "Genel"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:232
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:61
 msgid "General Settings"
 msgstr "Genel Ayarlar"
 
@@ -118,15 +118,15 @@ msgid ""
 "amaçlar."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:264
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:93
 msgid "Hide postcode fields in My Account > Address pages?"
 msgstr "Hesabım > Adres düzenleme sayfalarından posta kodunu kaldır?"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:203
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:194
 msgid "Hide postcode fields?"
 msgstr "Posta kodu alanları gizlensin mi?"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:173
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:157
 msgid ""
 "I backed up the key to a secure area and placed it in the wp-config file. In "
 "case the encryption key value is deleted from the wp-config.php file, all "
@@ -138,7 +138,7 @@ msgstr ""
 "no bilgilerinin okunamaz(decrypt edilemez) hale geleceğini anladım ve "
 "onaylıyorum. "
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:145
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:129
 msgid ""
 "If the T.C. Identity Field is active, an encryption key must be generated. "
 "The following encryption key generated will be lost upon saving the form. "
@@ -179,7 +179,7 @@ msgstr "Fatura tipi"
 msgid "Invoice type"
 msgstr "Fatura tipi"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:108
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:264
 msgid "Is T.C. Identity Number field required?"
 msgstr "T.C. Kimlik Numarası alanı zorunlu yapılsın mı?"
 
@@ -218,19 +218,19 @@ msgstr "Bireysel"
 msgid "Select an option"
 msgstr "Lütfen seçiniz"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:244
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:73
 msgid "Show hezarfen checkout tax fields?"
 msgstr "Ödeme sayfasında vergi alanları gösterilsin mi?"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:90
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:246
 msgid "Show T.C. Identity Field on checkout page "
 msgstr "T.C. Kimlik Numarası Alanını Ödeme Sayfasında Göster"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:254
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:83
 msgid "Sort address fields in My Account > Address pages?"
 msgstr "Hesabım > Adres düzenleme sayfalarındaki alanları sırala?"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:95
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:251
 msgid ""
 "T.C. Identity Field optionally shows on checkout field when invoice type "
 "selected as person. (T.C. field requires encryption. If encryption is not "
@@ -271,15 +271,15 @@ msgstr "İlçe"
 msgid "Yes"
 msgstr "Evet"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:237
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:66
 msgid "You can edit the general settings from this page."
 msgstr "Hezarfen ile ilgili genel ayarları bu sayfadan yönetebilirsiniz."
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:196
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:187
 msgid "You can set general checkout settings."
 msgstr "Ödeme sayfasıyla ilgili genel ayarları düzenleyebilirsiniz."
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:82
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:238
 msgid ""
 "You can update the checkout TAX fields. Note: T.C. number field requires "
 "encryption feature. If you do not activate the encryption feature, T.C. "
