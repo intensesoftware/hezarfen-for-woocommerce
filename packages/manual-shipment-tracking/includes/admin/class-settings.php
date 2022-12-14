@@ -23,10 +23,11 @@ class Settings {
 	const OPT_NETGSM_CONTENT           = 'hezarfen_mst_netgsm_sms_content';
 	const OPT_RECOG_DATA               = 'hezarfen_mst_recognize_data';
 	const OPT_RECOGNITION_TYPE         = 'hezarfen_mst_recognition_type';
-	const OPT_RECOG_SUPPORTED_PLUGINS  = 'hezarfen_mst_recognize_supported_shipping_plugins';
-	const OPT_RECOG_CUSTOM_META        = 'hezarfen_mst_recognize_custom_meta';
 	const OPT_COURIER_CUSTOM_META      = 'hezarfen_mst_courier_company_custom_meta';
 	const OPT_TRACKING_NUM_CUSTOM_META = 'hezarfen_mst_tracking_num_custom_meta';
+
+	const RECOG_TYPE_SUPPORTED_PLUGINS = 'hezarfen_mst_recognize_supported_shipping_plugins';
+	const RECOG_TYPE_CUSTOM_META       = 'hezarfen_mst_recognize_custom_meta';
 
 	/**
 	 * Constructor
@@ -180,8 +181,8 @@ class Settings {
 					'class'   => 'recognition recognition-type',
 					'options' => array(
 						/* translators: %s Supported plugins. */
-						self::OPT_RECOG_SUPPORTED_PLUGINS => sprintf( __( 'Recognize supported plugins: (%s)', 'hezarfen-for-woocommerce' ), implode( ', ', Manual_Shipment_Tracking::SUPPORTED_PLUGINS ) ),
-						self::OPT_RECOG_CUSTOM_META       => __( 'Recognize custom post meta data', 'hezarfen-for-woocommerce' ),
+						self::RECOG_TYPE_SUPPORTED_PLUGINS => sprintf( __( 'Recognize supported plugins: (%s)', 'hezarfen-for-woocommerce' ), implode( ', ', Manual_Shipment_Tracking::SUPPORTED_PLUGINS ) ),
+						self::RECOG_TYPE_CUSTOM_META       => __( 'Recognize custom post meta data', 'hezarfen-for-woocommerce' ),
 					),
 				),
 				array(
@@ -257,7 +258,7 @@ class Settings {
 			$_POST[ self::OPT_ENABLE_SMS ] = '';
 		}
 
-		if ( empty( $_POST[ self::OPT_RECOGNITION_TYPE ] ) || ( self::OPT_RECOG_CUSTOM_META === $_POST[ self::OPT_RECOGNITION_TYPE ] && ! self::check_posted_custom_meta_keys() ) ) {
+		if ( empty( $_POST[ self::OPT_RECOGNITION_TYPE ] ) || ( self::RECOG_TYPE_CUSTOM_META === $_POST[ self::OPT_RECOGNITION_TYPE ] && ! self::check_posted_custom_meta_keys() ) ) {
 			$_POST[ self::OPT_RECOG_DATA ]       = '';
 			$_POST[ self::OPT_RECOGNITION_TYPE ] = '';
 		}
@@ -298,7 +299,7 @@ class Settings {
 				'hezarfen_mst_backend',
 				array(
 					'netgsm_key'                => Netgsm::$id,
-					'recognize_custom_meta_key' => self::OPT_RECOG_CUSTOM_META,
+					'recognize_custom_meta_key' => self::RECOG_TYPE_CUSTOM_META,
 				),
 			);
 		}
