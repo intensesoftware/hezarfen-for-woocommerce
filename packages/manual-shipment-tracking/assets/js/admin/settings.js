@@ -38,10 +38,12 @@ jQuery(function ($) {
 		}).trigger('change');
 	});
 
-	function show_hide_related_settings(checkbox, related_settings, radios) {
+	function show_hide_related_settings(checkbox, related_settings, trigger_change_elements = null) {
 		checkbox.on('change', function () {
 			related_settings.toggle($(this).is(':checked')); // toggle visibility of the related settings.
-			radios.trigger('change');
+			if (trigger_change_elements) {
+				trigger_change_elements.trigger('change');
+			}
 		}).trigger('change');
 	}
 });
