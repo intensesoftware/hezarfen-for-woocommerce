@@ -1,6 +1,6 @@
 jQuery(function ($) {
 	$(document).ready(function () {
-		const notif_settings_rows = $('.notification').closest('tr:not(:first-child)');
+		const notif_settings_rows = $('.notification').closest('tr');
 		const notif_providers_row = $('.notif-provider').closest('tr');
 		const custom_meta_rows = $('.custom-meta').closest('tr');
 
