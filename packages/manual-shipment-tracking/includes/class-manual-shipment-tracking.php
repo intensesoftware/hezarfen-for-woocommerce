@@ -33,6 +33,8 @@ class Manual_Shipment_Tracking {
 	const TRACKING_NUM_KEY          = 'hezarfen_mst_tracking_number';
 	const TRACKING_URL_KEY          = 'hezarfen_mst_tracking_url';
 
+	const SUPPORTED_PLUGINS = array( 'Intense Kargo Takip', 'Kargo Takip Turkiye' );
+
 	/**
 	 * The single instance of the class
 	 *
