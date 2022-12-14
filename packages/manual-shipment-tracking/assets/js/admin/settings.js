@@ -2,14 +2,13 @@ jQuery(function ($) {
 	$(document).ready(function () {
 		const notif_settings_rows = $('.notification').closest('tr:not(:first-child)');
 		const notif_providers_row = $('.notif-provider').closest('tr');
+		const custom_meta_rows = $('.custom-meta').closest('tr');
 
-		notif_settings_rows.addClass('notification'); // add classes to the "tr" elements to style them with CSS.
+		// add classes to the "tr" elements to style them with CSS.
+		notif_settings_rows.addClass('notification');
+		custom_meta_rows.addClass('custom-meta');
 
-		$('.enable-sms-notif').on('change', function () {
-			notif_settings_rows.toggle($(this).is(':checked')); // toggle visibility of the SMS notification settings.
-			notif_providers_row.trigger('change');
-		}
-		).trigger('change');
+		show_hide_related_settings($('.enable-sms-notif'), notif_settings_rows, notif_providers_row);
 
 		notif_providers_row.on('change', function () {
 			const $this = $(this);
@@ -17,8 +16,7 @@ jQuery(function ($) {
 				const is_netgsm_selected = $this.find('.notif-provider:checked').val() === 'netgsm';
 				$('.netgsm').closest('tr').toggle(is_netgsm_selected); // toggle visibility of the NetGSM settings.
 			}
-		}
-		).trigger('change');
+		}).trigger('change');
 
 		const sms_textarea = $('.netgsm.sms-content');
 
@@ -35,11 +33,15 @@ jQuery(function ($) {
 			sms_textarea.val(inserted).prop('selectionEnd', end + this.innerText.length).focus();
 		}
 
-		const custom_meta_rows = $('.custom-meta').closest('tr');
-		custom_meta_rows.addClass('custom-meta'); // add classes to the "tr" elements to style them with CSS.
-
 		$('.recognize-custom-meta').on('change', function () {
 			custom_meta_rows.toggle($(this).is(':checked')); // toggle visibility of the "Recognize custom post meta data" settings.
 		}).trigger('change');
 	});
+
+	function show_hide_related_settings(checkbox, related_settings, radios) {
+		checkbox.on('change', function () {
+			related_settings.toggle($(this).is(':checked')); // toggle visibility of the related settings.
+			radios.trigger('change');
+		}).trigger('change');
+	}
 });
