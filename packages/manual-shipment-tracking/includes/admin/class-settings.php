@@ -26,8 +26,8 @@ class Settings {
 	const OPT_COURIER_CUSTOM_META      = 'hezarfen_mst_courier_company_custom_meta';
 	const OPT_TRACKING_NUM_CUSTOM_META = 'hezarfen_mst_tracking_num_custom_meta';
 
-	const RECOG_TYPE_SUPPORTED_PLUGINS = 'hezarfen_mst_recognize_supported_shipping_plugins';
-	const RECOG_TYPE_CUSTOM_META       = 'hezarfen_mst_recognize_custom_meta';
+	const RECOG_TYPE_SUPPORTED_PLUGINS = 'supported_plugins';
+	const RECOG_TYPE_CUSTOM_META       = 'custom_meta';
 
 	/**
 	 * Constructor
