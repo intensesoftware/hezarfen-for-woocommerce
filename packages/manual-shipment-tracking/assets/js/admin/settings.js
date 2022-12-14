@@ -2,10 +2,12 @@ jQuery(function ($) {
 	$(document).ready(function () {
 		const notif_settings_rows = $('.notification').closest('tr');
 		const notif_providers_row = $('.notif-provider').closest('tr');
+		const recognition_type_row = $('.recognition-type').closest('tr');
 		const custom_meta_rows = $('.custom-meta').closest('tr');
 
 		// add classes to the "tr" elements to style them with CSS.
 		notif_settings_rows.addClass('notification');
+		recognition_type_row.addClass('recognition-type');
 		custom_meta_rows.addClass('custom-meta');
 
 		show_hide_related_settings($('.enable-sms-notif'), notif_settings_rows, notif_providers_row);
@@ -33,8 +35,14 @@ jQuery(function ($) {
 			sms_textarea.val(inserted).prop('selectionEnd', end + this.innerText.length).focus();
 		}
 
-		$('.recognize-custom-meta').on('change', function () {
-			custom_meta_rows.toggle($(this).is(':checked')); // toggle visibility of the "Recognize custom post meta data" settings.
+		show_hide_related_settings($('.recogize-data'), $('.recognition').closest('tr'), recognition_type_row);
+
+		recognition_type_row.on('change', function () {
+			const $this = $(this);
+			if ($this.is(':visible')) {
+				const is_custom_meta_selected = $this.find('.recognition-type:checked').val() === 'hezarfen_mst_recognize_custom_meta';
+				custom_meta_rows.toggle(is_custom_meta_selected); // toggle visibility of the custom meta settings.
+			}
 		}).trigger('change');
 	});
 

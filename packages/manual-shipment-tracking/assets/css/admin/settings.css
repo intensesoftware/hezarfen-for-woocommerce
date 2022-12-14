@@ -1,5 +1,6 @@
 .notification th,
-.custom-meta th {
+.custom-meta th,
+.recognition-type th {
 	padding-left: 24px;
 }
 

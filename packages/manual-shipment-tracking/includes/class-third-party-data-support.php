@@ -23,7 +23,7 @@ class Third_Party_Data_Support {
 	 * Constructor
 	 */
 	public function __construct() {
-		if ( 'yes' === get_option( Settings::OPT_RECOGNIZE_PLUGINS ) ) {
+		if ( 'yes' === get_option( Settings::OPT_RECOG_SUPPORTED_PLUGINS ) ) {
 			self::intense_kargo_takip_support();
 			self::kargo_takip_turkiye_support();
 		}

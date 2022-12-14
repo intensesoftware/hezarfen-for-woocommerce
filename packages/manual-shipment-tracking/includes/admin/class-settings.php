@@ -21,8 +21,10 @@ class Settings {
 	const OPT_ENABLE_SMS               = 'hezarfen_mst_enable_sms_notification';
 	const OPT_NOTIF_PROVIDER           = 'hezarfen_mst_notification_provider';
 	const OPT_NETGSM_CONTENT           = 'hezarfen_mst_netgsm_sms_content';
-	const OPT_RECOGNIZE_PLUGINS        = 'hezarfen_mst_recognize_shipping_plugins';
-	const OPT_RECOGNIZE_CUSTOM_META    = 'hezarfen_mst_recognize_custom_meta';
+	const OPT_RECOG_DATA               = 'hezarfen_mst_recognize_data';
+	const OPT_RECOGNITION_TYPE         = 'hezarfen_mst_recognition_type';
+	const OPT_RECOG_SUPPORTED_PLUGINS  = 'hezarfen_mst_recognize_supported_shipping_plugins';
+	const OPT_RECOG_CUSTOM_META        = 'hezarfen_mst_recognize_custom_meta';
 	const OPT_COURIER_CUSTOM_META      = 'hezarfen_mst_courier_company_custom_meta';
 	const OPT_TRACKING_NUM_CUSTOM_META = 'hezarfen_mst_tracking_num_custom_meta';
 
@@ -167,28 +169,32 @@ class Settings {
 				),
 				array(
 					'type'     => 'checkbox',
-					'title'    => __( "Recognize supported shipping plugins' data", 'hezarfen-for-woocommerce' ),
-					'id'       => self::OPT_RECOGNIZE_PLUGINS,
-					'desc_tip' => __( 'Supported plugins: Intense Kargo Takip, Kargo Takip Turkiye', 'hezarfen-for-woocommerce' ),
+					'title'    => __( "Recognize third party plugins' data", 'hezarfen-for-woocommerce' ),
+					'id'       => self::OPT_RECOG_DATA,
+					'class'    => 'recogize-data'
 				),
 				array(
-					'type'  => 'checkbox',
-					'title' => __( 'Recognize custom post meta data', 'hezarfen-for-woocommerce' ),
-					'id'    => self::OPT_RECOGNIZE_CUSTOM_META,
-					'class' => 'recognize-custom-meta',
+					'type'     => 'radio',
+					'title'    => __( 'Recognition type', 'hezarfen-for-woocommerce' ),
+					'id'       => self::OPT_RECOGNITION_TYPE,
+					'class'    => 'recognition recognition-type',
+					'options'  => array(
+						self::OPT_RECOG_SUPPORTED_PLUGINS => __( 'Recognize supported plugins: (Intense Kargo Takip, Kargo Takip Turkiye)', 'hezarfen-for-woocommerce' ),
+						self::OPT_RECOG_CUSTOM_META => __( 'Recognize custom post meta data', 'hezarfen-for-woocommerce' ),
+					),
 				),
 				array(
 					'type'        => 'text',
 					'title'       => __( 'Courier company post meta', 'hezarfen-for-woocommerce' ),
 					'id'          => self::OPT_COURIER_CUSTOM_META,
-					'class'       => 'custom-meta',
+					'class'       => 'recognition custom-meta',
 					'placeholder' => __( 'Enter post meta for courier company', 'hezarfen-for-woocommerce' ),
 				),
 				array(
 					'type'        => 'text',
 					'title'       => __( 'Tracking number post meta', 'hezarfen-for-woocommerce' ),
 					'id'          => self::OPT_TRACKING_NUM_CUSTOM_META,
-					'class'       => 'custom-meta',
+					'class'       => 'recognition custom-meta',
 					'placeholder' => __( 'Enter post meta for tracking number', 'hezarfen-for-woocommerce' ),
 				),
 				array(
