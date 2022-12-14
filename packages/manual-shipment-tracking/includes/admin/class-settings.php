@@ -168,19 +168,19 @@ class Settings {
 					'title' => __( 'Advanced Settings', 'hezarfen-for-woocommerce' ),
 				),
 				array(
-					'type'     => 'checkbox',
-					'title'    => __( "Recognize third party plugins' data", 'hezarfen-for-woocommerce' ),
-					'id'       => self::OPT_RECOG_DATA,
-					'class'    => 'recogize-data'
+					'type'  => 'checkbox',
+					'title' => __( "Recognize third party plugins' data", 'hezarfen-for-woocommerce' ),
+					'id'    => self::OPT_RECOG_DATA,
+					'class' => 'recogize-data',
 				),
 				array(
-					'type'     => 'radio',
-					'title'    => __( 'Recognition type', 'hezarfen-for-woocommerce' ),
-					'id'       => self::OPT_RECOGNITION_TYPE,
-					'class'    => 'recognition recognition-type',
-					'options'  => array(
+					'type'    => 'radio',
+					'title'   => __( 'Recognition type', 'hezarfen-for-woocommerce' ),
+					'id'      => self::OPT_RECOGNITION_TYPE,
+					'class'   => 'recognition recognition-type',
+					'options' => array(
 						self::OPT_RECOG_SUPPORTED_PLUGINS => __( 'Recognize supported plugins: (Intense Kargo Takip, Kargo Takip Turkiye)', 'hezarfen-for-woocommerce' ),
-						self::OPT_RECOG_CUSTOM_META => __( 'Recognize custom post meta data', 'hezarfen-for-woocommerce' ),
+						self::OPT_RECOG_CUSTOM_META       => __( 'Recognize custom post meta data', 'hezarfen-for-woocommerce' ),
 					),
 				),
 				array(
