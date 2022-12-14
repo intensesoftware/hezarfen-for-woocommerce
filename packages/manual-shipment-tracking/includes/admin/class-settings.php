@@ -252,6 +252,10 @@ class Settings {
 	public static function settings_save() {
 		global $current_section;
 
+		if ( self::SECTION !== $current_section ) {
+			return;
+		}
+
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $_POST[ self::OPT_NOTIF_PROVIDER ] ) ) {
@@ -263,7 +267,7 @@ class Settings {
 			$_POST[ self::OPT_RECOGNITION_TYPE ] = '';
 		}
 
-		if ( self::SECTION === $current_section && ! empty( $_POST[ self::OPT_NETGSM_CONTENT ] ) ) {
+		if ( ! empty( $_POST[ self::OPT_NETGSM_CONTENT ] ) ) {
 			$_POST[ self::OPT_NETGSM_CONTENT ] = Netgsm::convert_hezarfen_variables_to_netgsm_metas( sanitize_text_field( $_POST[ self::OPT_NETGSM_CONTENT ] ) );
 		}
 
