@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
 class Third_Party_Data_Support {
 	const INTENSE_KARGO_TAKIP = 'Intense Kargo Takip';
 	const KARGO_TAKIP_TURKIYE = 'Kargo Takip Turkiye';
+	const CUSTOM              = 'custom';
 
 	const SUPPORTED_PLUGINS = array( self::INTENSE_KARGO_TAKIP, self::KARGO_TAKIP_TURKIYE );
 
@@ -75,7 +76,7 @@ class Third_Party_Data_Support {
 	public static function custom_meta_support() {
 		$order_status_id = get_option( Settings::OPT_ORDER_STATUS_ID );
 		if ( $order_status_id ) {
-			self::register_order_status( 'custom', $order_status_id );
+			self::register_order_status( self::CUSTOM, $order_status_id );
 		}
 	}
 
@@ -125,7 +126,7 @@ class Third_Party_Data_Support {
 				/* translators: %s: number of orders */
 				'label_count' => _n_noop( 'Shipped (Kargo Takip Turkiye Plugin) (%s)', 'Shipped (Kargo Takip Turkiye Plugin) (%s)', 'hezarfen-for-woocommerce' ),
 			),
-			'custom'                  => array(
+			self::CUSTOM              => array(
 				'id'          => $order_status_id,
 				'label'       => _x( 'Shipped (Custom Status)', 'WooCommerce Order status', 'hezarfen-for-woocommerce' ),
 				/* translators: %s: number of orders */
