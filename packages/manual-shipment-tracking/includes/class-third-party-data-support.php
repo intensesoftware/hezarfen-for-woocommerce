@@ -164,42 +164,29 @@ class Third_Party_Data_Support {
 			return $hezarfen_data;
 		}
 
+		$filter_name = str_replace( 'hezarfen_mst_', '', current_filter() );
+
 		$plugin_data = array(
 			self::INTENSE_KARGO_TAKIP => array(
-				'courier_company_key' => 'shipping_company',
-				'tracking_number_key' => 'shipping_number',
-				'tracking_url_key'    => 'in_kargotakip_tracking_url',
+				'get_courier_id'    => 'shipping_company',
+				'get_courier_title' => 'shipping_company',
+				'get_tracking_num'  => 'shipping_number',
+				'get_tracking_url'  => 'in_kargotakip_tracking_url',
 			),
 			self::KARGO_TAKIP_TURKIYE => array(
-				'courier_company_key' => 'tracking_company',
-				'tracking_number_key' => 'tracking_code',
+				'get_courier_id'    => 'tracking_company',
+				'get_courier_title' => 'tracking_company',
+				'get_tracking_num'  => 'tracking_code',
 			),
 		);
 
-		$filter_name = str_replace( 'hezarfen_mst_', '', current_filter() );
-
-		switch ( $filter_name ) {
-			case 'get_courier_id':
-			case 'get_courier_title':
-				$meta_key = $plugin_data[ $plugin ]['courier_company_key'];
-				break;
-			case 'get_tracking_num':
-				$meta_key = $plugin_data[ $plugin ]['tracking_number_key'];
-				break;
-			case 'get_tracking_url':
-				$meta_key = $plugin_data[ $plugin ]['tracking_url_key'] ?? '';
-				break;
-			default:
-				$meta_key = '';
-				break;  
-		}
-
-		$data = $meta_key ? get_post_meta( $order_id, $meta_key, true ) : '';
+		$meta_key = $plugin_data[ $plugin ][ $filter_name ] ?? '';
+		$data     = $meta_key ? get_post_meta( $order_id, $meta_key, true ) : '';
 
 		if ( ! $data && 'get_tracking_url' === $filter_name ) {
 			// try to create tracking url.
-			$courier_company = self::convert_courier( get_post_meta( $order_id, $plugin_data[ $plugin ]['courier_company_key'], true ) );
-			$tracking_number = $courier_company ? get_post_meta( $order_id, $plugin_data[ $plugin ]['tracking_number_key'], true ) : '';
+			$courier_company = self::convert_courier( get_post_meta( $order_id, $plugin_data[ $plugin ]['get_courier_id'], true ) );
+			$tracking_number = $courier_company ? get_post_meta( $order_id, $plugin_data[ $plugin ]['get_tracking_num'], true ) : '';
 			return $tracking_number ? Helper::get_courier_class( $courier_company )::create_tracking_url( $tracking_number ) : '';
 		}
 
