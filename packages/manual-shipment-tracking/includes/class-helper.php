@@ -70,8 +70,17 @@ class Helper {
 		$courier_companies = Manual_Shipment_Tracking::courier_companies();
 
 		if ( is_numeric( $id ) ) { // $id is an oder ID.
-			return $courier_companies[ self::get_courier_id( $id ) ] ?? $courier_companies[''];
+			$courier_id = self::get_courier_id( $id );
+			if ( self::is_custom_courier( $courier_id ) ) {
+				return Courier_Custom::class;
+			}
+
+			return $courier_companies[ $courier_id ] ?? $courier_companies[''];
 		} else { // $id is a courier company ID.
+			if ( self::is_custom_courier( $id ) ) {
+				return Courier_Custom::class;
+			}
+
 			return $courier_companies[ $id ] ?? $courier_companies[''];
 		}
 	}
@@ -107,6 +116,17 @@ class Helper {
 	public static function get_courier_title( $order_id ) {
 		$courier_title = get_post_meta( $order_id, Manual_Shipment_Tracking::COURIER_COMPANY_TITLE_KEY, true );
 		return apply_filters( 'hezarfen_mst_get_courier_title', $courier_title, $order_id );
+	}
+
+	/**
+	 * Checks if courier is the custom courier.
+	 * 
+	 * @param string $courier_id Courier ID.
+	 * 
+	 * @return bool
+	 */
+	public static function is_custom_courier( $courier_id ) {
+		return Courier_Custom::$id === $courier_id;
 	}
 
 	/**

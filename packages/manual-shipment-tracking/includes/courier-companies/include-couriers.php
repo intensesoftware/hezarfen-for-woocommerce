@@ -32,3 +32,4 @@ require 'class-trendyol-express.php';
 require 'class-ups.php';
 require 'class-yurtici.php';
 require 'class-kurye.php';
+require 'class-custom.php';

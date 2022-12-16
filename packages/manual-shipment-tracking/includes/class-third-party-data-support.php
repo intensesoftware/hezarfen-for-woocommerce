@@ -78,6 +78,10 @@ class Third_Party_Data_Support {
 		if ( $order_status_id ) {
 			self::register_order_status( self::CUSTOM, $order_status_id );
 		}
+
+		add_filter( 'hezarfen_mst_get_courier_id', array( __CLASS__, 'get_custom_meta_data' ), 10, 2 );
+		add_filter( 'hezarfen_mst_get_courier_title', array( __CLASS__, 'get_custom_meta_data' ), 10, 2 );
+		add_filter( 'hezarfen_mst_get_tracking_num', array( __CLASS__, 'get_custom_meta_data' ), 10, 2 );
 	}
 
 	/**
@@ -102,6 +106,32 @@ class Third_Party_Data_Support {
 	 */
 	public static function get_kargo_takip_turkiye_data( $hezarfen_data, $order_id ) {
 		return self::get_third_party_data( $hezarfen_data, $order_id, self::KARGO_TAKIP_TURKIYE );
+	}
+
+	/**
+	 * Returns custom meta data.
+	 * 
+	 * @param string     $hezarfen_data Hezarfen's order data.
+	 * @param string|int $order_id Order ID.
+	 * 
+	 * @return string
+	 */
+	public static function get_custom_meta_data( $hezarfen_data, $order_id ) {
+		if ( $hezarfen_data ) {
+			return $hezarfen_data;
+		}
+
+		$filter_name = self::get_current_filter();
+
+		if ( 'get_courier_id' === $filter_name ) {
+			return Courier_Custom::$id;
+		} elseif ( 'get_courier_title' === $filter_name ) {
+			return Courier_Custom::get_title( $order_id );
+		} elseif ( 'get_tracking_num' === $filter_name ) {
+			return get_post_meta( $order_id, get_option( Settings::OPT_TRACKING_NUM_CUSTOM_META, '' ), true );
+		}
+
+		return '';
 	}
 
 	/**
@@ -164,7 +194,7 @@ class Third_Party_Data_Support {
 			return $hezarfen_data;
 		}
 
-		$filter_name = str_replace( 'hezarfen_mst_', '', current_filter() );
+		$filter_name = self::get_current_filter();
 
 		$plugin_data = array(
 			self::INTENSE_KARGO_TAKIP => array(
@@ -240,5 +270,14 @@ class Third_Party_Data_Support {
 		);
 
 		return $conversion_data[ $courier ] ?? $courier;
+	}
+
+	/**
+	 * Returns the current filter after trimming the prefix.
+	 * 
+	 * @return string
+	 */
+	private static function get_current_filter() {
+		return str_replace( 'hezarfen_mst_', '', current_filter() );
 	}
 }

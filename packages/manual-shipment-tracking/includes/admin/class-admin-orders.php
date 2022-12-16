@@ -56,7 +56,7 @@ class Admin_Orders {
 		$tracking_url    = Helper::get_tracking_url( $order_id );
 		?>
 		<div class="address">
-			<p><strong><?php esc_html_e( 'Courier Company', 'hezarfen-for-woocommerce' ); ?>:</strong> <?php echo esc_html( $courier_company::get_title() ); ?></p>
+			<p><strong><?php esc_html_e( 'Courier Company', 'hezarfen-for-woocommerce' ); ?>:</strong> <?php echo esc_html( $courier_company::get_title( $order_id ) ); ?></p>
 			<p>
 				<strong><?php esc_html_e( 'Tracking Number', 'hezarfen-for-woocommerce' ); ?>:</strong>
 				<?php if ( $tracking_url ) : ?>
