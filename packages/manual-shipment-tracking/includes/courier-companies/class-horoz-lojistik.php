@@ -23,9 +23,11 @@ class Courier_Horoz_Lojistik extends Courier_Company {
 	/**
 	 * Returns the title.
 	 * 
+	 * @param int|string $order_id Order ID.
+	 * 
 	 * @return string
 	 */
-	public static function get_title() {
+	public static function get_title( $order_id = '' ) {
 		return __( 'Horoz Lojistik', 'hezarfen-for-woocommerce' );
 	}
 

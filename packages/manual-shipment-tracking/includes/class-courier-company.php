@@ -25,9 +25,11 @@ abstract class Courier_Company {
 	/**
 	 * Returns the title.
 	 * 
+	 * @param int|string $order_id Order ID.
+	 * 
 	 * @return string
 	 */
-	abstract public static function get_title();
+	abstract public static function get_title( $order_id = '' );
 
 	/**
 	 * Creates tracking URL.

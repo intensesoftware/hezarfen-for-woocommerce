@@ -23,9 +23,11 @@ class Courier_Aras extends Courier_Company {
 	/**
 	 * Returns the title.
 	 * 
+	 * @param int|string $order_id Order ID.
+	 * 
 	 * @return string
 	 */
-	public static function get_title() {
+	public static function get_title( $order_id = '' ) {
 		return __( 'Aras Kargo', 'hezarfen-for-woocommerce' );
 	}
 
