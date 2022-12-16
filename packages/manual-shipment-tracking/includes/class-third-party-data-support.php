@@ -93,7 +93,7 @@ class Third_Party_Data_Support {
 	 * @return string
 	 */
 	public static function get_intense_kargo_takip_data( $hezarfen_data, $order_id ) {
-		return self::get_third_party_data( $hezarfen_data, $order_id, self::INTENSE_KARGO_TAKIP );
+		return self::get_supported_plugin_data( $hezarfen_data, $order_id, self::INTENSE_KARGO_TAKIP );
 	}
 
 	/**
@@ -105,7 +105,7 @@ class Third_Party_Data_Support {
 	 * @return string
 	 */
 	public static function get_kargo_takip_turkiye_data( $hezarfen_data, $order_id ) {
-		return self::get_third_party_data( $hezarfen_data, $order_id, self::KARGO_TAKIP_TURKIYE );
+		return self::get_supported_plugin_data( $hezarfen_data, $order_id, self::KARGO_TAKIP_TURKIYE );
 	}
 
 	/**
@@ -181,7 +181,7 @@ class Third_Party_Data_Support {
 	}
 
 	/**
-	 * Returns a third party plugin's data.
+	 * Returns a supported third party plugin's data.
 	 * 
 	 * @param string     $hezarfen_data Hezarfen's order data.
 	 * @param string|int $order_id Order ID.
@@ -189,7 +189,7 @@ class Third_Party_Data_Support {
 	 * 
 	 * @return string
 	 */
-	public static function get_third_party_data( $hezarfen_data, $order_id, $plugin ) {
+	public static function get_supported_plugin_data( $hezarfen_data, $order_id, $plugin ) {
 		if ( $hezarfen_data ) {
 			return $hezarfen_data;
 		}
