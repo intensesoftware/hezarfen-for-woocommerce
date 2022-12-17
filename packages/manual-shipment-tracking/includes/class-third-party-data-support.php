@@ -13,20 +13,29 @@ defined( 'ABSPATH' ) || exit;
  * The Third_Party_Data_Support class.
  */
 class Third_Party_Data_Support {
+	const AUTO_ENABLE_THRESHOLD = 25;
+	const OPT_SQL_RESULT_CACHE  = 'hezarfen_mst_third_party_data_sql_result';
+
 	const INTENSE_KARGO_TAKIP = 'Intense Kargo Takip';
 	const KARGO_TAKIP_TURKIYE = 'Kargo Takip Turkiye';
 	const CUSTOM              = 'custom';
 
 	const SUPPORTED_PLUGINS = array( self::INTENSE_KARGO_TAKIP, self::KARGO_TAKIP_TURKIYE );
 
-	const INTENSE_KARGO_TAKIP_ORDER_STATUS = 'wc-shipping-progress';
-	const KARGO_TAKIP_TURKIYE_ORDER_STATUS = 'wc-kargo-verildi';
+	const INTENSE_KARGO_TAKIP_ORDER_STATUS          = 'wc-shipping-progress';
+	const INTENSE_KARGO_TAKIP_COURIER_META_KEY      = 'shipping_company';
+	const INTENSE_KARGO_TAKIP_TRACKING_NUM_META_KEY = 'shipping_number';
+	const INTENSE_KARGO_TAKIP_TRACKING_URL_META_KEY = 'in_kargotakip_tracking_url';
+	const KARGO_TAKIP_TURKIYE_ORDER_STATUS          = 'wc-kargo-verildi';
+	const KARGO_TAKIP_TURKIYE_COURIER_META_KEY      = 'tracking_company';
+	const KARGO_TAKIP_TURKIYE_TRACKING_NUM_META_KEY = 'tracking_code';
 
 	/**
 	 * Constructor
 	 */
 	public function __construct() {
-		if ( 'yes' !== get_option( Settings::OPT_RECOG_DATA ) ) {
+		$recog_data_option = get_option( Settings::OPT_RECOG_DATA ); // returns false if option is not set.
+		if ( 'no' === $recog_data_option || ( false === $recog_data_option && ! self::should_enable_recognizing() ) ) {
 			return;
 		}
 
@@ -198,15 +207,15 @@ class Third_Party_Data_Support {
 
 		$plugin_data = array(
 			self::INTENSE_KARGO_TAKIP => array(
-				'get_courier_id'    => 'shipping_company',
-				'get_courier_title' => 'shipping_company',
-				'get_tracking_num'  => 'shipping_number',
-				'get_tracking_url'  => 'in_kargotakip_tracking_url',
+				'get_courier_id'    => self::INTENSE_KARGO_TAKIP_COURIER_META_KEY,
+				'get_courier_title' => self::INTENSE_KARGO_TAKIP_COURIER_META_KEY,
+				'get_tracking_num'  => self::INTENSE_KARGO_TAKIP_TRACKING_NUM_META_KEY,
+				'get_tracking_url'  => self::INTENSE_KARGO_TAKIP_TRACKING_URL_META_KEY,
 			),
 			self::KARGO_TAKIP_TURKIYE => array(
-				'get_courier_id'    => 'tracking_company',
-				'get_courier_title' => 'tracking_company',
-				'get_tracking_num'  => 'tracking_code',
+				'get_courier_id'    => self::KARGO_TAKIP_TURKIYE_COURIER_META_KEY,
+				'get_courier_title' => self::KARGO_TAKIP_TURKIYE_COURIER_META_KEY,
+				'get_tracking_num'  => self::KARGO_TAKIP_TURKIYE_TRACKING_NUM_META_KEY,
 			),
 		);
 
@@ -279,5 +288,41 @@ class Third_Party_Data_Support {
 	 */
 	private static function get_current_filter() {
 		return str_replace( 'hezarfen_mst_', '', current_filter() );
+	}
+
+	/**
+	 * Scans the database and automatically enables recognizing if necessary.
+	 * 
+	 * @return bool
+	 */
+	private static function should_enable_recognizing() {
+		global $wpdb;
+
+		$result = get_option( self::OPT_SQL_RESULT_CACHE );
+
+		if ( false === $result ) {
+			$result = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$wpdb->prepare(
+					"SELECT COUNT(DISTINCT post_id) FROM {$wpdb->postmeta} WHERE meta_key IN (%s,%s,%s,%s,%s)",
+					array(
+						self::INTENSE_KARGO_TAKIP_COURIER_META_KEY,
+						self::INTENSE_KARGO_TAKIP_TRACKING_NUM_META_KEY,
+						self::INTENSE_KARGO_TAKIP_TRACKING_URL_META_KEY,
+						self::KARGO_TAKIP_TURKIYE_COURIER_META_KEY,
+						self::KARGO_TAKIP_TURKIYE_TRACKING_NUM_META_KEY,
+					)
+				)
+			);
+
+			update_option( self::OPT_SQL_RESULT_CACHE, $result );
+		}
+
+		if ( $result > self::AUTO_ENABLE_THRESHOLD ) {
+			update_option( Settings::OPT_RECOGNITION_TYPE, Settings::RECOG_TYPE_SUPPORTED_PLUGINS );
+			update_option( Settings::OPT_RECOG_DATA, 'yes' );
+			return true;
+		}
+
+		return false;
 	}
 }
