@@ -195,17 +195,17 @@ class Settings {
 				),
 				array(
 					'type'        => 'text',
-					'title'       => __( 'Courier company post meta', 'hezarfen-for-woocommerce' ),
+					'title'       => __( 'Courier company post meta key', 'hezarfen-for-woocommerce' ),
 					'id'          => self::OPT_COURIER_CUSTOM_META,
 					'class'       => 'recognition custom-meta',
-					'placeholder' => __( 'Enter post meta for courier company', 'hezarfen-for-woocommerce' ),
+					'placeholder' => __( 'Enter post meta key for courier company', 'hezarfen-for-woocommerce' ),
 				),
 				array(
 					'type'        => 'text',
-					'title'       => __( 'Tracking number post meta', 'hezarfen-for-woocommerce' ),
+					'title'       => __( 'Tracking number post meta key', 'hezarfen-for-woocommerce' ),
 					'id'          => self::OPT_TRACKING_NUM_CUSTOM_META,
 					'class'       => 'recognition custom-meta',
-					'placeholder' => __( 'Enter post meta for tracking number', 'hezarfen-for-woocommerce' ),
+					'placeholder' => __( 'Enter post meta key for tracking number', 'hezarfen-for-woocommerce' ),
 				),
 				array(
 					'type' => 'sectionend',
