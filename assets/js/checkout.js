@@ -117,7 +117,7 @@ jQuery( function( $ ) {
         $('#' + type + '_city')
             .append($("<option></option>")
                 .attr("value", "")
-                .text("Lütfen seçiniz"));
+                .text(wc_hezarfen_ajax_object.select_option_text));
 
         // get selected data
         var selected = e.params.data;
@@ -151,7 +151,7 @@ jQuery( function( $ ) {
         $('#' + type + '_address_1')
             .append($("<option></option>")
                 .attr("value", "")
-                .text("Lütfen seçiniz"));
+                .text(wc_hezarfen_ajax_object.select_option_text));
 
         // get selected data
         var selected = e.params.data;
