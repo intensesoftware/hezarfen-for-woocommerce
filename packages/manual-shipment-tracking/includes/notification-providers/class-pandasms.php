@@ -75,11 +75,11 @@ class Pandasms extends \Hezarfen\Inc\Notification_Provider {
 	 */
 	public static function add_new_trigger( $triggers ) {
 		$triggers[ self::TRIGGER_NAME ] = array(
-			'tanim'       => __( 'When order shipped', 'hezarfen-for-woocommerce' ),
+			'tanim'       => 'Sipariş kargoya verildiğinde',
 			'kisa_kodlar' => array(
-				self::COURIER_COMPANY_VAR => __( 'Courier Company', 'hezarfen-for-woocommerce' ),
-				self::TRACKING_NUM_VAR    => __( 'Tracking Number', 'hezarfen-for-woocommerce' ),
-				self::TRACKING_URL_VAR    => __( 'Tracking URL', 'hezarfen-for-woocommerce' ),
+				self::COURIER_COMPANY_VAR => 'Kargo Firması',
+				self::TRACKING_NUM_VAR    => 'Kargo Takip No',
+				self::TRACKING_URL_VAR    => 'Kargo Takip Linki',
 			),
 			'saglayici'   => 'Hezarfen',
 		);
