@@ -46,7 +46,7 @@ class Admin_Orders {
 	 * @return void
 	 */
 	public function order_details( $order ) {
-		$order_id = $order->get_id();
+		$order_id        = $order->get_id();
 		$courier_company = Helper::get_courier_class( $order_id );
 		$tracking_num    = Helper::get_tracking_num( $order_id );
 		$tracking_url    = Helper::get_tracking_url( $order_id );
