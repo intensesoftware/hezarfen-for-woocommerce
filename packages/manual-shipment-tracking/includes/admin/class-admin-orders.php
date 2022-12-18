@@ -13,6 +13,9 @@ defined( 'ABSPATH' ) || exit;
  * Adds new features related to orders in the admin panel.
  */
 class Admin_Orders {
+	const COURIER_HTML_NAME  = 'courier_company';
+	const TRACKING_HTML_NAME = 'tracking_number';
+
 	/**
 	 * Constructor
 	 */
@@ -69,7 +72,7 @@ class Admin_Orders {
 			<?php
 				woocommerce_wp_select(
 					array(
-						'id'            => 'courier_company',
+						'id'            => self::COURIER_HTML_NAME,
 						'label'         => __( 'Courier Company', 'hezarfen-for-woocommerce' ) . ':',
 						'value'         => $courier_company::$id ? $courier_company::$id : Helper::get_default_courier_id(),
 						'options'       => Helper::courier_company_options(),
@@ -79,7 +82,7 @@ class Admin_Orders {
 
 				woocommerce_wp_text_input(
 					array(
-						'id'            => 'tracking_number',
+						'id'            => self::TRACKING_HTML_NAME,
 						'label'         => __( 'Tracking Number', 'hezarfen-for-woocommerce' ) . ':',
 						'value'         => $tracking_num,
 						'wrapper_class' => 'form-field-wide',
@@ -102,8 +105,8 @@ class Admin_Orders {
 		$order            = new \WC_Order( $order_id );
 		$old_courier      = Helper::get_courier_class( $order_id );
 		$old_tracking_num = Helper::get_tracking_num( $order_id );
-		$new_courier_id   = ! empty( $_POST['courier_company'] ) ? sanitize_text_field( $_POST['courier_company'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$new_tracking_num = ! empty( $_POST['tracking_number'] ) ? sanitize_text_field( $_POST['tracking_number'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$new_courier_id   = ! empty( $_POST[ self::COURIER_HTML_NAME ] ) ? sanitize_text_field( $_POST[ self::COURIER_HTML_NAME ] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$new_tracking_num = ! empty( $_POST[ self::TRACKING_HTML_NAME ] ) ? sanitize_text_field( $_POST[ self::TRACKING_HTML_NAME ] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		if ( ( $new_courier_id !== $old_courier::$id ) || ( $new_tracking_num !== $old_tracking_num ) ) {
 			$new_courier = Helper::get_courier_class( $new_courier_id );
