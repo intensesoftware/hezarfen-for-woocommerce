@@ -49,44 +49,46 @@ class Admin_Orders {
 		$order_id = $order->get_id();
 		?>
 		<br class="clear" />
-		<h4><?php esc_html_e( 'Cargo Informations', 'hezarfen-for-woocommerce' ); ?> <a href="#" class="edit_address"><?php esc_html_e( 'Edit', 'hezarfen-for-woocommerce' ); ?></a></h4>
-		<?php
-		$courier_company = Helper::get_courier_class( $order_id );
-		$tracking_num    = Helper::get_tracking_num( $order_id );
-		$tracking_url    = Helper::get_tracking_url( $order_id );
-		?>
-		<div class="address">
-			<p><strong><?php esc_html_e( 'Courier Company', 'hezarfen-for-woocommerce' ); ?>:</strong> <?php echo esc_html( $courier_company::get_title( $order_id ) ); ?></p>
-			<p>
-				<strong><?php esc_html_e( 'Tracking Number', 'hezarfen-for-woocommerce' ); ?>:</strong>
-				<?php if ( $tracking_url ) : ?>
-					<a href="<?php echo esc_url( $tracking_url ); ?>" target="_blank"><?php echo esc_html( $tracking_num ); ?></a>
-				<?php else : ?>
-					<?php echo esc_html( $tracking_num ); ?>
-				<?php endif; ?>
-			</p>
-		</div>
-		<div class="edit_address">
-		<?php
-			woocommerce_wp_select(
-				array(
-					'id'            => 'courier_company',
-					'label'         => __( 'Courier Company', 'hezarfen-for-woocommerce' ) . ':',
-					'value'         => $courier_company::$id ? $courier_company::$id : Helper::get_default_courier_id(),
-					'options'       => Helper::courier_company_options(),
-					'wrapper_class' => 'form-field-wide',
-				)
-			);
+		<div class="order_data_column">
+			<h4><?php esc_html_e( 'Cargo Informations', 'hezarfen-for-woocommerce' ); ?> <a href="#" class="edit_address"><?php esc_html_e( 'Edit', 'hezarfen-for-woocommerce' ); ?></a></h4>
+			<?php
+			$courier_company = Helper::get_courier_class( $order_id );
+			$tracking_num    = Helper::get_tracking_num( $order_id );
+			$tracking_url    = Helper::get_tracking_url( $order_id );
+			?>
+			<div class="address">
+				<p><strong><?php esc_html_e( 'Courier Company', 'hezarfen-for-woocommerce' ); ?>:</strong> <?php echo esc_html( $courier_company::get_title( $order_id ) ); ?></p>
+				<p>
+					<strong><?php esc_html_e( 'Tracking Number', 'hezarfen-for-woocommerce' ); ?>:</strong>
+					<?php if ( $tracking_url ) : ?>
+						<a href="<?php echo esc_url( $tracking_url ); ?>" target="_blank"><?php echo esc_html( $tracking_num ); ?></a>
+					<?php else : ?>
+						<?php echo esc_html( $tracking_num ); ?>
+					<?php endif; ?>
+				</p>
+			</div>
+			<div class="edit_address">
+			<?php
+				woocommerce_wp_select(
+					array(
+						'id'            => 'courier_company',
+						'label'         => __( 'Courier Company', 'hezarfen-for-woocommerce' ) . ':',
+						'value'         => $courier_company::$id ? $courier_company::$id : Helper::get_default_courier_id(),
+						'options'       => Helper::courier_company_options(),
+						'wrapper_class' => 'form-field-wide',
+					)
+				);
 
-			woocommerce_wp_text_input(
-				array(
-					'id'            => 'tracking_number',
-					'label'         => __( 'Tracking Number', 'hezarfen-for-woocommerce' ) . ':',
-					'value'         => $tracking_num,
-					'wrapper_class' => 'form-field-wide',
-				)
-			);
-		?>
+				woocommerce_wp_text_input(
+					array(
+						'id'            => 'tracking_number',
+						'label'         => __( 'Tracking Number', 'hezarfen-for-woocommerce' ) . ':',
+						'value'         => $tracking_num,
+						'wrapper_class' => 'form-field-wide',
+					)
+				);
+			?>
+			</div>
 		</div>
 		<?php
 	}
