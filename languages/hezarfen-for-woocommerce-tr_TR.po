@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-14 17:11+0000\n"
-"PO-Revision-Date: 2022-12-18 08:06+0000\n"
+"PO-Revision-Date: 2022-12-18 08:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: Türkçe\n"
 "Language: tr_TR\n"
@@ -217,10 +217,10 @@ msgid "hepsiJET"
 msgstr "hepsiJET"
 
 #. Description of the plugin
-msgid ""
+msgid "Hezarfen aims to make the Woocommerce plugin more usable in Turkey."
+msgstr ""
 "Hezarfen, WooCommerce eklentisini Türkiye için daha kullanılabilir kılmayı "
 "amaçlar."
-msgstr "Hezarfen aims to make the Woocommerce plugin more usable in Turkey."
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:206
 msgid "Hide postcode fields?"
