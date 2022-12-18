@@ -9,14 +9,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-02T11:00:29+01:00\n"
+"POT-Creation-Date: 2022-12-18T09:03:58+01:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: hezarfen-for-woocommerce\n"
-
-#. Plugin Name of the plugin
-msgid "Hezarfen For Woocommerce"
-msgstr ""
 
 #. Description of the plugin
 msgid "Hezarfen, WooCommerce eklentisini Türkiye için daha kullanılabilir kılmayı amaçlar."
@@ -26,19 +22,15 @@ msgstr ""
 msgid "Intense Yazılım Ltd."
 msgstr ""
 
-#. Author URI of the plugin
-msgid "http://intense.com.tr"
-msgstr ""
-
 #: includes/admin/order/OrderDetails.php:61
 #: includes/admin/order/OrderDetails.php:73
-#: includes/Checkout.php:392
+#: includes/Checkout.php:394
 msgid "Personal"
 msgstr ""
 
 #: includes/admin/order/OrderDetails.php:63
 #: includes/admin/order/OrderDetails.php:74
-#: includes/Checkout.php:393
+#: includes/Checkout.php:395
 msgid "Company"
 msgstr ""
 
@@ -47,183 +39,193 @@ msgid "Invoice type"
 msgstr ""
 
 #: includes/admin/order/OrderDetails.php:81
-#: includes/Checkout.php:402
+#: includes/Checkout.php:404
 msgid "T.C. Identity Number"
 msgstr ""
 
 #: includes/admin/order/OrderDetails.php:90
-#: includes/Checkout.php:422
+#: includes/Checkout.php:424
 msgid "Tax Number"
 msgstr ""
 
 #: includes/admin/order/OrderDetails.php:95
-#: includes/Checkout.php:431
+#: includes/Checkout.php:433
 msgid "TAX Office"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:49
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:48
 msgid "General"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:50
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:49
 msgid "Encryption"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:51
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:50
 msgid "Checkout Page Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:56
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:55
 msgid "Checkout Tax Fields"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:77
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:76
 msgid "Checkout Tax Fields Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:82
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:81
 msgid "You can update the checkout TAX fields. Note: T.C. number field requires encryption feature. If you do not activate the encryption feature, T.C. number field does not appear on the checkout."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:90
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:89
 msgid "Show T.C. Identity Field on checkout page "
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:95
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:94
 msgid "T.C. Identity Field optionally shows on checkout field when invoice type selected as person. (T.C. field requires encryption. If encryption is not enabled, this field is not displayed.)"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:105
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:104
 msgid "Checkout T.C. Identity Number Fields Required Statuses"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:109
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:108
 msgid "Is T.C. Identity Number field required?"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:141
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:142
 msgid "Encryption Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:146
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:147
 msgid "If the T.C. Identity Field is active, an encryption key must be generated. The following encryption key generated will be lost upon saving the form. Please back up the generated encryption key to a secure area, then paste it anywhere in the wp-config.php file. In case of deletion of the hezarfen-encryption-key line from wp-config.php, retrospectively, the orders will be sent to T.C. no values will become unreadable."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:153
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:154
 msgid "Encryption Key"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:163
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:164
 msgid "Back up the phrase in the box to a safe area, then place it in wp-config.php file."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:169
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:170
 msgid "Encryption Key Confirmation"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:174
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:175
 msgid "I backed up the key to a secure area and placed it in the wp-config file. In case the encryption key value is deleted from the wp-config.php file, all past orders will be transferred to T.C. I know I cannot access ID data."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:193
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:194
 msgid "Checkout Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:198
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:199
 msgid "You can set general checkout settings."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:205
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:206
 msgid "Hide postcode fields?"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:216
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:217
 msgid "Auto sort fields in checkout form?"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:236
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:237
 msgid "General Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:241
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:242
 msgid "You can edit the general settings from this page."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:248
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:249
 msgid "Show hezarfen checkout tax fields?"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:10
+#: includes/admin/settings/views/encryption.php:17
 msgid "Encryption Key Health"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:17
+#: includes/admin/settings/views/encryption.php:24
 msgid "Is the encryption key genereated and placed the wp-config.php?"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:25
+#: includes/admin/settings/views/encryption.php:32
 msgid "It checks encryption key whetever placed to the wp-config.php"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:40
-#: includes/admin/settings/views/encryption.php:73
+#: includes/admin/settings/views/encryption.php:47
+#: includes/admin/settings/views/encryption.php:80
 msgid "Yes"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:41
-#: includes/admin/settings/views/encryption.php:74
+#: includes/admin/settings/views/encryption.php:48
+#: includes/admin/settings/views/encryption.php:81
 msgid "No"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:50
+#: includes/admin/settings/views/encryption.php:57
 msgid "Key comparison success?"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:58
+#: includes/admin/settings/views/encryption.php:65
 msgid "Checks if the key created when the plugin was first installed is still the same key."
 msgstr ""
 
-#: includes/Autoload.php:181
-#: includes/Checkout.php:492
-#: includes/Checkout.php:575
+#: includes/Autoload.php:173
+#: includes/Checkout.php:494
+#: includes/Checkout.php:577
 msgid "Select an option"
 msgstr ""
 
-#: includes/Autoload.php:249
-msgid "<strong>Hezarfen for WooCommerce</strong> eklentisinin sağıklı çalışabilmesi için <strong>Intense Türkiye İl İlçe Eklentisi For WooCommerce</strong> eklentisini siliniz. <strong>Hezarfen</strong> eklentisi zaten bünyesinde İl, ilçe ve mahalle verilerini barındırmaktadır."
+#: includes/Autoload.php:241
+msgid "In order to <strong>Hezarfen for WooCommerce</strong> plugin work, please remove the <strong>Intense Türkiye İl İlçe Eklentisi For WooCommerce</strong> plugin. The <strong>Hezarfen</strong> plugin already has province, district and neighborhood data in it."
 msgstr ""
 
 #: includes/Checkout.php:164
-#: includes/Checkout.php:525
+#: includes/Checkout.php:527
 msgid "Town / City"
 msgstr ""
 
 #: includes/Checkout.php:168
-#: includes/Checkout.php:536
+#: includes/Checkout.php:538
 msgid "Neighborhood"
 msgstr ""
 
-#: includes/Checkout.php:387
+#: includes/Checkout.php:182
+#: includes/Checkout.php:185
+msgid "Your Address"
+msgstr ""
+
+#: includes/Checkout.php:183
+#: includes/Checkout.php:186
+msgid "Enter street, apartment and apartment no"
+msgstr ""
+
+#: includes/Checkout.php:389
 msgid "Invoice Type"
 msgstr ""
 
-#: includes/Checkout.php:401
+#: includes/Checkout.php:403
 msgid "Enter T.C. Identity Number"
 msgstr ""
 
-#: includes/Checkout.php:414
+#: includes/Checkout.php:416
 msgid "Title"
 msgstr ""
 
-#: includes/Checkout.php:415
+#: includes/Checkout.php:417
 msgid "Enter invoice title"
 msgstr ""
 
-#: includes/Checkout.php:423
+#: includes/Checkout.php:425
 msgid "Enter tax number"
 msgstr ""
 
-#: includes/Checkout.php:432
+#: includes/Checkout.php:434
 msgid "Enter tax office"
 msgstr ""
 
@@ -232,43 +234,318 @@ msgstr ""
 msgid "%s plugin has a new version available. In order to use the plugin, you must update it."
 msgstr ""
 
-#: packages/manual-shipment-tracking/admin/class-settings.php:47
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:52
+msgid "Cargo Informations"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:52
+msgid "Edit"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:59
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:74
+#: packages/manual-shipment-tracking/includes/class-my-account.php:82
+#: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:32
+msgid "Courier Company"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:61
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:84
+#: packages/manual-shipment-tracking/includes/class-my-account.php:83
+#: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:35
+msgid "Tracking Number"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:60
+msgid "Enable Manual Shipment Tracking feature"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:84
 msgid "Manual Shipment Tracking"
 msgstr ""
 
-#: packages/manual-shipment-tracking/admin/class-settings.php:64
-msgid "Manual Shipment Tracking Settings"
+#. translators: %s SMS notification provider
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:107
+msgid "In order to %1$s integration work, the %2$s plugin must be activated."
 msgstr ""
 
-#: packages/manual-shipment-tracking/admin/class-settings.php:68
-msgid "Shipment Notification Email Extra Recipients"
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:112
+msgid "In order to NetGSM integration work, the \"send SMS to the customer when order status changed\" option must be activated from the NetGSM plugin settings."
 msgstr ""
 
-#: packages/manual-shipment-tracking/admin/class-settings.php:69
-msgid "Enter BCC"
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:122
+msgid "Manual Shipment Tracking General Settings"
 msgstr ""
 
-#: packages/manual-shipment-tracking/admin/class-settings.php:74
-msgid "Enter CC"
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:126
+msgid "Default courier company"
 msgstr ""
 
-#: packages/manual-shipment-tracking/admin/class-settings.php:79
-msgid "If you want to send the shipment notification email to additional recipients, type the emails separated with comma."
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:132
+msgid "Show Shipment Tracking column on My Account > Orders page"
 msgstr ""
 
-#: packages/manual-shipment-tracking/class-manual-shipment-tracking.php:66
-#: packages/manual-shipment-tracking/class-manual-shipment-tracking.php:86
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:141
+msgid "SMS Notification Settings"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:145
+msgid "Enable SMS notification when order shipped"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:151
+msgid "Notification Provider"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:159
+msgid "NetGSM SMS content"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:162
+msgid "Enter SMS content."
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:170
+msgid "Advanced Settings"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:174
+msgid "Recognize third party plugins' data"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:180
+msgid "Recognition type"
+msgstr ""
+
+#. translators: %s Supported plugins.
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:185
+msgid "Recognize supported plugins: (%s)"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:186
+msgid "Recognize custom post meta data"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:191
+msgid "Order status ID (optional)"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:194
+msgid "Enter order status id. E.g: wc-shipped"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:198
+msgid "Courier company post meta key"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:201
+msgid "Enter post meta key for courier company"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:205
+msgid "Tracking number post meta key"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:208
+msgid "Enter post meta key for tracking number"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:244
+msgid "Available Variables"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/class-helper.php:57
+msgid "Please choose a courier company"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:123
 msgctxt "WooCommerce Order status"
-msgid "Kargoya Verildi"
+msgid "Shipped"
 msgstr ""
 
 #. translators: %s: number of orders
-#: packages/manual-shipment-tracking/class-manual-shipment-tracking.php:72
-msgid "Kargoya Verildi (%s)"
-msgid_plural "Kargoya Verildi (%s)"
+#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:134
+msgid "Shipped (%s)"
+msgid_plural "Shipped (%s)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: packages/manual-shipment-tracking/class-manual-shipment-tracking.php:112
-msgid "Enable Manual Shipment Tracking feature"
+#: packages/manual-shipment-tracking/includes/class-my-account.php:42
+#: packages/manual-shipment-tracking/includes/class-my-account.php:80
+msgid "Tracking Information"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/class-my-account.php:86
+#: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:45
+msgid "Click here to find out where your cargo is."
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/class-my-account.php:91
+msgid "Your order hasn't been shipped yet."
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:158
+msgctxt "WooCommerce Order status"
+msgid "Shipped (Intense Kargo Takip Plugin)"
+msgstr ""
+
+#. translators: %s: number of orders
+#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:160
+msgid "Shipped (Intense Kargo Takip Plugin) (%s)"
+msgid_plural "Shipped (Intense Kargo Takip Plugin) (%s)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:164
+msgctxt "WooCommerce Order status"
+msgid "Shipped (Kargo Takip Turkiye Plugin)"
+msgstr ""
+
+#. translators: %s: number of orders
+#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:166
+msgid "Shipped (Kargo Takip Turkiye Plugin) (%s)"
+msgid_plural "Shipped (Kargo Takip Turkiye Plugin) (%s)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:170
+msgctxt "WooCommerce Order status"
+msgid "Shipped (Custom Status)"
+msgstr ""
+
+#. translators: %s: number of orders
+#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:172
+msgid "Shipped (Custom Status) (%s)"
+msgid_plural "Shipped (Custom Status) (%s)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-aras.php:31
+msgid "Aras Kargo"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-birgunde.php:31
+msgid "Birgünde Kargo"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-brinks.php:31
+msgid "Brinks Kargo"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-cdek.php:31
+msgid "CDEK"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-dhl.php:31
+msgid "DHL"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-fedex.php:31
+msgid "FedEx"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-gelal.php:31
+msgid "Gelal"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet.php:31
+msgid "hepsiJET"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-horoz-lojistik.php:31
+msgid "Horoz Lojistik"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-jetizz.php:31
+msgid "Jetizz"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-kargo-turk.php:31
+msgid "Kargo Türk"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-kargoist.php:31
+msgid "Kargoist"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-kolay-gelsin.php:31
+msgid "Kolay Gelsin"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-kurye.php:31
+msgid "Kurye"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-mng.php:31
+msgid "MNG Kargo"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-packupp.php:31
+msgid "PackUpp"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-ptt.php:31
+msgid "PTT Kargo"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-scotty.php:31
+msgid "Scotty"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-sendeo.php:31
+msgid "Sendeo Kargo"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-surat.php:31
+msgid "Sürat Kargo"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-tnt.php:31
+msgid "TNT"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-trendyol-express.php:31
+msgid "Trendyol Express"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-ups.php:31
+msgid "UPS Kargo"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-yurtici.php:31
+msgid "Yurtiçi Kargo"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:23
+msgid "Order Shipped"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:24
+msgid "Order Shipped emails are sent when an order have been shipped."
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:44
+msgid "Your Order Has Been Shipped"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:135
+msgid "BCC"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:137
+#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:146
+msgid "If you want to send the shipment notification email to additional recipients, type the emails separated with comma."
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:144
+msgid "CC"
+msgstr ""
+
+#. translators: %s billing email
+#: packages/manual-shipment-tracking/includes/email/class-email.php:56
+msgid "Tracking information sent to %s"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:29
+msgid "Your order has been shipped. Tracking information is below:"
 msgstr ""
