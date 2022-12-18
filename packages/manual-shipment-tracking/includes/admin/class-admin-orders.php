@@ -51,7 +51,7 @@ class Admin_Orders {
 		$tracking_num    = Helper::get_tracking_num( $order_id );
 		$tracking_url    = Helper::get_tracking_url( $order_id );
 		?>
-		<br class="clear" />
+		<br class="clear">
 		<div class="order_data_column">
 			<h4><?php esc_html_e( 'Cargo Informations', 'hezarfen-for-woocommerce' ); ?> <a href="#" class="edit_address"><?php esc_html_e( 'Edit', 'hezarfen-for-woocommerce' ); ?></a></h4>
 			<div class="address">
