@@ -14,80 +14,14 @@ defined( 'ABSPATH' ) || exit();
  */
 class Autoload {
 	/**
-	 * Addons info
-	 * 
-	 * @var array
-	 */
-	private $addons;
-
-	/**
-	 * Notices related to addons.
-	 * 
-	 * @var array
-	 */
-	private $addon_notices;
-
-	/**
 	 * Constructor
 	 *
 	 * @return void
 	 */
 	public function __construct() {
-		$this->addons = array(
-			array(
-				'name'        => 'Mahalle Bazlı Gönderim Bedeli for Hezarfen',
-				'short_name'  => 'MBGB',
-				'version'     => function () {
-					return defined( 'WC_HEZARFEN_MBGB_VERSION' ) ? WC_HEZARFEN_MBGB_VERSION : null;
-				},
-				'min_version' => WC_HEZARFEN_MIN_MBGB_VERSION,
-				'activated'   => function () {
-					return defined( 'WC_HEZARFEN_MBGB_VERSION' );
-				},
-			),
-		);
-
 		$this->load_plugin_files();
 
 		$this->load_assets();
-
-		register_activation_hook(
-			WC_HEZARFEN_FILE,
-			array(
-				'Hezarfen_Install',
-				'install',
-			)
-		);
-
-		add_action(
-			'plugins_loaded',
-			array(
-				$this,
-				'check_addons_and_show_notices',
-			)
-		);
-
-		add_filter(
-			'woocommerce_get_settings_pages',
-			array(
-				$this,
-				'add_hezarfen_setting_page',
-			)
-		);
-	}
-
-	/**
-	 *
-	 * Load Hezarfen Settings Page
-	 *
-	 * @param array $settings the current WC setting page paths.
-	 * @return array
-	 */
-	public function add_hezarfen_setting_page( $settings ) {
-		$settings[] = include_once WC_HEZARFEN_UYGULAMA_YOLU .
-			'includes/admin/settings/class-hezarfen-settings-hezarfen.php';
-
-		return $settings;
 	}
 	
 	/**
@@ -197,6 +131,8 @@ class Autoload {
 	 * @return void
 	 */
 	public function load_plugin_files() {
+		require_once 'class-hezarfen-wc-helper.php';
+		require_once 'class-hezarfen.php';
 		require_once 'Data/Abstracts/Abstract_Encryption.php';
 		require_once 'Data/ServiceCredentialEncryption.php';
 		require_once 'Data/PostMetaEncryption.php';
@@ -205,48 +141,10 @@ class Autoload {
 		require_once 'Ajax.php';
 		require_once 'class-mahalle-local.php';
 		require_once 'Hezarfen_Install.php';
-		require_once 'class-hezarfen-wc-helper.php';
 		require_once 'class-compatibility.php';
 
 		if ( is_admin() ) {
 			require_once 'admin/order/OrderDetails.php';
-		}
-	}
-
-	/**
-	 * Checks addons and shows notices if necessary.
-	 * Defines constants to disable outdated addons.
-	 * 
-	 * @return void
-	 */
-	public function check_addons_and_show_notices() {
-		$this->addon_notices = Helper::check_addons( $this->addons );
-		if ( $this->addon_notices ) {
-			foreach ( $this->addon_notices as $notice ) {
-				define( 'WC_HEZARFEN_OUTDATED_ADDON_' . $notice['addon_short_name'], true );
-			}
-
-			add_action(
-				'admin_notices',
-				function () {
-					Helper::show_admin_notices( $this->addon_notices );
-				}
-			);
-		}
-
-		// Check Intense Türkiye İl İlçe Eklentisi For WooCommerce plugin.
-		if ( defined( 'INTENSE_IL_ILCE_PLUGIN_PATH' ) ) {
-			add_action(
-				'admin_notices',
-				function () {
-					$notice = array(
-						'message' => __( '<strong>Hezarfen for WooCommerce</strong> eklentisinin sağıklı çalışabilmesi için <strong>Intense Türkiye İl İlçe Eklentisi For WooCommerce</strong> eklentisini siliniz. <strong>Hezarfen</strong> eklentisi zaten bünyesinde İl, ilçe ve mahalle verilerini barındırmaktadır.', 'hezarfen-for-woocommerce' ),
-						'type'    => 'error',
-					);
-
-					Helper::show_admin_notices( array( $notice ), true );
-				}
-			);
 		}
 	}
 }

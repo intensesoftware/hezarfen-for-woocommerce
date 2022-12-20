@@ -41,7 +41,7 @@ class hezarfen_mahalle_helper {
 		// empty district and neighborhood select boxes
 		thisHelper.get_city_field().empty();
 		thisHelper.get_nbrhood_field().empty();
-		if (this.page === 'edit-address') {
+		if (thisHelper.page === 'edit-address') {
 			thisHelper.get_city_field().trigger('change');
 			thisHelper.get_nbrhood_field().trigger('change');
 		}
@@ -73,7 +73,7 @@ class hezarfen_mahalle_helper {
 
 		// empty neighborhood select box
 		thisHelper.get_nbrhood_field().empty();
-		if (this.page === 'edit-address') {
+		if (thisHelper.page === 'edit-address') {
 			thisHelper.get_nbrhood_field().trigger('change');
 		}
 
