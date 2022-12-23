@@ -69,11 +69,10 @@ class Admin_Orders {
 			<?php
 			woocommerce_wp_select(
 				array(
-					'id'            => self::COURIER_HTML_NAME,
-					'label'         => __( 'Courier Company', 'hezarfen-for-woocommerce' ),
-					'value'         => $courier_company::$id ? $courier_company::$id : Helper::get_default_courier_id(),
-					'options'       => Helper::courier_company_options(),
-					'wrapper_class' => 'form-field-wide',
+					'id'      => self::COURIER_HTML_NAME,
+					'label'   => __( 'Courier Company', 'hezarfen-for-woocommerce' ),
+					'value'   => $courier_company::$id ? $courier_company::$id : Helper::get_default_courier_id(),
+					'options' => Helper::courier_company_options(),
 				)
 			);
 			?>
