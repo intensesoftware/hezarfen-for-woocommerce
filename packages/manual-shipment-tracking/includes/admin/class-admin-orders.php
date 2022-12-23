@@ -114,7 +114,12 @@ class Admin_Orders {
 			update_post_meta( $order_id, Manual_Shipment_Tracking::COURIER_COMPANY_ID_KEY, $new_courier_id );
 			update_post_meta( $order_id, Manual_Shipment_Tracking::COURIER_COMPANY_TITLE_KEY, $new_courier::get_title() );
 			update_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_NUM_KEY, $new_tracking_num );
-			update_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_URL_KEY, $new_courier::create_tracking_url( $new_tracking_num ) );
+
+			if ( $new_tracking_num ) {
+				update_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_URL_KEY, $new_courier::create_tracking_url( $new_tracking_num ) );
+			} else {
+				update_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_URL_KEY, '' );
+			}
 
 			do_action( 'hezarfen_mst_tracking_data_saved', $order, $new_courier_id, $new_tracking_num );
 
