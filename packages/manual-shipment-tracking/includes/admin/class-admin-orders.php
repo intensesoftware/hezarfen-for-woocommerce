@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * Adds new features related to orders in the admin panel.
  */
 class Admin_Orders {
-	const COURIER_HTML_NAME  = 'courier_company';
+	const COURIER_HTML_NAME      = 'courier_company';
 	const TRACKING_NUM_HTML_NAME = 'tracking_number';
 
 	/**
@@ -23,10 +23,71 @@ class Admin_Orders {
 		if ( is_admin() ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 
+			add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_box' ) );
+
 			add_filter( 'woocommerce_reports_order_statuses', array( $this, 'append_order_status_to_reports' ), 20 );
-			add_action( 'woocommerce_admin_order_data_after_order_details', array( $this, 'order_details' ) );
 			add_action( 'woocommerce_process_shop_order_meta', array( $this, 'order_save' ), PHP_INT_MAX - 1 );
 		}
+	}
+
+	/**
+	 * Adds a meta box to the admin order edit page.
+	 * 
+	 * @param string $post_type Post type.
+	 * 
+	 * @return void
+	 */
+	public static function add_meta_box( $post_type ) {
+		if ( 'shop_order' !== $post_type ) {
+			return;
+		}
+
+		add_meta_box(
+			'hezarfen-mst-order-edit-metabox',
+			__( 'Hezarfen', 'hezarfen-for-woocommerce' ),
+			array( __CLASS__, 'render_order_edit_metabox' ),
+			'shop_order',
+			'side',
+			'high'
+		);
+	}
+
+	/**
+	 * Renders the meta box in the admin order edit page.
+	 * 
+	 * @param \WP_Post $post The Post object.
+	 * 
+	 * @return void
+	 */
+	public static function render_order_edit_metabox( $post ) {
+		$order_id        = $post->ID;
+		$courier_company = Helper::get_courier_class( $order_id );
+		$tracking_num    = Helper::get_tracking_num( $order_id );
+		$tracking_url    = Helper::get_tracking_url( $order_id );
+		?>
+		<div class="shipment-info">
+			<?php
+			woocommerce_wp_select(
+				array(
+					'id'            => self::COURIER_HTML_NAME,
+					'label'         => __( 'Courier Company', 'hezarfen-for-woocommerce' ),
+					'value'         => $courier_company::$id ? $courier_company::$id : Helper::get_default_courier_id(),
+					'options'       => Helper::courier_company_options(),
+					'wrapper_class' => 'form-field-wide',
+				)
+			);
+			?>
+			<p class="form-field">
+				<label for="<?php echo esc_attr( self::TRACKING_NUM_HTML_NAME ); ?>">
+					<?php esc_html_e( 'Tracking Number', 'hezarfen-for-woocommerce' ); ?>
+				</label>
+				<?php if ( $tracking_url ) : ?>
+					<a href="<?php echo esc_url( $tracking_url ); ?>" target="_blank"><?php esc_html_e( '(Track Cargo)', 'hezarfen-for-woocommerce' ); ?></a>
+				<?php endif; ?>
+				<input type="text" name="<?php echo esc_attr( self::TRACKING_NUM_HTML_NAME ); ?>" id="<?php echo esc_attr( self::TRACKING_NUM_HTML_NAME ); ?>" value="<?php echo esc_attr( $tracking_num ); ?>" placeholder="<?php esc_attr_e( 'Enter tracking number', 'hezarfen-for-woocommerce' ); ?>">
+			</p>
+		</div>
+		<?php
 	}
 
 	/**
@@ -39,59 +100,6 @@ class Admin_Orders {
 	public function append_order_status_to_reports( $statuses ) {
 		$statuses[] = Manual_Shipment_Tracking::SHIPPED_ORDER_STATUS;
 		return $statuses;
-	}
-
-	/**
-	 * Adds necessary HTML to the admin order details page.
-	 * 
-	 * @param \WC_Order $order Order.
-	 * 
-	 * @return void
-	 */
-	public function order_details( $order ) {
-		$order_id        = $order->get_id();
-		$courier_company = Helper::get_courier_class( $order_id );
-		$tracking_num    = Helper::get_tracking_num( $order_id );
-		$tracking_url    = Helper::get_tracking_url( $order_id );
-		?>
-		<br class="clear">
-		<div class="order_data_column">
-			<h4><?php esc_html_e( 'Cargo Informations', 'hezarfen-for-woocommerce' ); ?> <a href="#" class="edit_address"><?php esc_html_e( 'Edit', 'hezarfen-for-woocommerce' ); ?></a></h4>
-			<div class="address">
-				<p><strong><?php esc_html_e( 'Courier Company', 'hezarfen-for-woocommerce' ); ?>:</strong> <?php echo esc_html( $courier_company::get_title( $order_id ) ); ?></p>
-				<p>
-					<strong><?php esc_html_e( 'Tracking Number', 'hezarfen-for-woocommerce' ); ?>:</strong>
-					<?php if ( $tracking_url ) : ?>
-						<a href="<?php echo esc_url( $tracking_url ); ?>" target="_blank"><?php echo esc_html( $tracking_num ); ?></a>
-					<?php else : ?>
-						<?php echo esc_html( $tracking_num ); ?>
-					<?php endif; ?>
-				</p>
-			</div>
-			<div class="edit_address">
-			<?php
-				woocommerce_wp_select(
-					array(
-						'id'            => self::COURIER_HTML_NAME,
-						'label'         => __( 'Courier Company', 'hezarfen-for-woocommerce' ) . ':',
-						'value'         => $courier_company::$id ? $courier_company::$id : Helper::get_default_courier_id(),
-						'options'       => Helper::courier_company_options(),
-						'wrapper_class' => 'form-field-wide',
-					)
-				);
-
-				woocommerce_wp_text_input(
-					array(
-						'id'            => self::TRACKING_NUM_HTML_NAME,
-						'label'         => __( 'Tracking Number', 'hezarfen-for-woocommerce' ) . ':',
-						'value'         => $tracking_num,
-						'wrapper_class' => 'form-field-wide',
-					)
-				);
-			?>
-			</div>
-		</div>
-		<?php
 	}
 
 	/**
