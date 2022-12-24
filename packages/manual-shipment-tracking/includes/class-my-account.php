@@ -51,17 +51,35 @@ class My_Account {
 	 */
 	public function add_tracking_info_to_column( $order ) {
 		$order_id      = $order->get_id();
-		$courier_title = Helper::get_courier_title( $order_id );
-		$tracking_num  = Helper::get_tracking_num( $order_id );
-		$tracking_url  = Helper::get_tracking_url( $order_id );
+		$shipment_data = Helper::get_all_shipment_data( $order_id );
 
-		if ( $courier_title ) {
-			printf( '<span style="display: block">%s</span>', esc_html( $courier_title ) );
-		}
+		foreach ( $shipment_data as $data ) {
+			$courier_title = Helper::extract_courier_title( $data );
+			$tracking_num  = Helper::extract_tracking_num( $data );
+			$tracking_url  = Helper::extract_tracking_url( $data );
 
-		if ( $tracking_url ) {
-			printf( '<a href="%s" target="_blank">%s</a>', esc_url( $tracking_url ), esc_html( $tracking_num ) );
+			$this->render_tracking_info_in_column( $courier_title, $tracking_num, $tracking_url );
 		}
+	}
+
+	/**
+	 * Renders tracking info HTML in the "Tracking Information" column.
+	 * 
+	 * @param string $courier_title Courier company title.
+	 * @param string $tracking_num Tracking number.
+	 * @param string $tracking_url Tracking URL.
+	 * 
+	 * @return void
+	 */
+	private function render_tracking_info_in_column( $courier_title, $tracking_num, $tracking_url ) {
+		?>
+		<div class="tracking-info">
+			<span style="display: block"><?php echo esc_html( $courier_title ); ?></span>
+			<?php if ( $tracking_url ) : ?>
+				<a href="<?php echo esc_url( $tracking_url ); ?>" target="_blank"><?php echo esc_html( $tracking_num ); ?></a>
+			<?php endif; ?>
+		</div>
+		<?php
 	}
 
 	/**
@@ -72,23 +90,46 @@ class My_Account {
 	 * @return void
 	 */
 	public function add_tracking_info_to_order_details( $order_id ) {
-		$courier_title = Helper::get_courier_title( $order_id );
-		$tracking_num  = Helper::get_tracking_num( $order_id );
-		$tracking_url  = Helper::get_tracking_url( $order_id );
+		$shipment_data = Helper::get_all_shipment_data( $order_id );
 		?>
-		<div class="hezarfen-mst-tracking-info-wrapper">
-			<h2 class="woocommerce-order-details__title"><?php esc_html_e( 'Tracking Information', 'hezarfen-for-woocommerce' ); ?></h2>		
-			<?php if ( ! empty( $courier_title ) || ! empty( $tracking_num ) ) : ?>
-				<h4><?php echo sprintf( '%s: %s', esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ), esc_html( $courier_title ) ); ?></h4>
-				<h4><?php echo sprintf( '%s: %s', esc_html__( 'Tracking Number', 'hezarfen-for-woocommerce' ), esc_html( $tracking_num ) ); ?></h4>
 
-				<?php if ( $tracking_url ) : ?>
-					<h4><a class="hezarfen-mst-tracking-url" href="<?php echo esc_url( $tracking_url ); ?>" target="_blank"><?php esc_html_e( 'Click here to find out where your cargo is.', 'hezarfen-for-woocommerce' ); ?></a></h4>
-					<?php 
-				endif;
-			else : 
+		<div class="hezarfen-mst-tracking-info-wrapper">
+			<h2 class="woocommerce-order-details__title"><?php esc_html_e( 'Tracking Information', 'hezarfen-for-woocommerce' ); ?></h2>
+			<?php
+			if ( $shipment_data ) {
+				foreach ( $shipment_data as $data ) {
+					$courier_title = Helper::extract_courier_title( $data );
+					$tracking_num  = Helper::extract_tracking_num( $data );
+					$tracking_url  = Helper::extract_tracking_url( $data );
+		
+					$this->render_tracking_info_in_order_details( $courier_title, $tracking_num, $tracking_url );
+				}
+			} else {
 				?>
 				<p><?php esc_html_e( "Your order hasn't been shipped yet.", 'hezarfen-for-woocommerce' ); ?></p>
+				<?php
+			}
+			?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Renders tracking info HTML in the customer order details page.
+	 * 
+	 * @param string $courier_title Courier company title.
+	 * @param string $tracking_num Tracking number.
+	 * @param string $tracking_url Tracking URL.
+	 * 
+	 * @return void
+	 */
+	private function render_tracking_info_in_order_details( $courier_title, $tracking_num, $tracking_url ) {
+		?>
+		<div class="tracking-info">
+			<h4><?php echo sprintf( '%s: %s', esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ), esc_html( $courier_title ) ); ?></h4>
+			<h4><?php echo sprintf( '%s: %s', esc_html__( 'Tracking Number', 'hezarfen-for-woocommerce' ), esc_html( $tracking_num ) ); ?></h4>
+			<?php if ( $tracking_url ) : ?>
+				<h4><a class="hezarfen-mst-tracking-url" href="<?php echo esc_url( $tracking_url ); ?>" target="_blank"><?php esc_html_e( 'Click here to find out where your cargo is.', 'hezarfen-for-woocommerce' ); ?></a></h4>
 			<?php endif; ?>
 		</div>
 		<?php
