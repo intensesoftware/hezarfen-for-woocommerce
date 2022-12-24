@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * Adds new features related to orders in the admin panel.
  */
 class Admin_Orders {
+	const DATA_ARRAY_KEY         = 'hezarfen_mst_shipment_data';
 	const COURIER_HTML_NAME      = 'courier_company';
 	const TRACKING_NUM_HTML_NAME = 'tracking_number';
 
@@ -60,16 +61,40 @@ class Admin_Orders {
 	 * @return void
 	 */
 	public static function render_order_edit_metabox( $post ) {
-		$order_id        = $post->ID;
-		$courier_company = Helper::get_courier_class( $order_id );
-		$tracking_num    = Helper::get_tracking_num( $order_id );
-		$tracking_url    = Helper::get_tracking_url( $order_id );
+		$order_id      = $post->ID;
+		$shipment_data = Helper::get_all_shipment_data( $order_id );
+
+		if ( $shipment_data ) {
+			foreach ( $shipment_data as $data ) :
+				$shipment_data_id = Helper::extract_shipment_data_id( $data );
+				$courier_company  = Helper::get_courier_class( Helper::extract_courier_id( $data ) );
+				$tracking_num     = Helper::extract_tracking_num( $data );
+				$tracking_url     = Helper::extract_tracking_url( $data );
+
+				self::render_shipment_form_elements( $shipment_data_id, $courier_company, $tracking_num, $tracking_url );
+			endforeach;
+		} else {
+			self::render_shipment_form_elements();
+		}
+	}
+
+	/**
+	 * Renders the shipment form elements.
+	 * 
+	 * @param int|string $shipment_data_id Shipment data ID.
+	 * @param string     $courier_company Courier company class.
+	 * @param string     $tracking_num Tracking number.
+	 * @param string     $tracking_url Tracking URL.
+	 * 
+	 * @return void
+	 */
+	private static function render_shipment_form_elements( $shipment_data_id = 1, $courier_company = Courier_Empty::class, $tracking_num = '', $tracking_url = '' ) {
 		?>
 		<div class="shipment-info">
 			<?php
 			woocommerce_wp_select(
 				array(
-					'id'      => self::COURIER_HTML_NAME,
+					'id'      => sprintf( '%s[%s][%s]', self::DATA_ARRAY_KEY, $shipment_data_id, self::COURIER_HTML_NAME ),
 					'label'   => __( 'Courier Company', 'hezarfen-for-woocommerce' ),
 					'value'   => $courier_company::$id ? $courier_company::$id : Helper::get_default_courier_id(),
 					'options' => Helper::courier_company_options(),
@@ -83,7 +108,12 @@ class Admin_Orders {
 				<?php if ( $tracking_url ) : ?>
 					<a href="<?php echo esc_url( $tracking_url ); ?>" target="_blank"><?php esc_html_e( '(Track Cargo)', 'hezarfen-for-woocommerce' ); ?></a>
 				<?php endif; ?>
-				<input type="text" name="<?php echo esc_attr( self::TRACKING_NUM_HTML_NAME ); ?>" id="<?php echo esc_attr( self::TRACKING_NUM_HTML_NAME ); ?>" value="<?php echo esc_attr( $tracking_num ); ?>" placeholder="<?php esc_attr_e( 'Enter tracking number', 'hezarfen-for-woocommerce' ); ?>">
+				<input
+					type="text"
+					name="<?php echo esc_attr( sprintf( '%s[%s][%s]', self::DATA_ARRAY_KEY, $shipment_data_id, self::TRACKING_NUM_HTML_NAME ) ); ?>"
+					id="<?php echo esc_attr( self::TRACKING_NUM_HTML_NAME ); ?>"
+					value="<?php echo esc_attr( $tracking_num ); ?>"
+					placeholder="<?php esc_attr_e( 'Enter tracking number', 'hezarfen-for-woocommerce' ); ?>">
 			</p>
 		</div>
 		<?php
@@ -109,37 +139,61 @@ class Admin_Orders {
 	 * @return void
 	 */
 	public function order_save( $order_id ) {
-		$order            = new \WC_Order( $order_id );
-		$old_courier      = Helper::get_courier_class( $order_id );
-		$old_tracking_num = Helper::get_tracking_num( $order_id );
-		$new_courier_id   = ! empty( $_POST[ self::COURIER_HTML_NAME ] ) ? sanitize_text_field( $_POST[ self::COURIER_HTML_NAME ] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$new_tracking_num = ! empty( $_POST[ self::TRACKING_NUM_HTML_NAME ] ) ? sanitize_text_field( $_POST[ self::TRACKING_NUM_HTML_NAME ] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		if ( empty( $_POST[ self::DATA_ARRAY_KEY ] ) ) {
+			return;
+		}
 
-		if ( ( $new_courier_id !== $old_courier::$id ) || ( $new_tracking_num !== $old_tracking_num ) ) {
-			$new_courier = Helper::get_courier_class( $new_courier_id );
+		foreach ( $_POST[ self::DATA_ARRAY_KEY ] as $id => $shipment_data ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$new_courier_id   = ! empty( $shipment_data[ self::COURIER_HTML_NAME ] ) ? sanitize_text_field( $shipment_data[ self::COURIER_HTML_NAME ] ) : '';
+			$new_tracking_num = ! empty( $shipment_data[ self::TRACKING_NUM_HTML_NAME ] ) ? sanitize_text_field( $shipment_data[ self::TRACKING_NUM_HTML_NAME ] ) : '';
 
-			update_post_meta( $order_id, Manual_Shipment_Tracking::COURIER_COMPANY_ID_KEY, $new_courier_id );
-			update_post_meta( $order_id, Manual_Shipment_Tracking::COURIER_COMPANY_TITLE_KEY, $new_courier::get_title() );
-			update_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_NUM_KEY, $new_tracking_num );
-
-			if ( $new_tracking_num ) {
-				update_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_URL_KEY, $new_courier::create_tracking_url( $new_tracking_num ) );
-			} else {
-				update_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_URL_KEY, '' );
+			if ( ! $new_courier_id ) {
+				continue;
 			}
 
-			do_action( 'hezarfen_mst_tracking_data_saved', $order, $new_courier_id, $new_tracking_num );
+			$old_data = Helper::get_shipment_data_by_id( $id, $order_id );
 
-			if ( ( $new_courier_id && $new_tracking_num ) || Courier_Kurye::$id === $new_courier_id ) {
-				$order->update_status( apply_filters( 'hezarfen_mst_new_order_status', Manual_Shipment_Tracking::SHIPPED_ORDER_STATUS, $order, $new_courier_id, $new_tracking_num ) );
+			$new_courier   = Helper::get_courier_class( $new_courier_id );
+			$prepared_data = Helper::prepare_shipment_data_for_db(
+				array(
+					$id,
+					$new_courier_id,
+					$new_courier::get_title(),
+					$new_tracking_num,
+					$new_tracking_num ? $new_courier::create_tracking_url( $new_tracking_num ) : '',
+				)
+			);
 
-				if ( 'yes' === get_option( Settings::OPT_ENABLE_SMS ) ) {
-					Helper::send_notification( $order );
-				}
+			if ( ! $old_data ) {
+				add_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $prepared_data );
+				do_action( 'hezarfen_mst_tracking_data_saved', $order_id, $new_courier_id, $new_tracking_num );
+				continue;
+			}
 
-				do_action( 'hezarfen_mst_order_shipped', $order );
+			if ( $prepared_data === $old_data ) {
+				continue;
+			}
+
+			$result = update_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $prepared_data, $old_data );
+
+			if ( true === $result ) {
+				do_action( 'hezarfen_mst_tracking_data_saved', $order_id, $new_courier_id, $new_tracking_num );
 			}
 		}
+
+		if ( did_action( 'hezarfen_mst_tracking_data_saved' ) ) {
+			$order = new \WC_Order( $order_id );
+			$order->update_status( apply_filters( 'hezarfen_mst_new_order_status', Manual_Shipment_Tracking::SHIPPED_ORDER_STATUS, $order, $new_courier_id, $new_tracking_num ) ); // @phpstan-ignore-line
+
+			if ( 'yes' === get_option( Settings::OPT_ENABLE_SMS ) ) {
+				Helper::send_notification( $order );
+			}
+
+			do_action( 'hezarfen_mst_order_shipped', $order );
+		}
+
+		// phpcs:enable
 	}
 
 	/**
