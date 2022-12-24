@@ -65,14 +65,14 @@ class Admin_Orders {
 		$shipment_data = Helper::get_all_shipment_data( $order_id );
 
 		if ( $shipment_data ) {
-			foreach ( $shipment_data as $data ) :
+			foreach ( $shipment_data as $data ) {
 				$shipment_data_id = Helper::extract_shipment_data_id( $data );
 				$courier_company  = Helper::get_courier_class( Helper::extract_courier_id( $data ) );
 				$tracking_num     = Helper::extract_tracking_num( $data );
 				$tracking_url     = Helper::extract_tracking_url( $data );
 
 				self::render_shipment_form_elements( $shipment_data_id, $courier_company, $tracking_num, $tracking_url );
-			endforeach;
+			}
 		} else {
 			self::render_shipment_form_elements();
 		}
