@@ -129,7 +129,7 @@ class My_Account {
 			<h4><?php echo sprintf( '%s: %s', esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ), esc_html( $courier_title ) ); ?></h4>
 			<h4><?php echo sprintf( '%s: %s', esc_html__( 'Tracking Number', 'hezarfen-for-woocommerce' ), esc_html( $tracking_num ) ); ?></h4>
 			<?php if ( $tracking_url ) : ?>
-				<h4><a class="hezarfen-mst-tracking-url" href="<?php echo esc_url( $tracking_url ); ?>" target="_blank"><?php esc_html_e( 'Click here to find out where your cargo is.', 'hezarfen-for-woocommerce' ); ?></a></h4>
+				<h4><a class="tracking-url" href="<?php echo esc_url( $tracking_url ); ?>" target="_blank"><?php esc_html_e( 'Click here to find out where your cargo is.', 'hezarfen-for-woocommerce' ); ?></a></h4>
 			<?php endif; ?>
 		</div>
 		<?php
