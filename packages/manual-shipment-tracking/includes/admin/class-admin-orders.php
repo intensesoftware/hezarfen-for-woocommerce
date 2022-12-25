@@ -81,13 +81,17 @@ class Admin_Orders {
 	 * @return void
 	 */
 	private static function render_shipment_form_elements( $shipment_data ) {
+		$courier_select_label = __( 'Courier Company', 'hezarfen-for-woocommerce' );
+		if ( Helper::is_custom_courier( $shipment_data->courier_id ) ) {
+			$courier_select_label = sprintf( '%s (%s)', $courier_select_label, $shipment_data->courier_title );
+		}
 		?>
 		<div class="shipment-info">
 			<?php
 			woocommerce_wp_select(
 				array(
 					'id'      => sprintf( '%s[%s][%s]', self::DATA_ARRAY_KEY, $shipment_data->id, self::COURIER_HTML_NAME ),
-					'label'   => __( 'Courier Company', 'hezarfen-for-woocommerce' ),
+					'label'   => $courier_select_label,
 					'value'   => $shipment_data->courier_id ? $shipment_data->courier_id : Helper::get_default_courier_id(),
 					'options' => Helper::courier_company_options(),
 				)
