@@ -166,7 +166,7 @@ class Helper {
 		$parsed_data = array();
 
 		foreach ( $all_data as $data ) {
-			$exploded = explode( self::DB_SHIPMENT_DATA_SEPARATOR, $data );
+			$exploded      = explode( self::DB_SHIPMENT_DATA_SEPARATOR, $data );
 			$parsed_data[] = array(
 				'id'            => $exploded[0] ?? '',
 				'courier_id'    => $exploded[1] ?? '',
