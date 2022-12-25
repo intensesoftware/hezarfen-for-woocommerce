@@ -120,12 +120,21 @@ class Third_Party_Data_Support {
 	 * @return Shipment_Data[]
 	 */
 	public static function get_custom_meta_data( $data, $order_id ) {
+		if ( $data ) {
+			return $data;
+		}
+
+		$courier_title = Courier_Custom::get_title( $order_id );
+		if ( ! $courier_title ) {
+			return array();
+		}
+
 		return array(
 			new Shipment_Data(
 				array(
 					null,
 					Courier_Custom::$id,
-					Courier_Custom::get_title( $order_id ),
+					$courier_title,
 					get_post_meta( $order_id, get_option( Settings::OPT_TRACKING_NUM_CUSTOM_META, self::NONSENSE_STRING ), true ),
 				)
 			),
