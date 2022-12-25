@@ -30,6 +30,8 @@ class Third_Party_Data_Support {
 	const KARGO_TAKIP_TURKIYE_COURIER_META_KEY      = 'tracking_company';
 	const KARGO_TAKIP_TURKIYE_TRACKING_NUM_META_KEY = 'tracking_code';
 
+	const NONSENSE_STRING = 'hezarfen_mst_nonsense_string';
+
 	/**
 	 * Constructor
 	 */
@@ -57,10 +59,7 @@ class Third_Party_Data_Support {
 	public static function intense_kargo_takip_support() {
 		self::register_order_status( self::INTENSE_KARGO_TAKIP );
 
-		add_filter( 'hezarfen_mst_get_courier_id', array( __CLASS__, 'get_intense_kargo_takip_data' ), 10, 2 );
-		add_filter( 'hezarfen_mst_get_courier_title', array( __CLASS__, 'get_intense_kargo_takip_data' ), 10, 2 );
-		add_filter( 'hezarfen_mst_get_tracking_num', array( __CLASS__, 'get_intense_kargo_takip_data' ), 10, 2 );
-		add_filter( 'hezarfen_mst_get_tracking_url', array( __CLASS__, 'get_intense_kargo_takip_data' ), 10, 2 );
+		add_filter( 'hezarfen_mst_get_shipment_data', array( __CLASS__, 'get_intense_kargo_takip_data' ), 10, 2 );
 	}
 
 	/**
@@ -71,10 +70,7 @@ class Third_Party_Data_Support {
 	public static function kargo_takip_turkiye_support() {
 		self::register_order_status( self::KARGO_TAKIP_TURKIYE );
 
-		add_filter( 'hezarfen_mst_get_courier_id', array( __CLASS__, 'get_kargo_takip_turkiye_data' ), 11, 2 );
-		add_filter( 'hezarfen_mst_get_courier_title', array( __CLASS__, 'get_kargo_takip_turkiye_data' ), 11, 2 );
-		add_filter( 'hezarfen_mst_get_tracking_num', array( __CLASS__, 'get_kargo_takip_turkiye_data' ), 11, 2 );
-		add_filter( 'hezarfen_mst_get_tracking_url', array( __CLASS__, 'get_kargo_takip_turkiye_data' ), 11, 2 );
+		add_filter( 'hezarfen_mst_get_shipment_data', array( __CLASS__, 'get_kargo_takip_turkiye_data' ), 11, 2 );
 	}
 
 	/**
@@ -88,59 +84,52 @@ class Third_Party_Data_Support {
 			self::register_order_status( self::CUSTOM, $order_status_id );
 		}
 
-		add_filter( 'hezarfen_mst_get_courier_id', array( __CLASS__, 'get_custom_meta_data' ), 10, 2 );
-		add_filter( 'hezarfen_mst_get_courier_title', array( __CLASS__, 'get_custom_meta_data' ), 10, 2 );
-		add_filter( 'hezarfen_mst_get_tracking_num', array( __CLASS__, 'get_custom_meta_data' ), 10, 2 );
+		add_filter( 'hezarfen_mst_get_shipment_data', array( __CLASS__, 'get_custom_meta_data' ), 10, 2 );
 	}
 
 	/**
 	 * Returns Intense Kargo Takip for WooCommerce plugin's data.
 	 * 
-	 * @param string     $hezarfen_data Hezarfen's order data.
-	 * @param string|int $order_id Order ID.
+	 * @param Shipment_Data[] $data Shipment data (just an empty array if no plugin modified it).
+	 * @param string|int      $order_id Order ID.
 	 * 
-	 * @return string
+	 * @return Shipment_Data[]
 	 */
-	public static function get_intense_kargo_takip_data( $hezarfen_data, $order_id ) {
-		return self::get_supported_plugin_data( $hezarfen_data, $order_id, self::INTENSE_KARGO_TAKIP );
+	public static function get_intense_kargo_takip_data( $data, $order_id ) {
+		return self::get_supported_plugin_data( $data, $order_id, self::INTENSE_KARGO_TAKIP );
 	}
 
 	/**
 	 * Returns Kargo Takip Türkiye plugin's data.
 	 * 
-	 * @param string     $hezarfen_data Hezarfen's order data.
-	 * @param string|int $order_id Order ID.
+	 * @param Shipment_Data[] $data Shipment data.
+	 * @param string|int      $order_id Order ID.
 	 * 
-	 * @return string
+	 * @return Shipment_Data[]
 	 */
-	public static function get_kargo_takip_turkiye_data( $hezarfen_data, $order_id ) {
-		return self::get_supported_plugin_data( $hezarfen_data, $order_id, self::KARGO_TAKIP_TURKIYE );
+	public static function get_kargo_takip_turkiye_data( $data, $order_id ) {
+		return self::get_supported_plugin_data( $data, $order_id, self::KARGO_TAKIP_TURKIYE );
 	}
 
 	/**
 	 * Returns custom meta data.
 	 * 
-	 * @param string     $hezarfen_data Hezarfen's order data.
-	 * @param string|int $order_id Order ID.
+	 * @param Shipment_Data[] $data Shipment data (just an empty array if no plugin modified it).
+	 * @param string|int      $order_id Order ID.
 	 * 
-	 * @return string
+	 * @return Shipment_Data[]
 	 */
-	public static function get_custom_meta_data( $hezarfen_data, $order_id ) {
-		if ( $hezarfen_data ) {
-			return $hezarfen_data;
-		}
-
-		$filter_name = self::get_current_filter();
-
-		if ( 'get_courier_id' === $filter_name ) {
-			return Courier_Custom::$id;
-		} elseif ( 'get_courier_title' === $filter_name ) {
-			return Courier_Custom::get_title( $order_id );
-		} elseif ( 'get_tracking_num' === $filter_name ) {
-			return get_post_meta( $order_id, get_option( Settings::OPT_TRACKING_NUM_CUSTOM_META, '' ), true );
-		}
-
-		return '';
+	public static function get_custom_meta_data( $data, $order_id ) {
+		return array(
+			new Shipment_Data(
+				array(
+					null,
+					Courier_Custom::$id,
+					Courier_Custom::get_title( $order_id ),
+					get_post_meta( $order_id, get_option( Settings::OPT_TRACKING_NUM_CUSTOM_META, self::NONSENSE_STRING ), true ),
+				)
+			),
+		);
 	}
 
 	/**
@@ -192,52 +181,58 @@ class Third_Party_Data_Support {
 	/**
 	 * Returns a supported third party plugin's data.
 	 * 
-	 * @param string     $hezarfen_data Hezarfen's order data.
-	 * @param string|int $order_id Order ID.
-	 * @param string     $plugin Plugin.
+	 * @param Shipment_Data[] $data Shipment data.
+	 * @param string|int      $order_id Order ID.
+	 * @param string          $plugin Plugin.
 	 * 
-	 * @return string
+	 * @return Shipment_Data[]
 	 */
-	public static function get_supported_plugin_data( $hezarfen_data, $order_id, $plugin ) {
-		if ( $hezarfen_data ) {
-			return $hezarfen_data;
+	public static function get_supported_plugin_data( $data, $order_id, $plugin ) {
+		if ( $data ) {
+			return $data;
 		}
-
-		$filter_name = self::get_current_filter();
 
 		$plugin_data = array(
 			self::INTENSE_KARGO_TAKIP => array(
-				'get_courier_id'    => self::INTENSE_KARGO_TAKIP_COURIER_META_KEY,
-				'get_courier_title' => self::INTENSE_KARGO_TAKIP_COURIER_META_KEY,
-				'get_tracking_num'  => self::INTENSE_KARGO_TAKIP_TRACKING_NUM_META_KEY,
-				'get_tracking_url'  => self::INTENSE_KARGO_TAKIP_TRACKING_URL_META_KEY,
+				'courier_id'    => self::INTENSE_KARGO_TAKIP_COURIER_META_KEY,
+				'courier_title' => self::INTENSE_KARGO_TAKIP_COURIER_META_KEY,
+				'tracking_num'  => self::INTENSE_KARGO_TAKIP_TRACKING_NUM_META_KEY,
+				'tracking_url'  => self::INTENSE_KARGO_TAKIP_TRACKING_URL_META_KEY,
 			),
 			self::KARGO_TAKIP_TURKIYE => array(
-				'get_courier_id'    => self::KARGO_TAKIP_TURKIYE_COURIER_META_KEY,
-				'get_courier_title' => self::KARGO_TAKIP_TURKIYE_COURIER_META_KEY,
-				'get_tracking_num'  => self::KARGO_TAKIP_TURKIYE_TRACKING_NUM_META_KEY,
+				'courier_id'    => self::KARGO_TAKIP_TURKIYE_COURIER_META_KEY,
+				'courier_title' => self::KARGO_TAKIP_TURKIYE_COURIER_META_KEY,
+				'tracking_num'  => self::KARGO_TAKIP_TURKIYE_TRACKING_NUM_META_KEY,
 			),
 		);
 
-		$meta_key = $plugin_data[ $plugin ][ $filter_name ] ?? '';
-		$data     = $meta_key ? get_post_meta( $order_id, $meta_key, true ) : '';
+		$courier_id = get_post_meta( $order_id, $plugin_data[ $plugin ]['courier_id'], true );
+		if ( ! $courier_id ) {
+			return array();
+		}
 
-		if ( ! $data && 'get_tracking_url' === $filter_name ) {
+		$courier_id    = self::convert_courier( $courier_id );
+		$courier_class = Helper::get_courier_class( $courier_id );
+
+		$courier_title = $courier_class::get_title();
+
+		$tracking_num = get_post_meta( $order_id, $plugin_data[ $plugin ]['tracking_num'], true );
+		$tracking_url = get_post_meta( $order_id, $plugin_data[ $plugin ]['tracking_url'] ?? self::NONSENSE_STRING, true );
+
+		if ( ! $tracking_url ) {
 			// try to create tracking url.
-			$courier_company = self::convert_courier( get_post_meta( $order_id, $plugin_data[ $plugin ]['get_courier_id'], true ) );
-			$tracking_number = $courier_company ? get_post_meta( $order_id, $plugin_data[ $plugin ]['get_tracking_num'], true ) : '';
-			return $tracking_number ? Helper::get_courier_class( $courier_company )::create_tracking_url( $tracking_number ) : '';
+			$tracking_url = $tracking_num ? $courier_class::create_tracking_url( $tracking_num ) : '';
 		}
 
-		if ( $data ) {
-			if ( 'get_courier_id' === $filter_name ) {
-				$data = self::convert_courier( $data );
-			} elseif ( 'get_courier_title' === $filter_name ) {
-				$data = Helper::get_courier_class( self::convert_courier( $data ) )::get_title();
-			}
-		}
+		$data = array(
+			null,
+			$courier_id,
+			$courier_title,
+			$tracking_num,
+			$tracking_url,
+		);
 
-		return $data;
+		return array( new Shipment_Data( $data ) );
 	}
 
 	/**
@@ -279,15 +274,6 @@ class Third_Party_Data_Support {
 		);
 
 		return $conversion_data[ $courier ] ?? $courier;
-	}
-
-	/**
-	 * Returns the current filter after trimming the prefix.
-	 * 
-	 * @return string
-	 */
-	private static function get_current_filter() {
-		return str_replace( 'hezarfen_mst_', '', current_filter() );
 	}
 
 	/**

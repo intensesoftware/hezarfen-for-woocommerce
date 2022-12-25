@@ -86,18 +86,6 @@ class Helper {
 	}
 
 	/**
-	 * Returns the courier company title of the order.
-	 * 
-	 * @param int|string $order_id Order ID.
-	 * 
-	 * @return string
-	 */
-	public static function get_courier_title( $order_id ) {
-		$courier_title = get_post_meta( $order_id, Manual_Shipment_Tracking::COURIER_COMPANY_TITLE_KEY, true );
-		return apply_filters( 'hezarfen_mst_get_courier_title', $courier_title, $order_id );
-	}
-
-	/**
 	 * Checks if courier is the custom courier.
 	 * 
 	 * @param string $courier_id Courier ID.
@@ -108,29 +96,6 @@ class Helper {
 		return Courier_Custom::$id === $courier_id;
 	}
 
-	/**
-	 * Returns tracking number of the order.
-	 * 
-	 * @param int|string $order_id Order ID.
-	 * 
-	 * @return string|false
-	 */
-	public static function get_tracking_num( $order_id ) {
-		$tracking_number = get_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_NUM_KEY, true );
-		return apply_filters( 'hezarfen_mst_get_tracking_num', $tracking_number, $order_id );
-	}
-
-	/**
-	 * Returns tracking URL of the order.
-	 * 
-	 * @param int|string $order_id Order ID.
-	 * 
-	 * @return string|false
-	 */
-	public static function get_tracking_url( $order_id ) {
-		$tracking_url = get_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_URL_KEY, true );
-		return apply_filters( 'hezarfen_mst_get_tracking_url', $tracking_url, $order_id );
-	}
 
 	/**
 	 * Returns the shipment data of the given order by shipment data ID.
@@ -160,14 +125,18 @@ class Helper {
 	 * @return Shipment_Data[]
 	 */
 	public static function get_all_shipment_data( $order_id ) {
-		$all_data     = get_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY );
-		$data_objects = array();
+		$all_data = get_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY );
 
-		foreach ( $all_data as $data ) {
-			$data_objects[] = new Shipment_Data( $data );
+		if ( ! $all_data ) {
+			return apply_filters( 'hezarfen_mst_get_shipment_data', array(), $order_id );
 		}
 
-		return $data_objects;
+		return array_map(
+			function( $data ) {
+				return new Shipment_Data( $data );
+			},
+			$all_data 
+		);
 	}
 
 	/**
