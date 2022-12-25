@@ -13,8 +13,6 @@ defined( 'ABSPATH' ) || exit;
  * Helper class.
  */
 class Helper {
-	const DB_SHIPMENT_DATA_SEPARATOR = '||';
-
 	/**
 	 * Sends notification.
 	 * 
@@ -140,18 +138,18 @@ class Helper {
 	 * @param int|string $data_id Shipment data ID.
 	 * @param int|string $order_id Order ID.
 	 * 
-	 * @return array<string, mixed>
+	 * @return Shipment_Data|null
 	 */
 	public static function get_shipment_data_by_id( $data_id, $order_id ) {
-		$meta_data = self::get_all_shipment_data( $order_id );
+		$shipment_data = self::get_all_shipment_data( $order_id );
 
-		foreach ( $meta_data as $data ) {
-			if ( (int) $data['id'] === (int) $data_id ) {
+		foreach ( $shipment_data as $data ) {
+			if ( $data->id === (int) $data_id ) {
 				return $data;
 			}
 		}
 
-		return array();
+		return null;
 	}
 
 	/**
@@ -159,35 +157,17 @@ class Helper {
 	 * 
 	 * @param int|string $order_id Order ID.
 	 * 
-	 * @return array<array<string, mixed>>
+	 * @return Shipment_Data[]
 	 */
 	public static function get_all_shipment_data( $order_id ) {
-		$all_data    = get_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY );
-		$parsed_data = array();
+		$all_data     = get_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY );
+		$data_objects = array();
 
 		foreach ( $all_data as $data ) {
-			$exploded      = explode( self::DB_SHIPMENT_DATA_SEPARATOR, $data );
-			$parsed_data[] = array(
-				'id'            => $exploded[0] ?? '',
-				'courier_id'    => $exploded[1] ?? '',
-				'courier_title' => $exploded[2] ?? '',
-				'tracking_num'  => $exploded[3] ?? '',
-				'tracking_url'  => $exploded[4] ?? '',
-			);
+			$data_objects[] = new Shipment_Data( $data );
 		}
 
-		return $parsed_data;
-	}
-
-	/**
-	 * Prepares the shipment data for storing in the database.
-	 * 
-	 * @param string[] $data Shipment data.
-	 * 
-	 * @return string
-	 */
-	public static function prepare_shipment_data_for_db( $data ) {
-		return implode( self::DB_SHIPMENT_DATA_SEPARATOR, $data );
+		return $data_objects;
 	}
 
 	/**

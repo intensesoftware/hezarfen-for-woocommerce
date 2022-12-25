@@ -65,12 +65,7 @@ class Admin_Orders {
 		$shipment_data = Helper::get_all_shipment_data( $order_id );
 
 		if ( ! $shipment_data ) {
-			$shipment_data[] = array(
-				'id'           => 1,
-				'courier_id'   => '',
-				'tracking_num' => '',
-				'tracking_url' => '',
-			);
+			$shipment_data[] = new Shipment_Data();
 		}
 
 		foreach ( $shipment_data as $data ) {
@@ -81,7 +76,7 @@ class Admin_Orders {
 	/**
 	 * Renders the shipment form elements.
 	 * 
-	 * @param array<string, mixed> $shipment_data Shipment data.
+	 * @param Shipment_Data $shipment_data Shipment data.
 	 * 
 	 * @return void
 	 */
@@ -91,9 +86,9 @@ class Admin_Orders {
 			<?php
 			woocommerce_wp_select(
 				array(
-					'id'      => sprintf( '%s[%s][%s]', self::DATA_ARRAY_KEY, $shipment_data['id'], self::COURIER_HTML_NAME ),
+					'id'      => sprintf( '%s[%s][%s]', self::DATA_ARRAY_KEY, $shipment_data->id, self::COURIER_HTML_NAME ),
 					'label'   => __( 'Courier Company', 'hezarfen-for-woocommerce' ),
-					'value'   => $shipment_data['courier_id'] ? $shipment_data['courier_id'] : Helper::get_default_courier_id(),
+					'value'   => $shipment_data->courier_id ? $shipment_data->courier_id : Helper::get_default_courier_id(),
 					'options' => Helper::courier_company_options(),
 				)
 			);
@@ -102,14 +97,14 @@ class Admin_Orders {
 				<label for="<?php echo esc_attr( self::TRACKING_NUM_HTML_NAME ); ?>">
 					<?php esc_html_e( 'Tracking Number', 'hezarfen-for-woocommerce' ); ?>
 				</label>
-				<?php if ( $shipment_data['tracking_url'] ) : ?>
-					<a href="<?php echo esc_url( $shipment_data['tracking_url'] ); ?>" target="_blank"><?php esc_html_e( '(Track Cargo)', 'hezarfen-for-woocommerce' ); ?></a>
+				<?php if ( $shipment_data->tracking_url ) : ?>
+					<a href="<?php echo esc_url( $shipment_data->tracking_url ); ?>" target="_blank"><?php esc_html_e( '(Track Cargo)', 'hezarfen-for-woocommerce' ); ?></a>
 				<?php endif; ?>
 				<input
 					type="text"
-					name="<?php echo esc_attr( sprintf( '%s[%s][%s]', self::DATA_ARRAY_KEY, $shipment_data['id'], self::TRACKING_NUM_HTML_NAME ) ); ?>"
+					name="<?php echo esc_attr( sprintf( '%s[%s][%s]', self::DATA_ARRAY_KEY, $shipment_data->id, self::TRACKING_NUM_HTML_NAME ) ); ?>"
 					id="<?php echo esc_attr( self::TRACKING_NUM_HTML_NAME ); ?>"
-					value="<?php echo esc_attr( $shipment_data['tracking_num'] ); ?>"
+					value="<?php echo esc_attr( $shipment_data->tracking_num ); ?>"
 					placeholder="<?php esc_attr_e( 'Enter tracking number', 'hezarfen-for-woocommerce' ); ?>">
 			</p>
 		</div>
@@ -150,10 +145,9 @@ class Admin_Orders {
 			}
 
 			$old_data = Helper::get_shipment_data_by_id( $id, $order_id );
-			$old_data = Helper::prepare_shipment_data_for_db( $old_data );
 
-			$new_courier   = Helper::get_courier_class( $new_courier_id );
-			$prepared_data = Helper::prepare_shipment_data_for_db(
+			$new_courier = Helper::get_courier_class( $new_courier_id );
+			$new_data    = new Shipment_Data(
 				array(
 					$id,
 					$new_courier_id,
@@ -164,19 +158,19 @@ class Admin_Orders {
 			);
 
 			if ( ! $old_data ) {
-				add_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $prepared_data );
-				do_action( 'hezarfen_mst_tracking_data_saved', $order_id, $new_courier_id, $new_tracking_num );
+				add_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $new_data->prapare_for_db() );
+				do_action( 'hezarfen_mst_tracking_data_saved', $order_id, $new_data );
 				continue;
 			}
 
-			if ( $prepared_data === $old_data ) {
+			if ( $new_data == $old_data ) {
 				continue;
 			}
 
-			$result = update_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $prepared_data, $old_data );
+			$result = update_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $new_data->prapare_for_db(), $old_data->prapare_for_db() );
 
 			if ( true === $result ) {
-				do_action( 'hezarfen_mst_tracking_data_saved', $order_id, $new_courier_id, $new_tracking_num );
+				do_action( 'hezarfen_mst_tracking_data_saved', $order_id, $new_data );
 			}
 		}
 

@@ -9,6 +9,7 @@ namespace Hezarfen\ManualShipmentTracking;
 
 defined( 'ABSPATH' ) || exit;
 
+require_once HEZARFEN_MST_PATH . 'models/class-shipment-data.php';
 require_once 'class-courier-company.php';
 require_once 'class-helper.php';
 require_once 'admin/class-settings.php';

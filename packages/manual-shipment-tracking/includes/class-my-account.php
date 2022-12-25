@@ -54,25 +54,23 @@ class My_Account {
 		$shipment_data = Helper::get_all_shipment_data( $order_id );
 
 		foreach ( $shipment_data as $data ) {
-			$this->render_tracking_info_in_column( $data['courier_title'], $data['tracking_num'], $data['tracking_url'] );
+			$this->render_tracking_info_in_column( $data );
 		}
 	}
 
 	/**
 	 * Renders tracking info HTML in the "Tracking Information" column.
 	 * 
-	 * @param string $courier_title Courier company title.
-	 * @param string $tracking_num Tracking number.
-	 * @param string $tracking_url Tracking URL.
+	 * @param Shipment_Data $shipment_data Shipment data.
 	 * 
 	 * @return void
 	 */
-	private function render_tracking_info_in_column( $courier_title, $tracking_num, $tracking_url ) {
+	private function render_tracking_info_in_column( $shipment_data ) {
 		?>
 		<div class="tracking-info">
-			<span style="display: block"><?php echo esc_html( $courier_title ); ?></span>
-			<?php if ( $tracking_url ) : ?>
-				<a href="<?php echo esc_url( $tracking_url ); ?>" target="_blank"><?php echo esc_html( $tracking_num ); ?></a>
+			<span style="display: block"><?php echo esc_html( $shipment_data->courier_title ); ?></span>
+			<?php if ( $shipment_data->tracking_url ) : ?>
+				<a href="<?php echo esc_url( $shipment_data->tracking_url ); ?>" target="_blank"><?php echo esc_html( $shipment_data->tracking_num ); ?></a>
 			<?php endif; ?>
 		</div>
 		<?php
@@ -94,7 +92,7 @@ class My_Account {
 			<?php
 			if ( $shipment_data ) {
 				foreach ( $shipment_data as $data ) {
-					$this->render_tracking_info_in_order_details( $data['courier_title'], $data['tracking_num'], $data['tracking_url'] );
+					$this->render_tracking_info_in_order_details( $data );
 				}
 			} else {
 				?>
@@ -109,19 +107,17 @@ class My_Account {
 	/**
 	 * Renders tracking info HTML in the customer order details page.
 	 * 
-	 * @param string $courier_title Courier company title.
-	 * @param string $tracking_num Tracking number.
-	 * @param string $tracking_url Tracking URL.
+	 * @param Shipment_Data $shipment_data Shipment data.
 	 * 
 	 * @return void
 	 */
-	private function render_tracking_info_in_order_details( $courier_title, $tracking_num, $tracking_url ) {
+	private function render_tracking_info_in_order_details( $shipment_data ) {
 		?>
 		<div class="tracking-info">
-			<h4><?php echo sprintf( '%s: %s', esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ), esc_html( $courier_title ) ); ?></h4>
-			<h4><?php echo sprintf( '%s: %s', esc_html__( 'Tracking Number', 'hezarfen-for-woocommerce' ), esc_html( $tracking_num ) ); ?></h4>
-			<?php if ( $tracking_url ) : ?>
-				<h4><a class="tracking-url" href="<?php echo esc_url( $tracking_url ); ?>" target="_blank"><?php esc_html_e( 'Click here to find out where your cargo is.', 'hezarfen-for-woocommerce' ); ?></a></h4>
+			<h4><?php echo sprintf( '%s: %s', esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ), esc_html( $shipment_data->courier_title ) ); ?></h4>
+			<h4><?php echo sprintf( '%s: %s', esc_html__( 'Tracking Number', 'hezarfen-for-woocommerce' ), esc_html( $shipment_data->tracking_num ) ); ?></h4>
+			<?php if ( $shipment_data->tracking_url ) : ?>
+				<h4><a class="tracking-url" href="<?php echo esc_url( $shipment_data->tracking_url ); ?>" target="_blank"><?php esc_html_e( 'Click here to find out where your cargo is.', 'hezarfen-for-woocommerce' ); ?></a></h4>
 			<?php endif; ?>
 		</div>
 		<?php
