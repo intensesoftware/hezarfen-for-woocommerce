@@ -54,11 +54,7 @@ class My_Account {
 		$shipment_data = Helper::get_all_shipment_data( $order_id );
 
 		foreach ( $shipment_data as $data ) {
-			$courier_title = Helper::extract_courier_title( $data );
-			$tracking_num  = Helper::extract_tracking_num( $data );
-			$tracking_url  = Helper::extract_tracking_url( $data );
-
-			$this->render_tracking_info_in_column( $courier_title, $tracking_num, $tracking_url );
+			$this->render_tracking_info_in_column( $data['courier_title'], $data['tracking_num'], $data['tracking_url'] );
 		}
 	}
 
@@ -98,11 +94,7 @@ class My_Account {
 			<?php
 			if ( $shipment_data ) {
 				foreach ( $shipment_data as $data ) {
-					$courier_title = Helper::extract_courier_title( $data );
-					$tracking_num  = Helper::extract_tracking_num( $data );
-					$tracking_url  = Helper::extract_tracking_url( $data );
-		
-					$this->render_tracking_info_in_order_details( $courier_title, $tracking_num, $tracking_url );
+					$this->render_tracking_info_in_order_details( $data['courier_title'], $data['tracking_num'], $data['tracking_url'] );
 				}
 			} else {
 				?>

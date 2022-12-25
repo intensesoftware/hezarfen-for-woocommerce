@@ -64,39 +64,36 @@ class Admin_Orders {
 		$order_id      = $post->ID;
 		$shipment_data = Helper::get_all_shipment_data( $order_id );
 
-		if ( $shipment_data ) {
-			foreach ( $shipment_data as $data ) {
-				$shipment_data_id = Helper::extract_shipment_data_id( $data );
-				$courier_company  = Helper::get_courier_class( Helper::extract_courier_id( $data ) );
-				$tracking_num     = Helper::extract_tracking_num( $data );
-				$tracking_url     = Helper::extract_tracking_url( $data );
+		if ( ! $shipment_data ) {
+			$shipment_data[] = array(
+				'id'           => 1,
+				'courier_id'   => '',
+				'tracking_num' => '',
+				'tracking_url' => '',
+			);
+		}
 
-				self::render_shipment_form_elements( $shipment_data_id, $courier_company, $tracking_num, $tracking_url );
-			}
-		} else {
-			self::render_shipment_form_elements();
+		foreach ( $shipment_data as $data ) {
+			self::render_shipment_form_elements( $data );
 		}
 	}
 
 	/**
 	 * Renders the shipment form elements.
 	 * 
-	 * @param int|string $shipment_data_id Shipment data ID.
-	 * @param string     $courier_company Courier company class.
-	 * @param string     $tracking_num Tracking number.
-	 * @param string     $tracking_url Tracking URL.
+	 * @param array<string, mixed> $shipment_data Shipment data.
 	 * 
 	 * @return void
 	 */
-	private static function render_shipment_form_elements( $shipment_data_id = 1, $courier_company = Courier_Empty::class, $tracking_num = '', $tracking_url = '' ) {
+	private static function render_shipment_form_elements( $shipment_data ) {
 		?>
 		<div class="shipment-info">
 			<?php
 			woocommerce_wp_select(
 				array(
-					'id'      => sprintf( '%s[%s][%s]', self::DATA_ARRAY_KEY, $shipment_data_id, self::COURIER_HTML_NAME ),
+					'id'      => sprintf( '%s[%s][%s]', self::DATA_ARRAY_KEY, $shipment_data['id'], self::COURIER_HTML_NAME ),
 					'label'   => __( 'Courier Company', 'hezarfen-for-woocommerce' ),
-					'value'   => $courier_company::$id ? $courier_company::$id : Helper::get_default_courier_id(),
+					'value'   => $shipment_data['courier_id'] ? $shipment_data['courier_id'] : Helper::get_default_courier_id(),
 					'options' => Helper::courier_company_options(),
 				)
 			);
@@ -105,14 +102,14 @@ class Admin_Orders {
 				<label for="<?php echo esc_attr( self::TRACKING_NUM_HTML_NAME ); ?>">
 					<?php esc_html_e( 'Tracking Number', 'hezarfen-for-woocommerce' ); ?>
 				</label>
-				<?php if ( $tracking_url ) : ?>
-					<a href="<?php echo esc_url( $tracking_url ); ?>" target="_blank"><?php esc_html_e( '(Track Cargo)', 'hezarfen-for-woocommerce' ); ?></a>
+				<?php if ( $shipment_data['tracking_url'] ) : ?>
+					<a href="<?php echo esc_url( $shipment_data['tracking_url'] ); ?>" target="_blank"><?php esc_html_e( '(Track Cargo)', 'hezarfen-for-woocommerce' ); ?></a>
 				<?php endif; ?>
 				<input
 					type="text"
-					name="<?php echo esc_attr( sprintf( '%s[%s][%s]', self::DATA_ARRAY_KEY, $shipment_data_id, self::TRACKING_NUM_HTML_NAME ) ); ?>"
+					name="<?php echo esc_attr( sprintf( '%s[%s][%s]', self::DATA_ARRAY_KEY, $shipment_data['id'], self::TRACKING_NUM_HTML_NAME ) ); ?>"
 					id="<?php echo esc_attr( self::TRACKING_NUM_HTML_NAME ); ?>"
-					value="<?php echo esc_attr( $tracking_num ); ?>"
+					value="<?php echo esc_attr( $shipment_data['tracking_num'] ); ?>"
 					placeholder="<?php esc_attr_e( 'Enter tracking number', 'hezarfen-for-woocommerce' ); ?>">
 			</p>
 		</div>
@@ -153,6 +150,7 @@ class Admin_Orders {
 			}
 
 			$old_data = Helper::get_shipment_data_by_id( $id, $order_id );
+			$old_data = Helper::prepare_shipment_data_for_db( $old_data );
 
 			$new_courier   = Helper::get_courier_class( $new_courier_id );
 			$prepared_data = Helper::prepare_shipment_data_for_db(

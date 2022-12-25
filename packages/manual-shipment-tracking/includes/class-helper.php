@@ -140,18 +140,18 @@ class Helper {
 	 * @param int|string $data_id Shipment data ID.
 	 * @param int|string $order_id Order ID.
 	 * 
-	 * @return string
+	 * @return array<string, mixed>
 	 */
 	public static function get_shipment_data_by_id( $data_id, $order_id ) {
 		$meta_data = self::get_all_shipment_data( $order_id );
 
 		foreach ( $meta_data as $data ) {
-			if ( (int) self::extract_shipment_data_id( $data ) === (int) $data_id ) {
+			if ( (int) $data['id'] === (int) $data_id ) {
 				return $data;
 			}
 		}
 
-		return '';
+		return array();
 	}
 
 	/**
@@ -159,10 +159,24 @@ class Helper {
 	 * 
 	 * @param int|string $order_id Order ID.
 	 * 
-	 * @return string[]
+	 * @return array<array<string, mixed>>
 	 */
 	public static function get_all_shipment_data( $order_id ) {
-		return get_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY );
+		$all_data    = get_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY );
+		$parsed_data = array();
+
+		foreach ( $all_data as $data ) {
+			$exploded = explode( self::DB_SHIPMENT_DATA_SEPARATOR, $data );
+			$parsed_data[] = array(
+				'id'            => $exploded[0] ?? '',
+				'courier_id'    => $exploded[1] ?? '',
+				'courier_title' => $exploded[2] ?? '',
+				'tracking_num'  => $exploded[3] ?? '',
+				'tracking_url'  => $exploded[4] ?? '',
+			);
+		}
+
+		return $parsed_data;
 	}
 
 	/**
@@ -174,73 +188,6 @@ class Helper {
 	 */
 	public static function prepare_shipment_data_for_db( $data ) {
 		return implode( self::DB_SHIPMENT_DATA_SEPARATOR, $data );
-	}
-
-	/**
-	 * Extracts shipment data ID from the given shipment data string.
-	 * 
-	 * @param string $db_shipment_data Shipment data.
-	 * 
-	 * @return string
-	 */
-	public static function extract_shipment_data_id( $db_shipment_data ) {
-		return self::extract_data( $db_shipment_data, 0 );
-	}
-
-	/**
-	 * Extracts courier company ID from the given shipment data string.
-	 * 
-	 * @param string $db_shipment_data Shipment data.
-	 * 
-	 * @return string
-	 */
-	public static function extract_courier_id( $db_shipment_data ) {
-		return self::extract_data( $db_shipment_data, 1 );
-	}
-
-	/**
-	 * Extracts courier company title from the given shipment data string.
-	 * 
-	 * @param string $db_shipment_data Shipment data.
-	 * 
-	 * @return string
-	 */
-	public static function extract_courier_title( $db_shipment_data ) {
-		return self::extract_data( $db_shipment_data, 2 );
-	}
-
-	/**
-	 * Extracts tracking number from the given shipment data string.
-	 * 
-	 * @param string $db_shipment_data Shipment data.
-	 * 
-	 * @return string
-	 */
-	public static function extract_tracking_num( $db_shipment_data ) {
-		return self::extract_data( $db_shipment_data, 3 );
-	}
-
-	/**
-	 * Extracts tracking URL from the given shipment data string.
-	 * 
-	 * @param string $db_shipment_data Shipment data.
-	 * 
-	 * @return string
-	 */
-	public static function extract_tracking_url( $db_shipment_data ) {
-		return self::extract_data( $db_shipment_data, 4 );
-	}
-
-	/**
-	 * Extracts data from the given shipment data string.
-	 * 
-	 * @param string $db_shipment_data Shipment data.
-	 * @param int    $index Index.
-	 * 
-	 * @return string
-	 */
-	public static function extract_data( $db_shipment_data, $index ) {
-		return explode( self::DB_SHIPMENT_DATA_SEPARATOR, $db_shipment_data )[ $index ] ?? '';
 	}
 
 	/**
