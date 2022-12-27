@@ -61,17 +61,29 @@ class Pandasms extends \Hezarfen\Inc\Notification_Provider {
 		$order_id = $order->get_id();
 
 		if ( function_exists( 'pandasms_wc_siparis_bildirimi' ) ) {
-			pandasms_wc_siparis_bildirimi(
-				$order,
-				self::TRIGGER_NAME,
-				array(
-					self::COURIER_COMPANY_VAR => get_post_meta( $order_id, Manual_Shipment_Tracking::COURIER_COMPANY_TITLE_KEY, true ),
-					self::TRACKING_NUM_VAR    => get_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_NUM_KEY, true ),
-					self::TRACKING_URL_VAR    => get_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_URL_KEY, true ),
-				)
-			);
+			$shipment_data = Helper::get_all_shipment_data( $order_id );
+			foreach ( $shipment_data as $data ) {
+				if ( $data->sms_sent ) {
+					continue;
+				}
 
-			$this->add_order_note( $order );
+				$result = pandasms_wc_siparis_bildirimi(
+					$order,
+					self::TRIGGER_NAME,
+					array(
+						self::COURIER_COMPANY_VAR => $data->courier_title,
+						self::TRACKING_NUM_VAR    => $data->tracking_num,
+						self::TRACKING_URL_VAR    => $data->tracking_url,
+					)
+				);
+
+				if ( true === $result ) {
+					$data->sms_sent = true;
+					update_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $data->prapare_for_db(), $data->raw_data );
+
+					$this->add_order_note( $order );
+				}
+			}
 		}
 	}
 
