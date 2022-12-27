@@ -81,6 +81,6 @@ class Shipment_Data {
 	 * @return string
 	 */
 	public function prapare_for_db() {
-		return implode( self::DATA_SEPARATOR, get_object_vars( $this ) );
+		return implode( self::DATA_SEPARATOR, array( $this->id, $this->courier_id, $this->courier_title, $this->tracking_num, $this->tracking_url ) );
 	}
 }
