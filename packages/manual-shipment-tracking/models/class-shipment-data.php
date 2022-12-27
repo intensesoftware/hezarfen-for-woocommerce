@@ -51,6 +51,13 @@ class Shipment_Data {
 	public $tracking_url;
 
 	/**
+	 * Is SMS sent for this data?
+	 * 
+	 * @var bool
+	 */
+	public $sms_sent;
+
+	/**
 	 * Raw string data.
 	 * 
 	 * @var string
@@ -81,6 +88,7 @@ class Shipment_Data {
 		$this->courier_title = $data[2] ?? '';
 		$this->tracking_num  = $data[3] ?? '';
 		$this->tracking_url  = $data[4] ?? '';
+		$this->sms_sent      = isset( $data[5] ) ? boolval( $data[5] ) : false;
 	}
 
 	/**
@@ -89,7 +97,7 @@ class Shipment_Data {
 	 * @return string
 	 */
 	public function prapare_for_db() {
-		return implode( self::DATA_SEPARATOR, array( $this->id, $this->courier_id, $this->courier_title, $this->tracking_num, $this->tracking_url ) );
+		return implode( self::DATA_SEPARATOR, array( $this->id, $this->courier_id, $this->courier_title, $this->tracking_num, $this->tracking_url, intval( $this->sms_sent ) ) );
 	}
 
 	/**

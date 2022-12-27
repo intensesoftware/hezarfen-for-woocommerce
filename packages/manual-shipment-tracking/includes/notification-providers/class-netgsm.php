@@ -70,13 +70,20 @@ class Netgsm extends \Hezarfen\Inc\Notification_Provider {
 		if ( function_exists( 'netgsm_order_status_changed_sendSMS' ) && get_option( Settings::OPT_NETGSM_CONTENT ) ) {
 			$order_id      = $order->get_id();
 			$shipment_data = Helper::get_all_shipment_data( $order_id );
-			if ( $shipment_data ) {
-				update_post_meta( $order_id, self::COURIER_TITLE_META_KEY, $shipment_data[0]->courier_title );
-				update_post_meta( $order_id, self::TRACKING_NUM_META_KEY, $shipment_data[0]->tracking_num );
-				update_post_meta( $order_id, self::TRACKING_URL_META_KEY, $shipment_data[0]->tracking_url );
-			}           
+			foreach ( $shipment_data as $data ) {
+				if ( $data->sms_sent ) {
+					continue;
+				}
 
-			netgsm_order_status_changed_sendSMS( $order_id, 'netgsm_order_status_text_' . $status_transition, $status_transition );
+				update_post_meta( $order_id, self::COURIER_TITLE_META_KEY, $data->courier_title );
+				update_post_meta( $order_id, self::TRACKING_NUM_META_KEY, $data->tracking_num );
+				update_post_meta( $order_id, self::TRACKING_URL_META_KEY, $data->tracking_url );
+
+				netgsm_order_status_changed_sendSMS( $order_id, 'netgsm_order_status_text_' . $status_transition, $status_transition );
+				$data->sms_sent = true;
+
+				update_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $data->prapare_for_db(), $data->raw_data );
+			}
 		}
 	}
 
