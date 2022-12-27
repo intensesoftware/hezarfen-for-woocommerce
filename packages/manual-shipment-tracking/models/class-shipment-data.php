@@ -51,6 +51,13 @@ class Shipment_Data {
 	public $tracking_url;
 
 	/**
+	 * Raw string data.
+	 * 
+	 * @var string
+	 */
+	public $raw_data;
+
+	/**
 	 * Constructor
 	 * 
 	 * @param mixed[]|string $data Shipment data.
@@ -63,7 +70,8 @@ class Shipment_Data {
 		}
 
 		if ( is_string( $data ) ) {
-			$data = explode( self::DATA_SEPARATOR, $data );
+			$this->raw_data = $data;
+			$data           = explode( self::DATA_SEPARATOR, $data );
 		}
 
 		$id = (int) ( $data[0] ?? 1 );

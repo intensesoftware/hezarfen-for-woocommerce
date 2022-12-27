@@ -171,7 +171,7 @@ class Admin_Orders {
 				continue;
 			}
 
-			$result = update_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $new_data->prapare_for_db(), $old_data->prapare_for_db() );
+			$result = update_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $new_data->prapare_for_db(), $old_data->raw_data );
 
 			if ( true === $result ) {
 				do_action( 'hezarfen_mst_tracking_data_saved', $order_id, $new_data );
