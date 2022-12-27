@@ -83,4 +83,15 @@ class Shipment_Data {
 	public function prapare_for_db() {
 		return implode( self::DATA_SEPARATOR, array( $this->id, $this->courier_id, $this->courier_title, $this->tracking_num, $this->tracking_url ) );
 	}
+
+	/**
+	 * Checks equality with an other Shipment_Data object.
+	 * 
+	 * @param Shipment_Data $other_data Other Shipment_Data object.
+	 * 
+	 * @return bool
+	 */
+	public function is_equal( $other_data ) {
+		return $this->courier_id === $other_data->courier_id && $this->tracking_num === $other_data->tracking_num;
+	}
 }

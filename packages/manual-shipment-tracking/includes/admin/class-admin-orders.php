@@ -167,7 +167,7 @@ class Admin_Orders {
 				continue;
 			}
 
-			if ( $new_data == $old_data ) {
+			if ( $old_data->is_equal( $new_data ) ) {
 				continue;
 			}
 
