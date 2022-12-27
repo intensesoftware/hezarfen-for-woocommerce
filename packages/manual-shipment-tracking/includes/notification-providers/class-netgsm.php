@@ -67,6 +67,10 @@ class Netgsm extends \Hezarfen\Inc\Notification_Provider {
 	 * @return void
 	 */
 	public function send( $order, $status_transition = '' ) {
+		if ( ! get_option( 'netgsm_status' ) ) {
+			return; // return if NetGSM status is "Closed".
+		}
+
 		if ( function_exists( 'netgsm_order_status_changed_sendSMS' ) && get_option( Settings::OPT_NETGSM_CONTENT ) ) {
 			$order_id      = $order->get_id();
 			$shipment_data = Helper::get_all_shipment_data( $order_id );
