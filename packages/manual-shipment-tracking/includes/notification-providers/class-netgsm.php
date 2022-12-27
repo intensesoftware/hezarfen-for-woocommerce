@@ -51,6 +51,13 @@ class Netgsm extends \Hezarfen\Inc\Notification_Provider {
 	public static $title = 'NetGSM';
 
 	/**
+	 * Notification type
+	 * 
+	 * @var string
+	 */
+	public static $notif_type = 'sms';
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -87,6 +94,8 @@ class Netgsm extends \Hezarfen\Inc\Notification_Provider {
 				$data->sms_sent = true;
 
 				update_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $data->prapare_for_db(), $data->raw_data );
+
+				$this->add_order_note( $order );
 			}
 		}
 	}

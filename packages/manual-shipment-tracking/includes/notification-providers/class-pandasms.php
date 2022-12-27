@@ -36,6 +36,13 @@ class Pandasms extends \Hezarfen\Inc\Notification_Provider {
 	public static $title = 'PandaSMS';
 
 	/**
+	 * Notification type
+	 * 
+	 * @var string
+	 */
+	public static $notif_type = 'sms';
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -63,6 +70,8 @@ class Pandasms extends \Hezarfen\Inc\Notification_Provider {
 					self::TRACKING_URL_VAR    => get_post_meta( $order_id, Manual_Shipment_Tracking::TRACKING_URL_KEY, true ),
 				)
 			);
+
+			$this->add_order_note( $order );
 		}
 	}
 
