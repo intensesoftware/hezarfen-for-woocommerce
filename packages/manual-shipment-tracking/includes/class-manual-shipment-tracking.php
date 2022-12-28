@@ -16,6 +16,7 @@ require_once 'admin/class-settings.php';
 require_once 'email/class-email.php';
 require_once 'class-my-account.php';
 require_once 'admin/class-admin-orders.php';
+require_once 'notification-providers/class-mst-notification-provider.php';
 require_once 'notification-providers/class-netgsm.php';
 require_once 'notification-providers/class-pandasms.php';
 require_once 'class-third-party-data-support.php';

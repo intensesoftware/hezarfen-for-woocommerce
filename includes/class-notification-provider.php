@@ -28,13 +28,6 @@ abstract class Notification_Provider {
 	public static $title;
 
 	/**
-	 * Notification type
-	 * 
-	 * @var string
-	 */
-	public static $notif_type;
-
-	/**
 	 * Sends the notification.
 	 * 
 	 * @param \WC_Order $order Order instance.
@@ -51,25 +44,5 @@ abstract class Notification_Provider {
 	 */
 	public static function is_plugin_ready() {
 		return true;
-	}
-
-	/**
-	 * Adds order note.
-	 * 
-	 * @param \WC_Order $order Order object.
-	 * 
-	 * @return void
-	 */
-	public function add_order_note( $order ) {
-		$note = '';
-
-		if ( 'sms' === self::$notif_type ) {
-			/* translators: %s billing email */
-			$note = sprintf( __( 'Tracking information SMS sent to %s', 'hezarfen-for-woocommerce' ), $order->get_billing_phone() );
-		}
-
-		if ( $note ) {
-			$order->add_order_note( $note );
-		}
 	}
 }

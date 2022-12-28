@@ -14,7 +14,7 @@ use \Hezarfen\Inc\Helper as Hezarfen_Helper;
 /**
  * Pandasms class.
  */
-class Pandasms extends \Hezarfen\Inc\Notification_Provider {
+class Pandasms extends MST_Notification_Provider {
 	const TRIGGER_NAME = 'hezarfen_mst_order_shipped';
 
 	const COURIER_COMPANY_VAR = 'kargoFirmasi';
@@ -36,13 +36,6 @@ class Pandasms extends \Hezarfen\Inc\Notification_Provider {
 	public static $title = 'PandaSMS';
 
 	/**
-	 * Notification type
-	 * 
-	 * @var string
-	 */
-	public static $notif_type = 'sms';
-
-	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -58,33 +51,32 @@ class Pandasms extends \Hezarfen\Inc\Notification_Provider {
 	 * @return void
 	 */
 	public function send( $order, $status_transition = '' ) {
-		$order_id = $order->get_id();
-
 		if ( function_exists( 'pandasms_wc_siparis_bildirimi' ) ) {
-			$shipment_data = Helper::get_all_shipment_data( $order_id );
-			foreach ( $shipment_data as $data ) {
-				if ( $data->sms_sent ) {
-					continue;
-				}
-
-				$result = pandasms_wc_siparis_bildirimi(
-					$order,
-					self::TRIGGER_NAME,
-					array(
-						self::COURIER_COMPANY_VAR => $data->courier_title,
-						self::TRACKING_NUM_VAR    => $data->tracking_num,
-						self::TRACKING_URL_VAR    => $data->tracking_url,
-					)
-				);
-
-				if ( true === $result ) {
-					$data->sms_sent = true;
-					update_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $data->prapare_for_db(), $data->raw_data );
-
-					$this->add_order_note( $order );
-				}
-			}
+			parent::send( $order, $status_transition );
 		}
+	}
+
+	/**
+	 * Performs the actual sending.
+	 * 
+	 * @param \WC_Order     $order Order object.
+	 * @param Shipment_Data $shipment_data Shipment data.
+	 * 
+	 * @return bool
+	 */
+	public function perform_sending( $order, $shipment_data ) {
+		// @phpstan-ignore-next-line
+		$result = pandasms_wc_siparis_bildirimi(
+			$order,
+			self::TRIGGER_NAME,
+			array(
+				self::COURIER_COMPANY_VAR => $shipment_data->courier_title,
+				self::TRACKING_NUM_VAR    => $shipment_data->tracking_num,
+				self::TRACKING_URL_VAR    => $shipment_data->tracking_url,
+			)
+		);
+
+		return true === $result;
 	}
 
 	/**

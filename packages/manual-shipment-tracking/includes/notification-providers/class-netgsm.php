@@ -14,7 +14,7 @@ use \Hezarfen\Inc\Helper as Hezarfen_Helper;
 /**
  * Netgsm class.
  */
-class Netgsm extends \Hezarfen\Inc\Notification_Provider {
+class Netgsm extends MST_Notification_Provider {
 	const COURIER_TITLE_META_KEY = '_hezarfen_mst_netgsm_sms_courier_title';
 	const TRACKING_NUM_META_KEY  = '_hezarfen_mst_netgsm_sms_tracking_num';
 	const TRACKING_URL_META_KEY  = '_hezarfen_mst_netgsm_sms_tracking_url';
@@ -51,13 +51,6 @@ class Netgsm extends \Hezarfen\Inc\Notification_Provider {
 	public static $title = 'NetGSM';
 
 	/**
-	 * Notification type
-	 * 
-	 * @var string
-	 */
-	public static $notif_type = 'sms';
-
-	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -79,25 +72,29 @@ class Netgsm extends \Hezarfen\Inc\Notification_Provider {
 		}
 
 		if ( function_exists( 'netgsm_order_status_changed_sendSMS' ) && get_option( Settings::OPT_NETGSM_CONTENT ) ) {
-			$order_id      = $order->get_id();
-			$shipment_data = Helper::get_all_shipment_data( $order_id );
-			foreach ( $shipment_data as $data ) {
-				if ( $data->sms_sent ) {
-					continue;
-				}
-
-				update_post_meta( $order_id, self::COURIER_TITLE_META_KEY, $data->courier_title );
-				update_post_meta( $order_id, self::TRACKING_NUM_META_KEY, $data->tracking_num );
-				update_post_meta( $order_id, self::TRACKING_URL_META_KEY, $data->tracking_url );
-
-				netgsm_order_status_changed_sendSMS( $order_id, 'netgsm_order_status_text_' . $status_transition, $status_transition );
-				$data->sms_sent = true;
-
-				update_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $data->prapare_for_db(), $data->raw_data );
-
-				$this->add_order_note( $order );
-			}
+			parent::send( $order, $status_transition );
 		}
+	}
+
+	/**
+	 * Performs the actual sending.
+	 * 
+	 * @param \WC_Order     $order Order object.
+	 * @param Shipment_Data $shipment_data Shipment data.
+	 * 
+	 * @return bool
+	 */
+	public function perform_sending( $order, $shipment_data ) {
+		$order_id = $order->get_id();
+
+		update_post_meta( $order_id, self::COURIER_TITLE_META_KEY, $shipment_data->courier_title );
+		update_post_meta( $order_id, self::TRACKING_NUM_META_KEY, $shipment_data->tracking_num );
+		update_post_meta( $order_id, self::TRACKING_URL_META_KEY, $shipment_data->tracking_url );
+
+		// @phpstan-ignore-next-line
+		netgsm_order_status_changed_sendSMS( $order_id, 'netgsm_order_status_text_' . Manual_Shipment_Tracking::DB_SHIPPED_ORDER_STATUS, Manual_Shipment_Tracking::DB_SHIPPED_ORDER_STATUS );
+
+		return true;
 	}
 
 	/**
