@@ -102,11 +102,12 @@ class Helper {
 	 * 
 	 * @param int|string $data_id Shipment data ID.
 	 * @param int|string $order_id Order ID.
+	 * @param bool       $bypass_filters Whether to bypass filters.
 	 * 
 	 * @return Shipment_Data|null
 	 */
-	public static function get_shipment_data_by_id( $data_id, $order_id ) {
-		$shipment_data = self::get_all_shipment_data( $order_id );
+	public static function get_shipment_data_by_id( $data_id, $order_id, $bypass_filters = false ) {
+		$shipment_data = self::get_all_shipment_data( $order_id, $bypass_filters );
 
 		foreach ( $shipment_data as $data ) {
 			if ( $data->id === (int) $data_id ) {
@@ -121,13 +122,14 @@ class Helper {
 	 * Returns all shipment data of the given order.
 	 * 
 	 * @param int|string $order_id Order ID.
+	 * @param bool       $bypass_filters Whether to bypass filters.
 	 * 
 	 * @return Shipment_Data[]
 	 */
-	public static function get_all_shipment_data( $order_id ) {
+	public static function get_all_shipment_data( $order_id, $bypass_filters = false ) {
 		$all_data = get_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY );
 
-		if ( ! $all_data ) {
+		if ( ! $all_data && ! $bypass_filters ) {
 			return apply_filters( 'hezarfen_mst_get_shipment_data', array(), $order_id );
 		}
 

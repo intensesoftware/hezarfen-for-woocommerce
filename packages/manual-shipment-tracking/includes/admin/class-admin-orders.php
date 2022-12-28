@@ -149,7 +149,7 @@ class Admin_Orders {
 			}
 
 			$new_courier  = Helper::get_courier_class( $new_courier_id );
-			$current_data = Helper::get_shipment_data_by_id( $id, $order_id );
+			$current_data = Helper::get_shipment_data_by_id( $id, $order_id, true );
 
 			if ( ! $current_data ) {
 				$new_data = new Shipment_Data(
