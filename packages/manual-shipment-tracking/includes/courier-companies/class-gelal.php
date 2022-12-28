@@ -39,6 +39,10 @@ class Courier_Gelal extends Courier_Company {
 	 * @return string
 	 */
 	public static function create_tracking_url( $tracking_number ) {
+		if ( ! $tracking_number ) {
+			return '';
+		}
+
 		return 'https://gelal.com/api/map/v1/map/' . $tracking_number;
 	}
 }

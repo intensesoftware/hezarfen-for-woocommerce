@@ -39,6 +39,10 @@ class Courier_Aras extends Courier_Company {
 	 * @return string
 	 */
 	public static function create_tracking_url( $tracking_number ) {
+		if ( ! $tracking_number ) {
+			return '';
+		}
+
 		return 'http://kargotakip.araskargo.com.tr/mainpage.aspx?code=' . $tracking_number;
 	}
 }

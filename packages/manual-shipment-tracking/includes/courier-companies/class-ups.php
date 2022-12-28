@@ -39,6 +39,10 @@ class Courier_UPS extends Courier_Company {
 	 * @return string
 	 */
 	public static function create_tracking_url( $tracking_number ) {
+		if ( ! $tracking_number ) {
+			return '';
+		}
+
 		return 'https://www.ups.com/track?loc=tr_TR&tracknum=' . $tracking_number . '&requester=WT/trackdetails';
 	}
 }

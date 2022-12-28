@@ -39,6 +39,10 @@ class Courier_PTT extends Courier_Company {
 	 * @return string
 	 */
 	public static function create_tracking_url( $tracking_number ) {
+		if ( ! $tracking_number ) {
+			return '';
+		}
+
 		return 'https://gonderitakip.ptt.gov.tr/Track/Verify?q=' . $tracking_number;
 	}
 }

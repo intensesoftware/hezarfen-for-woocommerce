@@ -39,6 +39,10 @@ class Courier_Trendyol_Express extends Courier_Company {
 	 * @return string
 	 */
 	public static function create_tracking_url( $tracking_number ) {
+		if ( ! $tracking_number ) {
+			return '';
+		}
+
 		return 'https://kargotakip.trendyol.com/?orderNumber=' . $tracking_number;
 	}
 }

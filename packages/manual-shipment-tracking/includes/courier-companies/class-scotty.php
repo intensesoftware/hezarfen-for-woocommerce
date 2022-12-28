@@ -39,6 +39,10 @@ class Courier_Scotty extends Courier_Company {
 	 * @return string
 	 */
 	public static function create_tracking_url( $tracking_number ) {
+		if ( ! $tracking_number ) {
+			return '';
+		}
+
 		return 'https://nerede.scotty.com.tr/kargom-nerede?tracking_code=' . $tracking_number;
 	}
 }
