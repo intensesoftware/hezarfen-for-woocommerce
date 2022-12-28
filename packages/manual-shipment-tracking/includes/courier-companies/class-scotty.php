@@ -21,6 +21,13 @@ class Courier_Scotty extends Courier_Company {
 	public static $id = 'scotty';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'scotty-logo.png';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

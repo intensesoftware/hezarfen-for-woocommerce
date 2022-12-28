@@ -21,6 +21,13 @@ class Courier_PTT extends Courier_Company {
 	public static $id = 'ptt';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'ptt-logo.png';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

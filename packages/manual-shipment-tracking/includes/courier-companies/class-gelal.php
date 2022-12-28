@@ -21,6 +21,13 @@ class Courier_Gelal extends Courier_Company {
 	public static $id = 'gelal';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'gelal-logo.png';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

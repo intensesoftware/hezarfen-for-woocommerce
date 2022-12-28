@@ -21,6 +21,13 @@ class Courier_Brinks extends Courier_Company {
 	public static $id = 'brinks';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'brinks-logo.png';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

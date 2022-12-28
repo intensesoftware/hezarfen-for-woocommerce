@@ -21,6 +21,13 @@ class Courier_Packupp extends Courier_Company {
 	public static $id = 'packupp';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'packupp-logo.svg';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

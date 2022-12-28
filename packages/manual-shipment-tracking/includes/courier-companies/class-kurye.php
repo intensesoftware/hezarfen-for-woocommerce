@@ -21,6 +21,13 @@ class Courier_Kurye extends Courier_Company {
 	public static $id = 'kurye';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = '';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

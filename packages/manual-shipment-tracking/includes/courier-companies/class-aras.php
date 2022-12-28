@@ -21,6 +21,13 @@ class Courier_Aras extends Courier_Company {
 	public static $id = 'aras';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'aras-logo.png';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

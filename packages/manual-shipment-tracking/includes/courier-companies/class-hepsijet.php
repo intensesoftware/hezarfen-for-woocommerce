@@ -21,6 +21,13 @@ class Courier_Hepsijet extends Courier_Company {
 	public static $id = 'hepsijet';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'hepsijet-logo.svg';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

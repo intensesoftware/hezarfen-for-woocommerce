@@ -21,6 +21,13 @@ class Courier_Jetizz extends Courier_Company {
 	public static $id = 'jetizz';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'jetizz-logo.png';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

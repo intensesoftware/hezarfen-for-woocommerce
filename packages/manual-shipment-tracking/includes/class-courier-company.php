@@ -23,6 +23,13 @@ abstract class Courier_Company {
 	public static $id;
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo;
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

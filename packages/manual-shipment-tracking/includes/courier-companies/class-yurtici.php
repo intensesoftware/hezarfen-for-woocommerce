@@ -21,6 +21,13 @@ class Courier_Yurtici extends Courier_Company {
 	public static $id = 'yurtici';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'yurtici-logo.svg';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

@@ -21,6 +21,13 @@ class Courier_Birgunde extends Courier_Company {
 	public static $id = 'birgunde';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'birgunde-logo.png';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

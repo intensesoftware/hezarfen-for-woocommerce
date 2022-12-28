@@ -21,6 +21,13 @@ class Courier_MNG extends Courier_Company {
 	public static $id = 'mng';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'mng-logo.svg';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

@@ -21,6 +21,13 @@ class Courier_Fedex extends Courier_Company {
 	public static $id = 'fedex';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'fedex-logo.png';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

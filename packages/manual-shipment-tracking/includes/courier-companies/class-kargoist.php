@@ -21,6 +21,13 @@ class Courier_Kargoist extends Courier_Company {
 	public static $id = 'kargoist';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'kargoist-logo.svg';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

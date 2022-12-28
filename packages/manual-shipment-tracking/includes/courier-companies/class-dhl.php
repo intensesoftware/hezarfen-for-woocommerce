@@ -21,6 +21,13 @@ class Courier_DHL extends Courier_Company {
 	public static $id = 'dhl';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'dhl-logo.svg';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

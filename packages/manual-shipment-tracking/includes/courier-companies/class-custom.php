@@ -21,6 +21,13 @@ class Courier_Custom extends Courier_Company {
 	public static $id = 'custom';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = '';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

@@ -21,6 +21,13 @@ class Courier_Kolay_Gelsin extends Courier_Company {
 	public static $id = 'kolay-gelsin';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'kolay-gelsin-logo.png';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

@@ -21,6 +21,13 @@ class Courier_TNT extends Courier_Company {
 	public static $id = 'tnt';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'tnt-logo.svg';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

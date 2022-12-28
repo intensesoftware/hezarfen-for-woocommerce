@@ -21,6 +21,13 @@ class Courier_Surat extends Courier_Company {
 	public static $id = 'surat';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'surat-logo.png';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

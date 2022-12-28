@@ -21,6 +21,13 @@ class Courier_CDEK extends Courier_Company {
 	public static $id = 'cdek';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'cdek-logo.svg';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

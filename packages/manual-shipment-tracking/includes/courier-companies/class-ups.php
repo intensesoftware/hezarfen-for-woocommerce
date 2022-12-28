@@ -21,6 +21,13 @@ class Courier_UPS extends Courier_Company {
 	public static $id = 'ups';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'ups-logo.svg';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

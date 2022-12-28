@@ -21,6 +21,13 @@ class Courier_Kargo_Turk extends Courier_Company {
 	public static $id = 'kargo-turk';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'kargo-turk-logo.png';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.

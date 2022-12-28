@@ -21,6 +21,13 @@ class Courier_Horoz_Lojistik extends Courier_Company {
 	public static $id = 'horoz-lojistik';
 
 	/**
+	 * Filename of the logo.
+	 * 
+	 * @var string
+	 */
+	public static $logo = 'horoz-lojistik-logo.svg';
+
+	/**
 	 * Returns the title.
 	 * 
 	 * @param int|string $order_id Order ID.
