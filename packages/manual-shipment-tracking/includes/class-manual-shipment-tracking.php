@@ -30,11 +30,7 @@ class Manual_Shipment_Tracking {
 	const DB_SHIPPED_ORDER_STATUS = 'wc-hezarfen-shipped';
 	const SHIPPED_ORDER_STATUS    = 'hezarfen-shipped';
 
-	const SHIPMENT_DATA_KEY         = '_hezarfen_mst_shipment_data';
-	const COURIER_COMPANY_ID_KEY    = '_hezarfen_mst_courier_company_id';
-	const COURIER_COMPANY_TITLE_KEY = '_hezarfen_mst_courier_company_title';
-	const TRACKING_NUM_KEY          = '_hezarfen_mst_tracking_number';
-	const TRACKING_URL_KEY          = '_hezarfen_mst_tracking_url';
+	const SHIPMENT_DATA_KEY = '_hezarfen_mst_shipment_data';
 
 	/**
 	 * The single instance of the class
