@@ -31,11 +31,10 @@ abstract class Notification_Provider {
 	 * Sends the notification.
 	 * 
 	 * @param \WC_Order $order Order instance.
-	 * @param string    $status_transition Status transition.
 	 * 
 	 * @return void
 	 */
-	abstract public function send( $order, $status_transition = '');
+	abstract public function send( $order);
 
 	/**
 	 * Override this method if notification provider requires 3rd party plugin(s) to work.

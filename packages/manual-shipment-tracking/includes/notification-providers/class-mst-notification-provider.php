@@ -17,11 +17,10 @@ abstract class MST_Notification_Provider extends \Hezarfen\Inc\Notification_Prov
 	 * Sends the notification.
 	 * 
 	 * @param \WC_Order $order Order instance.
-	 * @param string    $status_transition Status transition.
 	 * 
 	 * @return void
 	 */
-	public function send( $order, $status_transition = '' ) {
+	public function send( $order ) {
 		$order_id      = $order->get_id();
 		$shipment_data = Helper::get_all_shipment_data( $order_id );
 		foreach ( $shipment_data as $data ) {
