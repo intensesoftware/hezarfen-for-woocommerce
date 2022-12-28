@@ -140,41 +140,48 @@ class Admin_Orders {
 			return;
 		}
 
-		foreach ( $_POST[ self::DATA_ARRAY_KEY ] as $id => $shipment_data ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$new_courier_id   = ! empty( $shipment_data[ self::COURIER_HTML_NAME ] ) ? sanitize_text_field( $shipment_data[ self::COURIER_HTML_NAME ] ) : '';
-			$new_tracking_num = ! empty( $shipment_data[ self::TRACKING_NUM_HTML_NAME ] ) ? sanitize_text_field( $shipment_data[ self::TRACKING_NUM_HTML_NAME ] ) : '';
+		foreach ( $_POST[ self::DATA_ARRAY_KEY ] as $id => $post_data ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$new_courier_id   = ! empty( $post_data[ self::COURIER_HTML_NAME ] ) ? sanitize_text_field( $post_data[ self::COURIER_HTML_NAME ] ) : '';
+			$new_tracking_num = ! empty( $post_data[ self::TRACKING_NUM_HTML_NAME ] ) ? sanitize_text_field( $post_data[ self::TRACKING_NUM_HTML_NAME ] ) : '';
 
 			if ( ! $new_courier_id ) {
 				continue;
 			}
 
-			$old_data = Helper::get_shipment_data_by_id( $id, $order_id );
+			$new_courier  = Helper::get_courier_class( $new_courier_id );
+			$current_data = Helper::get_shipment_data_by_id( $id, $order_id );
 
-			$new_courier = Helper::get_courier_class( $new_courier_id );
-			$new_data    = new Shipment_Data(
-				array(
-					$id,
-					$new_courier_id,
-					$new_courier::get_title(),
-					$new_tracking_num,
-					$new_tracking_num ? $new_courier::create_tracking_url( $new_tracking_num ) : '',
-				)
-			);
+			if ( ! $current_data ) {
+				$new_data = new Shipment_Data(
+					array(
+						$id,
+						$order_id,
+						$new_courier_id,
+						$new_courier::get_title(),
+						$new_tracking_num,
+						$new_courier::create_tracking_url( $new_tracking_num ),
+					)
+				);
 
-			if ( ! $old_data ) {
-				add_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $new_data->prapare_for_db() );
+				$new_data->save( true );
 				do_action( 'hezarfen_mst_tracking_data_saved', $order_id, $new_data );
+
 				continue;
 			}
 
-			if ( $old_data->is_equal( $new_data ) ) {
+			if ( $current_data->courier_id === $new_courier_id && $current_data->tracking_num === $new_tracking_num ) {
 				continue;
 			}
 
-			$result = update_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $new_data->prapare_for_db(), $old_data->raw_data );
+			$current_data->courier_id    = $new_courier_id;
+			$current_data->courier_title = $new_courier::get_title();
+			$current_data->tracking_num  = $new_tracking_num;
+			$current_data->tracking_url  = $new_courier::create_tracking_url( $new_tracking_num );
+
+			$result = $current_data->save();
 
 			if ( true === $result ) {
-				do_action( 'hezarfen_mst_tracking_data_saved', $order_id, $new_data );
+				do_action( 'hezarfen_mst_tracking_data_saved', $order_id, $current_data );
 			}
 		}
 

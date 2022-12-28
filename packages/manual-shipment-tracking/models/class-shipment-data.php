@@ -23,6 +23,13 @@ class Shipment_Data {
 	public $id;
 
 	/**
+	 * The order ID that this object belongs to.
+	 * 
+	 * @var int
+	 */
+	public $order_id;
+
+	/**
 	 * Courier ID.
 	 * 
 	 * @var string
@@ -84,11 +91,35 @@ class Shipment_Data {
 		$id = (int) ( $data[0] ?? 1 );
 
 		$this->id            = $id > 0 ? $id : 1;
-		$this->courier_id    = $data[1] ?? '';
-		$this->courier_title = $data[2] ?? '';
-		$this->tracking_num  = $data[3] ?? '';
-		$this->tracking_url  = $data[4] ?? '';
-		$this->sms_sent      = isset( $data[5] ) ? boolval( $data[5] ) : false;
+		$this->order_id      = (int) ( $data[1] ?? 0 );
+		$this->courier_id    = $data[2] ?? '';
+		$this->courier_title = $data[3] ?? '';
+		$this->tracking_num  = $data[4] ?? '';
+		$this->tracking_url  = $data[5] ?? '';
+		$this->sms_sent      = isset( $data[6] ) ? boolval( $data[6] ) : false;
+	}
+
+	/**
+	 * Saves this shipment data object to db as a postmeta.
+	 * 
+	 * @param bool $add_new Add a new post meta?.
+	 * 
+	 * @return bool
+	 */
+	public function save( $add_new = false ) {
+		if ( ! $this->order_id ) {
+			return false;
+		}
+
+		if ( $add_new ) {
+			return add_post_meta( $this->order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->prapare_for_db() );
+		}
+
+		if ( $this->raw_data ) {
+			return update_post_meta( $this->order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->prapare_for_db(), $this->raw_data );
+		}
+
+		return false;
 	}
 
 	/**
@@ -97,17 +128,6 @@ class Shipment_Data {
 	 * @return string
 	 */
 	public function prapare_for_db() {
-		return implode( self::DATA_SEPARATOR, array( $this->id, $this->courier_id, $this->courier_title, $this->tracking_num, $this->tracking_url, intval( $this->sms_sent ) ) );
-	}
-
-	/**
-	 * Checks equality with an other Shipment_Data object.
-	 * 
-	 * @param Shipment_Data $other_data Other Shipment_Data object.
-	 * 
-	 * @return bool
-	 */
-	public function is_equal( $other_data ) {
-		return $this->courier_id === $other_data->courier_id && $this->tracking_num === $other_data->tracking_num;
+		return implode( self::DATA_SEPARATOR, array( $this->id, $this->order_id, $this->courier_id, $this->courier_title, $this->tracking_num, $this->tracking_url, intval( $this->sms_sent ) ) );
 	}
 }
