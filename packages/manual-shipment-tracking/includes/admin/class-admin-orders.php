@@ -22,7 +22,7 @@ class Admin_Orders {
 	 */
 	public function __construct() {
 		if ( is_admin() ) {
-			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_and_styles' ) );
 
 			add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_box' ) );
 
@@ -94,6 +94,7 @@ class Admin_Orders {
 					'label'   => $courier_select_label,
 					'value'   => $shipment_data->courier_id ? $shipment_data->courier_id : Helper::get_default_courier_id(),
 					'options' => Helper::courier_company_options(),
+					'class'   => 'courier-company-select',
 				)
 			);
 			?>
@@ -206,11 +207,19 @@ class Admin_Orders {
 	 * 
 	 * @return void
 	 */
-	public function enqueue_styles( $hook_suffix ) {
+	public function enqueue_scripts_and_styles( $hook_suffix ) {
 		global $typenow;
 
-		if ( 'edit.php' === $hook_suffix && 'shop_order' === $typenow ) {
+		if ( 'shop_order' !== $typenow ) {
+			return;
+		}
+
+		if ( 'edit.php' === $hook_suffix ) {
 			wp_enqueue_style( 'hezarfen_mst_admin_orders_page_css', HEZARFEN_MST_ASSETS_URL . 'css/admin/orders-page.css', array(), WC_HEZARFEN_VERSION );
+		}
+
+		if ( 'post.php' === $hook_suffix ) {
+			wp_enqueue_script( 'hezarfen_mst_admin_order_edit_page_js', HEZARFEN_MST_ASSETS_URL . 'js/admin/order-edit.js', array( 'jquery' ), WC_HEZARFEN_VERSION, true );
 		}
 	}
 }
