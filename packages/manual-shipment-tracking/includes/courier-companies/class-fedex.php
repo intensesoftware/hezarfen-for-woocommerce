@@ -25,7 +25,7 @@ class Courier_Fedex extends Courier_Company {
 	 * 
 	 * @var string
 	 */
-	public static $logo = 'fedex-logo.png';
+	public static $logo = 'fedex-logo.svg';
 
 	/**
 	 * Returns the title.

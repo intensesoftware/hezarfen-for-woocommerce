@@ -25,7 +25,7 @@ class Courier_Brinks extends Courier_Company {
 	 * 
 	 * @var string
 	 */
-	public static $logo = 'brinks-logo.png';
+	public static $logo = 'brinks-logo.svg';
 
 	/**
 	 * Returns the title.
