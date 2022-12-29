@@ -25,7 +25,7 @@ class Courier_Kurye extends Courier_Company {
 	 * 
 	 * @var string
 	 */
-	public static $logo = '';
+	public static $logo = 'kurye-logo.png';
 
 	/**
 	 * Returns the title.
