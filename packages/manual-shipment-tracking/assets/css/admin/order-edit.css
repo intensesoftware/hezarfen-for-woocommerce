@@ -1,0 +1,13 @@
+.shipment-info .courier-company-select {
+	width: 95%;
+}
+
+.hezarfen-mst-courier-logo-wrapper {
+	display: flex;
+	align-items: center;
+}
+
+.hezarfen-mst-courier-logo-wrapper .hezarfen-mst-courier-logo {
+	width: 50px;
+	margin-left: 5px;
+}

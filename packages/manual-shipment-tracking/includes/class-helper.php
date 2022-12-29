@@ -46,15 +46,21 @@ class Helper {
 	/**
 	 * Returns courier companies array for using as select options.
 	 * 
+	 * @param bool $first_item_blank Is first item must be blank?.
+	 * 
 	 * @return array<string, string>
 	 */
-	public static function courier_company_options() {
+	public static function courier_company_options( $first_item_blank = false ) {
 		// prepare the "ID => Courier title" array.
 		foreach ( Manual_Shipment_Tracking::courier_companies() as $id => $courier_class ) {
 			$options[ $id ] = $courier_class::get_title();
 		}
 
-		$options[''] = __( 'Please choose a courier company', 'hezarfen-for-woocommerce' );
+		if ( $first_item_blank ) {
+			$options[''] = '';
+		} else {
+			$options[''] = __( 'Choose a courier company', 'hezarfen-for-woocommerce' );
+		}
 
 		return $options;
 	}

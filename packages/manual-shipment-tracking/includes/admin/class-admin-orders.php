@@ -89,17 +89,17 @@ class Admin_Orders {
 		}
 		?>
 		<div class="shipment-info">
-			<p class="form-field">
+			<p class="form-field courier-company-select-wrapper">
 				<label>
 					<?php echo esc_html( $courier_select_label ); ?>
 					<select class="courier-company-select" name="<?php echo esc_attr( $courier_select_name ); ?>">
-						<?php foreach ( Helper::courier_company_options() as $courier_id => $courier_label ) : ?>
-							<option value="<?php echo esc_attr( $courier_id ); ?>" <?php selected( $courier_select_value, $courier_id ); ?>><?php echo esc_html( $courier_label ); ?></option>
+						<?php foreach ( Helper::courier_company_options( true ) as $courier_id => $courier_label ) : ?>
+							<option value="<?php echo esc_attr( $courier_id ); ?>" data-logo="<?php echo esc_attr( Helper::get_courier_class( $courier_id )::$logo ); ?>" <?php selected( $courier_select_value, $courier_id ); ?>><?php echo esc_html( $courier_label ); ?></option>
 						<?php endforeach; ?>
 					</select>
 				</label>
 			</p>
-			<p class="form-field">
+			<p class="form-field tracking-number-input-wrapper">
 				<label for="<?php echo esc_attr( self::TRACKING_NUM_HTML_NAME ); ?>">
 					<?php esc_html_e( 'Tracking Number', 'hezarfen-for-woocommerce' ); ?>
 				</label>
@@ -220,7 +220,17 @@ class Admin_Orders {
 		}
 
 		if ( 'post.php' === $hook_suffix ) {
-			wp_enqueue_script( 'hezarfen_mst_admin_order_edit_page_js', HEZARFEN_MST_ASSETS_URL . 'js/admin/order-edit.js', array( 'jquery' ), WC_HEZARFEN_VERSION, true );
+			wp_enqueue_style( 'hezarfen_mst_admin_order_edit_css', HEZARFEN_MST_ASSETS_URL . 'css/admin/order-edit.css', array(), WC_HEZARFEN_VERSION );
+			wp_enqueue_script( 'hezarfen_mst_admin_order_edit_js', HEZARFEN_MST_ASSETS_URL . 'js/admin/order-edit.js', array( 'jquery' ), WC_HEZARFEN_VERSION, true );
+
+			wp_localize_script(
+				'hezarfen_mst_admin_order_edit_js',
+				'hezarfen_mst_backend',
+				array(
+					'courier_select_placeholder' => __( 'Choose a courier company', 'hezarfen-for-woocommerce' ),
+					'courier_logo_base_url'      => HEZARFEN_MST_ASSETS_URL . 'img/courier-companies/',
+				)
+			);
 		}
 	}
 }
