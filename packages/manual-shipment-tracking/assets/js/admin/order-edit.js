@@ -16,10 +16,8 @@ jQuery(function ($) {
 			const base_url = hezarfen_mst_backend.courier_logo_base_url;
 
 			const wrapper = $('<div></div>').addClass('hezarfen-mst-courier-logo-wrapper');
-			const span = $('<span></span>').text(option.text);
-			const logo = $('<img>').attr('src', base_url + option.element.dataset.logo).addClass('hezarfen-mst-courier-logo');
+			const logo = $('<img>').attr('src', base_url + option.element.dataset.logo).addClass('hezarfen-mst-courier-logo').addClass(option.element.value);
 
-			wrapper.append(span);
 			wrapper.append(logo);
 
 			return wrapper;

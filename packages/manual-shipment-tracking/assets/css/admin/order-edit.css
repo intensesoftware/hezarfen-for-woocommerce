@@ -5,9 +5,27 @@
 .hezarfen-mst-courier-logo-wrapper {
 	display: flex;
 	align-items: center;
+	height: 30px;
 }
 
 .hezarfen-mst-courier-logo-wrapper .hezarfen-mst-courier-logo {
-	width: 50px;
-	margin-left: 5px;
+	height: 30px;
+	max-width: 105px;
+    object-fit: contain;
+}
+
+.hezarfen-mst-courier-logo-wrapper .hezarfen-mst-courier-logo.hepsijet {
+	height: 20px;
+}
+
+.hezarfen-mst-courier-logo-wrapper .hezarfen-mst-courier-logo.jetizz {
+	height: 27px;
+}
+
+.hezarfen-mst-courier-logo-wrapper .hezarfen-mst-courier-logo.cdek {
+	height: 22px;
+}
+
+.hezarfen-mst-courier-logo-wrapper .hezarfen-mst-courier-logo.fedex {
+	height: 23px;
 }
