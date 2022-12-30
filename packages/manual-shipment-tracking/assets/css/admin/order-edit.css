@@ -5,6 +5,7 @@
 .hezarfen-mst-courier-logo-wrapper {
 	display: flex;
 	align-items: center;
+	justify-content: center;
 	height: 30px;
 }
 
