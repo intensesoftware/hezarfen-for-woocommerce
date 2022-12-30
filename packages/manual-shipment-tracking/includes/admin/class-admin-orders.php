@@ -68,9 +68,16 @@ class Admin_Orders {
 			$shipment_data[] = new Shipment_Data();
 		}
 
-		foreach ( $shipment_data as $data ) {
-			self::render_shipment_form_elements( $data );
-		}
+		?>
+		<div class="shipment-forms-wrapper">
+			<?php 
+			foreach ( $shipment_data as $data ) {
+				self::render_shipment_form_elements( $data );
+			}
+			?>
+		</div>
+		<a class="button duplicate-form">+</a>
+		<?php
 	}
 
 	/**
@@ -85,13 +92,13 @@ class Admin_Orders {
 		$courier_select_value = $shipment_data->courier_id ? $shipment_data->courier_id : Helper::get_default_courier_id();
 		$courier_select_label = __( 'Courier Company', 'hezarfen-for-woocommerce' );
 		if ( Helper::is_custom_courier( $shipment_data->courier_id ) ) {
-			$courier_select_label = sprintf( '%s (%s)', $courier_select_label, $shipment_data->courier_title );
+			$courier_select_label = sprintf( '%s <span class="custom-courier-title">(%s)</span>', $courier_select_label, $shipment_data->courier_title );
 		}
 		?>
-		<div class="shipment-info">
+		<div class="shipment-form" data-id="<?php echo esc_attr( $shipment_data->id ); ?>">
 			<p class="form-field courier-company-select-wrapper">
 				<label>
-					<?php echo esc_html( $courier_select_label ); ?>
+					<?php echo wp_kses_post( $courier_select_label ); ?>
 					<select class="courier-company-select" name="<?php echo esc_attr( $courier_select_name ); ?>">
 						<?php foreach ( Helper::courier_company_options( true ) as $courier_id => $courier_label ) : ?>
 							<option value="<?php echo esc_attr( $courier_id ); ?>" data-logo="<?php echo esc_attr( Helper::get_courier_class( $courier_id )::$logo ); ?>" <?php selected( $courier_select_value, $courier_id ); ?>><?php echo esc_html( $courier_label ); ?></option>
@@ -99,7 +106,7 @@ class Admin_Orders {
 					</select>
 				</label>
 			</p>
-			<p class="form-field tracking-number-input-wrapper">
+			<p class="form-field tracking-num-input-wrapper">
 				<label>
 					<?php esc_html_e( 'Tracking Number', 'hezarfen-for-woocommerce' ); ?>
 					<?php if ( $shipment_data->tracking_url ) : ?>
@@ -109,6 +116,7 @@ class Admin_Orders {
 						type="text"
 						name="<?php echo esc_attr( sprintf( '%s[%s][%s]', self::DATA_ARRAY_KEY, $shipment_data->id, self::TRACKING_NUM_HTML_NAME ) ); ?>"
 						value="<?php echo esc_attr( $shipment_data->tracking_num ); ?>"
+						class="tracking-num-input"
 						placeholder="<?php esc_attr_e( 'Enter tracking number', 'hezarfen-for-woocommerce' ); ?>">
 				</label>
 			</p>
