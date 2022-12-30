@@ -100,18 +100,17 @@ class Admin_Orders {
 				</label>
 			</p>
 			<p class="form-field tracking-number-input-wrapper">
-				<label for="<?php echo esc_attr( self::TRACKING_NUM_HTML_NAME ); ?>">
+				<label>
 					<?php esc_html_e( 'Tracking Number', 'hezarfen-for-woocommerce' ); ?>
+					<?php if ( $shipment_data->tracking_url ) : ?>
+						<a href="<?php echo esc_url( $shipment_data->tracking_url ); ?>" target="_blank"><?php esc_html_e( '(Track Cargo)', 'hezarfen-for-woocommerce' ); ?></a>
+					<?php endif; ?>
+					<input
+						type="text"
+						name="<?php echo esc_attr( sprintf( '%s[%s][%s]', self::DATA_ARRAY_KEY, $shipment_data->id, self::TRACKING_NUM_HTML_NAME ) ); ?>"
+						value="<?php echo esc_attr( $shipment_data->tracking_num ); ?>"
+						placeholder="<?php esc_attr_e( 'Enter tracking number', 'hezarfen-for-woocommerce' ); ?>">
 				</label>
-				<?php if ( $shipment_data->tracking_url ) : ?>
-					<a href="<?php echo esc_url( $shipment_data->tracking_url ); ?>" target="_blank"><?php esc_html_e( '(Track Cargo)', 'hezarfen-for-woocommerce' ); ?></a>
-				<?php endif; ?>
-				<input
-					type="text"
-					name="<?php echo esc_attr( sprintf( '%s[%s][%s]', self::DATA_ARRAY_KEY, $shipment_data->id, self::TRACKING_NUM_HTML_NAME ) ); ?>"
-					id="<?php echo esc_attr( self::TRACKING_NUM_HTML_NAME ); ?>"
-					value="<?php echo esc_attr( $shipment_data->tracking_num ); ?>"
-					placeholder="<?php esc_attr_e( 'Enter tracking number', 'hezarfen-for-woocommerce' ); ?>">
 			</p>
 		</div>
 		<?php
