@@ -2,6 +2,11 @@
 	width: 95%;
 }
 
+#hezarfen-mst-order-edit-metabox .shipment-info-form .courier-company-select-wrapper .select2-container {
+	display: block;
+}
+
+/* select2 dropdown start */
 .hezarfen-mst-courier-logo-wrapper {
 	display: flex;
 	align-items: center;
@@ -30,3 +35,4 @@
 .hezarfen-mst-courier-logo-wrapper .hezarfen-mst-courier-logo.fedex {
 	height: 23px;
 }
+/* select2 dropdown end */
