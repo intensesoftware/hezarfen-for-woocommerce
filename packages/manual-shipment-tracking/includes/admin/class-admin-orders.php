@@ -95,7 +95,7 @@ class Admin_Orders {
 			$courier_select_label = sprintf( '%s <span class="custom-courier-title">(%s)</span>', $courier_select_label, $shipment_data->courier_title );
 		}
 		?>
-		<div class="shipment-form" data-id="<?php echo esc_attr( $shipment_data->id ); ?>">
+		<div class="shipment-form" data-id="<?php echo esc_attr( strval( $shipment_data->id ) ); ?>">
 			<p class="form-field courier-company-select-wrapper">
 				<label>
 					<?php echo wp_kses_post( $courier_select_label ); ?>
