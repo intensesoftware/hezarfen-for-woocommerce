@@ -16,9 +16,7 @@
 #hezarfen-mst-order-edit-metabox .duplicate-form {
 	display: block;
 	width: 30px;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 10px;
+	margin: 10px auto 0 auto;
 	font-weight: bold;
 }
 
