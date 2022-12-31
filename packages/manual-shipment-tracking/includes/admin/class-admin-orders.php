@@ -16,6 +16,7 @@ class Admin_Orders {
 	const DATA_ARRAY_KEY         = 'hezarfen_mst_shipment_data';
 	const COURIER_HTML_NAME      = 'courier_company';
 	const TRACKING_NUM_HTML_NAME = 'tracking_number';
+	const SHIPMENT_COLUMN        = 'hezarfen_mst_shipment_info';
 
 	/**
 	 * Constructor
@@ -24,10 +25,61 @@ class Admin_Orders {
 		if ( is_admin() ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_and_styles' ) );
 
+			add_filter( 'manage_shop_order_posts_columns', array( __CLASS__, 'add_shipment_column' ), PHP_INT_MAX - 1 );
+			add_action( 'manage_shop_order_posts_custom_column', array( __CLASS__, 'render_shipment_column' ), 10, 2 );
+
 			add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_box' ) );
 
 			add_filter( 'woocommerce_reports_order_statuses', array( $this, 'append_order_status_to_reports' ), 20 );
 			add_action( 'woocommerce_process_shop_order_meta', array( $this, 'order_save' ), PHP_INT_MAX - 1 );
+		}
+	}
+
+	/**
+	 * Adds the "Shipment" column to the orders page.
+	 * 
+	 * @param array<string, string> $columns Columns.
+	 * 
+	 * @return array<string, string>
+	 */
+	public static function add_shipment_column( $columns ) {
+		$reordered = array();
+
+		foreach ( $columns as $key => $title ) {
+			$reordered[ $key ] = $title;
+
+			if ( 'order_status' === $key ) {
+				$reordered[ self::SHIPMENT_COLUMN ] = __( 'Shipment', 'hezarfen-for-woocommerce' );
+			}
+		}
+
+		return $reordered;
+	}
+
+	/**
+	 * Outputs the "Shipment" column HTML.
+	 * 
+	 * @param string     $column_key Current column key.
+	 * @param int|string $order_id Order ID.
+	 * 
+	 * @return void
+	 */
+	public static function render_shipment_column( $column_key, $order_id ) {
+		if ( self::SHIPMENT_COLUMN === $column_key ) {
+			$shipment_data = Helper::get_all_shipment_data( $order_id );
+			if ( $shipment_data ) {
+				$courier = Helper::get_courier_class( $shipment_data[0]->courier_id );
+				if ( $courier::$logo ) : ?>
+					<img src="<?php echo esc_url( HEZARFEN_MST_COURIER_LOGO_URL . $courier::$logo ); ?>" class="courier-logo">
+				<?php else : ?>
+					<p><?php echo esc_html( $courier::get_title( $order_id ) ); ?></p>
+					<?php 
+				endif;
+			} else { 
+				?>
+				<p><?php esc_html_e( 'No shipment data found', 'hezarfen-for-woocommerce' ); ?></p>
+				<?php
+			}
 		}
 	}
 
@@ -235,7 +287,7 @@ class Admin_Orders {
 				'hezarfen_mst_backend',
 				array(
 					'courier_select_placeholder' => __( 'Choose a courier company', 'hezarfen-for-woocommerce' ),
-					'courier_logo_base_url'      => HEZARFEN_MST_ASSETS_URL . 'img/courier-companies/',
+					'courier_logo_base_url'      => HEZARFEN_MST_COURIER_LOGO_URL,
 				)
 			);
 		}

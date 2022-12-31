@@ -2,3 +2,9 @@
 	background: #5b85fb;
 	color: #ffffff;
 }
+
+.column-hezarfen_mst_shipment_info .courier-logo {
+	width: 100px;
+	height: 30px;
+	object-fit: contain;
+}
