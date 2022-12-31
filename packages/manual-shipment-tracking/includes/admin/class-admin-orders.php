@@ -223,7 +223,7 @@ class Admin_Orders {
 		}
 
 		if ( 'edit.php' === $hook_suffix ) {
-			wp_enqueue_style( 'hezarfen_mst_admin_orders_page_css', HEZARFEN_MST_ASSETS_URL . 'css/admin/orders-page.css', array(), WC_HEZARFEN_VERSION );
+			wp_enqueue_style( 'hezarfen_mst_admin_orders_css', HEZARFEN_MST_ASSETS_URL . 'css/admin/orders.css', array(), WC_HEZARFEN_VERSION );
 		}
 
 		if ( 'post.php' === $hook_suffix ) {
