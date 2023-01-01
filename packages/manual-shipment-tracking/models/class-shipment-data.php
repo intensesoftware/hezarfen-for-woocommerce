@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * The Shipment_Data class.
  */
-class Shipment_Data {
+class Shipment_Data implements \JsonSerializable {
 	const DATA_SEPARATOR = '||';
 
 	/**
@@ -129,5 +129,20 @@ class Shipment_Data {
 	 */
 	public function prapare_for_db() {
 		return implode( self::DATA_SEPARATOR, array( $this->id, $this->order_id, $this->courier_id, $this->courier_title, $this->tracking_num, $this->tracking_url, intval( $this->sms_sent ) ) );
+	}
+
+	/**
+	 * Returns data which should be serialized to JSON.
+	 * 
+	 * It hides sensitive and unnecessary data in ajax responses, and escapes the data.
+	 * 
+	 * @return array<string, string>
+	 */
+	public function jsonSerialize() {
+		return array(
+			'courier_title' => esc_html( $this->courier_title ),
+			'tracking_num'  => esc_html( $this->tracking_num ),
+			'tracking_url'  => esc_url( $this->tracking_url ),
+		);
 	}
 }

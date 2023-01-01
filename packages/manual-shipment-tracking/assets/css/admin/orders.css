@@ -8,3 +8,17 @@
 	height: 30px;
 	object-fit: contain;
 }
+
+.column-hezarfen_mst_shipment_info .shipment-info-icon {
+	width: 16px;
+	height: 16px;
+	font-size: 16px;
+}
+
+.column-hezarfen_mst_shipment_info .shipment-info-icon:hover {
+	color: #00a0d2;
+}
+
+.column-hezarfen_mst_shipment_info .shipment-info-icon::before {
+	content: "\f14c";
+}

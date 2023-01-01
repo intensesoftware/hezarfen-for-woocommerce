@@ -15,6 +15,7 @@ require_once 'class-helper.php';
 require_once 'admin/class-settings.php';
 require_once 'email/class-email.php';
 require_once 'class-my-account.php';
+require_once 'admin/class-admin-ajax.php';
 require_once 'admin/class-admin-orders.php';
 require_once 'notification-providers/class-mst-notification-provider.php';
 require_once 'notification-providers/class-netgsm.php';
@@ -90,6 +91,7 @@ class Manual_Shipment_Tracking {
 	private function initialize_classes() {
 		new Email();
 		new My_Account();
+		new Admin_Ajax();
 		new Admin_Orders();
 		new Third_Party_Data_Support();
 

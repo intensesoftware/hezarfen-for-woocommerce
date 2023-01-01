@@ -71,6 +71,7 @@ class Admin_Orders {
 				$courier = Helper::get_courier_class( $shipment_data[0]->courier_id );
 				if ( $courier::$logo ) : ?>
 					<img src="<?php echo esc_url( HEZARFEN_MST_COURIER_LOGO_URL . $courier::$logo ); ?>" class="courier-logo">
+					<span data-order-id="<?php echo esc_attr( $order_id ); ?>" class="dashicons dashicons-info-outline shipment-info-icon"></span>
 				<?php else : ?>
 					<p><?php echo esc_html( $courier::get_title( $order_id ) ); ?></p>
 					<?php 
@@ -276,6 +277,19 @@ class Admin_Orders {
 
 		if ( 'edit.php' === $hook_suffix ) {
 			wp_enqueue_style( 'hezarfen_mst_admin_orders_css', HEZARFEN_MST_ASSETS_URL . 'css/admin/orders.css', array(), WC_HEZARFEN_VERSION );
+			wp_enqueue_script( 'hezarfen_mst_admin_orders_js', HEZARFEN_MST_ASSETS_URL . 'js/admin/orders.js', array( 'jquery', 'jquery-tiptip' ), WC_HEZARFEN_VERSION, true );
+
+			wp_localize_script(
+				'hezarfen_mst_admin_orders_js',
+				'hezarfen_mst_backend',
+				array(
+					'get_shipment_data_nonce'  => wp_create_nonce( Admin_Ajax::GET_SHIPMENT_DATA_NONCE ),
+					'get_shipment_data_action' => Admin_Ajax::GET_SHIPMENT_DATA_ACTION,
+					'tooltip_placeholder'      => esc_html__( 'Fetching data..', 'hezarfen-for-woocommerce' ),
+					'courier_company_i18n'     => esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ),
+					'tracking_num_i18n'        => esc_html__( 'Tracking Number', 'hezarfen-for-woocommerce' ),
+				)
+			);
 		}
 
 		if ( 'post.php' === $hook_suffix ) {
