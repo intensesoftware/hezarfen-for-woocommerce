@@ -136,8 +136,9 @@ class Shipment_Data implements \JsonSerializable {
 	 * 
 	 * It hides sensitive and unnecessary data in ajax responses, and escapes the data.
 	 * 
-	 * @return mixed
+	 * @return array<string, string>
 	 */
+	#[\ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return array(
 			'courier_title' => esc_html( $this->courier_title ),
