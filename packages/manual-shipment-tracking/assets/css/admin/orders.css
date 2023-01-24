@@ -22,3 +22,7 @@
 .column-hezarfen_mst_shipment_info .shipment-info-icon::before {
 	content: "\f14c";
 }
+
+#tiptip_holder #tiptip_content {
+    max-width: 200px;
+}
