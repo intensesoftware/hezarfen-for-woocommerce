@@ -68,17 +68,22 @@ class Admin_Orders {
 		if ( self::SHIPMENT_COLUMN === $column_key ) {
 			$shipment_data = Helper::get_all_shipment_data( $order_id );
 			if ( $shipment_data ) {
-				$courier = Helper::get_courier_class( $shipment_data[0]->courier_id );
-				if ( $courier::$logo ) : ?>
-					<img src="<?php echo esc_url( HEZARFEN_MST_COURIER_LOGO_URL . $courier::$logo ); ?>" class="courier-logo">
-					<span data-order-id="<?php echo esc_attr( $order_id ); ?>" class="dashicons dashicons-info-outline shipment-info-icon"></span>
-				<?php else : ?>
-					<p><?php echo esc_html( $courier::get_title( $order_id ) ); ?></p>
-					<?php 
-				endif;
+				if ( count( $shipment_data ) > 1 ) {
+					printf( '<p>%s</p>', esc_html__( 'Shipment in pieces', 'hezarfen-for-woocommerce' ) );
+				} else {
+					$courier = Helper::get_courier_class( $shipment_data[0]->courier_id );
+					if ( $courier::$logo ) : ?>
+						<img src="<?php echo esc_url( HEZARFEN_MST_COURIER_LOGO_URL . $courier::$logo ); ?>" class="courier-logo">
+					<?php else : ?>
+						<p><?php echo esc_html( $courier::get_title( $order_id ) ); ?></p>
+						<?php 
+					endif;
+				}
+
+				printf( '<span data-order-id="%s" class="dashicons dashicons-info-outline shipment-info-icon"></span>', esc_attr( $order_id ) );
 			} else { 
 				?>
-				<p><?php esc_html_e( 'No shipment data found', 'hezarfen-for-woocommerce' ); ?></p>
+				<p class="no-shipment-found"><?php esc_html_e( 'No shipment data found', 'hezarfen-for-woocommerce' ); ?></p>
 				<?php
 			}
 		}

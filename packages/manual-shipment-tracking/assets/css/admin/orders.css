@@ -3,6 +3,15 @@
 	color: #ffffff;
 }
 
+td.column-hezarfen_mst_shipment_info p {
+	display: inline-block;
+	margin-right: 5px !important;
+}
+
+.column-hezarfen_mst_shipment_info .no-shipment-found {
+	color: #8d8d8d;
+}
+
 .column-hezarfen_mst_shipment_info .courier-logo {
 	width: 100px;
 	height: 30px;
@@ -24,5 +33,5 @@
 }
 
 #tiptip_holder #tiptip_content {
-    max-width: 200px;
+	max-width: 200px;
 }
