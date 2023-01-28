@@ -114,12 +114,13 @@ class My_Account {
 	private function render_tracking_info_in_order_details( $shipment_data ) {
 		?>
 		<div class="tracking-info">
-			<h4><?php echo sprintf( '%s: %s', esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ), esc_html( $shipment_data->courier_title ) ); ?></h4>
-			<h4><?php echo sprintf( '%s: %s', esc_html__( 'Tracking Number', 'hezarfen-for-woocommerce' ), esc_html( $shipment_data->tracking_num ) ); ?></h4>
+			<p><?php echo sprintf( '%s: <strong>%s</strong>', esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ), esc_html( $shipment_data->courier_title ) ); ?></p>
+			<p><?php echo sprintf( '%s: <strong>%s</strong>', esc_html__( 'Tracking Number', 'hezarfen-for-woocommerce' ), esc_html( $shipment_data->tracking_num ) ); ?></p>
 			<?php if ( $shipment_data->tracking_url ) : ?>
-				<h4><a class="tracking-url" href="<?php echo esc_url( $shipment_data->tracking_url ); ?>" target="_blank"><?php esc_html_e( 'Click here to find out where your cargo is.', 'hezarfen-for-woocommerce' ); ?></a></h4>
+				<p><a class="button tracking-url" href="<?php echo esc_url( $shipment_data->tracking_url ); ?>" target="_blank"><?php esc_html_e( 'Track Cargo', 'hezarfen-for-woocommerce' ); ?></a></p>
 			<?php endif; ?>
 		</div>
+		<hr>
 		<?php
 	}
 
