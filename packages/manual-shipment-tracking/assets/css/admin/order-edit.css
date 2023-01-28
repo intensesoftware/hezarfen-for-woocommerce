@@ -18,6 +18,7 @@
 	width: 30px;
 	margin: 10px auto 0 auto;
 	font-weight: bold;
+	text-align: center;
 }
 
 /* select2 dropdown start */
@@ -50,3 +51,9 @@
 	height: 23px;
 }
 /* select2 dropdown end */
+
+@media (max-width: 782px) {
+	#hezarfen-mst-order-edit-metabox .duplicate-form {
+		padding: 0;
+	}
+}
