@@ -27,8 +27,8 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 <p>
 	<?php esc_html_e( 'Your order has been shipped. Tracking information is below:', 'hezarfen-for-woocommerce' ); ?>
 </p>
-<div class="shipment-info">
-	<?php foreach ( $shipment_data as $data ) : ?>
+<div class="shipment-info" style="margin-bottom: 20px; padding: 10px; border: 2px solid #e5e5e5;">
+	<?php foreach ( $shipment_data as $i => $data ) : ?>
 		<p>
 			<?php esc_html_e( 'Courier Company', 'hezarfen-for-woocommerce' ); ?>: <strong><?php echo esc_html( $data->courier_title ); ?></strong>
 		</p>
@@ -40,15 +40,22 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 		<?php endif; ?>
 
 		<?php if ( $data->tracking_url ) : ?>
-			<p>
-				<a style="color:blue" href="<?php echo esc_url( $data->tracking_url ); ?>" target="_blank">
-					<?php esc_html_e( 'Click here to find out where your cargo is.', 'hezarfen-for-woocommerce' ); ?>
+			<?php $background_color = get_option( 'woocommerce_email_base_color' ); ?>
+			<?php $text_color = wc_light_or_dark( $background_color, '#202020', '#ffffff' ); ?>
+			<p style="margin: 0;">
+				<a
+					style="display: inline-block; padding: 3px 10px; height: 35px; line-height: 35px; background: <?php echo esc_attr( $background_color ); ?>; color: <?php echo esc_attr( $text_color ); ?>; text-decoration: none;"
+					href="<?php echo esc_url( $data->tracking_url ); ?>"
+					target="_blank">
+					<?php esc_html_e( 'Track Cargo', 'hezarfen-for-woocommerce' ); ?>
 				</a>
 			</p>
-			<?php 
-		endif;
-	endforeach; 
-	?>
+		<?php endif; ?>
+
+		<?php if ( $i < count( $shipment_data ) - 1 ) : ?>
+			<hr style="margin: 15px 0; color: #e5e5e5">
+		<?php endif; ?>
+	<?php endforeach; ?>
 </div>
 
 <?php
