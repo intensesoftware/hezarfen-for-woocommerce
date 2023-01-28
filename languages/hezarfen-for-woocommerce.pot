@@ -1,4 +1,4 @@
-# Copyright (C) 2022 Intense Yazılım Ltd.
+# Copyright (C) 2023 Intense Yazılım Ltd.
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
@@ -9,9 +9,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-12-18T09:11:39+01:00\n"
+"POT-Creation-Date: 2023-01-28T22:50:02+03:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.5.0\n"
+"X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: hezarfen-for-woocommerce\n"
 
 #. Description of the plugin
@@ -234,26 +234,59 @@ msgstr ""
 msgid "%s plugin has a new version available. In order to use the plugin, you must update it."
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:52
-msgid "Cargo Informations"
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:54
+msgid "Shipment"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:52
-msgid "Edit"
-msgstr ""
-
-#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:59
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:74
-#: packages/manual-shipment-tracking/includes/class-my-account.php:82
-#: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:32
+msgid "Shipment in pieces"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:86
+msgid "No shipment data found"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:105
+msgid "Hezarfen"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:129
+msgid "Remove shipment data?"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:131
+msgid "Are you sure you want to remove this shipment data?"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:154
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:300
+#: packages/manual-shipment-tracking/includes/class-my-account.php:119
+#: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:33
 msgid "Courier Company"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:61
-#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:84
-#: packages/manual-shipment-tracking/includes/class-my-account.php:83
-#: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:35
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:175
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:301
+#: packages/manual-shipment-tracking/includes/class-my-account.php:120
+#: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:38
 msgid "Tracking Number"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:177
+msgid "(Track Cargo)"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:184
+msgid "Enter tracking number"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:299
+msgid "Fetching data.."
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:314
+#: packages/manual-shipment-tracking/includes/class-helper.php:62
+msgid "Choose a courier company"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:60
@@ -354,165 +387,161 @@ msgstr ""
 msgid "Available Variables"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/class-helper.php:57
-msgid "Please choose a courier company"
-msgstr ""
-
-#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:123
+#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:124
 msgctxt "WooCommerce Order status"
 msgid "Shipped"
 msgstr ""
 
 #. translators: %s: number of orders
-#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:134
+#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:135
 msgid "Shipped (%s)"
 msgid_plural "Shipped (%s)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: packages/manual-shipment-tracking/includes/class-my-account.php:42
-#: packages/manual-shipment-tracking/includes/class-my-account.php:80
+#: packages/manual-shipment-tracking/includes/class-my-account.php:44
+#: packages/manual-shipment-tracking/includes/class-my-account.php:93
 msgid "Tracking Information"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/class-my-account.php:86
-#: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:45
-msgid "Click here to find out where your cargo is."
-msgstr ""
-
-#: packages/manual-shipment-tracking/includes/class-my-account.php:91
+#: packages/manual-shipment-tracking/includes/class-my-account.php:101
 msgid "Your order hasn't been shipped yet."
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:158
+#: packages/manual-shipment-tracking/includes/class-my-account.php:122
+#: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:50
+msgid "Track Cargo"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:159
 msgctxt "WooCommerce Order status"
 msgid "Shipped (Intense Kargo Takip Plugin)"
 msgstr ""
 
 #. translators: %s: number of orders
-#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:160
+#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:161
 msgid "Shipped (Intense Kargo Takip Plugin) (%s)"
 msgid_plural "Shipped (Intense Kargo Takip Plugin) (%s)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:164
+#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:165
 msgctxt "WooCommerce Order status"
 msgid "Shipped (Kargo Takip Turkiye Plugin)"
 msgstr ""
 
 #. translators: %s: number of orders
-#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:166
+#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:167
 msgid "Shipped (Kargo Takip Turkiye Plugin) (%s)"
 msgid_plural "Shipped (Kargo Takip Turkiye Plugin) (%s)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:170
+#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:171
 msgctxt "WooCommerce Order status"
 msgid "Shipped (Custom Status)"
 msgstr ""
 
 #. translators: %s: number of orders
-#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:172
+#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:173
 msgid "Shipped (Custom Status) (%s)"
 msgid_plural "Shipped (Custom Status) (%s)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-aras.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-aras.php:38
 msgid "Aras Kargo"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-birgunde.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-birgunde.php:38
 msgid "Birgünde Kargo"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-brinks.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-brinks.php:38
 msgid "Brinks Kargo"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-cdek.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-cdek.php:38
 msgid "CDEK"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-dhl.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-dhl.php:38
 msgid "DHL"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-fedex.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-fedex.php:38
 msgid "FedEx"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-gelal.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-gelal.php:38
 msgid "Gelal"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet.php:38
 msgid "hepsiJET"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-horoz-lojistik.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-horoz-lojistik.php:38
 msgid "Horoz Lojistik"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-jetizz.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-jetizz.php:38
 msgid "Jetizz"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-kargo-turk.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-kargo-turk.php:38
 msgid "Kargo Türk"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-kargoist.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-kargoist.php:38
 msgid "Kargoist"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-kolay-gelsin.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-kolay-gelsin.php:38
 msgid "Kolay Gelsin"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-kurye.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-kurye.php:38
 msgid "Kurye"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-mng.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-mng.php:38
 msgid "MNG Kargo"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-packupp.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-packupp.php:38
 msgid "PackUpp"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-ptt.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-ptt.php:38
 msgid "PTT Kargo"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-scotty.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-scotty.php:38
 msgid "Scotty"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-sendeo.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-sendeo.php:38
 msgid "Sendeo Kargo"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-surat.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-surat.php:38
 msgid "Sürat Kargo"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-tnt.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-tnt.php:38
 msgid "TNT"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-trendyol-express.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-trendyol-express.php:38
 msgid "Trendyol Express"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-ups.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-ups.php:38
 msgid "UPS Kargo"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-yurtici.php:31
+#: packages/manual-shipment-tracking/includes/courier-companies/class-yurtici.php:38
 msgid "Yurtiçi Kargo"
 msgstr ""
 
@@ -528,24 +557,29 @@ msgstr ""
 msgid "Your Order Has Been Shipped"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:135
+#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:134
 msgid "BCC"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:137
-#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:146
+#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:136
+#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:145
 msgid "If you want to send the shipment notification email to additional recipients, type the emails separated with comma."
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:144
+#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:143
 msgid "CC"
 msgstr ""
 
 #. translators: %s billing email
-#: packages/manual-shipment-tracking/includes/email/class-email.php:56
+#: packages/manual-shipment-tracking/includes/email/class-email.php:58
 msgid "Tracking information sent to %s"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:29
+#. translators: %s billing email
+#: packages/manual-shipment-tracking/includes/notification-providers/class-mst-notification-provider.php:38
+msgid "Tracking information SMS sent to %s"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:28
 msgid "Your order has been shipped. Tracking information is below:"
 msgstr ""
