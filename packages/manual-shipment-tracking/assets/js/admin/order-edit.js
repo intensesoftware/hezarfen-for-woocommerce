@@ -26,10 +26,10 @@ jQuery(function ($) {
 		modal_body.dialog({
 			resizable: false,
 			draggable: false,
-			height: "auto",
+			height: 'auto',
 			width: 400,
 			modal: true,
-			dialogClass: "hezarfen-mst-confirm-removal",
+			dialogClass: 'hezarfen-mst-confirm-removal',
 			buttons: {
 				Delete: function () {
 					$.post(
