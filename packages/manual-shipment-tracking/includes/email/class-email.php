@@ -14,7 +14,9 @@ defined( 'ABSPATH' ) || exit;
  */
 class Email {
 	/**
-	 * Constructor
+	 * Initialization method.
+	 * 
+	 * @return void
 	 */
 	public static function init() {
 		add_filter( 'woocommerce_email_classes', array( __CLASS__, 'add_order_shipped_email' ) );

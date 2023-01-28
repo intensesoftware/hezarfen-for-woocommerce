@@ -19,7 +19,9 @@ class Admin_Orders {
 	const SHIPMENT_COLUMN        = 'hezarfen_mst_shipment_info';
 
 	/**
-	 * Constructor
+	 * Initialization method.
+	 * 
+	 * @return void
 	 */
 	public static function init() {
 		if ( is_admin() ) {

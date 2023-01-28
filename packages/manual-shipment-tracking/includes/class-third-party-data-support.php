@@ -33,7 +33,9 @@ class Third_Party_Data_Support {
 	const NONSENSE_STRING = 'hezarfen_mst_nonsense_string';
 
 	/**
-	 * Constructor
+	 * Initialization method.
+	 * 
+	 * @return void
 	 */
 	public static function init() {
 		$recog_data_option = get_option( Settings::OPT_RECOG_DATA ); // returns false if option is not set.

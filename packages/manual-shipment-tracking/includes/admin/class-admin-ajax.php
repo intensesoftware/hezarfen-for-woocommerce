@@ -19,7 +19,9 @@ class Admin_Ajax {
 	const REMOVE_SHIPMENT_DATA_NONCE  = 'hezarfen-mst-remove-shipment-data';
 
 	/**
-	 * Constructor
+	 * Initialization method.
+	 * 
+	 * @return void
 	 */
 	public static function init() {
 		add_action( 'wp_ajax_' . self::GET_SHIPMENT_DATA_ACTION, array( __CLASS__, 'get_shipment_data' ) );

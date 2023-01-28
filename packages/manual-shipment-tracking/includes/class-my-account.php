@@ -14,7 +14,9 @@ defined( 'ABSPATH' ) || exit;
  */
 class My_Account {
 	/**
-	 * Constructor
+	 * Initialization method.
+	 * 
+	 * @return void
 	 */
 	public static function init() {
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_styles' ) );
