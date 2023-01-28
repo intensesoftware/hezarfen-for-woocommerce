@@ -85,18 +85,26 @@ class Shipment_Data implements \JsonSerializable {
 
 		if ( is_string( $data ) ) {
 			$this->raw_data = $data;
-			$data           = explode( self::DATA_SEPARATOR, $data );
+
+			try {
+				$data = array_combine(
+					array( 'id', 'order_id', 'courier_id', 'courier_title', 'tracking_num', 'tracking_url', 'sms_sent' ),
+					explode( self::DATA_SEPARATOR, $data )
+				);
+			} catch ( \Throwable $e ) {
+				$data = array();
+			}
 		}
 
-		$id = (int) ( $data[0] ?? 1 );
+		$id = (int) ( $data['id'] ?? 1 );
 
 		$this->id            = $id > 0 ? $id : 1;
-		$this->order_id      = (int) ( $data[1] ?? 0 );
-		$this->courier_id    = $data[2] ?? '';
-		$this->courier_title = $data[3] ?? '';
-		$this->tracking_num  = $data[4] ?? '';
-		$this->tracking_url  = $data[5] ?? '';
-		$this->sms_sent      = isset( $data[6] ) ? boolval( $data[6] ) : false;
+		$this->order_id      = (int) ( $data['order_id'] ?? 0 );
+		$this->courier_id    = $data['courier_id'] ?? '';
+		$this->courier_title = $data['courier_title'] ?? '';
+		$this->tracking_num  = $data['tracking_num'] ?? '';
+		$this->tracking_url  = $data['tracking_url'] ?? '';
+		$this->sms_sent      = isset( $data['sms_sent'] ) ? boolval( $data['sms_sent'] ) : false;
 	}
 
 	/**

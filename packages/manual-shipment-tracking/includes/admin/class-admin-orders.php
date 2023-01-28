@@ -227,12 +227,12 @@ class Admin_Orders {
 			if ( ! $current_data ) {
 				$new_data = new Shipment_Data(
 					array(
-						$id,
-						$order_id,
-						$new_courier_id,
-						$new_courier::get_title(),
-						$new_tracking_num,
-						$new_courier::create_tracking_url( $new_tracking_num ),
+						'id'            => $id,
+						'order_id'      => $order_id,
+						'courier_id'    => $new_courier_id,
+						'courier_title' => $new_courier::get_title(),
+						'tracking_num'  => $new_tracking_num,
+						'tracking_url'  => $new_courier::create_tracking_url( $new_tracking_num ),
 					)
 				);
 

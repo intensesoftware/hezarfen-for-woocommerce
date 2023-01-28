@@ -134,11 +134,11 @@ class Third_Party_Data_Support {
 		return array(
 			new Shipment_Data(
 				array(
-					null,
-					0,
-					Courier_Custom::$id,
-					$courier_title,
-					get_post_meta( $order_id, get_option( Settings::OPT_TRACKING_NUM_CUSTOM_META, self::NONSENSE_STRING ), true ),
+					'id'            => null,
+					'order_id'      => 0,
+					'courier_id'    => Courier_Custom::$id,
+					'courier_title' => $courier_title,
+					'tracking_num'  => get_post_meta( $order_id, get_option( Settings::OPT_TRACKING_NUM_CUSTOM_META, self::NONSENSE_STRING ), true ),
 				)
 			),
 		);
@@ -237,12 +237,12 @@ class Third_Party_Data_Support {
 		}
 
 		$data = array(
-			null,
-			$order_id,
-			$courier_id,
-			$courier_title,
-			$tracking_num,
-			$tracking_url,
+			'id'            => null,
+			'order_id'      => $order_id,
+			'courier_id'    => $courier_id,
+			'courier_title' => $courier_title,
+			'tracking_num'  => $tracking_num,
+			'tracking_url'  => $tracking_url,
 		);
 
 		return array( new Shipment_Data( $data ) );
