@@ -17,9 +17,9 @@ class Email {
 	 * Constructor
 	 */
 	public function __construct() {
-		add_filter( 'woocommerce_email_classes', array( $this, 'add_order_shipped_email' ) );
-		add_filter( 'woocommerce_template_directory', array( $this, 'specify_template_dir_for_themes' ), 10, 2 );
-		add_action( 'hezarfen_mst_order_shipped', array( $this, 'send_email' ) );
+		add_filter( 'woocommerce_email_classes', array( __CLASS__, 'add_order_shipped_email' ) );
+		add_filter( 'woocommerce_template_directory', array( __CLASS__, 'specify_template_dir_for_themes' ), 10, 2 );
+		add_action( 'hezarfen_mst_order_shipped', array( __CLASS__, 'send_email' ) );
 	}
 
 	/**
@@ -29,7 +29,7 @@ class Email {
 	 * 
 	 * @return array<string, \WC_Email>
 	 */
-	public function add_order_shipped_email( $emails ) {
+	public static function add_order_shipped_email( $emails ) {
 		$emails['Hezarfen_MST_Email_Order_Shipped'] = include HEZARFEN_MST_PATH . 'includes/email/class-email-order-shipped.php';
 		return $emails;
 	}
@@ -41,7 +41,7 @@ class Email {
 	 * 
 	 * @return void
 	 */
-	public function send_email( $order ) {
+	public static function send_email( $order ) {
 		/**
 		 * Email_Order_Shipped object instance.
 		 * 
@@ -68,7 +68,7 @@ class Email {
 	 * 
 	 * @return string
 	 */
-	public function specify_template_dir_for_themes( $woocommerce_dir, $template_name ) {
+	public static function specify_template_dir_for_themes( $woocommerce_dir, $template_name ) {
 		if ( 'emails/email-order-shipped.php' === $template_name ) {
 			return 'hezarfen-for-woocommerce';
 		}

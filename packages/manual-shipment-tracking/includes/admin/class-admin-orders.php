@@ -23,15 +23,15 @@ class Admin_Orders {
 	 */
 	public function __construct() {
 		if ( is_admin() ) {
-			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_and_styles' ) );
+			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_scripts_and_styles' ) );
 
 			add_filter( 'manage_shop_order_posts_columns', array( __CLASS__, 'add_shipment_column' ), PHP_INT_MAX - 1 );
 			add_action( 'manage_shop_order_posts_custom_column', array( __CLASS__, 'render_shipment_column' ), 10, 2 );
 
 			add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_box' ) );
 
-			add_filter( 'woocommerce_reports_order_statuses', array( $this, 'append_order_status_to_reports' ), 20 );
-			add_action( 'woocommerce_process_shop_order_meta', array( $this, 'order_save' ), PHP_INT_MAX - 1 );
+			add_filter( 'woocommerce_reports_order_statuses', array( __CLASS__, 'append_order_status_to_reports' ), 20 );
+			add_action( 'woocommerce_process_shop_order_meta', array( __CLASS__, 'order_save' ), PHP_INT_MAX - 1 );
 		}
 	}
 
@@ -193,7 +193,7 @@ class Admin_Orders {
 	 * 
 	 * @return string[]
 	 */
-	public function append_order_status_to_reports( $statuses ) {
+	public static function append_order_status_to_reports( $statuses ) {
 		$statuses[] = Manual_Shipment_Tracking::SHIPPED_ORDER_STATUS;
 		return $statuses;
 	}
@@ -205,7 +205,7 @@ class Admin_Orders {
 	 * 
 	 * @return void
 	 */
-	public function order_save( $order_id ) {
+	public static function order_save( $order_id ) {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		if ( empty( $_POST[ self::DATA_ARRAY_KEY ] ) ) {
 			return;
@@ -277,7 +277,7 @@ class Admin_Orders {
 	 * 
 	 * @return void
 	 */
-	public function enqueue_scripts_and_styles( $hook_suffix ) {
+	public static function enqueue_scripts_and_styles( $hook_suffix ) {
 		global $typenow;
 
 		if ( 'shop_order' !== $typenow ) {

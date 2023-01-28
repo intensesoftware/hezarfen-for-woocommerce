@@ -17,14 +17,14 @@ class My_Account {
 	 * Constructor
 	 */
 	public function __construct() {
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_styles' ) );
 
 		if ( 'yes' === get_option( Settings::OPT_SHOW_TRACKING_COLUMN ) ) {
-			add_filter( 'woocommerce_account_orders_columns', array( $this, 'add_new_column' ), PHP_INT_MAX - 1 );
-			add_action( 'woocommerce_my_account_my_orders_column_hezarfen-mst-shipment-tracking', array( $this, 'add_tracking_info_to_column' ) );
+			add_filter( 'woocommerce_account_orders_columns', array( __CLASS__, 'add_new_column' ), PHP_INT_MAX - 1 );
+			add_action( 'woocommerce_my_account_my_orders_column_hezarfen-mst-shipment-tracking', array( __CLASS__, 'add_tracking_info_to_column' ) );
 		}
 
-		add_action( 'woocommerce_view_order', array( $this, 'add_tracking_info_to_order_details' ), 0 );
+		add_action( 'woocommerce_view_order', array( __CLASS__, 'add_tracking_info_to_order_details' ), 0 );
 	}
 
 	/**
@@ -34,7 +34,7 @@ class My_Account {
 	 * 
 	 * @return array<string, string>
 	 */
-	public function add_new_column( $columns ) {
+	public static function add_new_column( $columns ) {
 		$offset      = 4;
 		$first_part  = array_slice( $columns, 0, $offset );
 		$second_part = array_slice( $columns, $offset );
@@ -49,12 +49,12 @@ class My_Account {
 	 * 
 	 * @return void
 	 */
-	public function add_tracking_info_to_column( $order ) {
+	public static function add_tracking_info_to_column( $order ) {
 		$order_id      = $order->get_id();
 		$shipment_data = Helper::get_all_shipment_data( $order_id );
 
 		foreach ( $shipment_data as $data ) {
-			$this->render_tracking_info_in_column( $data );
+			self::render_tracking_info_in_column( $data );
 		}
 	}
 
@@ -65,7 +65,7 @@ class My_Account {
 	 * 
 	 * @return void
 	 */
-	private function render_tracking_info_in_column( $shipment_data ) {
+	private static function render_tracking_info_in_column( $shipment_data ) {
 		?>
 		<div class="tracking-info">
 			<span style="display: block"><?php echo esc_html( $shipment_data->courier_title ); ?></span>
@@ -83,7 +83,7 @@ class My_Account {
 	 * 
 	 * @return void
 	 */
-	public function add_tracking_info_to_order_details( $order_id ) {
+	public static function add_tracking_info_to_order_details( $order_id ) {
 		$shipment_data = Helper::get_all_shipment_data( $order_id );
 		?>
 
@@ -92,7 +92,7 @@ class My_Account {
 			<?php
 			if ( $shipment_data ) {
 				foreach ( $shipment_data as $data ) {
-					$this->render_tracking_info_in_order_details( $data );
+					self::render_tracking_info_in_order_details( $data );
 				}
 			} else {
 				?>
@@ -111,7 +111,7 @@ class My_Account {
 	 * 
 	 * @return void
 	 */
-	private function render_tracking_info_in_order_details( $shipment_data ) {
+	private static function render_tracking_info_in_order_details( $shipment_data ) {
 		?>
 		<div class="tracking-info">
 			<p><?php echo sprintf( '%s: <strong>%s</strong>', esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ), esc_html( $shipment_data->courier_title ) ); ?></p>
@@ -129,7 +129,7 @@ class My_Account {
 	 * 
 	 * @return void
 	 */
-	public function enqueue_styles() {
+	public static function enqueue_styles() {
 		global $wp;
 
 		if ( is_account_page() && ! empty( $wp->query_vars['view-order'] ) ) {
