@@ -20,8 +20,8 @@ class Helper {
 	 * @param string[]|array<string, string> $arr array of the districts.
 	 * @return array<string, string>
 	 */
-	public static function checkout_select2_option_format( $arr ) {
-		$values = array();
+	public static function select2_option_format( $arr ) {
+		$values = array( '' => __( 'Select an option', 'hezarfen-for-woocommerce' ) );
 
 		foreach ( $arr as $key => $value ) {
 			$values[ $value ] = $value;
@@ -44,6 +44,101 @@ class Helper {
 			$msg   = $use_kses ? wp_kses_post( $notice['message'] ) : esc_html( $notice['message'] );
 			printf( '<div class="notice %s is-dismissible"><p>%s</p></div>', esc_attr( $class ), $msg ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
+	}
+
+	/**
+	 * Hooks into the necessary filters to sort address fields.
+	 * 
+	 * @return void
+	 */
+	public static function sort_address_fields() {
+		add_filter( 'woocommerce_get_country_locale', array( __CLASS__, 'assign_priorities_to_locale_fields' ), PHP_INT_MAX - 1 );
+		add_filter( 'woocommerce_billing_fields', array( __CLASS__, 'assign_priorities_to_non_locale_fields' ), PHP_INT_MAX - 1, 2 );
+		if ( is_checkout() ) {
+			add_filter( 'woocommerce_shipping_fields', array( __CLASS__, 'assign_priorities_to_non_locale_fields' ), PHP_INT_MAX - 1, 2 );
+		}
+	}
+
+	/**
+	 * Assigns priorities to the locale address fields.
+	 * 
+	 * @param array<string, array<string, array<string, mixed>>> $locales Locale data of all countries.
+	 * 
+	 * @return array<string, array<string, array<string, mixed>>>
+	 */
+	public static function assign_priorities_to_locale_fields( $locales ) {
+		$locales['TR']['state']['priority']     = 50;
+		$locales['TR']['city']['priority']      = 60;
+		$locales['TR']['address_1']['priority'] = 70;
+
+		$locales['TR']['address_2'] = array_merge(
+			$locales['TR']['address_2'] ?? array(),
+			array( 'priority' => 80 )
+		);
+
+		$locales['TR']['postcode'] = array_merge(
+			$locales['TR']['postcode'] ?? array(),
+			array( 'priority' => 90 )
+		);
+
+		return $locales;
+	}
+
+	/**
+	 * Assigns priorities to the billing phone, billing email and shipping company fields.
+	 * These fields are not part of country locale fields by default. (see WC_Countries::get_country_locale_field_selectors() method)
+	 * 
+	 * @param array<string, array<string, mixed>> $address_fields Address fields.
+	 * @param string                              $country Country.
+	 * 
+	 * @return array<string, array<string, mixed>>
+	 */
+	public static function assign_priorities_to_non_locale_fields( $address_fields, $country ) {
+		if ( 'TR' === $country ) {
+			$type = isset( $address_fields['billing_country'] ) ? 'billing' : 'shipping';
+
+			if ( 'billing' === $type ) {
+				if ( isset( $address_fields['billing_phone'] ) ) {
+					$address_fields['billing_phone']['priority'] = 32;
+				}
+
+				$address_fields['billing_email']['priority'] = 34;
+			} elseif ( isset( $address_fields['shipping_company'] ) ) {
+				$address_fields['shipping_company']['priority'] = 5;
+			}
+		}
+
+		return $address_fields;
+	}
+
+	/**
+	 * Hides the postcode field.
+	 * 
+	 * @return void
+	 */
+	public static function hide_postcode_field() {
+		add_filter(
+			'woocommerce_get_country_locale',
+			function ( $locales ) {
+				if ( isset( $locales['TR']['postcode'] ) ) {
+					$locales['TR']['postcode']['required'] = false;
+					$locales['TR']['postcode']['hidden']   = true;
+				}
+	
+				return $locales;
+			},
+			PHP_INT_MAX - 1 
+		);
+	}
+
+	/**
+	 * Is My Account > Edit Address page? (billing or shipping address).
+	 * 
+	 * @return bool
+	 */
+	public static function is_edit_address_page() {
+		global $wp;
+		return is_account_page() && ! empty( $wp->query_vars['edit-address'] );
 	}
 
 	/**

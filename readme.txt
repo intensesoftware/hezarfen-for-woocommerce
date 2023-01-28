@@ -3,14 +3,16 @@ Contributors: intenseyazilim
 Tags: vergi alanları, posta kodu, il ilçe, mahalle, Türkiye, Turkish, Turkey, intense, hezerfen, kargo, vergi
 Donate link: https://www.intense.com.tr
 Requires at least: 5.3
-Tested up to: 6.0
+Tested up to: 6.1
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 1.4.6
+Stable tag: 1.6.0
 
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
 == Description ==
+Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
+
 = ÖZELLİKLER =
 - Ödeme ekranına Türkiye için mahalle alanlarının eklenmesi (ücretsiz, mahalle verileri eklenti içerisinde saklanır.)
 - Ödeme ekranında vergi bilgileri (kurumsal ve bireysel fatura tercihine göre)
@@ -29,6 +31,27 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 6. Bireysel vergi bilgileri
 
 == Changelog ==
+= 1.6.0 - 2022-12-20 =
+* Özellik: TC Kimlik No Alanı İçin 11 Karakter Doğrulaması Eklendi
+* Hesabım > Adres düzenleme ekranında iyileştirmeler
+* Genel altyapısal iyileştirmeler
+
+= 1.5.0 - 2022-10-11 =
+* Müşteri Hesabım ekranına, seçilebilir ilçe ve mahalle desteği eklendi.
+* Ödeme ekranındaki bireysel/kurumsal seçim alanındaki select2 desteği kaldırıldı.
+* Ödeme ekranında Hezarfen fonksiyonlarında iyileştirmeler yapıldı.
+
+= 1.4.9 - 2022-09-24 =
+* Readme.txt güncellendi.
+
+= 1.4.8 - 2022-09-24 =
+* Hata Giderme: Sipariş detay ekranında bazı koşullara bağlı olarak PHP uyarısı görünmesi problemi giderildi.
+* Uyumluluk: Cartzilla teması için uyumluluk sorununun giderilmesi
+* Hata Giderme: Ödeme ekranında il değiştiğinde mahalle alanının temizlenmemesi sorunu giderildi.
+
+= 1.4.7 - 2022-09-15 =
+* TC No/Vergi Dairesi vb. alanları için temalarla uyumluluğunun iyileştirilmesi
+
 = 1.4.6 - 2022-09-04 =
 * Düzeltme: Ödeme ekranında il, ilçe ve mahalle alanları, kelimenin ilk harfleri büyük harf olacak şekilde düzenlendi.
 * Düzeltme: Ödeme ekranında, ilçe seçiminden sonra mahallelerin alfabetik sıralanmış olarak gösterilmesi sağlandı.

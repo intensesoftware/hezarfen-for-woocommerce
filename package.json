@@ -1,6 +1,6 @@
 {
   "name": "hezarfen-for-woocommerce",
-  "version": "0.0.0",
+  "version": "1.5.0",
   "description": "Hezarfen, WooCommerce eklentisini Türkiye için daha kullanılabilir kılmayı amaçlar.",
   "main": "index.js",
   "directories": {

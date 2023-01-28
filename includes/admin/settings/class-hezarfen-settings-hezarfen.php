@@ -28,26 +28,17 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 
 		parent::__construct();
 	}
-	
-	/**
-	 * The current value of the Should Show Hezarfen Tax Settings?
-	 *
-	 * @return bool
-	 */
-	private function show_hezarfen_tax_fields() {
-		return ( get_option( 'hezarfen_show_hezarfen_checkout_tax_fields' ) == 'yes' ) ? true : false;
-	}
 
 	/**
-	 * Get sections
+	 * Get own sections.
 	 *
-	 * @return array<string, string>
+	 * @return array
 	 */
-	public function get_sections() {
+	protected function get_own_sections() {
 		$sections = array(
-			'general'       => __( 'General', 'hezarfen-for-woocommerce' ),
+			''              => __( 'General', 'hezarfen-for-woocommerce' ),
 			'encryption'    => __( 'Encryption', 'hezarfen-for-woocommerce' ),
-			'checkout-page' => __( 'Checkout Page Settings', 'hezarfen-for-woocommerce' ),
+			'checkout_page' => __( 'Checkout Page Settings', 'hezarfen-for-woocommerce' ),
 		);
 
 		// if checkout field is active, show the section.
@@ -55,20 +46,185 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			$sections['checkout_tax'] = __( 'Checkout Tax Fields', 'hezarfen-for-woocommerce' );
 		}
 
-		return apply_filters(
-			'woocommerce_get_sections_' . $this->id,
-			$sections
-		);
+		return $sections;
 	}
 
 	/**
-	 * Get setting fields.
+	 * Get settings for the default(General) section.
 	 *
-	 * @param string $current_section the current setting section.
-	 * @return array<array<string, string>>
+	 * @return array
 	 */
-	public function get_settings( $current_section = '' ) {
-		if ( 'checkout_tax' == $current_section ) {
+	protected function get_settings_for_default_section() {
+		$fields = array(
+			array(
+				'title' => __(
+					'General Settings',
+					'hezarfen-for-woocommerce'
+				),
+				'type'  => 'title',
+				'desc'  => __(
+					'You can edit the general settings from this page.',
+					'hezarfen-for-woocommerce'
+				),
+				'id'    => 'hezarfen_general_settings_title',
+			),
+			array(
+				'title'   => __(
+					'Show hezarfen checkout tax fields?',
+					'hezarfen-for-woocommerce'
+				),
+				'type'    => 'checkbox',
+				'desc'    => '',
+				'id'      => 'hezarfen_show_hezarfen_checkout_tax_fields',
+				'default' => 'no',
+			),
+			array(
+				'title'   => __(
+					'Sort address fields in My Account > Address pages?',
+					'hezarfen-for-woocommerce'
+				),
+				'type'    => 'checkbox',
+				'desc'    => '',
+				'id'      => 'hezarfen_sort_my_account_fields',
+				'default' => 'no',
+			),
+			array(
+				'title'   => __(
+					'Hide postcode fields in My Account > Address pages?',
+					'hezarfen-for-woocommerce'
+				),
+				'type'    => 'checkbox',
+				'desc'    => '',
+				'id'      => 'hezarfen_hide_my_account_postcode_fields',
+				'default' => 'no',
+			),
+			array(
+				'type' => 'sectionend',
+				'id'   => 'hezarfen_general_settings_section_end',
+			),
+		);
+
+		return apply_filters( 'hezarfen_general_settings', $fields );
+	}
+
+	/**
+	 * Get settings for the Encryption section.
+	 *
+	 * @return array
+	 */
+	protected function get_settings_for_encryption_section() {
+		// if encryption key not generated before, generate a new key.
+		if ( ! ( new PostMetaEncryption() )->is_encryption_key_generated() ) {
+			// create a new random key.
+			$encryption_key = ( new PostMetaEncryption() )->create_random_key();
+
+			$fields = array(
+				array(
+					'title' => __(
+						'Encryption Settings',
+						'hezarfen-for-woocommerce'
+					),
+					'type'  => 'title',
+					'desc'  => __(
+						'If the T.C. Identity Field is active, an encryption key must be generated. The following encryption key generated will be lost upon saving the form. Please back up the generated encryption key to a secure area, then paste it anywhere in the wp-config.php file. In case of deletion of the hezarfen-encryption-key line from wp-config.php, retrospectively, the orders will be sent to T.C. no values will become unreadable.',
+						'hezarfen-for-woocommerce'
+					),
+					'id'    => 'hezarfen_checkout_encryption_fields_title',
+				),
+				array(
+					'title'   => __(
+						'Encryption Key',
+						'hezarfen-for-woocommerce'
+					),
+					'type'    => 'textarea',
+					'css'     => 'width:100%;height:60px',
+					'default' => sprintf(
+						"define( 'HEZARFEN_ENCRYPTION_KEY', '%s' );",
+						$encryption_key
+					),
+					'desc'    => __(
+						'Back up the phrase in the box to a safe area, then place it in wp-config.php file.',
+						'hezarfen-for-woocommerce'
+					),
+				),
+				array(
+					'title'   => __(
+						'Encryption Key Confirmation',
+						'hezarfen-for-woocommerce'
+					),
+					'type'    => 'checkbox',
+					'desc'    => __(
+						'I backed up the key to a secure area and placed it in the wp-config file. In case the encryption key value is deleted from the wp-config.php file, all past orders will be transferred to T.C. I know I cannot access ID data.',
+						'hezarfen-for-woocommerce'
+					),
+					'id'      => 'hezarfen_checkout_encryption_key_confirmation',
+					'default' => 'no',
+				),
+				array(
+					'type' => 'sectionend',
+					'id'   => 'hezarfen_checkout_encryption_fields_section_end',
+				),
+			);
+		}
+
+		return apply_filters( 'hezarfen_checkout_encryption_settings', $fields );
+	}
+
+	/**
+	 * Get settings for the Checkout Page section.
+	 *
+	 * @return array
+	 */
+	protected function get_settings_for_checkout_page_section() {
+		$fields = array(
+			array(
+				'title' => esc_html__(
+					'Checkout Settings',
+					'hezarfen-for-woocommerce'
+				),
+				'type'  => 'title',
+				'desc'  => esc_html__(
+					'You can set general checkout settings.',
+					'hezarfen-for-woocommerce'
+				),
+				'id'    => 'hezarfen_checkout_settings_title',
+			),
+			array(
+				'title'   => esc_html__(
+					'Hide postcode fields?',
+					'hezarfen-for-woocommerce'
+				),
+				'type'    => 'checkbox',
+				'desc'    => '',
+				'id'      => 'hezarfen_hide_checkout_postcode_fields',
+				'default' => 'no',
+			),
+			array(
+				'title'   => esc_html__(
+					'Auto sort fields in checkout form?',
+					'hezarfen-for-woocommerce'
+				),
+				'type'    => 'checkbox',
+				'desc'    => '',
+				'id'      => 'hezarfen_checkout_fields_auto_sort',
+				'default' => 'no',
+			),
+			array(
+				'type' => 'sectionend',
+				'id'   => 'hezarfen_checkout_settings_section_end',
+			),
+		);
+
+		return apply_filters( 'hezarfen_checkout_settings', $fields );
+	}
+
+	/**
+	 * Get settings for the Tax Fields section.
+	 *
+	 * @return array
+	 */
+	protected function get_settings_for_checkout_tax_section() {
+		if ( $this->show_hezarfen_tax_fields() ) {
 			$settings = apply_filters(
 				'hezarfen_checkout_tax_settings',
 				array(
@@ -82,9 +238,9 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 							'You can update the checkout TAX fields. Note: T.C. number field requires encryption feature. If you do not activate the encryption feature, T.C. number field does not appear on the checkout.',
 							'hezarfen-for-woocommerce'
 						),
-						'id'    => 'hezarfen_checkout_tax_fields_options',
+						'id'    => 'hezarfen_checkout_tax_fields_title',
 					),
-
+	
 					array(
 						'title'   => __(
 							'Show T.C. Identity Field on checkout page ',
@@ -97,9 +253,8 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 						),
 						'id'      => 'hezarfen_checkout_show_TC_identity_field',
 						'default' => 'no',
-						'std'     => 'yes',
 					),
-
+	
 					array(
 						'title'   => __(
 							'Checkout T.C. Identity Number Fields Required Statuses',
@@ -114,162 +269,31 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 						'default' => 'no',
 						'type'    => 'checkbox',
 					),
-
+	
 					array(
 						'type' => 'sectionend',
 						'id'   => 'hezarfen_checkout_tax_fields_section_end',
 					),
 				)
 			);
-
-			if ( ! $this->show_hezarfen_tax_fields() ) {
-				global $hide_save_button;
-
-				$hide_save_button = true;
-
-				$settings = apply_filters( 'hezarfen_checkout_tax_settings', array() );
-			}       
-		} elseif ( 'encryption' == $current_section ) {
-			$fields = array();
-
-			// if encryption key not generated before, generate a new key.
-			if ( ! ( new PostMetaEncryption() )->is_encryption_key_generated() ) {
-				// create a new random key.
-				$encryption_key = ( new PostMetaEncryption() )->create_random_key();
-
-				$fields = array(
-					array(
-						'title' => __(
-							'Encryption Settings',
-							'hezarfen-for-woocommerce'
-						),
-						'type'  => 'title',
-						'desc'  => __(
-							'If the T.C. Identity Field is active, an encryption key must be generated. The following encryption key generated will be lost upon saving the form. Please back up the generated encryption key to a secure area, then paste it anywhere in the wp-config.php file. In case of deletion of the hezarfen-encryption-key line from wp-config.php, retrospectively, the orders will be sent to T.C. no values will become unreadable.',
-							'hezarfen-for-woocommerce'
-						),
-						'id'    => 'hezarfen_checkout_encryption_fields_options',
-					),
-					array(
-						'title'   => __(
-							'Encryption Key',
-							'hezarfen-for-woocommerce'
-						),
-						'type'    => 'textarea',
-						'css'     => 'width:100%;height:60px',
-						'default' => sprintf(
-							"define( 'HEZARFEN_ENCRYPTION_KEY', '%s' );",
-							$encryption_key
-						),
-						'desc'    => __(
-							'Back up the phrase in the box to a safe area, then place it in wp-config.php file.',
-							'hezarfen-for-woocommerce'
-						),
-					),
-					array(
-						'title'   => __(
-							'Encryption Key Confirmation',
-							'hezarfen-for-woocommerce'
-						),
-						'type'    => 'checkbox',
-						'desc'    => __(
-							'I backed up the key to a secure area and placed it in the wp-config file. In case the encryption key value is deleted from the wp-config.php file, all past orders will be transferred to T.C. I know I cannot access ID data.',
-							'hezarfen-for-woocommerce'
-						),
-						'id'      => 'hezarfen_checkout_show_TC_identity_field',
-						'default' => 'no',
-						'std'     => 'yes',
-					),
-					array(
-						'type' => 'sectionend',
-						'id'   => 'hezarfen_checkout_encryption_fields_section_end',
-					),
-				);
-			}
-
-			$settings = apply_filters( 'hezarfen_checkout_encryption_settings', $fields );
-		} elseif ( 'checkout-page' == $current_section ) {
-			$fields = array(
-				array(
-					'title' => esc_html__(
-						'Checkout Settings',
-						'hezarfen-for-woocommerce'
-					),
-					'type'  => 'title',
-					'desc'  => esc_html__(
-						'You can set general checkout settings.',
-						'hezarfen-for-woocommerce'
-					),
-					'id'    => 'hezarfen_checkout_settings_title',
-				),
-				array(
-					'title'   => esc_html__(
-						'Hide postcode fields?',
-						'hezarfen-for-woocommerce'
-					),
-					'type'    => 'checkbox',
-					'desc'    => '',
-					'id'      => 'hezarfen_hide_checkout_postcode_fields',
-					'default' => 'no',
-					'std'     => 'yes',
-				),
-				array(
-					'title'   => esc_html__(
-						'Auto sort fields in checkout form?',
-						'hezarfen-for-woocommerce'
-					),
-					'type'    => 'checkbox',
-					'desc'    => '',
-					'id'      => 'hezarfen_checkout_fields_auto_sort',
-					'default' => 'no',
-					'std'     => 'yes',
-				),
-			);
-
-			$settings   = apply_filters( 'hezarfen_checkout_settings', $fields );
-			$settings[] = array(
-				'type' => 'sectionend',
-				'id'   => 'hezarfen_checkout_settings_section_end',
-			);
 		} else {
-			$fields = array(
-				array(
-					'title' => __(
-						'General Settings',
-						'hezarfen-for-woocommerce'
-					),
-					'type'  => 'title',
-					'desc'  => __(
-						'You can edit the general settings from this page.',
-						'hezarfen-for-woocommerce'
-					),
-					'id'    => 'hezarfen_general_settings_title',
-				),
-				array(
-					'title'   => __(
-						'Show hezarfen checkout tax fields?',
-						'hezarfen-for-woocommerce'
-					),
-					'type'    => 'checkbox',
-					'desc'    => '',
-					'id'      => 'hezarfen_show_hezarfen_checkout_tax_fields',
-					'default' => 'no',
-					'std'     => 'yes',
-				),
-			);
+			global $hide_save_button;
 
-			$settings   = apply_filters( 'hezarfen_general_settings', $fields );
-			$settings[] = array(
-				'type' => 'sectionend',
-				'id'   => 'hezarfen_general_settings_section_end',
-			);
+			$hide_save_button = true;
+
+			$settings = apply_filters( 'hezarfen_checkout_tax_settings', array() );
 		}
 
-		return apply_filters(
-			'woocommerce_get_settings_' . $this->id,
-			$settings,
-			$current_section
-		);
+		return $settings;
+	}
+
+	/**
+	 * The current value of the Should Show Hezarfen Tax Settings?
+	 *
+	 * @return bool
+	 */
+	private function show_hezarfen_tax_fields() {
+		return ( get_option( 'hezarfen_show_hezarfen_checkout_tax_fields' ) == 'yes' ) ? true : false;
 	}
 
 	/**
@@ -283,24 +307,20 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		global $current_section;
 		global $hide_save_button;
 
-		if ( 'encryption' == $current_section ) {
-			if ( ( new PostMetaEncryption() )->is_encryption_key_generated() ) {
-				$hide_save_button = true;
+		$post_meta_encryption = new PostMetaEncryption();
 
-				// is key generated and placed to the wp-config.php?
-				$health_check_status = ( new PostMetaEncryption() )->health_check();
+		if ( 'encryption' == $current_section && $post_meta_encryption->is_encryption_key_generated() ) {
+			$hide_save_button = true;
 
-				// is key correct and is it equal to the key that generated first time?
-				$test_the_key = ( new PostMetaEncryption() )->test_the_encryption_key();
+			// is key generated and placed to the wp-config.php?
+			$health_check_status = $post_meta_encryption->health_check();
 
-				require 'views/encryption.php';
-			} else {
-				// load the key geneate view.
-				$settings = $this->get_settings( $current_section );
-				WC_Admin_Settings::output_fields( $settings );
-			}
+			// is key correct and is it equal to the key that generated first time?
+			$test_the_key = $post_meta_encryption->test_the_encryption_key();
+
+			require 'views/encryption.php';
 		} else {
-			$settings = $this->get_settings( $current_section );
+			$settings = $this->get_settings_for_section( $current_section );
 			WC_Admin_Settings::output_fields( $settings );
 		}
 	}
@@ -327,12 +347,12 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			return false;
 		}
 
-		$settings = $this->get_settings( $current_section );
+		$settings = $this->get_settings_for_section( $current_section );
 		WC_Admin_Settings::save_fields( $settings );
 
 		if ( 'encryption' == $current_section ) {
 			if (
-				get_option( 'hezarfen_checkout_show_TC_identity_field', false ) ==
+				get_option( 'hezarfen_checkout_encryption_key_confirmation', false ) ==
 				'yes'
 			) {
 				update_option( 'hezarfen_encryption_key_generated', 'yes' );

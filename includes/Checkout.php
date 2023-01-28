@@ -37,25 +37,13 @@ class Checkout {
 			add_filter( 'woocommerce_checkout_fields', array( $this, 'add_tax_fields' ), 110, 1 );
 		}
 
-		$hide_postcode_field       = get_option( 'hezarfen_hide_checkout_postcode_fields', 'no' ) == 'yes';
-		$checkout_fields_auto_sort = get_option( 'hezarfen_checkout_fields_auto_sort', 'no' ) == 'yes';
-
-		if ( $checkout_fields_auto_sort ) {
-			add_filter( 'woocommerce_checkout_fields', array( $this, 'auto_sort_checkout_fields' ), 999999, 1 );
-
-			add_filter(
-				'woocommerce_default_address_fields',
-				array(
-					$this,
-					'sort_address_fields',
-				),
-				100000,
-				1
-			);
+		if ( 'yes' === get_option( 'hezarfen_checkout_fields_auto_sort', 'no' ) ) {
+			// we need to use an action that fires after the 'posts_selection' action to access the is_checkout() function. (https://woocommerce.com/document/conditional-tags/).
+			add_action( 'wp', array( $this, 'sort_checkout_fields' ) );
 		}
 
-		if ( $hide_postcode_field ) {
-			add_filter( 'woocommerce_checkout_fields', array( $this, 'hide_postcode_fields' ), 90 );
+		if ( 'yes' === get_option( 'hezarfen_hide_checkout_postcode_fields', 'no' ) ) {
+			add_action( 'wp', array( $this, 'hide_postcode_fields' ) );
 		}
 
 		// TODO: review the logic, if it's possible; define all fields in a single function.
@@ -91,19 +79,21 @@ class Checkout {
 		);
 
 		add_filter(
-			'woocommerce_get_country_locale',
-			array(
-				$this,
-				'modify_tr_locale',
-			)
-		);
-
-		add_filter(
 			'woocommerce_checkout_posted_data',
 			array(
 				$this,
 				'override_posted_data',
 			)
+		);
+
+		add_action(
+			'woocommerce_after_checkout_validation',
+			array(
+				$this,
+				'validate_posted_data',
+			),
+			10,
+			2
 		);
 
 		add_action(
@@ -126,18 +116,14 @@ class Checkout {
 	}
 
 	/**
-	 * Sort address fields forcelly.
+	 * Sorts the Checkout Form Fields.
 	 *
-	 * @param  array<string, mixed> $fields current default address fields.
-	 * @return array<string, mixed>
+	 * @return void
 	 */
-	public function sort_address_fields( $fields ) {
-		$fields['state']['priority']     = 6;
-		$fields['city']['priority']      = 7;
-		$fields['address_1']['priority'] = 8;
-		$fields['address_2']['priority'] = 9;
-
-		return $fields;
+	public function sort_checkout_fields() {
+		if ( is_checkout() ) {
+			Helper::sort_address_fields();
+		}
 	}
 
 	/**
@@ -150,25 +136,6 @@ class Checkout {
 		$fields['address_2']['required'] = true;
 
 		return $fields;
-	}
-
-	/**
-	 * Modifies TR country locale data.
-	 * 
-	 * @param array<string, mixed> $locales Locale data of all countries.
-	 * 
-	 * @return array<string, mixed>
-	 */
-	public function modify_tr_locale( $locales ) {
-		$locales['TR']['city'] = array(
-			'label' => __( 'Town / City', 'hezarfen-for-woocommerce' ),
-		);
-
-		$locales['TR']['address_1'] = array(
-			'label' => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
-		);
-
-		return $locales;
 	}
 
 	/**
@@ -189,74 +156,15 @@ class Checkout {
 	}
 
 	/**
-	 * Auto Sort the Checkout Form Fields.
+	 * Hides Post Code Fields in the checkout form.
 	 *
-	 * @param  array<string, mixed> $fields woocommerce checkout fields.
-	 * @return array<string, mixed>
+	 * @return void
 	 */
-	public function auto_sort_checkout_fields( $fields ) {
-		$fields['billing']['billing_first_name']['priority'] = 1;
-		$fields['billing']['billing_last_name']['priority']  = 2;
-		$fields['billing']['billing_phone']['priority']      = 3;
-		$fields['billing']['billing_email']['priority']      = 4;
-		$fields['billing']['billing_country']['priority']    = 5;
-		$fields['billing']['billing_state']['priority']      = 6;
-		$fields['billing']['billing_city']['priority']       = 7;
-		$fields['billing']['billing_address_1']['priority']  = 8;
-
-		if ( isset( $fields['billing']['billing_address_2'] ) ) {
-			$fields['billing']['billing_address_2']['priority'] = 9;
+	public function hide_postcode_fields() {
+		$wc_ajax = $_GET['wc-ajax'] ?? ''; // phpcs:ignore
+		if ( is_checkout() || ( defined( 'WC_DOING_AJAX' ) && 'checkout' === $wc_ajax ) ) {
+			Helper::hide_postcode_field();
 		}
-
-		if ( isset( $fields['billing']['billing_hez_invoice_type'] ) ) {
-			$fields['billing']['billing_hez_invoice_type']['priority'] = 10;
-		}
-
-		if ( self::is_show_identity_field_on_checkout() ) {
-			$fields['billing']['billing_hez_TC_number']['priority'] = 11;
-		}
-
-		if ( isset( $fields['billing']['billing_company'] ) ) {
-			$fields['billing']['billing_company']['priority'] = 12;
-		}
-
-		if ( isset( $fields['billing']['billing_hez_tax_number'] ) ) {
-			$fields['billing']['billing_hez_tax_number']['priority'] = 13;
-		}
-
-		if ( isset( $fields['billing']['billing_hez_tax_office'] ) ) {
-			$fields['billing']['billing_hez_tax_office']['priority'] = 14;
-		}
-
-		if ( isset( $fields['shipping']['shipping_company'] ) ) {
-			$fields['shipping']['shipping_company']['priority'] = 0;
-		}
-
-		$fields['shipping']['shipping_first_name']['priority'] = 1;
-		$fields['shipping']['shipping_last_name']['priority']  = 2;
-		$fields['shipping']['shipping_country']['priority']    = 5;
-		$fields['shipping']['shipping_state']['priority']      = 6;
-		$fields['shipping']['shipping_city']['priority']       = 7;
-		$fields['shipping']['shipping_address_1']['priority']  = 8;
-
-		if ( isset( $fields['shipping']['shipping_address_2'] ) ) {
-			$fields['shipping']['shipping_address_2']['priority'] = 9;
-		}
-
-		return $fields;
-	}
-	
-	/**
-	 * Hide Post Code Fields where in the checkout form.
-	 *
-	 * @param  array<string, mixed> $fields current checkout fields.
-	 * @return array<string, mixed>
-	 */
-	public function hide_postcode_fields( $fields ) {
-		unset( $fields['billing']['billing_postcode'] );
-		unset( $fields['shipping']['shipping_postcode'] );
-
-		return $fields;
 	}
 
 	/**
@@ -384,6 +292,9 @@ class Checkout {
 	public function add_tax_fields( $fields ) {
 		$invoice_type_value = ( new \WC_Checkout() )->get_value( 'billing_hez_invoice_type' );
 
+		$address_2_priority = $fields['billing']['billing_address_2']['priority'] ?? 0;
+		$address_1_priority = $fields['billing']['billing_address_1']['priority'];
+
 		$fields['billing']['billing_hez_invoice_type'] = array(
 			'id'       => 'hezarfen_invoice_type',
 			'label'    => __( 'Invoice Type', 'hezarfen-for-woocommerce' ),
@@ -394,7 +305,7 @@ class Checkout {
 				'person'  => __( 'Personal', 'hezarfen-for-woocommerce' ),
 				'company' => __( 'Company', 'hezarfen-for-woocommerce' ),
 			),
-			'priority' => $fields['billing']['billing_email']['priority'] + 1,
+			'priority' => $address_2_priority ? $address_2_priority + 1 : $address_1_priority + 1,
 		);
 
 		if ( self::is_show_identity_field_on_checkout() ) {
@@ -408,6 +319,7 @@ class Checkout {
 				'required'    => self::is_identity_number_field_required(),
 				// TODO: review the WP filter name table and if possible rename that as lowercase also remove phpcs ignore.
 				'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_TC_number', array( 'form-row-wide' ) ), //phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
+				'input_class' => apply_filters( 'hezarfen_checkout_fields_input_class_billing_hez_tc_number', array() ),
 				'priority'    => $fields['billing']['billing_hez_invoice_type']['priority'] + 1,
 			);
 		}
@@ -416,6 +328,8 @@ class Checkout {
 			'label'       => __( 'Title', 'hezarfen-for-woocommerce' ),
 			'placeholder' => __( 'Enter invoice title', 'hezarfen-for-woocommerce' ),
 			'required'    => true,
+			'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_company', array( 'form-row-wide' ) ),
+			'input_class' => apply_filters( 'hezarfen_checkout_fields_input_class_billing_hez_company', array() ),
 			'priority'    => $fields['billing']['billing_hez_invoice_type']['priority'] + 1,
 		);
 
@@ -425,6 +339,7 @@ class Checkout {
 			'placeholder' => __( 'Enter tax number', 'hezarfen-for-woocommerce' ),
 			'required'    => true,
 			'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_tax_number', array( 'form-row-wide' ) ),
+			'input_class' => apply_filters( 'hezarfen_checkout_fields_input_class_billing_hez_tax_number', array() ),
 			'priority'    => $fields['billing']['billing_company']['priority'] + 1,
 		);
 
@@ -434,6 +349,7 @@ class Checkout {
 			'placeholder' => __( 'Enter tax office', 'hezarfen-for-woocommerce' ),
 			'required'    => true,
 			'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_tax_office', array( 'form-row-wide' ) ),
+			'input_class' => apply_filters( 'hezarfen_checkout_fields_input_class_billing_hez_tax_office', array() ),
 			'priority'    => $fields['billing']['billing_hez_tax_number']['priority'] + 1,
 		);
 
@@ -462,17 +378,15 @@ class Checkout {
 	 */
 	public function override_posted_data( $data ) {
 		// Check if the T.C. Identitiy Field is active.
-		if ( $this->hezarfen_show_hezarfen_checkout_tax_fields && self::is_show_identity_field_on_checkout() ) {
+		if ( ! empty( $data['billing_hez_TC_number'] ) && $this->hezarfen_show_hezarfen_checkout_tax_fields && self::is_show_identity_field_on_checkout() ) {
 			if (
 				( new PostMetaEncryption() )->health_check() &&
 				( new PostMetaEncryption() )->test_the_encryption_key()
 			) {
-				if ( $data['billing_hez_TC_number'] ) {
-					// Encrypt the T.C. Identity fields.
-					$data['billing_hez_TC_number'] = ( new PostMetaEncryption() )->encrypt(
-						$data['billing_hez_TC_number']
-					);
-				}
+				// Encrypt the T.C. Identity fields.
+				$data['billing_hez_TC_number'] = ( new PostMetaEncryption() )->encrypt(
+					$data['billing_hez_TC_number']
+				);
 			} else {
 				// do not save the T.C. identitiy fields.
 				$data['billing_hez_TC_number'] = '******';
@@ -483,6 +397,22 @@ class Checkout {
 	}
 
 	/**
+	 * Validates necessary data after checkout submit.
+	 *
+	 * @param array     $data the posted checkout data.
+	 * @param \WP_Error $errors Validation errors.
+	 *
+	 * @return void
+	 */
+	public function validate_posted_data( $data, $errors ) {
+		$tc_id_number = ! empty( $data['billing_hez_TC_number'] ) ? ( new PostMetaEncryption() )->decrypt( $data['billing_hez_TC_number'] ) : '';
+
+		if ( $tc_id_number && 11 !== strlen( $tc_id_number ) ) {
+			$errors->add( 'billing_hez_TC_number_validation', '<strong>' . __( 'TC ID number is not valid', 'hezarfen-for-woocommerce' ) . '</strong>', array( 'id' => 'billing_hez_TC_number' ) );
+		}
+	}
+
+	/**
 	 * Show district and neighborhood fields on checkout page.
 	 *
 	 * @param array<string, mixed> $fields the current checkout fields.
@@ -490,8 +420,6 @@ class Checkout {
 	 */
 	public function add_district_and_neighborhood_fields( $fields ) {
 		$types = array( 'shipping', 'billing' );
-
-		$district_options = array( '' => __( 'Select an option', 'hezarfen-for-woocommerce' ) );
 
 		global $woocommerce;
 
@@ -512,81 +440,33 @@ class Checkout {
 			$current_city_plate_number_prefixed = $woocommerce->customer->$get_city_function();
 			$current_district                   = $woocommerce->customer->$get_district_function();
 
-			$districts = $this->get_districts(
-				$current_city_plate_number_prefixed
-			);
-
 			// remove WooCommerce default district field on checkout.
 			unset( $fields[ $type ][ $city_field_name ] );
-
-			// update array for name => name format.
-			$districts = Helper::checkout_select2_option_format( $districts );
 
 			$fields[ $type ][ $city_field_name ] = array(
 				'type'         => 'select',
 				'label'        => __( 'Town / City', 'hezarfen-for-woocommerce' ),
 				'required'     => true,
-				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_district', array( 'form-row-wide' ) ),
+				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_district', array() ),
 				'clear'        => true,
 				'autocomplete' => 'address-level2',
 				'priority'     => $fields[ $type ][ $type . '_state' ]['priority'] + 1,
-				'options'      => $district_options + $districts,
+				'options'      => Helper::select2_option_format( Mahalle_Local::get_districts( $current_city_plate_number_prefixed ) ),
 			);
 
 			$fields[ $type ][ $neighborhood_field_name ] = array(
 				'type'         => 'select',
 				'label'        => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
 				'required'     => true,
-				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_neighborhood', array( 'form-row-wide' ) ),
+				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_neighborhood', array() ),
 				'clear'        => true,
 				'autocomplete' => 'address-level3',
 				'priority'     => $fields[ $type ][ $type . '_state' ]['priority'] + 2,
-				'options'      => $this->get_neighborhood_options( $current_city_plate_number_prefixed, $current_district ),
+				'options'      => Helper::select2_option_format( Mahalle_Local::get_neighborhoods( $current_city_plate_number_prefixed, $current_district, false ) ),
 			);
 		}
 
 		return $fields;
-	}
-
-	/**
-	 * Get districts
-	 *
-	 * @param string $city_plate_with_prefix that begins with TR prefix such as TR18.
-	 *
-	 * @return string[]
-	 */
-	private function get_districts( $city_plate_with_prefix ) {
-		if ( ! $city_plate_with_prefix ) {
-			return array();
-		}
-
-		$districts = Mahalle_Local::get_districts( $city_plate_with_prefix );
-
-		return $districts;
-	}
-
-	/**
-	 * Returns neighborhood options.
-	 * 
-	 * @param string $city_plate_with_prefix that begins with TR prefix such as TR18.
-	 * @param string $district District.
-	 * 
-	 * @return array<string, string>
-	 */
-	private function get_neighborhood_options( $city_plate_with_prefix, $district ) {
-		$neighborhood_options = array( '' => __( 'Select an option', 'hezarfen-for-woocommerce' ) );
-
-		if ( ! $city_plate_with_prefix || ! $district ) {
-			return $neighborhood_options;
-		}
-
-		$neighborhoods = Mahalle_Local::get_neighborhoods( $city_plate_with_prefix, $district );
-
-		foreach ( $neighborhoods as $neighborhood ) {
-			$neighborhood_options[ $neighborhood ] = $neighborhood;
-		}
-
-		return $neighborhood_options;
 	}
 }
 

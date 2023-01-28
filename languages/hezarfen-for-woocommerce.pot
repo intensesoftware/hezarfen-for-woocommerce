@@ -34,7 +34,7 @@ msgstr ""
 msgid "Company"
 msgstr ""
 
-#: includes/admin/order/OrderDetails.php:70
+#: includes/admin/order/OrderDetails.php:57
 msgid "Invoice type"
 msgstr ""
 
