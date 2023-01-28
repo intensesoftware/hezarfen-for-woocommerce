@@ -21,7 +21,7 @@ class Admin_Orders {
 	/**
 	 * Constructor
 	 */
-	public function __construct() {
+	public static function init() {
 		if ( is_admin() ) {
 			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_scripts_and_styles' ) );
 

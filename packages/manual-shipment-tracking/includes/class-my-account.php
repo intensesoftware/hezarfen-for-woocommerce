@@ -16,7 +16,7 @@ class My_Account {
 	/**
 	 * Constructor
 	 */
-	public function __construct() {
+	public static function init() {
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_styles' ) );
 
 		if ( 'yes' === get_option( Settings::OPT_SHOW_TRACKING_COLUMN ) ) {

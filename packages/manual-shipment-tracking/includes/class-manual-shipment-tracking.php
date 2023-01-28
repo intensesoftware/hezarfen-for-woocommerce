@@ -89,11 +89,11 @@ class Manual_Shipment_Tracking {
 	 * @return void
 	 */
 	private function initialize_classes() {
-		new Email();
-		new My_Account();
-		new Admin_Ajax();
-		new Admin_Orders();
-		new Third_Party_Data_Support();
+		Email::init();
+		My_Account::init();
+		Admin_Ajax::init();
+		Admin_Orders::init();
+		Third_Party_Data_Support::init();
 
 		if ( 'yes' === get_option( Settings::OPT_ENABLE_SMS ) ) {
 			$selected_provider = get_option( Settings::OPT_NOTIF_PROVIDER );

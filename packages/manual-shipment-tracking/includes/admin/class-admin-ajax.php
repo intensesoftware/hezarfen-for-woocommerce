@@ -21,7 +21,7 @@ class Admin_Ajax {
 	/**
 	 * Constructor
 	 */
-	public function __construct() {
+	public static function init() {
 		add_action( 'wp_ajax_' . self::GET_SHIPMENT_DATA_ACTION, array( __CLASS__, 'get_shipment_data' ) );
 		add_action( 'wp_ajax_' . self::REMOVE_SHIPMENT_DATA_ACTION, array( __CLASS__, 'remove_shipment_data' ) );
 	}

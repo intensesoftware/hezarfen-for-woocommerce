@@ -35,7 +35,7 @@ class Third_Party_Data_Support {
 	/**
 	 * Constructor
 	 */
-	public function __construct() {
+	public static function init() {
 		$recog_data_option = get_option( Settings::OPT_RECOG_DATA ); // returns false if option is not set.
 		if ( 'no' === $recog_data_option || ( false === $recog_data_option && ! self::should_enable_recognizing() ) ) {
 			return;

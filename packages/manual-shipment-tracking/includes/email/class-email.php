@@ -16,7 +16,7 @@ class Email {
 	/**
 	 * Constructor
 	 */
-	public function __construct() {
+	public static function init() {
 		add_filter( 'woocommerce_email_classes', array( __CLASS__, 'add_order_shipped_email' ) );
 		add_filter( 'woocommerce_template_directory', array( __CLASS__, 'specify_template_dir_for_themes' ), 10, 2 );
 		add_action( 'hezarfen_mst_order_shipped', array( __CLASS__, 'send_email' ) );
