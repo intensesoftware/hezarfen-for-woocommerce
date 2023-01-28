@@ -34,7 +34,7 @@ abstract class MST_Notification_Provider extends \Hezarfen\Inc\Notification_Prov
 				$data->sms_sent = true;
 				$data->save();
 
-				/* translators: %s billing email */
+				/* translators: %s billing phone */
 				$note = sprintf( __( 'Tracking information SMS sent to %s', 'hezarfen-for-woocommerce' ), $order->get_billing_phone() );
 				$order->add_order_note( $note );
 			}
