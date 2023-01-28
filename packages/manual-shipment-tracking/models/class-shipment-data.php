@@ -123,6 +123,19 @@ class Shipment_Data implements \JsonSerializable {
 	}
 
 	/**
+	 * Removes this shipment data from the db.
+	 * 
+	 * @return bool
+	 */
+	public function remove() {
+		if ( ! $this->order_id || ! $this->raw_data ) {
+			return false;
+		}
+
+		return delete_post_meta( $this->order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->raw_data );
+	}
+
+	/**
 	 * Prepares the shipment data for storing in the database.
 	 * 
 	 * @return string
