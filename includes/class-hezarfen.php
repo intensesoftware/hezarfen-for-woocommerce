@@ -16,14 +16,14 @@ class Hezarfen {
 	/**
 	 * Addons info
 	 * 
-	 * @var array
+	 * @var array<array<string, mixed>>
 	 */
 	private $addons;
 
 	/**
 	 * Notices related to addons.
 	 * 
-	 * @var array
+	 * @var array<array<string, string>>
 	 */
 	private $addon_notices;
 
@@ -55,9 +55,9 @@ class Hezarfen {
 	/**
 	 * Modifies TR country locale data.
 	 * 
-	 * @param array $locales Locale data of all countries.
+	 * @param array<array<string, mixed>> $locales Locale data of all countries.
 	 * 
-	 * @return array
+	 * @return array<array<string, mixed>>
 	 */
 	public function modify_tr_locale( $locales ) {
 		$locales['TR']['city'] = array_merge(
@@ -94,7 +94,7 @@ class Hezarfen {
 			add_action(
 				'admin_notices',
 				function () {
-					Helper::show_admin_notices( $this->addon_notices );
+					Helper::render_admin_notices( $this->addon_notices );
 				}
 			);
 		}
@@ -109,7 +109,7 @@ class Hezarfen {
 						'type'    => 'error',
 					);
 
-					Helper::show_admin_notices( array( $notice ), true );
+					Helper::render_admin_notices( array( $notice ), true );
 				}
 			);
 		}
@@ -119,8 +119,8 @@ class Hezarfen {
 	 *
 	 * Load Hezarfen Settings Page
 	 *
-	 * @param array $settings the current WC setting page paths.
-	 * @return array
+	 * @param \WC_Settings_Page[] $settings the current WC setting page objects.
+	 * @return \WC_Settings_Page[]
 	 */
 	public function add_hezarfen_setting_page( $settings ) {
 		$settings[] = include_once WC_HEZARFEN_UYGULAMA_YOLU .

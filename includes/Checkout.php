@@ -399,8 +399,8 @@ class Checkout {
 	/**
 	 * Validates necessary data after checkout submit.
 	 *
-	 * @param array     $data the posted checkout data.
-	 * @param \WP_Error $errors Validation errors.
+	 * @param array<string, mixed> $data the posted checkout data.
+	 * @param \WP_Error            $errors Validation errors.
 	 *
 	 * @return void
 	 */

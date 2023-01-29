@@ -82,7 +82,7 @@ class OrderDetails {
 	/**
 	 * Adds decrypted TC Number information to the order details page.
 	 * 
-	 * @param WC_Order $order Order object.
+	 * @param \WC_Order $order Order object.
 	 * 
 	 * @return void
 	 */

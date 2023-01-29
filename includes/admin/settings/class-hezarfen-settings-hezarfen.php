@@ -32,7 +32,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	/**
 	 * Get own sections.
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	protected function get_own_sections() {
 		$sections = array(
@@ -52,7 +52,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	/**
 	 * Get settings for the default(General) section.
 	 *
-	 * @return array
+	 * @return array<array<string, string>>
 	 */
 	protected function get_settings_for_default_section() {
 		$fields = array(
@@ -110,9 +110,11 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	/**
 	 * Get settings for the Encryption section.
 	 *
-	 * @return array
+	 * @return array<array<string, string>>
 	 */
 	protected function get_settings_for_encryption_section() {
+		$fields = array();
+
 		// if encryption key not generated before, generate a new key.
 		if ( ! ( new PostMetaEncryption() )->is_encryption_key_generated() ) {
 			// create a new random key.
@@ -173,7 +175,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	/**
 	 * Get settings for the Checkout Page section.
 	 *
-	 * @return array
+	 * @return array<array<string, string>>
 	 */
 	protected function get_settings_for_checkout_page_section() {
 		$fields = array(
@@ -221,7 +223,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	/**
 	 * Get settings for the Tax Fields section.
 	 *
-	 * @return array
+	 * @return array<array<string, string>>
 	 */
 	protected function get_settings_for_checkout_tax_section() {
 		if ( $this->show_hezarfen_tax_fields() ) {
