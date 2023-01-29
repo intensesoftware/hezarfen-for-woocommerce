@@ -98,13 +98,16 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				'id'      => 'hezarfen_hide_my_account_postcode_fields',
 				'default' => 'no',
 			),
-			array(
-				'type' => 'sectionend',
-				'id'   => 'hezarfen_general_settings_section_end',
-			),
 		);
 
-		return apply_filters( 'hezarfen_general_settings', $fields );
+		$fields = apply_filters( 'hezarfen_general_settings', $fields );
+
+		$fields[] = array(
+			'type' => 'sectionend',
+			'id'   => 'hezarfen_general_settings_section_end',
+		);
+
+		return $fields;
 	}
 
 	/**
