@@ -27,6 +27,8 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		$this->id    = 'hezarfen';
 		$this->label = 'Hezarfen';
 
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_and_styles' ) );
+
 		parent::__construct();
 	}
 
@@ -45,6 +47,12 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		// if checkout field is active, show the section.
 		if ( $this->show_hezarfen_tax_fields() ) {
 			$sections['checkout_tax'] = __( 'Checkout Tax Fields', 'hezarfen-for-woocommerce' );
+		}
+
+		$post_meta_encryption = new PostMetaEncryption();
+
+		if ( $post_meta_encryption->is_encryption_key_generated() && ! $post_meta_encryption->health_check() ) {
+			$sections['encryption_recovery'] = __( 'Encryption Key Recovery', 'hezarfen-for-woocommerce' );
 		}
 
 		return $sections;
@@ -289,6 +297,81 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	}
 
 	/**
+	 * Get settings for the Encryption Key Recovery section.
+	 *
+	 * @return array
+	 */
+	protected function get_settings_for_encryption_recovery_section() {
+		global $hide_save_button;
+		$post_meta_encryption = new PostMetaEncryption();
+
+		if ( $post_meta_encryption->health_check() ) {
+			$hide_save_button = true;
+
+			$fields = array(
+				array(
+					'title' => __(
+						'Encryption Key Recovery Screen',
+						'hezarfen-for-woocommerce'
+					),
+					'type'  => 'title',
+					'desc'  => __(
+						'Everything seems fine.',
+						'hezarfen-for-woocommerce'
+					),
+					'id'    => 'hezarfen_encryption_recovery_settings_title',
+				),
+			);
+		} else {
+			$encryption_key = $post_meta_encryption->create_random_key();
+
+			$fields = array(
+				array(
+					'title' => __(
+						'Encryption Key Recovery Screen',
+						'hezarfen-for-woocommerce'
+					),
+					'type'  => 'title',
+					'desc'  => __(
+						'You can generate a new encryption key from this page.',
+						'hezarfen-for-woocommerce'
+					),
+					'id'    => 'hezarfen_encryption_recovery_settings_title',
+				),
+				array(
+					'title'   => __(
+						'New Encryption Key',
+						'hezarfen-for-woocommerce'
+					),
+					'type'    => 'textarea',
+					'css'     => 'width:100%;height:60px',
+					'default' => sprintf(
+						"define( 'HEZARFEN_ENCRYPTION_KEY', '%s' );",
+						$encryption_key
+					),
+					'desc'    => __(
+						'Back up the phrase in the box to a safe area, then place it in wp-config.php file.',
+						'hezarfen-for-woocommerce'
+					),
+				),
+				array(
+					'title'   => '',
+					'type'    => 'checkbox',
+					'desc'    => __( "I understand and agree that I can't acces the TC ID data of the old orders by using this new encryption key. I backed up the phrase in the box to a safe area, and I placed it in wp-config.php file.", 'hezarfen-for-woocommerce' ),
+					'default' => 'no',
+					'class'   => 'encryption-recovery-confirmation',
+				),
+				array(
+					'type' => 'sectionend',
+					'id'   => 'hezarfen_encryption_recovery_settings_section_end',
+				),
+			);
+		}
+
+		return apply_filters( 'hezarfen_encryption_recovery_settings', $fields );
+	}
+
+	/**
 	 * The current value of the Should Show Hezarfen Tax Settings?
 	 *
 	 * @return bool
@@ -342,7 +425,8 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		}
 
 		// if encryption key not placed the wp-config, do not continue.
-		if ( ! defined( 'HEZARFEN_ENCRYPTION_KEY' ) && 'encryption' == $current_section ) {
+		if ( ! defined( 'HEZARFEN_ENCRYPTION_KEY' ) && ( 'encryption' === $current_section || 'encryption_recovery' === $current_section ) ) {
+			WC_Admin_Settings::add_error( __( 'Please place the encryption key in the wp-config.php file.', 'hezarfen-for-woocommerce' ) );
 			return false;
 		}
 
@@ -361,6 +445,22 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					( new PostMetaEncryption() )->create_encryption_tester_text();
 				}
 			}
+		}
+	}
+
+	/**
+	 * Enqueues scripts and styles.
+	 * 
+	 * @param string $hook_suffix The current admin page.
+	 * 
+	 * @return void
+	 */
+	public function enqueue_scripts_and_styles( $hook_suffix ) {
+		global $current_section;
+
+		if ( 'woocommerce_page_wc-settings' === $hook_suffix && 'encryption_recovery' === $current_section ) {
+			wp_enqueue_script( 'wc_hezarfen_settings_js', plugins_url( 'assets/admin/js/settings.js', WC_HEZARFEN_FILE ), array( 'jquery' ), WC_HEZARFEN_VERSION, true );
+			wp_enqueue_style( 'wc_hezarfen_settings_css', plugins_url( 'assets/admin/css/settings.css', WC_HEZARFEN_FILE ), array(), WC_HEZARFEN_VERSION );
 		}
 	}
 }
