@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-14 17:11+0000\n"
-"PO-Revision-Date: 2023-01-29 14:25+0000\n"
+"PO-Revision-Date: 2023-01-31 13:32+0000\n"
 "Last-Translator: \n"
 "Language-Team: Türkçe\n"
 "Language: tr_TR\n"
@@ -39,7 +39,7 @@ msgstr "Aras Kargo"
 msgid "Are you sure you want to remove this shipment data?"
 msgstr "Bu gönderi verisini silmek istediğinize emin misiniz?"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:205
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:208
 msgid "Auto sort fields in checkout form?"
 msgstr "Ödeme formundaki alanlar otomatik olarak sıralansın mı?"
 
@@ -47,7 +47,7 @@ msgstr "Ödeme formundaki alanlar otomatik olarak sıralansın mı?"
 msgid "Available Variables"
 msgstr "Kullanabileceğiniz Değişkenler"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:147
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:150
 msgid ""
 "Back up the phrase in the box to a safe area, then place it in wp-config.php "
 "file."
@@ -79,11 +79,11 @@ msgstr "CDEK"
 msgid "Checkout Page Settings"
 msgstr "Ödeme Sayfası Ayarları"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:183
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:186
 msgid "Checkout Settings"
 msgstr "Ödeme Sayfası Ayarları"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:261
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:264
 msgid "Checkout T.C. Identity Number Fields Required Statuses"
 msgstr "Ödeme Ekranında, T.C. Kimlik Numarasının Zorunluluk Durumlar"
 
@@ -91,7 +91,7 @@ msgstr "Ödeme Ekranında, T.C. Kimlik Numarasının Zorunluluk Durumlar"
 msgid "Checkout Tax Fields"
 msgstr "Ödeme Vergi Alanları"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:234
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:237
 msgid "Checkout Tax Fields Settings"
 msgstr "Ödeme Vergi Alan Ayarları"
 
@@ -145,11 +145,11 @@ msgstr "Sipariş kargoya verildiğinde SMS bildirimini aktif et"
 msgid "Encryption"
 msgstr "Şifreleme (Encryption)"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:137
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:140
 msgid "Encryption Key"
 msgstr "Şifreleme Anahtarı (Encryption Key)"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:153
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:156
 msgid "Encryption Key Confirmation"
 msgstr "Şifreleme Anahtarı (Encryption Key) Onayı"
 
@@ -157,7 +157,7 @@ msgstr "Şifreleme Anahtarı (Encryption Key) Onayı"
 msgid "Encryption Key Health"
 msgstr "Şifreleme Anahtarı (Encryption Key) Sağlığı"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:125
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:128
 msgid "Encryption Settings"
 msgstr "Şifreleme Anahtarı (Encryption Key) Ayarları"
 
@@ -239,7 +239,7 @@ msgstr ""
 msgid "Hide postcode fields in My Account > Address pages?"
 msgstr "Hesabım > Adres Düzenleme sayfalarındaki posta kodu alanını gizle?"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:195
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:198
 msgid "Hide postcode fields?"
 msgstr "Posta kodu alanları gizlensin mi?"
 
@@ -247,7 +247,7 @@ msgstr "Posta kodu alanları gizlensin mi?"
 msgid "Horoz Lojistik"
 msgstr "Horoz Lojistik"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:158
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:161
 msgid ""
 "I backed up the key to a secure area and placed it in the wp-config file. In "
 "case the encryption key value is deleted from the wp-config.php file, all "
@@ -259,7 +259,7 @@ msgstr ""
 "no bilgilerinin okunamaz(decrypt edilemez) hale geleceğini anladım ve "
 "onaylıyorum. "
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:130
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:133
 msgid ""
 "If the T.C. Identity Field is active, an encryption key must be generated. "
 "The following encryption key generated will be lost upon saving the form. "
@@ -327,7 +327,7 @@ msgstr "Fatura tipi"
 msgid "Invoice type"
 msgstr "Fatura tipi"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:265
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:268
 msgid "Is T.C. Identity Number field required?"
 msgstr "T.C. Kimlik Numarası alanı zorunlu yapılsın mı?"
 
@@ -503,7 +503,7 @@ msgstr "Ödeme sayfasında vergi alanları gösterilsin mi?"
 msgid "Show Shipment Tracking column on My Account > Orders page"
 msgstr "Hesabım > Siparişler sayfasında Kargo Takip sütununu göster"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:247
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:250
 msgid "Show T.C. Identity Field on checkout page "
 msgstr "T.C. Kimlik Numarası Alanını Ödeme Sayfasında Göster"
 
@@ -519,7 +519,7 @@ msgstr "Hesabım > Adres Düzenleme sayfalarındaki adres alanlarını sırala?"
 msgid "Sürat Kargo"
 msgstr "Sürat Kargo"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:252
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:255
 msgid ""
 "T.C. Identity Field optionally shows on checkout field when invoice type "
 "selected as person. (T.C. field requires encryption. If encryption is not "
@@ -627,11 +627,11 @@ msgstr "Evet"
 msgid "You can edit the general settings from this page."
 msgstr "Hezarfen ile ilgili genel ayarları bu sayfadan yönetebilirsiniz."
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:188
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:191
 msgid "You can set general checkout settings."
 msgstr "Ödeme sayfasıyla ilgili genel ayarları düzenleyebilirsiniz."
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:239
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:242
 msgid ""
 "You can update the checkout TAX fields. Note: T.C. number field requires "
 "encryption feature. If you do not activate the encryption feature, T.C. "

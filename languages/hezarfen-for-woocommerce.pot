@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-01-29T17:17:06+03:00\n"
+"POT-Creation-Date: 2023-01-31T17:21:02+03:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: hezarfen-for-woocommerce\n"
@@ -89,67 +89,67 @@ msgstr ""
 msgid "Hide postcode fields in My Account > Address pages?"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:125
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:128
 msgid "Encryption Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:130
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:133
 msgid "If the T.C. Identity Field is active, an encryption key must be generated. The following encryption key generated will be lost upon saving the form. Please back up the generated encryption key to a secure area, then paste it anywhere in the wp-config.php file. In case of deletion of the hezarfen-encryption-key line from wp-config.php, retrospectively, the orders will be sent to T.C. no values will become unreadable."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:137
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:140
 msgid "Encryption Key"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:147
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:150
 msgid "Back up the phrase in the box to a safe area, then place it in wp-config.php file."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:153
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:156
 msgid "Encryption Key Confirmation"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:158
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:161
 msgid "I backed up the key to a secure area and placed it in the wp-config file. In case the encryption key value is deleted from the wp-config.php file, all past orders will be transferred to T.C. I know I cannot access ID data."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:183
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:186
 msgid "Checkout Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:188
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:191
 msgid "You can set general checkout settings."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:195
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:198
 msgid "Hide postcode fields?"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:205
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:208
 msgid "Auto sort fields in checkout form?"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:234
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:237
 msgid "Checkout Tax Fields Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:239
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:242
 msgid "You can update the checkout TAX fields. Note: T.C. number field requires encryption feature. If you do not activate the encryption feature, T.C. number field does not appear on the checkout."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:247
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:250
 msgid "Show T.C. Identity Field on checkout page "
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:252
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:255
 msgid "T.C. Identity Field optionally shows on checkout field when invoice type selected as person. (T.C. field requires encryption. If encryption is not enabled, this field is not displayed.)"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:261
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:264
 msgid "Checkout T.C. Identity Number Fields Required Statuses"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:265
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:268
 msgid "Is T.C. Identity Number field required?"
 msgstr ""
 
