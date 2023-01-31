@@ -446,6 +446,13 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				}
 			}
 		}
+
+		if ( 'encryption_recovery' === $current_section ) {
+			$recovery_log   = get_option( 'hezarfen_encryption_key_recovery_log', array() );
+			$recovery_log[] = current_datetime();
+
+			update_option( 'hezarfen_encryption_key_recovery_log', $recovery_log );
+		}
 	}
 
 	/**
