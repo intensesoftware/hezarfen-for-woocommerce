@@ -217,7 +217,7 @@ class Admin_Orders {
 			$new_courier_id   = ! empty( $post_data[ self::COURIER_HTML_NAME ] ) ? sanitize_text_field( $post_data[ self::COURIER_HTML_NAME ] ) : '';
 			$new_tracking_num = ! empty( $post_data[ self::TRACKING_NUM_HTML_NAME ] ) ? sanitize_text_field( $post_data[ self::TRACKING_NUM_HTML_NAME ] ) : '';
 
-			if ( ! $new_courier_id || ! $new_tracking_num ) {
+			if ( ! $new_courier_id || ( Courier_Kurye::$id !== $new_courier_id && ! $new_tracking_num ) ) {
 				continue;
 			}
 
