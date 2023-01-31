@@ -86,6 +86,13 @@ class Pandasms extends MST_Notification_Provider {
 	 * @return array<string, mixed>
 	 */
 	public static function add_new_trigger( $triggers ) {
+		// remove the "Shipped" order status that added automatically by PandaSMS plugin.
+		unset( $triggers[ 'ps_wc_siparis_durum_degisiklik_' . Manual_Shipment_Tracking::DB_SHIPPED_ORDER_STATUS ] );
+
+		// remove the order statuses that added by Third_Party_Data_Support class.
+		unset( $triggers[ 'ps_wc_siparis_durum_degisiklik_' . Third_Party_Data_Support::INTENSE_KARGO_TAKIP_ORDER_STATUS ] );
+		unset( $triggers[ 'ps_wc_siparis_durum_degisiklik_' . Third_Party_Data_Support::KARGO_TAKIP_TURKIYE_ORDER_STATUS ] );
+
 		$triggers[ self::TRIGGER_NAME ] = array(
 			'tanim'       => 'Sipariş kargoya verildiğinde',
 			'kisa_kodlar' => array(
