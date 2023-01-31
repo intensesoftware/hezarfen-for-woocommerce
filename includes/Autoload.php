@@ -29,9 +29,9 @@ class Autoload {
 	 */
 	public function __construct() {
 		$this->load_plugin_files();
-		$this->load_packages();
-
 		$this->load_assets();
+
+		add_action( 'plugins_loaded', array( $this, 'load_packages' ) );
 	}
 	
 	/**
