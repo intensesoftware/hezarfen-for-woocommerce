@@ -40,18 +40,6 @@ class OrderDetails {
 	 * @return array
 	 */
 	public function add_tax_fields_to_order_details( $fields ) {
-		global $post;
-
-		$invoice_type = get_post_meta( $post->ID, '_billing_hez_invoice_type', true );
-
-		if ( 'person' == $invoice_type ) {
-			$invoice_type_human = __( 'Personal', 'hezarfen-for-woocommerce' );
-		} elseif ( 'company' == $invoice_type ) {
-			$invoice_type_human = __( 'Company', 'hezarfen-for-woocommerce' );
-		} else {
-			$invoice_type_human = '';
-		}
-
 		$tax_fields = array(
 			'hez_invoice_type' => array(
 				'label'   => __( 'Invoice type', 'hezarfen-for-woocommerce' ),
@@ -61,8 +49,7 @@ class OrderDetails {
 					'company' => __( 'Company', 'hezarfen-for-woocommerce' ),
 				),
 				'class'   => 'hezarfen_billing_invoice_type_field',
-				'show'    => true,
-				'value'   => $invoice_type_human,
+				'show'    => false,
 			),
 			'hez_tax_number'   => array(
 				'label' => __( 'Tax Number', 'hezarfen-for-woocommerce' ),
