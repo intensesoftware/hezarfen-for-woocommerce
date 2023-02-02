@@ -1,11 +1,13 @@
 jQuery(document).ready(function ($) {
+	const invoice_type_field = $('.hezarfen_billing_invoice_type_field');
+
 	$('a.edit_address').on('click', function () {
 		$('.hezarfen-tc-num-field').hide();
 	});
 
-	update_field_showing_statuses($('.hezarfen_billing_invoice_type_field').val());
+	update_field_showing_statuses(invoice_type_field.val());
 
-	$('.hezarfen_billing_invoice_type_field').on('change', function () {
+	invoice_type_field.on('change', function () {
 		var invoice_type = $(this).val();
 		update_field_showing_statuses(invoice_type);
 	});
