@@ -51,7 +51,9 @@ class Autoload {
 	 * @return void
 	 */
 	public function load_admin_assets_files( $hook_suffix ) {
-		if ( 'post.php' === $hook_suffix ) {
+		global $post_type;
+
+		if ( 'post.php' === $hook_suffix && 'shop_order' === $post_type ) {
 			wp_enqueue_script(
 				'wc_hezarfen_admin_order_details_js',
 				plugins_url( 'assets/admin/js/order-details.js', WC_HEZARFEN_FILE ),
