@@ -105,7 +105,6 @@ class Settings {
 				if ( ! $class::is_plugin_ready() ) {
 					/* translators: %s SMS notification provider */
 					$notice = sprintf( __( 'In order to %1$s integration work, the %2$s plugin must be activated.', 'hezarfen-for-woocommerce' ), $class::$title, $class::$title );
-
 				}
 
 				if ( Netgsm::$id === $id && ! Netgsm::is_netgsm_order_status_change_notif_active() ) {
