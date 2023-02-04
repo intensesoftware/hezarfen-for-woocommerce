@@ -36,6 +36,13 @@ class Pandasms extends MST_Notification_Provider {
 	public static $title = 'PandaSMS';
 
 	/**
+	 * Plugin basename.
+	 * 
+	 * @var string
+	 */
+	public static $plugin_basename = 'pandasms-for-woocommerce/pandasms-for-woocommerce.php';
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -112,6 +119,6 @@ class Pandasms extends MST_Notification_Provider {
 	 * @return bool
 	 */
 	public static function is_plugin_ready() {
-		return Hezarfen_Helper::is_plugin_active( 'pandasms-for-woocommerce/pandasms-for-woocommerce.php' );
+		return Hezarfen_Helper::is_plugin_active( self::$plugin_basename );
 	}
 }

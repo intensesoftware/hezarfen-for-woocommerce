@@ -4,6 +4,10 @@
 	padding-left: 24px;
 }
 
+.pandasms-link {
+	margin-left: 5px;
+}
+
 .sms-variables-wrapper {
 	width: 50%;
 }

@@ -2,6 +2,7 @@ jQuery(function ($) {
 	$(document).ready(function () {
 		const notif_settings_rows = $('.notification').closest('tr');
 		const notif_providers = $('.notif-provider');
+		const pandasms_radio = $(`input[value="${hezarfen_mst_backend.pandasms_key}"]`);
 		const recognition_settings_rows = $('.recognition').closest('tr');
 		const recognition_types = $('.recognition-type');
 		const sms_textarea = $('.netgsm.sms-content');
@@ -15,6 +16,33 @@ jQuery(function ($) {
 
 		checkbox_show_hide_related_settings($('.recogize-data'), recognition_settings_rows, recognition_types);
 		radio_show_hide_related_settings(recognition_types, $('.custom-meta').closest('tr'), hezarfen_mst_backend.recognize_custom_meta_key);
+
+		if (pandasms_radio.is(':disabled')) {
+			const install_pandasms_link = $('<a class="pandasms-link"></a>').text(hezarfen_mst_backend.install_pandasms_link_text);
+			pandasms_radio.parent().append(install_pandasms_link);
+
+			install_pandasms_link.on('click', function () {
+				if (hezarfen_mst_backend.is_pandasms_installed) {
+					activate_pandasms_plugin();
+				} else {
+					$.post(
+						ajaxurl,
+						{
+							action: 'install-plugin',
+							_ajax_nonce: hezarfen_mst_backend.plugin_install_nonce,
+							slug: 'pandasms-for-woocommerce'
+						},
+						function (response) {
+							if (response.success) {
+								activate_pandasms_plugin();
+							} else {
+								alert(`${hezarfen_mst_backend.install_pandasms_fail_text}\nError message: "${response.data.errorMessage}"`);
+							}
+						}
+					);
+				}
+			});
+		}
 
 		if (sms_textarea.is(':enabled')) {
 			$('.sms-variable').on('click', function () { // Insert variable to textarea.
@@ -42,5 +70,17 @@ jQuery(function ($) {
 				related_settings.toggle($this.val() === radio_button_value && $this.is(':checked'));
 			}
 		}).trigger('change');
+	}
+
+	function activate_pandasms_plugin() {
+		$.get(
+			hezarfen_mst_backend.activate_pandasms_url,
+			function () {
+				alert(hezarfen_mst_backend.install_pandasms_success_text);
+				location.reload();
+			}
+		).fail(function () {
+			alert(hezarfen_mst_backend.install_pandasms_fail_text);
+		});
 	}
 });

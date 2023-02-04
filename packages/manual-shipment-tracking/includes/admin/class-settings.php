@@ -312,13 +312,39 @@ class Settings {
 			wp_enqueue_script( 'hezarfen_mst_settings_js', HEZARFEN_MST_ASSETS_URL . 'js/admin/settings.js', array(), WC_HEZARFEN_VERSION, false );
 			wp_enqueue_style( 'hezarfen_mst_settings_css', HEZARFEN_MST_ASSETS_URL . 'css/admin/settings.css', array(), WC_HEZARFEN_VERSION );
 
+			$object_props = array(
+				'netgsm_key'                => Netgsm::$id,
+				'pandasms_key'              => Pandasms::$id,
+				'recognize_custom_meta_key' => self::RECOG_TYPE_CUSTOM_META,
+			);
+
+			if ( ! Pandasms::is_plugin_ready() ) {
+				$activate_pandasms_url = add_query_arg(
+					array(
+						'_wpnonce' => wp_create_nonce( 'activate-plugin_' . Pandasms::$plugin_basename ),
+						'action'   => 'activate',
+						'plugin'   => Pandasms::$plugin_basename,
+					),
+					admin_url( 'plugins.php' )
+				);
+
+				$object_props = array_merge(
+					$object_props,
+					array(
+						'install_pandasms_link_text'    => __( 'Install & activate PandaSMS for Woocommerce plugin', 'hezarfen-for-woocommerce' ),
+						'install_pandasms_success_text' => __( 'PandaSMS plugin is successfully installed and activated.', 'hezarfen-for-woocommerce' ),
+						'install_pandasms_fail_text'    => __( 'An error occured when installing and activating the PandaSMS plugin.', 'hezarfen-for-woocommerce' ),
+						'plugin_install_nonce'          => wp_create_nonce( 'updates' ),
+						'activate_pandasms_url'         => $activate_pandasms_url,
+						'is_pandasms_installed'         => isset( get_plugins()[ Pandasms::$plugin_basename ] ),
+					)
+				);
+			}
+
 			wp_localize_script(
 				'hezarfen_mst_settings_js',
 				'hezarfen_mst_backend',
-				array(
-					'netgsm_key'                => Netgsm::$id,
-					'recognize_custom_meta_key' => self::RECOG_TYPE_CUSTOM_META,
-				),
+				$object_props,
 			);
 		}
 	}
