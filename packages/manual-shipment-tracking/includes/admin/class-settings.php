@@ -172,6 +172,7 @@ class Settings {
 				array(
 					'type'  => 'checkbox',
 					'title' => __( "Recognize third party plugins' data", 'hezarfen-for-woocommerce' ),
+					'desc'  => __( "If you used a shipment tracking plugin before, check this to recognize your old shipment tracking plugin's data.", 'hezarfen-for-woocommerce' ),
 					'id'    => self::OPT_RECOG_DATA,
 					'class' => 'recogize-data',
 				),
