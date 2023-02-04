@@ -102,7 +102,7 @@ class Admin_Orders {
 
 		add_meta_box(
 			'hezarfen-mst-order-edit-metabox',
-			__( 'Hezarfen', 'hezarfen-for-woocommerce' ),
+			__( 'Hezarfen Cargo Tracking', 'hezarfen-for-woocommerce' ),
 			array( __CLASS__, 'render_order_edit_metabox' ),
 			'shop_order',
 			'side',
