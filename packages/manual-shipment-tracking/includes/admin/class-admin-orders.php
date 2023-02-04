@@ -312,6 +312,7 @@ class Admin_Orders {
 				'hezarfen_mst_backend',
 				array(
 					'courier_select_placeholder'  => __( 'Choose a courier company', 'hezarfen-for-woocommerce' ),
+					'duplicate_btn_tooltip_text'  => __( 'Add new shipment', 'hezarfen-for-woocommerce' ),
 					'courier_logo_base_url'       => HEZARFEN_MST_COURIER_LOGO_URL,
 					'remove_shipment_data_action' => Admin_Ajax::REMOVE_SHIPMENT_DATA_ACTION,
 					'remove_shipment_data_nonce'  => wp_create_nonce( Admin_Ajax::REMOVE_SHIPMENT_DATA_NONCE ),

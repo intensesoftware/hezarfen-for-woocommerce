@@ -6,6 +6,13 @@ jQuery(function ($) {
 
 		convert_selects_to_selectwoo(metabox_wrapper);
 
+		duplicate_button.tipTip({
+			'fadeIn': 50,
+			'fadeOut': 50,
+			'delay': 200,
+			'content': hezarfen_mst_backend.duplicate_btn_tooltip_text
+		});
+
 		duplicate_button.on('click', function () {
 			duplicate_shipment_form(metabox_wrapper);
 		});
