@@ -37,32 +37,38 @@ jQuery(function ($) {
 			width: 400,
 			modal: true,
 			dialogClass: 'hezarfen-mst-confirm-removal',
-			buttons: {
-				Delete: function () {
-					$.post(
-						ajaxurl,
-						{
-							action: hezarfen_mst_backend.remove_shipment_data_action,
-							_wpnonce: hezarfen_mst_backend.remove_shipment_data_nonce,
-							order_id: $('input#post_ID').val(),
-							data_id: shipment_form.data('id')
-						},
-						function () {
-							if (metabox_wrapper.find('.shipment-form').length === 1) {
-								duplicate_shipment_form(metabox_wrapper);
-							}
+			buttons: [
+				{
+					text: hezarfen_mst_backend.modal_btn_delete_text,
+					click: function () {
+						$.post(
+							ajaxurl,
+							{
+								action: hezarfen_mst_backend.remove_shipment_data_action,
+								_wpnonce: hezarfen_mst_backend.remove_shipment_data_nonce,
+								order_id: $('input#post_ID').val(),
+								data_id: shipment_form.data('id')
+							},
+							function () {
+								if (metabox_wrapper.find('.shipment-form').length === 1) {
+									duplicate_shipment_form(metabox_wrapper);
+								}
 
-							shipment_form.remove();
+								shipment_form.remove();
+								modal_body.dialog('destroy');
+							}
+						).fail(function () {
 							modal_body.dialog('destroy');
-						}
-					).fail(function () {
-						modal_body.dialog('destroy');
-					});
+						});
+					}
 				},
-				Cancel: function () {
-					modal_body.dialog('destroy');
+				{
+					text: hezarfen_mst_backend.modal_btn_cancel_text,
+					click: function () {
+						modal_body.dialog('destroy');
+					}
 				}
-			}
+			]
 		});
 	}
 
