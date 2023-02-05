@@ -23,7 +23,7 @@ jQuery(function ($) {
 
 			install_pandasms_link.on('click', function () {
 				if (hezarfen_mst_backend.is_pandasms_installed) {
-					activate_pandasms_plugin();
+					activate_pandasms_plugin(pandasms_radio);
 				} else {
 					$.post(
 						ajaxurl,
@@ -34,7 +34,7 @@ jQuery(function ($) {
 						},
 						function (response) {
 							if (response.success) {
-								activate_pandasms_plugin();
+								activate_pandasms_plugin(pandasms_radio);
 							} else {
 								alert(`${hezarfen_mst_backend.install_pandasms_fail_text}\nError message: "${response.data.errorMessage}"`);
 							}
@@ -72,12 +72,15 @@ jQuery(function ($) {
 		}).trigger('change');
 	}
 
-	function activate_pandasms_plugin() {
+	function activate_pandasms_plugin(pandasms_radio) {
 		$.get(
 			hezarfen_mst_backend.activate_pandasms_url,
 			function () {
 				alert(hezarfen_mst_backend.install_pandasms_success_text);
-				location.reload();
+
+				pandasms_radio.removeAttr('disabled');
+				pandasms_radio.parent().contents().slice(1).remove();
+				pandasms_radio.after(' ' + hezarfen_mst_backend.pandasms_title);
 			}
 		).fail(function () {
 			alert(hezarfen_mst_backend.install_pandasms_fail_text);

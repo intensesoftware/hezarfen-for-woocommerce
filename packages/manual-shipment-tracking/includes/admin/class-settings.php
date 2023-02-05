@@ -315,6 +315,7 @@ class Settings {
 			$object_props = array(
 				'netgsm_key'                => Netgsm::$id,
 				'pandasms_key'              => Pandasms::$id,
+				'pandasms_title'            => Pandasms::$title,
 				'recognize_custom_meta_key' => self::RECOG_TYPE_CUSTOM_META,
 			);
 
