@@ -56,6 +56,10 @@ class Helper {
 		add_filter( 'woocommerce_billing_fields', array( __CLASS__, 'assign_priorities_to_non_locale_fields' ), PHP_INT_MAX - 1, 2 );
 		if ( is_checkout() ) {
 			add_filter( 'woocommerce_shipping_fields', array( __CLASS__, 'assign_priorities_to_non_locale_fields' ), PHP_INT_MAX - 1, 2 );
+
+			if ( 'yes' === get_option( 'hezarfen_show_hezarfen_checkout_tax_fields' ) ) {
+				add_filter( 'woocommerce_country_locale_field_selectors', array( __CLASS__, 'add_tax_fields_to_locale_selectors' ), PHP_INT_MAX - 1 );
+			}
 		}
 	}
 
@@ -74,6 +78,31 @@ class Helper {
 		$locales['TR']['address_2'] = array_merge(
 			$locales['TR']['address_2'] ?? array(),
 			array( 'priority' => 80 )
+		);
+
+		$locales['TR']['hez_invoice_type'] = array_merge(
+			$locales['TR']['hez_invoice_type'] ?? array(),
+			array( 'priority' => 81 )
+		);
+
+		$locales['TR']['hezarfen_TC_number'] = array_merge(
+			$locales['TR']['hezarfen_TC_number'] ?? array(),
+			array( 'priority' => 81 )
+		);
+
+		$locales['TR']['billing_company'] = array_merge(
+			$locales['TR']['billing_company'] ?? array(),
+			array( 'priority' => 82 )
+		);
+
+		$locales['TR']['hezarfen_tax_number'] = array_merge(
+			$locales['TR']['hezarfen_tax_number'] ?? array(),
+			array( 'priority' => 83 )
+		);
+
+		$locales['TR']['hezarfen_tax_office'] = array_merge(
+			$locales['TR']['hezarfen_tax_office'] ?? array(),
+			array( 'priority' => 84 )
 		);
 
 		$locales['TR']['postcode'] = array_merge(
@@ -109,6 +138,23 @@ class Helper {
 		}
 
 		return $address_fields;
+	}
+
+	/**
+	 * Adds tax fields' CSS selectors.
+	 * 
+	 * @param array<string, string> $locale_fields Locale fields.
+	 * 
+	 * @return array<string, string>
+	 */
+	public static function add_tax_fields_to_locale_selectors( $locale_fields ) {
+		$locale_fields['billing_company']     = '#billing_company_field';
+		$locale_fields['hez_invoice_type']    = '#hezarfen_invoice_type_field';
+		$locale_fields['hezarfen_TC_number']  = '#hezarfen_TC_number_field';
+		$locale_fields['hezarfen_tax_number'] = '#hezarfen_tax_number_field';
+		$locale_fields['hezarfen_tax_office'] = '#hezarfen_tax_office_field';
+
+		return $locale_fields;
 	}
 
 	/**
