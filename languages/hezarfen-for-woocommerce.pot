@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-01-31T17:21:02+03:00\n"
+"POT-Creation-Date: 2023-02-05T13:05:58+03:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: hezarfen-for-woocommerce\n"
@@ -259,7 +259,7 @@ msgid "No shipment data found"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:105
-msgid "Hezarfen"
+msgid "Hezarfen Cargo Tracking"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:129
@@ -301,6 +301,18 @@ msgstr ""
 msgid "Choose a courier company"
 msgstr ""
 
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:315
+msgid "Add new shipment"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:316
+msgid "Delete"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:317
+msgid "Cancel"
+msgstr ""
+
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:60
 msgid "Enable Manual Shipment Tracking feature"
 msgstr ""
@@ -314,48 +326,52 @@ msgstr ""
 msgid "In order to %1$s integration work, the %2$s plugin must be activated."
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:112
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:111
 msgid "In order to NetGSM integration work, the \"send SMS to the customer when order status changed\" option must be activated from the NetGSM plugin settings."
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:122
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:121
 msgid "Manual Shipment Tracking General Settings"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:126
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:125
 msgid "Default courier company"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:132
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:131
 msgid "Show Shipment Tracking column on My Account > Orders page"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:141
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:140
 msgid "SMS Notification Settings"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:145
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:144
 msgid "Enable SMS notification when order shipped"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:151
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:150
 msgid "Notification Provider"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:159
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:158
 msgid "NetGSM SMS content"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:162
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:161
 msgid "Enter SMS content."
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:170
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:169
 msgid "Advanced Settings"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:174
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:173
 msgid "Recognize third party plugins' data"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:174
+msgid "If you used a shipment tracking plugin before, check this to recognize your old shipment tracking plugin's data."
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:180
@@ -397,6 +413,22 @@ msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:244
 msgid "Available Variables"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:334
+msgid "Installing.."
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:336
+msgid "Install & activate PandaSMS for Woocommerce plugin"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:337
+msgid "PandaSMS plugin is successfully installed and activated."
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:338
+msgid "An error occured when installing and activating the PandaSMS plugin."
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:124
