@@ -57,7 +57,7 @@ class Helper {
 		if ( is_checkout() ) {
 			add_filter( 'woocommerce_shipping_fields', array( __CLASS__, 'assign_priorities_to_non_locale_fields' ), PHP_INT_MAX - 1, 2 );
 
-			if ( 'yes' === get_option( 'hezarfen_show_hezarfen_checkout_tax_fields' ) ) {
+			if ( self::is_show_tax_fields() ) {
 				add_filter( 'woocommerce_country_locale_field_selectors', array( __CLASS__, 'add_tax_fields_to_locale_selectors' ), PHP_INT_MAX - 1 );
 			}
 		}
@@ -185,6 +185,15 @@ class Helper {
 	public static function is_edit_address_page() {
 		global $wp;
 		return is_account_page() && ! empty( $wp->query_vars['edit-address'] );
+	}
+
+	/**
+	 * Show tax fields in checkout?
+	 * 
+	 * @return bool
+	 */
+	public static function is_show_tax_fields() {
+		return 'yes' === get_option( 'hezarfen_show_hezarfen_checkout_tax_fields' );
 	}
 
 	/**

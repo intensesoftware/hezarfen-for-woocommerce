@@ -8,7 +8,7 @@
 defined( 'ABSPATH' ) || exit();
 
 use Hezarfen\Inc\Data\PostMetaEncryption;
-use Hezarfen\Inc\Data\ServiceCredentialEncryption;
+use Hezarfen\Inc\Helper;
 
 if ( class_exists( 'Hezarfen_Settings_Hezarfen', false ) ) {
 	return new Hezarfen_Settings_Hezarfen();
@@ -43,7 +43,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		);
 
 		// if checkout field is active, show the section.
-		if ( $this->show_hezarfen_tax_fields() ) {
+		if ( Helper::is_show_tax_fields() ) {
 			$sections['checkout_tax'] = __( 'Checkout Tax Fields', 'hezarfen-for-woocommerce' );
 		}
 
@@ -225,7 +225,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 * @return array
 	 */
 	protected function get_settings_for_checkout_tax_section() {
-		if ( $this->show_hezarfen_tax_fields() ) {
+		if ( Helper::is_show_tax_fields() ) {
 			$settings = apply_filters(
 				'hezarfen_checkout_tax_settings',
 				array(
@@ -286,15 +286,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		}
 
 		return $settings;
-	}
-
-	/**
-	 * The current value of the Should Show Hezarfen Tax Settings?
-	 *
-	 * @return bool
-	 */
-	private function show_hezarfen_tax_fields() {
-		return ( get_option( 'hezarfen_show_hezarfen_checkout_tax_fields' ) == 'yes' ) ? true : false;
 	}
 
 	/**
