@@ -80,30 +80,32 @@ class Helper {
 			array( 'priority' => 80 )
 		);
 
-		$locales['TR']['hez_invoice_type'] = array_merge(
-			$locales['TR']['hez_invoice_type'] ?? array(),
-			array( 'priority' => 81 )
-		);
-
-		$locales['TR']['hezarfen_TC_number'] = array_merge(
-			$locales['TR']['hezarfen_TC_number'] ?? array(),
-			array( 'priority' => 81 )
-		);
-
-		$locales['TR']['billing_company'] = array_merge(
-			$locales['TR']['billing_company'] ?? array(),
-			array( 'priority' => 82 )
-		);
-
-		$locales['TR']['hezarfen_tax_number'] = array_merge(
-			$locales['TR']['hezarfen_tax_number'] ?? array(),
-			array( 'priority' => 83 )
-		);
-
-		$locales['TR']['hezarfen_tax_office'] = array_merge(
-			$locales['TR']['hezarfen_tax_office'] ?? array(),
-			array( 'priority' => 84 )
-		);
+		if ( self::is_show_tax_fields() ) {
+			$locales['TR']['hez_invoice_type'] = array_merge(
+				$locales['TR']['hez_invoice_type'] ?? array(),
+				array( 'priority' => 81 )
+			);
+	
+			$locales['TR']['hezarfen_TC_number'] = array_merge(
+				$locales['TR']['hezarfen_TC_number'] ?? array(),
+				array( 'priority' => 81 )
+			);
+	
+			$locales['TR']['billing_company'] = array_merge(
+				$locales['TR']['billing_company'] ?? array(),
+				array( 'priority' => 82 )
+			);
+	
+			$locales['TR']['hezarfen_tax_number'] = array_merge(
+				$locales['TR']['hezarfen_tax_number'] ?? array(),
+				array( 'priority' => 83 )
+			);
+	
+			$locales['TR']['hezarfen_tax_office'] = array_merge(
+				$locales['TR']['hezarfen_tax_office'] ?? array(),
+				array( 'priority' => 84 )
+			);
+		}
 
 		$locales['TR']['postcode'] = array_merge(
 			$locales['TR']['postcode'] ?? array(),
