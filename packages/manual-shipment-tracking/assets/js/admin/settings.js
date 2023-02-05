@@ -22,6 +22,9 @@ jQuery(function ($) {
 			pandasms_radio.parent().append(install_pandasms_link);
 
 			install_pandasms_link.on('click', function () {
+				$(this).html(hezarfen_mst_backend.installing_text);
+				change_cursor();
+
 				if (hezarfen_mst_backend.is_pandasms_installed) {
 					activate_pandasms_plugin(pandasms_radio);
 				} else {
@@ -39,7 +42,9 @@ jQuery(function ($) {
 								alert(`${hezarfen_mst_backend.install_pandasms_fail_text}\nError message: "${response.data.errorMessage}"`);
 							}
 						}
-					);
+					).always(function () {
+						revert_cursor();
+					});
 				}
 			});
 		}
@@ -81,9 +86,20 @@ jQuery(function ($) {
 				pandasms_radio.removeAttr('disabled');
 				pandasms_radio.parent().contents().slice(1).remove();
 				pandasms_radio.after(' ' + hezarfen_mst_backend.pandasms_title);
+				pandasms_radio.prop('checked', true);
 			}
 		).fail(function () {
 			alert(hezarfen_mst_backend.install_pandasms_fail_text);
+		}).always(function () {
+			revert_cursor();
 		});
+	}
+
+	function change_cursor() {
+		$('body').css('cursor', 'wait');
+	}
+
+	function revert_cursor() {
+		$('body').css('cursor', 'default');
 	}
 });

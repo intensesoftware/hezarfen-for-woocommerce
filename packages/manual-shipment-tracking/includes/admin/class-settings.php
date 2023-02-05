@@ -315,7 +315,6 @@ class Settings {
 			$object_props = array(
 				'netgsm_key'                => Netgsm::$id,
 				'pandasms_key'              => Pandasms::$id,
-				'pandasms_title'            => Pandasms::$title,
 				'recognize_custom_meta_key' => self::RECOG_TYPE_CUSTOM_META,
 			);
 
@@ -332,6 +331,8 @@ class Settings {
 				$object_props = array_merge(
 					$object_props,
 					array(
+						'installing_text'               => __( 'Installing..', 'hezarfen-for-woocommerce' ),
+						'pandasms_title'                => Pandasms::$title,
 						'install_pandasms_link_text'    => __( 'Install & activate PandaSMS for Woocommerce plugin', 'hezarfen-for-woocommerce' ),
 						'install_pandasms_success_text' => __( 'PandaSMS plugin is successfully installed and activated.', 'hezarfen-for-woocommerce' ),
 						'install_pandasms_fail_text'    => __( 'An error occured when installing and activating the PandaSMS plugin.', 'hezarfen-for-woocommerce' ),
