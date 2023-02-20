@@ -1,17 +1,17 @@
-# Copyright (C) 2022 Intense Yazılım Ltd.
+# Copyright (C) 2023 Intense Yazılım Ltd.
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Hezarfen For Woocommerce 1.5.0\n"
+"Project-Id-Version: Hezarfen For Woocommerce 1.6.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/hezarfen-for-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-12-14T09:35:14+01:00\n"
+"POT-Creation-Date: 2023-02-20T15:04:32+03:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.5.0\n"
+"X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: hezarfen-for-woocommerce\n"
 
 #. Description of the plugin
@@ -114,42 +114,46 @@ msgid "I backed up the key to a secure area and placed it in the wp-config file.
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:182
+msgid "Disable the Checkout Field Editor for WooCommerce plugin to use this setting."
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:188
 msgid "Checkout Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:187
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:193
 msgid "You can set general checkout settings."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:194
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:200
 msgid "Hide postcode fields?"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:204
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:211
 msgid "Auto sort fields in checkout form?"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:233
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:241
 msgid "Checkout Tax Fields Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:238
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:246
 msgid "You can update the checkout TAX fields. Note: T.C. number field requires encryption feature. If you do not activate the encryption feature, T.C. number field does not appear on the checkout."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:246
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:254
 msgid "Show T.C. Identity Field on checkout page "
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:251
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:259
 msgid "T.C. Identity Field optionally shows on checkout field when invoice type selected as person. (T.C. field requires encryption. If encryption is not enabled, this field is not displayed.)"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:260
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:268
 msgid "Checkout T.C. Identity Number Fields Required Statuses"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:264
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:272
 msgid "Is T.C. Identity Number field required?"
 msgstr ""
 
@@ -228,7 +232,7 @@ msgid "Neighborhood"
 msgstr ""
 
 #. translators: %s plugin name
-#: includes/class-hezarfen-wc-helper.php:158
+#: includes/class-hezarfen-wc-helper.php:166
 msgid "%s plugin has a new version available. In order to use the plugin, you must update it."
 msgstr ""
 

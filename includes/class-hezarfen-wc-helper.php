@@ -52,6 +52,10 @@ class Helper {
 	 * @return void
 	 */
 	public static function sort_address_fields() {
+		if ( apply_filters( 'hezarfen_skip_sort_address_fields', false ) ) {
+			return;
+		}
+
 		add_filter( 'woocommerce_get_country_locale', array( __CLASS__, 'assign_priorities_to_locale_fields' ), PHP_INT_MAX - 1 );
 		add_filter( 'woocommerce_billing_fields', array( __CLASS__, 'assign_priorities_to_non_locale_fields' ), PHP_INT_MAX - 1, 2 );
 		if ( is_checkout() ) {
@@ -117,6 +121,10 @@ class Helper {
 	 * @return void
 	 */
 	public static function hide_postcode_field() {
+		if ( apply_filters( 'hezarfen_skip_hide_postcode_field', false ) ) {
+			return;
+		}
+
 		add_filter(
 			'woocommerce_get_country_locale',
 			function ( $locales ) {
@@ -186,5 +194,14 @@ class Helper {
 		}
 
 		return $outdated;
+	}
+
+	/**
+	 * Checks if Checkout Field Editor for WooCommerce plugin is active or not.
+	 * 
+	 * @return bool
+	 */
+	public static function is_cfe_plugin_active() {
+		return defined( 'THWCFD_VERSION' );
 	}
 }
