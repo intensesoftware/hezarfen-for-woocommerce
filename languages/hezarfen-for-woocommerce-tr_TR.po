@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-14 17:11+0000\n"
-"PO-Revision-Date: 2023-02-05 10:09+0000\n"
+"PO-Revision-Date: 2023-02-20 11:56+0000\n"
 "Last-Translator: \n"
 "Language-Team: Türkçe\n"
 "Language: tr_TR\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Loco-Version: 2.6.3; wp-6.1.1"
 
 #. translators: %s plugin name
-#: includes/class-hezarfen-wc-helper.php:158
+#: includes/class-hezarfen-wc-helper.php:166
 msgid ""
 "%s plugin has a new version available. In order to use the plugin, you must "
 "update it."
@@ -95,7 +95,7 @@ msgstr "Ödeme Sayfası Ayarları"
 msgid "Checkout Settings"
 msgstr "Ödeme Sayfası Ayarları"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:264
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:266
 msgid "Checkout T.C. Identity Number Fields Required Statuses"
 msgstr "Ödeme Ekranında, T.C. Kimlik Numarasının Zorunluluk Durumlar"
 
@@ -103,7 +103,7 @@ msgstr "Ödeme Ekranında, T.C. Kimlik Numarasının Zorunluluk Durumlar"
 msgid "Checkout Tax Fields"
 msgstr "Ödeme Vergi Alanları"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:237
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:239
 msgid "Checkout Tax Fields Settings"
 msgstr "Ödeme Vergi Alan Ayarları"
 
@@ -158,6 +158,14 @@ msgid "Enable SMS notification when order shipped"
 msgstr "Sipariş kargoya verildiğinde SMS bildirimini aktif et"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:40
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:181
+msgid ""
+"Disable the Checkout Field Editor for WooCommerce plugin to use this setting."
+msgstr ""
+"Bu ayarı kullanabilmek için Checkout Field Editor for WooCommerce "
+"eklentisini devre dışı bırakınız."
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:41
 msgid "Encryption"
 msgstr "Şifreleme (Encryption)"
 
@@ -359,7 +367,7 @@ msgstr "Fatura tipi"
 msgid "Invoice type"
 msgstr "Fatura tipi"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:268
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:270
 msgid "Is T.C. Identity Number field required?"
 msgstr "T.C. Kimlik Numarası alanı zorunlu yapılsın mı?"
 
@@ -540,6 +548,7 @@ msgid "Show Shipment Tracking column on My Account > Orders page"
 msgstr "Hesabım > Siparişler sayfasında Kargo Takip sütununu göster"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:250
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:252
 msgid "Show T.C. Identity Field on checkout page "
 msgstr "T.C. Kimlik Numarası Alanını Ödeme Sayfasında Göster"
 
@@ -556,6 +565,7 @@ msgid "Sürat Kargo"
 msgstr "Sürat Kargo"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:255
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:257
 msgid ""
 "T.C. Identity Field optionally shows on checkout field when invoice type "
 "selected as person. (T.C. field requires encryption. If encryption is not "
@@ -667,7 +677,7 @@ msgstr "Hezarfen ile ilgili genel ayarları bu sayfadan yönetebilirsiniz."
 msgid "You can set general checkout settings."
 msgstr "Ödeme sayfasıyla ilgili genel ayarları düzenleyebilirsiniz."
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:242
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:244
 msgid ""
 "You can update the checkout TAX fields. Note: T.C. number field requires "
 "encryption feature. If you do not activate the encryption feature, T.C. "

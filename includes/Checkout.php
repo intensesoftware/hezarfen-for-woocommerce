@@ -31,7 +31,7 @@ class Checkout {
 	 * @return void
 	 */
 	public function __construct() {
-		$this->hezarfen_show_hezarfen_checkout_tax_fields = ( get_option( 'hezarfen_show_hezarfen_checkout_tax_fields' ) == 'yes' ) ? true : false;
+		$this->hezarfen_show_hezarfen_checkout_tax_fields = Helper::is_show_tax_fields();
 
 		if ( $this->hezarfen_show_hezarfen_checkout_tax_fields ) {
 			add_filter( 'woocommerce_checkout_fields', array( $this, 'add_tax_fields' ), 110, 1 );

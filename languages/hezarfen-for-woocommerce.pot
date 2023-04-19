@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-02-05T13:05:58+03:00\n"
+"POT-Creation-Date: 2023-02-20T15:04:32+03:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: hezarfen-for-woocommerce\n"
@@ -141,6 +141,10 @@ msgstr ""
 msgid "Show T.C. Identity Field on checkout page "
 msgstr ""
 
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:182
+msgid "Disable the Checkout Field Editor for WooCommerce plugin to use this setting."
+msgstr ""
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:255
 msgid "T.C. Identity Field optionally shows on checkout field when invoice type selected as person. (T.C. field requires encryption. If encryption is not enabled, this field is not displayed.)"
 msgstr ""
@@ -238,7 +242,7 @@ msgid "Neighborhood"
 msgstr ""
 
 #. translators: %s plugin name
-#: includes/class-hezarfen-wc-helper.php:158
+#: includes/class-hezarfen-wc-helper.php:166
 msgid "%s plugin has a new version available. In order to use the plugin, you must update it."
 msgstr ""
 

@@ -6,7 +6,7 @@ jQuery(document).ready(function ($) {
 
   update_field_showing_statuses($('.hezarfen_billing_invoice_type_field').val());
 
-  $('.hezarfen_billing_invoice_type_field').change(function () {
+  $('.hezarfen_billing_invoice_type_field').on('change', function () {
 
     var invoice_type = $(this).val();
     update_field_showing_statuses(invoice_type);
