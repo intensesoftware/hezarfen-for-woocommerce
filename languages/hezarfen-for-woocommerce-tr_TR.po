@@ -3,9 +3,9 @@ msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-14 17:11+0000\n"
-"PO-Revision-Date: 2023-02-20 11:56+0000\n"
+"PO-Revision-Date: 2023-04-19 10:34+0000\n"
 "Last-Translator: \n"
-"Language-Team: Türkçe\n"
+"Language-Team: Turkish\n"
 "Language: tr_TR\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Loco-Version: 2.6.3; wp-6.1.1"
 
 #. translators: %s plugin name
-#: includes/class-hezarfen-wc-helper.php:166
+#: includes/class-hezarfen-wc-helper.php:223
 msgid ""
 "%s plugin has a new version available. In order to use the plugin, you must "
 "update it."
@@ -47,7 +47,7 @@ msgstr "Aras Kargo"
 msgid "Are you sure you want to remove this shipment data?"
 msgstr "Bu gönderi verisini silmek istediğinize emin misiniz?"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:208
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:216
 msgid "Auto sort fields in checkout form?"
 msgstr "Ödeme formundaki alanlar otomatik olarak sıralansın mı?"
 
@@ -55,7 +55,7 @@ msgstr "Ödeme formundaki alanlar otomatik olarak sıralansın mı?"
 msgid "Available Variables"
 msgstr "Kullanabileceğiniz Değişkenler"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:150
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:151
 msgid ""
 "Back up the phrase in the box to a safe area, then place it in wp-config.php "
 "file."
@@ -87,23 +87,23 @@ msgstr "CC"
 msgid "CDEK"
 msgstr "CDEK"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:41
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:42
 msgid "Checkout Page Settings"
 msgstr "Ödeme Sayfası Ayarları"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:186
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:193
 msgid "Checkout Settings"
 msgstr "Ödeme Sayfası Ayarları"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:266
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:273
 msgid "Checkout T.C. Identity Number Fields Required Statuses"
 msgstr "Ödeme Ekranında, T.C. Kimlik Numarasının Zorunluluk Durumlar"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:46
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:47
 msgid "Checkout Tax Fields"
 msgstr "Ödeme Vergi Alanları"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:239
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:246
 msgid "Checkout Tax Fields Settings"
 msgstr "Ödeme Vergi Alan Ayarları"
 
@@ -149,6 +149,13 @@ msgstr "Sil"
 msgid "DHL"
 msgstr "DHL"
 
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:187
+msgid ""
+"Disable the Checkout Field Editor for WooCommerce plugin to use this setting."
+msgstr ""
+"Bu ayarı kullanabilmek için Checkout Field Editor for WooCommerce "
+"eklentisini devre dışı bırakınız."
+
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:60
 msgid "Enable Manual Shipment Tracking feature"
 msgstr "Manuel Kargo Takip özelliğini aktif et"
@@ -157,23 +164,15 @@ msgstr "Manuel Kargo Takip özelliğini aktif et"
 msgid "Enable SMS notification when order shipped"
 msgstr "Sipariş kargoya verildiğinde SMS bildirimini aktif et"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:40
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:181
-msgid ""
-"Disable the Checkout Field Editor for WooCommerce plugin to use this setting."
-msgstr ""
-"Bu ayarı kullanabilmek için Checkout Field Editor for WooCommerce "
-"eklentisini devre dışı bırakınız."
-
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:41
 msgid "Encryption"
 msgstr "Şifreleme (Encryption)"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:140
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:141
 msgid "Encryption Key"
 msgstr "Şifreleme Anahtarı (Encryption Key)"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:156
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:157
 msgid "Encryption Key Confirmation"
 msgstr "Şifreleme Anahtarı (Encryption Key) Onayı"
 
@@ -181,7 +180,7 @@ msgstr "Şifreleme Anahtarı (Encryption Key) Onayı"
 msgid "Encryption Key Health"
 msgstr "Şifreleme Anahtarı (Encryption Key) Sağlığı"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:128
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:129
 msgid "Encryption Settings"
 msgstr "Şifreleme Anahtarı (Encryption Key) Ayarları"
 
@@ -237,11 +236,11 @@ msgstr "Veri çekiliyor.."
 msgid "Gelal"
 msgstr "Gelal"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:39
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:40
 msgid "General"
 msgstr "Genel"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:60
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:61
 msgid "General Settings"
 msgstr "Genel Ayarlar"
 
@@ -259,11 +258,11 @@ msgstr ""
 msgid "Hezarfen Cargo Tracking"
 msgstr "Hezarfen Kargo Takip"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:92
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:93
 msgid "Hide postcode fields in My Account > Address pages?"
 msgstr "Hesabım > Adres Düzenleme sayfalarındaki posta kodu alanını gizle?"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:198
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:205
 msgid "Hide postcode fields?"
 msgstr "Posta kodu alanları gizlensin mi?"
 
@@ -271,7 +270,7 @@ msgstr "Posta kodu alanları gizlensin mi?"
 msgid "Horoz Lojistik"
 msgstr "Horoz Lojistik"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:161
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:162
 msgid ""
 "I backed up the key to a secure area and placed it in the wp-config file. In "
 "case the encryption key value is deleted from the wp-config.php file, all "
@@ -283,7 +282,7 @@ msgstr ""
 "no bilgilerinin okunamaz(decrypt edilemez) hale geleceğini anladım ve "
 "onaylıyorum. "
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:133
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:134
 msgid ""
 "If the T.C. Identity Field is active, an encryption key must be generated. "
 "The following encryption key generated will be lost upon saving the form. "
@@ -367,7 +366,7 @@ msgstr "Fatura tipi"
 msgid "Invoice type"
 msgstr "Fatura tipi"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:270
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:277
 msgid "Is T.C. Identity Number field required?"
 msgstr "T.C. Kimlik Numarası alanı zorunlu yapılsın mı?"
 
@@ -539,7 +538,7 @@ msgid_plural "Shipped (Kargo Takip Turkiye Plugin) (%s)"
 msgstr[0] "Kargoya Verildi (Kargo Takip Turkiye Eklentisi) (%s)"
 msgstr[1] "Kargoya Verildi (Kargo Takip Turkiye Eklentisi) (%s)"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:72
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:73
 msgid "Show hezarfen checkout tax fields?"
 msgstr "Ödeme sayfasında vergi alanları gösterilsin mi?"
 
@@ -547,8 +546,7 @@ msgstr "Ödeme sayfasında vergi alanları gösterilsin mi?"
 msgid "Show Shipment Tracking column on My Account > Orders page"
 msgstr "Hesabım > Siparişler sayfasında Kargo Takip sütununu göster"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:250
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:252
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:259
 msgid "Show T.C. Identity Field on checkout page "
 msgstr "T.C. Kimlik Numarası Alanını Ödeme Sayfasında Göster"
 
@@ -556,7 +554,7 @@ msgstr "T.C. Kimlik Numarası Alanını Ödeme Sayfasında Göster"
 msgid "SMS Notification Settings"
 msgstr "SMS Bildirimi Ayarları"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:82
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:83
 msgid "Sort address fields in My Account > Address pages?"
 msgstr "Hesabım > Adres Düzenleme sayfalarındaki adres alanlarını sırala?"
 
@@ -564,8 +562,7 @@ msgstr "Hesabım > Adres Düzenleme sayfalarındaki adres alanlarını sırala?"
 msgid "Sürat Kargo"
 msgstr "Sürat Kargo"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:255
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:257
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:264
 msgid ""
 "T.C. Identity Field optionally shows on checkout field when invoice type "
 "selected as person. (T.C. field requires encryption. If encryption is not "
@@ -669,15 +666,15 @@ msgstr "Kargoya Verildi (Kargo Takip Turkiye Eklentisi)"
 msgid "Yes"
 msgstr "Evet"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:65
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:66
 msgid "You can edit the general settings from this page."
 msgstr "Hezarfen ile ilgili genel ayarları bu sayfadan yönetebilirsiniz."
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:191
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:198
 msgid "You can set general checkout settings."
 msgstr "Ödeme sayfasıyla ilgili genel ayarları düzenleyebilirsiniz."
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:244
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:251
 msgid ""
 "You can update the checkout TAX fields. Note: T.C. number field requires "
 "encryption feature. If you do not activate the encryption feature, T.C. "
