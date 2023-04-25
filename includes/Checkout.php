@@ -1,7 +1,7 @@
 <?php
 /**
  * Class Checkout.
- * 
+ *
  * @package Hezarfen\Inc
  */
 
@@ -17,14 +17,14 @@ use Hezarfen\Inc\Data\PostMetaEncryption;
  * Checkout
  */
 class Checkout {
-	
+
 	/**
 	 * Should tax fields be shown on the checkout form?
 	 *
 	 * @var bool
 	 */
 	protected $hezarfen_show_hezarfen_checkout_tax_fields;
-	
+
 	/**
 	 * Constructor
 	 *
@@ -58,6 +58,8 @@ class Checkout {
 			1
 		);
 
+		add_filter( 'woocommerce_get_country_locale', array( $this, 'update_address_2_fields_for_tr' ) );
+
 		add_filter(
 			'woocommerce_checkout_fields',
 			array(
@@ -72,10 +74,8 @@ class Checkout {
 			'woocommerce_default_address_fields',
 			array(
 				$this,
-				'make_address2_required_default_address_field',
+				'make_visible_address2_label',
 			),
-			99999,
-			1
 		);
 
 		add_filter(
@@ -127,13 +127,36 @@ class Checkout {
 	}
 
 	/**
-	 * Make address 2 fields required.
+	 * Update Address 2 Field Labels and make it required for Turkiye.
+	 *
+	 * @param  array $country_locale_settings Country label settings.
+	 * @return array
+	 */
+	public function update_address_2_fields_for_tr( $country_locale_settings ) {
+		if ( ! array_key_exists( 'TR', $country_locale_settings ) ) {
+			return $country_locale_settings;
+		}
+
+		$country_locale_settings['TR']['address_2']['required']    = true;
+		$country_locale_settings['TR']['address_2']['label']       = __( 'Your Adress', 'hezarfen-for-woocommerce' );
+		$country_locale_settings['TR']['address_2']['placeholder'] = __( 'Enter your street, avenue, building, and apartment number information.', 'hezarfen-for-woocommerce' );
+		$country_locale_settings['TR']['address_2']['hidden']      = false;
+
+		return $country_locale_settings;
+	}
+
+	/**
+	 * Make visible the Address2 Field Label.
 	 *
 	 * @param  array $fields current default address fields.
 	 * @return array
 	 */
-	public function make_address2_required_default_address_field( $fields ) {
-		$fields['address_2']['required'] = true;
+	public function make_visible_address2_label( $fields ) {
+		$needs_removal_label_class = array_search( 'screen-reader-text', $fields['address_2']['label_class'] );
+
+		if ( false !== $needs_removal_label_class ) {
+			unset( $fields['address_2']['label_class'][ $needs_removal_label_class ] );
+		}
 
 		return $fields;
 	}
