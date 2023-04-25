@@ -71,7 +71,7 @@ class Autoload {
 		wp_register_script(
 			'wc_hezarfen_mahalle_helper_js',
 			plugins_url( 'assets/js/mahalle-helper.js', WC_HEZARFEN_FILE ),
-			array( 'jquery' ),
+			array( 'jquery', 'select2', 'selectWoo' ),
 			WC_HEZARFEN_VERSION,
 			true
 		);
