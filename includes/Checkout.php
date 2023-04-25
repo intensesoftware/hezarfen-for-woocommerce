@@ -146,11 +146,11 @@ class Checkout {
 	 */
 	public function make_address2_required_and_update_the_label( $fields ) {
 		$fields['billing']['billing_address_2']['required']      = true;
-		$fields['billing']['billing_address_2']['label']         = 'Adresiniz';
-		$fields['billing']['billing_address_2']['placeholder']   = 'Cadde, sokak, bina, daire no bilgilerinizi giriniz';
+		$fields['billing']['billing_address_2']['label']         = __( 'Your Adress', 'hezarfen-for-woocommerce' );
+		$fields['billing']['billing_address_2']['placeholder']   = __( 'Enter your street, avenue, building, and apartment number information.', 'hezarfen-for-woocommerce' );
 		$fields['shipping']['shipping_address_2']['required']    = true;
-		$fields['shipping']['shipping_address_2']['label']       = 'Adresiniz';
-		$fields['shipping']['shipping_address_2']['placeholder'] = 'Cadde, sokak, bina, daire no bilgilerinizi giriniz';
+		$fields['shipping']['shipping_address_2']['label']       = __( 'Your Adress', 'hezarfen-for-woocommerce' );
+		$fields['shipping']['shipping_address_2']['placeholder'] = __( 'Enter your street, avenue, building, and apartment number information.', 'hezarfen-for-woocommerce' );
 
 		return $fields;
 	}
