@@ -3,7 +3,7 @@ Contributors: intenseyazilim
 Tags: vergi alanları, posta kodu, il ilçe, mahalle, Türkiye, Turkish, Turkey, intense, hezerfen, kargo, vergi
 Donate link: https://www.intense.com.tr
 Requires at least: 5.3
-Tested up to: 6.1
+Tested up to: 6.2
 Requires PHP: 7.0
 License: GPL2
 Stable tag: 1.6.1
