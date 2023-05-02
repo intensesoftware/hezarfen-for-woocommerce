@@ -57,7 +57,7 @@ class OrderDetails {
 				'class' => 'hezarfen_billing_tax_number_field',
 			),
 			'hez_tax_office'   => array(
-				'label' => __( 'TAX Office', 'hezarfen-for-woocommerce' ),
+				'label' => __( 'Tax Office', 'hezarfen-for-woocommerce' ),
 				'show'  => true,
 				'class' => 'hezarfen_billing_tax_office_field',
 			),
