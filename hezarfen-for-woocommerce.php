@@ -19,7 +19,7 @@
 
 defined( 'ABSPATH' ) || exit();
 
-define( 'WC_HEZARFEN_VERSION', '1.4.6' );
+define( 'WC_HEZARFEN_VERSION', '1.6.0' );
 define( 'WC_HEZARFEN_MIN_MBGB_VERSION', '0.6.1' );
 define( 'WC_HEZARFEN_FILE', __FILE__ );
 define( 'WC_HEZARFEN_UYGULAMA_YOLU', plugin_dir_path( __FILE__ ) );
