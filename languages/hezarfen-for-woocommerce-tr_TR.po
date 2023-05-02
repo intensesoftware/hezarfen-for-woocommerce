@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-14 17:11+0000\n"
-"PO-Revision-Date: 2023-04-19 10:34+0000\n"
+"PO-Revision-Date: 2023-05-02 19:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -122,7 +122,7 @@ msgid "Choose a courier company"
 msgstr "Kargo firmasını seçiniz"
 
 #: includes/admin/order/OrderDetails.php:50
-#: includes/admin/order/OrderDetails.php:61 includes/Checkout.php:306
+#: includes/admin/order/OrderDetails.php:61 includes/Checkout.php:329
 msgid "Company"
 msgstr "Kurumsal"
 
@@ -184,7 +184,7 @@ msgstr "Şifreleme Anahtarı (Encryption Key) Sağlığı"
 msgid "Encryption Settings"
 msgstr "Şifreleme Anahtarı (Encryption Key) Ayarları"
 
-#: includes/Checkout.php:329
+#: includes/Checkout.php:352
 msgid "Enter invoice title"
 msgstr "Fatura ünvanını giriniz"
 
@@ -204,25 +204,26 @@ msgstr "Kargo takip no post meta keyini giriniz"
 msgid "Enter SMS content."
 msgstr "SMS içeriğini giriniz."
 
-#: includes/Checkout.php:150 includes/Checkout.php:153
-msgid "Enter street, apartment and apartment no"
-msgstr "Cadde, sokak, bina, daire no bilgilerinizi giriniz"
-
-#: includes/Checkout.php:314
+#: includes/Checkout.php:337
 msgid "Enter T.C. Identity Number"
 msgstr "T.C. Kimlik numaranızı giriniz"
 
-#: includes/Checkout.php:339
+#: includes/Checkout.php:362
 msgid "Enter tax number"
 msgstr "Vergi numaranızı giriniz"
 
-#: includes/Checkout.php:349
+#: includes/Checkout.php:372
 msgid "Enter tax office"
 msgstr "Vergi dairesini giriniz"
 
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:184
 msgid "Enter tracking number"
 msgstr "Kargo takip no giriniz"
+
+#: includes/Checkout.php:142 includes/Checkout.php:173
+#: includes/Checkout.php:176
+msgid "Enter your street, avenue, building, and apartment number information."
+msgstr "Cadde, sokak, bina, daire no bilgilerinizi giriniz"
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-fedex.php:38
 msgid "FedEx"
@@ -358,7 +359,7 @@ msgstr "Yükleniyor.."
 msgid "Intense Yazılım Ltd."
 msgstr "Intense Software Ltd."
 
-#: includes/Checkout.php:300
+#: includes/Checkout.php:323
 msgid "Invoice Type"
 msgstr "Fatura tipi"
 
@@ -418,7 +419,7 @@ msgstr "Manuel Kargo Takip Genel Ayarları"
 msgid "MNG Kargo"
 msgstr "MNG Kargo"
 
-#: includes/Checkout.php:459 includes/class-hezarfen.php:73
+#: includes/Checkout.php:482 includes/class-hezarfen.php:73
 msgid "Neighborhood"
 msgstr "Mahalle"
 
@@ -460,7 +461,7 @@ msgid "PandaSMS plugin is successfully installed and activated."
 msgstr "PandaSMS eklentisi başarıyla yüklendi ve aktif edildi."
 
 #: includes/admin/order/OrderDetails.php:48
-#: includes/admin/order/OrderDetails.php:60 includes/Checkout.php:305
+#: includes/admin/order/OrderDetails.php:60 includes/Checkout.php:328
 msgid "Personal"
 msgstr "Bireysel"
 
@@ -574,23 +575,27 @@ msgstr ""
 "şifreleme özelliğini aktif etmezseniz, ödeme ekranında T.C. no alanı "
 "gösterilmez.)"
 
-#: includes/admin/order/OrderDetails.php:102 includes/Checkout.php:315
+#: includes/admin/order/OrderDetails.php:102 includes/Checkout.php:338
 msgid "T.C. Identity Number"
 msgstr "T.C. Kimlik Numarası"
 
-#: includes/admin/order/OrderDetails.php:68 includes/Checkout.php:338
+#: includes/admin/order/OrderDetails.php:68 includes/Checkout.php:361
 msgid "Tax Number"
 msgstr "Vergi Numarası"
 
-#: includes/admin/order/OrderDetails.php:73 includes/Checkout.php:348
+#: includes/Checkout.php:371
 msgid "TAX Office"
 msgstr "Vergi Dairesi"
 
-#: includes/Checkout.php:411
+#: includes/admin/order/OrderDetails.php:73
+msgid "Tax Office"
+msgstr "Vergi Dairesi"
+
+#: includes/Checkout.php:434
 msgid "TC ID number is not valid"
 msgstr "TC Kimlik No hatalı"
 
-#: includes/Checkout.php:328
+#: includes/Checkout.php:351
 msgid "Title"
 msgstr "Ünvan"
 
@@ -598,7 +603,7 @@ msgstr "Ünvan"
 msgid "TNT"
 msgstr "TNT"
 
-#: includes/Checkout.php:448 includes/class-hezarfen.php:66
+#: includes/Checkout.php:471 includes/class-hezarfen.php:66
 msgid "Town / City"
 msgstr "İlçe"
 
@@ -685,8 +690,11 @@ msgstr ""
 "edilmesini gerektirir. Eğer şifreleme(encryption) özelliğini aktif "
 "etmediyseniz, T.C. kimlik numara alanı ödeme ekranında görünmeyecektir."
 
-#: includes/Checkout.php:149 includes/Checkout.php:152
-msgid "Your Address"
+#: includes/Checkout.php:141 includes/Checkout.php:172
+#: includes/Checkout.php:175
+#, fuzzy
+#| msgid "Your Address"
+msgid "Your Adress"
 msgstr "Adresiniz"
 
 #: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:44

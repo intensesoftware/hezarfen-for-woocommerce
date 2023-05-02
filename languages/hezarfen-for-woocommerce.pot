@@ -1,23 +1,18 @@
 # Copyright (C) 2023 Intense Yazılım Ltd.
 # This file is distributed under the GPL2.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce 1.6.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/hezarfen-for-"
-"woocommerce\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/hezarfen-for-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-04-25 13:40+0000\n"
+"POT-Creation-Date: 2023-05-02T22:00:26+03:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: Loco https://localise.biz/\n"
+"X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: hezarfen-for-woocommerce\n"
-"\n"
-"Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;"
 
 #. Description of the plugin
 msgid "Hezarfen aims to make the Woocommerce plugin more usable in Turkey."
@@ -29,13 +24,13 @@ msgstr ""
 
 #: includes/admin/order/OrderDetails.php:48
 #: includes/admin/order/OrderDetails.php:60
-#: includes/Checkout.php:305
+#: includes/Checkout.php:328
 msgid "Personal"
 msgstr ""
 
 #: includes/admin/order/OrderDetails.php:50
 #: includes/admin/order/OrderDetails.php:61
-#: includes/Checkout.php:306
+#: includes/Checkout.php:329
 msgid "Company"
 msgstr ""
 
@@ -44,17 +39,16 @@ msgid "Invoice type"
 msgstr ""
 
 #: includes/admin/order/OrderDetails.php:68
-#: includes/Checkout.php:338
+#: includes/Checkout.php:361
 msgid "Tax Number"
 msgstr ""
 
 #: includes/admin/order/OrderDetails.php:73
-#: includes/Checkout.php:348
-msgid "TAX Office"
+msgid "Tax Office"
 msgstr ""
 
 #: includes/admin/order/OrderDetails.php:102
-#: includes/Checkout.php:315
+#: includes/Checkout.php:338
 msgid "T.C. Identity Number"
 msgstr ""
 
@@ -198,50 +192,56 @@ msgstr ""
 msgid "Select an option"
 msgstr ""
 
-#: includes/Checkout.php:149
-#: includes/Checkout.php:152
-msgid "Your Address"
+#: includes/Checkout.php:141
+#: includes/Checkout.php:172
+#: includes/Checkout.php:175
+msgid "Your Adress"
 msgstr ""
 
-#: includes/Checkout.php:150
-#: includes/Checkout.php:153
-msgid "Enter street, apartment and apartment no"
+#: includes/Checkout.php:142
+#: includes/Checkout.php:173
+#: includes/Checkout.php:176
+msgid "Enter your street, avenue, building, and apartment number information."
 msgstr ""
 
-#: includes/Checkout.php:300
+#: includes/Checkout.php:323
 msgid "Invoice Type"
 msgstr ""
 
-#: includes/Checkout.php:314
+#: includes/Checkout.php:337
 msgid "Enter T.C. Identity Number"
 msgstr ""
 
-#: includes/Checkout.php:328
+#: includes/Checkout.php:351
 msgid "Title"
 msgstr ""
 
-#: includes/Checkout.php:329
+#: includes/Checkout.php:352
 msgid "Enter invoice title"
 msgstr ""
 
-#: includes/Checkout.php:339
+#: includes/Checkout.php:362
 msgid "Enter tax number"
 msgstr ""
 
-#: includes/Checkout.php:349
+#: includes/Checkout.php:371
+msgid "TAX Office"
+msgstr ""
+
+#: includes/Checkout.php:372
 msgid "Enter tax office"
 msgstr ""
 
-#: includes/Checkout.php:411
+#: includes/Checkout.php:434
 msgid "TC ID number is not valid"
 msgstr ""
 
-#: includes/Checkout.php:448
+#: includes/Checkout.php:471
 #: includes/class-hezarfen.php:66
 msgid "Town / City"
 msgstr ""
 
-#: includes/Checkout.php:459
+#: includes/Checkout.php:482
 #: includes/class-hezarfen.php:73
 msgid "Neighborhood"
 msgstr ""
@@ -251,19 +251,8 @@ msgstr ""
 msgid "%s plugin has a new version available. In order to use the plugin, you must update it."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:193
-msgid "You can set general checkout settings."
-msgstr ""
-
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:246
-msgid ""
-"You can update the checkout TAX fields. Note: T.C. number field requires "
-"encryption feature. If you do not activate the encryption feature, T.C. "
-"number field does not appear on the checkout."
-msgstr ""
-
-#: includes/Checkout.php:149 includes/Checkout.php:152
-msgid "Your Adress"
+#: includes/class-hezarfen.php:108
+msgid "In order to <strong>Hezarfen for WooCommerce</strong> plugin work, please remove the <strong>Intense Türkiye İl İlçe Eklentisi For WooCommerce</strong> plugin. The <strong>Hezarfen</strong> plugin already has province, district and neighborhood data in it."
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:54
