@@ -8,7 +8,7 @@
 defined( 'ABSPATH' ) || exit();
 
 use Hezarfen\Inc\Data\PostMetaEncryption;
-use Hezarfen\Inc\Data\ServiceCredentialEncryption;
+use Hezarfen\Inc\Helper;
 
 if ( class_exists( 'Hezarfen_Settings_Hezarfen', false ) ) {
 	return new Hezarfen_Settings_Hezarfen();
@@ -45,7 +45,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		);
 
 		// if checkout field is active, show the section.
-		if ( $this->show_hezarfen_tax_fields() ) {
+		if ( Helper::is_show_tax_fields() ) {
 			$sections['checkout_tax'] = __( 'Checkout Tax Fields', 'hezarfen-for-woocommerce' );
 		}
 
@@ -185,6 +185,12 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 * @return array
 	 */
 	protected function get_settings_for_checkout_page_section() {
+		$cfe_plugin_active = Hezarfen\Inc\Helper::is_cfe_plugin_active();
+		if ( $cfe_plugin_active ) {
+			$warning_msg = __( 'Disable the Checkout Field Editor for WooCommerce plugin to use this setting.', 'hezarfen-for-woocommerce' );
+			$custom_attr = array( 'disabled' => 'disabled' );
+		}
+
 		$fields = array(
 			array(
 				'title' => esc_html__(
@@ -199,24 +205,26 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				'id'    => 'hezarfen_checkout_settings_title',
 			),
 			array(
-				'title'   => esc_html__(
+				'title'             => esc_html__(
 					'Hide postcode fields?',
 					'hezarfen-for-woocommerce'
 				),
-				'type'    => 'checkbox',
-				'desc'    => '',
-				'id'      => 'hezarfen_hide_checkout_postcode_fields',
-				'default' => 'no',
+				'type'              => 'checkbox',
+				'desc'              => $warning_msg ?? '',
+				'id'                => 'hezarfen_hide_checkout_postcode_fields',
+				'default'           => 'no',
+				'custom_attributes' => $custom_attr ?? array(),
 			),
 			array(
-				'title'   => esc_html__(
+				'title'             => esc_html__(
 					'Auto sort fields in checkout form?',
 					'hezarfen-for-woocommerce'
 				),
-				'type'    => 'checkbox',
-				'desc'    => '',
-				'id'      => 'hezarfen_checkout_fields_auto_sort',
-				'default' => 'no',
+				'type'              => 'checkbox',
+				'desc'              => $warning_msg ?? '',
+				'id'                => 'hezarfen_checkout_fields_auto_sort',
+				'default'           => 'no',
+				'custom_attributes' => $custom_attr ?? array(),
 			),
 			array(
 				'type' => 'sectionend',
@@ -233,7 +241,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 * @return array
 	 */
 	protected function get_settings_for_checkout_tax_section() {
-		if ( $this->show_hezarfen_tax_fields() ) {
+		if ( Helper::is_show_tax_fields() ) {
 			$settings = apply_filters(
 				'hezarfen_checkout_tax_settings',
 				array(
@@ -369,15 +377,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		}
 
 		return apply_filters( 'hezarfen_encryption_recovery_settings', $fields );
-	}
-
-	/**
-	 * The current value of the Should Show Hezarfen Tax Settings?
-	 *
-	 * @return bool
-	 */
-	private function show_hezarfen_tax_fields() {
-		return ( get_option( 'hezarfen_show_hezarfen_checkout_tax_fields' ) == 'yes' ) ? true : false;
 	}
 
 	/**

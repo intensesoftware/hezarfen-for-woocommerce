@@ -24,7 +24,7 @@ class Compatibility {
 			$this->cartzilla_support();
 		}
 
-		add_action( 'wp', array( $this, 'wp_action' ) );
+		add_action( 'wp', array( $this, 'wp_action' ), 9 );
 	}
 
 	/**
@@ -51,10 +51,17 @@ class Compatibility {
 	 * @return void
 	 */
 	public function checkout_field_editor_support() {
-		add_filter( 'thwcfd_address_field_override_priority', '__return_false' );
-		add_filter( 'thwcfd_address_field_override_label', '__return_false' );
-		add_filter( 'thwcfd_address_field_override_placeholder', '__return_false' );
-		add_filter( 'thwcfd_address_field_override_class', '__return_false' );
+		if ( Helper::is_edit_address_page() && 'yes' === get_option( 'hezarfen_sort_my_account_fields', 'no' ) ) {
+			add_filter( 'thwcfd_address_field_override_priority', '__return_false' );
+			add_filter( 'thwcfd_address_field_override_label', '__return_false' );
+			add_filter( 'thwcfd_address_field_override_placeholder', '__return_false' );
+			add_filter( 'thwcfd_address_field_override_class', '__return_false' );
+		}
+
+		if ( is_checkout() ) {
+			add_filter( 'hezarfen_skip_hide_postcode_field', '__return_true' );
+			add_filter( 'hezarfen_skip_sort_address_fields', '__return_true' );
+		}
 	}
 
 	/**
@@ -63,7 +70,7 @@ class Compatibility {
 	 * @return void
 	 */
 	public function wp_action() {
-		if ( defined( 'THWCFD_VERSION' ) && 'yes' === get_option( 'hezarfen_sort_my_account_fields', 'no' ) && Helper::is_edit_address_page() ) {
+		if ( Helper::is_cfe_plugin_active() ) {
 			$this->checkout_field_editor_support();
 		}
 	}
