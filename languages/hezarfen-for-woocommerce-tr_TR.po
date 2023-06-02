@@ -3,9 +3,9 @@ msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-14 17:11+0000\n"
-"PO-Revision-Date: 2023-04-25 13:41+0000\n"
+"PO-Revision-Date: 2023-06-02 20:15+0000\n"
 "Last-Translator: \n"
-"Language-Team: Türkçe\n"
+"Language-Team: Turkish\n"
 "Language: tr_TR\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
@@ -63,7 +63,7 @@ msgstr ""
 "Şifreleme Anahtarının (Encryption Key), eklenti ilk kurulduğunda oluşan "
 "anahtar ile aynı olup olmadığını kontrol eder."
 
-#: includes/Checkout.php:304 includes/admin/order/OrderDetails.php:50
+#: includes/Checkout.php:327 includes/admin/order/OrderDetails.php:50
 #: includes/admin/order/OrderDetails.php:61
 msgid "Company"
 msgstr "Kurumsal"
@@ -95,23 +95,24 @@ msgstr "Şifreleme Anahtarı (Encryption Key) Sağlığı"
 msgid "Encryption Settings"
 msgstr "Şifreleme Anahtarı (Encryption Key) Ayarları"
 
-#: includes/Checkout.php:327
+#: includes/Checkout.php:350
 msgid "Enter invoice title"
 msgstr "Fatura ünvanını giriniz"
 
-#: includes/Checkout.php:312
+#: includes/Checkout.php:335
 msgid "Enter T.C. Identity Number"
 msgstr "T.C. Kimlik numaranızı giriniz"
 
-#: includes/Checkout.php:337
+#: includes/Checkout.php:360
 msgid "Enter tax number"
 msgstr "Vergi numaranızı giriniz"
 
-#: includes/Checkout.php:347
+#: includes/Checkout.php:370
 msgid "Enter tax office"
 msgstr "Vergi dairesini giriniz"
 
-#: includes/Checkout.php:150 includes/Checkout.php:153
+#: includes/Checkout.php:142 includes/Checkout.php:173
+#: includes/Checkout.php:176
 msgid "Enter your street, avenue, building, and apartment number information."
 msgstr "Cadde, sokak, bina, daire no bilgilerinizi giriniz"
 
@@ -192,7 +193,7 @@ msgstr ""
 msgid "Intense Yazılım Ltd."
 msgstr "Intense Yazılım Ltd."
 
-#: includes/Checkout.php:298
+#: includes/Checkout.php:321
 msgid "Invoice Type"
 msgstr "Fatura tipi"
 
@@ -220,7 +221,7 @@ msgstr ""
 msgid "Key comparison success?"
 msgstr "Anahtar doğrulaması başarılı mı?"
 
-#: includes/class-hezarfen.php:73 includes/Checkout.php:457
+#: includes/class-hezarfen.php:73 includes/Checkout.php:480
 msgid "Neighborhood"
 msgstr "Mahalle"
 
@@ -229,7 +230,7 @@ msgstr "Mahalle"
 msgid "No"
 msgstr "Hayır"
 
-#: includes/Checkout.php:303 includes/admin/order/OrderDetails.php:48
+#: includes/Checkout.php:326 includes/admin/order/OrderDetails.php:48
 #: includes/admin/order/OrderDetails.php:60
 msgid "Personal"
 msgstr "Bireysel"
@@ -263,31 +264,27 @@ msgstr ""
 "şifreleme özelliğini aktif etmezseniz, ödeme ekranında T.C. no alanı "
 "gösterilmez.)"
 
-#: includes/Checkout.php:313 includes/admin/order/OrderDetails.php:102
+#: includes/Checkout.php:336 includes/admin/order/OrderDetails.php:102
 msgid "T.C. Identity Number"
 msgstr "T.C. Kimlik Numarası"
 
-#: includes/Checkout.php:336 includes/admin/order/OrderDetails.php:68
+#: includes/Checkout.php:359 includes/admin/order/OrderDetails.php:68
 msgid "Tax Number"
 msgstr "Vergi Numarası"
 
-#: includes/Checkout.php:346
-msgid "TAX Office"
-msgstr "Vergi Dairesi"
-
-#: includes/admin/order/OrderDetails.php:73
+#: includes/Checkout.php:369 includes/admin/order/OrderDetails.php:73
 msgid "Tax Office"
 msgstr "Vergi Dairesi"
 
-#: includes/Checkout.php:409
+#: includes/Checkout.php:432
 msgid "TC ID number is not valid"
 msgstr "TC Kimlik numarası hatalı"
 
-#: includes/Checkout.php:326
+#: includes/Checkout.php:349
 msgid "Title"
 msgstr "Ünvan"
 
-#: includes/class-hezarfen.php:66 includes/Checkout.php:446
+#: includes/class-hezarfen.php:66 includes/Checkout.php:469
 msgid "Town / City"
 msgstr "İlçe"
 
@@ -305,8 +302,13 @@ msgid "You can set general checkout settings."
 msgstr "Ödeme sayfasıyla ilgili genel ayarları düzenleyebilirsiniz."
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:246
+#, fuzzy
+#| msgid ""
+#| "You can update the checkout TAX fields. Note: T.C. number field requires "
+#| "encryption feature. If you do not activate the encryption feature, T.C. "
+#| "number field does not appear on the checkout."
 msgid ""
-"You can update the checkout TAX fields. Note: T.C. number field requires "
+"You can update the checkout Tax fields. Note: T.C. number field requires "
 "encryption feature. If you do not activate the encryption feature, T.C. "
 "number field does not appear on the checkout."
 msgstr ""
@@ -315,6 +317,9 @@ msgstr ""
 "edilmesini gerektirir. Eğer şifreleme(encryption) özelliğini aktif "
 "etmediyseniz, T.C. kimlik numara alanı ödeme ekranında görünmeyecektir."
 
-#: includes/Checkout.php:149 includes/Checkout.php:152
-msgid "Your Adress"
+#: includes/Checkout.php:141 includes/Checkout.php:172
+#: includes/Checkout.php:175
+#, fuzzy
+#| msgid "Your Adress"
+msgid "Your Address"
 msgstr "Adresiniz"
