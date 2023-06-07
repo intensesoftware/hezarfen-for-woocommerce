@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.2
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
@@ -31,6 +31,17 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 6. Bireysel vergi bilgileri
 
 == Changelog ==
+= 1.6.2 - 2023-06-07 =
+* Hata giderme: Bazı yazım hatalarının giderilmesi.
+
+= 1.6.1 - 2023-04-30 =
+* Hata giderme: "jQuery.fn.change() event shorthand is deprecated" uyarısı giderildi.
+* İyileştirme: Checkout Field Editor for Woocommerce eklentisi aktifken, Hezarfen otomatik ödeme alanları sıralanması ve posta kodunun gizlenmesi özelliklerinin devre dışı bırakılması sağlandı.
+* Hata giderme: Ödeme sayfasında varsayılan ülke Türkiye dışında bir ülkeyse ortaya çıkan sorun çözüldü.
+* Hata giderme: Bazı stringlerin çeviri problemleri giderildi (varsayılan olarak Türkçe olup çeviri desteği bulunmayanlar)
+* Hata giderme: Ödeme ekranında, il, ilçe, mahalle seçim alanlarındaki "no results found" uyarısına dil çeviri desteği eklendi.
+* Hata giderme: Ödeme ekranında; adres 2 alanının etiketi (input label), yer tutucu (input placeholder) ve zorunluluk durum göstergelerinin görünmemesi problemleri Türkiye için giderildi. Artık bu alan, "Adresiniz" etiketiyle gösteriliyor.
+
 = 1.6.0 - 2022-12-20 =
 * Özellik: TC Kimlik No Alanı İçin 11 Karakter Doğrulaması Eklendi
 * Hesabım > Adres düzenleme ekranında iyileştirmeler
