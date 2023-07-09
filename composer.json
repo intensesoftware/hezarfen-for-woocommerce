@@ -1,7 +1,7 @@
 {
     "scripts": {
-        "phpcs": "./vendor/bin/phpcs -s",
-        "phpcbf": "./vendor/bin/phpcbf",
+        "phpcs": "./vendor/bin/phpcs --ignore=includes/Data/mahalle/* -s",
+        "phpcbf": "./vendor/bin/phpcbf --ignore=includes/Data/mahalle/*",
         "phpstan": "./vendor/bin/phpstan"
     },
     "require-dev": {
