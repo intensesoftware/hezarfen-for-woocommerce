@@ -3,18 +3,13 @@ msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-14 17:11+0000\n"
-"PO-Revision-Date: 2023-05-02 18:41+0000\n"
-"Last-Translator: \n"
-"Language-Team: Turkish\n"
 "Language: tr_TR\n"
+"Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.5.8; wp-5.9"
+"PO-Revision-Date: 2023-07-09 21:08+0000\n"
+"X-Generator: Loco https://localise.biz/"
 
-#. translators: %s plugin name
+#. %s plugin name
 #: includes/class-hezarfen-wc-helper.php:223
 msgid ""
 "%s plugin has a new version available. In order to use the plugin, you must "
@@ -64,8 +59,8 @@ msgstr ""
 "Şifreleme Anahtarının (Encryption Key), eklenti ilk kurulduğunda oluşan "
 "anahtar ile aynı olup olmadığını kontrol eder."
 
-#: includes/admin/order/OrderDetails.php:50
-#: includes/admin/order/OrderDetails.php:61 includes/Checkout.php:327
+#: includes/Checkout.php:327 includes/admin/order/OrderDetails.php:50
+#: includes/admin/order/OrderDetails.php:61
 msgid "Company"
 msgstr "Kurumsal"
 
@@ -138,6 +133,10 @@ msgstr "Genel"
 msgid "General Settings"
 msgstr "Genel Ayarlar"
 
+#. Name of the plugin
+msgid "Hezarfen For Woocommerce"
+msgstr ""
+
 #. Description of the plugin
 msgid ""
 "Hezarfen, WooCommerce eklentisini Türkiye için daha kullanılabilir kılmayı "
@@ -153,6 +152,10 @@ msgstr "Hesabım > Adres düzenleme sayfalarından posta kodunu kaldır?"
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:208
 msgid "Hide postcode fields?"
 msgstr "Posta kodu alanları gizlensin mi?"
+
+#. Author URI of the plugin
+msgid "http://intense.com.tr"
+msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:165
 msgid ""
@@ -237,7 +240,7 @@ msgstr ""
 msgid "Key comparison success?"
 msgstr "Anahtar doğrulaması başarılı mı?"
 
-#: includes/Checkout.php:477 includes/class-hezarfen.php:73
+#: includes/class-hezarfen.php:73 includes/Checkout.php:477
 msgid "Neighborhood"
 msgstr "Mahalle"
 
@@ -250,8 +253,8 @@ msgstr "Yeni Şifreleme Anahtarı"
 msgid "No"
 msgstr "Hayır"
 
-#: includes/admin/order/OrderDetails.php:48
-#: includes/admin/order/OrderDetails.php:60 includes/Checkout.php:326
+#: includes/Checkout.php:326 includes/admin/order/OrderDetails.php:48
+#: includes/admin/order/OrderDetails.php:60
 msgid "Personal"
 msgstr "Bireysel"
 
@@ -288,19 +291,15 @@ msgstr ""
 "şifreleme özelliğini aktif etmezseniz, ödeme ekranında T.C. no alanı "
 "gösterilmez.)"
 
-#: includes/admin/order/OrderDetails.php:102 includes/Checkout.php:336
+#: includes/Checkout.php:336 includes/admin/order/OrderDetails.php:102
 msgid "T.C. Identity Number"
 msgstr "T.C. Kimlik Numarası"
 
-#: includes/admin/order/OrderDetails.php:68 includes/Checkout.php:359
+#: includes/Checkout.php:359 includes/admin/order/OrderDetails.php:68
 msgid "Tax Number"
 msgstr "Vergi Numarası"
 
-#: includes/Checkout.php:369
-msgid "TAX Office"
-msgstr "Vergi Dairesi"
-
-#: includes/admin/order/OrderDetails.php:73
+#: includes/Checkout.php:369 includes/admin/order/OrderDetails.php:73
 msgid "Tax Office"
 msgstr "Vergi Dairesi"
 
@@ -312,7 +311,7 @@ msgstr "TC Kimlik numarası hatalı"
 msgid "Title"
 msgstr "Ünvan"
 
-#: includes/Checkout.php:466 includes/class-hezarfen.php:66
+#: includes/class-hezarfen.php:66 includes/Checkout.php:466
 msgid "Town / City"
 msgstr "İlçe"
 
@@ -334,8 +333,13 @@ msgid "You can set general checkout settings."
 msgstr "Ödeme sayfasıyla ilgili genel ayarları düzenleyebilirsiniz."
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:254
+#, fuzzy
+#| msgid ""
+#| "You can update the checkout TAX fields. Note: T.C. number field requires "
+#| "encryption feature. If you do not activate the encryption feature, T.C. "
+#| "number field does not appear on the checkout."
 msgid ""
-"You can update the checkout TAX fields. Note: T.C. number field requires "
+"You can update the checkout Tax fields. Note: T.C. number field requires "
 "encryption feature. If you do not activate the encryption feature, T.C. "
 "number field does not appear on the checkout."
 msgstr ""
@@ -346,5 +350,7 @@ msgstr ""
 
 #: includes/Checkout.php:141 includes/Checkout.php:172
 #: includes/Checkout.php:175
-msgid "Your Adress"
+#, fuzzy
+#| msgid "Your Adress"
+msgid "Your Address"
 msgstr "Adresiniz"
