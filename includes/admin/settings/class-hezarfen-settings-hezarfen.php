@@ -455,7 +455,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			// update the tester text.
 			if ( ( new PostMetaEncryption() )->health_check() ) {
 				// create an encryption tester text.
-				( new PostMetaEncryption() )->update_encryption_tester_text(true);
+				( new PostMetaEncryption() )->update_encryption_tester_text( true );
 			}
 		}
 	}
