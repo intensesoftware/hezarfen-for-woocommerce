@@ -441,7 +441,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 
 				if ( ( new PostMetaEncryption() )->health_check() ) {
 					// create an encryption tester text.
-					( new PostMetaEncryption() )->create_encryption_tester_text();
+					( new PostMetaEncryption() )->update_encryption_tester_text();
 				}
 			}
 		}
@@ -451,6 +451,12 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			$recovery_log[] = current_datetime();
 
 			update_option( 'hezarfen_encryption_key_recovery_log', $recovery_log );
+
+			// update the tester text.
+			if ( ( new PostMetaEncryption() )->health_check() ) {
+				// create an encryption tester text.
+				( new PostMetaEncryption() )->update_encryption_tester_text(true);
+			}
 		}
 	}
 
