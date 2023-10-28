@@ -120,11 +120,23 @@ class Shipment_Data implements \JsonSerializable {
 		}
 
 		if ( $add_new ) {
-			return add_post_meta( $this->order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->prapare_for_db() );
+			$saved = add_post_meta( $this->order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->prapare_for_db() );
+
+			if( $saved ) {
+				Helper::update_order_shipment_last_index($this->order_id);
+			}
+
+			return $saved;
 		}
 
 		if ( $this->raw_data ) {
-			return update_post_meta( $this->order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->prapare_for_db(), $this->raw_data );
+			$updated = update_post_meta( $this->order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->prapare_for_db(), $this->raw_data );
+
+			if( $updated ) {
+				Helper::update_order_shipment_last_index($this->order_id);
+			}
+
+			return $updated;
 		}
 
 		return false;

@@ -14,6 +14,74 @@ defined( 'ABSPATH' ) || exit;
  */
 class Helper {
 	/**
+	 * Update shipment last index
+	 *
+	 * @return void
+	 */
+	public static function update_order_shipment_last_index( $order_id ) {
+		$ids = array();
+		$meta = get_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, false );
+
+		foreach( $meta as $shipment_data ) {
+			$data = new Shipment_Data( $shipment_data );
+			$ids[] = $data->id;
+		}
+
+		$last_index = ( count( $ids ) > 0 ) ? max($ids) : 1;
+
+		update_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_LAST_INDEX_KEY, $last_index );
+	}
+
+	/**
+	 * Add new order shipment data
+	 *
+	 * @param  \WC_Order $order
+	 * @param  int $id Shipment ID uniq in the shipment of the order.
+	 * @param  string $new_courier_id Shipping Company ID.
+	 * @param  string $new_tracking_num Tracking Number
+	 * @return void
+	 */
+	public static function new_order_shipment_data($order, $id, $new_courier_id, $new_tracking_num) {
+		$order_id = $order->get_id();
+
+		$new_courier  = Helper::get_courier_class( $new_courier_id );
+		$current_data = Helper::get_shipment_data_by_id( $id, $order_id, true );
+
+		if ( ! $current_data ) {
+			$new_data = new Shipment_Data(
+				array(
+					'id'            => $id,
+					'order_id'      => $order_id,
+					'courier_id'    => $new_courier_id,
+					'courier_title' => $new_courier::get_title(),
+					'tracking_num'  => $new_tracking_num,
+					'tracking_url'  => $new_courier::create_tracking_url( $new_tracking_num ),
+				)
+			);
+
+			$new_data->save( true );
+			do_action( 'hezarfen_mst_shipment_data_saved', $order_id, $new_data );
+
+			return;
+		}
+
+		if ( $current_data->courier_id === $new_courier_id && $current_data->tracking_num === $new_tracking_num ) {
+			return;
+		}
+
+		$current_data->courier_id    = $new_courier_id;
+		$current_data->courier_title = $new_courier::get_title();
+		$current_data->tracking_num  = $new_tracking_num;
+		$current_data->tracking_url  = $new_courier::create_tracking_url( $new_tracking_num );
+
+		$result = $current_data->save();
+
+		if ( true === $result ) {
+			do_action( 'hezarfen_mst_shipment_data_saved', $order_id, $current_data );
+		}
+	}
+
+	/**
 	 * Sends notification.
 	 * 
 	 * @param \WC_Order $order Order instance.

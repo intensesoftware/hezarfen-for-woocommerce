@@ -32,6 +32,7 @@ class Manual_Shipment_Tracking {
 	const SHIPPED_ORDER_STATUS    = 'hezarfen-shipped';
 
 	const SHIPMENT_DATA_KEY = '_hezarfen_mst_shipment_data';
+	const SHIPMENT_LAST_INDEX_KEY = '_hezarfen_mst_shipment_last_index';
 
 	/**
 	 * The single instance of the class
