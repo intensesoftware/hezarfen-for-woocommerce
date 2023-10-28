@@ -14,6 +14,15 @@ defined( 'ABSPATH' ) || exit;
  */
 class Helper {
 	/**
+	 * Get last shipment index of the order
+	 *
+	 * @param  int $order_id Order ID.
+	 * @return string
+	 */
+	public static function get_order_shipment_last_shipment( $order_id ) {
+		return get_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_LAST_INDEX_KEY, true );
+	}
+	/**
 	 * Update shipment last index
 	 *
 	 * @return void
