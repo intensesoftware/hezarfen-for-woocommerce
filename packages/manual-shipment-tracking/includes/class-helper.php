@@ -53,8 +53,8 @@ class Helper {
 	public static function new_order_shipment_data($order, $id, $new_courier_id, $new_tracking_num) {
 		$order_id = $order->get_id();
 
-		$new_courier  = Helper::get_courier_class( $new_courier_id );
-		$current_data = Helper::get_shipment_data_by_id( $id, $order_id, true );
+		$new_courier  = self::get_courier_class( $new_courier_id );
+		$current_data = self::get_shipment_data_by_id( $id, $order_id, true );
 
 		if ( ! $current_data ) {
 			$new_data = new Shipment_Data(
