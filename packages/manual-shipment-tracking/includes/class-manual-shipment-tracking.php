@@ -69,6 +69,7 @@ class Manual_Shipment_Tracking {
 	 */
 	public static function init() {
 		self::instance();
+		add_action( 'hezarfen_mst_shipment_data_saved', array( __CLASS__, 'ship_order' ), 10, 2 );
 	}
 
 	/**
@@ -105,6 +106,23 @@ class Manual_Shipment_Tracking {
 				$this->active_notif_provider = new Pandasms();
 			}
 		}
+	}
+
+	/**
+	 * Ship order
+	 *
+	 * @param  \WC_Order $order Order instance
+	 * @param  Shipment_Data $shipment_data Shipment data
+	 * @return void
+	 */
+	public static function ship_order( $order, Shipment_Data $shipment_data )  {
+		$order->update_status( apply_filters( 'hezarfen_mst_new_order_status', Manual_Shipment_Tracking::SHIPPED_ORDER_STATUS, $order, $shipment_data->courier_id, $shipment_data->tracking_num ) ); // @phpstan-ignore-line
+
+		if ( 'yes' === get_option( Settings::OPT_ENABLE_SMS ) ) {
+			Helper::send_notification( $order );
+		}
+
+		do_action( 'hezarfen_mst_order_shipped', $order );
 	}
 
 	/**

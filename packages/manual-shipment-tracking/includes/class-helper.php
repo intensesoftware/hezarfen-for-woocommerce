@@ -69,7 +69,7 @@ class Helper {
 			);
 
 			$new_data->save( true );
-			do_action( 'hezarfen_mst_shipment_data_saved', $order_id, $new_data );
+			do_action( 'hezarfen_mst_shipment_data_saved', $order, $new_data );
 
 			return;
 		}
@@ -86,7 +86,7 @@ class Helper {
 		$result = $current_data->save();
 
 		if ( true === $result ) {
-			do_action( 'hezarfen_mst_shipment_data_saved', $order_id, $current_data );
+			do_action( 'hezarfen_mst_shipment_data_saved', $order, $current_data );
 		}
 	}
 

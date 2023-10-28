@@ -224,17 +224,6 @@ class Admin_Orders {
 			$order = new \WC_Order( $order_id );
 			Helper::new_order_shipment_data($order, $id, $new_courier_id, $new_tracking_num);
 		}
-
-		if ( did_action( 'hezarfen_mst_shipment_data_saved' ) ) {
-			$order->update_status( apply_filters( 'hezarfen_mst_new_order_status', Manual_Shipment_Tracking::SHIPPED_ORDER_STATUS, $order, $new_courier_id, $new_tracking_num ) ); // @phpstan-ignore-line
-
-			if ( 'yes' === get_option( Settings::OPT_ENABLE_SMS ) ) {
-				Helper::send_notification( $order );
-			}
-
-			do_action( 'hezarfen_mst_order_shipped', $order );
-		}
-
 		// phpcs:enable
 	}
 
