@@ -45,21 +45,29 @@ class Autoload {
 
 	/**
 	 * Load assets files for admin
+	 * 
+	 * @param string $hook_suffix The current admin page.
+	 * 
+	 * @return void
 	 */
-	public function load_admin_assets_files() {
-		wp_enqueue_script(
-			'wc_hezarfen_admin_order_details_js',
-			plugins_url( 'assets/admin/js/order-details.js', WC_HEZARFEN_FILE ),
-			array( 'jquery' ),
-			WC_HEZARFEN_VERSION,
-			true
-		);
-		wp_enqueue_style(
-			'wc_hezarfen_checkout_css',
-			plugins_url( 'assets/admin/css/order-details.css', WC_HEZARFEN_FILE ),
-			array(),
-			WC_HEZARFEN_VERSION
-		);
+	public function load_admin_assets_files( $hook_suffix ) {
+		global $post_type;
+
+		if ( 'post.php' === $hook_suffix && 'shop_order' === $post_type ) {
+			wp_enqueue_script(
+				'wc_hezarfen_admin_order_details_js',
+				plugins_url( 'assets/admin/js/order-details.js', WC_HEZARFEN_FILE ),
+				array( 'jquery' ),
+				WC_HEZARFEN_VERSION,
+				true
+			);
+			wp_enqueue_style(
+				'wc_hezarfen_checkout_css',
+				plugins_url( 'assets/admin/css/order-details.css', WC_HEZARFEN_FILE ),
+				array(),
+				WC_HEZARFEN_VERSION
+			);
+		}
 	}
 	
 	/**
