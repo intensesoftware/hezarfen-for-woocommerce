@@ -138,7 +138,7 @@ class Checkout {
 		}
 
 		$country_locale_settings['TR']['address_2']['required']    = true;
-		$country_locale_settings['TR']['address_2']['label']       = __( 'Your Address', 'hezarfen-for-woocommerce' );
+		$country_locale_settings['TR']['address_2']['label']       = __( 'Your Adress', 'hezarfen-for-woocommerce' );
 		$country_locale_settings['TR']['address_2']['placeholder'] = __( 'Enter your street, avenue, building, and apartment number information.', 'hezarfen-for-woocommerce' );
 		$country_locale_settings['TR']['address_2']['hidden']      = false;
 
@@ -148,8 +148,8 @@ class Checkout {
 	/**
 	 * Make visible the Address2 Field Label.
 	 *
-	 * @param  array $fields current default address fields.
-	 * @return array
+	 * @param  array<string, mixed> $fields current default address fields.
+	 * @return array<string, mixed>
 	 */
 	public function make_visible_address2_label( $fields ) {
 		$needs_removal_label_class = array_search( 'screen-reader-text', $fields['address_2']['label_class'] );
@@ -164,15 +164,15 @@ class Checkout {
 	/**
 	 * Make address2 fields required.
 	 *
-	 * @param  array $fields current default address fields.
-	 * @return array
+	 * @param  array<string, mixed> $fields current default address fields.
+	 * @return array<string, mixed>
 	 */
 	public function make_address2_required_and_update_the_label( $fields ) {
 		$fields['billing']['billing_address_2']['required']      = true;
-		$fields['billing']['billing_address_2']['label']         = __( 'Your Address', 'hezarfen-for-woocommerce' );
+		$fields['billing']['billing_address_2']['label']         = __( 'Your Adress', 'hezarfen-for-woocommerce' );
 		$fields['billing']['billing_address_2']['placeholder']   = __( 'Enter your street, avenue, building, and apartment number information.', 'hezarfen-for-woocommerce' );
 		$fields['shipping']['shipping_address_2']['required']    = true;
-		$fields['shipping']['shipping_address_2']['label']       = __( 'Your Address', 'hezarfen-for-woocommerce' );
+		$fields['shipping']['shipping_address_2']['label']       = __( 'Your Adress', 'hezarfen-for-woocommerce' );
 		$fields['shipping']['shipping_address_2']['placeholder'] = __( 'Enter your street, avenue, building, and apartment number information.', 'hezarfen-for-woocommerce' );
 
 		return $fields;
@@ -242,8 +242,8 @@ class Checkout {
 	/**
 	 * Make non-required tax_number and tax_office fields.
 	 *
-	 * @param array $fields the current WooCommerce checkout fields.
-	 * @return array
+	 * @param array<string, mixed> $fields the current WooCommerce checkout fields.
+	 * @return array<string, mixed>
 	 */
 	public function update_fields_required_options_for_invoice_type_person(
 		$fields
@@ -258,8 +258,8 @@ class Checkout {
 	/**
 	 * Make non-required TC_number field.
 	 *
-	 * @param array $fields current WooCommerce checkout fields.
-	 * @return array
+	 * @param array<string, mixed> $fields current WooCommerce checkout fields.
+	 * @return array<string, mixed>
 	 */
 	public function update_fields_required_options_for_invoice_type_company(
 		$fields
@@ -275,6 +275,8 @@ class Checkout {
 
 	/**
 	 * Update tax field required statuses according to the invoice type selection when checkout submit (before checkout processed.).
+	 * 
+	 * @return void
 	 */
 	public function update_field_required_statuses_before_checkout_process() {
 		// nonce verification phpcs error ignored since WooCommerce already doing the nonce verification before the woocommerce_before_checkout_process hook release.
@@ -307,8 +309,8 @@ class Checkout {
 	/**
 	 * Add tax fields (person or company selection and tax informations).
 	 *
-	 * @param  array $fields the current WooCommerce checkout fields.
-	 * @return array
+	 * @param  array<string, mixed> $fields the current WooCommerce checkout fields.
+	 * @return array<string, mixed>
 	 */
 	public function add_tax_fields( $fields ) {
 		$invoice_type_value = ( new \WC_Checkout() )->get_value( 'billing_hez_invoice_type' );
@@ -366,7 +368,7 @@ class Checkout {
 
 		$fields['billing']['billing_hez_tax_office'] = array(
 			'id'          => 'hezarfen_tax_office',
-			'label'       => __( 'Tax Office', 'hezarfen-for-woocommerce' ),
+			'label'       => __( 'TAX Office', 'hezarfen-for-woocommerce' ),
 			'placeholder' => __( 'Enter tax office', 'hezarfen-for-woocommerce' ),
 			'required'    => true,
 			'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_tax_office', array( 'form-row-wide' ) ),
@@ -394,8 +396,8 @@ class Checkout {
 	 *
 	 * Update necessary data after checkout submit
 	 *
-	 * @param array $data the posted checkout data.
-	 * @return array
+	 * @param array<string, mixed> $data the posted checkout data.
+	 * @return array<string, mixed>
 	 */
 	public function override_posted_data( $data ) {
 		// Check if the T.C. Identitiy Field is active.
@@ -420,8 +422,8 @@ class Checkout {
 	/**
 	 * Validates necessary data after checkout submit.
 	 *
-	 * @param array     $data the posted checkout data.
-	 * @param \WP_Error $errors Validation errors.
+	 * @param array<string, mixed> $data the posted checkout data.
+	 * @param \WP_Error            $errors Validation errors.
 	 *
 	 * @return void
 	 */
@@ -436,8 +438,8 @@ class Checkout {
 	/**
 	 * Show district and neighborhood fields on checkout page.
 	 *
-	 * @param array $fields the current checkout fields.
-	 * @return array
+	 * @param array<string, mixed> $fields the current checkout fields.
+	 * @return array<string, mixed>
 	 */
 	public function add_district_and_neighborhood_fields( $fields ) {
 		$types = array( 'shipping', 'billing' );
@@ -468,7 +470,7 @@ class Checkout {
 				'type'         => 'select',
 				'label'        => __( 'Town / City', 'hezarfen-for-woocommerce' ),
 				'required'     => true,
-				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_district', array() ),
+				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_district', $fields[ $type ][ $city_field_name ]['class'] ),
 				'clear'        => true,
 				'autocomplete' => 'address-level2',
 				'priority'     => $fields[ $type ][ $type . '_state' ]['priority'] + 1,
@@ -479,7 +481,7 @@ class Checkout {
 				'type'         => 'select',
 				'label'        => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
 				'required'     => true,
-				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_neighborhood', array() ),
+				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_neighborhood', $fields[ $type ][ $neighborhood_field_name ]['class'] ),
 				'clear'        => true,
 				'autocomplete' => 'address-level3',
 				'priority'     => $fields[ $type ][ $type . '_state' ]['priority'] + 2,
