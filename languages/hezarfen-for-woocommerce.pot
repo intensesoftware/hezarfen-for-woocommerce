@@ -9,10 +9,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-02T22:00:26+03:00\n"
+=======
+"POT-Creation-Date: 2023-06-02 20:15+0000\n"
+>>>>>>> origin/master
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: hezarfen-for-woocommerce\n"
+<<<<<<< HEAD
+=======
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;"
+>>>>>>> origin/master
 
 #. Description of the plugin
 msgid "Hezarfen aims to make the Woocommerce plugin more usable in Turkey."
@@ -76,8 +85,14 @@ msgstr ""
 msgid "You can edit the general settings from this page."
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:73
 msgid "Show hezarfen checkout tax fields?"
+=======
+#: includes/Checkout.php:327 includes/admin/order/OrderDetails.php:50
+#: includes/admin/order/OrderDetails.php:61
+msgid "Company"
+>>>>>>> origin/master
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:83
@@ -164,6 +179,7 @@ msgstr ""
 msgid "Is the encryption key genereated and placed the wp-config.php?"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/admin/settings/views/encryption.php:32
 msgid "It checks encryption key whetever placed to the wp-config.php"
 msgstr ""
@@ -234,6 +250,27 @@ msgstr ""
 
 #: includes/Checkout.php:434
 msgid "TC ID number is not valid"
+=======
+#: includes/Checkout.php:350
+msgid "Enter invoice title"
+msgstr ""
+
+#: includes/Checkout.php:335
+msgid "Enter T.C. Identity Number"
+msgstr ""
+
+#: includes/Checkout.php:360
+msgid "Enter tax number"
+msgstr ""
+
+#: includes/Checkout.php:370
+msgid "Enter tax office"
+msgstr ""
+
+#: includes/Checkout.php:142 includes/Checkout.php:173
+#: includes/Checkout.php:176
+msgid "Enter your street, avenue, building, and apartment number information."
+>>>>>>> origin/master
 msgstr ""
 
 #: includes/Checkout.php:471
@@ -286,11 +323,16 @@ msgstr ""
 msgid "Courier Company"
 msgstr ""
 
+<<<<<<< HEAD
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:175
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:301
 #: packages/manual-shipment-tracking/includes/class-my-account.php:120
 #: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:38
 msgid "Tracking Number"
+=======
+#: includes/Checkout.php:321
+msgid "Invoice Type"
+>>>>>>> origin/master
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:177
@@ -314,16 +356,27 @@ msgstr ""
 msgid "Add new shipment"
 msgstr ""
 
+<<<<<<< HEAD
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:316
 msgid "Delete"
+=======
+#: includes/class-hezarfen.php:73 includes/Checkout.php:480
+msgid "Neighborhood"
+>>>>>>> origin/master
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:317
 msgid "Cancel"
 msgstr ""
 
+<<<<<<< HEAD
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:60
 msgid "Enable Manual Shipment Tracking feature"
+=======
+#: includes/Checkout.php:326 includes/admin/order/OrderDetails.php:48
+#: includes/admin/order/OrderDetails.php:60
+msgid "Personal"
+>>>>>>> origin/master
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:84
@@ -347,6 +400,7 @@ msgstr ""
 msgid "Default courier company"
 msgstr ""
 
+<<<<<<< HEAD
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:131
 msgid "Show Shipment Tracking column on My Account > Orders page"
 msgstr ""
@@ -373,6 +427,30 @@ msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:169
 msgid "Advanced Settings"
+=======
+#: includes/Checkout.php:336 includes/admin/order/OrderDetails.php:102
+msgid "T.C. Identity Number"
+msgstr ""
+
+#: includes/Checkout.php:359 includes/admin/order/OrderDetails.php:68
+msgid "Tax Number"
+msgstr ""
+
+#: includes/Checkout.php:369 includes/admin/order/OrderDetails.php:73
+msgid "Tax Office"
+msgstr ""
+
+#: includes/Checkout.php:432
+msgid "TC ID number is not valid"
+msgstr ""
+
+#: includes/Checkout.php:349
+msgid "Title"
+msgstr ""
+
+#: includes/class-hezarfen.php:66 includes/Checkout.php:469
+msgid "Town / City"
+>>>>>>> origin/master
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:173
@@ -387,6 +465,7 @@ msgstr ""
 msgid "Recognition type"
 msgstr ""
 
+<<<<<<< HEAD
 #. translators: %s Supported plugins.
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:185
 msgid "Recognize supported plugins: (%s)"
@@ -635,4 +714,16 @@ msgstr ""
 
 #: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:28
 msgid "Your order has been shipped. Tracking information is below:"
+=======
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:246
+msgid ""
+"You can update the checkout Tax fields. Note: T.C. number field requires "
+"encryption feature. If you do not activate the encryption feature, T.C. "
+"number field does not appear on the checkout."
+msgstr ""
+
+#: includes/Checkout.php:141 includes/Checkout.php:172
+#: includes/Checkout.php:175
+msgid "Your Address"
+>>>>>>> origin/master
 msgstr ""

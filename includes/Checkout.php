@@ -138,7 +138,7 @@ class Checkout {
 		}
 
 		$country_locale_settings['TR']['address_2']['required']    = true;
-		$country_locale_settings['TR']['address_2']['label']       = __( 'Your Adress', 'hezarfen-for-woocommerce' );
+		$country_locale_settings['TR']['address_2']['label']       = __( 'Your Address', 'hezarfen-for-woocommerce' );
 		$country_locale_settings['TR']['address_2']['placeholder'] = __( 'Enter your street, avenue, building, and apartment number information.', 'hezarfen-for-woocommerce' );
 		$country_locale_settings['TR']['address_2']['hidden']      = false;
 
@@ -169,10 +169,10 @@ class Checkout {
 	 */
 	public function make_address2_required_and_update_the_label( $fields ) {
 		$fields['billing']['billing_address_2']['required']      = true;
-		$fields['billing']['billing_address_2']['label']         = __( 'Your Adress', 'hezarfen-for-woocommerce' );
+		$fields['billing']['billing_address_2']['label']         = __( 'Your Address', 'hezarfen-for-woocommerce' );
 		$fields['billing']['billing_address_2']['placeholder']   = __( 'Enter your street, avenue, building, and apartment number information.', 'hezarfen-for-woocommerce' );
 		$fields['shipping']['shipping_address_2']['required']    = true;
-		$fields['shipping']['shipping_address_2']['label']       = __( 'Your Adress', 'hezarfen-for-woocommerce' );
+		$fields['shipping']['shipping_address_2']['label']       = __( 'Your Address', 'hezarfen-for-woocommerce' );
 		$fields['shipping']['shipping_address_2']['placeholder'] = __( 'Enter your street, avenue, building, and apartment number information.', 'hezarfen-for-woocommerce' );
 
 		return $fields;
@@ -368,7 +368,7 @@ class Checkout {
 
 		$fields['billing']['billing_hez_tax_office'] = array(
 			'id'          => 'hezarfen_tax_office',
-			'label'       => __( 'TAX Office', 'hezarfen-for-woocommerce' ),
+			'label'       => __( 'Tax Office', 'hezarfen-for-woocommerce' ),
 			'placeholder' => __( 'Enter tax office', 'hezarfen-for-woocommerce' ),
 			'required'    => true,
 			'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_tax_office', array( 'form-row-wide' ) ),
@@ -470,7 +470,7 @@ class Checkout {
 				'type'         => 'select',
 				'label'        => __( 'Town / City', 'hezarfen-for-woocommerce' ),
 				'required'     => true,
-				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_district', array() ),
+				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_district', $fields[ $type ][ $city_field_name ]['class'] ),
 				'clear'        => true,
 				'autocomplete' => 'address-level2',
 				'priority'     => $fields[ $type ][ $type . '_state' ]['priority'] + 1,
@@ -481,7 +481,7 @@ class Checkout {
 				'type'         => 'select',
 				'label'        => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
 				'required'     => true,
-				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_neighborhood', array() ),
+				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_neighborhood', $fields[ $type ][ $neighborhood_field_name ]['class'] ),
 				'clear'        => true,
 				'autocomplete' => 'address-level3',
 				'priority'     => $fields[ $type ][ $type . '_state' ]['priority'] + 2,
