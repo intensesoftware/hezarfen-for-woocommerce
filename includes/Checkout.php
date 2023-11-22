@@ -464,22 +464,34 @@ class Checkout {
 			// remove WooCommerce default district field on checkout.
 			unset( $fields[ $type ][ $city_field_name ] );
 
+			$city_class = array();
+
+			if( array_key_exists( $type, $fields ) && array_key_exists( $city_field_name, $fields[$type] ) && array_key_exists( 'class', $fields[ $type ][ $city_field_name ] ) ) {
+				$city_class = $fields[ $type ][ $city_field_name ]['class'];
+			}
+
 			$fields[ $type ][ $city_field_name ] = array(
 				'type'         => 'select',
 				'label'        => __( 'Town / City', 'hezarfen-for-woocommerce' ),
 				'required'     => true,
-				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_district', $fields[ $type ][ $city_field_name ]['class'] ),
+				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_district', $city_class ),
 				'clear'        => true,
 				'autocomplete' => 'address-level2',
 				'priority'     => $fields[ $type ][ $type . '_state' ]['priority'] + 1,
 				'options'      => Helper::select2_option_format( Mahalle_Local::get_districts( $current_city_plate_number_prefixed ) ),
 			);
 
+			$neighborhood_class = array();
+
+			if( array_key_exists( $type, $fields ) && array_key_exists( $neighborhood_field_name, $fields[$type] ) && array_key_exists( 'class', $fields[ $type ][ $neighborhood_field_name ] ) ) {
+				$neighborhood_class = $fields[ $type ][ $neighborhood_field_name ]['class'];
+			}
+
 			$fields[ $type ][ $neighborhood_field_name ] = array(
 				'type'         => 'select',
 				'label'        => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
 				'required'     => true,
-				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_neighborhood', $fields[ $type ][ $neighborhood_field_name ]['class'] ),
+				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_neighborhood', $neighborhood_class ),
 				'clear'        => true,
 				'autocomplete' => 'address-level3',
 				'priority'     => $fields[ $type ][ $type . '_state' ]['priority'] + 2,
