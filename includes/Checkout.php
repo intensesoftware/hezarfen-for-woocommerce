@@ -355,6 +355,7 @@ class Checkout {
 		);
 
 		$fields['billing']['billing_hez_tax_number'] = array(
+			'maxlength'          => '11',
 			'id'          => 'hezarfen_tax_number',
 			'label'       => __( 'Tax Number', 'hezarfen-for-woocommerce' ),
 			'placeholder' => __( 'Enter tax number', 'hezarfen-for-woocommerce' ),
