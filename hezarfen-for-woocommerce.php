@@ -41,6 +41,13 @@ function hez_ad_hezarfen_pro_presale() {
 	if( get_option( 'hez_ad_hezarfen_pro_presale_dismiss', 'no' ) === 'yes' ) {
 		return;
 	}
+
+	$timezone = new DateTimeZone('Europe/Istanbul');
+	$end = new DateTime('2023-12-06 23:59', $timezone);
+
+	if( current_datetime() >= $end ) {
+		return;
+	}
 	?>
 	<div id="in-hezarfen-pro-presale">
 		<img style="height:200px" src="<?php echo WC_HEZARFEN_UYGULAMA_URL . 'assets/admin/hezarfen-pro.png'; ?>" />
