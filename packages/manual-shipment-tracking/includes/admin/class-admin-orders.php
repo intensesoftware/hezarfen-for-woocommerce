@@ -131,13 +131,18 @@ class Admin_Orders {
 			<p><?php esc_html_e( 'Are you sure you want to remove this shipment data?', 'hezarfen-for-woocommerce' ); ?></p>
 		</div>
 		<div class="shipment-forms-wrapper">
-			<?php 
-			foreach ( $shipment_data as $data ) {
-				self::render_shipment_form_elements( $data );
-			}
-			?>
+			<div class="col">
+				<div class="manual-shipment-forms-wrapper">
+					<?php
+					foreach ( $shipment_data as $data ) {
+						self::render_shipment_form_elements( $data );
+					}
+					?>
+				</div>
+				<a class="button duplicate-form">+</a>
+			</div>
+			<?php do_action( 'hez_admin_order_edit_shipment_edits' ); ?>
 		</div>
-		<a class="button duplicate-form">+</a>
 		<?php
 	}
 

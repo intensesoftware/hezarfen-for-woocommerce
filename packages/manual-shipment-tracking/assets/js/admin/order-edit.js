@@ -92,7 +92,7 @@ jQuery(function ($) {
 		new_form.find('.custom-courier-title').remove();
 		new_form.find('.tracking-num-input-wrapper a').remove();
 
-		new_form.appendTo(metabox_wrapper.find('.shipment-forms-wrapper'));
+		new_form.appendTo(metabox_wrapper.find('.manual-shipment-forms-wrapper'));
 		convert_selects_to_selectwoo(metabox_wrapper);
 	}
 
