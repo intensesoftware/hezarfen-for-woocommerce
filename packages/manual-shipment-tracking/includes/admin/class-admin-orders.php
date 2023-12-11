@@ -141,7 +141,7 @@ class Admin_Orders {
 				</div>
 				<a class="button duplicate-form">+</a>
 			</div>
-			<?php do_action( 'hez_admin_order_edit_shipment_edits' ); ?>
+			<?php do_action( 'hez_admin_order_edit_shipment_edits', $order_id ); ?>
 		</div>
 		<?php
 	}
