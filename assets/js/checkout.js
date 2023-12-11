@@ -10,6 +10,13 @@ var wc_hezarfen_checkout = {
 
 jQuery(function ($) {
     $(document).ready(function () {
+        $('#hezarfen_tax_number').on('input', function() {
+            var inputValue = $(this).val();
+            if (/[^0-9]/.test(inputValue)) {
+              $(this).val(inputValue.replace(/[^0-9]/g, ''));
+            }
+          });
+
         for (const type of ['billing', 'shipping']) {
             let wrapper = $(`.woocommerce-${type}-fields`);
             let mahalle_helper = new hezarfen_mahalle_helper(wrapper, type, 'checkout');

@@ -1,4 +1,4 @@
-=== Hezarfen for WooCommerce ===
+=== Hezarfen for WooCommerce - Ücretsiz ilçe/mahalle ve kurumsal/bireysel vergi ödeme alanları ===
 Contributors: intenseyazilim
 Tags: vergi alanları, posta kodu, il ilçe, mahalle, Türkiye, Turkish, Turkey, intense, hezerfen, kargo, vergi, fatura, ödeme alanları
 Donate link: https://www.intense.com.tr
@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.4
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 1.6.5
+Stable tag: 1.6.7
 
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
@@ -31,6 +31,12 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 6. Bireysel vergi bilgileri
 
 == Changelog ==
+= 1.6.7 - 2023-12-06 =
+* Ödeme ekranında vergi no alanın maks 11 karakter yazılabilmesi sağlandı.
+
+= 1.6.6 - 2023-11-22 =
+* Hata giderme: Ödeme ekranında oluşabilen PHP uyarısının düzeltilmesi
+
 = 1.6.5 - 2023-11-19 =
 * Hata giderme: Ödeme ekranında ilçe ve mahalle alanlarının HTML class değerlerini miras al.
 
