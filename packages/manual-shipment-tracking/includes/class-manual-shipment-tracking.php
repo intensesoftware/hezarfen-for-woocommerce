@@ -110,6 +110,7 @@ class Manual_Shipment_Tracking {
 
 	/**
 	 * Ship order
+	 * Internal use only
 	 *
 	 * @param  \WC_Order $order Order instance
 	 * @param  Shipment_Data $shipment_data Shipment data
