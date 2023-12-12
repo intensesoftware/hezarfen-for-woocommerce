@@ -17,10 +17,10 @@ class Helper {
 	 * Get last shipment index of the order
 	 *
 	 * @param  \WC_Order $order Order.
-	 * @return string
+	 * @return int
 	 */
 	public static function get_order_shipment_last_shipment( $order ) {
-		return get_post_meta( $order->get_id(), Manual_Shipment_Tracking::SHIPMENT_LAST_INDEX_KEY, true );
+		return absint( get_post_meta( $order->get_id(), Manual_Shipment_Tracking::SHIPMENT_LAST_INDEX_KEY, true ) );
 	}
 	/**
 	 * Update shipment last index
