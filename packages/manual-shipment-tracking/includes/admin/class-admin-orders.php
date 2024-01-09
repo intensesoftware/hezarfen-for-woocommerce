@@ -83,7 +83,7 @@ class Admin_Orders {
 
 				printf( '<span data-order-id="%s" class="dashicons dashicons-info-outline shipment-info-icon"></span>', esc_attr( $order_id ) );
 			} else { 
-				printf( '<p class="no-shipment-found">%s</p>', esc_html__( 'No shipment data found', 'hezarfen-for-woocommerce' ) );
+				printf( '<p class="no-shipment-found">%s</p>', apply_filters( 'hezarfen_shop_order_no_shipment_found_msg', esc_html__( 'No shipment data found', 'hezarfen-for-woocommerce' ), $order_id ) );
 			}
 		}
 	}
