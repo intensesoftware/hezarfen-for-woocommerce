@@ -479,7 +479,7 @@ class Checkout {
 				'required'     => true,
 				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_district', $city_class ),
 				'clear'        => true,
-				'autocomplete' => 'address-level2',
+				'autocomplete' => false,
 				'priority'     => $fields[ $type ][ $type . '_state' ]['priority'] + 1,
 				'options'      => Helper::select2_option_format( Mahalle_Local::get_districts( $current_city_plate_number_prefixed ) ),
 			);
@@ -496,7 +496,7 @@ class Checkout {
 				'required'     => true,
 				'class'        => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_' . $type . '_neighborhood', $neighborhood_class ),
 				'clear'        => true,
-				'autocomplete' => 'address-level3',
+				'autocomplete' => false,
 				'priority'     => $fields[ $type ][ $type . '_state' ]['priority'] + 2,
 				'options'      => Helper::select2_option_format( Mahalle_Local::get_neighborhoods( $current_city_plate_number_prefixed, $current_district, false ) ),
 			);
