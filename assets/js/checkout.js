@@ -42,17 +42,21 @@ jQuery(function ($) {
         $('#hezarfen_invoice_type').on('change', function () {
             var invoice_type = $(this).val();
 
-            if (invoice_type == 'person') {
-                $('#hezarfen_TC_number_field').removeClass('hezarfen-hide-form-field');
-                $('#hezarfen_tax_number_field, #hezarfen_tax_office_field, #billing_company_field').addClass('hezarfen-hide-form-field');
-            } else if (invoice_type == 'company') {
-                $('#hezarfen_TC_number_field').addClass('hezarfen-hide-form-field');
-                $('#hezarfen_tax_number_field, #hezarfen_tax_office_field, #billing_company_field').removeClass('hezarfen-hide-form-field');
-            }
+            toggle_invoice_fields(invoice_type);
         });
 
         $('#hezarfen_TC_number').on('blur', validate);
     });
+
+    function toggle_invoice_fields(invoice_type) {
+        if (invoice_type == 'person') {
+            $('#hezarfen_TC_number_field').removeClass('hezarfen-hide-form-field');
+            $('#hezarfen_tax_number_field, #hezarfen_tax_office_field, #billing_company_field').addClass('hezarfen-hide-form-field');
+        } else if (invoice_type == 'company') {
+            $('#hezarfen_TC_number_field').addClass('hezarfen-hide-form-field');
+            $('#hezarfen_tax_number_field, #hezarfen_tax_office_field, #billing_company_field').removeClass('hezarfen-hide-form-field');
+        }
+    }
 
     function add_checkout_event_handlers(type, wrapper) {
         // prevent adding event handlers multiple times.
@@ -71,6 +75,10 @@ jQuery(function ($) {
     function country_on_change(type, country_code, wrapper) {
         if (country_code === 'TR') {
             add_checkout_event_handlers(type, wrapper);
+            toggle_invoice_fields($('#hezarfen_invoice_type').val());
+            $('#hezarfen_invoice_type_field').removeClass('hezarfen-hide-form-field');
+        }else{
+            $('#hezarfen_invoice_type_field, #hezarfen_TC_number_field, #billing_company_field, #hezarfen_tax_office_field, #hezarfen_tax_number_field').addClass('hezarfen-hide-form-field');
         }
     }
 

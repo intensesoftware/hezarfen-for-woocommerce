@@ -316,6 +316,14 @@ class Checkout {
 		$address_2_priority = $fields['billing']['billing_address_2']['priority'] ?? 0;
 		$address_1_priority = $fields['billing']['billing_address_1']['priority'];
 
+		global $woocommerce;
+
+		$get_country_function  = 'get_billing_country';
+
+		$current_country_code = $woocommerce->customer->$get_country_function();
+
+		$hide_tax_fields = $current_country_code && 'TR' !== $current_country_code;
+
 		$fields['billing']['billing_hez_invoice_type'] = array(
 			'id'       => 'hezarfen_invoice_type',
 			'label'    => __( 'Invoice Type', 'hezarfen-for-woocommerce' ),
@@ -386,6 +394,13 @@ class Checkout {
 			$fields['billing']['billing_company']['class'][]        = 'hezarfen-hide-form-field';
 			$fields['billing']['billing_hez_tax_office']['class'][] = 'hezarfen-hide-form-field';
 			$fields['billing']['billing_hez_tax_number']['class'][] = 'hezarfen-hide-form-field';
+		}
+
+		if( $hide_tax_fields ) {
+			$fields['billing']['billing_hez_invoice_type']['class'][] = 'hezarfen-hide-form-field';
+			$fields['billing']['billing_hez_tax_office']['class'][] = 'hezarfen-hide-form-field';
+			$fields['billing']['billing_hez_tax_number']['class'][] = 'hezarfen-hide-form-field';
+			$fields['billing']['billing_hez_TC_number']['class'][] = 'hezarfen-hide-form-field';
 		}
 
 		return $fields;
