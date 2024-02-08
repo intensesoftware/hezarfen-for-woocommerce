@@ -56,10 +56,10 @@ jQuery(function ($) {
 
     function add_checkout_event_handlers(type, wrapper) {
         // prevent adding event handlers multiple times.
-        $(`#${type}_address_1`).off('select2:select.hezarfen');
+        $(`#${type}_address_1`).off('change.hezarfen');
         $('#ship-to-different-address input').off('change.hezarfen');
 
-        $(`#${type}_address_1`).on("select2:select.hezarfen", function () {
+        $(`#${type}_address_1`).on("change.hezarfen", function () {
             neighborhood_on_change($(this).val(), type, wrapper);
         });
 
