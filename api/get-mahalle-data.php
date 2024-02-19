@@ -1,12 +1,9 @@
 <?php
 
-use Hezarfen\Inc\Mahalle_Local;
-
-if( ! defined( 'ABSPATH' ) ) {
+if( ! isset( $hezarfen_mahalle_data ) ) {
 	define( 'ABSPATH', '' );
+	require dirname( __DIR__ ) . '/includes/class-mahalle-local.php';
 }
-
-require dirname( __DIR__ ) . '/includes/class-mahalle-local.php';
 
 /**
  * Returns district and neighborhood data.
@@ -20,9 +17,9 @@ require dirname( __DIR__ ) . '/includes/class-mahalle-local.php';
  */
 function hez_mahalle_get_data( $requested_data_type, $city_plate_number, $district = null, $return_nbrhood_ids = true ) {
 	if ( 'district' === $requested_data_type ) {
-		return Mahalle_Local::get_districts( $city_plate_number );
+		return \Hezarfen\Inc\Mahalle_Local::get_districts( $city_plate_number );
 	} elseif ( 'neighborhood' === $requested_data_type && $district ) {
-		return Mahalle_Local::get_neighborhoods( $city_plate_number, $district, $return_nbrhood_ids );
+		return \Hezarfen\Inc\Mahalle_Local::get_neighborhoods( $city_plate_number, $district, $return_nbrhood_ids );
 	}
 
 	return null;
