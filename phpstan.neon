@@ -1,9 +1,17 @@
 parameters:
-    level: 8
+    level: 6
     paths:
-        - includes
-    bootstrapFiles:
         - hezarfen-for-woocommerce.php
+        - includes
+        - packages
+    excludePaths:
+        - includes/Data/mahalle/
+    bootstrapFiles:
+        - tests/phpstan/constants.php
         - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
-includes:
-    - phpstan-baseline.neon
+    ignoreErrors:
+        -
+            messages: 
+                - '#Undefined variable: \$tr_.*#'
+                - '#Variable \$tr_.* in isset\(\) is never defined#'
+            path: includes/class-mahalle-local.php

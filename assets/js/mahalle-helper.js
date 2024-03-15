@@ -25,11 +25,11 @@ class hezarfen_mahalle_helper {
 
 	add_event_handlers() {
 		// prevent adding event handlers multiple times.
-		this.get_fields().off('select2:select.hezarfen');
+		this.get_fields().off('change.hezarfen');
 
-		this.get_state_field().on('select2:select.hezarfen', { thisHelper: this }, this.province_on_change);
+		this.get_state_field().on('change.hezarfen', { thisHelper: this }, this.province_on_change);
 
-		this.get_city_field().on('select2:select.hezarfen', { thisHelper: this }, this.district_on_change);
+		this.get_city_field().on('change.hezarfen', { thisHelper: this }, this.district_on_change);
 	}
 
 	province_on_change(event) {
@@ -50,11 +50,11 @@ class hezarfen_mahalle_helper {
 		thisHelper.get_city_field().append(thisHelper.create_default_option());
 
 		// get selected data
-		var selected = event.params.data;
+		var selected = jQuery(this).val();
 
 		var data = {
 			'dataType': 'district',
-			'cityPlateNumber': selected.id
+			'cityPlateNumber': selected
 		};
 
 		jQuery.get(hezarfen_mahalle_helper_backend.api_url, data, function (response) {
@@ -81,12 +81,12 @@ class hezarfen_mahalle_helper {
 		thisHelper.get_nbrhood_field().append(thisHelper.create_default_option());
 
 		// get selected data
-		var selected = event.params.data;
+		var selected = jQuery(this).val();
 
 		var data = {
 			'dataType': 'neighborhood',
 			'cityPlateNumber': thisHelper.get_state_field().val(),
-			'district': selected.id,
+			'district': selected,
 			'return_nbrhood_ids': false
 		};
 
@@ -109,7 +109,7 @@ class hezarfen_mahalle_helper {
 			this.add_event_handlers();
 		} else {
 			// Remove select2:select event handler from the state field.
-			this.get_state_field().off('select2:select.hezarfen');
+			this.get_state_field().off('change');
 
 			// Replace city and address_1 fields with input elements.
 			this.replaceElementsWith(elements, 'input', additional_classes);

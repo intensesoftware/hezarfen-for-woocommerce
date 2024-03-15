@@ -15,4 +15,4 @@ jobs:
         with:
           php-version: '8.1'
       - name: Run PHPSTAN
-        run: vendor/bin/phpstan --memory-limit=512M
+        run: vendor/bin/phpstan --memory-limit=-1

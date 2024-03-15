@@ -17,8 +17,8 @@ class Helper {
 	 *
 	 * Update array keys for select option values
 	 *
-	 * @param array $arr array of the districts.
-	 * @return array
+	 * @param string[]|array<string, string> $arr array of the districts.
+	 * @return array<string, string>
 	 */
 	public static function select2_option_format( $arr ) {
 		$values = array( '' => __( 'Select an option', 'hezarfen-for-woocommerce' ) );
@@ -33,12 +33,12 @@ class Helper {
 	/**
 	 * Displays admin notices.
 	 * 
-	 * @param array $notices Notices.
-	 * @param bool  $use_kses Use wp_kses_post for escaping.
+	 * @param array<array<string, string>> $notices Notices.
+	 * @param bool                         $use_kses Use wp_kses_post for escaping.
 	 * 
 	 * @return void
 	 */
-	public static function show_admin_notices( $notices, $use_kses = false ) {
+	public static function render_admin_notices( $notices, $use_kses = false ) {
 		foreach ( $notices as $notice ) {
 			$class = 'error' === $notice['type'] ? 'notice-error' : 'notice-warning';
 			$msg   = $use_kses ? wp_kses_post( $notice['message'] ) : esc_html( $notice['message'] );
@@ -60,10 +60,6 @@ class Helper {
 		add_filter( 'woocommerce_billing_fields', array( __CLASS__, 'assign_priorities_to_non_locale_fields' ), PHP_INT_MAX - 1, 2 );
 		if ( is_checkout() ) {
 			add_filter( 'woocommerce_shipping_fields', array( __CLASS__, 'assign_priorities_to_non_locale_fields' ), PHP_INT_MAX - 1, 2 );
-
-			if ( self::is_show_tax_fields() ) {
-				add_filter( 'woocommerce_country_locale_field_selectors', array( __CLASS__, 'add_tax_fields_to_locale_selectors' ), PHP_INT_MAX - 1 );
-			}
 		}
 	}
 
@@ -147,23 +143,6 @@ class Helper {
 	}
 
 	/**
-	 * Adds tax fields' CSS selectors.
-	 * 
-	 * @param array<string, string> $locale_fields Locale fields.
-	 * 
-	 * @return array<string, string>
-	 */
-	public static function add_tax_fields_to_locale_selectors( $locale_fields ) {
-		$locale_fields['billing_company']     = '#billing_company_field';
-		$locale_fields['hez_invoice_type']    = '#hezarfen_invoice_type_field';
-		$locale_fields['hezarfen_TC_number']  = '#hezarfen_TC_number_field';
-		$locale_fields['hezarfen_tax_number'] = '#hezarfen_tax_number_field';
-		$locale_fields['hezarfen_tax_office'] = '#hezarfen_tax_office_field';
-
-		return $locale_fields;
-	}
-
-	/**
 	 * Hides the postcode field.
 	 * 
 	 * @return void
@@ -209,9 +188,9 @@ class Helper {
 	/**
 	 * Checks installed Hezarfen addons' versions. Returns notices if there are outdated addons.
 	 * 
-	 * @param array $addons Addons data to check.
+	 * @param array<array<string, mixed>> $addons Addons data to check.
 	 * 
-	 * @return array
+	 * @return array<array<string, string>>
 	 */
 	public static function check_addons( $addons ) {
 		$notices = array();
@@ -231,9 +210,9 @@ class Helper {
 	/**
 	 * Finds outdated plugins
 	 * 
-	 * @param array $plugins Plugins data to check.
+	 * @param array<array<string, mixed>> $plugins Plugins data to check.
 	 * 
-	 * @return array
+	 * @return array<array<string, string>>
 	 */
 	public static function find_outdated( $plugins ) {
 		$outdated = array();
@@ -251,6 +230,21 @@ class Helper {
 		}
 
 		return $outdated;
+	}
+
+	/**
+	 * Checks if plugin is active.
+	 * 
+	 * @param string $plugin Plugin.
+	 * 
+	 * @return bool
+	 */
+	public static function is_plugin_active( $plugin ) {
+		if ( in_array( $plugin, apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+			return true;
+		}
+	
+		return false;
 	}
 
 	/**

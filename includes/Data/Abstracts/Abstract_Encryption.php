@@ -20,21 +20,12 @@ class Abstract_Encryption {
 	 * @var mixed
 	 */
 	protected $encryption_key;
-	
-	/**
-	 * Constructor
-	 *
-	 * @return void
-	 */
-	public function __construct() {
-		$this->setEncryptionKey();
-	}
 
 	/**
 	 * Encrypts the given string.
 	 *
-	 * @param  mixed $plaintext that plain text.
-	 * @return string|bool
+	 * @param  string $plaintext that plain text.
+	 * @return string|bool|\WP_Error
 	 */
 	public function encrypt( $plaintext ) {
 		if ( is_wp_error( $this->encryption_key ) ) {
@@ -68,8 +59,8 @@ class Abstract_Encryption {
 	/**
 	 * Decrypts the given cipher string.
 	 *
-	 * @param  mixed $ciphertext that will be decrypted.
-	 * @return string|bool
+	 * @param  string $ciphertext that will be decrypted.
+	 * @return string|bool|\WP_Error
 	 */
 	public function decrypt( $ciphertext ) {
 		if ( is_wp_error( $this->encryption_key ) ) {
@@ -103,5 +94,7 @@ class Abstract_Encryption {
 			// PHP 5.6+ timing attack safe comparison.
 			return $original_plaintext;
 		}
+
+		return $ciphertext;
 	}
 }

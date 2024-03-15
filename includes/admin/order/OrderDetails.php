@@ -36,22 +36,10 @@ class OrderDetails {
 	/**
 	 * Adds tax fields (except TC Number field) to billing form where in the admin order edit screen.
 	 *
-	 * @param  array $fields WooCommerce current fields.
-	 * @return array
+	 * @param  array<string, mixed> $fields WooCommerce current fields.
+	 * @return array<string, mixed>
 	 */
 	public function add_tax_fields_to_order_details( $fields ) {
-		global $post;
-
-		$invoice_type = get_post_meta( $post->ID, '_billing_hez_invoice_type', true );
-
-		if ( 'person' == $invoice_type ) {
-			$invoice_type_human = __( 'Personal', 'hezarfen-for-woocommerce' );
-		} elseif ( 'company' == $invoice_type ) {
-			$invoice_type_human = __( 'Company', 'hezarfen-for-woocommerce' );
-		} else {
-			$invoice_type_human = '';
-		}
-
 		$tax_fields = array(
 			'hez_invoice_type' => array(
 				'label'   => __( 'Invoice type', 'hezarfen-for-woocommerce' ),
@@ -61,8 +49,7 @@ class OrderDetails {
 					'company' => __( 'Company', 'hezarfen-for-woocommerce' ),
 				),
 				'class'   => 'hezarfen_billing_invoice_type_field',
-				'show'    => true,
-				'value'   => $invoice_type_human,
+				'show'    => false,
 			),
 			'hez_tax_number'   => array(
 				'label' => __( 'Tax Number', 'hezarfen-for-woocommerce' ),
@@ -82,7 +69,7 @@ class OrderDetails {
 	/**
 	 * Adds decrypted TC Number information to the order details page.
 	 * 
-	 * @param WC_Order $order Order object.
+	 * @param \WC_Order $order Order object.
 	 * 
 	 * @return void
 	 */

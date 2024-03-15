@@ -33,7 +33,9 @@ class PostMetaEncryption extends Abstract_Encryption {
 	}
 	
 	/**
-	 * Check HEZARFEN_ENCRYPTION_KEY is generated before.
+	 * Check hezarfen encryption key is generated before.
+	 *
+	 * @return bool
 	 */
 	public function is_encryption_key_generated() {
 		$is_encryption_key_generated = get_option(
@@ -97,16 +99,14 @@ class PostMetaEncryption extends Abstract_Encryption {
 	}
 
 	/**
-	 * Get HEZARFEN_ENCRYPTION_KEY if exists.
+	 * Set hezarfen encryption key if exists.
 	 *
-	 * @return string|bool
+	 * @return void
 	 */
 	public function setEncryptionKey() {
-		if ( ! $this->health_check() ) {
-			return $this->health_check();
+		if ( $this->health_check() ) {
+			$this->encryption_key = HEZARFEN_ENCRYPTION_KEY;
 		}
-
-		$this->encryption_key = HEZARFEN_ENCRYPTION_KEY;
 	}
 
 	/**

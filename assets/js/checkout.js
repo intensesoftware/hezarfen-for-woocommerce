@@ -1,6 +1,10 @@
 var wc_hezarfen_checkout = {
     mbgb_plugin_active: typeof wc_hezarfen_mbgb_backend !== 'undefined',
     should_notify_neighborhood_changed: function (type) {
+        if( wc_hezarfen_ajax_object.should_notify_neighborhood_changed ) {
+            return true;
+        }
+
         return this.mbgb_plugin_active && (wc_hezarfen_mbgb_backend.address_source === type || (wc_hezarfen_mbgb_backend.address_source === 'shipping' && !this.ship_to_different_checked()))
     },
     ship_to_different_checked: function () {
@@ -10,6 +14,13 @@ var wc_hezarfen_checkout = {
 
 jQuery(function ($) {
     $(document).ready(function () {
+        $('#hezarfen_tax_number').on('input', function() {
+            var inputValue = $(this).val();
+            if (/[^0-9]/.test(inputValue)) {
+              $(this).val(inputValue.replace(/[^0-9]/g, ''));
+            }
+          });
+
         for (const type of ['billing', 'shipping']) {
             let wrapper = $(`.woocommerce-${type}-fields`);
             let mahalle_helper = new hezarfen_mahalle_helper(wrapper, type, 'checkout');
@@ -49,10 +60,10 @@ jQuery(function ($) {
 
     function add_checkout_event_handlers(type, wrapper) {
         // prevent adding event handlers multiple times.
-        $(`#${type}_address_1`).off('select2:select.hezarfen');
+        $(`#${type}_address_1`).off('change.hezarfen');
         $('#ship-to-different-address input').off('change.hezarfen');
 
-        $(`#${type}_address_1`).on("select2:select.hezarfen", function () {
+        $(`#${type}_address_1`).on("change.hezarfen", function () {
             neighborhood_on_change($(this).val(), type, wrapper);
         });
 

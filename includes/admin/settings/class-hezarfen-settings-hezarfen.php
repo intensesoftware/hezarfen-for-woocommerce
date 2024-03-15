@@ -33,7 +33,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	/**
 	 * Get own sections.
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
 	protected function get_own_sections() {
 		$sections = array(
@@ -53,7 +53,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	/**
 	 * Get settings for the default(General) section.
 	 *
-	 * @return array
+	 * @return array<array<string, string>>
 	 */
 	protected function get_settings_for_default_section() {
 		$fields = array(
@@ -99,21 +99,26 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				'id'      => 'hezarfen_hide_my_account_postcode_fields',
 				'default' => 'no',
 			),
-			array(
-				'type' => 'sectionend',
-				'id'   => 'hezarfen_general_settings_section_end',
-			),
 		);
 
-		return apply_filters( 'hezarfen_general_settings', $fields );
+		$fields = apply_filters( 'hezarfen_general_settings', $fields );
+
+		$fields[] = array(
+			'type' => 'sectionend',
+			'id'   => 'hezarfen_general_settings_section_end',
+		);
+
+		return $fields;
 	}
 
 	/**
 	 * Get settings for the Encryption section.
 	 *
-	 * @return array
+	 * @return array<array<string, string>>
 	 */
 	protected function get_settings_for_encryption_section() {
+		$fields = array();
+
 		// if encryption key not generated before, generate a new key.
 		if ( ! ( new PostMetaEncryption() )->is_encryption_key_generated() ) {
 			// create a new random key.
@@ -174,7 +179,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	/**
 	 * Get settings for the Checkout Page section.
 	 *
-	 * @return array
+	 * @return array<array<string, string>>
 	 */
 	protected function get_settings_for_checkout_page_section() {
 		$cfe_plugin_active = Hezarfen\Inc\Helper::is_cfe_plugin_active();
@@ -230,7 +235,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	/**
 	 * Get settings for the Tax Fields section.
 	 *
-	 * @return array
+	 * @return array<array<string, string>>
 	 */
 	protected function get_settings_for_checkout_tax_section() {
 		if ( Helper::is_show_tax_fields() ) {
@@ -244,7 +249,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 						),
 						'type'  => 'title',
 						'desc'  => __(
-							'You can update the checkout TAX fields. Note: T.C. number field requires encryption feature. If you do not activate the encryption feature, T.C. number field does not appear on the checkout.',
+							'You can update the checkout Tax fields. Note: T.C. number field requires encryption feature. If you do not activate the encryption feature, T.C. number field does not appear on the checkout.',
 							'hezarfen-for-woocommerce'
 						),
 						'id'    => 'hezarfen_checkout_tax_fields_title',
@@ -300,6 +305,8 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 * Output the settings
 	 *
 	 * @since 1.0
+	 * 
+	 * @return void
 	 */
 	public function output() {
 		global $current_section;
