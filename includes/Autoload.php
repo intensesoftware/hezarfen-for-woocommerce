@@ -9,6 +9,8 @@ namespace Hezarfen\Inc;
 
 defined( 'ABSPATH' ) || exit();
 
+use Automattic\WooCommerce\Utilities\OrderUtil;
+
 /**
  * Autoload
  */
@@ -45,15 +47,11 @@ class Autoload {
 
 	/**
 	 * Load assets files for admin
-	 * 
-	 * @param string $hook_suffix The current admin page.
-	 * 
+	 *
 	 * @return void
 	 */
-	public function load_admin_assets_files( $hook_suffix ) {
-		global $post_type;
-
-		if ( 'post.php' === $hook_suffix && 'shop_order' === $post_type ) {
+	public function load_admin_assets_files() {
+		if ( OrderUtil::is_order_edit_screen() ) {
 			wp_enqueue_script(
 				'wc_hezarfen_admin_order_details_js',
 				plugins_url( 'assets/admin/js/order-details.js', WC_HEZARFEN_FILE ),
