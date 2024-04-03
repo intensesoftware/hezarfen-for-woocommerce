@@ -1,7 +1,7 @@
 <?php
 /**
  * Class Autoload.
- * 
+ *
  * @package Hezarfen\Inc
  */
 
@@ -25,7 +25,7 @@ class Autoload {
 
 		$this->load_assets();
 	}
-	
+
 	/**
 	 * Load assets
 	 *
@@ -67,7 +67,7 @@ class Autoload {
 			);
 		}
 	}
-	
+
 	/**
 	 * Load js files
 	 *
@@ -130,7 +130,7 @@ class Autoload {
 			);
 		}
 	}
-	
+
 	/**
 	 * Load plugin files.
 	 *
