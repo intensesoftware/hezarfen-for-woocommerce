@@ -177,6 +177,22 @@ class Helper {
 	}
 
 	/**
+	 * Is Order Edit page?
+	 *
+	 * Note: Recent versions of Woocommerce has OrderUtil::is_order_edit_screen() method. That method must be used in the future.
+	 * We're not using that now because we must support older Woocommerce versions.
+	 * 
+	 * @param string $current_admin_page The current admin page.
+	 *
+	 * @return bool
+	 */
+	public static function is_order_edit_page( $current_admin_page ) {
+		global $post_type;
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return ( 'woocommerce_page_wc-orders' === $current_admin_page && ! empty( $_GET['action'] ) ) || ( 'post.php' === $current_admin_page && 'shop_order' === $post_type );
+	}
+
+	/**
 	 * Show tax fields in checkout?
 	 * 
 	 * @return bool
