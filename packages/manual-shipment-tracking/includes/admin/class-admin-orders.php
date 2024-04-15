@@ -227,7 +227,7 @@ class Admin_Orders {
 			}
 
 			$order = new \WC_Order( $order_id );
-			Helper::new_order_shipment_data($order, $id, $new_courier_id, $new_tracking_num);
+			Helper::new_order_shipment_data( $order, $id, $new_courier_id, $new_tracking_num );
 		}
 		// phpcs:enable
 	}

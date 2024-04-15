@@ -126,7 +126,7 @@ class Autoload {
 					'shipping_district_field_classes'     => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_shipping_district', array() ),
 					'billing_neighborhood_field_classes'  => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_billing_neighborhood', array() ),
 					'shipping_neighborhood_field_classes' => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_shipping_neighborhood', array() ),
-					'should_notify_neighborhood_changed' => apply_filters( 'hezarfen_checkout_should_notify_neighborhood_changed', false )
+					'should_notify_neighborhood_changed'  => apply_filters( 'hezarfen_checkout_should_notify_neighborhood_changed', false ),
 				)
 			);
 		}

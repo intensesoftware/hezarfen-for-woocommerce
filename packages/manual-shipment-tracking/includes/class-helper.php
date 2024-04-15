@@ -28,15 +28,15 @@ class Helper {
 	 * @return void
 	 */
 	public static function update_order_shipment_last_index( $order_id ) {
-		$ids = array();
+		$ids  = array();
 		$meta = get_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, false );
 
-		foreach( $meta as $shipment_data ) {
-			$data = new Shipment_Data( $shipment_data );
+		foreach ( $meta as $shipment_data ) {
+			$data  = new Shipment_Data( $shipment_data );
 			$ids[] = $data->id;
 		}
 
-		$last_index = ( count( $ids ) > 0 ) ? max($ids) : 1;
+		$last_index = ( count( $ids ) > 0 ) ? max( $ids ) : 1;
 
 		update_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_LAST_INDEX_KEY, $last_index );
 	}
@@ -45,12 +45,12 @@ class Helper {
 	 * Add new order shipment data
 	 *
 	 * @param  \WC_Order $order
-	 * @param  int $id Shipment ID uniq in the shipment of the order.
-	 * @param  string $new_courier_id Shipping Company ID.
-	 * @param  string $new_tracking_num Tracking Number
+	 * @param  int       $id Shipment ID uniq in the shipment of the order.
+	 * @param  string    $new_courier_id Shipping Company ID.
+	 * @param  string    $new_tracking_num Tracking Number
 	 * @return void
 	 */
-	public static function new_order_shipment_data($order, $id, $new_courier_id, $new_tracking_num) {
+	public static function new_order_shipment_data( $order, $id, $new_courier_id, $new_tracking_num ) {
 		$order_id = $order->get_id();
 
 		$new_courier  = self::get_courier_class( $new_courier_id );

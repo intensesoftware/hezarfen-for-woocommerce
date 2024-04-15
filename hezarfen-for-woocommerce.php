@@ -16,35 +16,35 @@ Requires at least: 5.7
 WC tested up to: 8.2
 */
 
-defined('ABSPATH') || exit();
+defined( 'ABSPATH' ) || exit();
 
-define('WC_HEZARFEN_VERSION', '2.0.0-beta.5');
-define('WC_HEZARFEN_MIN_MBGB_VERSION', '0.6.1');
-define('WC_HEZARFEN_FILE', __FILE__);
-define('WC_HEZARFEN_UYGULAMA_YOLU', plugin_dir_path(__FILE__));
-define('WC_HEZARFEN_UYGULAMA_URL', plugin_dir_url(__FILE__));
-define('WC_HEZARFEN_NEIGH_API_URL', plugin_dir_url(__FILE__) . 'api/get-mahalle-data.php');
+define( 'WC_HEZARFEN_VERSION', '2.0.0-beta.5' );
+define( 'WC_HEZARFEN_MIN_MBGB_VERSION', '0.6.1' );
+define( 'WC_HEZARFEN_FILE', __FILE__ );
+define( 'WC_HEZARFEN_UYGULAMA_YOLU', plugin_dir_path( __FILE__ ) );
+define( 'WC_HEZARFEN_UYGULAMA_URL', plugin_dir_url( __FILE__ ) );
+define( 'WC_HEZARFEN_NEIGH_API_URL', plugin_dir_url( __FILE__ ) . 'api/get-mahalle-data.php' );
 
-add_action('plugins_loaded', 'hezarfen_load_plugin_textdomain');
+add_action( 'plugins_loaded', 'hezarfen_load_plugin_textdomain' );
 
-add_action('admin_post_in_hezarfen_pro_presale_ad_dismiss', 'hez_ad_hezarfen_pro_presale_dismiss');
+add_action( 'admin_post_in_hezarfen_pro_presale_ad_dismiss', 'hez_ad_hezarfen_pro_presale_dismiss' );
 
 function hez_ad_hezarfen_pro_presale_dismiss() {
 	update_option( 'hez_ad_hezarfen_pro_presale_dismiss', 'yes', false );
-	wp_redirect(admin_url('/'));
+	wp_redirect( admin_url( '/' ) );
 }
 
-add_action('admin_notices', 'hez_ad_hezarfen_pro_presale' );
+add_action( 'admin_notices', 'hez_ad_hezarfen_pro_presale' );
 
 function hez_ad_hezarfen_pro_presale() {
-	if( get_option( 'hez_ad_hezarfen_pro_presale_dismiss', 'no' ) === 'yes' ) {
+	if ( get_option( 'hez_ad_hezarfen_pro_presale_dismiss', 'no' ) === 'yes' ) {
 		return;
 	}
 
-	$timezone = new DateTimeZone('Europe/Istanbul');
-	$end = new DateTime('2023-12-06 23:59', $timezone);
+	$timezone = new DateTimeZone( 'Europe/Istanbul' );
+	$end      = new DateTime( '2023-12-06 23:59', $timezone );
 
-	if( current_datetime() >= $end ) {
+	if ( current_datetime() >= $end ) {
 		return;
 	}
 	?>
@@ -69,7 +69,7 @@ function hez_ad_hezarfen_pro_presale() {
 				</div>
 
 			</div>
-			<a href="<?php echo admin_url('admin-post.php?action=in_hezarfen_pro_presale_ad_dismiss'); ?>">Reklamı kalıcı olarak gizle</a>
+			<a href="<?php echo admin_url( 'admin-post.php?action=in_hezarfen_pro_presale_ad_dismiss' ); ?>">Reklamı kalıcı olarak gizle</a>
 		</div>
 	</div>
 
@@ -114,8 +114,7 @@ function hez_ad_hezarfen_pro_presale() {
 	<?php
 }
 
-function hezarfen_load_plugin_textdomain()
-{
+function hezarfen_load_plugin_textdomain() {
 	load_plugin_textdomain(
 		'hezarfen-for-woocommerce',
 		false,

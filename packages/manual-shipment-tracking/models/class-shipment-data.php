@@ -122,8 +122,8 @@ class Shipment_Data implements \JsonSerializable {
 		if ( $add_new ) {
 			$saved = add_post_meta( $this->order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->prapare_for_db() );
 
-			if( $saved ) {
-				Helper::update_order_shipment_last_index($this->order_id);
+			if ( $saved ) {
+				Helper::update_order_shipment_last_index( $this->order_id );
 			}
 
 			return $saved;
@@ -132,8 +132,8 @@ class Shipment_Data implements \JsonSerializable {
 		if ( $this->raw_data ) {
 			$updated = update_post_meta( $this->order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->prapare_for_db(), $this->raw_data );
 
-			if( $updated ) {
-				Helper::update_order_shipment_last_index($this->order_id);
+			if ( $updated ) {
+				Helper::update_order_shipment_last_index( $this->order_id );
 			}
 
 			return $updated;
