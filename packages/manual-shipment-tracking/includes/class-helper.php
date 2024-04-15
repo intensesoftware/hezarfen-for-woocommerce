@@ -25,6 +25,8 @@ class Helper {
 	/**
 	 * Update shipment last index
 	 *
+	 * @param int $order_id Order ID.
+	 * 
 	 * @return void
 	 */
 	public static function update_order_shipment_last_index( $order_id ) {
@@ -44,10 +46,10 @@ class Helper {
 	/**
 	 * Add new order shipment data
 	 *
-	 * @param  \WC_Order $order
+	 * @param  \WC_Order $order Order.
 	 * @param  int       $id Shipment ID uniq in the shipment of the order.
 	 * @param  string    $new_courier_id Shipping Company ID.
-	 * @param  string    $new_tracking_num Tracking Number
+	 * @param  string    $new_tracking_num Tracking Number.
 	 * @return void
 	 */
 	public static function new_order_shipment_data( $order, $id, $new_courier_id, $new_tracking_num ) {

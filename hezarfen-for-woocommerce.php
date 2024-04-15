@@ -1,20 +1,22 @@
 <?php
-/*
-Plugin Name: Hezarfen For Woocommerce
-Description: Hezarfen, WooCommerce eklentisini Türkiye için daha kullanılabilir kılmayı amaçlar.
-Version: 2.0.0-beta.5
-Author: Intense Yazılım Ltd.
-Author URI: http://intense.com.tr
-Developer: Intense Yazılım Ltd.
-Developer URI: http://intense.com.tr
-License: GPL2
-Text Domain: hezarfen-for-woocommerce
-Domain Path: /languages
-Requires PHP: 7.0
-Requires at least: 5.7
-
-WC tested up to: 8.2
-*/
+/**
+ * Plugin Name: Hezarfen For Woocommerce
+ * Description: Hezarfen, WooCommerce eklentisini Türkiye için daha kullanılabilir kılmayı amaçlar.
+ * Version: 2.0.0-beta.5
+ * Author: Intense Yazılım Ltd.
+ * Author URI: http://intense.com.tr
+ * Developer: Intense Yazılım Ltd.
+ * Developer URI: http://intense.com.tr
+ * License: GPL2
+ * Text Domain: hezarfen-for-woocommerce
+ * Domain Path: /languages
+ * Requires PHP: 7.0
+ * Requires at least: 5.7
+ * 
+ * WC tested up to: 8.2
+ * 
+ * @package Hezarfen
+ */
 
 defined( 'ABSPATH' ) || exit();
 
@@ -29,13 +31,24 @@ add_action( 'plugins_loaded', 'hezarfen_load_plugin_textdomain' );
 
 add_action( 'admin_post_in_hezarfen_pro_presale_ad_dismiss', 'hez_ad_hezarfen_pro_presale_dismiss' );
 
+/**
+ * Hezarfen Pro presale dismiss
+ * 
+ * @return void
+ */
 function hez_ad_hezarfen_pro_presale_dismiss() {
 	update_option( 'hez_ad_hezarfen_pro_presale_dismiss', 'yes', false );
-	wp_redirect( admin_url( '/' ) );
+	wp_safe_redirect( admin_url( '/' ) );
+	exit;
 }
 
 add_action( 'admin_notices', 'hez_ad_hezarfen_pro_presale' );
 
+/**
+ * Hezarfen Pro presale
+ * 
+ * @return void
+ */
 function hez_ad_hezarfen_pro_presale() {
 	if ( get_option( 'hez_ad_hezarfen_pro_presale_dismiss', 'no' ) === 'yes' ) {
 		return;
@@ -49,7 +62,7 @@ function hez_ad_hezarfen_pro_presale() {
 	}
 	?>
 	<div id="in-hezarfen-pro-presale">
-		<img style="height:200px" src="<?php echo WC_HEZARFEN_UYGULAMA_URL . 'assets/admin/hezarfen-pro.png'; ?>" />
+		<img style="height:200px" src="<?php echo WC_HEZARFEN_UYGULAMA_URL . 'assets/admin/hezarfen-pro.png'; ?>" /> <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		<div id="benefits-container">
 			<h2>Hezarfen Pro Ön Satışta!</h2>
 			<h4>Özellikler</h4>
@@ -69,7 +82,7 @@ function hez_ad_hezarfen_pro_presale() {
 				</div>
 
 			</div>
-			<a href="<?php echo admin_url( 'admin-post.php?action=in_hezarfen_pro_presale_ad_dismiss' ); ?>">Reklamı kalıcı olarak gizle</a>
+			<a href="<?php echo esc_url( admin_url( 'admin-post.php?action=in_hezarfen_pro_presale_ad_dismiss' ) ); ?>">Reklamı kalıcı olarak gizle</a>
 		</div>
 	</div>
 
@@ -114,6 +127,11 @@ function hez_ad_hezarfen_pro_presale() {
 	<?php
 }
 
+/**
+ * Load plugin textdomain
+ * 
+ * @return void
+ */
 function hezarfen_load_plugin_textdomain() {
 	load_plugin_textdomain(
 		'hezarfen-for-woocommerce',
