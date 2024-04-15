@@ -355,7 +355,7 @@ class Checkout {
 		);
 
 		$fields['billing']['billing_hez_tax_number'] = array(
-			'maxlength'          => '11',
+			'maxlength'   => '11',
 			'id'          => 'hezarfen_tax_number',
 			'label'       => __( 'Tax Number', 'hezarfen-for-woocommerce' ),
 			'placeholder' => __( 'Enter tax number', 'hezarfen-for-woocommerce' ),
@@ -467,7 +467,7 @@ class Checkout {
 
 			$city_class = array();
 
-			if( array_key_exists( $type, $fields ) && array_key_exists( $city_field_name, $fields[$type] ) && array_key_exists( 'class', $fields[ $type ][ $city_field_name ] ) ) {
+			if ( array_key_exists( $type, $fields ) && array_key_exists( $city_field_name, $fields[ $type ] ) && array_key_exists( 'class', $fields[ $type ][ $city_field_name ] ) ) {
 				$city_class = $fields[ $type ][ $city_field_name ]['class'];
 			}
 
@@ -484,7 +484,7 @@ class Checkout {
 
 			$neighborhood_class = array();
 
-			if( array_key_exists( $type, $fields ) && array_key_exists( $neighborhood_field_name, $fields[$type] ) && array_key_exists( 'class', $fields[ $type ][ $neighborhood_field_name ] ) ) {
+			if ( array_key_exists( $type, $fields ) && array_key_exists( $neighborhood_field_name, $fields[ $type ] ) && array_key_exists( 'class', $fields[ $type ][ $neighborhood_field_name ] ) ) {
 				$neighborhood_class = $fields[ $type ][ $neighborhood_field_name ]['class'];
 			}
 
