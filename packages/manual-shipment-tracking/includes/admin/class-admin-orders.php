@@ -29,6 +29,8 @@ class Admin_Orders {
 
 			add_filter( 'manage_shop_order_posts_columns', array( __CLASS__, 'add_shipment_column' ), PHP_INT_MAX - 1 );
 			add_action( 'manage_shop_order_posts_custom_column', array( __CLASS__, 'render_shipment_column' ), 10, 2 );
+			add_filter( 'woocommerce_shop_order_list_table_columns', array( __CLASS__, 'add_shipment_column' ), PHP_INT_MAX - 1 );
+			add_action( 'woocommerce_shop_order_list_table_custom_column', array( __CLASS__, 'render_shipment_column' ), 10, 2 );
 
 			add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_box' ) );
 
