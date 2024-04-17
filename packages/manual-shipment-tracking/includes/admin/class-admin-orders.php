@@ -63,13 +63,14 @@ class Admin_Orders {
 	/**
 	 * Outputs the "Shipment" column HTML.
 	 * 
-	 * @param string     $column_key Current column key.
-	 * @param int|string $order_id Order ID.
+	 * @param string        $column_key Current column key.
+	 * @param int|\WC_Order $order Order ID or object.
 	 * 
 	 * @return void
 	 */
-	public static function render_shipment_column( $column_key, $order_id ) {
-		if ( self::SHIPMENT_COLUMN === $column_key ) {
+	public static function render_shipment_column( $column_key, $order ) {
+		if ( self::SHIPMENT_COLUMN === $column_key ) { // TODO: early return.
+			$order_id      = $order instanceof \WC_Order ? $order->get_id() : $order;
 			$shipment_data = Helper::get_all_shipment_data( $order_id );
 			if ( $shipment_data ) {
 				if ( count( $shipment_data ) > 1 ) {
