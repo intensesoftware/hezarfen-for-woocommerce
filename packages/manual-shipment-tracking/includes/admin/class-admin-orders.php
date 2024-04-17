@@ -93,21 +93,23 @@ class Admin_Orders {
 
 	/**
 	 * Adds a meta box to the admin order edit page.
-	 * 
-	 * @param string $post_type Post type.
-	 * 
+	 *  
 	 * @return void
 	 */
-	public static function add_meta_box( $post_type ) {
-		if ( 'shop_order' !== $post_type ) {
+	public static function add_meta_box() {
+		if ( ! \Hezarfen\Inc\Helper::is_order_edit_page() ) {
 			return;
 		}
+
+		// Note: For the recent versions of Woocommerce, wc_get_page_screen_id() function can be used alone, without the need to check if HPOS is enabled or not.
+		// We are checking because we must support older Woocommerce versions.
+		$screen = WC_HEZARFEN_HPOS_ENABLED ? wc_get_page_screen_id( 'shop-order' ) : 'shop_order';
 
 		add_meta_box(
 			'hezarfen-mst-order-edit-metabox',
 			__( 'Hezarfen Cargo Tracking', 'hezarfen-for-woocommerce' ),
 			array( __CLASS__, 'render_order_edit_metabox' ),
-			'shop_order',
+			$screen,
 			'side',
 			'high'
 		);
@@ -116,12 +118,12 @@ class Admin_Orders {
 	/**
 	 * Renders the meta box in the admin order edit page.
 	 * 
-	 * @param \WP_Post $post The Post object.
+	 * @param \WP_Post|\WC_Order $order The Order or Post object.
 	 * 
 	 * @return void
 	 */
-	public static function render_order_edit_metabox( $post ) {
-		$order_id      = $post->ID;
+	public static function render_order_edit_metabox( $order ) {
+		$order_id      = $order instanceof \WC_Order ? $order->get_id() : $order->ID;
 		$shipment_data = Helper::get_all_shipment_data( $order_id );
 
 		if ( ! $shipment_data ) {
