@@ -182,14 +182,14 @@ class Helper {
 	 * Note: Recent versions of Woocommerce has OrderUtil::is_order_edit_screen() method. That method must be used in the future.
 	 * We're not using that now because we must support older Woocommerce versions.
 	 * 
-	 * @param string $current_admin_page The current admin page.
-	 *
 	 * @return bool
 	 */
-	public static function is_order_edit_page( $current_admin_page ) {
-		global $post_type;
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		return ( 'woocommerce_page_wc-orders' === $current_admin_page && ! empty( $_GET['action'] ) ) || ( 'post.php' === $current_admin_page && 'shop_order' === $post_type );
+	public static function is_order_edit_page() {
+		$screen = get_current_screen();
+		$action = $_GET['action'] ?? ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Recommended
+
+		return ( 'woocommerce_page_wc-orders' === $screen->id && 'edit' === $action )
+		|| ( 'post' === $screen->base && 'shop_order' === $screen->post_type && ! $screen->action );
 	}
 
 	/**
