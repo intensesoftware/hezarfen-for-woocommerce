@@ -105,7 +105,7 @@ class Admin_Orders {
 			__( 'Hezarfen Cargo Tracking', 'hezarfen-for-woocommerce' ),
 			array( __CLASS__, 'render_order_edit_metabox' ),
 			'shop_order',
-			'side',
+			'normal',
 			'high'
 		);
 	}
