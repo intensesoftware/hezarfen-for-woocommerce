@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .text-blue-600 {
+      --tw-text-opacity: 1;
+      color: rgba(0, 0, 0, var(--tw-text-opacity)); /* Custom lighter blue */
+    }
+
+    .border-blue-600 {
+      --tw-border-opacity: 1;
+      border-color: rgba(242, 159, 44, var(--tw-border-opacity)); /* Custom darker blue */
+    }
+}

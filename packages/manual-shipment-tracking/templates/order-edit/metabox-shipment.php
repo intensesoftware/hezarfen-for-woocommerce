@@ -1,6 +1,6 @@
 
 <div class="hez-ui">
-    <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+    <div class="mb-4 border-gray-200 dark:border-gray-700">
         <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
             <li class="w-1/2" role="presentation">
                 <button class="w-full inline-block p-4 border-b-2 rounded-t-lg" id="profile-tab" data-tabs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false"><?php esc_html_e( 'Manual Tracking', 'hezarfen-for-woocommerce' ); ?></button>
