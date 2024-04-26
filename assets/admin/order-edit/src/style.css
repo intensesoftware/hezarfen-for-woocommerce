@@ -23,4 +23,10 @@
     input[type="radio"] {
         @apply hidden !important;
     }
+
+    #shipping-companies {
+        li label {
+            @apply flex justify-center !important;
+        }
+    }
 }
