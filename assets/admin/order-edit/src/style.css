@@ -18,3 +18,9 @@
         border-color: rgba(150, 150, 150, var(--tw-border-opacity)); /* Custom darker blue */
     }
 }
+
+#hez-order-shipments {
+    input[type="radio"] {
+        @apply hidden !important;
+    }
+}

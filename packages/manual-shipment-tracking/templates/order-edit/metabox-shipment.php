@@ -1,5 +1,5 @@
 
-<div class="hez-ui">
+<div id="hez-order-shipments" class="hez-ui">
     <div class="mb-4 border-gray-200 dark:border-gray-700">
         <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
             <li class="w-1/2" role="presentation">
@@ -20,7 +20,50 @@
     </div>
     <div id="default-tab-content">
         <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Profile tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p class="text-lg text-black"><?php esc_html_e( 'Enter Tracking Information', 'hezarfen-for-woocommerce' ); ?></p>
+                    <p class="text-gray-1 text-xs font-light"><?php esc_html_e( 'In order to track your shipment, please enter your tracking number and select courier from below and add it to your tracking list.', 'hezarfen-for-woocommerce' ); ?></p>
+
+                    <div>
+                        <?php
+                            $courier_select_name  = sprintf( '%s[%s][%s]', self::DATA_ARRAY_KEY, $shipment_data->id, self::COURIER_HTML_NAME );
+                        ?>
+                        <div class="mb-5">
+                            <label for="tracking-num-input" class="font-normal text-gray-1 block mb-2 text-sm font-medium dark:text-white font-light>Your email</label>
+                            <input type="text" id="tracking-num-input" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-1 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required />
+                        </div>
+                        <div class="mb-5">
+                            <label for="password" class="font-normal text-gray-1 block mb-2 text-sm font-medium dark:text-white font-light"><?php esc_html_e( 'Select a Courier Company', 'hezarfen-for-woocommerce' ); ?></label>
+                            <ul id="shipping-companies" class="grid w-full gap-2 md:grid-cols-4 max-h-24 overflow-hidden transition-max-height duration-300 ease-in-out">
+                                <?php foreach ( \Hezarfen\ManualShipmentTracking\Helper::courier_company_options() as $courier_id => $courier_label ) : if(empty($courier_id)) {continue;} ?>
+                                    <li>
+                                        <input type="radio" name="courier-company-select" value="<?php echo esc_attr( $courier_id ); ?>" class="hidden peer" required />
+                                        <label for="courier-company-select" class="max-h-10 inline-flex items-center justify-between w-full p-4 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">                           
+                                            <div class="block">
+                                                <div class="w-full">
+                                                    <img src="<?php echo esc_attr( HEZARFEN_MST_COURIER_LOGO_URL . \Hezarfen\ManualShipmentTracking\Helper::get_courier_class( $courier_id )::$logo ); ?>" />
+                                                </div>
+                                            </div>
+                                            <svg class="w-5 h-5 ms-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                            </svg>
+                                        </label>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+
+                        <div class="flex justify-center">
+                            <button type="button" class="h-expand" class="bg-blue-500 text-white px-4 py-2 mt-2 hover:bg-blue-700"><?php esc_html_e( 'Show more', 'hezarfen-for-woocommerce' ); ?></button>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="border-dashed border-2 border-gray-2 p-4">
+                    ....
+                </div>
+            </div>
         </div>
         <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
             <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Dashboard tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
