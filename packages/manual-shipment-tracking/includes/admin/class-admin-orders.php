@@ -118,6 +118,10 @@ class Admin_Orders {
 	 * @return void
 	 */
 	public static function render_order_edit_metabox( $post ) {
+		$asset_file = include WC_HEZARFEN_UYGULAMA_YOLU . 'assets/admin/order-edit/build/main.asset.php';
+		wp_enqueue_script( 'hezarfen-order-edit', WC_HEZARFEN_UYGULAMA_URL . 'assets/admin/order-edit/build/main.js', $asset_file['dependencies'], $dependencies['version'] );
+		wp_enqueue_style( 'hezarfen-order-edit', WC_HEZARFEN_UYGULAMA_URL . 'assets/admin/order-edit/build/style-main.css', $asset_file['dependencies'], $dependencies['version'] );
+
 		$order_id      = $post->ID;
 		$shipment_data = Helper::get_all_shipment_data( $order_id );
 
@@ -125,6 +129,9 @@ class Admin_Orders {
 			$shipment_data[] = new Shipment_Data();
 		}
 
+		require_once WC_HEZARFEN_UYGULAMA_YOLU . 'packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php';
+
+		return;
 		?>
 		<div id="modal-body" title="<?php esc_attr_e( 'Remove shipment data?', 'hezarfen-for-woocommerce' ); ?>" class="hidden">
 			<span class="ui-icon ui-icon-alert"></span>
