@@ -8,9 +8,7 @@ const config = {
   theme: {
     extend: {
       colors: {
-        'text-blue-600': '#000',
-        'border-blue-600': '#F29F2C',
-        'gray': '#969696'
+        'primary-color': '#F29F2C'
       }
     }
   },

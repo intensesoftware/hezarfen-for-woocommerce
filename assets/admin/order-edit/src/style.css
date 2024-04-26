@@ -12,4 +12,9 @@
       --tw-border-opacity: 1;
       border-color: rgba(242, 159, 44, var(--tw-border-opacity)); /* Custom darker blue */
     }
+
+    .text-gray-500 {
+        --tw-border-opacity: 1;
+        border-color: rgba(150, 150, 150, var(--tw-border-opacity)); /* Custom darker blue */
+    }
 }
