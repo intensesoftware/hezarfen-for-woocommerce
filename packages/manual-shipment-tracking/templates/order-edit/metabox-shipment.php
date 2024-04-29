@@ -8,10 +8,10 @@ use \Hezarfen\ManualShipmentTracking\Helper;
     <div class="mb-4 border-gray-200 dark:border-gray-700">
         <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
             <li class="w-1/2" role="presentation">
-                <button class="h-16	w-full inline-block p-2 border-b-2 rounded-t-lg" id="profile-tab" data-tabs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false"><?php esc_html_e( 'Manual Tracking', 'hezarfen-for-woocommerce' ); ?></button>
+                <button class="h-16	w-full inline-block p-2 border-b-2 rounded-t-lg" id="hezarfen-lite-tab" data-tabs-target="#hezarfen-lite" type="button" role="tab" aria-controls="hezarfen-lite" aria-selected="false"><?php esc_html_e( 'Manual Tracking', 'hezarfen-for-woocommerce' ); ?></button>
             </li>
             <li class="w-1/2" role="presentation">
-                <button class="h-16	center flex justify-center items-center	 w-full gap-4 inline-block p-2 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="dashboard-tab" data-tabs-target="#dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="false">
+                <button class="h-16	center flex justify-center items-center	 w-full gap-4 inline-block p-2 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="hezarfen-pro-tab" data-tabs-target="#hezarfen-pro" type="button" role="tab" aria-controls="hezarfen-pro" aria-selected="false">
                     <?php esc_html_e( 'Shipment Barcode', 'hezarfen-for-woocommerce' ); ?>
                     <span type="button" class="flex gap-2 bg-primary-color text-xs text-white border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-1 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
                         <svg width="13" height="12" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,7 +24,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
         </ul>
     </div>
     <div id="default-tab-content">
-        <div class="hidden p-4 rounded-lg" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="hidden p-4 rounded-lg" id="hezarfen-lite" role="tabpanel" aria-labelledby="hezarfen-lite-tab">
             <div class="grid grid-cols-2 gap-8">
                 <div>
                     <p class="text-lg text-black"><?php esc_html_e( 'Enter Tracking Information', 'hezarfen-for-woocommerce' ); ?></p>
@@ -77,6 +77,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                             <p class="text-gray-1 font-light"><?php esc_html_e( 'There are no tracking numbers added to the tracking list.', 'hezarfen-for-woocommerce' ); ?></p>
                             <p class="text-gray-1 font-light"><?php esc_html_e( 'Please add one or more tracking numbers to the list.', 'hezarfen-for-woocommerce' ); ?></p>
                         </p>
+                        </div>
                     </div>
                 </div>
                     <?php
@@ -96,7 +97,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                         <?php
                         foreach( $shipments_data as $shipment_args ):
                         ?>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <tr data-id="<?php echo esc_attr( strval( $shipment_args->id ) ); ?>" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         <?php echo esc_html( $shipment_args->courier_title ); ?>
                                     </td>
@@ -115,13 +116,13 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-6 py-4 flex gap-2">
-                                        <a href="<?php echo esc_url( $shipment_args->tracking_url ); ?>" target="_blank" class="focus:outline-none hover:opacity-80">
+                                        <a href="<?php echo esc_url( $shipment_args->tracking_url ); ?>" target="_blank" class="cursor-pointer focus:outline-none hover:opacity-80">
                                             <svg width="30" height="24" viewBox="0 0 30 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <rect width="30" height="24" rx="6" fill="black"/>
                                                 <path d="M18.5179 14.6933L21.0163 17.1912L20.1909 18.0166L17.6931 15.5182C16.7637 16.2632 15.6077 16.6684 14.4165 16.6667C11.5185 16.6667 9.1665 14.3147 9.1665 11.4167C9.1665 8.51875 11.5185 6.16675 14.4165 6.16675C17.3145 6.16675 19.6665 8.51875 19.6665 11.4167C19.6682 12.6079 19.263 13.7639 18.5179 14.6933ZM17.3478 14.2605C18.0881 13.4992 18.5015 12.4787 18.4998 11.4167C18.4998 9.161 16.6723 7.33341 14.4165 7.33341C12.1608 7.33341 10.3332 9.161 10.3332 11.4167C10.3332 13.6725 12.1608 15.5001 14.4165 15.5001C15.4784 15.5018 16.4989 15.0883 17.2603 14.348L17.3478 14.2605Z" fill="white"/>
                                             </svg>
                                         </a>
-                                        <a class="hover:opacity-80 focus:outline-none">
+                                        <a class="remove-shipment-data hover:opacity-80 focus:outline-none cursor-pointer">
                                             <svg width="32" height="24" viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <rect x="0.5" y="0.5" width="31" height="23" rx="5.5" stroke="#FF2222"/>
                                                 <path d="M19.3335 8.00016H22.6668V9.3335H21.3335V18.0002C21.3335 18.177 21.2633 18.3465 21.1382 18.4716C21.0132 18.5966 20.8436 18.6668 20.6668 18.6668H11.3335C11.1567 18.6668 10.9871 18.5966 10.8621 18.4716C10.7371 18.3465 10.6668 18.177 10.6668 18.0002V9.3335H9.3335V8.00016H12.6668V6.00016C12.6668 5.82335 12.7371 5.65378 12.8621 5.52876C12.9871 5.40373 13.1567 5.3335 13.3335 5.3335H18.6668C18.8436 5.3335 19.0132 5.40373 19.1382 5.52876C19.2633 5.65378 19.3335 5.82335 19.3335 6.00016V8.00016ZM20.0002 9.3335H12.0002V17.3335H20.0002V9.3335ZM14.0002 11.3335H15.3335V15.3335H14.0002V11.3335ZM16.6668 11.3335H18.0002V15.3335H16.6668V11.3335ZM14.0002 6.66683V8.00016H18.0002V6.66683H14.0002Z" fill="#FF2222"/>
@@ -139,9 +140,13 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                     endif;
                     ?>
             </div>
+            <div id="modal-body" title="<?php esc_attr_e( 'Remove shipment data?', 'hezarfen-for-woocommerce' ); ?>" class="hidden">
+                <span class="ui-icon ui-icon-alert"></span>
+                <p><?php esc_html_e( 'Are you sure you want to remove this shipment data?', 'hezarfen-for-woocommerce' ); ?></p>
+            </div>
         </div>
-        <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-            <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Dashboard tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+        <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="hezarfen-pro" role="tabpanel" aria-labelledby="hezarfen-pro-tab">
+            <p class="text-sm text-gray-500 dark:text-gray-400">Pro</p>
         </div>
     </div>
 </div>
