@@ -33,7 +33,6 @@ class Admin_Orders {
 			add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_box' ) );
 
 			add_filter( 'woocommerce_reports_order_statuses', array( __CLASS__, 'append_order_status_to_reports' ), 20 );
-			add_action( 'woocommerce_process_shop_order_meta', array( __CLASS__, 'order_save' ), PHP_INT_MAX - 1 );
 		}
 	}
 
@@ -118,9 +117,25 @@ class Admin_Orders {
 	 * @return void
 	 */
 	public static function render_order_edit_metabox( $post ) {
-		$asset_file = include WC_HEZARFEN_UYGULAMA_YOLU . 'assets/admin/order-edit/build/main.asset.php';
-		wp_enqueue_script( 'hezarfen-order-edit', WC_HEZARFEN_UYGULAMA_URL . 'assets/admin/order-edit/build/main.js', $asset_file['dependencies'], $dependencies['version'] );
-		wp_enqueue_style( 'hezarfen-order-edit', WC_HEZARFEN_UYGULAMA_URL . 'assets/admin/order-edit/build/style-main.css', $asset_file['dependencies'], $dependencies['version'] );
+		wp_enqueue_script( 'hezarfen-order-edit', WC_HEZARFEN_UYGULAMA_URL . 'assets/admin/order-edit/build/main.js', array( 'jquery', 'jquery-ui-dialog' ), WC_HEZARFEN_VERSION );
+		wp_localize_script(
+			'hezarfen-order-edit',
+			'hezarfen_mst_backend',
+			array(
+				'courier_select_placeholder'  => __( 'Choose a courier company', 'hezarfen-for-woocommerce' ),
+				'duplicate_btn_tooltip_text'  => __( 'Add new shipment', 'hezarfen-for-woocommerce' ),
+				'modal_btn_delete_text'       => __( 'Delete', 'hezarfen-for-woocommerce' ),
+				'modal_btn_cancel_text'       => __( 'Cancel', 'hezarfen-for-woocommerce' ),
+				'courier_logo_base_url'       => HEZARFEN_MST_COURIER_LOGO_URL,
+				'remove_shipment_data_action' => Admin_Ajax::REMOVE_SHIPMENT_DATA_ACTION,
+				'remove_shipment_data_nonce'  => wp_create_nonce( Admin_Ajax::REMOVE_SHIPMENT_DATA_NONCE ),
+				'new_shipment_data_action' => Admin_Ajax::NEW_SHIPMENT_DATA_ACTION,
+				'new_shipment_data_nonce'  => wp_create_nonce( Admin_Ajax::NEW_SHIPMENT_DATA_NONCE ),
+				'new_shipment_courier_html_name' => Admin_Ajax::COURIER_HTML_NAME,
+				'new_shipment_tracking_num_html_name' => Admin_Ajax::TRACKING_NUM_HTML_NAME
+			)
+		);
+		wp_enqueue_style( 'hezarfen-order-edit', WC_HEZARFEN_UYGULAMA_URL . 'assets/admin/order-edit/build/style-main.css', array(), WC_HEZARFEN_VERSION );
 
 		$order_id      = $post->ID;
 		$shipment_data = Helper::get_all_shipment_data( $order_id );
@@ -130,27 +145,6 @@ class Admin_Orders {
 		}
 
 		require_once WC_HEZARFEN_UYGULAMA_YOLU . 'packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php';
-
-		return;
-		?>
-		<div id="modal-body" title="<?php esc_attr_e( 'Remove shipment data?', 'hezarfen-for-woocommerce' ); ?>" class="hidden">
-			<span class="ui-icon ui-icon-alert"></span>
-			<p><?php esc_html_e( 'Are you sure you want to remove this shipment data?', 'hezarfen-for-woocommerce' ); ?></p>
-		</div>
-		<div class="shipment-forms-wrapper">
-			<div class="col">
-				<div class="manual-shipment-forms-wrapper">
-					<?php
-					foreach ( $shipment_data as $data ) {
-						self::render_shipment_form_elements( $data );
-					}
-					?>
-				</div>
-				<a class="button duplicate-form">+</a>
-			</div>
-			<?php do_action( 'hez_admin_order_edit_shipment_edits', $order_id ); ?>
-		</div>
-		<?php
 	}
 
 	/**
@@ -213,33 +207,6 @@ class Admin_Orders {
 	}
 
 	/**
-	 * Saves the data.
-	 * 
-	 * @param int|string $order_id Order ID.
-	 * 
-	 * @return void
-	 */
-	public static function order_save( $order_id ) {
-		// phpcs:disable WordPress.Security.NonceVerification.Missing
-		if ( empty( $_POST[ self::DATA_ARRAY_KEY ] ) ) {
-			return;
-		}
-
-		foreach ( $_POST[ self::DATA_ARRAY_KEY ] as $id => $post_data ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$new_courier_id   = ! empty( $post_data[ self::COURIER_HTML_NAME ] ) ? sanitize_text_field( $post_data[ self::COURIER_HTML_NAME ] ) : '';
-			$new_tracking_num = ! empty( $post_data[ self::TRACKING_NUM_HTML_NAME ] ) ? sanitize_text_field( $post_data[ self::TRACKING_NUM_HTML_NAME ] ) : '';
-
-			if ( ! $new_courier_id || ( Courier_Kurye::$id !== $new_courier_id && ! $new_tracking_num ) ) {
-				continue;
-			}
-
-			$order = new \WC_Order( $order_id );
-			Helper::new_order_shipment_data($order, $id, $new_courier_id, $new_tracking_num);
-		}
-		// phpcs:enable
-	}
-
-	/**
 	 * Enqueues CSS files.
 	 * 
 	 * @param string $hook_suffix Hook suffix.
@@ -266,25 +233,6 @@ class Admin_Orders {
 					'tooltip_placeholder'      => esc_html__( 'Fetching data..', 'hezarfen-for-woocommerce' ),
 					'courier_company_i18n'     => esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ),
 					'tracking_num_i18n'        => esc_html__( 'Tracking Number', 'hezarfen-for-woocommerce' ),
-				)
-			);
-		}
-
-		if ( 'post.php' === $hook_suffix ) {
-			wp_enqueue_style( 'hezarfen_mst_admin_order_edit_css', HEZARFEN_MST_ASSETS_URL . 'css/admin/order-edit.css', array(), WC_HEZARFEN_VERSION );
-			wp_enqueue_script( 'hezarfen_mst_admin_order_edit_js', HEZARFEN_MST_ASSETS_URL . 'js/admin/order-edit.js', array( 'jquery', 'jquery-ui-dialog' ), WC_HEZARFEN_VERSION, true );
-
-			wp_localize_script(
-				'hezarfen_mst_admin_order_edit_js',
-				'hezarfen_mst_backend',
-				array(
-					'courier_select_placeholder'  => __( 'Choose a courier company', 'hezarfen-for-woocommerce' ),
-					'duplicate_btn_tooltip_text'  => __( 'Add new shipment', 'hezarfen-for-woocommerce' ),
-					'modal_btn_delete_text'       => __( 'Delete', 'hezarfen-for-woocommerce' ),
-					'modal_btn_cancel_text'       => __( 'Cancel', 'hezarfen-for-woocommerce' ),
-					'courier_logo_base_url'       => HEZARFEN_MST_COURIER_LOGO_URL,
-					'remove_shipment_data_action' => Admin_Ajax::REMOVE_SHIPMENT_DATA_ACTION,
-					'remove_shipment_data_nonce'  => wp_create_nonce( Admin_Ajax::REMOVE_SHIPMENT_DATA_NONCE ),
 				)
 			);
 		}

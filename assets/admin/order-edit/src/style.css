@@ -24,6 +24,18 @@
         @apply hidden !important;
     }
 
+    .actions {
+        a:hover {
+            opacity: 0.7 !important;
+            transition: 0.4s;
+        }
+
+        a:focus, svg:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+    }
+
     #shipping-companies {
         li label {
             @apply flex justify-center !important;

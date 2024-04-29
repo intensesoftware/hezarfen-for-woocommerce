@@ -1,8 +1,7 @@
 
 <?php
-
+defined( 'ABSPATH' ) || exit;
 use \Hezarfen\ManualShipmentTracking\Helper;
-
 ?>
 <div id="hez-order-shipments" class="hez-ui">
     <div class="mb-4 border-gray-200 dark:border-gray-700">
@@ -41,11 +40,11 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                         <div class="mb-5">
                             <label class="font-light text-gray-1 block mb-2 text-sm dark:text-white"><?php esc_html_e( 'Select a Courier Company', 'hezarfen-for-woocommerce' ); ?></label>
                             <ul id="shipping-companies" class="max-h-24 grid w-full gap-2 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 5xl:grid-cols-7 6xl:grid-cols-8 overflow-hidden transition-max-height duration-300 ease-in-out">
-                                <?php foreach ( \Hezarfen\ManualShipmentTracking\Helper::courier_company_options() as $courier_id => $courier_label ) : if(empty($courier_id)) {continue;} ?>
+                                <?php foreach ( Helper::courier_company_options() as $courier_id => $courier_label ) : if(empty($courier_id)) {continue;} ?>
                                     <li class="flex justify-center">
                                         <input type="radio" id="courier-company-select-<?php echo esc_attr( $courier_id ); ?>" name="courier-company-select" value="<?php echo esc_attr( $courier_id ); ?>" class="hidden peer" required />
-                                        <label for="courier-company-select-<?php echo esc_attr( $courier_id ); ?>" class="flex justify-center h-12 items-center justify-between w-full p-5 text-gray-3 bg-white border border-gray-3 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-3 dark:peer-checked:text-blue-500 peer-checked:bg-orange-1 peer-checked:border-2 peer-checked:border-orange-2 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-300 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">                           
-                                            <img class="max-h-8" src="<?php echo esc_attr( HEZARFEN_MST_COURIER_LOGO_URL . \Hezarfen\ManualShipmentTracking\Helper::get_courier_class( $courier_id )::$logo ); ?>" />
+                                        <label for="courier-company-select-<?php echo esc_attr( $courier_id ); ?>" class="flex justify-center h-12 items-center justify-between w-full p-5 text-gray-3 bg-white border border-gray-3 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-3 dark:peer-checked:text-blue-500 peer-checked:bg-orange-1 peer-checked:border-2 peer-checked:border-orange-2 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-orange-1 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">                           
+                                            <img class="max-h-8" src="<?php echo esc_attr( HEZARFEN_MST_COURIER_LOGO_URL . Helper::get_courier_class( $courier_id )::$logo ); ?>" />
                                         </label>
                                     </li>
                                 <?php endforeach; ?>
@@ -57,13 +56,13 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                         </div>
 
                         <div class="flex justify-center mt-6">
-                            <button type="button" class="w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-normal rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"><?php esc_html_e( 'Add to Tracking List', 'hezarfen-for-woocommerce' ); ?></button>
+                            <button data-order_id="<?php echo esc_attr( $order_id ); ?>" id="add-to-tracking-list" type="button" class="w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-normal rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"><?php esc_html_e( 'Add to Tracking List', 'hezarfen-for-woocommerce' ); ?></button>
                         </div>
 
                     </div>
                 </div>
                     <?php
-                    $shipments_data = \Hezarfen\ManualShipmentTracking\Helper::get_all_shipment_data( $order_id );
+                    $shipments_data = Helper::get_all_shipment_data( $order_id );
 
                     if( count( $shipments_data ) < 1 ):
                     ?>
@@ -115,7 +114,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                             </svg>
                                         <?php endif; ?>
                                     </td>
-                                    <td class="px-6 py-4 flex gap-2">
+                                    <td class="actions px-6 py-4 flex gap-2">
                                         <a href="<?php echo esc_url( $shipment_args->tracking_url ); ?>" target="_blank" class="cursor-pointer focus:outline-none hover:opacity-80">
                                             <svg width="30" height="24" viewBox="0 0 30 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <rect width="30" height="24" rx="6" fill="black"/>
