@@ -1,4 +1,9 @@
 
+<?php
+
+use \Hezarfen\ManualShipmentTracking\Helper;
+
+?>
 <div id="hez-order-shipments" class="hez-ui">
     <div class="mb-4 border-gray-200 dark:border-gray-700">
         <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
@@ -19,7 +24,7 @@
         </ul>
     </div>
     <div id="default-tab-content">
-        <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="hidden p-4 rounded-lg" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             <div class="grid grid-cols-2 gap-8">
                 <div>
                     <p class="text-lg text-black"><?php esc_html_e( 'Enter Tracking Information', 'hezarfen-for-woocommerce' ); ?></p>
@@ -57,7 +62,12 @@
 
                     </div>
                 </div>
-                <div class="border-dashed border-2 border-gray-2 p-4 flex justify-center">
+                    <?php
+                    $shipments_data = \Hezarfen\ManualShipmentTracking\Helper::get_all_shipment_data( $order_id );
+
+                    if( count( $shipments_data ) < 1 ):
+                    ?>
+                 <div class="border-dashed border-2 border-gray-2 p-4 flex justify-center">
                     <div id="no-shipments" class="w-9/12 flex justify-center flex-col font-medium items-center">
                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 20">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m13 19-6-5-6 5V2a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17Z"/>
@@ -69,6 +79,65 @@
                         </p>
                     </div>
                 </div>
+                    <?php
+                    else:
+                    ?>
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3"><?php esc_html_e( 'Courier Company', 'hezarfen-for-woocommerce' ); ?></th>
+                                    <th scope="col" class="px-6 py-3"><?php esc_html_e( 'Tracking Number', 'hezarfen-for-woocommerce' ); ?></th>
+                                    <th scope="col" class="px-6 py-3"><?php esc_html_e( 'SMS', 'hezarfen-for-woocommerce' ); ?></th>
+                                    <th scope="col" class="px-6 py-3"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                        <?php
+                        foreach( $shipments_data as $shipment_args ):
+                        ?>
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        <?php echo esc_html( $shipment_args->courier_title ); ?>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <?php echo esc_html( $shipment_args->tracking_num ); ?>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <?php if( (bool) $shipment_args->sms_sent ): ?>
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M10 17.5C10.9849 17.5 11.9602 17.306 12.8701 16.9291C13.7801 16.5522 14.6069 15.9997 15.3033 15.3033C15.9997 14.6069 16.5522 13.7801 16.9291 12.8701C17.306 11.9602 17.5 10.9849 17.5 10C17.5 9.01509 17.306 8.03982 16.9291 7.12987C16.5522 6.21993 15.9997 5.39314 15.3033 4.6967C14.6069 4.00026 13.7801 3.44781 12.8701 3.0709C11.9602 2.69399 10.9849 2.5 10 2.5C8.01088 2.5 6.10322 3.29018 4.6967 4.6967C3.29018 6.10322 2.5 8.01088 2.5 10C2.5 11.9891 3.29018 13.8968 4.6967 15.3033C6.10322 16.7098 8.01088 17.5 10 17.5ZM9.80667 13.0333L13.9733 8.03333L12.6933 6.96667L9.11 11.2658L7.25583 9.41083L6.0775 10.5892L8.5775 13.0892L9.2225 13.7342L9.80667 13.0333Z" fill="#008000"/>
+                                            </svg>
+                                        <?php else: ?>
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M10.0003 18.3334C5.39783 18.3334 1.66699 14.6026 1.66699 10.0001C1.66699 5.39758 5.39783 1.66675 10.0003 1.66675C14.6028 1.66675 18.3337 5.39758 18.3337 10.0001C18.3337 14.6026 14.6028 18.3334 10.0003 18.3334ZM10.0003 8.82175L7.64366 6.46425L6.46449 7.64341L8.82199 10.0001L6.46449 12.3567L7.64366 13.5359L10.0003 11.1784L12.357 13.5359L13.5362 12.3567L11.1787 10.0001L13.5362 7.64341L12.357 6.46425L10.0003 8.82175Z" fill="#FF2222"/>
+                                            </svg>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="px-6 py-4 flex gap-2">
+                                        <a href="<?php echo esc_url( $shipment_args->tracking_url ); ?>" target="_blank" class="focus:outline-none hover:opacity-80">
+                                            <svg width="30" height="24" viewBox="0 0 30 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect width="30" height="24" rx="6" fill="black"/>
+                                                <path d="M18.5179 14.6933L21.0163 17.1912L20.1909 18.0166L17.6931 15.5182C16.7637 16.2632 15.6077 16.6684 14.4165 16.6667C11.5185 16.6667 9.1665 14.3147 9.1665 11.4167C9.1665 8.51875 11.5185 6.16675 14.4165 6.16675C17.3145 6.16675 19.6665 8.51875 19.6665 11.4167C19.6682 12.6079 19.263 13.7639 18.5179 14.6933ZM17.3478 14.2605C18.0881 13.4992 18.5015 12.4787 18.4998 11.4167C18.4998 9.161 16.6723 7.33341 14.4165 7.33341C12.1608 7.33341 10.3332 9.161 10.3332 11.4167C10.3332 13.6725 12.1608 15.5001 14.4165 15.5001C15.4784 15.5018 16.4989 15.0883 17.2603 14.348L17.3478 14.2605Z" fill="white"/>
+                                            </svg>
+                                        </a>
+                                        <a class="hover:opacity-80 focus:outline-none">
+                                            <svg width="32" height="24" viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect x="0.5" y="0.5" width="31" height="23" rx="5.5" stroke="#FF2222"/>
+                                                <path d="M19.3335 8.00016H22.6668V9.3335H21.3335V18.0002C21.3335 18.177 21.2633 18.3465 21.1382 18.4716C21.0132 18.5966 20.8436 18.6668 20.6668 18.6668H11.3335C11.1567 18.6668 10.9871 18.5966 10.8621 18.4716C10.7371 18.3465 10.6668 18.177 10.6668 18.0002V9.3335H9.3335V8.00016H12.6668V6.00016C12.6668 5.82335 12.7371 5.65378 12.8621 5.52876C12.9871 5.40373 13.1567 5.3335 13.3335 5.3335H18.6668C18.8436 5.3335 19.0132 5.40373 19.1382 5.52876C19.2633 5.65378 19.3335 5.82335 19.3335 6.00016V8.00016ZM20.0002 9.3335H12.0002V17.3335H20.0002V9.3335ZM14.0002 11.3335H15.3335V15.3335H14.0002V11.3335ZM16.6668 11.3335H18.0002V15.3335H16.6668V11.3335ZM14.0002 6.66683V8.00016H18.0002V6.66683H14.0002Z" fill="#FF2222"/>
+                                            </svg>
+                                        </a>
+                                    </td>
+                                </tr>
+                        <?php
+                        endforeach;
+                        ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <?php
+                    endif;
+                    ?>
             </div>
         </div>
         <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
