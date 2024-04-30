@@ -119,8 +119,15 @@ class Shipment_Data implements \JsonSerializable {
 			return false;
 		}
 
+		$order = wc_get_order( $this->order_id );
+
+		if( ! $order ) {
+			return false;
+		}
+
 		if ( $add_new ) {
-			$saved = add_post_meta( $this->order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->prapare_for_db() );
+			$saved = $order->add_meta_data( Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->prapare_for_db() );
+			$saved = $order->save();
 
 			if ( $saved ) {
 				Helper::update_order_shipment_last_index( $this->order_id );
@@ -130,7 +137,15 @@ class Shipment_Data implements \JsonSerializable {
 		}
 
 		if ( $this->raw_data ) {
-			$updated = update_post_meta( $this->order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->prapare_for_db(), $this->raw_data );
+			$current_data = $order->get_meta( Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, false );
+
+			if ( ! in_array($this->raw_data, $current_data) ) {
+				$order->add_meta_data( Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->prapare_for_db(), false );
+				$order->save();
+				$updated = true;
+			} else {
+				$updated = false;
+			}
 
 			if ( $updated ) {
 				Helper::update_order_shipment_last_index( $this->order_id );

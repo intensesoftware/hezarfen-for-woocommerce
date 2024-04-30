@@ -86,9 +86,16 @@ class Netgsm extends MST_Notification_Provider {
 	public function perform_sending( $order, $shipment_data ) {
 		$order_id = $order->get_id();
 
-		update_post_meta( $order_id, self::COURIER_TITLE_META_KEY, $shipment_data->courier_title );
-		update_post_meta( $order_id, self::TRACKING_NUM_META_KEY, $shipment_data->tracking_num );
-		update_post_meta( $order_id, self::TRACKING_URL_META_KEY, $shipment_data->tracking_url );
+		$order = wc_get_order( $order_id );
+
+		if ( ! $order ) {
+			return false;
+		}
+
+		$order->update_meta_data( self::COURIER_TITLE_META_KEY, $shipment_data->courier_title );
+		$order->update_meta_data( self::TRACKING_NUM_META_KEY, $shipment_data->tracking_num );
+		$order->update_meta_data( self::TRACKING_URL_META_KEY, $shipment_data->tracking_url );
+		$order->save();
 
 		// @phpstan-ignore-next-line
 		netgsm_order_status_changed_sendSMS( $order_id, 'netgsm_order_status_text_' . Manual_Shipment_Tracking::DB_SHIPPED_ORDER_STATUS, Manual_Shipment_Tracking::DB_SHIPPED_ORDER_STATUS );

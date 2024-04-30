@@ -40,7 +40,14 @@ class Helper {
 
 		$last_index = ( count( $ids ) > 0 ) ? max( $ids ) : 1;
 
-		update_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_LAST_INDEX_KEY, $last_index );
+		$order = wc_get_order( $order_id );
+
+		if ( $order ) {
+			return;
+		}
+
+		$order->update_meta_data( Manual_Shipment_Tracking::SHIPMENT_LAST_INDEX_KEY, $last_index );
+		$order->save();
 	}
 
 	/**
