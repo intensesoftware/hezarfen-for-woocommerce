@@ -41,4 +41,28 @@
             @apply flex justify-center !important;
         }
     }
+
+    #paywall-pro-area {
+        * {
+            cursor: not-allowed;
+        }
+    }
+
+    .campaign {
+        background-color: #FFF3E3;
+    }
+
+    #countdown {
+        font-size: 24px;
+        font-family: Arial, sans-serif;
+    }
+
+    #countdown span {
+        color: #333;
+        margin-right: 8px;
+    }
+
+    #hps-upgrade:focus, #hps-upgrade:hover {
+        color: #fff !important;
+    }
 }

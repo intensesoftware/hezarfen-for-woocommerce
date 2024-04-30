@@ -26,6 +26,9 @@ const config = {
         '5xl': '2304px', // New custom breakpoint
         '6xl': '2560px', // New custom breakpoint
       },
+      blur: {
+        xs: '2px',
+      }
     }
   },
   content: [

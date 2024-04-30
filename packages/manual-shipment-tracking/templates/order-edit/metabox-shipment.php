@@ -26,7 +26,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
         </ul>
     </div>
     <div id="default-tab-content">
-        <div class="hidden p-4 rounded-lg" id="hezarfen-lite" role="tabpanel" aria-labelledby="hezarfen-lite-tab">
+        <div class="hidden rounded-lg" id="hezarfen-lite" role="tabpanel" aria-labelledby="hezarfen-lite-tab">
             <div class="grid grid-cols-2 gap-8">
                 <div>
                     <p class="text-lg text-black"><?php esc_html_e('Enter Tracking Information', 'hezarfen-for-woocommerce'); ?></p>
@@ -149,204 +149,317 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                 <p><?php esc_html_e('Are you sure you want to remove this shipment data?', 'hezarfen-for-woocommerce'); ?></p>
             </div>
         </div>
-        <div class="hidden p-4 rounded-lg" id="hezarfen-pro" role="tabpanel" aria-labelledby="hezarfen-pro-tab">
+        <div class="hidden rounded-lg" id="hezarfen-pro" role="tabpanel" aria-labelledby="hezarfen-pro-tab">
             <?php if (!defined('HEZARFEN_PRO_VERSION')) : ?>
-                <div class="grid grid-cols-4 gap-12">
-                    <div class="col-span-1">
-                        <p class="text-lg text-black">Barkod Bilgileri</p>
+                <div id="paywall" class="relative">
+                    <div id="paywall-pro-area" class="blur-xs p-4 grid grid-cols-4 gap-12 flex justify-center items-start min-h-screen">
+                        <div class="col-span-1">
+                            <p class="text-lg text-black">Barkod Bilgileri</p>
 
-                        <div class="mt-6">
-                            <div class="mb-5">
-                                <label class="font-light text-gray-1 block mb-2 text-sm dark:text-white">Kargo Şirketi Seçin</label>
-                                <ul id="shipping-companies" class="max-h-24 grid w-full gap-2 grid-cols-1 xl:grid-cols-2 5xl:grid-cols-3 overflow-hidden transition-max-height duration-300 ease-in-out">
-                                    <li class="flex justify-center">
-                                        <input type="radio" id="hez-pro-courier-company-select-hepsijet" name="hez-pro-courier-company-select" value="hepsijet" class="hidden peer" required="">
-                                        <label for="hez-pro-courier-company-select-hepsijet" class="flex justify-center h-12 items-center justify-between w-full p-5 text-gray-3 bg-white border border-gray-3 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-3 dark:peer-checked:text-blue-500 peer-checked:bg-orange-1 peer-checked:border-2 peer-checked:border-orange-2 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-orange-1 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-                                            <img class="max-h-12" src="http://hezarfen.test/wp-content/plugins/hezarfen-for-woocommerce/packages/manual-shipment-tracking/assets/img/courier-companies/hepsijet-logo.svg">
-                                        </label>
-                                    </li>
-                                    <li class="flex justify-center">
-                                        <input type="radio" id="hez-pro-courier-company-select-mng" name="hez-pro-courier-company-select" value="mng" class="hidden peer" required="">
-                                        <label for="hez-pro-courier-company-select-mng" class="flex justify-center h-12 items-center justify-between w-full p-5 text-gray-3 bg-white border border-gray-3 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-3 dark:peer-checked:text-blue-500 peer-checked:bg-orange-1 peer-checked:border-2 peer-checked:border-orange-2 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-orange-1 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-                                            <img class="max-h-12" src="http://hezarfen.test/wp-content/plugins/hezarfen-for-woocommerce/packages/manual-shipment-tracking/assets/img/courier-companies/mng-logo.svg">
-                                        </label>
-                                    </li>
-                                    <li class="flex justify-center">
-                                        <input type="radio" id="hez-pro-courier-company-select-yurtici" name="hez-pro-courier-company-select" value="yurtici" class="hidden peer" required="">
-                                        <label for="hez-pro-courier-company-select-yurtici" class="flex justify-center h-12 items-center justify-between w-full p-5 text-gray-3 bg-white border border-gray-3 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-3 dark:peer-checked:text-blue-500 peer-checked:bg-orange-1 peer-checked:border-2 peer-checked:border-orange-2 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-orange-1 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-                                            <img class="max-h-12" src="http://hezarfen.test/wp-content/plugins/hezarfen-for-woocommerce/packages/manual-shipment-tracking/assets/img/courier-companies/yurtici-logo.svg">
-                                        </label>
-                                    </li>
-                                    <li class="flex justify-center">
-                                        <input type="radio" id="hez-pro-courier-company-select-sendeo" name="hez-pro-courier-company-select" value="sendeo" class="hidden peer" required="">
-                                        <label for="hez-pro-courier-company-select-sendeo" class="flex justify-center h-12 items-center justify-between w-full p-5 text-gray-3 bg-white border border-gray-3 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-3 dark:peer-checked:text-blue-500 peer-checked:bg-orange-1 peer-checked:border-2 peer-checked:border-orange-2 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-orange-1 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-                                            <img class="max-h-12" src="http://hezarfen.test/wp-content/plugins/hezarfen-for-woocommerce/packages/manual-shipment-tracking/assets/img/courier-companies/sendeo-logo.svg">
-                                        </label>
-                                    </li>
-                                    <li class="flex justify-center">
-                                        <input type="radio" id="hez-pro-courier-company-select-aras" name="hez-pro-courier-company-select" value="aras" class="hidden peer" required="">
-                                        <label for="hez-pro-courier-company-select-aras" class="flex justify-center h-12 items-center justify-between w-full p-5 text-gray-3 bg-white border border-gray-3 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-3 dark:peer-checked:text-blue-500 peer-checked:bg-orange-1 peer-checked:border-2 peer-checked:border-orange-2 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-orange-1 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-                                            <img class="max-h-12" src="http://hezarfen.test/wp-content/plugins/hezarfen-for-woocommerce/packages/manual-shipment-tracking/assets/img/courier-companies/aras-logo.png">
-                                        </label>
-                                    </li>
-                                </ul>
+                            <div class="mt-6">
+                                <div class="mb-5">
+                                    <label class="font-light text-gray-1 block mb-2 text-sm dark:text-white">Kargo Şirketi Seçin</label>
+                                    <ul id="shipping-companies" class="max-h-24 grid w-full gap-2 grid-cols-1 xl:grid-cols-2 5xl:grid-cols-3 overflow-hidden transition-max-height duration-300 ease-in-out">
+                                        <li class="flex justify-center">
+                                            <input type="radio" id="hez-pro-courier-company-select-hepsijet" name="hez-pro-courier-company-select" value="hepsijet" class="hidden peer" required="">
+                                            <label for="hez-pro-courier-company-select-hepsijet" class="flex justify-center h-12 items-center justify-between w-full p-5 text-gray-3 bg-white border border-gray-3 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-3 dark:peer-checked:text-blue-500 peer-checked:bg-orange-1 peer-checked:border-2 peer-checked:border-orange-2 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-orange-1 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                                <img class="max-h-12" src="http://hezarfen.test/wp-content/plugins/hezarfen-for-woocommerce/packages/manual-shipment-tracking/assets/img/courier-companies/hepsijet-logo.svg">
+                                            </label>
+                                        </li>
+                                        <li class="flex justify-center">
+                                            <input type="radio" id="hez-pro-courier-company-select-mng" name="hez-pro-courier-company-select" value="mng" class="hidden peer" required="">
+                                            <label for="hez-pro-courier-company-select-mng" class="flex justify-center h-12 items-center justify-between w-full p-5 text-gray-3 bg-white border border-gray-3 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-3 dark:peer-checked:text-blue-500 peer-checked:bg-orange-1 peer-checked:border-2 peer-checked:border-orange-2 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-orange-1 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                                <img class="max-h-12" src="http://hezarfen.test/wp-content/plugins/hezarfen-for-woocommerce/packages/manual-shipment-tracking/assets/img/courier-companies/mng-logo.svg">
+                                            </label>
+                                        </li>
+                                        <li class="flex justify-center">
+                                            <input type="radio" id="hez-pro-courier-company-select-yurtici" name="hez-pro-courier-company-select" value="yurtici" class="hidden peer" required="">
+                                            <label for="hez-pro-courier-company-select-yurtici" class="flex justify-center h-12 items-center justify-between w-full p-5 text-gray-3 bg-white border border-gray-3 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-3 dark:peer-checked:text-blue-500 peer-checked:bg-orange-1 peer-checked:border-2 peer-checked:border-orange-2 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-orange-1 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                                <img class="max-h-12" src="http://hezarfen.test/wp-content/plugins/hezarfen-for-woocommerce/packages/manual-shipment-tracking/assets/img/courier-companies/yurtici-logo.svg">
+                                            </label>
+                                        </li>
+                                        <li class="flex justify-center">
+                                            <input type="radio" id="hez-pro-courier-company-select-sendeo" name="hez-pro-courier-company-select" value="sendeo" class="hidden peer" required="">
+                                            <label for="hez-pro-courier-company-select-sendeo" class="flex justify-center h-12 items-center justify-between w-full p-5 text-gray-3 bg-white border border-gray-3 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-3 dark:peer-checked:text-blue-500 peer-checked:bg-orange-1 peer-checked:border-2 peer-checked:border-orange-2 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-orange-1 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                                <img class="max-h-12" src="http://hezarfen.test/wp-content/plugins/hezarfen-for-woocommerce/packages/manual-shipment-tracking/assets/img/courier-companies/sendeo-logo.svg">
+                                            </label>
+                                        </li>
+                                        <li class="flex justify-center">
+                                            <input type="radio" id="hez-pro-courier-company-select-aras" name="hez-pro-courier-company-select" value="aras" class="hidden peer" required="">
+                                            <label for="hez-pro-courier-company-select-aras" class="flex justify-center h-12 items-center justify-between w-full p-5 text-gray-3 bg-white border border-gray-3 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-3 dark:peer-checked:text-blue-500 peer-checked:bg-orange-1 peer-checked:border-2 peer-checked:border-orange-2 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-orange-1 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                                <img class="max-h-12" src="http://hezarfen.test/wp-content/plugins/hezarfen-for-woocommerce/packages/manual-shipment-tracking/assets/img/courier-companies/aras-logo.png">
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="flex justify-center">
+                                    <button type="button" class="hp-expand" data-show-more-label="Daha Fazla" data-show-less-label="Azalt">Daha Fazla</button>
+                                </div>
+
+                                <div class="flex justify-center mt-6">
+                                    <button data-order_id="119" id="create-barcode-btn" type="button" class="w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-normal rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Gönderi Oluştur</button>
+                                </div>
+
                             </div>
-
-                            <div class="flex justify-center">
-                                <button type="button" class="hp-expand" data-show-more-label="Daha Fazla" data-show-less-label="Azalt">Daha Fazla</button>
-                            </div>
-
-                            <div class="flex justify-center mt-6">
-                                <button data-order_id="119" id="create-barcode-btn" type="button" class="w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-normal rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Gönderi Oluştur</button>
-                            </div>
-
                         </div>
+                        <div class="col-span-3">
+                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3">Kargo Şirketi</th>
+                                            <th scope="col" class="px-6 py-3">Paketler</th>
+                                            <th scope="col" class="px-6 py-3">Kapıda Ödeme</th>
+                                            <th scope="col" class="px-6 py-3">Oluşturulma</th>
+                                            <th scope="col" class="px-6 py-3">Durum</th>
+                                            <th scope="col" class="px-6 py-3"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-id="66" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                aras
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                1 </td>
+                                            <td class="px-6 py-4">
+                                                Yok </td>
+                                            <td class="px-6 py-4">
+                                                30/04/2024 04:15:30 </td>
+                                            <td class="actions px-6">
+                                                İptal edilmiş </td>
+                                            <td class="px-6 py-4">
+                                            </td>
+                                        </tr>
+                                        <tr data-id="65" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                hepsijet
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                3 </td>
+                                            <td class="px-6 py-4">
+                                                Yok </td>
+                                            <td class="px-6 py-4">
+                                                26/04/2024 15:19:01 </td>
+                                            <td class="actions px-6">
+                                                Bilinmiyor </td>
+                                            <td class="px-6 py-4">
+                                                <button id="dropdownMenuIconHorizontalButton" data-dropdown-toggle="hps-settigs-65" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
+                                                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
+                                                        <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"></path>
+                                                    </svg>
+                                                </button>
+                                                <div id="hps-settigs-65" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600" data-popper-placement="bottom" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate3d(1315.5px, 1156px, 0px);">
+                                                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconHorizontalButton">
+                                                        <li>
+                                                            <a href="#TB_inline?&amp;width=600&amp;height=550&amp;inlineId=hez-pro-shipment-details" data-shipment_id="65" class="thickbox detail-shipment block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Detaylar</a>
+                                                        </li>
+                                                        <li>
+                                                            <a target="_blank" href="http://hezarfen.test/wp-admin/admin.php?shipment_id=65&amp;_wpnonce=7e4e38a5f7&amp;action=print-shipment" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Yazdır</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="javascript:void(0);" data-shipment_id="65" class="cancel-shipment block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">İptal</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-id="51" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                yurtici
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                Bilinmiyor </td>
+                                            <td class="px-6 py-4">
+                                                Yok </td>
+                                            <td class="px-6 py-4">
+                                                15/03/2024 17:52:15 </td>
+                                            <td class="actions px-6">
+                                                Bilinmiyor </td>
+                                            <td class="px-6 py-4">
+                                                <button id="dropdownMenuIconHorizontalButton" data-dropdown-toggle="hps-settigs-51" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
+                                                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
+                                                        <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"></path>
+                                                    </svg>
+                                                </button>
+                                                <div id="hps-settigs-51" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600" data-popper-placement="bottom" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate3d(1315.5px, 1225px, 0px);">
+                                                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconHorizontalButton">
+                                                        <li>
+                                                            <a href="#TB_inline?&amp;width=600&amp;height=550&amp;inlineId=hez-pro-shipment-details" data-shipment_id="51" class="thickbox detail-shipment block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Detaylar</a>
+                                                        </li>
+                                                        <li>
+                                                            <a target="_blank" href="http://hezarfen.test/wp-admin/admin.php?shipment_id=51&amp;_wpnonce=17b11f1289&amp;action=print-shipment" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Yazdır</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="javascript:void(0);" data-shipment_id="51" class="cancel-shipment block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">İptal</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-id="50" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                mng
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                1 </td>
+                                            <td class="px-6 py-4">
+                                                Yok </td>
+                                            <td class="px-6 py-4">
+                                                13/03/2024 20:36:16 </td>
+                                            <td class="actions px-6">
+                                                İptal edilmiş </td>
+                                            <td class="px-6 py-4">
+                                            </td>
+                                        </tr>
+                                        <tr data-id="49" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                mng
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                1 </td>
+                                            <td class="px-6 py-4">
+                                                Yok </td>
+                                            <td class="px-6 py-4">
+                                                13/03/2024 14:02:35 </td>
+                                            <td class="actions px-6">
+                                                Bilinmiyor </td>
+                                            <td class="px-6 py-4">
+                                                <button id="dropdownMenuIconHorizontalButton" data-dropdown-toggle="hps-settigs-49" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
+                                                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
+                                                        <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"></path>
+                                                    </svg>
+                                                </button>
+                                                <div id="hps-settigs-49" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600" data-popper-placement="bottom" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate3d(1315.5px, 1347px, 0px);">
+                                                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconHorizontalButton">
+                                                        <li>
+                                                            <a href="#TB_inline?&amp;width=600&amp;height=550&amp;inlineId=hez-pro-shipment-details" data-shipment_id="49" class="thickbox detail-shipment block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Detaylar</a>
+                                                        </li>
+                                                        <li>
+                                                            <a target="_blank" href="http://hezarfen.test/wp-admin/admin.php?shipment_id=49&amp;_wpnonce=4395be2cdb&amp;action=print-shipment" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Yazdır</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="javascript:void(0);" data-shipment_id="49" class="cancel-shipment block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">İptal</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 bg-gray-800 opacity-50"></div>
                     </div>
-                    <div class="col-span-3">
-                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3">Kargo Şirketi</th>
-                                        <th scope="col" class="px-6 py-3">Paketler</th>
-                                        <th scope="col" class="px-6 py-3">Kapıda Ödeme</th>
-                                        <th scope="col" class="px-6 py-3">Oluşturulma</th>
-                                        <th scope="col" class="px-6 py-3">Durum</th>
-                                        <th scope="col" class="px-6 py-3"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr data-id="66" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            aras
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            1 </td>
-                                        <td class="px-6 py-4">
-                                            Yok </td>
-                                        <td class="px-6 py-4">
-                                            30/04/2024 04:15:30 </td>
-                                        <td class="actions px-6">
-                                            İptal edilmiş </td>
-                                        <td class="px-6 py-4">
-                                        </td>
-                                    </tr>
-                                    <tr data-id="65" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            hepsijet
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            3 </td>
-                                        <td class="px-6 py-4">
-                                            Yok </td>
-                                        <td class="px-6 py-4">
-                                            26/04/2024 15:19:01 </td>
-                                        <td class="actions px-6">
-                                            Bilinmiyor </td>
-                                        <td class="px-6 py-4">
-                                            <button id="dropdownMenuIconHorizontalButton" data-dropdown-toggle="hps-settigs-65" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
-                                                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
-                                                    <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"></path>
-                                                </svg>
-                                            </button>
-                                            <div id="hps-settigs-65" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600" data-popper-placement="bottom" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate3d(1315.5px, 1156px, 0px);">
-                                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconHorizontalButton">
-                                                    <li>
-                                                        <a href="#TB_inline?&amp;width=600&amp;height=550&amp;inlineId=hez-pro-shipment-details" data-shipment_id="65" class="thickbox detail-shipment block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Detaylar</a>
-                                                    </li>
-                                                    <li>
-                                                        <a target="_blank" href="http://hezarfen.test/wp-admin/admin.php?shipment_id=65&amp;_wpnonce=7e4e38a5f7&amp;action=print-shipment" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Yazdır</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="javascript:void(0);" data-shipment_id="65" class="cancel-shipment block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">İptal</a>
-                                                    </li>
-                                                </ul>
+                    <div id="paywall-banner" class="absolute top-0 left-1/2 transform -translate-x-1/2 w-3/4 bg-white p-4 rounded-lg shadow-lg mt-8">
+                        <h3 class="text-xl">Kargo Entegrasyonlarını Kullanabilmek için Hezarfen Pro'ya Geçin</h3>
+
+                        <div class="mt-3 grid grid-cols-3 gap-2">
+                            <div class="col-span-2">
+                                <h4 class="text-base font-bold mb-2">Özellikler</h4>
+                                <ul class="space-y-2 text-left text-gray-500 dark:text-gray-400">
+                                    <?php
+                                    foreach( [
+                                        'Ödeme ekranında seçilen kargo firması için otomatik barkod oluşturabilme',
+                                        'Hezarfen Pro ile 5 kargo entegrasyonu tek pakette (kargo başına ücret ödemeyin)',
+                                        'Otomatik sipariş durum güncellemesi (kargoya verildi, tamamlandı)',
+                                        'Kargo takip bilgisinin otomatik girilmesi',
+                                        'Toplu barkod yazdırma, sipariş durumu değişikliğiyle otomatik barkod oluşturabilme',
+                                        'Kapıda ödemeli siparişlerde tutar ve ödeme yönteminin kargo firmasına iletimi',
+                                        'Kargo firmalarına nazaran çok uygun fiyatlara otomatik SMS gönderimi',
+                                        'Hezarfen/Hezarfen Pro için Premium Destek',
+                                    ] as $feature ): ?>
+                                    <li class="flex items-center space-x-3 rtl:space-x-reverse">
+                                        <svg class="flex-shrink-0 w-3.5 h-3.5 text-green-500 dark:text-green-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                                        </svg>
+                                        <span><?php echo esc_html($feature); ?></span>
+                                    </li>
+                                    <?php endforeach; ?>
+                                </ul>
+
+                                <div class="campaign rounded-lg p-3 mt-4">
+                                    <div class="p-2">
+                                        <h3 class="text-primary-color font-bold text-lg">Hezarfen Pro'da Büyük Bahar Festivali</h3>
+                                        <p>Süreli İndirim - Son Tarih: 1 Mayıs 2024 23:59</p>
+                                    </div>
+
+                                    <div class="grid grid-cols-5 gap-2">
+                                        <div class="col-span-2 flex justify-between p-3 rounded-lg flex-col">
+                                            <p><span class="line-through">7250₺+KDV</span> yerine</p>
+                                            %30 indirimle
+                                            <span class="text-lg text-red font-bold text-red-600">5250₺+KDV (1 Yıllık)</span>
+                                        </div>
+
+                                        <div class="col-span-3 p-3">
+                                            <h3 class="font-bold text-lg text-black">Son Saatler</h3>
+                                            <div class="flex gap-4" id="countdown">
+                                                <div class="bg-white p-2 text-sm rounded-lg flex items-center justify-center">
+                                                    <span id="days"></span> gün
+                                                </div>
+                                                <div class="bg-white p-2 text-sm rounded-lg flex items-center justify-center">
+                                                    <span id="hours"></span> saat
+                                                </div>
+                                                <div class="bg-white p-2 text-sm rounded-lg flex items-center justify-center">
+                                                    <span id="minutes"></span> dk
+                                                </div>
+                                                <div class="bg-white p-2 text-sm rounded-lg flex items-center justify-center">
+                                                    <span id="seconds"></span> sn
+                                                </div>
                                             </div>
-                                        </td>
-                                    </tr>
-                                    <tr data-id="51" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            yurtici
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            Bilinmiyor </td>
-                                        <td class="px-6 py-4">
-                                            Yok </td>
-                                        <td class="px-6 py-4">
-                                            15/03/2024 17:52:15 </td>
-                                        <td class="actions px-6">
-                                            Bilinmiyor </td>
-                                        <td class="px-6 py-4">
-                                            <button id="dropdownMenuIconHorizontalButton" data-dropdown-toggle="hps-settigs-51" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
-                                                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
-                                                    <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"></path>
-                                                </svg>
-                                            </button>
-                                            <div id="hps-settigs-51" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600" data-popper-placement="bottom" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate3d(1315.5px, 1225px, 0px);">
-                                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconHorizontalButton">
-                                                    <li>
-                                                        <a href="#TB_inline?&amp;width=600&amp;height=550&amp;inlineId=hez-pro-shipment-details" data-shipment_id="51" class="thickbox detail-shipment block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Detaylar</a>
-                                                    </li>
-                                                    <li>
-                                                        <a target="_blank" href="http://hezarfen.test/wp-admin/admin.php?shipment_id=51&amp;_wpnonce=17b11f1289&amp;action=print-shipment" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Yazdır</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="javascript:void(0);" data-shipment_id="51" class="cancel-shipment block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">İptal</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr data-id="50" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            mng
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            1 </td>
-                                        <td class="px-6 py-4">
-                                            Yok </td>
-                                        <td class="px-6 py-4">
-                                            13/03/2024 20:36:16 </td>
-                                        <td class="actions px-6">
-                                            İptal edilmiş </td>
-                                        <td class="px-6 py-4">
-                                        </td>
-                                    </tr>
-                                    <tr data-id="49" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            mng
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            1 </td>
-                                        <td class="px-6 py-4">
-                                            Yok </td>
-                                        <td class="px-6 py-4">
-                                            13/03/2024 14:02:35 </td>
-                                        <td class="actions px-6">
-                                            Bilinmiyor </td>
-                                        <td class="px-6 py-4">
-                                            <button id="dropdownMenuIconHorizontalButton" data-dropdown-toggle="hps-settigs-49" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
-                                                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
-                                                    <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"></path>
-                                                </svg>
-                                            </button>
-                                            <div id="hps-settigs-49" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600" data-popper-placement="bottom" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate3d(1315.5px, 1347px, 0px);">
-                                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconHorizontalButton">
-                                                    <li>
-                                                        <a href="#TB_inline?&amp;width=600&amp;height=550&amp;inlineId=hez-pro-shipment-details" data-shipment_id="49" class="thickbox detail-shipment block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Detaylar</a>
-                                                    </li>
-                                                    <li>
-                                                        <a target="_blank" href="http://hezarfen.test/wp-admin/admin.php?shipment_id=49&amp;_wpnonce=4395be2cdb&amp;action=print-shipment" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Yazdır</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="javascript:void(0);" data-shipment_id="49" class="cancel-shipment block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">İptal</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-3">
+                                        <a id="hps-upgrade" target="_blank" href="https://intense.com.tr/urun/hezarfen-pro?campaign=hezarfen-2.0.0" class="block text-center focus:outline-none text-white bg-green-700 hover:bg-green-800  my-2 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-full">Hemen Yükselt</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-bold mb-2">Faydalar</h4>
+                                <ul class="space-y-2 text-left text-gray-500 dark:text-gray-400">
+                                    <?php
+                                    foreach( [
+                                        'Tekrarlayan iş yükünüzü azaltın',
+                                        'Hatalı kargo adresi girişleri engelleyin',
+                                        'Kapıda ödeme tutar hatalarını engelleyin',
+                                        'Hepsijet/Intense Kampanyasıyla 66₺\'den başlayan fiyatlarla gönderim yapın'
+                                    ] as $feature ): ?>
+                                    <li class="flex items-center space-x-3 rtl:space-x-reverse">
+                                        <svg class="flex-shrink-0 w-3.5 h-3.5 text-green-500 dark:text-green-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                                        </svg>
+                                        <span><?php echo esc_html($feature); ?></span>
+                                    </li>
+                                    <?php
+                                    endforeach;
+                                    ?>
+                                </ul>
+
+                                <div class="campaign rounded-lg p-2 my-4">
+                                    <span class="text-primary-color font-bold">Hepsijet'den Intense Hezarfen Pro Müşterilerine Özel Fiyatlar</span>
+                                    <div class="mt-2 grid grid-cols-2 gap-2">
+                                        <div class="flex justify-between bg-white p-2 rounded-lg">
+                                            <span>0-4 Desi</span>
+                                            <span>66₺</span>
+                                        </div>
+                                        <div class="flex justify-between bg-white p-2 rounded-lg">
+                                            <span>5-10 Desi</span>
+                                            <span>86₺</span>
+                                        </div>
+                                        <div class="flex justify-between bg-white p-2 rounded-lg">
+                                            <span>11-20 Desi</span>
+                                            <span>125₺</span>
+                                        </div>
+                                        <div class="flex justify-between bg-white p-2 rounded-lg">
+                                            <span>21-30 Desi</span>
+                                            <span>179₺</span>
+                                        </div>
+                                    </div>
+                                    <p class="mt-3 text-xs">Fiyatlar vergiler hariçtir. Kampanya 31.06.2024 tarihine kadar geçerlidir. Intense veya Hepsijet kampanyayı dilediği zaman sonlandırma hakkına sahiptir. Firmalar tipografik hatalardan sorumlu tutulamaz.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
