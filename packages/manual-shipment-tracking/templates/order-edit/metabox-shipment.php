@@ -94,6 +94,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                             </thead>
                             <tbody>
                         <?php
+                        ray($shipments_data);
                         foreach( $shipments_data as $shipment_args ):
                         ?>
                                 <tr data-id="<?php echo esc_attr( strval( $shipment_args->id ) ); ?>" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
