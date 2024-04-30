@@ -1171,6 +1171,9 @@ video:where(.hez-ui,.hez-ui *) {
 .h-9 {
   height: 2.25rem;
 }
+.h-full {
+  height: 100%;
+}
 .max-h-12 {
   max-height: 3rem;
 }
