@@ -6,9 +6,11 @@ use \Hezarfen\ManualShipmentTracking\Helper;
 <div id="hez-order-shipments" class="hez-ui">
     <div class="mb-4 border-gray-200 dark:border-gray-700">
         <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
+            <?php if (!defined('HEZARFEN_PRO_VERSION')) : ?>
             <li class="w-1/2" role="presentation">
                 <button class="h-16	w-full inline-block p-2 border-b-2 rounded-t-lg" id="hezarfen-lite-tab" data-tabs-target="#hezarfen-lite" type="button" role="tab" aria-controls="hezarfen-lite" aria-selected="false"><?php esc_html_e('Manual Tracking', 'hezarfen-for-woocommerce'); ?></button>
             </li>
+            <?php endif; ?>
             <li class="w-1/2" role="presentation">
                 <button class="h-16	center flex justify-center items-center	 w-full gap-4 inline-block p-2 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="hezarfen-pro-tab" data-tabs-target="#hezarfen-pro" type="button" role="tab" aria-controls="hezarfen-pro" aria-selected="false">
                     <?php esc_html_e('Shipment Barcode', 'hezarfen-for-woocommerce'); ?>
@@ -23,6 +25,11 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                     <?php endif; ?>
                 </button>
             </li>
+            <?php if (defined('HEZARFEN_PRO_VERSION')) : ?>
+            <li class="w-1/2" role="presentation">
+                <button class="h-16	w-full inline-block p-2 border-b-2 rounded-t-lg" id="hezarfen-lite-tab" data-tabs-target="#hezarfen-lite" type="button" role="tab" aria-controls="hezarfen-lite" aria-selected="false"><?php esc_html_e('Manual Tracking', 'hezarfen-for-woocommerce'); ?></button>
+            </li>
+            <?php endif; ?>
         </ul>
     </div>
     <div id="default-tab-content">
