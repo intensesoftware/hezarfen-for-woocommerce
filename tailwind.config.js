@@ -30,6 +30,7 @@ const config = {
   },
   content: [
     './packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php',
+    '../hezarfen-pro-for-woocommerce/includes/class-shipping-company-manager.php',
     "./node_modules/flowbite/**/*.js"
   ],
   plugins: [

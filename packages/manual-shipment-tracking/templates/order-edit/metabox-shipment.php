@@ -94,7 +94,6 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                             </thead>
                             <tbody>
                         <?php
-                        ray($shipments_data);
                         foreach( $shipments_data as $shipment_args ):
                         ?>
                                 <tr data-id="<?php echo esc_attr( strval( $shipment_args->id ) ); ?>" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -145,8 +144,8 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                 <p><?php esc_html_e( 'Are you sure you want to remove this shipment data?', 'hezarfen-for-woocommerce' ); ?></p>
             </div>
         </div>
-        <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="hezarfen-pro" role="tabpanel" aria-labelledby="hezarfen-pro-tab">
-            <p class="text-sm text-gray-500 dark:text-gray-400">Pro</p>
+        <div class="hidden p-4 rounded-lg" id="hezarfen-pro" role="tabpanel" aria-labelledby="hezarfen-pro-tab">
+            <?php do_action( 'hez_admin_order_edit_shipment_edits', $order_id ); ?>
         </div>
     </div>
 </div>

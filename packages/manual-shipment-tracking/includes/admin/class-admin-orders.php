@@ -148,53 +148,6 @@ class Admin_Orders {
 	}
 
 	/**
-	 * Renders the shipment form elements.
-	 * 
-	 * @param Shipment_Data $shipment_data Shipment data.
-	 * 
-	 * @return void
-	 */
-	private static function render_shipment_form_elements( $shipment_data ) {
-		$courier_select_name  = sprintf( '%s[%s][%s]', self::DATA_ARRAY_KEY, $shipment_data->id, self::COURIER_HTML_NAME );
-		$courier_select_value = $shipment_data->courier_id ? $shipment_data->courier_id : Helper::get_default_courier_id();
-		$courier_select_label = __( 'Courier Company', 'hezarfen-for-woocommerce' );
-		if ( Helper::is_custom_courier( $shipment_data->courier_id ) ) {
-			$courier_select_label = sprintf( '%s <span class="custom-courier-title">(%s)</span>', $courier_select_label, $shipment_data->courier_title );
-		}
-		?>
-		<div class="shipment-form" data-id="<?php echo esc_attr( strval( $shipment_data->id ) ); ?>">
-			<a class="remove-form">
-				<span class="remove-form-icon"></span>
-			</a>
-			<p class="form-field courier-company-select-wrapper">
-				<label>
-					<?php echo wp_kses_post( $courier_select_label ); ?>
-					<select class="courier-company-select" name="<?php echo esc_attr( $courier_select_name ); ?>">
-						<?php foreach ( Helper::courier_company_options( true ) as $courier_id => $courier_label ) : ?>
-							<option value="<?php echo esc_attr( $courier_id ); ?>" data-logo="<?php echo esc_attr( Helper::get_courier_class( $courier_id )::$logo ); ?>" <?php selected( $courier_select_value, $courier_id ); ?>><?php echo esc_html( $courier_label ); ?></option>
-						<?php endforeach; ?>
-					</select>
-				</label>
-			</p>
-			<p class="form-field tracking-num-input-wrapper">
-				<label>
-					<?php esc_html_e( 'Tracking Number', 'hezarfen-for-woocommerce' ); ?>
-					<?php if ( $shipment_data->tracking_url ) : ?>
-						<a href="<?php echo esc_url( $shipment_data->tracking_url ); ?>" target="_blank"><?php esc_html_e( '(Track Cargo)', 'hezarfen-for-woocommerce' ); ?></a>
-					<?php endif; ?>
-					<input
-						type="text"
-						name="<?php echo esc_attr( sprintf( '%s[%s][%s]', self::DATA_ARRAY_KEY, $shipment_data->id, self::TRACKING_NUM_HTML_NAME ) ); ?>"
-						value="<?php echo esc_attr( $shipment_data->tracking_num ); ?>"
-						class="tracking-num-input"
-						placeholder="<?php esc_attr_e( 'Enter tracking number', 'hezarfen-for-woocommerce' ); ?>">
-				</label>
-			</p>
-		</div>
-		<?php
-	}
-
-	/**
 	 * Shows new order status in reports.
 	 *
 	 * @param string[] $statuses Current order report statuses.
