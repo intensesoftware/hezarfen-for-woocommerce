@@ -2,17 +2,19 @@ import { initFlowbite } from 'flowbite';
 import './style.css';
 
 jQuery(document).ready(($)=>{
-  $('.hez-ui .h-expand').click(function() {
-    var $content = $('#shipping-companies');
-    var $button = $(this);
+  $('#hezarfen-lite .h-expand').click(function () {
+    var $content = $('#hezarfen-lite #shipping-companies');
 
-    // Toggle max height class
+    var $button = $(this);
+    const $buttonText = $(this).find('span');
+    $button.find('svg').toggleClass('rotate-180');
+
     if ($content.hasClass('max-h-24')) {
       $content.removeClass('max-h-24').addClass('max-h-[1000px]');
-      $button.text($button.data('show-less-label')); // Change button label to "Show less"
+      $buttonText.text($button.data('show-less-label'));
     } else {
       $content.removeClass('max-h-[1000px]').addClass('max-h-24');
-      $button.text($button.data('show-more-label')); // Change button label to "Show more"
+      $buttonText.text($button.data('show-more-label'));
     }
   });
 

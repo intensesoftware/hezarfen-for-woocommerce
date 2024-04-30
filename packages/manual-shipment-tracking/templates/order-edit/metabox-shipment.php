@@ -47,7 +47,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                             <label for="tracking-num-input" class="font-light text-gray-1 block mb-2 text-sm dark:text-white"><?php esc_html_e('Tracking Number', 'hezarfen-for-woocommerce'); ?></label>
                             <input type="text" id="tracking-num-input" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-3 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" />
                         </div>
-                        <div class="mb-5">
+                        <div class="mb-2">
                             <label class="font-light text-gray-1 block mb-2 text-sm dark:text-white"><?php esc_html_e('Select a Courier Company', 'hezarfen-for-woocommerce'); ?></label>
                             <ul id="shipping-companies" class="max-h-24 grid w-full gap-2 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 5xl:grid-cols-7 6xl:grid-cols-8 overflow-hidden transition-max-height duration-300 ease-in-out">
                                 <?php foreach (Helper::courier_company_options() as $courier_id => $courier_label) : if (empty($courier_id)) {
@@ -64,10 +64,17 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                         </div>
 
                         <div class="flex justify-center">
-                            <button type="button" class="h-expand" class="text-black px-4 py-2 mt-2" data-show-more-label="<?php esc_html_e('Show More', 'hezarfen-for-woocommerce'); ?>" data-show-less-label="<?php esc_html_e('Show Less', 'hezarfen-for-woocommerce'); ?>"><?php esc_html_e('Show More', 'hezarfen-for-woocommerce'); ?></button>
+                            <div class="flex justify-center">
+                                <button type="button" class="h-expand items-center text-black px-4 py-2 flex" data-show-more-label="<?php esc_html_e( 'Show More', 'hezarfen-pro-for-woocommerce' ); ?>" data-show-less-label="<?php esc_html_e( 'Show Less', 'hezarfen-pro-for-woocommerce' ); ?>">
+                                    <span><?php esc_html_e( 'Show More', 'hezarfen-pro-for-woocommerce' ); ?></span>
+                                    <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M8.00048 9.11403L11.3005 5.81403L12.2431 6.75736L8.00048 11L3.75781 6.75736L4.70048 5.81469L8.00048 9.11403Z" fill="black"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
 
-                        <div class="flex justify-center mt-6">
+                        <div class="flex justify-center mt-2">
                             <button data-order_id="<?php echo esc_attr($order_id); ?>" id="add-to-tracking-list" type="button" class="w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-normal rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"><?php esc_html_e('Add to Tracking List', 'hezarfen-for-woocommerce'); ?></button>
                         </div>
 
@@ -161,8 +168,8 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                         <div class="col-span-1">
                             <p class="text-lg text-black">Barkod Bilgileri</p>
 
-                            <div class="mt-6">
-                                <div class="mb-5">
+                            <div class="mt-2">
+                                <div class="mb-2">
                                     <label class="font-light text-gray-1 block mb-2 text-sm dark:text-white">Kargo Şirketi Seçin</label>
                                     <ul id="shipping-companies" class="max-h-24 grid w-full gap-2 grid-cols-1 xl:grid-cols-2 5xl:grid-cols-3 overflow-hidden transition-max-height duration-300 ease-in-out">
                                         <li class="flex justify-center">
