@@ -197,12 +197,13 @@ class Helper {
 			return apply_filters( 'hezarfen_mst_get_shipment_data', array(), $order_id );
 		}
 
-		return array_map(
-			function( $data ) {
-				return new Shipment_Data( $data->value, $data->id );
-			},
-			$all_data
-		);
+		$stack = array();
+
+		foreach( $all_data as $data ){
+			$stack[] = new Shipment_Data( $data->value, $data->id );
+		}
+
+		return $stack;
 	}
 
 	/**
