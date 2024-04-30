@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    .text-blue-600 {
+      --tw-text-opacity: 1;
+      color: rgba(0, 0, 0, var(--tw-text-opacity)); /* Custom lighter blue */
+    }
+
+    .border-blue-600 {
+      --tw-border-opacity: 1;
+      border-color: rgba(242, 159, 44, var(--tw-border-opacity)); /* Custom darker blue */
+    }
+
+    .text-gray-500 {
+        --tw-border-opacity: 1;
+        border-color: rgba(150, 150, 150, var(--tw-border-opacity)); /* Custom darker blue */
+    }
+}
+
+#hez-order-shipments {
+    input[type="radio"] {
+        @apply hidden !important;
+    }
+
+    .actions {
+        a:hover {
+            opacity: 0.7 !important;
+            transition: 0.4s;
+        }
+
+        a:focus, svg:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+    }
+
+    #shipping-companies {
+        li label {
+            @apply flex justify-center !important;
+        }
+    }
+
+    #paywall-pro-area {
+        * {
+            cursor: not-allowed;
+        }
+    }
+
+    .campaign {
+        background-color: #FFF3E3;
+    }
+
+    #countdown {
+        font-size: 24px;
+        font-family: Arial, sans-serif;
+    }
+
+    #countdown span {
+        color: #333;
+        margin-right: 8px;
+    }
+
+    #hps-upgrade:focus, #hps-upgrade:hover {
+        color: #fff !important;
+    }
+}
