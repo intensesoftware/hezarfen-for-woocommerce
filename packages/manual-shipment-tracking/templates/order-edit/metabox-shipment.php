@@ -39,7 +39,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                     <p class="text-lg text-black"><?php esc_html_e('Enter Tracking Information', 'hezarfen-for-woocommerce'); ?></p>
                     <p class="text-gray-1 text-xs font-light"><?php esc_html_e('In order to track your shipment, please enter your tracking number and select courier from below and add it to your tracking list.', 'hezarfen-for-woocommerce'); ?></p>
 
-                    <div class="mt-6">
+                    <div class="mt-4">
                         <?php
                         $courier_select_name  = sprintf('%s[%s][%s]', self::DATA_ARRAY_KEY, $shipment_data->id, self::COURIER_HTML_NAME);
                         ?>
@@ -86,8 +86,6 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                             <p class="text-black text-lg"><?php esc_html_e('Nothing to Track Yet', 'hezarfen-for-woocommerce'); ?></p>
                             <div class="text-center">
                                 <p class="text-gray-1 font-light"><?php esc_html_e('There are no tracking numbers added to the tracking list.', 'hezarfen-for-woocommerce'); ?></p>
-                                <p class="text-gray-1 font-light"><?php esc_html_e('Please add one or more tracking numbers to the list.', 'hezarfen-for-woocommerce'); ?></p>
-                                </p>
                             </div>
                         </div>
                     </div>
