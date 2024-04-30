@@ -131,6 +131,12 @@ class Third_Party_Data_Support {
 			return array();
 		}
 
+		$order = wc_get_order( $order_id );
+
+		if( ! $order ) {
+			return array();
+		}
+
 		return array(
 			new Shipment_Data(
 				array(
@@ -138,7 +144,7 @@ class Third_Party_Data_Support {
 					'order_id'      => 0,
 					'courier_id'    => Courier_Custom::$id,
 					'courier_title' => $courier_title,
-					'tracking_num'  => get_post_meta( $order_id, get_option( Settings::OPT_TRACKING_NUM_CUSTOM_META, self::NONSENSE_STRING ), true ),
+					'tracking_num'  => $order->get_meta( get_option( Settings::OPT_TRACKING_NUM_CUSTOM_META, self::NONSENSE_STRING ), true ),
 				),
 				null
 			),

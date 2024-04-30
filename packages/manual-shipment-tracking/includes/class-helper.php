@@ -191,7 +191,6 @@ class Helper {
 			return array();
 		}
 
-		$all_data = get_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY );
 		$all_data = $order->get_meta( Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, false );
 
 		if ( ! $all_data && ! $bypass_filters ) {
