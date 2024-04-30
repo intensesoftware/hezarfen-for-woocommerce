@@ -32,7 +32,6 @@ class Manual_Shipment_Tracking {
 	const SHIPPED_ORDER_STATUS    = 'hezarfen-shipped';
 
 	const SHIPMENT_DATA_KEY       = '_hezarfen_mst_shipment_data';
-	const SHIPMENT_LAST_INDEX_KEY = '_hezarfen_mst_shipment_last_index';
 
 	/**
 	 * The single instance of the class
@@ -120,10 +119,10 @@ class Manual_Shipment_Tracking {
 		$order->update_status( apply_filters( 'hezarfen_mst_new_order_status', self::SHIPPED_ORDER_STATUS, $order, $shipment_data->courier_id, $shipment_data->tracking_num ) ); // @phpstan-ignore-line
 
 		if ( 'yes' === get_option( Settings::OPT_ENABLE_SMS ) ) {
-			Helper::send_notification( $order );
+			Helper::send_notification( $order, $shipment_data );
 		}
 
-		do_action( 'hezarfen_mst_order_shipped', $order );
+		do_action( 'hezarfen_mst_order_shipped', $order, $shipment_data );
 	}
 
 	/**

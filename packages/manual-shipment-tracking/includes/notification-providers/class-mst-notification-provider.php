@@ -15,29 +15,26 @@ defined( 'ABSPATH' ) || exit();
 abstract class MST_Notification_Provider extends \Hezarfen\Inc\Notification_Provider {
 	/**
 	 * Sends the notification.
-	 * 
+	 *
 	 * @param \WC_Order $order Order instance.
-	 * 
+	 * @param  Shipment_Data $shipment_data Shipment data.
+	 *
 	 * @return void
 	 */
-	public function send( $order ) {
-		$order_id      = $order->get_id();
-		$shipment_data = Helper::get_all_shipment_data( $order_id );
-		foreach ( $shipment_data as $data ) {
-			if ( $data->sms_sent ) {
-				continue;
-			}
+	public function send( $order, $shipment_data ) {
+		if ( $shipment_data->sms_sent ) {
+			return;
+		}
 
-			$result = $this->perform_sending( $order, $data );
+		$result = $this->perform_sending( $order, $shipment_data );
 
-			if ( $result ) {
-				$data->sms_sent = true;
-				$data->save();
+		if ( $result ) {
+			$shipment_data->sms_sent = true;
+			$shipment_data->save();
 
-				/* translators: %s billing phone */
-				$note = sprintf( __( 'Tracking information SMS sent to %s', 'hezarfen-for-woocommerce' ), $order->get_billing_phone() );
-				$order->add_order_note( $note );
-			}
+			/* translators: %s billing phone */
+			$note = sprintf( __( 'Tracking information SMS sent to %s', 'hezarfen-for-woocommerce' ), $order->get_billing_phone() );
+			$order->add_order_note( $note );
 		}
 	}
 

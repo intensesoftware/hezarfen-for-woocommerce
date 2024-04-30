@@ -73,7 +73,7 @@ jQuery(document).ready(($)=>{
                 action: hezarfen_mst_backend.remove_shipment_data_action,
                 _wpnonce: hezarfen_mst_backend.remove_shipment_data_nonce,
                 order_id: $('input#post_ID').val(),
-                data_id: shipment_row.data('id')
+                meta_id: shipment_row.data('meta_id')
               },
               function () {
                 shipment_row.remove();

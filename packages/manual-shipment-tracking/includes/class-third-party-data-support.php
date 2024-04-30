@@ -139,7 +139,8 @@ class Third_Party_Data_Support {
 					'courier_id'    => Courier_Custom::$id,
 					'courier_title' => $courier_title,
 					'tracking_num'  => get_post_meta( $order_id, get_option( Settings::OPT_TRACKING_NUM_CUSTOM_META, self::NONSENSE_STRING ), true ),
-				)
+				),
+				null
 			),
 		);
 	}
@@ -218,18 +219,25 @@ class Third_Party_Data_Support {
 			),
 		);
 
-		$courier_id = get_post_meta( $order_id, $plugin_data[ $plugin ]['courier_id'], true );
-		if ( ! $courier_id ) {
+		$order = wc_get_order( $order_id );
+
+		if( ! $order ) {
 			return array();
 		}
+
+		$courier_data = $order->get_meta( $plugin_data[ $plugin ]['courier_id'], true );
+		$courier_id = $courier_data->value;
 
 		$courier_id    = self::convert_courier( $courier_id );
 		$courier_class = Helper::get_courier_class( $courier_id );
 
 		$courier_title = $courier_class::get_title();
 
-		$tracking_num = get_post_meta( $order_id, $plugin_data[ $plugin ]['tracking_num'], true );
-		$tracking_url = get_post_meta( $order_id, $plugin_data[ $plugin ]['tracking_url'] ?? self::NONSENSE_STRING, true );
+		$tracking_num = $order->get_meta( $plugin_data[ $plugin ]['tracking_num'], true );
+		$tracking_num = $tracking_num->value;
+
+		$tracking_url = $order->get_meta( $plugin_data[ $plugin ]['tracking_url'], true );
+		$tracking_url = $tracking_url->value ?? self::NONSENSE_STRING;
 
 		if ( ! $tracking_url ) {
 			// try to create tracking url.
@@ -245,7 +253,7 @@ class Third_Party_Data_Support {
 			'tracking_url'  => $tracking_url,
 		);
 
-		return array( new Shipment_Data( $data ) );
+		return array( new Shipment_Data( $data, null ) );
 	}
 
 	/**

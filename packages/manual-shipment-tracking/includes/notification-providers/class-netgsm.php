@@ -62,16 +62,17 @@ class Netgsm extends MST_Notification_Provider {
 	 * Sends SMS.
 	 * 
 	 * @param \WC_Order $order Order instance.
-	 * 
+	 * @param  Shipment_Data $shipment_data Shipment data.
+	 *
 	 * @return void
 	 */
-	public function send( $order ) {
+	public function send( $order, $shipment_data ) {
 		if ( ! get_option( 'netgsm_status' ) ) {
 			return; // return if NetGSM status is "Closed".
 		}
 
 		if ( function_exists( 'netgsm_order_status_changed_sendSMS' ) && get_option( Settings::OPT_NETGSM_CONTENT ) ) {
-			parent::send( $order );
+			parent::send( $order, $shipment_data );
 		}
 	}
 

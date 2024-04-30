@@ -14,67 +14,32 @@ defined( 'ABSPATH' ) || exit;
  */
 class Helper {
 	/**
-	 * Get last shipment index of the order
-	 *
-	 * @param  \WC_Order $order Order.
-	 * @return int
-	 */
-	public static function get_order_shipment_last_shipment( $order ) {
-		return absint( get_post_meta( $order->get_id(), Manual_Shipment_Tracking::SHIPMENT_LAST_INDEX_KEY, true ) );
-	}
-	/**
-	 * Update shipment last index
-	 *
-	 * @param int $order_id Order ID.
-	 * 
-	 * @return void
-	 */
-	public static function update_order_shipment_last_index( $order_id ) {
-		$ids  = array();
-		$meta = get_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, false );
-
-		foreach ( $meta as $shipment_data ) {
-			$data  = new Shipment_Data( $shipment_data );
-			$ids[] = $data->id;
-		}
-
-		$last_index = ( count( $ids ) > 0 ) ? max( $ids ) : 1;
-
-		$order = wc_get_order( $order_id );
-
-		if ( $order ) {
-			return;
-		}
-
-		$order->update_meta_data( Manual_Shipment_Tracking::SHIPMENT_LAST_INDEX_KEY, $last_index );
-		$order->save();
-	}
-
-	/**
 	 * Add new order shipment data
 	 *
 	 * @param  \WC_Order $order Order.
 	 * @param  int       $id Shipment ID uniq in the shipment of the order.
 	 * @param  string    $new_courier_id Shipping Company ID.
 	 * @param  string    $new_tracking_num Tracking Number.
+	 * @param  int|null  $meta_id = null
 	 * @return void
 	 */
-	public static function new_order_shipment_data( $order, $id, $new_courier_id, $new_tracking_num ) {
+	public static function new_order_shipment_data( $order, $deprecated, $new_courier_id, $new_tracking_num, $meta_id = null ) {
 		$order_id = $order->get_id();
 
 		$new_courier  = self::get_courier_class( $new_courier_id );
-		$current_data = self::get_shipment_data_by_id( $id, $order_id, true );
+		$current_data = self::get_shipment_data_by_id( $meta_id, $order_id, true );
 
 		if ( ! $current_data ) {
 			$new_data = new Shipment_Data(
 				array(
-					'id'            => $id,
+					'id'            => null,
 					'order_id'      => $order_id,
 					'courier_id'    => $new_courier_id,
 					'courier_title' => $new_courier::get_title(),
 					'tracking_num'  => $new_tracking_num,
 					'tracking_url'  => $new_courier::create_tracking_url( $new_tracking_num ),
-				)
+				),
+				null
 			);
 
 			$new_data->save( true );
@@ -101,15 +66,16 @@ class Helper {
 
 	/**
 	 * Sends notification.
-	 * 
+	 *
 	 * @param \WC_Order $order Order instance.
-	 * 
+	 * @param  Shipment_Data $shipment_data Shipment data.
+	 *
 	 * @return void
 	 */
-	public static function send_notification( $order ) {
+	public static function send_notification( $order, $shipment_data) {
 		$notification_provider = Manual_Shipment_Tracking::instance()->active_notif_provider;
 		if ( $notification_provider ) {
-			$notification_provider->send( $order );
+			$notification_provider->send( $order, $shipment_data );
 		}
 	}
 
@@ -192,17 +158,17 @@ class Helper {
 	/**
 	 * Returns the shipment data of the given order by shipment data ID.
 	 * 
-	 * @param int|string $data_id Shipment data ID.
+	 * @param int|null $meta_id Meta ID.
 	 * @param int|string $order_id Order ID.
 	 * @param bool       $bypass_filters Whether to bypass filters.
 	 * 
 	 * @return Shipment_Data|null
 	 */
-	public static function get_shipment_data_by_id( $data_id, $order_id, $bypass_filters = false ) {
+	public static function get_shipment_data_by_id( $meta_id, $order_id, $bypass_filters = false ) {
 		$shipment_data = self::get_all_shipment_data( $order_id, $bypass_filters );
 
 		foreach ( $shipment_data as $data ) {
-			if ( $data->id === (int) $data_id ) {
+			if ( $data->meta_id === (int) $meta_id ) {
 				return $data;
 			}
 		}
@@ -219,7 +185,14 @@ class Helper {
 	 * @return Shipment_Data[]
 	 */
 	public static function get_all_shipment_data( $order_id, $bypass_filters = false ) {
+		$order = wc_get_order( $order_id );
+
+		if( ! $order ) {
+			return array();
+		}
+
 		$all_data = get_post_meta( $order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY );
+		$all_data = $order->get_meta( Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, false );
 
 		if ( ! $all_data && ! $bypass_filters ) {
 			return apply_filters( 'hezarfen_mst_get_shipment_data', array(), $order_id );
@@ -227,9 +200,9 @@ class Helper {
 
 		return array_map(
 			function( $data ) {
-				return new Shipment_Data( $data );
+				return new Shipment_Data( $data->value, $data->id );
 			},
-			$all_data 
+			$all_data
 		);
 	}
 

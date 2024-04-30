@@ -68,8 +68,6 @@ class Admin_Ajax {
 
 		$order = wc_get_order( $order_id );
 
-		$id = \Hezarfen\ManualShipmentTracking\Helper::get_order_shipment_last_shipment( $order );
-
 		$new_courier_id   = ! empty( $_POST[ self::COURIER_HTML_NAME ] ) ? sanitize_text_field( $_POST[ self::COURIER_HTML_NAME ] ) : '';
 		$new_tracking_num = ! empty( $_POST[ self::TRACKING_NUM_HTML_NAME ] ) ? sanitize_text_field( $_POST[ self::TRACKING_NUM_HTML_NAME ] ) : '';
 
@@ -77,7 +75,7 @@ class Admin_Ajax {
 			wp_send_json_error( null, 400 );
 		}
 
-		Helper::new_order_shipment_data($order, ( $id + 1 ), $new_courier_id, $new_tracking_num);
+		Helper::new_order_shipment_data($order, null, $new_courier_id, $new_tracking_num);
 	}
 
 	/**
@@ -88,11 +86,11 @@ class Admin_Ajax {
 	public static function remove_shipment_data() {
 		check_ajax_referer( self::REMOVE_SHIPMENT_DATA_NONCE );
 
-		if ( empty( $_POST['order_id'] ) || empty( $_POST['data_id'] ) ) {
+		if ( empty( $_POST['meta_id'] ) || empty( $_POST['meta_id'] ) ) {
 			wp_send_json_error( null, 400 );
 		}
 
-		$data = Helper::get_shipment_data_by_id( intval( $_POST['data_id'] ), intval( $_POST['order_id'] ), true );
+		$data = Helper::get_shipment_data_by_id( intval( $_POST['meta_id'] ), intval( $_POST['order_id'] ), true );
 
 		if ( $data ) {
 			if ( $data->remove() ) {
