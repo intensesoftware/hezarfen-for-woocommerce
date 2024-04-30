@@ -7,8 +7,21 @@
     "test": "tests"
   },
   "scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"prettier": "prettier"
+    "build": "npm-run-all --parallel build:*",
+    "build:order-edit": "wp-scripts build assets/admin/order-edit/src/main.js --output-path=assets/admin/order-edit/build",
+    "check-engines": "wp-scripts check-engines",
+    "check-licenses": "wp-scripts check-licenses",
+    "format": "wp-scripts format",
+    "lint:css": "wp-scripts lint-style",
+    "lint:js": "wp-scripts lint-js",
+    "lint:md:docs": "wp-scripts lint-md-docs",
+    "lint:pkg-json": "wp-scripts lint-pkg-json",
+    "packages-update": "wp-scripts packages-update",
+    "plugin-zip": "wp-scripts plugin-zip",
+    "start": "npm-run-all --parallel start:*",
+    "start:order-edit": "wp-scripts start assets/admin/order-edit/src/main.js --output-path=assets/admin/order-edit/build",
+    "test:e2e": "wp-scripts test-e2e",
+    "test:unit": "wp-scripts test-unit-js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +35,21 @@
   "homepage": "https://github.com/intensesoftware/hezarfen-for-woocommerce#readme",
   "devDependencies": {
     "@prettier/plugin-php": "^0.15.2",
-    "prettier": "^2.1.2"
+    "@tailwindcss/forms": "^0.5.7",
+    "@wordpress/scripts": "^27.7.0",
+    "autoprefixer": "^10.4.19",
+    "install": "^0.13.0",
+    "npm": "^10.6.0",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.4.38",
+    "postcss-cli": "^11.0.0",
+    "prettier": "^2.1.2",
+    "tailwindcss": "^3.4.3"
+  },
+  "dependencies": {
+    "@preline/tabs": "^2.1.0",
+    "flowbite": "^2.3.0",
+    "postcss-prefix-selector": "^1.16.1",
+    "tailwindcss-scoped-preflight": "^3.2.5"
   }
 }
