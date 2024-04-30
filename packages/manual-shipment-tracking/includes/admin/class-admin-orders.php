@@ -84,8 +84,14 @@ class Admin_Orders {
 				}
 
 				printf( '<span data-order-id="%s" class="dashicons dashicons-info-outline shipment-info-icon"></span>', esc_attr( $order_id ) );
-			} else { 
-				printf( '<p class="no-shipment-found">%s</p>', esc_html( apply_filters( 'hezarfen_shop_order_no_shipment_found_msg', __( 'No shipment data found', 'hezarfen-for-woocommerce' ), $order_id ) ) );
+			} else {
+				$no_shipment_msg = apply_filters( 'hezarfen_shop_order_no_shipment_found_msg', null, $order_id );
+
+				if( is_null( $no_shipment_msg ) ) {
+					esc_html_e( 'No shipment data found', 'hezarfen-for-woocommerce' );
+				}else{
+					printf( $no_shipment_msg );
+				}
 			}
 		}
 	}
@@ -164,6 +170,16 @@ class Admin_Orders {
 		return $statuses;
 	}
 
+	private static function is_wc_order_list_screen() {
+		$screen = get_current_screen();
+
+		if (isset($screen->post_type) && 'shop_order' === $screen->post_type) {
+			return true;
+		}
+
+		return false;
+	}
+
 	/**
 	 * Enqueues CSS files.
 	 * 
@@ -172,27 +188,23 @@ class Admin_Orders {
 	 * @return void
 	 */
 	public static function enqueue_scripts_and_styles( $hook_suffix ) {
-		global $typenow;
-
-		if ( 'shop_order' !== $typenow ) {
+		if( ! self::is_wc_order_list_screen() ){
 			return;
 		}
 
-		if ( 'edit.php' === $hook_suffix ) {
-			wp_enqueue_style( 'hezarfen_mst_admin_orders_css', HEZARFEN_MST_ASSETS_URL . 'css/admin/orders.css', array(), WC_HEZARFEN_VERSION );
-			wp_enqueue_script( 'hezarfen_mst_admin_orders_js', HEZARFEN_MST_ASSETS_URL . 'js/admin/orders.js', array( 'jquery', 'jquery-tiptip' ), WC_HEZARFEN_VERSION, true );
+		wp_enqueue_style( 'hezarfen_mst_admin_orders_css', HEZARFEN_MST_ASSETS_URL . 'css/admin/orders.css', array(), WC_HEZARFEN_VERSION );
+		wp_enqueue_script( 'hezarfen_mst_admin_orders_js', HEZARFEN_MST_ASSETS_URL . 'js/admin/orders.js', array( 'jquery', 'jquery-tiptip' ), WC_HEZARFEN_VERSION, true );
 
-			wp_localize_script(
-				'hezarfen_mst_admin_orders_js',
-				'hezarfen_mst_backend',
-				array(
-					'get_shipment_data_nonce'  => wp_create_nonce( Admin_Ajax::GET_SHIPMENT_DATA_NONCE ),
-					'get_shipment_data_action' => Admin_Ajax::GET_SHIPMENT_DATA_ACTION,
-					'tooltip_placeholder'      => esc_html__( 'Fetching data..', 'hezarfen-for-woocommerce' ),
-					'courier_company_i18n'     => esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ),
-					'tracking_num_i18n'        => esc_html__( 'Tracking Number', 'hezarfen-for-woocommerce' ),
-				)
-			);
-		}
+		wp_localize_script(
+			'hezarfen_mst_admin_orders_js',
+			'hezarfen_mst_backend',
+			array(
+				'get_shipment_data_nonce'  => wp_create_nonce( Admin_Ajax::GET_SHIPMENT_DATA_NONCE ),
+				'get_shipment_data_action' => Admin_Ajax::GET_SHIPMENT_DATA_ACTION,
+				'tooltip_placeholder'      => esc_html__( 'Fetching data..', 'hezarfen-for-woocommerce' ),
+				'courier_company_i18n'     => esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ),
+				'tracking_num_i18n'        => esc_html__( 'Tracking Number', 'hezarfen-for-woocommerce' ),
+			)
+		);
 	}
 }
