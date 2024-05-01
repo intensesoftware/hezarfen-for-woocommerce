@@ -1,3 +1,6 @@
+/*!*******************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./assets/admin/order-edit/src/style.css ***!
+  \*******************************************************************************************************************************************************************************************/
 .tooltip-arrow,.tooltip-arrow:before {
   position: absolute;
   width: 8px;
@@ -1370,6 +1373,9 @@ video:where(.hez-ui,.hez-ui *) {
 .whitespace-nowrap {
   white-space: nowrap;
 }
+.rounded-full {
+  border-radius: 9999px;
+}
 .rounded-lg {
   border-radius: 0.5rem;
 }
@@ -1438,6 +1444,10 @@ video:where(.hez-ui,.hez-ui *) {
 .border-gray-300 {
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity));
+}
+.bg-blue-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(235 245 255 / var(--tw-bg-opacity));
 }
 .bg-blue-700 {
   --tw-bg-opacity: 1;
@@ -1591,6 +1601,10 @@ video:where(.hez-ui,.hez-ui *) {
 .text-blue-600 {
   --tw-text-opacity: 1;
   color: rgb(28 100 242 / var(--tw-text-opacity));
+}
+.text-blue-800 {
+  --tw-text-opacity: 1;
+  color: rgb(30 66 159 / var(--tw-text-opacity));
 }
 .text-gray-1 {
   --tw-text-opacity: 1;
@@ -1819,6 +1833,12 @@ video:where(.hez-ui,.hez-ui *) {
     }
 }
 
+.hez-shipment-migrate {
+    a:hover, a:focus {
+        color: #fff !important;
+    }
+}
+
 .hover\:border-gray-300:hover {
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity));
@@ -2017,6 +2037,11 @@ video:where(.hez-ui,.hez-ui *) {
   background-color: rgb(5 122 85 / var(--tw-bg-opacity));
 }
 
+.dark\:text-blue-400:is(.dark *) {
+  --tw-text-opacity: 1;
+  color: rgb(118 169 250 / var(--tw-text-opacity));
+}
+
 .dark\:text-blue-500:is(.dark *) {
   --tw-text-opacity: 1;
   color: rgb(63 131 248 / var(--tw-text-opacity));
@@ -2121,6 +2146,11 @@ video:where(.hez-ui,.hez-ui *) {
 .dark\:focus\:ring-green-800:focus:is(.dark *) {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(3 84 63 / var(--tw-ring-opacity));
+}
+
+.dark\:focus\:ring-blue-800:focus:is(.dark *) {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(30 66 159 / var(--tw-ring-opacity));
 }
 
 .peer:checked ~ .dark\:peer-checked\:text-blue-500:is(.dark *) {
@@ -2273,3 +2303,5 @@ video:where(.hez-ui,.hez-ui *) {
 .rtl\:text-right:where([dir="rtl"], [dir="rtl"] *) {
   text-align: right;
 }
+
+/*# sourceMappingURL=style-main.css.map*/

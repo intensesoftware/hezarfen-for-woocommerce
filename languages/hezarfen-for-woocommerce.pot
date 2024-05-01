@@ -14,7 +14,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2024-05-01 01:36+0000\n"
+"POT-Creation-Date: 2024-05-01 02:46+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #. %s plugin name
@@ -150,6 +150,12 @@ msgid ""
 "Disable the Checkout Field Editor for WooCommerce plugin to use this setting."
 msgstr ""
 
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:486
+msgid ""
+"Easy Data Recognition - We've detected that you're using the Intense Kargo "
+"Takip Plugin or Kargo Takip Türkiye plugin."
+msgstr ""
+
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:60
 msgid "Enable Manual Shipment Tracking feature"
 msgstr ""
@@ -227,6 +233,10 @@ msgstr ""
 msgid "Fetching data.."
 msgstr ""
 
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:492
+msgid "Free Support on wordpress.org"
+msgstr ""
+
 #: packages/manual-shipment-tracking/includes/courier-companies/class-gelal.php:38
 msgid "Gelal"
 msgstr ""
@@ -241,6 +251,17 @@ msgstr ""
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet.php:38
 msgid "hepsiJET"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:488
+msgid ""
+"Hezarfen can automatically recognize the shipment data of your previous "
+"orders with just one click. Moreover, this data remains accessible in "
+"Hezarfen even if you deactivate the Kargo Takip Türkiye plugin later on. You "
+"can start doing it on the Hezarfen Settings screen. In Hezarfen Manual "
+"Shipment Tracking Settings -> Advanced -> Recognize third party plugins' "
+"data -> Recognition type -> click 'Desteklenen eklentilerin verilerini "
+"algıla: (Intense Kargo Takip, Kargo Takip Turkiye)'"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:115
@@ -646,6 +667,10 @@ msgstr ""
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-ups.php:38
 msgid "UPS Kargo"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:491
+msgid "Visit Hezarfen Shipment Settings"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:143

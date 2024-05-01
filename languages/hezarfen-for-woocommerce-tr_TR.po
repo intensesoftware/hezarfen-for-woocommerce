@@ -6,7 +6,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2024-05-01 01:36+0000\n"
+"PO-Revision-Date: 2024-05-01 02:47+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #. %s plugin name
@@ -151,6 +151,14 @@ msgstr ""
 "Bu ayarı kullanabilmek için Checkout Field Editor for WooCommerce "
 "eklentisini devre dışı bırakınız."
 
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:486
+msgid ""
+"Easy Data Recognition - We've detected that you're using the Intense Kargo "
+"Takip Plugin or Kargo Takip Türkiye plugin."
+msgstr ""
+"Kolay Veri Tanıma Özelliği - Intense Kargo Takip Eklentisi veya Kargo Takip "
+"Türkiye eklentisini kullandığınızı tespit ettik."
+
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:60
 msgid "Enable Manual Shipment Tracking feature"
 msgstr "Manuel Kargo Takip özelliğini aktif et"
@@ -228,6 +236,10 @@ msgstr "FedEx"
 msgid "Fetching data.."
 msgstr "Veri çekiliyor.."
 
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:492
+msgid "Free Support on wordpress.org"
+msgstr "wordpress.org üzerinde Ücretsiz Destek"
+
 #: packages/manual-shipment-tracking/includes/courier-companies/class-gelal.php:38
 msgid "Gelal"
 msgstr "Gelal"
@@ -244,6 +256,27 @@ msgstr "Genel Ayarlar"
 msgid "hepsiJET"
 msgstr "hepsiJET"
 
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:488
+msgid ""
+"Hezarfen can automatically recognize the shipment data of your previous "
+"orders with just one click. Moreover, this data remains accessible in "
+"Hezarfen even if you deactivate the Kargo Takip Türkiye plugin later on. You "
+"can start doing it on the Hezarfen Settings screen. In Hezarfen Manual "
+"Shipment Tracking Settings -> Advanced -> Recognize third party plugins' "
+"data -> Recognition type -> click 'Desteklenen eklentilerin verilerini "
+"algıla: (Intense Kargo Takip, Kargo Takip Turkiye)'"
+msgstr ""
+"Kolay Veri Tanıma - Intense Kargo Takip Eklentisi veya Kargo Takip Türkiye "
+"eklentisini kullandığınızı tespit ettik. Hezarfen, önceki siparişlerinizin "
+"kargo verilerini tek tıklamayla otomatik olarak tanıyabilir. Ayrıca, "
+"kullandığınız Intense Kargo Takip Eklentisi veya Kargo Takip Türkiye "
+"eklentisini daha sonra devre dışı bıraksanız bile bu veriler Hezarfen'de "
+"erişilebilir kalır. Bunu Hezarfen Ayarlar ekranından yapmaya "
+"başlayabilirsiniz. Hezarfen Manuel Kargo Takip Ayarları -> Gelişmiş Ayarlar -"
+"> Üçüncü taraf eklentilerin verilerini algıla -> Algılama tipi -> "
+"'Desteklenen eklentilerin verilerini algıla: (Intense Kargo Takip, Kargo "
+"Takip Turkiye)' seçeneğine tıklayın."
+
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:115
 msgid "Hezarfen Cargo Tracking"
 msgstr "Hezarfen Kargo Takip"
@@ -257,6 +290,8 @@ msgid ""
 "Hezarfen, WooCommerce eklentisini Türkiye için daha kullanılabilir kılmayı "
 "amaçlar."
 msgstr ""
+"Hezarfen, WooCommerce eklentisini Türkiye için daha kullanılabilir kılmayı "
+"amaçlar."
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:93
 msgid "Hide postcode fields in My Account > Address pages?"
@@ -686,6 +721,10 @@ msgstr "Trendyol Express"
 #: packages/manual-shipment-tracking/includes/courier-companies/class-ups.php:38
 msgid "UPS Kargo"
 msgstr "UPS Kargo"
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:491
+msgid "Visit Hezarfen Shipment Settings"
+msgstr "Hezarfen Gönderi Ayarları'nı ziyaret edin."
 
 #: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:143
 msgctxt "WooCommerce Order status"

@@ -475,5 +475,24 @@ use \Hezarfen\ManualShipmentTracking\Helper;
             endif;
             do_action('hez_admin_order_edit_shipment_edits', $order_id); ?>
         </div>
+
+        <?php
+        include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+        if (is_plugin_active('intense-kargo-takip-for-woocommerce/intense-kargo-takip-for-woocommerce.php') || is_plugin_active('kargo-takip-turkiye/kargo-takip-turkiye.php')) {
+            ?>
+            <div class="hez-shipment-migrate mt-6 mb-4">
+                <div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+                    <span class="font-medium">
+                        <?php esc_html_e( "Easy Data Recognition - We've detected that you're using the Intense Kargo Takip Plugin or Kargo Takip Türkiye plugin.", "hezarfen-for-woocommerce" ); ?>
+                    </span>
+                    <?php  esc_html_e( "Hezarfen can automatically recognize the shipment data of your previous orders with just one click. Moreover, this data remains accessible in Hezarfen even if you deactivate the Kargo Takip Türkiye plugin later on. You can start doing it on the Hezarfen Settings screen. In Hezarfen Manual Shipment Tracking Settings -> Advanced -> Recognize third party plugins' data -> Recognition type -> click 'Desteklenen eklentilerin verilerini algıla: (Intense Kargo Takip, Kargo Takip Turkiye)'", 'hezarfen-for-woocommerce' ); ?>
+                </div>
+
+                <a target="_blank" class="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" href="<?php echo esc_html( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=manual_shipment_tracking' ) ); ?>"><?php esc_html_e( 'Visit Hezarfen Shipment Settings', 'hezarfen-for-woocommerce' ); ?></a>
+                <a target="_blank" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" href="https://wordpress.org/support/plugin/hezarfen-for-woocommerce/"><?php esc_html_e( 'Free Support on wordpress.org', 'hezarfen-for-woocommerce' ); ?></a>
+            </div>
+            <?php
+        }
+        ?>
     </div>
 </div>
