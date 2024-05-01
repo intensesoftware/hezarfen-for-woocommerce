@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <ruleset name="PHP Code Sniffer">
+    <file>hezarfen-for-woocommerce.php</file>
     <file>includes</file>
+    <file>packages</file>
 
     <rule ref="WordPress-Core"/>
     <rule ref="WordPress-Docs"/>
@@ -9,4 +11,6 @@
         <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
     </rule>
     <rule ref="WordPress-VIP-Go"/>
+
+    <exclude-pattern>*.js</exclude-pattern>
 </ruleset>

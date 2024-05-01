@@ -3,3 +3,9 @@
 .hezarfen-tc-num-field strong {
 	display: block;
 }
+
+.shipment-forms-wrapper {
+	display: flex;
+	gap: 15px;
+	justify-content: space-between;
+}

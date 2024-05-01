@@ -36,8 +36,8 @@ class OrderDetails {
 	/**
 	 * Adds tax fields (except TC Number field) to billing form where in the admin order edit screen.
 	 *
-	 * @param  array $fields WooCommerce current fields.
-	 * @return array
+	 * @param  array<string, mixed> $fields WooCommerce current fields.
+	 * @return array<string, mixed>
 	 */
 	public function add_tax_fields_to_order_details( $fields ) {
 		$tax_fields = array(
@@ -69,7 +69,7 @@ class OrderDetails {
 	/**
 	 * Adds decrypted TC Number information to the order details page.
 	 * 
-	 * @param WC_Order $order Order object.
+	 * @param \WC_Order $order Order object.
 	 * 
 	 * @return void
 	 */

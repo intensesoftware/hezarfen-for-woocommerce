@@ -1,0 +1,37 @@
+.order-status.status-hezarfen-shipped {
+	background: #5b85fb;
+	color: #ffffff;
+}
+
+td.column-hezarfen_mst_shipment_info p {
+	display: inline-block;
+	margin-right: 3px !important;
+}
+
+.column-hezarfen_mst_shipment_info .no-shipment-found {
+	color: #8d8d8d;
+}
+
+.column-hezarfen_mst_shipment_info .courier-logo {
+	width: 100px;
+	height: 30px;
+	object-fit: contain;
+}
+
+.column-hezarfen_mst_shipment_info .shipment-info-icon {
+	width: 16px;
+	height: 16px;
+	font-size: 16px;
+}
+
+.column-hezarfen_mst_shipment_info .shipment-info-icon:hover {
+	color: #00a0d2;
+}
+
+.column-hezarfen_mst_shipment_info .shipment-info-icon::before {
+	content: "\f14c";
+}
+
+#tiptip_holder #tiptip_content {
+	max-width: 200px;
+}

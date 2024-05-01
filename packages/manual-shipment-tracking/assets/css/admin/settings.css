@@ -1,0 +1,21 @@
+.notification th,
+.custom-meta th,
+.recognition th {
+	padding-left: 24px;
+}
+
+.pandasms-link {
+	margin-left: 5px;
+}
+
+.sms-variables-wrapper {
+	width: 50%;
+}
+
+.sms-variables-wrapper .sms-variable {
+	margin-top: 5px;
+}
+
+.netgsm.sms-content {
+	padding: 6px !important;
+}

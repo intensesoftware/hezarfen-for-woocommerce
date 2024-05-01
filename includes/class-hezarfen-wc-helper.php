@@ -17,8 +17,8 @@ class Helper {
 	 *
 	 * Update array keys for select option values
 	 *
-	 * @param array $arr array of the districts.
-	 * @return array
+	 * @param string[]|array<string, string> $arr array of the districts.
+	 * @return array<string, string>
 	 */
 	public static function select2_option_format( $arr ) {
 		$values = array( '' => __( 'Select an option', 'hezarfen-for-woocommerce' ) );
@@ -33,12 +33,12 @@ class Helper {
 	/**
 	 * Displays admin notices.
 	 * 
-	 * @param array $notices Notices.
-	 * @param bool  $use_kses Use wp_kses_post for escaping.
+	 * @param array<array<string, string>> $notices Notices.
+	 * @param bool                         $use_kses Use wp_kses_post for escaping.
 	 * 
 	 * @return void
 	 */
-	public static function show_admin_notices( $notices, $use_kses = false ) {
+	public static function render_admin_notices( $notices, $use_kses = false ) {
 		foreach ( $notices as $notice ) {
 			$class = 'error' === $notice['type'] ? 'notice-error' : 'notice-warning';
 			$msg   = $use_kses ? wp_kses_post( $notice['message'] ) : esc_html( $notice['message'] );
@@ -182,14 +182,14 @@ class Helper {
 	 * Note: Recent versions of Woocommerce has OrderUtil::is_order_edit_screen() method. That method must be used in the future.
 	 * We're not using that now because we must support older Woocommerce versions.
 	 * 
-	 * @param string $current_admin_page The current admin page.
-	 *
 	 * @return bool
 	 */
-	public static function is_order_edit_page( $current_admin_page ) {
-		global $post_type;
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		return ( 'woocommerce_page_wc-orders' === $current_admin_page && ! empty( $_GET['action'] ) ) || ( 'post.php' === $current_admin_page && 'shop_order' === $post_type );
+	public static function is_order_edit_page() {
+		$screen = get_current_screen();
+		$action = $_GET['action'] ?? ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Recommended
+
+		return ( 'woocommerce_page_wc-orders' === $screen->id && 'edit' === $action )
+		|| ( 'post' === $screen->base && 'shop_order' === $screen->post_type && ! $screen->action );
 	}
 
 	/**
@@ -204,9 +204,9 @@ class Helper {
 	/**
 	 * Checks installed Hezarfen addons' versions. Returns notices if there are outdated addons.
 	 * 
-	 * @param array $addons Addons data to check.
+	 * @param array<array<string, mixed>> $addons Addons data to check.
 	 * 
-	 * @return array
+	 * @return array<array<string, string>>
 	 */
 	public static function check_addons( $addons ) {
 		$notices = array();
@@ -226,9 +226,9 @@ class Helper {
 	/**
 	 * Finds outdated plugins
 	 * 
-	 * @param array $plugins Plugins data to check.
+	 * @param array<array<string, mixed>> $plugins Plugins data to check.
 	 * 
-	 * @return array
+	 * @return array<array<string, string>>
 	 */
 	public static function find_outdated( $plugins ) {
 		$outdated = array();
@@ -246,6 +246,21 @@ class Helper {
 		}
 
 		return $outdated;
+	}
+
+	/**
+	 * Checks if plugin is active.
+	 * 
+	 * @param string $plugin Plugin.
+	 * 
+	 * @return bool
+	 */
+	public static function is_plugin_active( $plugin ) {
+		if ( in_array( $plugin, apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+			return true;
+		}
+	
+		return false;
 	}
 
 	/**

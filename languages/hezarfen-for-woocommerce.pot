@@ -11,39 +11,91 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-06-02 20:15+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: Loco https://localise.biz/\n"
-"X-Domain: hezarfen-for-woocommerce\n"
 "Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2024-05-01 02:54+0000\n"
+"X-Generator: Loco https://localise.biz/"
 
 #. %s plugin name
-#: includes/class-hezarfen-wc-helper.php:223
+#: includes/class-hezarfen-wc-helper.php:218
+#, php-format
 msgid ""
 "%s plugin has a new version available. In order to use the plugin, you must "
 "update it."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:211
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:137
+msgid "Add new shipment"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:78
+msgid "Add to Tracking List"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:169
+msgid "Advanced Settings"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:338
+msgid "An error occured when installing and activating the PandaSMS plugin."
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-aras.php:38
+msgid "Aras Kargo"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:161
+msgid "Are you sure you want to remove this shipment data?"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:216
 msgid "Auto sort fields in checkout form?"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:146
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:244
+msgid "Available Variables"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:151
 msgid ""
 "Back up the phrase in the box to a safe area, then place it in wp-config.php "
 "file."
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:134
+msgid "BCC"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-birgunde.php:38
+msgid "Birgünde Kargo"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-brinks.php:38
+msgid "Brinks Kargo"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:139
+msgid "Cancel"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:143
+msgid "CC"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-cdek.php:38
+msgid "CDEK"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:42
 msgid "Checkout Page Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:188
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:193
 msgid "Checkout Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:268
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:273
 msgid "Checkout T.C. Identity Number Fields Required Statuses"
 msgstr ""
 
@@ -51,65 +103,142 @@ msgstr ""
 msgid "Checkout Tax Fields"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:241
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:246
 msgid "Checkout Tax Fields Settings"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:58
+#: includes/admin/settings/views/encryption.php:65
 msgid ""
 "Checks if the key created when the plugin was first installed is still the "
 "same key."
 msgstr ""
 
-#: includes/Checkout.php:327 includes/admin/order/OrderDetails.php:50
-#: includes/admin/order/OrderDetails.php:61
+#: packages/manual-shipment-tracking/includes/class-helper.php:114
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:136
+msgid "Choose a courier company"
+msgstr ""
+
+#: includes/Checkout.php:329 includes/admin/order/OrderDetails.php:49
 msgid "Company"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:182
+#: packages/manual-shipment-tracking/includes/class-my-account.php:119
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:205
+#: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:33
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:106
+msgid "Courier Company"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:198
+msgid "Courier company post meta key"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:125
+msgid "Default courier company"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:138
+msgid "Delete"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-dhl.php:38
+msgid "DHL"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:187
 msgid ""
 "Disable the Checkout Field Editor for WooCommerce plugin to use this setting."
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:491
+msgid ""
+"Easy Data Recognition - We've detected that you're using the Intense Kargo "
+"Takip Plugin or Kargo Takip Türkiye plugin."
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:60
+msgid "Enable Manual Shipment Tracking feature"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:144
+msgid "Enable SMS notification when order shipped"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:41
 msgid "Encryption"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:136
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:141
 msgid "Encryption Key"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:152
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:157
 msgid "Encryption Key Confirmation"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:10
+#: includes/admin/settings/views/encryption.php:17
 msgid "Encryption Key Health"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:124
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:129
 msgid "Encryption Settings"
 msgstr ""
 
-#: includes/Checkout.php:350
+#: includes/Checkout.php:352
 msgid "Enter invoice title"
 msgstr ""
 
-#: includes/Checkout.php:335
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:194
+msgid "Enter order status id. E.g: wc-shipped"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:201
+msgid "Enter post meta key for courier company"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:208
+msgid "Enter post meta key for tracking number"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:161
+msgid "Enter SMS content."
+msgstr ""
+
+#: includes/Checkout.php:337
 msgid "Enter T.C. Identity Number"
 msgstr ""
 
-#: includes/Checkout.php:360
+#: includes/Checkout.php:363
 msgid "Enter tax number"
 msgstr ""
 
-#: includes/Checkout.php:370
+#: includes/Checkout.php:373
 msgid "Enter tax office"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:39
+msgid "Enter Tracking Information"
 msgstr ""
 
 #: includes/Checkout.php:142 includes/Checkout.php:173
 #: includes/Checkout.php:176
 msgid "Enter your street, avenue, building, and apartment number information."
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-fedex.php:38
+msgid "FedEx"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:204
+msgid "Fetching data.."
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:497
+msgid "Free Support on wordpress.org"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-gelal.php:38
+msgid "Gelal"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:40
@@ -118,6 +247,25 @@ msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:61
 msgid "General Settings"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet.php:38
+msgid "hepsiJET"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:493
+msgid ""
+"Hezarfen can automatically recognize the shipment data of your previous "
+"orders with just one click. Moreover, this data remains accessible in "
+"Hezarfen even if you deactivate the Kargo Takip Türkiye plugin later on. You "
+"can start doing it on the Hezarfen Settings screen. In Hezarfen Manual "
+"Shipment Tracking Settings -> Advanced -> Recognize third party plugins' "
+"data -> Recognition type -> click 'Desteklenen eklentilerin verilerini "
+"algıla: (Intense Kargo Takip, Kargo Takip Turkiye)'"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:115
+msgid "Hezarfen Cargo Tracking"
 msgstr ""
 
 #. Name of the plugin
@@ -134,22 +282,26 @@ msgstr ""
 msgid "Hide postcode fields in My Account > Address pages?"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:200
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:205
 msgid "Hide postcode fields?"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-horoz-lojistik.php:38
+msgid "Horoz Lojistik"
 msgstr ""
 
 #. Author URI of the plugin
 msgid "http://intense.com.tr"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:157
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:162
 msgid ""
 "I backed up the key to a secure area and placed it in the wp-config file. In "
 "case the encryption key value is deleted from the wp-config.php file, all "
 "past orders will be transferred to T.C. I know I cannot access ID data."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:129
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:134
 msgid ""
 "If the T.C. Identity Field is active, an encryption key must be generated. "
 "The following encryption key generated will be lost upon saving the form. "
@@ -159,7 +311,26 @@ msgid ""
 "sent to T.C. no values will become unreadable."
 msgstr ""
 
-#: includes/class-hezarfen.php:108
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:174
+msgid ""
+"If you used a shipment tracking plugin before, check this to recognize your "
+"old shipment tracking plugin's data."
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:136
+#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:145
+msgid ""
+"If you want to send the shipment notification email to additional recipients,"
+" type the emails separated with comma."
+msgstr ""
+
+#. %s SMS notification provider
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:107
+#, php-format
+msgid "In order to %1$s integration work, the %2$s plugin must be activated."
+msgstr ""
+
+#: includes/class-hezarfen.php:120
 msgid ""
 "In order to <strong>Hezarfen for WooCommerce</strong> plugin work, please "
 "remove the <strong>Intense Türkiye İl İlçe Eklentisi For WooCommerce</strong>"
@@ -167,98 +338,372 @@ msgid ""
 "and neighborhood data in it."
 msgstr ""
 
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:111
+msgid ""
+"In order to NetGSM integration work, the \"send SMS to the customer when "
+"order status changed\" option must be activated from the NetGSM plugin "
+"settings."
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:40
+msgid ""
+"In order to track your shipment, please enter your tracking number and "
+"select courier from below and add it to your tracking list."
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:336
+msgid "Install & activate PandaSMS for Woocommerce plugin"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:334
+msgid "Installing.."
+msgstr ""
+
 #. Author of the plugin
 msgid "Intense Yazılım Ltd."
 msgstr ""
 
-#: includes/Checkout.php:321
+#: includes/Checkout.php:323
 msgid "Invoice Type"
 msgstr ""
 
-#: includes/admin/order/OrderDetails.php:57
+#: includes/admin/order/OrderDetails.php:45
 msgid "Invoice type"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:272
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:277
 msgid "Is T.C. Identity Number field required?"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:17
+#: includes/admin/settings/views/encryption.php:24
 msgid "Is the encryption key genereated and placed the wp-config.php?"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:25
+#: includes/admin/settings/views/encryption.php:32
 msgid "It checks encryption key whetever placed to the wp-config.php"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:50
+#: packages/manual-shipment-tracking/includes/courier-companies/class-jetizz.php:38
+msgid "Jetizz"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-kargo-turk.php:38
+msgid "Kargo Türk"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-kargoist.php:38
+msgid "Kargoist"
+msgstr ""
+
+#: includes/admin/settings/views/encryption.php:57
 msgid "Key comparison success?"
 msgstr ""
 
-#: includes/class-hezarfen.php:73 includes/Checkout.php:480
+#: packages/manual-shipment-tracking/includes/courier-companies/class-kolay-gelsin.php:38
+msgid "Kolay Gelsin"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-kurye.php:38
+msgid "Kurye"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:84
+msgid "Manual Shipment Tracking"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:121
+msgid "Manual Shipment Tracking General Settings"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:11
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:30
+msgid "Manual Tracking"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-mng.php:38
+msgid "MNG Kargo"
+msgstr ""
+
+#: includes/class-hezarfen.php:76 includes/Checkout.php:495
 msgid "Neighborhood"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:41
-#: includes/admin/settings/views/encryption.php:74
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:158
+msgid "NetGSM SMS content"
+msgstr ""
+
+#: includes/admin/settings/views/encryption.php:48
+#: includes/admin/settings/views/encryption.php:81
 msgid "No"
 msgstr ""
 
-#: includes/Checkout.php:326 includes/admin/order/OrderDetails.php:48
-#: includes/admin/order/OrderDetails.php:60
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:91
+msgid "No shipment data found"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:93
+msgid "Nothing to Track Yet"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:150
+msgid "Notification Provider"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:23
+msgid "Order Shipped"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:24
+msgid "Order Shipped emails are sent when an order have been shipped."
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:191
+msgid "Order status ID (optional)"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-packupp.php:38
+msgid "PackUpp"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:337
+msgid "PandaSMS plugin is successfully installed and activated."
+msgstr ""
+
+#: includes/Checkout.php:328 includes/admin/order/OrderDetails.php:48
 msgid "Personal"
 msgstr ""
 
-#: includes/Autoload.php:83 includes/class-hezarfen-wc-helper.php:24
-#: includes/class-hezarfen.php:74
+#: packages/manual-shipment-tracking/includes/courier-companies/class-ptt.php:38
+msgid "PTT Kargo"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:180
+msgid "Recognition type"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:186
+msgid "Recognize custom post meta data"
+msgstr ""
+
+#. %s Supported plugins.
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:185
+#, php-format
+msgid "Recognize supported plugins: (%s)"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:173
+msgid "Recognize third party plugins' data"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:159
+msgid "Remove shipment data?"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-scotty.php:38
+msgid "Scotty"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:51
+msgid "Select a Courier Company"
+msgstr ""
+
+#: includes/Autoload.php:97 includes/class-hezarfen-wc-helper.php:24
+#: includes/class-hezarfen.php:77
 msgid "Select an option"
 msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-sendeo.php:38
+msgid "Sendeo Kargo"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:55
+msgid "Shipment"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:16
+msgid "Shipment Barcode / Automated Shipment Tracking"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:76
+msgid "Shipment in pieces"
+msgstr ""
+
+#. %s: number of orders
+#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:154
+#, php-format
+msgid "Shipped (%s)"
+msgid_plural "Shipped (%s)"
+msgstr[0] ""
+msgstr[1] ""
+
+#. %s: number of orders
+#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:180
+#, php-format
+msgid "Shipped (Custom Status) (%s)"
+msgid_plural "Shipped (Custom Status) (%s)"
+msgstr[0] ""
+msgstr[1] ""
+
+#. %s: number of orders
+#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:168
+#, php-format
+msgid "Shipped (Intense Kargo Takip Plugin) (%s)"
+msgid_plural "Shipped (Intense Kargo Takip Plugin) (%s)"
+msgstr[0] ""
+msgstr[1] ""
+
+#. %s: number of orders
+#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:174
+#, php-format
+msgid "Shipped (Kargo Takip Turkiye Plugin) (%s)"
+msgid_plural "Shipped (Kargo Takip Turkiye Plugin) (%s)"
+msgstr[0] ""
+msgstr[1] ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:73
 msgid "Show hezarfen checkout tax fields?"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:254
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:68
+msgid "Show Less"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:68
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:69
+msgid "Show More"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:131
+msgid "Show Shipment Tracking column on My Account > Orders page"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:259
 msgid "Show T.C. Identity Field on checkout page "
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:108
+msgid "SMS"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:140
+msgid "SMS Notification Settings"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:83
 msgid "Sort address fields in My Account > Address pages?"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:259
+#: packages/manual-shipment-tracking/includes/courier-companies/class-surat.php:38
+msgid "Sürat Kargo"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:264
 msgid ""
 "T.C. Identity Field optionally shows on checkout field when invoice type "
 "selected as person. (T.C. field requires encryption. If encryption is not "
 "enabled, this field is not displayed.)"
 msgstr ""
 
-#: includes/Checkout.php:336 includes/admin/order/OrderDetails.php:102
+#: includes/Checkout.php:338 includes/admin/order/OrderDetails.php:89
 msgid "T.C. Identity Number"
 msgstr ""
 
-#: includes/Checkout.php:359 includes/admin/order/OrderDetails.php:68
+#: includes/Checkout.php:362 includes/admin/order/OrderDetails.php:55
 msgid "Tax Number"
 msgstr ""
 
-#: includes/Checkout.php:369 includes/admin/order/OrderDetails.php:73
+#: includes/Checkout.php:372 includes/admin/order/OrderDetails.php:60
 msgid "Tax Office"
 msgstr ""
 
-#: includes/Checkout.php:432
+#: includes/Checkout.php:435
 msgid "TC ID number is not valid"
 msgstr ""
 
-#: includes/Checkout.php:349
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:95
+msgid "There are no tracking numbers added to the tracking list."
+msgstr ""
+
+#: includes/Checkout.php:351
 msgid "Title"
 msgstr ""
 
-#: includes/class-hezarfen.php:66 includes/Checkout.php:469
+#: packages/manual-shipment-tracking/includes/courier-companies/class-tnt.php:38
+msgid "TNT"
+msgstr ""
+
+#: includes/class-hezarfen.php:69 includes/Checkout.php:478
 msgid "Town / City"
 msgstr ""
 
-#: includes/admin/settings/views/encryption.php:40
-#: includes/admin/settings/views/encryption.php:73
+#: packages/manual-shipment-tracking/includes/class-my-account.php:122
+#: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:50
+msgid "Track Cargo"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/class-my-account.php:44
+#: packages/manual-shipment-tracking/includes/class-my-account.php:93
+msgid "Tracking Information"
+msgstr ""
+
+#. %s billing email
+#: packages/manual-shipment-tracking/includes/email/class-email.php:58
+#, php-format
+msgid "Tracking information sent to %s"
+msgstr ""
+
+#. %s billing phone
+#: packages/manual-shipment-tracking/includes/notification-providers/class-mst-notification-provider.php:36
+#, php-format
+msgid "Tracking information SMS sent to %s"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/class-my-account.php:120
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:206
+#: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:38
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:47
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:107
+msgid "Tracking Number"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:205
+msgid "Tracking number post meta key"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-trendyol-express.php:38
+msgid "Trendyol Express"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-ups.php:38
+msgid "UPS Kargo"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:496
+msgid "Visit Hezarfen Shipment Settings"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:143
+msgctxt "WooCommerce Order status"
+msgid "Shipped"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:178
+msgctxt "WooCommerce Order status"
+msgid "Shipped (Custom Status)"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:166
+msgctxt "WooCommerce Order status"
+msgid "Shipped (Intense Kargo Takip Plugin)"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/class-third-party-data-support.php:172
+msgctxt "WooCommerce Order status"
+msgid "Shipped (Kargo Takip Turkiye Plugin)"
+msgstr ""
+
+#: includes/admin/settings/views/encryption.php:47
+#: includes/admin/settings/views/encryption.php:80
 msgid "Yes"
 msgstr ""
 
@@ -266,11 +711,11 @@ msgstr ""
 msgid "You can edit the general settings from this page."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:193
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:198
 msgid "You can set general checkout settings."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:246
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:251
 msgid ""
 "You can update the checkout Tax fields. Note: T.C. number field requires "
 "encryption feature. If you do not activate the encryption feature, T.C. "
@@ -280,4 +725,20 @@ msgstr ""
 #: includes/Checkout.php:141 includes/Checkout.php:172
 #: includes/Checkout.php:175
 msgid "Your Address"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:44
+msgid "Your Order Has Been Shipped"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:28
+msgid "Your order has been shipped. Tracking information is below:"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/class-my-account.php:101
+msgid "Your order hasn't been shipped yet."
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-yurtici.php:38
+msgid "Yurtiçi Kargo"
 msgstr ""

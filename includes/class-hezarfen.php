@@ -9,6 +9,8 @@ namespace Hezarfen\Inc;
 
 defined( 'ABSPATH' ) || exit();
 
+use Automattic\WooCommerce\Utilities\OrderUtil;
+
 /**
  * Hezarfen main class.
  */
@@ -16,14 +18,14 @@ class Hezarfen {
 	/**
 	 * Addons info
 	 * 
-	 * @var array
+	 * @var array<array<string, mixed>>
 	 */
 	private $addons;
 
 	/**
 	 * Notices related to addons.
 	 * 
-	 * @var array
+	 * @var array<array<string, string>>
 	 */
 	private $addon_notices;
 
@@ -48,6 +50,7 @@ class Hezarfen {
 		register_activation_hook( WC_HEZARFEN_FILE, array( 'Hezarfen_Install', 'install' ) );
 
 		add_action( 'plugins_loaded', array( $this, 'check_addons_and_show_notices' ) );
+		add_action( 'plugins_loaded', array( $this, 'define_constants' ) );
 		add_filter( 'woocommerce_get_settings_pages', array( $this, 'add_hezarfen_setting_page' ) );
 		add_filter( 'woocommerce_get_country_locale', array( $this, 'modify_tr_locale' ), PHP_INT_MAX - 2 );
 	}
@@ -55,9 +58,9 @@ class Hezarfen {
 	/**
 	 * Modifies TR country locale data.
 	 * 
-	 * @param array $locales Locale data of all countries.
+	 * @param array<array<string, mixed>> $locales Locale data of all countries.
 	 * 
-	 * @return array
+	 * @return array<array<string, mixed>>
 	 */
 	public function modify_tr_locale( $locales ) {
 		$locales['TR']['city'] = array_merge(
@@ -79,6 +82,15 @@ class Hezarfen {
 	}
 
 	/**
+	 * Define constants after plugins are loaded.
+	 */
+	public function define_constants() {
+		if ( ! defined( 'WC_HEZARFEN_HPOS_ENABLED' ) ) {
+			define( 'WC_HEZARFEN_HPOS_ENABLED', OrderUtil::custom_orders_table_usage_is_enabled() );
+		}
+	}
+
+	/**
 	 * Checks addons and shows notices if necessary.
 	 * Defines constants to disable outdated addons.
 	 * 
@@ -94,7 +106,7 @@ class Hezarfen {
 			add_action(
 				'admin_notices',
 				function () {
-					Helper::show_admin_notices( $this->addon_notices );
+					Helper::render_admin_notices( $this->addon_notices );
 				}
 			);
 		}
@@ -109,7 +121,7 @@ class Hezarfen {
 						'type'    => 'error',
 					);
 
-					Helper::show_admin_notices( array( $notice ), true );
+					Helper::render_admin_notices( array( $notice ), true );
 				}
 			);
 		}
@@ -119,8 +131,8 @@ class Hezarfen {
 	 *
 	 * Load Hezarfen Settings Page
 	 *
-	 * @param array $settings the current WC setting page paths.
-	 * @return array
+	 * @param \WC_Settings_Page[] $settings the current WC setting page objects.
+	 * @return \WC_Settings_Page[]
 	 */
 	public function add_hezarfen_setting_page( $settings ) {
 		$settings[] = include_once WC_HEZARFEN_UYGULAMA_YOLU .

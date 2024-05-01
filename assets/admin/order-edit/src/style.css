@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    .text-blue-600 {
+      --tw-text-opacity: 1;
+      color: rgba(0, 0, 0, var(--tw-text-opacity)); /* Custom lighter blue */
+    }
+
+    .border-blue-600 {
+      --tw-border-opacity: 1;
+      border-color: rgba(242, 159, 44, var(--tw-border-opacity)); /* Custom darker blue */
+    }
+
+    .text-gray-500 {
+        --tw-border-opacity: 1;
+        border-color: rgba(150, 150, 150, var(--tw-border-opacity)); /* Custom darker blue */
+    }
+}
+
+#hez-order-shipments {
+    input[type="radio"] {
+        @apply hidden !important;
+    }
+
+    .actions {
+        a:hover {
+            opacity: 0.7 !important;
+            transition: 0.4s;
+        }
+
+        a:focus, svg:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+    }
+
+    #shipping-companies {
+        li label {
+            @apply flex justify-center !important;
+        }
+    }
+
+    #paywall-pro-area {
+        * {
+            cursor: not-allowed;
+        }
+    }
+
+    #paywall-banner {
+        h3 {
+            font-size: 0.85em;
+            line-height: normal;
+        }
+
+        svg {
+            width: 0.8em;
+        }
+
+        h4 {
+            font-size: 0.82em;
+        }
+
+        li {
+            font-size: 0.90em;
+            margin: 0.4em;
+        }
+
+        span {
+            font-size: 0.80em;
+            line-height: normal;
+        }
+
+        .campaign {
+            h3, span {
+                font-size: 0.80em;
+                line-height: normal;
+            }
+        }
+    }
+
+    .campaign {
+        .deadline {
+            font-size: 0.75em;
+        }
+
+        .hezarfen-pricing * {
+            font-size: 0.85em !important;
+
+            h3 {
+                font-size: 0.95em !important;
+            }
+        }
+
+        background-color: #FFF3E3;
+
+        &.campaign-hepsijet {
+            #hepsijet-pricing * {
+                font-size: 1em !important;
+            }
+
+            * {
+                font-size: 0.6em !important;
+                line-height: normal;
+            }
+        }
+    }
+
+    #countdown {
+        div {
+            font-size: 0.7em !important;
+        }
+    }
+
+    #hps-upgrade:focus, #hps-upgrade:hover {
+        color: #fff !important;
+    }
+}
+
+.hez-shipment-migrate {
+    a:hover, a:focus {
+        color: #fff !important;
+    }
+}

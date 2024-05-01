@@ -1,6 +1,10 @@
 var wc_hezarfen_checkout = {
     mbgb_plugin_active: typeof wc_hezarfen_mbgb_backend !== 'undefined',
     should_notify_neighborhood_changed: function (type) {
+        if( wc_hezarfen_ajax_object.should_notify_neighborhood_changed ) {
+            return true;
+        }
+
         return this.mbgb_plugin_active && (wc_hezarfen_mbgb_backend.address_source === type || (wc_hezarfen_mbgb_backend.address_source === 'shipping' && !this.ship_to_different_checked()))
     },
     ship_to_different_checked: function () {
@@ -56,10 +60,10 @@ jQuery(function ($) {
 
     function add_checkout_event_handlers(type, wrapper) {
         // prevent adding event handlers multiple times.
-        $(`#${type}_address_1`).off('select2:select.hezarfen');
+        $(`#${type}_address_1`).off('change.hezarfen');
         $('#ship-to-different-address input').off('change.hezarfen');
 
-        $(`#${type}_address_1`).on("select2:select.hezarfen", function () {
+        $(`#${type}_address_1`).on("change.hezarfen", function () {
             neighborhood_on_change($(this).val(), type, wrapper);
         });
 
