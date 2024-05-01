@@ -231,8 +231,11 @@ class Third_Party_Data_Support {
 			return array();
 		}
 
-		$courier_data = $order->get_meta( $plugin_data[ $plugin ]['courier_id'], true );
-		$courier_id = $courier_data->value;
+		$courier_id = $order->get_meta( $plugin_data[ $plugin ]['courier_id'], true );
+
+		if ( ! $courier_id ) {
+			return array();
+		}
 
 		$courier_id    = self::convert_courier( $courier_id );
 		$courier_class = Helper::get_courier_class( $courier_id );
@@ -240,10 +243,8 @@ class Third_Party_Data_Support {
 		$courier_title = $courier_class::get_title();
 
 		$tracking_num = $order->get_meta( $plugin_data[ $plugin ]['tracking_num'], true );
-		$tracking_num = $tracking_num->value;
 
-		$tracking_url = $order->get_meta( $plugin_data[ $plugin ]['tracking_url'], true );
-		$tracking_url = $tracking_url->value ?? self::NONSENSE_STRING;
+		$tracking_url = $order->get_meta( $plugin_data[ $plugin ]['tracking_url'], true ) ?? self::NONSENSE_STRING;
 
 		if ( ! $tracking_url ) {
 			// try to create tracking url.
