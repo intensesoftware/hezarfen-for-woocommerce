@@ -1,7 +1,7 @@
 <?php
 /**
  * Class Autoload.
- * 
+ *
  * @package Hezarfen\Inc
  */
 
@@ -33,7 +33,7 @@ class Autoload {
 
 		add_action( 'plugins_loaded', array( $this, 'load_packages' ) );
 	}
-	
+
 	/**
 	 * Load assets
 	 *
@@ -56,10 +56,12 @@ class Autoload {
 	/**
 	 * Load assets files for admin
 	 *
+	 * @param string $hook_suffix The current admin page.
+	 *
 	 * @return void
 	 */
-	public function load_admin_assets_files() {
-		if ( Helper::is_order_edit_page() ) {
+	public function load_admin_assets_files( $hook_suffix ) {
+		if ( Helper::is_order_edit_page( $hook_suffix ) ) {
 			wp_enqueue_script(
 				'wc_hezarfen_admin_order_details_js',
 				plugins_url( 'assets/admin/js/order-details.js', WC_HEZARFEN_FILE ),
@@ -75,7 +77,7 @@ class Autoload {
 			);
 		}
 	}
-	
+
 	/**
 	 * Load js and css files
 	 *
@@ -129,7 +131,7 @@ class Autoload {
 			);
 		}
 	}
-	
+
 	/**
 	 * Load plugin files.
 	 *

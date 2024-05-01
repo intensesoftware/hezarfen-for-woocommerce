@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.4
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 1.6.7
+Stable tag: 1.6.8
 
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
@@ -31,6 +31,9 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 6. Bireysel vergi bilgileri
 
 == Changelog ==
+= 1.6.8 - 2024-04-15 =
+* HPOS desteği eklendi.
+
 = 1.6.7 - 2023-12-06 =
 * Ödeme ekranında vergi no alanın maks 11 karakter yazılabilmesi sağlandı.
 
