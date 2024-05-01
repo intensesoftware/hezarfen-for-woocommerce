@@ -10,7 +10,6 @@ composer.lock
 phpcs.xml.dist
 .wordpress-org
 node_modules
-vendor
 tests
 .editorconfig
 .prettierrc.json
