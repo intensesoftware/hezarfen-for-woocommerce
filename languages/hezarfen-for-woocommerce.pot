@@ -14,7 +14,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2024-05-01 02:46+0000\n"
+"POT-Creation-Date: 2024-05-01 02:54+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #. %s plugin name
@@ -150,7 +150,7 @@ msgid ""
 "Disable the Checkout Field Editor for WooCommerce plugin to use this setting."
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:486
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:491
 msgid ""
 "Easy Data Recognition - We've detected that you're using the Intense Kargo "
 "Takip Plugin or Kargo Takip Türkiye plugin."
@@ -233,7 +233,7 @@ msgstr ""
 msgid "Fetching data.."
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:492
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:497
 msgid "Free Support on wordpress.org"
 msgstr ""
 
@@ -253,7 +253,7 @@ msgstr ""
 msgid "hepsiJET"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:488
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:493
 msgid ""
 "Hezarfen can automatically recognize the shipment data of your previous "
 "orders with just one click. Moreover, this data remains accessible in "
@@ -564,6 +564,15 @@ msgstr[1] ""
 msgid "Show hezarfen checkout tax fields?"
 msgstr ""
 
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:68
+msgid "Show Less"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:68
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:69
+msgid "Show More"
+msgstr ""
+
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:131
 msgid "Show Shipment Tracking column on My Account > Orders page"
 msgstr ""
@@ -669,7 +678,7 @@ msgstr ""
 msgid "UPS Kargo"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:491
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:496
 msgid "Visit Hezarfen Shipment Settings"
 msgstr ""
 

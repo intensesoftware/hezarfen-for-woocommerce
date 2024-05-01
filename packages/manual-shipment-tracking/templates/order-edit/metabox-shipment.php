@@ -65,8 +65,8 @@ use \Hezarfen\ManualShipmentTracking\Helper;
 
                         <div class="flex justify-center">
                             <div class="flex justify-center">
-                                <button type="button" class="h-expand items-center text-black px-4 py-2 flex" data-show-more-label="<?php esc_html_e( 'Show More', 'hezarfen-pro-for-woocommerce' ); ?>" data-show-less-label="<?php esc_html_e( 'Show Less', 'hezarfen-pro-for-woocommerce' ); ?>">
-                                    <span><?php esc_html_e( 'Show More', 'hezarfen-pro-for-woocommerce' ); ?></span>
+                                <button type="button" class="h-expand items-center text-black px-4 py-2 flex" data-show-more-label="<?php esc_html_e( 'Show More', 'hezarfen-for-woocommerce' ); ?>" data-show-less-label="<?php esc_html_e( 'Show Less', 'hezarfen-for-woocommerce' ); ?>">
+                                    <span><?php esc_html_e( 'Show More', 'hezarfen-for-woocommerce' ); ?></span>
                                     <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M8.00048 9.11403L11.3005 5.81403L12.2431 6.75736L8.00048 11L3.75781 6.75736L4.70048 5.81469L8.00048 9.11403Z" fill="black"/>
                                     </svg>

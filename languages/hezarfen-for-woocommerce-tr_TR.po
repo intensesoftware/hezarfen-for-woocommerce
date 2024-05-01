@@ -6,7 +6,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2024-05-01 02:47+0000\n"
+"PO-Revision-Date: 2024-05-01 02:54+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #. %s plugin name
@@ -151,7 +151,7 @@ msgstr ""
 "Bu ayarı kullanabilmek için Checkout Field Editor for WooCommerce "
 "eklentisini devre dışı bırakınız."
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:486
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:491
 msgid ""
 "Easy Data Recognition - We've detected that you're using the Intense Kargo "
 "Takip Plugin or Kargo Takip Türkiye plugin."
@@ -236,7 +236,7 @@ msgstr "FedEx"
 msgid "Fetching data.."
 msgstr "Veri çekiliyor.."
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:492
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:497
 msgid "Free Support on wordpress.org"
 msgstr "wordpress.org üzerinde Ücretsiz Destek"
 
@@ -256,7 +256,7 @@ msgstr "Genel Ayarlar"
 msgid "hepsiJET"
 msgstr "hepsiJET"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:488
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:493
 msgid ""
 "Hezarfen can automatically recognize the shipment data of your previous "
 "orders with just one click. Moreover, this data remains accessible in "
@@ -612,6 +612,15 @@ msgstr[1] "Kargoya Verildi (Kargo Takip Turkiye Eklentisi) (%s)"
 msgid "Show hezarfen checkout tax fields?"
 msgstr "Ödeme sayfasında vergi alanları gösterilsin mi?"
 
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:68
+msgid "Show Less"
+msgstr "Daha az göster"
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:68
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:69
+msgid "Show More"
+msgstr "Daha fazla göster"
+
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:131
 msgid "Show Shipment Tracking column on My Account > Orders page"
 msgstr "Hesabım > Siparişler sayfasında Kargo Takip sütununu göster"
@@ -722,7 +731,7 @@ msgstr "Trendyol Express"
 msgid "UPS Kargo"
 msgstr "UPS Kargo"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:491
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:496
 msgid "Visit Hezarfen Shipment Settings"
 msgstr "Hezarfen Gönderi Ayarları'nı ziyaret edin."
 
