@@ -121,12 +121,6 @@ class Settings {
 					'title' => __( 'Manual Shipment Tracking General Settings', 'hezarfen-for-woocommerce' ),
 				),
 				array(
-					'type'    => 'select',
-					'title'   => __( 'Default courier company', 'hezarfen-for-woocommerce' ),
-					'id'      => self::OPT_DEFAULT_COURIER,
-					'options' => Helper::courier_company_options(),
-				),
-				array(
 					'type'  => 'checkbox',
 					'title' => __( 'Show Shipment Tracking column on My Account > Orders page', 'hezarfen-for-woocommerce' ),
 					'id'    => self::OPT_SHOW_TRACKING_COLUMN,
