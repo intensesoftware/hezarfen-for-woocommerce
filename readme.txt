@@ -5,7 +5,7 @@ Requires at least: 5.3
 Tested up to: 6.4
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
@@ -37,7 +37,7 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 11. Kargoya verildi özellik ayarları
 
 == Changelog ==
-= 2.0.0 - 2024-04-15 =
+= 2.0.1 - 2024-04-15 =
 * Kargo takip özelliği eklendi. (kargo takip numarası girebilme, kargoya verildi durumu, SMS entegrasyonu)
 
 = 1.6.8 - 2024-04-15 =
