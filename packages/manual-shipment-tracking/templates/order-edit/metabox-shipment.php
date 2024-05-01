@@ -392,6 +392,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                 </ul>
 
                                 <div class="campaign rounded-lg p-1 2xl:p-2 mt-0">
+                                    <?php if( current_time('mysql') < '2024-05-03 23:59:00' ): ?>
                                     <div class="p-0 2xl:p-1g">
                                         <h3 class="font-bold text-lg text-red-600">Hezarfen Pro'da Büyük Bahar Festivali</h3>
                                         <p class="deadline">Süreli İndirim - Son Tarih: 3 Mayıs 2024 23:59</p>
@@ -419,6 +420,8 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                         </div>
                                     </div>
 
+                                    <?php endif; ?>
+
                                     <div class="p-1 2xl:p-1">
                                         <a id="hps-upgrade" target="_blank" href="https://intense.com.tr/urun/hezarfen-pro?campaign=hezarfen-2.0.0" class="block text-center focus:outline-none text-white bg-green-700 hover:bg-green-800  xl:my-2 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-full">Hemen Yükselt</a>
                                     </div>
@@ -445,6 +448,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                     ?>
                                 </ul>
 
+                                <?php if( current_time('mysql') < '2024-07-01 00:00' ): ?>
                                 <div class="campaign campaign-hepsijet rounded-lg p-2 xl:p-2 mt-0 xl:mt-2">
                                     <h3 class="text-primary-color font-bold">Hepsijet'den Intense Hezarfen Pro Müşterilerine Özel Fiyatlar</h3>
                                     <div id="hepsijet-pricing" class="mt-2 grid grid-cols-2 gap-2">
@@ -467,6 +471,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                     </div>
                                     <p class="mt-3 text-xs">Fiyatlar vergiler hariçtir. Kampanya 31.06.2024 tarihine kadar geçerlidir. Intense veya Hepsijet kampanyayı dilediği zaman sonlandırma hakkına sahiptir. Firmalar tipografik hatalardan sorumlu tutulamaz.</p>
                                 </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
