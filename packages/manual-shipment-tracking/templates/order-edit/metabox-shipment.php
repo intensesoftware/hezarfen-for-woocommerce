@@ -13,7 +13,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
             <?php endif; ?>
             <li class="w-1/2" role="presentation">
                 <button class="h-16	center flex justify-center items-center	 w-full gap-4 inline-block p-2 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="hezarfen-pro-tab" data-tabs-target="#hezarfen-pro" type="button" role="tab" aria-controls="hezarfen-pro" aria-selected="false">
-                    <?php esc_html_e('Shipment Barcode', 'hezarfen-for-woocommerce'); ?>
+                    <?php esc_html_e('Shipment Barcode / Automated Shipment Tracking', 'hezarfen-for-woocommerce'); ?>
 
                     <?php if (!defined('HEZARFEN_PRO_VERSION')) : ?>
                         <span type="button" class="flex gap-2 bg-primary-color text-xs text-white border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-1 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
