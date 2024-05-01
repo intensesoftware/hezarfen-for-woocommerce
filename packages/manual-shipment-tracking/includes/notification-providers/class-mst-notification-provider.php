@@ -30,6 +30,7 @@ abstract class MST_Notification_Provider extends \Hezarfen\Inc\Notification_Prov
 
 		if ( $result ) {
 			$shipment_data->sms_sent = true;
+
 			$shipment_data->save();
 
 			/* translators: %s billing phone */

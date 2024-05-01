@@ -115,11 +115,35 @@ class Shipment_Data implements \JsonSerializable {
 	}
 
 	/**
+	 * Find meta ID
+	 *
+	 * @param  object $raw_data Raw Data
+	 * @return int|null
+	 */
+	private function find_meta_id($raw_data) {
+		$order = wc_get_order( $this->order_id );
+
+		if( ! $order ) {
+			return null;
+		}
+
+		$all_data = $order->get_meta( Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, false );
+
+		foreach($all_data as $data) {
+			if( $data->value === $raw_data ) {
+				return $data->id;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Saves this shipment data object to db as a postmeta.
 	 * 
 	 * @param bool $add_new Add a new post meta?.
 	 * 
-	 * @return bool
+	 * @return int|false
 	 */
 	public function save( $add_new = false ) {
 		if ( ! $this->order_id ) {
@@ -136,21 +160,16 @@ class Shipment_Data implements \JsonSerializable {
 			$saved = $order->add_meta_data( Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->prapare_for_db() );
 			$saved = $order->save();
 
-			return $saved;
-		}
-
-		if ( $this->raw_data ) {
-			$current_data = $order->get_meta( Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, false );
-
-			if ( ! in_array($this->raw_data, $current_data) ) {
-				$order->add_meta_data( Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->prapare_for_db(), false );
-				$order->save();
-				$updated = true;
-			} else {
-				$updated = false;
+			if( $saved ) {
+				return $this->find_meta_id( $this->prapare_for_db() );
 			}
 
-			return $updated;
+			return false;
+		}
+
+		if ( $this->meta_id ) {
+			$order->update_meta_data( Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->prapare_for_db(), $this->meta_id );
+			return $order->save();
 		}
 
 		return false;

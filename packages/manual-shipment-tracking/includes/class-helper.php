@@ -42,7 +42,12 @@ class Helper {
 				null
 			);
 
-			$new_data->save( true );
+			$meta_id = $new_data->save( true );
+
+			if( false !== $meta_id ) {
+				$new_data->meta_id = $meta_id;
+			}
+
 			do_action( 'hezarfen_mst_shipment_data_saved', $order, $new_data );
 
 			return;
