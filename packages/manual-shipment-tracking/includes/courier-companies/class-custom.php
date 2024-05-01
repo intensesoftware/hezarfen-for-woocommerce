@@ -39,7 +39,9 @@ class Courier_Custom extends Courier_Company {
 			return '';
 		}
 
-		return get_post_meta( $order_id, get_option( Settings::OPT_COURIER_CUSTOM_META, '' ), true );
+		$order = wc_get_order( $order_id );
+
+		return $order->get_meta( get_option( Settings::OPT_COURIER_CUSTOM_META, '' ), true );
 	}
 
 	/**

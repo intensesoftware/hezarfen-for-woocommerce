@@ -48,21 +48,78 @@
         }
     }
 
+    #paywall-banner {
+        h3 {
+            font-size: 0.85em;
+            line-height: normal;
+        }
+
+        svg {
+            width: 0.8em;
+        }
+
+        h4 {
+            font-size: 0.82em;
+        }
+
+        li {
+            font-size: 0.90em;
+            margin: 0.4em;
+        }
+
+        span {
+            font-size: 0.80em;
+            line-height: normal;
+        }
+
+        .campaign {
+            h3, span {
+                font-size: 0.80em;
+                line-height: normal;
+            }
+        }
+    }
+
     .campaign {
+        .deadline {
+            font-size: 0.75em;
+        }
+
+        .hezarfen-pricing * {
+            font-size: 0.85em !important;
+
+            h3 {
+                font-size: 0.95em !important;
+            }
+        }
+
         background-color: #FFF3E3;
+
+        &.campaign-hepsijet {
+            #hepsijet-pricing * {
+                font-size: 1em !important;
+            }
+
+            * {
+                font-size: 0.6em !important;
+                line-height: normal;
+            }
+        }
     }
 
     #countdown {
-        font-size: 24px;
-        font-family: Arial, sans-serif;
-    }
-
-    #countdown span {
-        color: #333;
-        margin-right: 8px;
+        div {
+            font-size: 0.7em !important;
+        }
     }
 
     #hps-upgrade:focus, #hps-upgrade:hover {
+        color: #fff !important;
+    }
+}
+
+.hez-shipment-migrate {
+    a:hover, a:focus {
         color: #fff !important;
     }
 }

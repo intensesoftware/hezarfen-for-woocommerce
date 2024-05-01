@@ -23,6 +23,13 @@ class Shipment_Data implements \JsonSerializable {
 	public $id;
 
 	/**
+	 * Meta ID.
+	 * 
+	 * @var int
+	 */
+	public $meta_id;
+
+	/**
 	 * The order ID that this object belongs to.
 	 * 
 	 * @var int
@@ -75,10 +82,11 @@ class Shipment_Data implements \JsonSerializable {
 	 * Constructor
 	 * 
 	 * @param mixed[]|string $data Shipment data.
+	 * @param int|null $id meta ID
 	 * 
 	 * @return void
 	 */
-	public function __construct( $data = null ) {
+	public function __construct( $data = null, $mid = null ) {
 		if ( ! $data ) {
 			$data = array();
 		}
@@ -96,9 +104,8 @@ class Shipment_Data implements \JsonSerializable {
 			}
 		}
 
-		$id = (int) ( $data['id'] ?? 1 );
-
-		$this->id            = $id > 0 ? $id : 1;
+		$this->meta_id 		 = $mid;
+		$this->id            = null;
 		$this->order_id      = (int) ( $data['order_id'] ?? 0 );
 		$this->courier_id    = $data['courier_id'] ?? '';
 		$this->courier_title = $data['courier_title'] ?? '';
@@ -119,21 +126,28 @@ class Shipment_Data implements \JsonSerializable {
 			return false;
 		}
 
-		if ( $add_new ) {
-			$saved = add_post_meta( $this->order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->prapare_for_db() );
+		$order = wc_get_order( $this->order_id );
 
-			if( $saved ) {
-				Helper::update_order_shipment_last_index($this->order_id);
-			}
+		if( ! $order ) {
+			return false;
+		}
+
+		if ( $add_new ) {
+			$saved = $order->add_meta_data( Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->prapare_for_db() );
+			$saved = $order->save();
 
 			return $saved;
 		}
 
 		if ( $this->raw_data ) {
-			$updated = update_post_meta( $this->order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->prapare_for_db(), $this->raw_data );
+			$current_data = $order->get_meta( Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, false );
 
-			if( $updated ) {
-				Helper::update_order_shipment_last_index($this->order_id);
+			if ( ! in_array($this->raw_data, $current_data) ) {
+				$order->add_meta_data( Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->prapare_for_db(), false );
+				$order->save();
+				$updated = true;
+			} else {
+				$updated = false;
 			}
 
 			return $updated;
@@ -148,11 +162,17 @@ class Shipment_Data implements \JsonSerializable {
 	 * @return bool
 	 */
 	public function remove() {
-		if ( ! $this->order_id || ! $this->raw_data ) {
+		if ( ! $this->order_id || ! $this->meta_id || (int) $this->meta_id < 1 ) {
 			return false;
 		}
 
-		return delete_post_meta( $this->order_id, Manual_Shipment_Tracking::SHIPMENT_DATA_KEY, $this->raw_data );
+		$order = wc_get_order( $this->order_id );
+
+		$order->delete_meta_data_by_mid( $this->meta_id );
+
+		$removed = $order->save();
+
+		return $removed>0;
 	}
 
 	/**

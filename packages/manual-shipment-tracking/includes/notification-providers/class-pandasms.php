@@ -53,12 +53,13 @@ class Pandasms extends MST_Notification_Provider {
 	 * Sends SMS.
 	 * 
 	 * @param \WC_Order $order Order instance.
+	 * @param Shipment_Data $shipment_data Shipment data.
 	 * 
 	 * @return void
 	 */
-	public function send( $order ) {
+	public function send( $order, $shipment_data ) {
 		if ( function_exists( 'pandasms_wc_siparis_bildirimi' ) ) {
-			parent::send( $order );
+			parent::send( $order, $shipment_data );
 		}
 	}
 

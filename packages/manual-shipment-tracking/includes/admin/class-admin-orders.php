@@ -29,6 +29,8 @@ class Admin_Orders {
 
 			add_filter( 'manage_shop_order_posts_columns', array( __CLASS__, 'add_shipment_column' ), PHP_INT_MAX - 1 );
 			add_action( 'manage_shop_order_posts_custom_column', array( __CLASS__, 'render_shipment_column' ), 10, 2 );
+			add_filter( 'woocommerce_shop_order_list_table_columns', array( __CLASS__, 'add_shipment_column' ), PHP_INT_MAX - 1 );
+			add_action( 'woocommerce_shop_order_list_table_custom_column', array( __CLASS__, 'render_shipment_column' ), 10, 2 );
 
 			add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_box' ) );
 
@@ -60,13 +62,14 @@ class Admin_Orders {
 	/**
 	 * Outputs the "Shipment" column HTML.
 	 * 
-	 * @param string     $column_key Current column key.
-	 * @param int|string $order_id Order ID.
+	 * @param string        $column_key Current column key.
+	 * @param int|\WC_Order $order Order ID or object.
 	 * 
 	 * @return void
 	 */
-	public static function render_shipment_column( $column_key, $order_id ) {
-		if ( self::SHIPMENT_COLUMN === $column_key ) {
+	public static function render_shipment_column( $column_key, $order ) {
+		if ( self::SHIPMENT_COLUMN === $column_key ) { // TODO: early return.
+			$order_id      = $order instanceof \WC_Order ? $order->get_id() : $order;
 			$shipment_data = Helper::get_all_shipment_data( $order_id );
 			if ( $shipment_data ) {
 				if ( count( $shipment_data ) > 1 ) {
@@ -81,29 +84,37 @@ class Admin_Orders {
 				}
 
 				printf( '<span data-order-id="%s" class="dashicons dashicons-info-outline shipment-info-icon"></span>', esc_attr( $order_id ) );
-			} else { 
-				printf( '<p class="no-shipment-found">%s</p>', apply_filters( 'hezarfen_shop_order_no_shipment_found_msg', esc_html__( 'No shipment data found', 'hezarfen-for-woocommerce' ), $order_id ) );
+			} else {
+				$no_shipment_msg = apply_filters( 'hezarfen_shop_order_no_shipment_found_msg', null, $order_id );
+
+				if( is_null( $no_shipment_msg ) ) {
+					esc_html_e( 'No shipment data found', 'hezarfen-for-woocommerce' );
+				}else{
+					printf( $no_shipment_msg );
+				}
 			}
 		}
 	}
 
 	/**
 	 * Adds a meta box to the admin order edit page.
-	 * 
-	 * @param string $post_type Post type.
-	 * 
+	 *  
 	 * @return void
 	 */
-	public static function add_meta_box( $post_type ) {
-		if ( 'shop_order' !== $post_type ) {
+	public static function add_meta_box() {
+		if ( ! \Hezarfen\Inc\Helper::is_order_edit_page() ) {
 			return;
 		}
+
+		// Note: For the recent versions of Woocommerce, wc_get_page_screen_id() function can be used alone, without the need to check if HPOS is enabled or not.
+		// We are checking because we must support older Woocommerce versions.
+		$screen = WC_HEZARFEN_HPOS_ENABLED ? wc_get_page_screen_id( 'shop-order' ) : 'shop_order';
 
 		add_meta_box(
 			'hezarfen-mst-order-edit-metabox',
 			__( 'Hezarfen Cargo Tracking', 'hezarfen-for-woocommerce' ),
 			array( __CLASS__, 'render_order_edit_metabox' ),
-			'shop_order',
+			$screen,
 			'normal',
 			'high'
 		);
@@ -112,11 +123,11 @@ class Admin_Orders {
 	/**
 	 * Renders the meta box in the admin order edit page.
 	 * 
-	 * @param \WP_Post $post The Post object.
+	 * @param \WP_Post|\WC_Order $order The Order or Post object.
 	 * 
 	 * @return void
 	 */
-	public static function render_order_edit_metabox( $post ) {
+	public static function render_order_edit_metabox( $order ) {
 		wp_enqueue_script( 'hezarfen-order-edit', WC_HEZARFEN_UYGULAMA_URL . 'assets/admin/order-edit/build/main.js', array( 'jquery', 'jquery-ui-dialog' ), WC_HEZARFEN_VERSION );
 		wp_localize_script(
 			'hezarfen-order-edit',
@@ -137,7 +148,7 @@ class Admin_Orders {
 		);
 		wp_enqueue_style( 'hezarfen-order-edit', WC_HEZARFEN_UYGULAMA_URL . 'assets/admin/order-edit/build/style-main.css', array(), WC_HEZARFEN_VERSION );
 
-		$order_id      = $post->ID;
+		$order_id      = $order instanceof \WC_Order ? $order->get_id() : $order->ID;
 		$shipment_data = Helper::get_all_shipment_data( $order_id );
 
 		if ( ! $shipment_data ) {
@@ -159,6 +170,16 @@ class Admin_Orders {
 		return $statuses;
 	}
 
+	private static function is_wc_order_list_screen() {
+		$screen = get_current_screen();
+
+		if (isset($screen->post_type) && 'shop_order' === $screen->post_type) {
+			return true;
+		}
+
+		return false;
+	}
+
 	/**
 	 * Enqueues CSS files.
 	 * 
@@ -167,27 +188,23 @@ class Admin_Orders {
 	 * @return void
 	 */
 	public static function enqueue_scripts_and_styles( $hook_suffix ) {
-		global $typenow;
-
-		if ( 'shop_order' !== $typenow ) {
+		if( ! self::is_wc_order_list_screen() ){
 			return;
 		}
 
-		if ( 'edit.php' === $hook_suffix ) {
-			wp_enqueue_style( 'hezarfen_mst_admin_orders_css', HEZARFEN_MST_ASSETS_URL . 'css/admin/orders.css', array(), WC_HEZARFEN_VERSION );
-			wp_enqueue_script( 'hezarfen_mst_admin_orders_js', HEZARFEN_MST_ASSETS_URL . 'js/admin/orders.js', array( 'jquery', 'jquery-tiptip' ), WC_HEZARFEN_VERSION, true );
+		wp_enqueue_style( 'hezarfen_mst_admin_orders_css', HEZARFEN_MST_ASSETS_URL . 'css/admin/orders.css', array(), WC_HEZARFEN_VERSION );
+		wp_enqueue_script( 'hezarfen_mst_admin_orders_js', HEZARFEN_MST_ASSETS_URL . 'js/admin/orders.js', array( 'jquery', 'jquery-tiptip' ), WC_HEZARFEN_VERSION, true );
 
-			wp_localize_script(
-				'hezarfen_mst_admin_orders_js',
-				'hezarfen_mst_backend',
-				array(
-					'get_shipment_data_nonce'  => wp_create_nonce( Admin_Ajax::GET_SHIPMENT_DATA_NONCE ),
-					'get_shipment_data_action' => Admin_Ajax::GET_SHIPMENT_DATA_ACTION,
-					'tooltip_placeholder'      => esc_html__( 'Fetching data..', 'hezarfen-for-woocommerce' ),
-					'courier_company_i18n'     => esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ),
-					'tracking_num_i18n'        => esc_html__( 'Tracking Number', 'hezarfen-for-woocommerce' ),
-				)
-			);
-		}
+		wp_localize_script(
+			'hezarfen_mst_admin_orders_js',
+			'hezarfen_mst_backend',
+			array(
+				'get_shipment_data_nonce'  => wp_create_nonce( Admin_Ajax::GET_SHIPMENT_DATA_NONCE ),
+				'get_shipment_data_action' => Admin_Ajax::GET_SHIPMENT_DATA_ACTION,
+				'tooltip_placeholder'      => esc_html__( 'Fetching data..', 'hezarfen-for-woocommerce' ),
+				'courier_company_i18n'     => esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ),
+				'tracking_num_i18n'        => esc_html__( 'Tracking Number', 'hezarfen-for-woocommerce' ),
+			)
+		);
 	}
 }

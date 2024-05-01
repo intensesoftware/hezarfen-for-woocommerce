@@ -56,14 +56,10 @@ class Autoload {
 	/**
 	 * Load assets files for admin
 	 *
-	 * @param string $hook_suffix The current admin page.
-	 *
 	 * @return void
 	 */
-	public function load_admin_assets_files( $hook_suffix ) {
-		global $post_type;
-
-		if ( 'post.php' === $hook_suffix && 'shop_order' === $post_type ) {
+	public function load_admin_assets_files() {
+		if ( Helper::is_order_edit_page() ) {
 			wp_enqueue_script(
 				'wc_hezarfen_admin_order_details_js',
 				plugins_url( 'assets/admin/js/order-details.js', WC_HEZARFEN_FILE ),
@@ -128,7 +124,7 @@ class Autoload {
 					'shipping_district_field_classes'     => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_shipping_district', array() ),
 					'billing_neighborhood_field_classes'  => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_billing_neighborhood', array() ),
 					'shipping_neighborhood_field_classes' => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_shipping_neighborhood', array() ),
-					'should_notify_neighborhood_changed' => apply_filters( 'hezarfen_checkout_should_notify_neighborhood_changed', false )
+					'should_notify_neighborhood_changed'  => apply_filters( 'hezarfen_checkout_should_notify_neighborhood_changed', false ),
 				)
 			);
 		}

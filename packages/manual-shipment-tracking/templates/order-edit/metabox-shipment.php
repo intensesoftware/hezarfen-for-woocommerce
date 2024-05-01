@@ -6,12 +6,14 @@ use \Hezarfen\ManualShipmentTracking\Helper;
 <div id="hez-order-shipments" class="hez-ui">
     <div class="mb-4 border-gray-200 dark:border-gray-700">
         <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
+            <?php if (!defined('HEZARFEN_PRO_VERSION')) : ?>
             <li class="w-1/2" role="presentation">
                 <button class="h-16	w-full inline-block p-2 border-b-2 rounded-t-lg" id="hezarfen-lite-tab" data-tabs-target="#hezarfen-lite" type="button" role="tab" aria-controls="hezarfen-lite" aria-selected="false"><?php esc_html_e('Manual Tracking', 'hezarfen-for-woocommerce'); ?></button>
             </li>
+            <?php endif; ?>
             <li class="w-1/2" role="presentation">
                 <button class="h-16	center flex justify-center items-center	 w-full gap-4 inline-block p-2 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="hezarfen-pro-tab" data-tabs-target="#hezarfen-pro" type="button" role="tab" aria-controls="hezarfen-pro" aria-selected="false">
-                    <?php esc_html_e('Shipment Barcode', 'hezarfen-for-woocommerce'); ?>
+                    <?php esc_html_e('Shipment Barcode / Automated Shipment Tracking', 'hezarfen-for-woocommerce'); ?>
 
                     <?php if (!defined('HEZARFEN_PRO_VERSION')) : ?>
                         <span type="button" class="flex gap-2 bg-primary-color text-xs text-white border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-1 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
@@ -23,6 +25,11 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                     <?php endif; ?>
                 </button>
             </li>
+            <?php if (defined('HEZARFEN_PRO_VERSION')) : ?>
+            <li class="w-1/2" role="presentation">
+                <button class="h-16	w-full inline-block p-2 border-b-2 rounded-t-lg" id="hezarfen-lite-tab" data-tabs-target="#hezarfen-lite" type="button" role="tab" aria-controls="hezarfen-lite" aria-selected="false"><?php esc_html_e('Manual Tracking', 'hezarfen-for-woocommerce'); ?></button>
+            </li>
+            <?php endif; ?>
         </ul>
     </div>
     <div id="default-tab-content">
@@ -32,22 +39,22 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                     <p class="text-lg text-black"><?php esc_html_e('Enter Tracking Information', 'hezarfen-for-woocommerce'); ?></p>
                     <p class="text-gray-1 text-xs font-light"><?php esc_html_e('In order to track your shipment, please enter your tracking number and select courier from below and add it to your tracking list.', 'hezarfen-for-woocommerce'); ?></p>
 
-                    <div class="mt-6">
+                    <div class="mt-4">
                         <?php
                         $courier_select_name  = sprintf('%s[%s][%s]', self::DATA_ARRAY_KEY, $shipment_data->id, self::COURIER_HTML_NAME);
                         ?>
                         <div class="mb-5">
                             <label for="tracking-num-input" class="font-light text-gray-1 block mb-2 text-sm dark:text-white"><?php esc_html_e('Tracking Number', 'hezarfen-for-woocommerce'); ?></label>
-                            <input type="text" id="tracking-num-input" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-3 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required />
+                            <input type="text" id="tracking-num-input" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-3 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" />
                         </div>
-                        <div class="mb-5">
+                        <div class="mb-2">
                             <label class="font-light text-gray-1 block mb-2 text-sm dark:text-white"><?php esc_html_e('Select a Courier Company', 'hezarfen-for-woocommerce'); ?></label>
                             <ul id="shipping-companies" class="max-h-24 grid w-full gap-2 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 5xl:grid-cols-7 6xl:grid-cols-8 overflow-hidden transition-max-height duration-300 ease-in-out">
                                 <?php foreach (Helper::courier_company_options() as $courier_id => $courier_label) : if (empty($courier_id)) {
                                         continue;
                                     } ?>
                                     <li class="flex justify-center">
-                                        <input type="radio" id="courier-company-select-<?php echo esc_attr($courier_id); ?>" name="courier-company-select" value="<?php echo esc_attr($courier_id); ?>" class="hidden peer" required />
+                                        <input type="radio" id="courier-company-select-<?php echo esc_attr($courier_id); ?>" name="courier-company-select" value="<?php echo esc_attr($courier_id); ?>" class="hidden peer" />
                                         <label for="courier-company-select-<?php echo esc_attr($courier_id); ?>" class="flex justify-center h-12 items-center justify-between w-full p-5 text-gray-3 bg-white border border-gray-3 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-3 dark:peer-checked:text-blue-500 peer-checked:bg-orange-1 peer-checked:border-2 peer-checked:border-orange-2 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-orange-1 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
                                             <img class="max-h-8" src="<?php echo esc_attr(HEZARFEN_MST_COURIER_LOGO_URL . Helper::get_courier_class($courier_id)::$logo); ?>" />
                                         </label>
@@ -57,10 +64,17 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                         </div>
 
                         <div class="flex justify-center">
-                            <button type="button" class="h-expand" class="text-black px-4 py-2 mt-2" data-show-more-label="<?php esc_html_e('Show More', 'hezarfen-for-woocommerce'); ?>" data-show-less-label="<?php esc_html_e('Show Less', 'hezarfen-for-woocommerce'); ?>"><?php esc_html_e('Show More', 'hezarfen-for-woocommerce'); ?></button>
+                            <div class="flex justify-center">
+                                <button type="button" class="h-expand items-center text-black px-4 py-2 flex" data-show-more-label="<?php esc_html_e( 'Show More', 'hezarfen-for-woocommerce' ); ?>" data-show-less-label="<?php esc_html_e( 'Show Less', 'hezarfen-for-woocommerce' ); ?>">
+                                    <span><?php esc_html_e( 'Show More', 'hezarfen-for-woocommerce' ); ?></span>
+                                    <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M8.00048 9.11403L11.3005 5.81403L12.2431 6.75736L8.00048 11L3.75781 6.75736L4.70048 5.81469L8.00048 9.11403Z" fill="black"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
 
-                        <div class="flex justify-center mt-6">
+                        <div class="flex justify-center mt-2">
                             <button data-order_id="<?php echo esc_attr($order_id); ?>" id="add-to-tracking-list" type="button" class="w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-normal rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"><?php esc_html_e('Add to Tracking List', 'hezarfen-for-woocommerce'); ?></button>
                         </div>
 
@@ -79,8 +93,6 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                             <p class="text-black text-lg"><?php esc_html_e('Nothing to Track Yet', 'hezarfen-for-woocommerce'); ?></p>
                             <div class="text-center">
                                 <p class="text-gray-1 font-light"><?php esc_html_e('There are no tracking numbers added to the tracking list.', 'hezarfen-for-woocommerce'); ?></p>
-                                <p class="text-gray-1 font-light"><?php esc_html_e('Please add one or more tracking numbers to the list.', 'hezarfen-for-woocommerce'); ?></p>
-                                </p>
                             </div>
                         </div>
                     </div>
@@ -99,9 +111,9 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                             </thead>
                             <tbody>
                                 <?php
-                                foreach ($shipments_data as $shipment_args) :
+                                foreach ($shipments_data as $shipment_args):
                                 ?>
-                                    <tr data-id="<?php echo esc_attr(strval($shipment_args->id)); ?>" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <tr data-meta_id="<?php echo esc_attr(strval($shipment_args->meta_id)); ?>" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             <?php echo esc_html($shipment_args->courier_title); ?>
                                             </td>
@@ -156,36 +168,36 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                         <div class="col-span-1">
                             <p class="text-lg text-black">Barkod Bilgileri</p>
 
-                            <div class="mt-6">
-                                <div class="mb-5">
+                            <div class="mt-2">
+                                <div class="mb-2">
                                     <label class="font-light text-gray-1 block mb-2 text-sm dark:text-white">Kargo Şirketi Seçin</label>
                                     <ul id="shipping-companies" class="max-h-24 grid w-full gap-2 grid-cols-1 xl:grid-cols-2 5xl:grid-cols-3 overflow-hidden transition-max-height duration-300 ease-in-out">
                                         <li class="flex justify-center">
-                                            <input type="radio" id="hez-pro-courier-company-select-hepsijet" name="hez-pro-courier-company-select" value="hepsijet" class="hidden peer" required="">
+                                            <input type="radio" id="hez-pro-courier-company-select-hepsijet" name="hez-pro-courier-company-select" value="hepsijet" class="hidden peer">
                                             <label for="hez-pro-courier-company-select-hepsijet" class="flex justify-center h-12 items-center justify-between w-full p-5 text-gray-3 bg-white border border-gray-3 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-3 dark:peer-checked:text-blue-500 peer-checked:bg-orange-1 peer-checked:border-2 peer-checked:border-orange-2 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-orange-1 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
                                                 <img class="max-h-12" src="http://hezarfen.test/wp-content/plugins/hezarfen-for-woocommerce/packages/manual-shipment-tracking/assets/img/courier-companies/hepsijet-logo.svg">
                                             </label>
                                         </li>
                                         <li class="flex justify-center">
-                                            <input type="radio" id="hez-pro-courier-company-select-mng" name="hez-pro-courier-company-select" value="mng" class="hidden peer" required="">
+                                            <input type="radio" id="hez-pro-courier-company-select-mng" name="hez-pro-courier-company-select" value="mng" class="hidden peer">
                                             <label for="hez-pro-courier-company-select-mng" class="flex justify-center h-12 items-center justify-between w-full p-5 text-gray-3 bg-white border border-gray-3 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-3 dark:peer-checked:text-blue-500 peer-checked:bg-orange-1 peer-checked:border-2 peer-checked:border-orange-2 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-orange-1 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
                                                 <img class="max-h-12" src="http://hezarfen.test/wp-content/plugins/hezarfen-for-woocommerce/packages/manual-shipment-tracking/assets/img/courier-companies/mng-logo.svg">
                                             </label>
                                         </li>
                                         <li class="flex justify-center">
-                                            <input type="radio" id="hez-pro-courier-company-select-yurtici" name="hez-pro-courier-company-select" value="yurtici" class="hidden peer" required="">
+                                            <input type="radio" id="hez-pro-courier-company-select-yurtici" name="hez-pro-courier-company-select" value="yurtici" class="hidden peer">
                                             <label for="hez-pro-courier-company-select-yurtici" class="flex justify-center h-12 items-center justify-between w-full p-5 text-gray-3 bg-white border border-gray-3 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-3 dark:peer-checked:text-blue-500 peer-checked:bg-orange-1 peer-checked:border-2 peer-checked:border-orange-2 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-orange-1 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
                                                 <img class="max-h-12" src="http://hezarfen.test/wp-content/plugins/hezarfen-for-woocommerce/packages/manual-shipment-tracking/assets/img/courier-companies/yurtici-logo.svg">
                                             </label>
                                         </li>
                                         <li class="flex justify-center">
-                                            <input type="radio" id="hez-pro-courier-company-select-sendeo" name="hez-pro-courier-company-select" value="sendeo" class="hidden peer" required="">
+                                            <input type="radio" id="hez-pro-courier-company-select-sendeo" name="hez-pro-courier-company-select" value="sendeo" class="hidden peer">
                                             <label for="hez-pro-courier-company-select-sendeo" class="flex justify-center h-12 items-center justify-between w-full p-5 text-gray-3 bg-white border border-gray-3 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-3 dark:peer-checked:text-blue-500 peer-checked:bg-orange-1 peer-checked:border-2 peer-checked:border-orange-2 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-orange-1 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
                                                 <img class="max-h-12" src="http://hezarfen.test/wp-content/plugins/hezarfen-for-woocommerce/packages/manual-shipment-tracking/assets/img/courier-companies/sendeo-logo.svg">
                                             </label>
                                         </li>
                                         <li class="flex justify-center">
-                                            <input type="radio" id="hez-pro-courier-company-select-aras" name="hez-pro-courier-company-select" value="aras" class="hidden peer" required="">
+                                            <input type="radio" id="hez-pro-courier-company-select-aras" name="hez-pro-courier-company-select" value="aras" class="hidden peer">
                                             <label for="hez-pro-courier-company-select-aras" class="flex justify-center h-12 items-center justify-between w-full p-5 text-gray-3 bg-white border border-gray-3 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-3 dark:peer-checked:text-blue-500 peer-checked:bg-orange-1 peer-checked:border-2 peer-checked:border-orange-2 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-orange-1 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
                                                 <img class="max-h-12" src="http://hezarfen.test/wp-content/plugins/hezarfen-for-woocommerce/packages/manual-shipment-tracking/assets/img/courier-companies/aras-logo.png">
                                             </label>
@@ -352,12 +364,12 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                         </div>
                         <div class="absolute inset-0 bg-gray-800 opacity-50"></div>
                     </div>
-                    <div id="paywall-banner" class="absolute top-0 left-1/2 transform -translate-x-1/2 w-3/4 bg-white p-4 rounded-lg shadow-lg mt-8">
+                    <div id="paywall-banner" class="text-xs md:text-sm lg:text-base xl:text-lg absolute top-0 left-1/2 transform -translate-x-1/2 w-5/6 bg-white p-2 lg:p-4 rounded-lg shadow-lg mt-8">
                         <h3 class="text-xl">Kargo Entegrasyonlarını Kullanabilmek için Hezarfen Pro'ya Geçin</h3>
 
-                        <div class="mt-3 grid grid-cols-3 gap-2">
+                        <div class="mt-1 xl:mt-3 grid grid-cols-3 gap-2">
                             <div class="col-span-2">
-                                <h4 class="text-base font-bold mb-2">Özellikler</h4>
+                                <h4 class="text-base font-bold mb-1 xl:mb-2">Özellikler</h4>
                                 <ul class="space-y-2 text-left text-gray-500 dark:text-gray-400">
                                     <?php
                                     foreach( [
@@ -370,7 +382,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                         'Kargo firmalarına nazaran çok uygun fiyatlara otomatik SMS gönderimi',
                                         'Hezarfen/Hezarfen Pro için Premium Destek',
                                     ] as $feature ): ?>
-                                    <li class="flex items-center space-x-3 rtl:space-x-reverse">
+                                    <li class="flex items-center space-x-0 lg:space-x-3 rtl:space-x-reverse">
                                         <svg class="flex-shrink-0 w-3.5 h-3.5 text-green-500 dark:text-green-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
                                         </svg>
@@ -379,45 +391,44 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                     <?php endforeach; ?>
                                 </ul>
 
-                                <div class="campaign rounded-lg p-3 mt-4">
-                                    <div class="p-2">
-                                        <h3 class="text-primary-color font-bold text-lg">Hezarfen Pro'da Büyük Bahar Festivali</h3>
-                                        <p>Süreli İndirim - Son Tarih: 1 Mayıs 2024 23:59</p>
+                                <div class="campaign rounded-lg p-1 2xl:p-2 mt-0">
+                                    <?php if( current_time('mysql') < '2024-05-03 23:59:00' ): ?>
+                                    <div class="p-0 2xl:p-1g">
+                                        <h3 class="font-bold text-lg text-red-600">Hezarfen Pro'da Büyük Bahar Festivali</h3>
+                                        <p class="deadline">Süreli İndirim - Son Tarih: 3 Mayıs 2024 23:59</p>
                                     </div>
 
-                                    <div class="grid grid-cols-5 gap-2">
-                                        <div class="col-span-2 flex justify-between p-3 rounded-lg flex-col">
-                                            <p><span class="line-through">7250₺+KDV</span> yerine</p>
-                                            %30 indirimle
-                                            <span class="text-lg text-red font-bold text-red-600">5250₺+KDV (1 Yıllık)</span>
-                                        </div>
+                                    <div class="hezarfen-pricing p-1 2xl:p-1 rounded-lg">
+                                        <p><span class="line-through">7250₺+KDV</span> yerine %30 indirimle <span class="text-lg text-red font-bold text-red-600">5250₺+KDV (1 Yıllık)</span></p>
+                                    </div>
 
-                                        <div class="col-span-3 p-3">
-                                            <h3 class="font-bold text-lg text-black">Son Saatler</h3>
-                                            <div class="flex gap-4" id="countdown">
-                                                <div class="bg-white p-2 text-sm rounded-lg flex items-center justify-center">
-                                                    <span id="days"></span> gün
-                                                </div>
-                                                <div class="bg-white p-2 text-sm rounded-lg flex items-center justify-center">
-                                                    <span id="hours"></span> saat
-                                                </div>
-                                                <div class="bg-white p-2 text-sm rounded-lg flex items-center justify-center">
-                                                    <span id="minutes"></span> dk
-                                                </div>
-                                                <div class="bg-white p-2 text-sm rounded-lg flex items-center justify-center">
-                                                    <span id="seconds"></span> sn
-                                                </div>
+                                    <div class="2xl:p-1">
+                                        <h3 class="font-bold text-black">Son Saatler</h3>
+                                        <div class="flex gap-2 xl:gap-4" id="countdown">
+                                            <div class="bg-white p-1 xl:p-2 rounded-lg flex items-center justify-center gap-1">
+                                                <span id="days"></span> gün
+                                            </div>
+                                            <div class="bg-white p-1 xl:p-2 rounded-lg flex items-center justify-center gap-1">
+                                                <span id="hours"></span> saat
+                                            </div>
+                                            <div class="bg-white p-1 xl:p-2 rounded-lg flex items-center justify-center gap-1">
+                                                <span id="minutes"></span> dk
+                                            </div>
+                                            <div class="bg-white p-1 xl:p-2 rounded-lg flex items-center justify-center gap-1">
+                                                <span id="seconds"></span> sn
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="p-3">
-                                        <a id="hps-upgrade" target="_blank" href="https://intense.com.tr/urun/hezarfen-pro?campaign=hezarfen-2.0.0" class="block text-center focus:outline-none text-white bg-green-700 hover:bg-green-800  my-2 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-full">Hemen Yükselt</a>
+                                    <?php endif; ?>
+
+                                    <div class="p-1 2xl:p-1">
+                                        <a id="hps-upgrade" target="_blank" href="https://intense.com.tr/urun/hezarfen-pro?campaign=hezarfen-2.0.0" class="block text-center focus:outline-none text-white bg-green-700 hover:bg-green-800  xl:my-2 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-full">Hemen Yükselt</a>
                                     </div>
                                 </div>
                             </div>
                             <div>
-                                <h4 class="text-base font-bold mb-2">Faydalar</h4>
+                                <h4 class="text-base font-bold mb-1 xl:mb-2">Faydalar</h4>
                                 <ul class="space-y-2 text-left text-gray-500 dark:text-gray-400">
                                     <?php
                                     foreach( [
@@ -437,28 +448,30 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                     ?>
                                 </ul>
 
-                                <div class="campaign rounded-lg p-2 my-4">
-                                    <span class="text-primary-color font-bold">Hepsijet'den Intense Hezarfen Pro Müşterilerine Özel Fiyatlar</span>
-                                    <div class="mt-2 grid grid-cols-2 gap-2">
-                                        <div class="flex justify-between bg-white p-2 rounded-lg">
+                                <?php if( current_time('mysql') < '2024-07-01 00:00' ): ?>
+                                <div class="campaign campaign-hepsijet rounded-lg p-2 xl:p-2 mt-0 xl:mt-2">
+                                    <h3 class="text-primary-color font-bold">Hepsijet'den Intense Hezarfen Pro Müşterilerine Özel Fiyatlar</h3>
+                                    <div id="hepsijet-pricing" class="mt-2 grid grid-cols-2 gap-2">
+                                        <div class="flex justify-between items-center bg-white p-0 xl:p-1 rounded-lg">
                                             <span>0-4 Desi</span>
                                             <span>66₺</span>
                                         </div>
-                                        <div class="flex justify-between bg-white p-2 rounded-lg">
+                                        <div class="flex justify-between items-center bg-white p-1 xl:p-2 ounded-lg">
                                             <span>5-10 Desi</span>
                                             <span>86₺</span>
                                         </div>
-                                        <div class="flex justify-between bg-white p-2 rounded-lg">
+                                        <div class="flex justify-between items-center bg-white p-0 xl:p-1 rounded-lg">
                                             <span>11-20 Desi</span>
                                             <span>125₺</span>
                                         </div>
-                                        <div class="flex justify-between bg-white p-2 rounded-lg">
+                                        <div class="flex justify-between items-center bg-white p-0 xl:p-1 rounded-lg">
                                             <span>21-30 Desi</span>
                                             <span>179₺</span>
                                         </div>
                                     </div>
                                     <p class="mt-3 text-xs">Fiyatlar vergiler hariçtir. Kampanya 31.06.2024 tarihine kadar geçerlidir. Intense veya Hepsijet kampanyayı dilediği zaman sonlandırma hakkına sahiptir. Firmalar tipografik hatalardan sorumlu tutulamaz.</p>
                                 </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -467,5 +480,24 @@ use \Hezarfen\ManualShipmentTracking\Helper;
             endif;
             do_action('hez_admin_order_edit_shipment_edits', $order_id); ?>
         </div>
+
+        <?php
+        include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+        if (is_plugin_active('intense-kargo-takip-for-woocommerce/intense-kargo-takip-for-woocommerce.php') || is_plugin_active('kargo-takip-turkiye/kargo-takip-turkiye.php')) {
+            ?>
+            <div class="hez-shipment-migrate mt-6 mb-4">
+                <div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+                    <span class="font-medium">
+                        <?php esc_html_e( "Easy Data Recognition - We've detected that you're using the Intense Kargo Takip Plugin or Kargo Takip Türkiye plugin.", "hezarfen-for-woocommerce" ); ?>
+                    </span>
+                    <?php  esc_html_e( "Hezarfen can automatically recognize the shipment data of your previous orders with just one click. Moreover, this data remains accessible in Hezarfen even if you deactivate the Kargo Takip Türkiye plugin later on. You can start doing it on the Hezarfen Settings screen. In Hezarfen Manual Shipment Tracking Settings -> Advanced -> Recognize third party plugins' data -> Recognition type -> click 'Desteklenen eklentilerin verilerini algıla: (Intense Kargo Takip, Kargo Takip Turkiye)'", 'hezarfen-for-woocommerce' ); ?>
+                </div>
+
+                <a target="_blank" class="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" href="<?php echo esc_html( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=manual_shipment_tracking' ) ); ?>"><?php esc_html_e( 'Visit Hezarfen Shipment Settings', 'hezarfen-for-woocommerce' ); ?></a>
+                <a target="_blank" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" href="https://wordpress.org/support/plugin/hezarfen-for-woocommerce/"><?php esc_html_e( 'Free Support on wordpress.org', 'hezarfen-for-woocommerce' ); ?></a>
+            </div>
+            <?php
+        }
+        ?>
     </div>
 </div>

@@ -9,6 +9,8 @@ namespace Hezarfen\Inc;
 
 defined( 'ABSPATH' ) || exit();
 
+use Automattic\WooCommerce\Utilities\OrderUtil;
+
 /**
  * Hezarfen main class.
  */
@@ -48,6 +50,7 @@ class Hezarfen {
 		register_activation_hook( WC_HEZARFEN_FILE, array( 'Hezarfen_Install', 'install' ) );
 
 		add_action( 'plugins_loaded', array( $this, 'check_addons_and_show_notices' ) );
+		add_action( 'plugins_loaded', array( $this, 'define_constants' ) );
 		add_filter( 'woocommerce_get_settings_pages', array( $this, 'add_hezarfen_setting_page' ) );
 		add_filter( 'woocommerce_get_country_locale', array( $this, 'modify_tr_locale' ), PHP_INT_MAX - 2 );
 	}
@@ -76,6 +79,15 @@ class Hezarfen {
 		);
 
 		return $locales;
+	}
+
+	/**
+	 * Define constants after plugins are loaded.
+	 */
+	public function define_constants() {
+		if ( ! defined( 'WC_HEZARFEN_HPOS_ENABLED' ) ) {
+			define( 'WC_HEZARFEN_HPOS_ENABLED', OrderUtil::custom_orders_table_usage_is_enabled() );
+		}
 	}
 
 	/**
