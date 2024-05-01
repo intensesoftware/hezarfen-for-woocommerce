@@ -1,12 +1,11 @@
-=== Hezarfen for WooCommerce - Ücretsiz ilçe/mahalle ve kurumsal/bireysel vergi ödeme alanları ===
+=== Hezarfen for WooCommerce - Ücretsiz manuel kargo takip özelliği ve ilçe/mahalle, kurumsal/bireysel vergi ödeme alanları ===
 Contributors: intenseyazilim
-Tags: vergi alanları, posta kodu, il ilçe, mahalle, Türkiye, Turkish, Turkey, intense, hezerfen, kargo, vergi, fatura, ödeme alanları
-Donate link: https://www.intense.com.tr
+Tags: kargo, vergi, ilçe, mahalle, Türkiye
 Requires at least: 5.3
 Tested up to: 6.4
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 1.6.8
+Stable tag: 2.0.0
 
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
@@ -14,6 +13,7 @@ Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabil
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
 = ÖZELLİKLER =
+- Ücretsiz manuel kargo takibi özelliği (takip numarası girebilme, "kargoya verildi" sipariş durumu, müşteri ekranında kargo detaylarının gösterimi, NetGSM ve PandaSMS entegrasyonu, sipariş kargoya verildi maili.)
 - Ödeme ekranına Türkiye için mahalle alanlarının eklenmesi (ücretsiz, mahalle verileri eklenti içerisinde saklanır.)
 - Ödeme ekranında vergi bilgileri (kurumsal ve bireysel fatura tercihine göre)
 - Encrypt edilebilir T.C. kimlik no alanı (T.C. no verileri veritabanına encrypt edilerek yazılır.)
@@ -24,13 +24,22 @@ Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabil
 Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hezarfen menüsünden eklentinin ayarlarını kontrol edebilirsiniz.
 
 == Screenshots ==
-1. Ödeme formu ayarlar ekranı
-3. Opsiyonel mahalle.io servisi aktifken ödeme ekranı
-4. Opsiyonel mahalle.io servisi kullanılmadığında ödeme ekranı
-5. Kurumsal vergi bilgileri
-6. Bireysel vergi bilgileri
+1. Kargo takip no giriş alanı
+2. Kargoya verildi maili
+3. Müşteri hesabım sayfası kargo detayları
+4. Ödeme formu ayarlar ekranı
+5. Opsiyonel mahalle.io servisi aktifken ödeme ekranı
+6. Opsiyonel mahalle.io servisi kullanılmadığında ödeme ekranı
+7. Kurumsal vergi bilgileri
+8. Bireysel vergi bilgileri
+9. Kargo takip özellik ayarları
+10. Sipariş liste ekranında kargo takip bilgilerinin görünmesi
+11. Kargoya verildi özellik ayarları
 
 == Changelog ==
+= 2.0.0 - 2024-04-15 =
+* Kargo takip özelliği eklendi. (kargo takip numarası girebilme, kargoya verildi durumu, SMS entegrasyonu)
+
 = 1.6.8 - 2024-04-15 =
 * HPOS desteği eklendi.
 
