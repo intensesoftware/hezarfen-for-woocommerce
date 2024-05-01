@@ -364,12 +364,12 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                         </div>
                         <div class="absolute inset-0 bg-gray-800 opacity-50"></div>
                     </div>
-                    <div id="paywall-banner" class="absolute top-0 left-1/2 transform -translate-x-1/2 w-3/4 bg-white p-4 rounded-lg shadow-lg mt-8">
+                    <div id="paywall-banner" class="text-xs md:text-sm lg:text-base xl:text-lg absolute top-0 left-1/2 transform -translate-x-1/2 w-5/6 bg-white p-2 lg:p-4 rounded-lg shadow-lg mt-8">
                         <h3 class="text-xl">Kargo Entegrasyonlarını Kullanabilmek için Hezarfen Pro'ya Geçin</h3>
 
-                        <div class="mt-3 grid grid-cols-3 gap-2">
+                        <div class="mt-1 xl:mt-3 grid grid-cols-3 gap-2">
                             <div class="col-span-2">
-                                <h4 class="text-base font-bold mb-2">Özellikler</h4>
+                                <h4 class="text-base font-bold mb-1 xl:mb-2">Özellikler</h4>
                                 <ul class="space-y-2 text-left text-gray-500 dark:text-gray-400">
                                     <?php
                                     foreach( [
@@ -382,7 +382,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                         'Kargo firmalarına nazaran çok uygun fiyatlara otomatik SMS gönderimi',
                                         'Hezarfen/Hezarfen Pro için Premium Destek',
                                     ] as $feature ): ?>
-                                    <li class="flex items-center space-x-3 rtl:space-x-reverse">
+                                    <li class="flex items-center space-x-0 lg:space-x-3 rtl:space-x-reverse">
                                         <svg class="flex-shrink-0 w-3.5 h-3.5 text-green-500 dark:text-green-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
                                         </svg>
@@ -391,45 +391,41 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                     <?php endforeach; ?>
                                 </ul>
 
-                                <div class="campaign rounded-lg p-3 mt-4">
-                                    <div class="p-2">
-                                        <h3 class="text-primary-color font-bold text-lg">Hezarfen Pro'da Büyük Bahar Festivali</h3>
-                                        <p>Süreli İndirim - Son Tarih: 1 Mayıs 2024 23:59</p>
+                                <div class="campaign rounded-lg p-1 2xl:p-2 mt-0">
+                                    <div class="p-0 2xl:p-2">
+                                        <h3 class="font-bold text-lg text-red-600">Hezarfen Pro'da Büyük Bahar Festivali</h3>
+                                        <p class="deadline">Süreli İndirim - Son Tarih: 1 Mayıs 2024 23:59</p>
                                     </div>
 
-                                    <div class="grid grid-cols-5 gap-2">
-                                        <div class="col-span-2 flex justify-between p-3 rounded-lg flex-col">
-                                            <p><span class="line-through">7250₺+KDV</span> yerine</p>
-                                            %30 indirimle
-                                            <span class="text-lg text-red font-bold text-red-600">5250₺+KDV (1 Yıllık)</span>
-                                        </div>
+                                    <div class="hezarfen-pricing p-1 2xl:p-1 rounded-lg">
+                                        <p><span class="line-through">7250₺+KDV</span> yerine %30 indirimle <span class="text-lg text-red font-bold text-red-600">5250₺+KDV (1 Yıllık)</span></p>
+                                    </div>
 
-                                        <div class="col-span-3 p-3">
-                                            <h3 class="font-bold text-lg text-black">Son Saatler</h3>
-                                            <div class="flex gap-4" id="countdown">
-                                                <div class="bg-white p-2 text-sm rounded-lg flex items-center justify-center">
-                                                    <span id="days"></span> gün
-                                                </div>
-                                                <div class="bg-white p-2 text-sm rounded-lg flex items-center justify-center">
-                                                    <span id="hours"></span> saat
-                                                </div>
-                                                <div class="bg-white p-2 text-sm rounded-lg flex items-center justify-center">
-                                                    <span id="minutes"></span> dk
-                                                </div>
-                                                <div class="bg-white p-2 text-sm rounded-lg flex items-center justify-center">
-                                                    <span id="seconds"></span> sn
-                                                </div>
+                                    <div class="2xl:p-1">
+                                        <h3 class="font-bold text-black">Son Saatler</h3>
+                                        <div class="flex gap-2 xl:gap-4" id="countdown">
+                                            <div class="bg-white p-1 xl:p-2 rounded-lg flex items-center justify-center gap-1">
+                                                <span id="days"></span> gün
+                                            </div>
+                                            <div class="bg-white p-1 xl:p-2 rounded-lg flex items-center justify-center gap-1">
+                                                <span id="hours"></span> saat
+                                            </div>
+                                            <div class="bg-white p-1 xl:p-2 rounded-lg flex items-center justify-center gap-1">
+                                                <span id="minutes"></span> dk
+                                            </div>
+                                            <div class="bg-white p-1 xl:p-2 rounded-lg flex items-center justify-center gap-1">
+                                                <span id="seconds"></span> sn
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="p-3">
-                                        <a id="hps-upgrade" target="_blank" href="https://intense.com.tr/urun/hezarfen-pro?campaign=hezarfen-2.0.0" class="block text-center focus:outline-none text-white bg-green-700 hover:bg-green-800  my-2 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-full">Hemen Yükselt</a>
+                                    <div class="p-1 2xl:p-1">
+                                        <a id="hps-upgrade" target="_blank" href="https://intense.com.tr/urun/hezarfen-pro?campaign=hezarfen-2.0.0" class="block text-center focus:outline-none text-white bg-green-700 hover:bg-green-800  xl:my-2 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-full">Hemen Yükselt</a>
                                     </div>
                                 </div>
                             </div>
                             <div>
-                                <h4 class="text-base font-bold mb-2">Faydalar</h4>
+                                <h4 class="text-base font-bold mb-1 xl:mb-2">Faydalar</h4>
                                 <ul class="space-y-2 text-left text-gray-500 dark:text-gray-400">
                                     <?php
                                     foreach( [
@@ -449,22 +445,22 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                     ?>
                                 </ul>
 
-                                <div class="campaign rounded-lg p-2 my-4">
-                                    <span class="text-primary-color font-bold">Hepsijet'den Intense Hezarfen Pro Müşterilerine Özel Fiyatlar</span>
-                                    <div class="mt-2 grid grid-cols-2 gap-2">
-                                        <div class="flex justify-between bg-white p-2 rounded-lg">
+                                <div class="campaign campaign-hepsijet rounded-lg p-2 xl:p-2 mt-0 xl:mt-2">
+                                    <h3 class="text-primary-color font-bold">Hepsijet'den Intense Hezarfen Pro Müşterilerine Özel Fiyatlar</h3>
+                                    <div id="hepsijet-pricing" class="mt-2 grid grid-cols-2 gap-2">
+                                        <div class="flex justify-between items-center bg-white p-0 xl:p-1 rounded-lg">
                                             <span>0-4 Desi</span>
                                             <span>66₺</span>
                                         </div>
-                                        <div class="flex justify-between bg-white p-2 rounded-lg">
+                                        <div class="flex justify-between items-center bg-white p-1 xl:p-2 ounded-lg">
                                             <span>5-10 Desi</span>
                                             <span>86₺</span>
                                         </div>
-                                        <div class="flex justify-between bg-white p-2 rounded-lg">
+                                        <div class="flex justify-between items-center bg-white p-0 xl:p-1 rounded-lg">
                                             <span>11-20 Desi</span>
                                             <span>125₺</span>
                                         </div>
-                                        <div class="flex justify-between bg-white p-2 rounded-lg">
+                                        <div class="flex justify-between items-center bg-white p-0 xl:p-1 rounded-lg">
                                             <span>21-30 Desi</span>
                                             <span>179₺</span>
                                         </div>
