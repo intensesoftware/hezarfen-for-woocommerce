@@ -97,7 +97,7 @@ jQuery(document).ready(($)=>{
   }
 
   function updateCountdown() {
-      var endTime = new Date("May 1, 2024 23:59:00").getTime(); // Set the countdown end date and time
+      var endTime = new Date("May 3, 2024 23:59:00").getTime(); // Set the countdown end date and time
       var now = new Date().getTime(); // Current time
       var timeLeft = endTime - now; // Time remaining in milliseconds
 

@@ -392,9 +392,9 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                 </ul>
 
                                 <div class="campaign rounded-lg p-1 2xl:p-2 mt-0">
-                                    <div class="p-0 2xl:p-2">
+                                    <div class="p-0 2xl:p-1g">
                                         <h3 class="font-bold text-lg text-red-600">Hezarfen Pro'da Büyük Bahar Festivali</h3>
-                                        <p class="deadline">Süreli İndirim - Son Tarih: 1 Mayıs 2024 23:59</p>
+                                        <p class="deadline">Süreli İndirim - Son Tarih: 3 Mayıs 2024 23:59</p>
                                     </div>
 
                                     <div class="hezarfen-pricing p-1 2xl:p-1 rounded-lg">
