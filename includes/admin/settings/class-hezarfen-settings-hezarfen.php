@@ -214,6 +214,16 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			),
 			array(
 				'title'             => esc_html__(
+					'Hide district and neighborhood fields?',
+					'hezarfen-for-woocommerce'
+				),
+				'type'              => 'checkbox',
+				'desc'              => $warning_msg ?? '',
+				'id'                => 'hezarfen_hide_district_neighborhood_fields',
+				'default'           => 'no'
+			),
+			array(
+				'title'             => esc_html__(
 					'Auto sort fields in checkout form?',
 					'hezarfen-for-woocommerce'
 				),

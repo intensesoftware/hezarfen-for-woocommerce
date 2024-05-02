@@ -48,35 +48,37 @@ class Checkout {
 
 		// TODO: review the logic, if it's possible; define all fields in a single function.
 
-		add_filter(
-			'woocommerce_checkout_fields',
-			array(
-				$this,
-				'add_district_and_neighborhood_fields',
-			),
-			100,
-			1
-		);
+		if( ! hez_hide_district_neighborhood() ) {
+			add_filter(
+				'woocommerce_checkout_fields',
+				array(
+					$this,
+					'add_district_and_neighborhood_fields',
+				),
+				100,
+				1
+			);
 
-		add_filter( 'woocommerce_get_country_locale', array( $this, 'update_address_2_fields_for_tr' ) );
+			add_filter( 'woocommerce_get_country_locale', array( $this, 'update_address_2_fields_for_tr' ) );
 
-		add_filter(
-			'woocommerce_checkout_fields',
-			array(
-				$this,
-				'make_address2_required_and_update_the_label',
-			),
-			999998,
-			1
-		);
+			add_filter(
+				'woocommerce_checkout_fields',
+				array(
+					$this,
+					'make_address2_required_and_update_the_label',
+				),
+				999998,
+				1
+			);
 
-		add_filter(
-			'woocommerce_default_address_fields',
-			array(
-				$this,
-				'make_visible_address2_label',
-			),
-		);
+			add_filter(
+				'woocommerce_default_address_fields',
+				array(
+					$this,
+					'make_visible_address2_label',
+				),
+			);
+		}
 
 		add_filter(
 			'woocommerce_checkout_posted_data',

@@ -84,21 +84,23 @@ class Autoload {
 	 * @return void
 	 */
 	public function load_js_and_css_files() {
-		wp_register_script(
-			'wc_hezarfen_mahalle_helper_js',
-			plugins_url( 'assets/js/mahalle-helper.js', WC_HEZARFEN_FILE ),
-			array( 'jquery', 'select2', 'selectWoo' ),
-			WC_HEZARFEN_VERSION,
-			true
-		);
-		wp_localize_script(
-			'wc_hezarfen_mahalle_helper_js',
-			'hezarfen_mahalle_helper_backend',
-			array(
-				'api_url'            => WC_HEZARFEN_NEIGH_API_URL,
-				'select_option_text' => __( 'Select an option', 'hezarfen-for-woocommerce' ),
-			)
-		);
+		if( ! hez_hide_district_neighborhood() ) {
+			wp_register_script(
+				'wc_hezarfen_mahalle_helper_js',
+				plugins_url( 'assets/js/mahalle-helper.js', WC_HEZARFEN_FILE ),
+				array( 'jquery', 'select2', 'selectWoo' ),
+				WC_HEZARFEN_VERSION,
+				true
+			);
+			wp_localize_script(
+				'wc_hezarfen_mahalle_helper_js',
+				'hezarfen_mahalle_helper_backend',
+				array(
+					'api_url'            => WC_HEZARFEN_NEIGH_API_URL,
+					'select_option_text' => __( 'Select an option', 'hezarfen-for-woocommerce' ),
+				)
+			);
+		}
 
 		if ( is_checkout() ) {
 			wp_enqueue_style(
@@ -138,6 +140,7 @@ class Autoload {
 	 * @return void
 	 */
 	public function load_plugin_files() {
+		require_once 'helpers.php';
 		require_once 'class-hezarfen-wc-helper.php';
 		require_once 'class-hezarfen.php';
 		require_once 'Data/Abstracts/Abstract_Encryption.php';
