@@ -84,7 +84,9 @@ class Autoload {
 	 * @return void
 	 */
 	public function load_js_and_css_files() {
-		if( ! hez_hide_district_neighborhood() ) {
+		$hide_neighborhood = hez_hide_district_neighborhood();
+
+		if( ! $hide_neighborhood ) {
 			wp_register_script(
 				'wc_hezarfen_mahalle_helper_js',
 				plugins_url( 'assets/js/mahalle-helper.js', WC_HEZARFEN_FILE ),
@@ -110,10 +112,16 @@ class Autoload {
 				WC_HEZARFEN_VERSION
 			);
 
+			$checkout_js_dependencies = array( 'jquery', 'wc-checkout' );
+
+			if( ! $hide_neighborhood ) {
+				$checkout_js_dependencies[] = 'wc_hezarfen_mahalle_helper_js';
+			}
+
 			wp_enqueue_script(
 				'wc_hezarfen_checkout_js',
 				plugins_url( 'assets/js/checkout.js', WC_HEZARFEN_FILE ),
-				array( 'jquery', 'wc-checkout', 'wc_hezarfen_mahalle_helper_js' ),
+				$checkout_js_dependencies,
 				WC_HEZARFEN_VERSION,
 				true
 			);
@@ -129,6 +137,7 @@ class Autoload {
 					'billing_neighborhood_field_classes'  => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_billing_neighborhood', array() ),
 					'shipping_neighborhood_field_classes' => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_shipping_neighborhood', array() ),
 					'should_notify_neighborhood_changed'  => apply_filters( 'hezarfen_checkout_should_notify_neighborhood_changed', false ),
+					'hide_neighborhood_mahalle' 		  => $hide_neighborhood
 				)
 			);
 		}
