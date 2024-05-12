@@ -6,7 +6,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2024-05-01 02:54+0000\n"
+"PO-Revision-Date: 2024-05-12 08:14+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #. %s plugin name
@@ -23,15 +23,15 @@ msgstr ""
 msgid "Add new shipment"
 msgstr "Yeni kargo ekle"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:78
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:81
 msgid "Add to Tracking List"
 msgstr "Gönderi listesine ekle"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:169
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:163
 msgid "Advanced Settings"
 msgstr "Gelişmiş Ayarlar"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:338
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:332
 msgid "An error occured when installing and activating the PandaSMS plugin."
 msgstr "PandaSMS eklentisi yüklenip aktif edilirken bir hata oluştu."
 
@@ -39,7 +39,7 @@ msgstr "PandaSMS eklentisi yüklenip aktif edilirken bir hata oluştu."
 msgid "Aras Kargo"
 msgstr "Aras Kargo"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:161
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:164
 msgid "Are you sure you want to remove this shipment data?"
 msgstr "Bu gönderi verisini silmek istediğinize emin misiniz?"
 
@@ -47,7 +47,7 @@ msgstr "Bu gönderi verisini silmek istediğinize emin misiniz?"
 msgid "Auto sort fields in checkout form?"
 msgstr "Ödeme formundaki alanlar otomatik olarak sıralansın mı?"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:244
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:238
 msgid "Available Variables"
 msgstr "Kullanabileceğiniz Değişkenler"
 
@@ -62,6 +62,23 @@ msgstr ""
 #: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:134
 msgid "BCC"
 msgstr "BCC (Gizli Alıcı)"
+
+#: includes/class-hezarfen.php:135
+msgid ""
+"Because the Woocommerce Checkout Blocks feature is active on your website, "
+"<strong>Hezarfen for Woocommerce</strong> plugin doesn't work on the "
+"checkout page. We will add support for it as soon as possible. You can "
+"revert to old checkout system easily by following <a target='_blank' "
+"href='https://woocommerce.com/document/cart-checkout-blocks-"
+"status/#reverting-to-shortcodes-with-woocommerce-8-3'>these instructions</a>."
+msgstr ""
+"Woocommerce Ödeme Blokları özelliği sitenizde aktif olduğu için, <strong>"
+"Hezarfen for Woocommerce</strong> eklentisi ödeme ekranında çalışmamaktadır. "
+"Bu özelliğe en kısa zamanda destek ekleyeceğiz. <a target='_blank' "
+"href='https://woocommerce.com/document/cart-checkout-blocks-"
+"status/#reverting-to-shortcodes-with-woocommerce-8-3'>Şuradaki "
+"talimatları</a> uygulayarak kolaylıkla eski ödeme sayfası sistemini aktif "
+"edebilirsiniz."
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-birgunde.php:38
 msgid "Birgünde Kargo"
@@ -111,7 +128,7 @@ msgstr ""
 "Şifreleme Anahtarının (Encryption Key), eklenti ilk kurulduğunda oluşan "
 "anahtar ile aynı olup olmadığını kontrol eder."
 
-#: packages/manual-shipment-tracking/includes/class-helper.php:114
+#: packages/manual-shipment-tracking/includes/class-helper.php:119
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:136
 #| msgid "Please choose a courier company"
 msgid "Choose a courier company"
@@ -123,18 +140,14 @@ msgstr "Kurumsal"
 
 #: packages/manual-shipment-tracking/includes/class-my-account.php:119
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:205
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:109
 #: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:33
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:106
 msgid "Courier Company"
 msgstr "Kargo Firması"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:198
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:192
 msgid "Courier company post meta key"
 msgstr "Kargo firması post meta keyi"
-
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:125
-msgid "Default courier company"
-msgstr "Varsayılan kargo firması"
 
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:138
 msgid "Delete"
@@ -151,7 +164,7 @@ msgstr ""
 "Bu ayarı kullanabilmek için Checkout Field Editor for WooCommerce "
 "eklentisini devre dışı bırakınız."
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:491
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:497
 msgid ""
 "Easy Data Recognition - We've detected that you're using the Intense Kargo "
 "Takip Plugin or Kargo Takip Türkiye plugin."
@@ -163,7 +176,7 @@ msgstr ""
 msgid "Enable Manual Shipment Tracking feature"
 msgstr "Manuel Kargo Takip özelliğini aktif et"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:144
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:138
 msgid "Enable SMS notification when order shipped"
 msgstr "Sipariş kargoya verildiğinde SMS bildirimini aktif et"
 
@@ -191,19 +204,19 @@ msgstr "Şifreleme Anahtarı (Encryption Key) Ayarları"
 msgid "Enter invoice title"
 msgstr "Fatura ünvanını giriniz"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:194
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:188
 msgid "Enter order status id. E.g: wc-shipped"
 msgstr "Sipariş durumu ID'sini girin. Örn: wc-shipped"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:201
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:195
 msgid "Enter post meta key for courier company"
 msgstr "Kargo firması post meta keyini giriniz"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:208
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:202
 msgid "Enter post meta key for tracking number"
 msgstr "Kargo takip no post meta keyini giriniz"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:161
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:155
 msgid "Enter SMS content."
 msgstr "SMS içeriğini giriniz."
 
@@ -236,7 +249,7 @@ msgstr "FedEx"
 msgid "Fetching data.."
 msgstr "Veri çekiliyor.."
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:497
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:503
 msgid "Free Support on wordpress.org"
 msgstr "wordpress.org üzerinde Ücretsiz Destek"
 
@@ -256,7 +269,7 @@ msgstr "Genel Ayarlar"
 msgid "hepsiJET"
 msgstr "hepsiJET"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:493
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:499
 msgid ""
 "Hezarfen can automatically recognize the shipment data of your previous "
 "orders with just one click. Moreover, this data remains accessible in "
@@ -338,7 +351,7 @@ msgstr ""
 "alana yapıştırın. Bu satırın wp-config.php dosyasından silinmesi durumunda, "
 "daha önceki siparişlere ait T.C. no bilgileri okunamaz hale gelecektir."
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:174
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:168
 msgid ""
 "If you used a shipment tracking plugin before, check this to recognize your "
 "old shipment tracking plugin's data."
@@ -395,11 +408,11 @@ msgstr ""
 "numarası giriniz. Otomatik olarak e-posta ve SMS (ayarlanmışsa) "
 "gönderilecektir."
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:336
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:330
 msgid "Install & activate PandaSMS for Woocommerce plugin"
 msgstr "PandaSMS for Woocommerce eklentisini yükle & aktif et"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:334
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:328
 msgid "Installing.."
 msgstr "Yükleniyor.."
 
@@ -472,11 +485,11 @@ msgstr "Manuel Gönderi Takibi"
 msgid "MNG Kargo"
 msgstr "MNG Kargo"
 
-#: includes/class-hezarfen.php:76 includes/Checkout.php:495
+#: includes/Checkout.php:495 includes/class-hezarfen.php:76
 msgid "Neighborhood"
 msgstr "Mahalle"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:158
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:152
 msgid "NetGSM SMS content"
 msgstr "NetGSM SMS içeriği"
 
@@ -489,11 +502,11 @@ msgstr "Hayır"
 msgid "No shipment data found"
 msgstr "Gönderi verisi bulunamadı"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:93
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:96
 msgid "Nothing to Track Yet"
 msgstr "Henüz takip edilebilecek bir gönderi yok."
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:150
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:144
 msgid "Notification Provider"
 msgstr "Bildirim Sağlayıcı"
 
@@ -505,7 +518,7 @@ msgstr "Kargoya Verildi"
 msgid "Order Shipped emails are sent when an order have been shipped."
 msgstr "Kargoya Verildi epostası, sipariş kargoya verildiğinde gönderilir."
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:191
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:185
 msgid "Order status ID (optional)"
 msgstr "Sipariş durumu ID'si (opsiyonel)"
 
@@ -513,7 +526,7 @@ msgstr "Sipariş durumu ID'si (opsiyonel)"
 msgid "PackUpp"
 msgstr "PackUpp"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:337
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:331
 msgid "PandaSMS plugin is successfully installed and activated."
 msgstr "PandaSMS eklentisi başarıyla yüklendi ve aktif edildi."
 
@@ -525,25 +538,25 @@ msgstr "Bireysel"
 msgid "PTT Kargo"
 msgstr "PTT Kargo"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:180
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:174
 msgid "Recognition type"
 msgstr "Algılama tipi"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:186
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:180
 msgid "Recognize custom post meta data"
 msgstr "Özel post meta verilerini algıla"
 
 #. %s Supported plugins.
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:185
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:179
 #, php-format
 msgid "Recognize supported plugins: (%s)"
 msgstr "Desteklenen eklentilerin verilerini algıla: (%s)"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:173
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:167
 msgid "Recognize third party plugins' data"
 msgstr "Üçüncü taraf eklentilerin verilerini algıla"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:159
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:162
 msgid "Remove shipment data?"
 msgstr "Gönderi verisini sil?"
 
@@ -555,8 +568,8 @@ msgstr "Scotty"
 msgid "Select a Courier Company"
 msgstr "Bir Gönderi Şirketi Seçiniz"
 
-#: includes/Autoload.php:97 includes/class-hezarfen-wc-helper.php:24
-#: includes/class-hezarfen.php:77
+#: includes/Autoload.php:99 includes/class-hezarfen.php:77
+#: includes/class-hezarfen-wc-helper.php:24
 msgid "Select an option"
 msgstr "Lütfen seçiniz"
 
@@ -612,16 +625,16 @@ msgstr[1] "Kargoya Verildi (Kargo Takip Turkiye Eklentisi) (%s)"
 msgid "Show hezarfen checkout tax fields?"
 msgstr "Ödeme sayfasında vergi alanları gösterilsin mi?"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:68
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:71
 msgid "Show Less"
 msgstr "Daha az göster"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:68
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:69
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:71
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:72
 msgid "Show More"
 msgstr "Daha fazla göster"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:131
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:125
 msgid "Show Shipment Tracking column on My Account > Orders page"
 msgstr "Hesabım > Siparişler sayfasında Kargo Takip sütununu göster"
 
@@ -629,11 +642,11 @@ msgstr "Hesabım > Siparişler sayfasında Kargo Takip sütununu göster"
 msgid "Show T.C. Identity Field on checkout page "
 msgstr "T.C. Kimlik Numarası Alanını Ödeme Sayfasında Göster"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:108
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:111
 msgid "SMS"
 msgstr "SMS"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:140
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:134
 msgid "SMS Notification Settings"
 msgstr "SMS Bildirimi Ayarları"
 
@@ -673,7 +686,7 @@ msgstr "Vergi Dairesi"
 msgid "TC ID number is not valid"
 msgstr "TC Kimlik No hatalı"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:95
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:98
 msgid "There are no tracking numbers added to the tracking list."
 msgstr "Gönderi listesine herhangi bir gönderi detayı eklenmedi"
 
@@ -685,7 +698,7 @@ msgstr "Ünvan"
 msgid "TNT"
 msgstr "TNT"
 
-#: includes/class-hezarfen.php:69 includes/Checkout.php:478
+#: includes/Checkout.php:478 includes/class-hezarfen.php:69
 msgid "Town / City"
 msgstr "İlçe"
 
@@ -706,20 +719,20 @@ msgid "Tracking information sent to %s"
 msgstr "Müşterinin %s e-posta adresine kargo takip bilgileri gönderilmiştir."
 
 #. %s billing phone
-#: packages/manual-shipment-tracking/includes/notification-providers/class-mst-notification-provider.php:36
+#: packages/manual-shipment-tracking/includes/notification-providers/class-mst-notification-provider.php:37
 #, php-format
 msgid "Tracking information SMS sent to %s"
 msgstr "Kargo takip SMS'i %s GSM numarasına gönderildi"
 
 #: packages/manual-shipment-tracking/includes/class-my-account.php:120
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:206
-#: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:38
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:47
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:107
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:110
+#: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:38
 msgid "Tracking Number"
 msgstr "Kargo Takip No"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:205
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:199
 msgid "Tracking number post meta key"
 msgstr "Kargo takip no post meta keyi"
 
@@ -731,7 +744,7 @@ msgstr "Trendyol Express"
 msgid "UPS Kargo"
 msgstr "UPS Kargo"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:496
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:502
 msgid "Visit Hezarfen Shipment Settings"
 msgstr "Hezarfen Gönderi Ayarları'nı ziyaret edin."
 

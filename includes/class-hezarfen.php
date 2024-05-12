@@ -125,6 +125,21 @@ class Hezarfen {
 				}
 			);
 		}
+
+		// Show notice if the Woocommerce Checkout Blocks feature is active.
+		if ( \Automattic\WooCommerce\Blocks\Utils\CartCheckoutUtils::is_checkout_block_default() ) {
+			add_action(
+				'admin_notices',
+				function () {
+					$notice = array(
+						'message' => __( "Because the Woocommerce Checkout Blocks feature is active on your website, <strong>Hezarfen for Woocommerce</strong> plugin doesn't work on the checkout page. We will add support for it as soon as possible. You can revert to old checkout system easily by following <a target='_blank' href='https://woocommerce.com/document/cart-checkout-blocks-status/#reverting-to-shortcodes-with-woocommerce-8-3'>these instructions</a>.", 'hezarfen-for-woocommerce' ),
+						'type'    => 'warning',
+					);
+
+					Helper::render_admin_notices( array( $notice ), true );
+				}
+			);
+		}
 	}
 
 	/**
