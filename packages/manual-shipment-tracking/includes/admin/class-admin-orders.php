@@ -128,6 +128,26 @@ class Admin_Orders {
 	 * @return void
 	 */
 	public static function render_order_edit_metabox( $order ) {
+		wp_enqueue_script( 'hezarfen-order-edit', WC_HEZARFEN_UYGULAMA_URL . 'assets/admin/order-edit/build/main.js', array( 'jquery', 'jquery-ui-dialog' ), WC_HEZARFEN_VERSION );
+		wp_localize_script(
+			'hezarfen-order-edit',
+			'hezarfen_mst_backend',
+			array(
+				'courier_select_placeholder'  => __( 'Choose a courier company', 'hezarfen-for-woocommerce' ),
+				'duplicate_btn_tooltip_text'  => __( 'Add new shipment', 'hezarfen-for-woocommerce' ),
+				'modal_btn_delete_text'       => __( 'Delete', 'hezarfen-for-woocommerce' ),
+				'modal_btn_cancel_text'       => __( 'Cancel', 'hezarfen-for-woocommerce' ),
+				'courier_logo_base_url'       => HEZARFEN_MST_COURIER_LOGO_URL,
+				'remove_shipment_data_action' => Admin_Ajax::REMOVE_SHIPMENT_DATA_ACTION,
+				'remove_shipment_data_nonce'  => wp_create_nonce( Admin_Ajax::REMOVE_SHIPMENT_DATA_NONCE ),
+				'new_shipment_data_action' => Admin_Ajax::NEW_SHIPMENT_DATA_ACTION,
+				'new_shipment_data_nonce'  => wp_create_nonce( Admin_Ajax::NEW_SHIPMENT_DATA_NONCE ),
+				'new_shipment_courier_html_name' => Admin_Ajax::COURIER_HTML_NAME,
+				'new_shipment_tracking_num_html_name' => Admin_Ajax::TRACKING_NUM_HTML_NAME
+			)
+		);
+		wp_enqueue_style( 'hezarfen-order-edit', WC_HEZARFEN_UYGULAMA_URL . 'assets/admin/order-edit/build/style-main.css', array(), WC_HEZARFEN_VERSION );
+
 		$order_id      = $order instanceof \WC_Order ? $order->get_id() : $order->ID;
 		$shipment_data = Helper::get_all_shipment_data( $order_id );
 
@@ -168,26 +188,6 @@ class Admin_Orders {
 	 * @return void
 	 */
 	public static function enqueue_scripts_and_styles( $hook_suffix ) {
-		wp_enqueue_script( 'hezarfen-order-edit', WC_HEZARFEN_UYGULAMA_URL . 'assets/admin/order-edit/build/main.js', array( 'jquery', 'jquery-ui-dialog' ), WC_HEZARFEN_VERSION, array('in_footer'=>false) );
-		wp_localize_script(
-			'hezarfen-order-edit',
-			'hezarfen_mst_backend',
-			array(
-				'courier_select_placeholder'  => __( 'Choose a courier company', 'hezarfen-for-woocommerce' ),
-				'duplicate_btn_tooltip_text'  => __( 'Add new shipment', 'hezarfen-for-woocommerce' ),
-				'modal_btn_delete_text'       => __( 'Delete', 'hezarfen-for-woocommerce' ),
-				'modal_btn_cancel_text'       => __( 'Cancel', 'hezarfen-for-woocommerce' ),
-				'courier_logo_base_url'       => HEZARFEN_MST_COURIER_LOGO_URL,
-				'remove_shipment_data_action' => Admin_Ajax::REMOVE_SHIPMENT_DATA_ACTION,
-				'remove_shipment_data_nonce'  => wp_create_nonce( Admin_Ajax::REMOVE_SHIPMENT_DATA_NONCE ),
-				'new_shipment_data_action' => Admin_Ajax::NEW_SHIPMENT_DATA_ACTION,
-				'new_shipment_data_nonce'  => wp_create_nonce( Admin_Ajax::NEW_SHIPMENT_DATA_NONCE ),
-				'new_shipment_courier_html_name' => Admin_Ajax::COURIER_HTML_NAME,
-				'new_shipment_tracking_num_html_name' => Admin_Ajax::TRACKING_NUM_HTML_NAME
-			)
-		);
-		wp_enqueue_style( 'hezarfen-order-edit', WC_HEZARFEN_UYGULAMA_URL . 'assets/admin/order-edit/build/style-main.css', array(), WC_HEZARFEN_VERSION );
-
 		if( ! self::is_wc_order_list_screen() ){
 			return;
 		}
