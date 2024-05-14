@@ -5,7 +5,7 @@ Requires at least: 5.3
 Tested up to: 6.5
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
@@ -37,6 +37,9 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 11. Kargoya verildi özellik ayarları
 
 == Changelog ==
+= 2.0.3 - 2024-05-14 =
+* Hata giderme: v2.0.2 ile birlikte yapılan düzeltmelerin, manuel kargo takip özelliğinin çalışmasını engellemesi sorunu giderildi.
+
 = 2.0.2 - 2024-05-14 =
 * WordPress admin ekranında farklı eklentiler tarafından Bootstrap küfürlerinin kullanılması durumunda, Hezarfen eklentisinin etkilenmemesi sağlandı.
 
