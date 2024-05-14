@@ -1,16 +1,16 @@
-=== Hezarfen for WooCommerce - Ücretsiz manuel kargo takip özelliği ve ilçe/mahalle, kurumsal/bireysel vergi ödeme alanları ===
+=== Hezarfen for WooCommerce - Ücretsiz manuel kargo takip özelliği (+ SMS/E-Posta) ve ilçe/mahalle, kurumsal/bireysel vergi ödeme alanları ===
 Contributors: intenseyazilim
 Tags: kargo, vergi, ilçe, mahalle, Türkiye
 Requires at least: 5.3
-Tested up to: 6.4
+Tested up to: 6.5
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
 == Description ==
-Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
+Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar. Ücretsiz olarak manuel kargo takip özelliği(20+ kargo), ilçe/mahalle seçim alanları, kurumsal/bireysel fatura bilgileri ve T.C. kimlik no alanı gibi özellikler sunar.
 
 = ÖZELLİKLER =
 - Ücretsiz manuel kargo takibi özelliği (takip numarası girebilme, "kargoya verildi" sipariş durumu, müşteri ekranında kargo detaylarının gösterimi, NetGSM ve PandaSMS entegrasyonu, sipariş kargoya verildi maili.)
@@ -37,6 +37,9 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 11. Kargoya verildi özellik ayarları
 
 == Changelog ==
+= 2.0.2 - 2024-05-14 =
+* WordPress admin ekranında farklı eklentiler tarafından Bootstrap küfürlerinin kullanılması durumunda, Hezarfen eklentisinin etkilenmemesi sağlandı.
+
 = 2.0.1 - 2024-04-15 =
 * Kargo takip özelliği eklendi. (kargo takip numarası girebilme, kargoya verildi durumu, SMS entegrasyonu)
 
