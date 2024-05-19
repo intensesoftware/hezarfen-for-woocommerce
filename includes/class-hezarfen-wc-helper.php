@@ -9,6 +9,8 @@ namespace Hezarfen\Inc;
 
 defined( 'ABSPATH' ) || exit();
 
+use Hezarfen\Inc\Data\PostMetaEncryption;
+
 /**
  * Helper class
  */
@@ -44,6 +46,93 @@ class Helper {
 			$msg   = $use_kses ? wp_kses_post( $notice['message'] ) : esc_html( $notice['message'] );
 			printf( '<div class="notice %s is-dismissible"><p>%s</p></div>', esc_attr( $class ), $msg ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
+	}
+
+	/**
+	 * Add tax fields (person or company selection and tax informations).
+	 *
+	 * @param  array<string, mixed> $fields the current WooCommerce checkout/address fields.
+	 * @return array<string, mixed>
+	 */
+	public static function add_tax_fields( $fields ) {
+		$invoice_type_value = ( new \WC_Checkout() )->get_value( 'billing_hez_invoice_type' );
+
+		$address_2_priority = $fields['billing']['billing_address_2']['priority'] ?? 0;
+		$address_1_priority = $fields['billing']['billing_address_1']['priority'];
+
+		$fields['billing']['billing_hez_invoice_type'] = array(
+			'id'       => 'hezarfen_invoice_type',
+			'label'    => __( 'Invoice Type', 'hezarfen-for-woocommerce' ),
+			'type'     => 'select',
+			'required' => true,
+			'class'    => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_invoice_type', array( 'form-row-wide' ) ),
+			'options'  => array(
+				'person'  => __( 'Personal', 'hezarfen-for-woocommerce' ),
+				'company' => __( 'Company', 'hezarfen-for-woocommerce' ),
+			),
+			'priority' => $address_2_priority ? $address_2_priority + 1 : $address_1_priority + 1,
+		);
+
+		if ( self::is_show_identity_field_on_checkout() ) {
+			$fields['billing']['billing_hez_TC_number'] = array(
+				'id'          => 'hezarfen_TC_number',
+				'placeholder' => __( 'Enter T.C. Identity Number', 'hezarfen-for-woocommerce' ),
+				'label'       => __(
+					'T.C. Identity Number',
+					'hezarfen-for-woocommerce'
+				),
+				'required'    => self::is_identity_number_field_required(),
+				// TODO: review the WP filter name table and if possible rename that as lowercase also remove phpcs ignore.
+				'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_TC_number', array( 'form-row-wide' ) ), //phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
+				'input_class' => apply_filters( 'hezarfen_checkout_fields_input_class_billing_hez_tc_number', array() ),
+				'priority'    => $fields['billing']['billing_hez_invoice_type']['priority'] + 1,
+			);
+		}
+
+		$fields['billing']['billing_company'] = array(
+			'label'       => __( 'Title', 'hezarfen-for-woocommerce' ),
+			'placeholder' => __( 'Enter invoice title', 'hezarfen-for-woocommerce' ),
+			'required'    => true,
+			'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_company', array( 'form-row-wide' ) ),
+			'input_class' => apply_filters( 'hezarfen_checkout_fields_input_class_billing_hez_company', array() ),
+			'priority'    => $fields['billing']['billing_hez_invoice_type']['priority'] + 1,
+		);
+
+		$fields['billing']['billing_hez_tax_number'] = array(
+			'maxlength'   => '11',
+			'id'          => 'hezarfen_tax_number',
+			'label'       => __( 'Tax Number', 'hezarfen-for-woocommerce' ),
+			'placeholder' => __( 'Enter tax number', 'hezarfen-for-woocommerce' ),
+			'required'    => true,
+			'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_tax_number', array( 'form-row-wide' ) ),
+			'input_class' => apply_filters( 'hezarfen_checkout_fields_input_class_billing_hez_tax_number', array() ),
+			'priority'    => $fields['billing']['billing_company']['priority'] + 1,
+		);
+
+		$fields['billing']['billing_hez_tax_office'] = array(
+			'id'          => 'hezarfen_tax_office',
+			'label'       => __( 'Tax Office', 'hezarfen-for-woocommerce' ),
+			'placeholder' => __( 'Enter tax office', 'hezarfen-for-woocommerce' ),
+			'required'    => true,
+			'class'       => apply_filters( 'hezarfen_checkout_fields_class_billing_hez_tax_office', array( 'form-row-wide' ) ),
+			'input_class' => apply_filters( 'hezarfen_checkout_fields_input_class_billing_hez_tax_office', array() ),
+			'priority'    => $fields['billing']['billing_hez_tax_number']['priority'] + 1,
+		);
+
+		// set the hidden tax fields according to the invoice_type value.
+		if ( 'person' == $invoice_type_value ) {
+			$fields['billing']['billing_company']['class'][]        = 'hezarfen-hide-form-field';
+			$fields['billing']['billing_hez_tax_office']['class'][] = 'hezarfen-hide-form-field';
+			$fields['billing']['billing_hez_tax_number']['class'][] = 'hezarfen-hide-form-field';
+		} elseif ( 'company' == $invoice_type_value ) {
+			$fields['billing']['billing_hez_TC_number']['class'][] = 'hezarfen-hide-form-field';
+		} else {
+			$fields['billing']['billing_company']['class'][]        = 'hezarfen-hide-form-field';
+			$fields['billing']['billing_hez_tax_office']['class'][] = 'hezarfen-hide-form-field';
+			$fields['billing']['billing_hez_tax_number']['class'][] = 'hezarfen-hide-form-field';
+		}
+
+		return $fields;
 	}
 
 	/**
@@ -199,6 +288,39 @@ class Helper {
 	 */
 	public static function is_show_tax_fields() {
 		return 'yes' === get_option( 'hezarfen_show_hezarfen_checkout_tax_fields' );
+	}
+
+	/**
+	 * Should show TC Identity field on checkout?.
+	 * Default: false
+	 *
+	 * @return boolean
+	 */
+	public static function is_show_identity_field_on_checkout() {
+		$show = get_option( 'hezarfen_checkout_show_TC_identity_field', false ) ==
+			'yes'
+			? true
+			: false;
+
+		if ( ! $show || ! ( new PostMetaEncryption() )->test_the_encryption_key() ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Is TC Identity Number field required on checkout?
+	 *
+	 * @return bool
+	 */
+	public static function is_identity_number_field_required() {
+		return get_option(
+			'hezarfen_checkout_is_TC_identity_number_field_required',
+			false
+		) == 'yes'
+			? true
+			: false;
 	}
 
 	/**

@@ -138,10 +138,10 @@ class Autoload {
 	 * @return void
 	 */
 	public function load_plugin_files() {
-		require_once 'class-hezarfen-wc-helper.php';
-		require_once 'class-hezarfen.php';
 		require_once 'Data/Abstracts/Abstract_Encryption.php';
 		require_once 'Data/PostMetaEncryption.php';
+		require_once 'class-hezarfen-wc-helper.php';
+		require_once 'class-hezarfen.php';
 		require_once 'Checkout.php';
 		require_once 'class-my-account.php';
 		require_once 'Ajax.php';
