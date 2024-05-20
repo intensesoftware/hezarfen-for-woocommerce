@@ -18,8 +18,9 @@ class My_Account {
 	 */
 	public function __construct() {
 		add_filter( 'woocommerce_address_to_edit', array( $this, 'convert_to_select_elements' ), PHP_INT_MAX - 1, 2 );
+		add_filter( 'woocommerce_address_to_edit', array( Helper::class, 'add_tax_fields' ), PHP_INT_MAX - 1, 2 );
 		add_action( 'woocommerce_after_save_address_validation', array( $this, 'save_customer_object' ), PHP_INT_MAX - 1, 4 );
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_and_styles' ) );
 
 		if ( 'yes' === get_option( 'hezarfen_sort_my_account_fields', 'no' ) ) {
 			// we need to use an action that fires after the 'posts_selection' action to access the is_account_page() function. (https://woocommerce.com/document/conditional-tags/).
@@ -98,9 +99,10 @@ class My_Account {
 	 * 
 	 * @return void
 	 */
-	public function enqueue_scripts() {
+	public function enqueue_scripts_and_styles() {
 		if ( Helper::is_edit_address_page() ) {
 			wp_enqueue_script( 'wc_hezarfen_my_account_addresses_js', plugins_url( 'assets/js/my-account-addresses.js', WC_HEZARFEN_FILE ), array( 'jquery', 'wc_hezarfen_mahalle_helper_js' ), WC_HEZARFEN_VERSION, true );
+			wp_enqueue_style( 'wc_hezarfen_my_account_billing_address_css', plugins_url( 'assets/css/my-account-addresses.css', WC_HEZARFEN_FILE ), array(), WC_HEZARFEN_VERSION );
 		}
 	}
 }

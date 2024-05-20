@@ -231,7 +231,7 @@ class Checkout {
 	public function update_fields_required_options_for_invoice_type_company(
 		$fields
 	) {
-		if ( ! $this->hezarfen_show_hezarfen_checkout_tax_fields || ! Helper::is_show_identity_field_on_checkout() ) {
+		if ( ! $this->hezarfen_show_hezarfen_checkout_tax_fields || ! Helper::is_show_identity_field() ) {
 			return $fields;
 		}
 
@@ -282,7 +282,7 @@ class Checkout {
 	 */
 	public function override_posted_data( $data ) {
 		// Check if the T.C. Identitiy Field is active.
-		if ( ! empty( $data['billing_hez_TC_number'] ) && $this->hezarfen_show_hezarfen_checkout_tax_fields && Helper::is_show_identity_field_on_checkout() ) {
+		if ( ! empty( $data['billing_hez_TC_number'] ) && $this->hezarfen_show_hezarfen_checkout_tax_fields && Helper::is_show_identity_field() ) {
 			if (
 				( new PostMetaEncryption() )->health_check() &&
 				( new PostMetaEncryption() )->test_the_encryption_key()
