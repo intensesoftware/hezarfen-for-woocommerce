@@ -49,7 +49,7 @@ class Helper {
 	}
 
 	/**
-	 * Add tax fields (person or company selection and tax informations) to Checkout and My Account -> Addresses -> Edit Address -> Billing pages.
+	 * Add tax fields (person or company selection and tax informations) to Checkout and My Account -> Addresses -> Edit Address -> Billing page.
 	 *
 	 * @param  array<string, mixed> $fields The current WooCommerce checkout/address fields.
 	 * @param  string               $load_address The loaded address on the My Account -> Addresses -> Edit Address pages.
