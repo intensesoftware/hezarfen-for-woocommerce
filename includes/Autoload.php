@@ -100,6 +100,14 @@ class Autoload {
 			)
 		);
 
+		wp_register_script(
+			'wc_hezarfen_tax_fields_helper_js',
+			plugins_url( 'assets/js/tax-fields-helper.js', WC_HEZARFEN_FILE ),
+			array( 'jquery' ),
+			WC_HEZARFEN_VERSION,
+			true
+		);
+
 		if ( is_checkout() ) {
 			wp_enqueue_style(
 				'wc_hezarfen_checkout_css',
@@ -111,7 +119,7 @@ class Autoload {
 			wp_enqueue_script(
 				'wc_hezarfen_checkout_js',
 				plugins_url( 'assets/js/checkout.js', WC_HEZARFEN_FILE ),
-				array( 'jquery', 'wc-checkout', 'wc_hezarfen_mahalle_helper_js' ),
+				array( 'jquery', 'wc-checkout', 'wc_hezarfen_mahalle_helper_js', 'wc_hezarfen_tax_fields_helper_js' ),
 				WC_HEZARFEN_VERSION,
 				true
 			);
