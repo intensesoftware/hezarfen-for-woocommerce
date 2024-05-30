@@ -6,7 +6,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2024-05-12 08:14+0000\n"
+"PO-Revision-Date: 2024-05-30 10:29+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #. %s plugin name
@@ -23,7 +23,7 @@ msgstr ""
 msgid "Add new shipment"
 msgstr "Yeni kargo ekle"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:81
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:78
 msgid "Add to Tracking List"
 msgstr "Gönderi listesine ekle"
 
@@ -39,7 +39,7 @@ msgstr "PandaSMS eklentisi yüklenip aktif edilirken bir hata oluştu."
 msgid "Aras Kargo"
 msgstr "Aras Kargo"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:164
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:161
 msgid "Are you sure you want to remove this shipment data?"
 msgstr "Bu gönderi verisini silmek istediğinize emin misiniz?"
 
@@ -63,20 +63,18 @@ msgstr ""
 msgid "BCC"
 msgstr "BCC (Gizli Alıcı)"
 
-#: includes/class-hezarfen.php:135
+#: includes/class-hezarfen.php:136
 msgid ""
 "Because the Woocommerce Checkout Blocks feature is active on your website, "
 "<strong>Hezarfen for Woocommerce</strong> plugin doesn't work on the "
-"checkout page. We will add support for it as soon as possible. You can "
-"revert to old checkout system easily by following <a target='_blank' "
-"href='https://woocommerce.com/document/cart-checkout-blocks-"
+"checkout page. You can revert to old checkout system easily by following <a "
+"target='_blank' href='https://woocommerce.com/document/cart-checkout-blocks-"
 "status/#reverting-to-shortcodes-with-woocommerce-8-3'>these instructions</a>."
 msgstr ""
 "Woocommerce Ödeme Blokları özelliği sitenizde aktif olduğu için, <strong>"
 "Hezarfen for Woocommerce</strong> eklentisi ödeme ekranında çalışmamaktadır. "
-"Bu özelliğe en kısa zamanda destek ekleyeceğiz. <a target='_blank' "
-"href='https://woocommerce.com/document/cart-checkout-blocks-"
-"status/#reverting-to-shortcodes-with-woocommerce-8-3'>Şuradaki "
+"<a target='_blank' href='https://woocommerce.com/document/cart-checkout-"
+"blocks-status/#reverting-to-shortcodes-with-woocommerce-8-3'>Şuradaki "
 "talimatları</a> uygulayarak kolaylıkla eski ödeme sayfası sistemini aktif "
 "edebilirsiniz."
 
@@ -140,8 +138,8 @@ msgstr "Kurumsal"
 
 #: packages/manual-shipment-tracking/includes/class-my-account.php:119
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:205
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:109
 #: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:33
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:106
 msgid "Courier Company"
 msgstr "Kargo Firması"
 
@@ -164,7 +162,7 @@ msgstr ""
 "Bu ayarı kullanabilmek için Checkout Field Editor for WooCommerce "
 "eklentisini devre dışı bırakınız."
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:497
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:491
 msgid ""
 "Easy Data Recognition - We've detected that you're using the Intense Kargo "
 "Takip Plugin or Kargo Takip Türkiye plugin."
@@ -249,7 +247,7 @@ msgstr "FedEx"
 msgid "Fetching data.."
 msgstr "Veri çekiliyor.."
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:503
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:497
 msgid "Free Support on wordpress.org"
 msgstr "wordpress.org üzerinde Ücretsiz Destek"
 
@@ -269,7 +267,7 @@ msgstr "Genel Ayarlar"
 msgid "hepsiJET"
 msgstr "hepsiJET"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:499
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:493
 msgid ""
 "Hezarfen can automatically recognize the shipment data of your previous "
 "orders with just one click. Moreover, this data remains accessible in "
@@ -485,7 +483,7 @@ msgstr "Manuel Gönderi Takibi"
 msgid "MNG Kargo"
 msgstr "MNG Kargo"
 
-#: includes/Checkout.php:495 includes/class-hezarfen.php:76
+#: includes/class-hezarfen.php:76 includes/Checkout.php:495
 msgid "Neighborhood"
 msgstr "Mahalle"
 
@@ -502,7 +500,7 @@ msgstr "Hayır"
 msgid "No shipment data found"
 msgstr "Gönderi verisi bulunamadı"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:96
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:93
 msgid "Nothing to Track Yet"
 msgstr "Henüz takip edilebilecek bir gönderi yok."
 
@@ -556,7 +554,7 @@ msgstr "Desteklenen eklentilerin verilerini algıla: (%s)"
 msgid "Recognize third party plugins' data"
 msgstr "Üçüncü taraf eklentilerin verilerini algıla"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:162
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:159
 msgid "Remove shipment data?"
 msgstr "Gönderi verisini sil?"
 
@@ -568,8 +566,8 @@ msgstr "Scotty"
 msgid "Select a Courier Company"
 msgstr "Bir Gönderi Şirketi Seçiniz"
 
-#: includes/Autoload.php:99 includes/class-hezarfen.php:77
-#: includes/class-hezarfen-wc-helper.php:24
+#: includes/Autoload.php:99 includes/class-hezarfen-wc-helper.php:24
+#: includes/class-hezarfen.php:77
 msgid "Select an option"
 msgstr "Lütfen seçiniz"
 
@@ -625,12 +623,12 @@ msgstr[1] "Kargoya Verildi (Kargo Takip Turkiye Eklentisi) (%s)"
 msgid "Show hezarfen checkout tax fields?"
 msgstr "Ödeme sayfasında vergi alanları gösterilsin mi?"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:71
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:68
 msgid "Show Less"
 msgstr "Daha az göster"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:71
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:72
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:68
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:69
 msgid "Show More"
 msgstr "Daha fazla göster"
 
@@ -642,7 +640,7 @@ msgstr "Hesabım > Siparişler sayfasında Kargo Takip sütununu göster"
 msgid "Show T.C. Identity Field on checkout page "
 msgstr "T.C. Kimlik Numarası Alanını Ödeme Sayfasında Göster"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:111
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:108
 msgid "SMS"
 msgstr "SMS"
 
@@ -686,7 +684,7 @@ msgstr "Vergi Dairesi"
 msgid "TC ID number is not valid"
 msgstr "TC Kimlik No hatalı"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:98
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:95
 msgid "There are no tracking numbers added to the tracking list."
 msgstr "Gönderi listesine herhangi bir gönderi detayı eklenmedi"
 
@@ -698,7 +696,7 @@ msgstr "Ünvan"
 msgid "TNT"
 msgstr "TNT"
 
-#: includes/Checkout.php:478 includes/class-hezarfen.php:69
+#: includes/class-hezarfen.php:69 includes/Checkout.php:478
 msgid "Town / City"
 msgstr "İlçe"
 
@@ -726,9 +724,9 @@ msgstr "Kargo takip SMS'i %s GSM numarasına gönderildi"
 
 #: packages/manual-shipment-tracking/includes/class-my-account.php:120
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:206
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:47
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:110
 #: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:38
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:47
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:107
 msgid "Tracking Number"
 msgstr "Kargo Takip No"
 
@@ -744,7 +742,7 @@ msgstr "Trendyol Express"
 msgid "UPS Kargo"
 msgstr "UPS Kargo"
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:502
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:496
 msgid "Visit Hezarfen Shipment Settings"
 msgstr "Hezarfen Gönderi Ayarları'nı ziyaret edin."
 
