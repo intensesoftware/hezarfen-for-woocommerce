@@ -431,7 +431,8 @@ class Checkout {
 	public function validate_posted_data( $data, $errors ) {
 		$tc_id_number = ! empty( $data['billing_hez_TC_number'] ) ? ( new PostMetaEncryption() )->decrypt( $data['billing_hez_TC_number'] ) : '';
 
-		if ( $tc_id_number && 11 !== strlen( $tc_id_number ) ) {
+		// extend here to cover only number validaiton check for the TC ID number.
+		if ( $tc_id_number && ( 11 !== strlen( $tc_id_number ) || ! is_numeric( $tc_id_number ) ) ) {
 			$errors->add( 'billing_hez_TC_number_validation', '<strong>' . __( 'TC ID number is not valid', 'hezarfen-for-woocommerce' ) . '</strong>', array( 'id' => 'billing_hez_TC_number' ) );
 		}
 	}
