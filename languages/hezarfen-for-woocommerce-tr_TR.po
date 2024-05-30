@@ -6,7 +6,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2024-05-30 10:29+0000\n"
+"PO-Revision-Date: 2024-05-30 10:44+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #. %s plugin name
@@ -483,7 +483,7 @@ msgstr "Manuel Gönderi Takibi"
 msgid "MNG Kargo"
 msgstr "MNG Kargo"
 
-#: includes/class-hezarfen.php:76 includes/Checkout.php:495
+#: includes/class-hezarfen.php:76 includes/Checkout.php:506
 msgid "Neighborhood"
 msgstr "Mahalle"
 
@@ -676,11 +676,15 @@ msgstr "T.C. Kimlik Numarası"
 msgid "Tax Number"
 msgstr "Vergi Numarası"
 
+#: includes/Checkout.php:445
+msgid "Tax number is not valid"
+msgstr "Vergi numarası hatalı"
+
 #: includes/Checkout.php:372 includes/admin/order/OrderDetails.php:60
 msgid "Tax Office"
 msgstr "Vergi Dairesi"
 
-#: includes/Checkout.php:435
+#: includes/Checkout.php:436
 msgid "TC ID number is not valid"
 msgstr "TC Kimlik No hatalı"
 
@@ -696,7 +700,7 @@ msgstr "Ünvan"
 msgid "TNT"
 msgstr "TNT"
 
-#: includes/class-hezarfen.php:69 includes/Checkout.php:478
+#: includes/class-hezarfen.php:69 includes/Checkout.php:489
 msgid "Town / City"
 msgstr "İlçe"
 
