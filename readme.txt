@@ -5,7 +5,7 @@ Requires at least: 5.3
 Tested up to: 6.5
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
@@ -37,6 +37,9 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 11. Kargoya verildi özellik ayarları
 
 == Changelog ==
+= 2.1.1 - 2024-05-30 =
+* WooCommerce aktif olmadığında eklentinin çalışması engellendi.
+
 = 2.1.0 - 2024-05-30 =
 * Ödeme ekranında TCKN doğrulama özelliği genişletildi.
 * Ödeme ekranında vergi no alanı için doğrulama eklendi.
