@@ -20,6 +20,11 @@
 
  defined( 'ABSPATH' ) || exit();
 
+// check if WooCommerce is active
+if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+	return;
+}
+
 define( 'WC_HEZARFEN_VERSION', '2.1.0' );
 define( 'WC_HEZARFEN_MIN_MBGB_VERSION', '0.6.1' );
 define( 'WC_HEZARFEN_FILE', __FILE__ );
