@@ -19,28 +19,6 @@ jQuery(function ($) {
             if (/[^0-9]/.test(inputValue)) {
               $(this).val(inputValue.replace(/[^0-9]/g, ''));
             }
-          });
-
-        for (const type of ['billing', 'shipping']) {
-            let wrapper = $(`.woocommerce-${type}-fields`);
-            let mahalle_helper = new hezarfen_mahalle_helper(wrapper, type, 'checkout');
-
-            let current_country_code = mahalle_helper.get_country_field().val();
-
-            if (!current_country_code || current_country_code === 'TR') {
-                mahalle_helper.convert_fields_to_selectwoo();
-            }
-
-            if (current_country_code === 'TR') {
-                mahalle_helper.add_event_handlers();
-                add_checkout_event_handlers(type, wrapper);
-            }
-        }
-
-        $(document.body).on('country_to_state_changing', function (event, country_code, wrapper) {
-            let type = wrapper.hasClass('woocommerce-billing-fields') ? 'billing' : 'shipping';
-            new hezarfen_mahalle_helper(wrapper, type, 'checkout').on_country_change(country_code, get_additional_classes(type));
-            country_on_change(type, country_code, wrapper);
         });
 
         $('#hezarfen_invoice_type').on('change', function () {
@@ -56,6 +34,30 @@ jQuery(function ($) {
         });
 
         $('#hezarfen_TC_number').on('blur', validate);
+
+        if( ! wc_hezarfen_ajax_object.hide_neighborhood_mahalle ) {
+            for (const type of ['billing', 'shipping']) {
+                let wrapper = $(`.woocommerce-${type}-fields`);
+                let mahalle_helper = new hezarfen_mahalle_helper(wrapper, type, 'checkout');
+
+                let current_country_code = mahalle_helper.get_country_field().val();
+
+                if (!current_country_code || current_country_code === 'TR') {
+                    mahalle_helper.convert_fields_to_selectwoo();
+                }
+
+                if (current_country_code === 'TR') {
+                    mahalle_helper.add_event_handlers();
+                    add_checkout_event_handlers(type, wrapper);
+                }
+            }
+
+            $(document.body).on('country_to_state_changing', function (event, country_code, wrapper) {
+                let type = wrapper.hasClass('woocommerce-billing-fields') ? 'billing' : 'shipping';
+                new hezarfen_mahalle_helper(wrapper, type, 'checkout').on_country_change(country_code, get_additional_classes(type));
+                country_on_change(type, country_code, wrapper);
+            });
+        }
     });
 
     function add_checkout_event_handlers(type, wrapper) {

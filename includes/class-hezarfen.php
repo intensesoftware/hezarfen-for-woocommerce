@@ -63,6 +63,10 @@ class Hezarfen {
 	 * @return array<array<string, mixed>>
 	 */
 	public function modify_tr_locale( $locales ) {
+		if( is_checkout() && hez_hide_district_neighborhood() ) {
+			return $locales;
+		}
+
 		$locales['TR']['city'] = array_merge(
 			$locales['TR']['city'] ?? array(),
 			array(

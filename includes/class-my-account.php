@@ -17,6 +17,10 @@ class My_Account {
 	 * Constructor
 	 */
 	public function __construct() {
+		if( hez_hide_district_neighborhood() ) {
+			return;
+		}
+
 		add_filter( 'woocommerce_address_to_edit', array( $this, 'convert_to_select_elements' ), PHP_INT_MAX - 1, 2 );
 		add_action( 'woocommerce_after_save_address_validation', array( $this, 'save_customer_object' ), PHP_INT_MAX - 1, 4 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
