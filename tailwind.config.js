@@ -5,6 +5,7 @@ import {
 
 /** @type {import("tailwindcss").Config} */
 const config = {
+  important: true,
   theme: {
     extend: {
       colors: {
