@@ -53,6 +53,7 @@ class Hezarfen {
 		add_action( 'plugins_loaded', array( $this, 'define_constants' ) );
 		add_filter( 'woocommerce_get_settings_pages', array( $this, 'add_hezarfen_setting_page' ) );
 		add_filter( 'woocommerce_get_country_locale', array( $this, 'modify_tr_locale' ), PHP_INT_MAX - 2 );
+		add_filter('woocommerce_rest_prepare_shop_order_object', array( $this, 'add_virtual_order_metas_to_metadata' ), 10, 2);
 	}
 
 	/**
@@ -157,6 +158,35 @@ class Hezarfen {
 
 		return $settings;
 	}
+
+	public function add_virtual_order_metas_to_metadata($response, $order) {
+        $identity_number_field_value = $order->get_meta('_billing_hez_TC_number', true);
+        $identity_number_field_decrypted_value = (new \Hezarfen\Inc\Data\PostMetaEncryption())->decrypt($identity_number_field_value);
+
+        if ('person' === $order->get_meta('_billing_hez_invoice_type', true)) {
+            $tax_number = $identity_number_field_decrypted_value;
+        } else {
+            $tax_number = $order->get_meta('_billing_hez_tax_number', true);
+        }
+
+        $tax_office = $order->get_meta('_billing_hez_tax_office', true);
+
+        $meta_data = $response->data['meta_data'];
+
+        $meta_data[] = array(
+            'key'   => '_hezarfen_billing_v_tax_number',
+            'value' => $tax_number,
+        );
+
+        $meta_data[] = array(
+            'key'   => '_hezarfen_billing_v_tax_office',
+            'value' => $tax_office,
+        );
+
+        $response->data['meta_data'] = $meta_data;
+
+        return $response;
+    }
 }
 
 new Hezarfen();

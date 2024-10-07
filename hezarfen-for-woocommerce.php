@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Hezarfen For Woocommerce
  * Description: Hezarfen, WooCommerce eklentisini Türkiye için daha kullanılabilir kılmayı amaçlar.
- * Version: 2.1.2
+ * Version: 2.2.0-alfa.1
  * Author: Intense Yazılım Ltd.
  * Author URI: http://intense.com.tr
  * Developer: Intense Yazılım Ltd.
@@ -25,7 +25,7 @@ if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins',
 	return;
 }
 
-define( 'WC_HEZARFEN_VERSION', '2.1.2' );
+define( 'WC_HEZARFEN_VERSION', '2.2.0-alfa.1' );
 define( 'WC_HEZARFEN_MIN_MBGB_VERSION', '0.6.1' );
 define( 'WC_HEZARFEN_FILE', __FILE__ );
 define( 'WC_HEZARFEN_UYGULAMA_YOLU', plugin_dir_path( __FILE__ ) );
