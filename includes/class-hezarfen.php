@@ -159,34 +159,47 @@ class Hezarfen {
 		return $settings;
 	}
 
+	/**
+	 * Modify TC number in WooCommerce REST API response
+	 * 
+	 * @param WP_REST_Response $response The response object
+	 * @param WC_Order $order The order object
+	 * @return WP_REST_Response Modified response
+	 */
 	public function add_virtual_order_metas_to_metadata($response, $order) {
-        $identity_number_field_value = $order->get_meta('_billing_hez_TC_number', true);
-        $identity_number_field_decrypted_value = (new \Hezarfen\Inc\Data\PostMetaEncryption())->decrypt($identity_number_field_value);
+		// Get invoice type
+		$invoice_type = $order->get_meta('_billing_hez_invoice_type', true);
 
-        if ('person' === $order->get_meta('_billing_hez_invoice_type', true)) {
-            $tax_number = $identity_number_field_decrypted_value;
-        } else {
-            $tax_number = $order->get_meta('_billing_hez_tax_number', true);
-        }
+		// If not a person, return response without modification
+		if ('person' !== $invoice_type) {
+			return $response;
+		}
 
-        $tax_office = $order->get_meta('_billing_hez_tax_office', true);
+		// Get encrypted TC number and decrypt it
+		$encrypted_tc_number = $order->get_meta('_billing_hez_TC_number', true);
+		$decrypted_tc_number = (new \Hezarfen\Inc\Data\PostMetaEncryption())->decrypt($encrypted_tc_number);
 
-        $meta_data = $response->data['meta_data'];
+		// Get response data
+		$response_data = $response->get_data();
 
-        $meta_data[] = array(
-            'key'   => '_hezarfen_billing_v_tax_number',
-            'value' => $tax_number,
-        );
+		// Loop through meta data and update the TC number in the response
+		foreach ($response_data['meta_data'] as $index => $meta) {
+			$meta_data = $meta->get_data();
+			if ($meta_data['key'] === '_billing_hez_TC_number') {
+				$response_data['meta_data'][$index] = [
+					'id' => $meta_data['id'],
+					'key' => $meta_data['key'],
+					'value' => $decrypted_tc_number
+				];
+				break;
+			}
+		}
 
-        $meta_data[] = array(
-            'key'   => '_hezarfen_billing_v_tax_office',
-            'value' => $tax_office,
-        );
+		// Set modified data back to response
+		$response->set_data($response_data);
 
-        $response->data['meta_data'] = $meta_data;
-
-        return $response;
-    }
+		return $response;
+	}
 }
 
 new Hezarfen();
