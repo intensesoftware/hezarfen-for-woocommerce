@@ -160,44 +160,71 @@ class Hezarfen {
 	}
 
 	/**
-	 * Modify TC number in WooCommerce REST API response
-	 * 
+	 * Modify TC number and ensure required billing keys in WooCommerce REST API response
+	 *
 	 * @param WP_REST_Response $response The response object
 	 * @param WC_Order $order The order object
 	 * @return WP_REST_Response Modified response
 	 */
 	public function add_virtual_order_metas_to_metadata($response, $order) {
+		// Required billing keys that should always be present
+		$required_billing_keys = [
+			'_billing_hez_tax_number',
+			'_billing_hez_tax_office',
+			'_billing_hez_TC_number'
+		];
+		
 		// Get invoice type
 		$invoice_type = $order->get_meta('_billing_hez_invoice_type', true);
-
-		// If not a person, return response without modification
-		if ('person' !== $invoice_type) {
-			return $response;
-		}
-
-		// Get encrypted TC number and decrypt it
-		$encrypted_tc_number = $order->get_meta('_billing_hez_TC_number', true);
-		$decrypted_tc_number = (new \Hezarfen\Inc\Data\PostMetaEncryption())->decrypt($encrypted_tc_number);
-
+		
 		// Get response data
 		$response_data = $response->get_data();
-
-		// Loop through meta data and update the TC number in the response
+		
+		// Ensure meta_data is an array
+		if (!isset($response_data['meta_data'])) {
+			$response_data['meta_data'] = [];
+		}
+		
+		// Create a map of existing meta keys for easier lookup
+		$existing_meta_keys = [];
 		foreach ($response_data['meta_data'] as $index => $meta) {
 			$meta_data = $meta->get_data();
-			if ($meta_data['key'] === '_billing_hez_TC_number') {
-				$response_data['meta_data'][$index] = [
-					'id' => $meta_data['id'],
-					'key' => $meta_data['key'],
-					'value' => $decrypted_tc_number
-				];
-				break;
+			$existing_meta_keys[$meta_data['key']] = $index;
+		}
+		
+		// Process TC number if invoice type is person
+		if ('person' === $invoice_type) {
+			$encrypted_tc_number = $order->get_meta('_billing_hez_TC_number', true);
+			if ($encrypted_tc_number) {
+				$decrypted_tc_number = (new \Hezarfen\Inc\Data\PostMetaEncryption())->decrypt($encrypted_tc_number);
+				
+				// Update TC number in response if it exists
+				if (isset($existing_meta_keys['_billing_hez_TC_number'])) {
+					$index = $existing_meta_keys['_billing_hez_TC_number'];
+					$meta_data = $response_data['meta_data'][$index]->get_data();
+					$response_data['meta_data'][$index] = [
+						'id' => $meta_data['id'],
+						'key' => '_billing_hez_TC_number',
+						'value' => $decrypted_tc_number
+					];
+				}
 			}
 		}
-
+		
+		// Ensure all required billing keys exist
+		foreach ($required_billing_keys as $key) {
+			if (!isset($existing_meta_keys[$key])) {
+				// Add empty meta data for missing keys
+				$response_data['meta_data'][] = [
+					'id' => 0, // You might want to generate a proper ID if needed
+					'key' => $key,
+					'value' => ''
+				];
+			}
+		}
+		
 		// Set modified data back to response
 		$response->set_data($response_data);
-
 		return $response;
 	}
 }
