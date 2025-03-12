@@ -5,7 +5,7 @@ Requires at least: 5.3
 Tested up to: 6.5
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.1.2
+Stable tag: 2.3.0
 
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
@@ -19,6 +19,23 @@ Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabil
 - Encrypt edilebilir T.C. kimlik no alanı (T.C. no verileri veritabanına encrypt edilerek yazılır.)
 - Posta kodu alanını ödeme ekranından tek tuşla kaldırabilme
 - Ödeme formundaki alanları tek tuşla, Türkiye için otomatik sıralayabilme
+
+== Frequently Asked Questions ==
+
+= Kargo takip özelliğini ayarlarını nasıl yapabilirim? =
+Eklentiyi aktifleştirdikten sonra, WooCommerce -> Ayarlar -> Hezarfen -> Manuel Kargo Takip menüsünden ilgili ayarları yapabilirsiniz.
+
+= T.C. Kimlik numarası alanı neden görünmüyor? =
+T.C. Kimlik numarası alanının görünmesi için şifreleme (encryption) özelliğinin aktif edilmesi gerekir. WooCommerce -> Ayarlar -> Hezarfen -> Şifreleme (Encryption) menüsünden bu özelliği aktifleştirebilirsiniz.
+
+= Kaybolan şifreleme anahtarını nasıl yeniden oluşturabilirim? =
+Şifreleme anahtarınızı kaybettiyseniz, WooCommerce -> Ayarlar -> Hezarfen -> Şifreleme Anahtarı Kurtarma bölümünden yeni bir anahtar oluşturabilirsiniz. Oluşturulan anahtarı wp-config.php dosyanıza `define( 'HEZARFEN_ENCRYPTION_KEY', 'örnek anahtar değeri' );` şeklinde eklemeniz gerekir. Bu işlem öncesinde mutlaka sitenizin tam yedeğini alın. Unutmayın ki, yeni anahtar oluşturduğunuzda eski siparişlerdeki şifrelenmiş T.C. Kimlik numarası verilerine erişemezsiniz. Not: "Şifreleme Anahtarı Kurtarma" bölümü sadece wp-config.php dosyasında encryption key tanımlanmadığında ve geçmişte başarılı bir şifreleme anahtarı oluşturma işlemi yaptıysanız görünür.
+
+= İlçe ve mahalle verileri nereden geliyor? =
+İlçe ve mahalle verileri eklenti içerisinde yer almaktadır, herhangi bir harici servise ihtiyaç duymaz.
+
+= Kurumsal ve bireysel fatura seçeneğini nasıl aktifleştirebilirim? =
+WooCommerce -> Ayarlar -> Hezarfen -> Ödeme Sayfası Ayarları menüsünden "Ödeme ekranında vergi alanlarını göster" seçeneğini aktifleştirmeniz yeterlidir.
 
 == Installation ==
 Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hezarfen menüsünden eklentinin ayarlarını kontrol edebilirsiniz.
@@ -37,6 +54,13 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 11. Kargoya verildi özellik ayarları
 
 == Changelog ==
+
+= 2.3.0 - 2025-03-12 =
+* Özellik: Şifreleme anahtarı kurtarma özelliği eklendi.
+* Hata giderme: Geçersiz T.C. Kimlik Numarası girildiğinde, ödeme ekranında otomatik temizleme özelliği eklendi.
+* Hata giderme: Fatura tipi kurumsal seçildiğinde oluşan T.C. Kimlik Numarası doğrulama sorunu giderildi.
+* Özellik: WooCommerce REST API için vergi alanları desteği eklendi (deneysel, beta).
+
 = 2.1.2 - 2024-05-31 =
 * WooCommerce admin sipariş düzenleme ekranında, indirilebilir ürünler alanının ve bazı alanların, Hezarfen tarafından bozulması için geçici düzeltme
 
