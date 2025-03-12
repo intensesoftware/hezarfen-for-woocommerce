@@ -334,6 +334,10 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					),
 					'id'    => 'hezarfen_encryption_recovery_settings_title',
 				),
+				array(
+					'type' => 'sectionend',
+					'id'   => 'hezarfen_encryption_recovery_settings_section_end',
+				),
 			);
 		} else {
 			$encryption_key = $post_meta_encryption->create_random_key();
