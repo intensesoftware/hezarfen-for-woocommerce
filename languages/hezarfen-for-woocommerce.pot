@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-12 11:46+0000\n"
+"POT-Creation-Date: 2025-03-12 12:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -57,7 +57,7 @@ msgid "Available Variables"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:159
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:365
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:369
 msgid ""
 "Back up the phrase in the box to a safe area, then place it in wp-config.php "
 "file."
@@ -127,7 +127,7 @@ msgstr ""
 msgid "Choose a courier company"
 msgstr ""
 
-#: includes/Checkout.php:329 includes/admin/order/OrderDetails.php:49
+#: includes/Checkout.php:350 includes/admin/order/OrderDetails.php:49
 msgid "Company"
 msgstr ""
 
@@ -190,7 +190,7 @@ msgid "Encryption Key Recovery"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:326
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:343
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:347
 msgid "Encryption Key Recovery Screen"
 msgstr ""
 
@@ -198,7 +198,7 @@ msgstr ""
 msgid "Encryption Settings"
 msgstr ""
 
-#: includes/Checkout.php:352
+#: includes/Checkout.php:373
 msgid "Enter invoice title"
 msgstr ""
 
@@ -218,15 +218,15 @@ msgstr ""
 msgid "Enter SMS content."
 msgstr ""
 
-#: includes/Checkout.php:337
+#: includes/Checkout.php:358
 msgid "Enter T.C. Identity Number"
 msgstr ""
 
-#: includes/Checkout.php:363
+#: includes/Checkout.php:384
 msgid "Enter tax number"
 msgstr ""
 
-#: includes/Checkout.php:373
+#: includes/Checkout.php:394
 msgid "Enter tax office"
 msgstr ""
 
@@ -234,8 +234,8 @@ msgstr ""
 msgid "Enter Tracking Information"
 msgstr ""
 
-#: includes/Checkout.php:142 includes/Checkout.php:173
-#: includes/Checkout.php:176
+#: includes/Checkout.php:163 includes/Checkout.php:194
+#: includes/Checkout.php:197
 msgid "Enter your street, avenue, building, and apartment number information."
 msgstr ""
 
@@ -319,7 +319,7 @@ msgid ""
 "past orders will be transferred to T.C. I know I cannot access ID data."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:373
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:377
 msgid ""
 "I understand and agree that I can't acces the TC ID data of the old orders "
 "by using this new encryption key. I backed up the phrase in the box to a "
@@ -388,7 +388,7 @@ msgstr ""
 msgid "Intense Yazılım Ltd."
 msgstr ""
 
-#: includes/Checkout.php:323
+#: includes/Checkout.php:344
 msgid "Invoice Type"
 msgstr ""
 
@@ -449,7 +449,7 @@ msgstr ""
 msgid "MNG Kargo"
 msgstr ""
 
-#: includes/class-hezarfen.php:77 includes/Checkout.php:503
+#: includes/class-hezarfen.php:77 includes/Checkout.php:524
 msgid "Neighborhood"
 msgstr ""
 
@@ -457,7 +457,7 @@ msgstr ""
 msgid "NetGSM SMS content"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:355
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:359
 msgid "New Encryption Key"
 msgstr ""
 
@@ -498,11 +498,11 @@ msgstr ""
 msgid "PandaSMS plugin is successfully installed and activated."
 msgstr ""
 
-#: includes/Checkout.php:328 includes/admin/order/OrderDetails.php:48
+#: includes/Checkout.php:349 includes/admin/order/OrderDetails.php:48
 msgid "Personal"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:435
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:439
 msgid "Please place the encryption key in the wp-config.php file."
 msgstr ""
 
@@ -637,23 +637,23 @@ msgid ""
 "enabled, this field is not displayed.)"
 msgstr ""
 
-#: includes/Checkout.php:338 includes/admin/order/OrderDetails.php:89
+#: includes/Checkout.php:359 includes/admin/order/OrderDetails.php:89
 msgid "T.C. Identity Number"
 msgstr ""
 
-#: includes/Checkout.php:362 includes/admin/order/OrderDetails.php:55
+#: includes/Checkout.php:383 includes/admin/order/OrderDetails.php:55
 msgid "Tax Number"
 msgstr ""
 
-#: includes/Checkout.php:442
+#: includes/Checkout.php:463
 msgid "Tax number is not valid"
 msgstr ""
 
-#: includes/Checkout.php:372 includes/admin/order/OrderDetails.php:60
+#: includes/Checkout.php:393 includes/admin/order/OrderDetails.php:60
 msgid "Tax Office"
 msgstr ""
 
-#: includes/Checkout.php:435
+#: includes/Checkout.php:456
 msgid "TC ID number is not valid"
 msgstr ""
 
@@ -661,7 +661,16 @@ msgstr ""
 msgid "There are no tracking numbers added to the tracking list."
 msgstr ""
 
-#: includes/Checkout.php:351
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:352
+msgid ""
+"This page allows you to generate a new encryption key. Before proceeding, "
+"please create a complete website backup. We do not provide support for this "
+"feature nor assume any responsibility for potential data loss or damage that "
+"may occur. Use of this feature is entirely at your own risk, even if you "
+"have created backups. By continuing, you acknowledge and accept these terms."
+msgstr ""
+
+#: includes/Checkout.php:372
 msgid "Title"
 msgstr ""
 
@@ -669,7 +678,7 @@ msgstr ""
 msgid "TNT"
 msgstr ""
 
-#: includes/class-hezarfen.php:70 includes/Checkout.php:486
+#: includes/class-hezarfen.php:70 includes/Checkout.php:507
 msgid "Town / City"
 msgstr ""
 
@@ -748,10 +757,6 @@ msgstr ""
 msgid "You can edit the general settings from this page."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:348
-msgid "You can generate a new encryption key from this page."
-msgstr ""
-
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:206
 msgid "You can set general checkout settings."
 msgstr ""
@@ -763,8 +768,8 @@ msgid ""
 "number field does not appear on the checkout."
 msgstr ""
 
-#: includes/Checkout.php:141 includes/Checkout.php:172
-#: includes/Checkout.php:175
+#: includes/Checkout.php:162 includes/Checkout.php:193
+#: includes/Checkout.php:196
 msgid "Your Address"
 msgstr ""
 

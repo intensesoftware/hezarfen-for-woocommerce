@@ -4,9 +4,9 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-14 17:11+0000\n"
 "Language: tr_TR\n"
-"Language-Team: Turkish\n"
+"Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2025-03-12 11:51+0000\n"
+"PO-Revision-Date: 2025-03-12 12:18+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #. %s plugin name
@@ -52,7 +52,7 @@ msgid "Available Variables"
 msgstr "Kullanabileceğiniz Değişkenler"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:159
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:365
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:369
 msgid ""
 "Back up the phrase in the box to a safe area, then place it in wp-config.php "
 "file."
@@ -133,7 +133,7 @@ msgstr ""
 msgid "Choose a courier company"
 msgstr "Kargo firmasını seçiniz"
 
-#: includes/Checkout.php:329 includes/admin/order/OrderDetails.php:49
+#: includes/Checkout.php:350 includes/admin/order/OrderDetails.php:49
 msgid "Company"
 msgstr "Kurumsal"
 
@@ -200,7 +200,7 @@ msgid "Encryption Key Recovery"
 msgstr "Şifreleme Anahtarı Kurtarma"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:326
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:343
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:347
 msgid "Encryption Key Recovery Screen"
 msgstr "Şifreleme Anahtarı Kurtarma Ekranı"
 
@@ -208,7 +208,7 @@ msgstr "Şifreleme Anahtarı Kurtarma Ekranı"
 msgid "Encryption Settings"
 msgstr "Şifreleme Anahtarı (Encryption Key) Ayarları"
 
-#: includes/Checkout.php:352
+#: includes/Checkout.php:373
 msgid "Enter invoice title"
 msgstr "Fatura ünvanını giriniz"
 
@@ -228,15 +228,15 @@ msgstr "Kargo takip no post meta keyini giriniz"
 msgid "Enter SMS content."
 msgstr "SMS içeriğini giriniz."
 
-#: includes/Checkout.php:337
+#: includes/Checkout.php:358
 msgid "Enter T.C. Identity Number"
 msgstr "T.C. Kimlik numaranızı giriniz"
 
-#: includes/Checkout.php:363
+#: includes/Checkout.php:384
 msgid "Enter tax number"
 msgstr "Vergi numaranızı giriniz"
 
-#: includes/Checkout.php:373
+#: includes/Checkout.php:394
 msgid "Enter tax office"
 msgstr "Vergi dairesini giriniz"
 
@@ -244,8 +244,8 @@ msgstr "Vergi dairesini giriniz"
 msgid "Enter Tracking Information"
 msgstr "Gönderi Takip Bilgi Girişi"
 
-#: includes/Checkout.php:142 includes/Checkout.php:173
-#: includes/Checkout.php:176
+#: includes/Checkout.php:163 includes/Checkout.php:194
+#: includes/Checkout.php:197
 msgid "Enter your street, avenue, building, and apartment number information."
 msgstr "Cadde, sokak, bina, daire no bilgilerinizi giriniz"
 
@@ -346,7 +346,7 @@ msgstr ""
 "no bilgilerinin okunamaz(decrypt edilemez) hale geleceğini anladım ve "
 "onaylıyorum. "
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:373
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:377
 msgid ""
 "I understand and agree that I can't acces the TC ID data of the old orders "
 "by using this new encryption key. I backed up the phrase in the box to a "
@@ -442,7 +442,7 @@ msgstr "Yükleniyor.."
 msgid "Intense Yazılım Ltd."
 msgstr "Intense Software Ltd."
 
-#: includes/Checkout.php:323
+#: includes/Checkout.php:344
 msgid "Invoice Type"
 msgstr "Fatura tipi"
 
@@ -507,7 +507,7 @@ msgstr "Manuel Gönderi Takibi"
 msgid "MNG Kargo"
 msgstr "MNG Kargo"
 
-#: includes/class-hezarfen.php:77 includes/Checkout.php:503
+#: includes/class-hezarfen.php:77 includes/Checkout.php:524
 msgid "Neighborhood"
 msgstr "Mahalle"
 
@@ -515,7 +515,7 @@ msgstr "Mahalle"
 msgid "NetGSM SMS content"
 msgstr "NetGSM SMS içeriği"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:355
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:359
 msgid "New Encryption Key"
 msgstr "Yeni Şifreleme Anahtarı"
 
@@ -556,11 +556,11 @@ msgstr "PackUpp"
 msgid "PandaSMS plugin is successfully installed and activated."
 msgstr "PandaSMS eklentisi başarıyla yüklendi ve aktif edildi."
 
-#: includes/Checkout.php:328 includes/admin/order/OrderDetails.php:48
+#: includes/Checkout.php:349 includes/admin/order/OrderDetails.php:48
 msgid "Personal"
 msgstr "Bireysel"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:435
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:439
 msgid "Please place the encryption key in the wp-config.php file."
 msgstr "Lütfen şifreleme anahtarını wp-config.php dosyasına yerleştirin."
 
@@ -700,23 +700,23 @@ msgstr ""
 "şifreleme özelliğini aktif etmezseniz, ödeme ekranında T.C. no alanı "
 "gösterilmez.)"
 
-#: includes/Checkout.php:338 includes/admin/order/OrderDetails.php:89
+#: includes/Checkout.php:359 includes/admin/order/OrderDetails.php:89
 msgid "T.C. Identity Number"
 msgstr "T.C. Kimlik Numarası"
 
-#: includes/Checkout.php:362 includes/admin/order/OrderDetails.php:55
+#: includes/Checkout.php:383 includes/admin/order/OrderDetails.php:55
 msgid "Tax Number"
 msgstr "Vergi Numarası"
 
-#: includes/Checkout.php:442
+#: includes/Checkout.php:463
 msgid "Tax number is not valid"
 msgstr "Vergi numarası hatalı"
 
-#: includes/Checkout.php:372 includes/admin/order/OrderDetails.php:60
+#: includes/Checkout.php:393 includes/admin/order/OrderDetails.php:60
 msgid "Tax Office"
 msgstr "Vergi Dairesi"
 
-#: includes/Checkout.php:435
+#: includes/Checkout.php:456
 msgid "TC ID number is not valid"
 msgstr "TC Kimlik No hatalı"
 
@@ -724,7 +724,22 @@ msgstr "TC Kimlik No hatalı"
 msgid "There are no tracking numbers added to the tracking list."
 msgstr "Gönderi listesine herhangi bir gönderi detayı eklenmedi"
 
-#: includes/Checkout.php:351
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:352
+msgid ""
+"This page allows you to generate a new encryption key. Before proceeding, "
+"please create a complete website backup. We do not provide support for this "
+"feature nor assume any responsibility for potential data loss or damage that "
+"may occur. Use of this feature is entirely at your own risk, even if you "
+"have created backups. By continuing, you acknowledge and accept these terms."
+msgstr ""
+"Bu sayfa, yeni bir şifreleme anahtarı oluşturmanıza olanak tanır. İşleme "
+"devam etmeden önce, lütfen tam bir web sitesi yedeği oluşturun. Bu özellik "
+"için herhangi bir destek sağlamıyoruz ve oluşabilecek veri kaybı veya "
+"hasardan hiçbir sorumluluk kabul etmiyoruz. Yedekleme yapsanız bile, bu "
+"özelliğin kullanımı tamamen kendi sorumluluğunuzdadır. Devam ederek, bu "
+"şartları kabul etmiş olursunuz."
+
+#: includes/Checkout.php:372
 msgid "Title"
 msgstr "Ünvan"
 
@@ -732,7 +747,7 @@ msgstr "Ünvan"
 msgid "TNT"
 msgstr "TNT"
 
-#: includes/class-hezarfen.php:70 includes/Checkout.php:486
+#: includes/class-hezarfen.php:70 includes/Checkout.php:507
 msgid "Town / City"
 msgstr "İlçe"
 
@@ -811,10 +826,6 @@ msgstr "Evet"
 msgid "You can edit the general settings from this page."
 msgstr "Hezarfen ile ilgili genel ayarları bu sayfadan yönetebilirsiniz."
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:348
-msgid "You can generate a new encryption key from this page."
-msgstr "Bu sayfadan yeni bir şifreleme anahtarı oluşturabilirsiniz."
-
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:206
 msgid "You can set general checkout settings."
 msgstr "Ödeme sayfasıyla ilgili genel ayarları düzenleyebilirsiniz."
@@ -835,8 +846,8 @@ msgstr ""
 "edilmesini gerektirir. Eğer şifreleme(encryption) özelliğini aktif "
 "etmediyseniz, T.C. kimlik numara alanı ödeme ekranında görünmeyecektir."
 
-#: includes/Checkout.php:141 includes/Checkout.php:172
-#: includes/Checkout.php:175
+#: includes/Checkout.php:162 includes/Checkout.php:193
+#: includes/Checkout.php:196
 #| msgid "Your Adress"
 msgid "Your Address"
 msgstr "Adresiniz"

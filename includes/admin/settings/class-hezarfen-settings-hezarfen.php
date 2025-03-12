@@ -349,10 +349,10 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 						'hezarfen-for-woocommerce'
 					),
 					'type'  => 'title',
-					'desc'  => __(
-						'You can generate a new encryption key from this page.',
+					'desc'  => '<strong>Önemli not: ' . __(
+						'This page allows you to generate a new encryption key. Before proceeding, please create a complete website backup. We do not provide support for this feature nor assume any responsibility for potential data loss or damage that may occur. Use of this feature is entirely at your own risk, even if you have created backups. By continuing, you acknowledge and accept these terms.',
 						'hezarfen-for-woocommerce'
-					),
+					) . '</strong>',
 					'id'    => 'hezarfen_encryption_recovery_settings_title',
 				),
 				array(
