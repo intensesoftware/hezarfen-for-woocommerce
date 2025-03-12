@@ -82,12 +82,13 @@ class PostMetaEncryption extends Abstract_Encryption {
 	}
 
 	/**
-	 * The method creates a new encryption tester text.
+	 * The method create/update a new encryption tester text.
 	 *
+	 * @param bool $force_update Forcefully update the tester text.
 	 * @return bool
 	 */
-	public function create_encryption_tester_text() {
-		if ( get_option( 'hezarfen_encryption_tester_text' ) ) {
+	public function update_encryption_tester_text( $force_update = false ) {
+		if ( ! $force_update && get_option( 'hezarfen_encryption_tester_text' ) ) {
 			return false;
 		}
 
