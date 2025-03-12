@@ -113,6 +113,27 @@ class Checkout {
 			10,
 			2
 		);
+
+		add_filter('woocommerce_form_field_text', array(__CLASS__, 'filter_tc_number_field'), 10, 4);
+	}
+
+	/**
+	 * Filter the TC number field to clear invalid values
+	 */
+	public static function filter_tc_number_field($field, $key, $args, $value) {
+		// Only process the TC number field
+		if ($key === 'billing_hez_TC_number') {
+			// Get the actual TC number (may need to decrypt it first)
+			$tc_id_number = $value;
+			// Check if the TC number is invalid
+			if ($tc_id_number &&  (11 !== strlen($tc_id_number) || !is_numeric($tc_id_number))) {
+
+				// Replace the value attribute in the HTML with an empty string
+				$field = preg_replace('/value="[^"]*"/', 'value=""', $field);
+			}
+		}
+
+		return $field;
 	}
 
 	/**
