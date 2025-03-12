@@ -431,12 +431,12 @@ class Checkout {
 	public function validate_posted_data( $data, $errors ) {
 		$tc_id_number = ! empty( $data['billing_hez_TC_number'] ) ? ( new PostMetaEncryption() )->decrypt( $data['billing_hez_TC_number'] ) : '';
 
+		$invoice_type = array_key_exists( 'billing_hez_invoice_type', $_POST ) ? sanitize_key( $_POST['billing_hez_invoice_type'] ) : '';
+
 		// extend here to cover only number validaiton check for the TC ID number.
-		if ( $tc_id_number && ( 11 !== strlen( $tc_id_number ) || ! is_numeric( $tc_id_number ) ) ) {
+		if ( 'person' === $invoice_type && $tc_id_number && ( 11 !== strlen( $tc_id_number ) || ! is_numeric( $tc_id_number ) ) ) {
 			$errors->add( 'billing_hez_TC_number_validation', '<strong>' . __( 'TC ID number is not valid', 'hezarfen-for-woocommerce' ) . '</strong>', array( 'id' => 'billing_hez_TC_number' ) );
 		}
-
-		$invoice_type = array_key_exists( 'billing_hez_invoice_type', $_POST ) ? sanitize_key( $_POST['billing_hez_invoice_type'] ) : '';
 
 		if( 'company' === $invoice_type ) {
 			$tax_number = array_key_exists( 'billing_hez_tax_number', $_POST ) ? sanitize_text_field( $_POST['billing_hez_tax_number'] ) : '';
