@@ -55,6 +55,9 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 
 == Changelog ==
 
+= 2.3.2 - 2025-08-06 =
+* PHP hatası giderildi.
+
 = 2.3.1 - 2025-08-06 =
 * WooCommerce uyumluluk versiyon bilgisi güncellendi.
 * Eklenti banner ve logo güncellendi.
