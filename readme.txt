@@ -1,4 +1,4 @@
-=== Hezarfen - Türkiye Kargo Entegratör - WooCommerce Kargo Takip ve Yönetim Eklentisi For Woocommerce ===
+=== Hezarfen - Türkiye Kargo Entegratör - WooCommerce Kargo Takip ve Yönetim Eklentisi For WooCommerce ===
 Contributors: intenseyazilim, mskapusuz
 Tags: kargo, kargo takip, türkiye, woocommerce, fatura
 Requires at least: 5.3
@@ -10,7 +10,33 @@ Stable tag: 2.3.2
 Türkiye'nin sevilen WooCommerce kargo eklentisi! Aras kargo, MNG kargo, Yurtiçi kargo, PTT kargo, Sürat kargo ve 25+ yerli kargo firması için manuel kargo takibi. Kargo numarası girme, kargo durumu takibi, kargo SMS bildirimleri ve kapsamlı kargo yönetimi özelliği. Türk WooCommerce e-ticaret sitelerine özel geliştirilmiş kargo çözümü.
 
 == Description ==
-Türkiye'nin sevilen WooCommerce kargo eklentisi! Aras kargo, MNG kargo, Yurtiçi kargo, PTT kargo, Sürat kargo ve 25+ yerli kargo firması için manuel kargo takibi. Kargo numarası girme, kargo durumu takibi, kargo SMS bildirimleri ve kapsamlı kargo yönetimi özelliği. Türk WooCommerce e-ticaret sitelerine özel geliştirilmiş kargo çözümü. Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar. Ücretsiz olarak manuel kargo takip özelliği(20+ kargo), ilçe/mahalle seçim alanları, kurumsal/bireysel fatura bilgileri ve T.C. kimlik no alanı gibi özellikler sunar.
+Türkiye'nin sevilen WooCommerce kargo eklentisi! Manuel kargo takip özelliği ile 26 farklı kargo firmasını destekler. Kargo numarası girme, kargo durumu takibi, kargo SMS bildirimleri ve kapsamlı kargo yönetimi özelliği. Türk WooCommerce e-ticaret sitelerine özel geliştirilmiş kargo çözümü. Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar. Ücretsiz olarak manuel kargo takip özelliği, ilçe/mahalle seçim alanları, kurumsal/bireysel fatura bilgileri ve T.C. kimlik no alanı gibi özellikler sunar.
+
+**Desteklenen Kargo Firmaları (Manuel Kargo Takip):**
+• Aras Kargo
+• Birgünde Kargo
+• Brinks Kargo
+• CDEK
+• DHL
+• FedEx
+• Gelal
+• hepsiJET
+• Horoz Lojistik
+• Jetizz
+• Kargo Türk
+• Kargoist
+• Kolay Gelsin
+• Kurye
+• MNG Kargo
+• PackUpp
+• PTT Kargo
+• Scotty
+• Sendeo Kargo
+• Sürat Kargo
+• TNT
+• Trendyol Express
+• UPS Kargo
+• Yurtiçi Kargo
 
 = ÖZELLİKLER =
 - Ücretsiz manuel kargo takibi özelliği (takip numarası girebilme, "kargoya verildi" sipariş durumu, müşteri ekranında kargo detaylarının gösterimi, NetGSM ve PandaSMS entegrasyonu, sipariş kargoya verildi maili.)
@@ -22,7 +48,7 @@ Türkiye'nin sevilen WooCommerce kargo eklentisi! Aras kargo, MNG kargo, Yurtiç
 
 == Frequently Asked Questions ==
 
-= Kargo takip özelliğini ayarlarını nasıl yapabilirim? =
+= Kargo takip özelliğinin ayarlarını nasıl yapabilirim? =
 Eklentiyi aktifleştirdikten sonra, WooCommerce -> Ayarlar -> Hezarfen -> Manuel Kargo Takip menüsünden ilgili ayarları yapabilirsiniz.
 
 = T.C. Kimlik numarası alanı neden görünmüyor? =
@@ -71,7 +97,7 @@ Bu kargo firmaları için manuel kargo takip numarası girişi, kargo durumu tak
 Hezarfen ücretsiz versiyonunda NetGSM ve PandaSMS entegrasyonları bulunmaktadır. WooCommerce -> Ayarlar -> Hezarfen -> Manuel Kargo Takip bölümünden kargoya verildi SMS şablonunu düzenleyebilirsiniz.
 
 == Installation ==
-Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hezarfen menüsünden eklentinin ayarlarını kontrol edebilirsiniz.
+Eklentiyi aktifleştirdikten sonra, WooCommerce -> Ayarlar ekranına giderek Hezarfen menüsünden eklentinin ayarlarını kontrol edebilirsiniz.
 
 == Screenshots ==
 1. Kargo takip no giriş alanı
@@ -88,7 +114,7 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 
 == Changelog ==
 
-= 2.3.2 - 2025-08-06 =
+= 2.3.2 - 2025-08-07 =
 * PHP hatası giderildi.
 
 = 2.3.1 - 2025-08-06 =
@@ -116,7 +142,7 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 * Hata giderme: v2.0.2 ile birlikte yapılan düzeltmelerin, manuel kargo takip özelliğinin çalışmasını engellemesi sorunu giderildi.
 
 = 2.0.2 - 2024-05-14 =
-* WordPress admin ekranında farklı eklentiler tarafından Bootstrap küfürlerinin kullanılması durumunda, Hezarfen eklentisinin etkilenmemesi sağlandı.
+* WordPress admin ekranında farklı eklentiler tarafından Bootstrap kütüphanelerinin kullanılması durumunda, Hezarfen eklentisinin etkilenmemesi sağlandı.
 
 = 2.0.1 - 2024-04-15 =
 * Kargo takip özelliği eklendi. (kargo takip numarası girebilme, kargoya verildi durumu, SMS entegrasyonu)
@@ -125,13 +151,13 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 * HPOS desteği eklendi.
 
 = 1.6.7 - 2023-12-06 =
-* Ödeme ekranında vergi no alanın maks 11 karakter yazılabilmesi sağlandı.
+* Ödeme ekranında vergi no alanının maksimum 11 karakter yazılabilmesi sağlandı.
 
 = 1.6.6 - 2023-11-22 =
 * Hata giderme: Ödeme ekranında oluşabilen PHP uyarısının düzeltilmesi
 
 = 1.6.5 - 2023-11-19 =
-* Hata giderme: Ödeme ekranında ilçe ve mahalle alanlarının HTML class değerlerini miras al.
+* Hata giderme: Ödeme ekranında ilçe ve mahalle alanlarının HTML class değerlerini miras alması sağlandı.
 
 = 1.6.3 - 2023-11-05 =
 * Hata giderme: WP Admin sipariş düzenleme ekranından sipariş düzenlendikten sonra, fatura tipi bilgisinin değişmesi (kurumsal'ken bireysele dönmesi) problemi giderildi.
@@ -141,7 +167,7 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 
 = 1.6.1 - 2023-04-30 =
 * Hata giderme: "jQuery.fn.change() event shorthand is deprecated" uyarısı giderildi.
-* İyileştirme: Checkout Field Editor for Woocommerce eklentisi aktifken, Hezarfen otomatik ödeme alanları sıralanması ve posta kodunun gizlenmesi özelliklerinin devre dışı bırakılması sağlandı.
+* İyileştirme: Checkout Field Editor for WooCommerce eklentisi aktifken, Hezarfen otomatik ödeme alanları sıralanması ve posta kodunun gizlenmesi özelliklerinin devre dışı bırakılması sağlandı.
 * Hata giderme: Ödeme sayfasında varsayılan ülke Türkiye dışında bir ülkeyse ortaya çıkan sorun çözüldü.
 * Hata giderme: Bazı stringlerin çeviri problemleri giderildi (varsayılan olarak Türkçe olup çeviri desteği bulunmayanlar)
 * Hata giderme: Ödeme ekranında, il, ilçe, mahalle seçim alanlarındaki "no results found" uyarısına dil çeviri desteği eklendi.
@@ -179,7 +205,7 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 
 = 1.4.4 - 2022-07-03 =
 * Hata giderme: Ödeme sayfasında Türkiye harici bir ülke seçildiğinde ortaya çıkan sorunların giderilmesi
-* Hata giderme: T.C. Kimlik Zorunluysa ve alan boşsa sipariş oluşturabilme sorunun giderilmesi
+* Hata giderme: T.C. Kimlik Zorunluysa ve alan boşsa sipariş oluşturabilme sorununun giderilmesi
 * Checkout Field Editor eklenti uyumluluğu
 * Hata giderme: Tema uyumluluğu
 
@@ -193,7 +219,7 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 * readme.txt güncellendi.
 
 = 1.4.0 - 2022-03-24 =
-* Hezarfen'e lokal mahalle desteği eklendi ve mahalle.io bağımlığı kaldırıldı. Artık ilçe/mahalle desteği ücretsiz ve varsayılan olarak sunuluyor.
+* Hezarfen'e lokal mahalle desteği eklendi ve mahalle.io bağımlılığı kaldırıldı. Artık ilçe/mahalle desteği ücretsiz ve varsayılan olarak sunuluyor.
 * Performans iyileştirmeleri
 * Ödeme ekranındaki ilçe ve mahalle alanlarının html element ID değerleri standartlara uygun hale getirildi.
 * Ödeme ekranındaki ilçe ve mahalle bilgisinin kaydedilmesi sağlanarak, kayıtlı kullanıcıların her sefer mahalle ve ilçe seçme gereksinimi kaldırıldı.
@@ -216,7 +242,7 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 * Özellik: mahalle.io aktif edilirse, adres2 alanının otomatik olarak zorunlu yapılması sağlandı.
 
 = 1.2.2 - 2020-11-11 =
-* mahalle.io AJAX fonksiyonlarinda iyileştirmeler ( nonce ve sanization desteği )
+* mahalle.io AJAX fonksiyonlarında iyileştirmeler ( nonce ve sanitization desteği )
 * Genel iyileştirmeler
 
 = 1.2.1 - 2020-11-10 =
@@ -228,7 +254,7 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 * Ödeme sayfasında yer alan posta kodu alanlarının tek tuşla ödeme ekranından kaldırılabilmesi sağlandı.
 
 = 1.1.0 - 2020-11-09 =
-* Ödeme sayfasında, fatura bilgileri bölümündeki \'fatura firma adı\' alanının yalnızca \'fatura tipi\' kurumsal olarak seçildiğinde gösterilmesi sağlandı.
+* Ödeme sayfasında, fatura bilgileri bölümündeki 'fatura firma adı' alanının yalnızca 'fatura tipi' kurumsal olarak seçildiğinde gösterilmesi sağlandı.
 
 = 1.0.0 - 2020-11-07 =
 * Opsiyonel olarak ödeme ekranına mahalle alanının eklenmesi
