@@ -37,6 +37,39 @@ T.C. Kimlik numarası alanının görünmesi için şifreleme (encryption) özel
 = Kurumsal ve bireysel fatura seçeneğini nasıl aktifleştirebilirim? =
 WooCommerce -> Ayarlar -> Hezarfen -> Ödeme Sayfası Ayarları menüsünden "Ödeme ekranında vergi alanlarını göster" seçeneğini aktifleştirmeniz yeterlidir.
 
+= Hangi kargo firmalarını destekliyorsunuz? =
+Hezarfen eklentisi aşağıdaki Türk kargo firmalarını desteklemektedir:
+
+• Aras Kargo
+• Birgünde Kargo
+• Brinks Kargo
+• CDEK
+• DHL
+• FedEx
+• Gelal
+• hepsiJET
+• Horoz Lojistik
+• Jetizz
+• Kargo Türk
+• Kargoist
+• Kolay Gelsin
+• Kurye
+• MNG Kargo
+• PackUpp
+• PTT Kargo
+• Scotty
+• Sendeo Kargo
+• Sürat Kargo
+• TNT
+• Trendyol Express
+• UPS Kargo
+• Yurtiçi Kargo
+
+Bu kargo firmaları için manuel kargo takip numarası girişi, kargo durumu takibi ve müşteri ekranında kargo detaylarının gösterimi özellikleri mevcuttur.
+
+= Müşterilere nasıl kargo SMS'i gönderilir? =
+Hezarfen ücretsiz versiyonunda NetGSM ve PandaSMS entegrasyonları bulunmaktadır. WooCommerce -> Ayarlar -> Hezarfen -> Manuel Kargo Takip bölümünden kargoya verildi SMS şablonunu düzenleyebilirsiniz.
+
 == Installation ==
 Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hezarfen menüsünden eklentinin ayarlarını kontrol edebilirsiniz.
 
