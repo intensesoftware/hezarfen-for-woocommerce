@@ -46,6 +46,14 @@ Türkiye'nin sevilen WooCommerce kargo eklentisi! Manuel kargo takip özelliği 
 - Posta kodu alanını ödeme ekranından tek tuşla kaldırabilme
 - Ödeme formundaki alanları tek tuşla, Türkiye için otomatik sıralayabilme
 
+= PRO ÖZELLİKLER =
+- **5 Kargo Entegrasyonu Tek Pakette**: Yurtiçi, DHL E-Commerce (MNG), Aras, Kolay Gelsin, Hepsijet kargolarıyla entegre olun. Tüm kargo firmalarını aynı anda kullanabilirsiniz, kargo firması başına ayrı ücret ödemezsiniz.
+- **Otomatik Kargo Entegrasyonu**: Barkod oluşturun, kargo takip numaraları otomatik girilsin, otomatik olarak firmanızın adına SMS ve e-posta gönderilsin, sipariş durumları otomatik olarak kargoya verildi veya tamamlandı yapılsın.
+- **Paraşüt Entegrasyonu**: Paraşüt ile siparişlerinizi otomatik olarak faturalandırıp resmileştirin.
+- **Otomatik Ürün Gönderimi**: Paraşüt'e ürünlerinizi otomatik olarak gönderin.
+
+**Hezarfen Pro'yu satın almak için:** [https://intense.com.tr/urun/hezarfen-pro/](https://intense.com.tr/urun/hezarfen-pro/)
+
 == Frequently Asked Questions ==
 
 = Kargo takip özelliğinin ayarlarını nasıl yapabilirim? =
