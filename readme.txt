@@ -1,4 +1,5 @@
-=== Hezarfen - Türkiye Kargo Entegratör - WooCommerce Kargo Takip ve Yönetim Eklentisi For WooCommerce ===
+
+=== Hezarfen - WooCommerce Türkiye Kargo Entegrasyonu ===
 Contributors: intenseyazilim, mskapusuz
 Tags: kargo, kargo takip, türkiye, woocommerce, fatura
 Requires at least: 5.3
@@ -7,105 +8,133 @@ Requires PHP: 7.0
 License: GPL2
 Stable tag: 2.3.2
 
-Türkiye'nin sevilen WooCommerce kargo eklentisi! Aras kargo, MNG kargo, Yurtiçi kargo, PTT kargo, Sürat kargo ve 25+ yerli kargo firması için manuel kargo takibi. Kargo numarası girme, kargo durumu takibi, kargo SMS bildirimleri ve kapsamlı kargo yönetimi özelliği. Türk WooCommerce e-ticaret sitelerine özel geliştirilmiş kargo çözümü.
+Türkiye'nin lider WooCommerce kargo çözümü! 26+ yerli kargo firması desteği, otomatik takip, SMS bildirimleri ve Türkiye'ye özel e-ticaret özellikleri. Aras, MNG, Yurtiçi, PTT ve daha fazlası için tek eklenti.
 
 == Description ==
-Türkiye'nin sevilen WooCommerce kargo eklentisi! Manuel kargo takip özelliği ile 26 farklı kargo firmasını destekler. Kargo numarası girme, kargo durumu takibi, kargo SMS bildirimleri ve kapsamlı kargo yönetimi özelliği. Türk WooCommerce e-ticaret sitelerine özel geliştirilmiş kargo çözümü. Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar. Ücretsiz olarak manuel kargo takip özelliği, ilçe/mahalle seçim alanları, kurumsal/bireysel fatura bilgileri ve T.C. kimlik no alanı gibi özellikler sunar.
 
-**Desteklenen Kargo Firmaları (Manuel Kargo Takip):**
-• Aras Kargo
-• Birgünde Kargo
-• Brinks Kargo
-• CDEK
-• DHL
-• FedEx
-• Gelal
-• hepsiJET
-• Horoz Lojistik
-• Jetizz
-• Kargo Türk
-• Kargoist
-• Kolay Gelsin
-• Kurye
-• MNG Kargo
-• PackUpp
-• PTT Kargo
-• Scotty
-• Sendeo Kargo
-• Sürat Kargo
-• TNT
-• Trendyol Express
-• UPS Kargo
-• Yurtiçi Kargo
+**Hezarfen**, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo ve ödeme yönetim eklentisidir. 26 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel kargo takip deneyimi sunar ve Türkiye'ye özgü fatura/vergi işlemlerini kolaylaştırır.
 
-= ÖZELLİKLER =
-- Ücretsiz manuel kargo takibi özelliği (takip numarası girebilme, "kargoya verildi" sipariş durumu, müşteri ekranında kargo detaylarının gösterimi, NetGSM ve PandaSMS entegrasyonu, sipariş kargoya verildi maili.)
-- Ödeme ekranına Türkiye için mahalle alanlarının eklenmesi (ücretsiz, mahalle verileri eklenti içerisinde saklanır.)
-- Ödeme ekranında vergi bilgileri (kurumsal ve bireysel fatura tercihine göre)
-- Encrypt edilebilir T.C. kimlik no alanı (T.C. no verileri veritabanına encrypt edilerek yazılır.)
-- Posta kodu alanını ödeme ekranından tek tuşla kaldırabilme
-- Ödeme formundaki alanları tek tuşla, Türkiye için otomatik sıralayabilme
+= 🚀 NEDEN HEZARFEN? =
 
-= PRO ÖZELLİKLER =
-- **5 Kargo Entegrasyonu Tek Pakette**: Yurtiçi, DHL E-Commerce (MNG), Aras, Kolay Gelsin, Hepsijet kargolarıyla entegre olun. Tüm kargo firmalarını aynı anda kullanabilirsiniz, kargo firması başına ayrı ücret ödemezsiniz.
-- **Otomatik Kargo Entegrasyonu**: Barkod oluşturun, kargo takip numaraları otomatik girilsin, otomatik olarak firmanızın adına SMS ve e-posta gönderilsin, sipariş durumları otomatik olarak kargoya verildi veya tamamlandı yapılsın.
-- **Paraşüt Entegrasyonu**: Paraşüt ile siparişlerinizi otomatik olarak faturalandırıp resmileştirin.
-- **Otomatik Ürün Gönderimi**: Paraşüt'e ürünlerinizi otomatik olarak gönderin.
+✅ **Zaman Tasarrufu**: Manuel kargo işlemlerinizi otomatikleştirin
+✅ **Müşteri Memnuniyeti**: SMS ve e-posta bildirimleriyle müşterilerinizi bilgilendirin
+✅ **Türkiye'ye Özel**: İl/ilçe/mahalle seçimi, TC kimlik no, vergi bilgileri
+✅ **Tek Eklenti**: 26 kargo firması tek eklentide
+✅ **Kolay Kullanım**: Kurulum sonrası hemen kullanmaya başlayın
 
-**Hezarfen Pro'yu satın almak için:** [https://intense.com.tr/urun/hezarfen-pro/](https://intense.com.tr/urun/hezarfen-pro/)
+= 📦 DESTEKLENEN KARGO FİRMALARI =
+
+**Popüler Kargo Firmaları:**
+• Aras Kargo • MNG Kargo • Yurtiçi Kargo • PTT Kargo • Sürat Kargo 
+• HepsiJET • Trendyol Express • Kolay Gelsin • Sendeo Kargo
+
+**Uluslararası Kargo:**
+• DHL • FedEx • UPS • TNT • CDEK
+
+**Diğer Kargo Firmaları:**
+• Birgünde Kargo • Brinks Kargo • Gelal • Horoz Lojistik • Jetizz 
+• Kargo Türk • Kargoist • Kurye • PackUpp • Scotty
+
+= ⭐ ÜCRETSİZ ÖZELLİKLER =
+
+**🚚 Kargo Yönetimi**
+• Manuel kargo takip numarası girişi
+• "Kargoya Verildi" sipariş durumu
+• Müşteri panelinde detaylı kargo görüntüleme
+• Otomatik e-posta bildirimleri
+• SMS entegrasyonu (NetGSM ve PandaSMS)
+
+**🏠 Türkiye'ye Özel Çözümler**
+• İl/İlçe/Mahalle seçim alanları (internet bağlantısı gerektirmez)
+• Posta kodu alanını tek tıkla kaldırma
+• Ödeme formunu Türkiye standartlarına göre otomatik sıralama
+• Adres alanlarının optimize edilmesi
+
+**💼 Fatura ve Vergi Özellikleri**
+• Kurumsal/Bireysel fatura seçimi
+• T.C. Kimlik No alanı (şifreli saklama)
+• Vergi no ve vergi dairesi alanları
+• 11 haneli TC kimlik no doğrulaması
+• Vergi numarası format kontrolü
+
+**🔒 Güvenlik**
+• T.C. Kimlik numaralarının şifrelenerek saklanması
+• KVKK uyumlu veri saklama
+• Güvenli anahtar yönetimi
+
+= 💎 PRO ÖZELLİKLER =
+
+**🔄 Otomatik Kargo Entegrasyonu**
+• 5 büyük kargo firması ile direkt entegrasyon (Yurtiçi, DHL E-Commerce, Aras, Kolay Gelsin, HepsiJET)
+• Otomatik barkod oluşturma
+• Takip numaralarının otomatik girilmesi
+• Sipariş durumlarının otomatik güncellenmesi
+• Toplu kargo gönderimi
+
+**📊 Paraşüt Muhasebe Entegrasyonu**
+• Siparişlerin otomatik faturalandırılması
+• Ürünlerin Paraşüt'e otomatik aktarımı
+• Stok senkronizasyonu
+• Müşteri bilgilerinin senkronizasyonu
+
+**Pro sürümü satın almak için:** [intense.com.tr/urun/hezarfen-pro](https://intense.com.tr/urun/hezarfen-pro/)
+
+== Installation ==
+
+= Otomatik Kurulum =
+1. WordPress yönetim panelinizde **Eklentiler > Yeni Ekle** menüsüne gidin
+2. "Hezarfen" kelimesini aratın
+3. **Şimdi Kur** butonuna tıklayın ve eklentiyi aktifleştirin
+4. **WooCommerce > Ayarlar > Hezarfen** menüsünden ayarlarınızı yapın
+
+= Manuel Kurulum =
+1. Eklenti dosyalarını `/wp-content/plugins/hezarfen/` dizinine yükleyin
+2. WordPress yönetim panelinden eklentiyi aktifleştirin
+3. **WooCommerce > Ayarlar > Hezarfen** menüsünden konfigürasyonu tamamlayın
+
+= İlk Yapılandırma =
+1. **Manuel Kargo Takip**: Kullanacağınız kargo firmalarını seçin
+2. **Ödeme Sayfası**: İl/ilçe/mahalle alanlarını aktifleştirin
+3. **Güvenlik**: T.C. Kimlik no şifrelemeyi aktifleştirin
+4. **Bildirimler**: SMS servis bilgilerinizi girin
 
 == Frequently Asked Questions ==
 
-= Kargo takip özelliğinin ayarlarını nasıl yapabilirim? =
-Eklentiyi aktifleştirdikten sonra, WooCommerce -> Ayarlar -> Hezarfen -> Manuel Kargo Takip menüsünden ilgili ayarları yapabilirsiniz.
+= Eklenti tamamen ücretsiz mi? =
+Evet, temel özellikler tamamen ücretsizdir. 26 kargo firması için manuel takip, il/ilçe/mahalle seçimi, TC kimlik no alanı gibi özellikler ücretsiz sunulmaktadır. Pro özellikleri (otomatik entegrasyon, Paraşüt bağlantısı) ücretlidir.
+
+= Hangi WooCommerce sürümleriyle uyumlu? =
+WooCommerce 5.0 ve üzeri tüm sürümlerle uyumludur. HPOS (High Performance Order Storage) desteği mevcuttur.
+
+= Kargo takip özelliğini nasıl kullanabilirim? =
+Eklentiyi aktifleştirdikten sonra, WooCommerce > Ayarlar > Hezarfen > Manuel Kargo Takip menüsünden kullanmak istediğiniz kargo firmalarını seçin. Sipariş detayında kargo takip numarasını girebilir ve müşterilerinize otomatik bildirim gönderebilirsiniz.
 
 = T.C. Kimlik numarası alanı neden görünmüyor? =
-T.C. Kimlik numarası alanının görünmesi için şifreleme (encryption) özelliğinin aktif edilmesi gerekir. WooCommerce -> Ayarlar -> Hezarfen -> Şifreleme (Encryption) menüsünden bu özelliği aktifleştirebilirsiniz.
+T.C. Kimlik numarası alanının görünmesi için şifreleme özelliğinin aktif edilmesi gerekir. WooCommerce > Ayarlar > Hezarfen > Şifreleme (Encryption) menüsünden bu özelliği aktifleştirebilirsiniz.
 
-= Kaybolan şifreleme anahtarını nasıl yeniden oluşturabilirim? =
-Şifreleme anahtarınızı kaybettiyseniz, WooCommerce -> Ayarlar -> Hezarfen -> Şifreleme Anahtarı Kurtarma bölümünden yeni bir anahtar oluşturabilirsiniz. Oluşturulan anahtarı wp-config.php dosyanıza `define( 'HEZARFEN_ENCRYPTION_KEY', 'örnek anahtar değeri' );` şeklinde eklemeniz gerekir. Bu işlem öncesinde mutlaka sitenizin tam yedeğini alın. Unutmayın ki, yeni anahtar oluşturduğunuzda eski siparişlerdeki şifrelenmiş T.C. Kimlik numarası verilerine erişemezsiniz. Not: "Şifreleme Anahtarı Kurtarma" bölümü sadece wp-config.php dosyasında encryption key tanımlanmadığında ve geçmişte başarılı bir şifreleme anahtarı oluşturma işlemi yaptıysanız görünür.
+= İl/ilçe/mahalle verileri nereden geliyor? =
+Tüm il/ilçe/mahalle verileri eklenti içerisinde yer almaktadır. İnternet bağlantısı veya harici bir servise ihtiyaç duymaz, tamamen offline çalışır.
 
-= İlçe ve mahalle verileri nereden geliyor? =
-İlçe ve mahalle verileri eklenti içerisinde yer almaktadır, herhangi bir harici servise ihtiyaç duymaz.
+= SMS bildirimleri nasıl gönderilir? =
+NetGSM veya PandaSMS hesabınız varsa, API bilgilerinizi girerek müşterilerinize otomatik kargo SMS'i gönderebilirsiniz. WooCommerce > Ayarlar > Hezarfen > Manuel Kargo Takip bölümünden yapılandırabilirsiniz.
 
-= Kurumsal ve bireysel fatura seçeneğini nasıl aktifleştirebilirim? =
-WooCommerce -> Ayarlar -> Hezarfen -> Ödeme Sayfası Ayarları menüsünden "Ödeme ekranında vergi alanlarını göster" seçeneğini aktifleştirmeniz yeterlidir.
+= Kurumsal ve bireysel fatura ayrımı nasıl yapılır? =
+WooCommerce > Ayarlar > Hezarfen > Ödeme Sayfası Ayarları menüsünden "Ödeme ekranında vergi alanlarını göster" seçeneğini aktifleştirdiğinizde, müşterileriniz kurumsal veya bireysel fatura seçimi yapabilir.
 
-= Hangi kargo firmalarını destekliyorsunuz? =
-Hezarfen eklentisi aşağıdaki Türk kargo firmalarını desteklemektedir:
+= Pro sürüme geçiş yapmak veri kaybına neden olur mu? =
+Hayır, Pro sürüme geçiş yaptığınızda mevcut tüm verileriniz korunur. Sadece yeni özellikler eklenir.
 
-• Aras Kargo
-• Birgünde Kargo
-• Brinks Kargo
-• CDEK
-• DHL
-• FedEx
-• Gelal
-• hepsiJET
-• Horoz Lojistik
-• Jetizz
-• Kargo Türk
-• Kargoist
-• Kolay Gelsin
-• Kurye
-• MNG Kargo
-• PackUpp
-• PTT Kargo
-• Scotty
-• Sendeo Kargo
-• Sürat Kargo
-• TNT
-• Trendyol Express
-• UPS Kargo
-• Yurtiçi Kargo
+= Destek nasıl alabilirim? =
+Ücretsiz versiyonumuz için WordPress.org destek forumunu kullanabilir, Pro versiyonumuz için [intense.com.tr](https://intense.com.tr) üzerinden bizimle iletişime geçebilirsiniz.
 
-Bu kargo firmaları için manuel kargo takip numarası girişi, kargo durumu takibi ve müşteri ekranında kargo detaylarının gösterimi özellikleri mevcuttur.
+= Kaybolan şifreleme anahtarını nasıl kurtarabilirim? =
+WooCommerce > Ayarlar > Hezarfen > Şifreleme Anahtarı Kurtarma bölümünden yeni anahtar oluşturabilirsiniz. Oluşturulan anahtarı wp-config.php dosyanıza eklemeniz gerekir. Detaylı bilgi için dokümantasyonu inceleyin.
 
-= Müşterilere nasıl kargo SMS'i gönderilir? =
-Hezarfen ücretsiz versiyonunda NetGSM ve PandaSMS entegrasyonları bulunmaktadır. WooCommerce -> Ayarlar -> Hezarfen -> Manuel Kargo Takip bölümünden kargoya verildi SMS şablonunu düzenleyebilirsiniz.
+= Hangi ödeme yöntemleriyle uyumlu? =
+Hezarfen, tüm WooCommerce ödeme yöntemleriyle uyumludur. Kapıda ödeme, kredi kartı, havale/EFT dahil tüm ödeme metodlarıyla sorunsuz çalışır.
 
-== Installation ==
-Eklentiyi aktifleştirdikten sonra, WooCommerce -> Ayarlar ekranına giderek Hezarfen menüsünden eklentinin ayarlarını kontrol edebilirsiniz.
+= Çoklu dil desteği var mı? =
+Eklenti Türkçe ve İngilizce dillerini desteklemektedir. WPML ve Polylang gibi çoklu dil eklentileriyle uyumludur.
 
 == Screenshots ==
 1. Kargo takip no giriş alanı
