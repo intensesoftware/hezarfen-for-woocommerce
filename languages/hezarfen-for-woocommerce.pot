@@ -724,6 +724,10 @@ msgstr ""
 msgid "Trendyol Express"
 msgstr ""
 
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:141
+msgid "Thank you for supporting Hezarfen! 🌟"
+msgstr ""
+
 #. Description of the plugin
 msgid ""
 "Türkiye'nin WooCommerce kargo eklentisi - 26+ kargo firmalası için takip, "

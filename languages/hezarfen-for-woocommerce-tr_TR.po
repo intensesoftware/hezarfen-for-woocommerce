@@ -488,7 +488,7 @@ msgstr "Kurye"
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:68
 msgid "Leave a Review"
-msgstr "Yorum bırak"
+msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:84
 msgid "Manual Shipment Tracking"
@@ -792,6 +792,10 @@ msgstr "Kargo takip no post meta keyi"
 #: packages/manual-shipment-tracking/includes/courier-companies/class-trendyol-express.php:38
 msgid "Trendyol Express"
 msgstr "Trendyol Express"
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:141
+msgid "Thank you for supporting Hezarfen! 🌟"
+msgstr "Hezarfen'i desteklediğiniz için teşekkürler! 🌟"
 
 #. Description of the plugin
 msgid ""

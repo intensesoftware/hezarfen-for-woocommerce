@@ -29,7 +29,7 @@ jQuery(document).ready(($)=>{
       localStorage.setItem('hezarfen_review_clicked', 'true');
       
       // Show thank you message
-      showThankYouMessage('Thank you for supporting Hezarfen! 🌟');
+      showThankYouMessage(hezarfen_mst_backend.thank_you_message);
       
       // Hide after 3 seconds
       setTimeout(() => {
