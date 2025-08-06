@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: Hezarfen For Woocommerce
- * Description: Hezarfen, WooCommerce eklentisini Türkiye için daha kullanılabilir kılmayı amaçlar.
+ * Plugin Name: Hezarfen - Türkiye Kargo Entegratör - WooCommerce Kargo Takip ve Yönetim Eklentisi For Woocommerce
+ * Description: Türkiye'nin WooCommerce kargo eklentisi - 26+ kargo firmalası için takip, sms, e-posta bildirimleri
  * Version: 2.3.2
  * Author: Intense Yazılım Ltd.
- * Author URI: http://intense.com.tr
+ * Author URI: https://intense.com.tr
  * Developer: Intense Yazılım Ltd.
- * Developer URI: http://intense.com.tr
+ * Developer URI: https://intense.com.tr
  * License: GPL2
  * Text Domain: hezarfen-for-woocommerce
  * Domain Path: /languages

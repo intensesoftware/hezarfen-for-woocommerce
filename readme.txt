@@ -1,5 +1,5 @@
-=== Hezarfen for WooCommerce - Ücretsiz manuel kargo takip özelliği (+ SMS/E-Posta) ve ilçe/mahalle, kurumsal/bireysel vergi ödeme alanları ===
-Contributors: intenseyazilim
+=== Hezarfen - Türkiye Kargo Entegratör - WooCommerce Kargo Takip ve Yönetim Eklentisi For Woocommerce ===
+Contributors: intenseyazilim, mskapusuz
 Tags: kargo, kargo takip, türkiye, woocommerce, fatura
 Requires at least: 5.3
 Tested up to: 6.8
@@ -7,10 +7,10 @@ Requires PHP: 7.0
 License: GPL2
 Stable tag: 2.3.2
 
-Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
+Türkiye'nin sevilen WooCommerce kargo eklentisi! Aras kargo, MNG kargo, Yurtiçi kargo, PTT kargo, Sürat kargo ve 25+ yerli kargo firması için manuel kargo takibi. Kargo numarası girme, kargo durumu takibi, kargo SMS bildirimleri ve kapsamlı kargo yönetimi özelliği. Türk WooCommerce e-ticaret sitelerine özel geliştirilmiş kargo çözümü.
 
 == Description ==
-Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar. Ücretsiz olarak manuel kargo takip özelliği(20+ kargo), ilçe/mahalle seçim alanları, kurumsal/bireysel fatura bilgileri ve T.C. kimlik no alanı gibi özellikler sunar.
+Türkiye'nin sevilen WooCommerce kargo eklentisi! Aras kargo, MNG kargo, Yurtiçi kargo, PTT kargo, Sürat kargo ve 25+ yerli kargo firması için manuel kargo takibi. Kargo numarası girme, kargo durumu takibi, kargo SMS bildirimleri ve kapsamlı kargo yönetimi özelliği. Türk WooCommerce e-ticaret sitelerine özel geliştirilmiş kargo çözümü. Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar. Ücretsiz olarak manuel kargo takip özelliği(20+ kargo), ilçe/mahalle seçim alanları, kurumsal/bireysel fatura bilgileri ve T.C. kimlik no alanı gibi özellikler sunar.
 
 = ÖZELLİKLER =
 - Ücretsiz manuel kargo takibi özelliği (takip numarası girebilme, "kargoya verildi" sipariş durumu, müşteri ekranında kargo detaylarının gösterimi, NetGSM ve PandaSMS entegrasyonu, sipariş kargoya verildi maili.)
