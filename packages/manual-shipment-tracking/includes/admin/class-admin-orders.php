@@ -77,7 +77,7 @@ class Admin_Orders {
 				} else {
 					$courier = Helper::get_courier_class( $shipment_data[0]->courier_id );
 					if ( $courier::$logo ) {
-						printf( '<img src="%s" class="courier-logo">', esc_url( HEZARFEN_MST_COURIER_LOGO_URL . $courier::$logo ) );
+						printf( '<img src="%s" class="courier-logo" loading="lazy" alt="%s">', esc_url( HEZARFEN_MST_COURIER_LOGO_URL . $courier::$logo ), esc_attr( $courier::get_title( $order_id ) ) );
 					} else {
 						printf( '<p>%s</p>', esc_html( $courier::get_title( $order_id ) ) );
 					}
