@@ -61,7 +61,6 @@ Türkiye'nin lider WooCommerce kargo çözümü! 26+ yerli kargo firması deste�
 
 **🔒 Güvenlik**
 • T.C. Kimlik numaralarının şifrelenerek saklanması
-• KVKK uyumlu veri saklama
 • Güvenli anahtar yönetimi
 
 = 💎 PRO ÖZELLİKLER =
