@@ -2,10 +2,10 @@
 Contributors: intenseyazilim
 Tags: kargo, vergi, ilçe, mahalle, Türkiye
 Requires at least: 5.3
-Tested up to: 6.5
+Tested up to: 6.8
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.3.0
+Stable tag: 2.3.1
 
 Hezarfen, WooCommerce e-ticaret altyapısını Türkiye için daha kullanılabilir kılmayı amaçlar.
 
@@ -54,6 +54,10 @@ Eklentiyi aktifleştirdikten sonra, WooCommerce -> ayarlar ekranına giderek Hez
 11. Kargoya verildi özellik ayarları
 
 == Changelog ==
+
+= 2.3.1 - 2025-08-06 =
+* WooCommerce uyumluluk versiyon bilgisi güncellendi.
+* Eklenti banner ve logo güncellendi.
 
 = 2.3.0 - 2025-03-12 =
 * Özellik: Şifreleme anahtarı kurtarma özelliği eklendi.
