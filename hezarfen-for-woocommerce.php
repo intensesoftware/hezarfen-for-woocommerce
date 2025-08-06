@@ -13,7 +13,7 @@
  * Requires PHP: 7.0
  * Requires at least: 5.7
  * 
- * WC tested up to: 8.9
+ * WC tested up to: 10.0
  * 
  * @package Hezarfen
  */
