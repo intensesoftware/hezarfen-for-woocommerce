@@ -8,7 +8,7 @@ Requires PHP: 7.0
 License: GPL2
 Stable tag: 2.3.3
 
-Türkiye'nin lider WooCommerce kargo çözümü! 26+ yerli kargo firması desteği, otomatik takip, SMS bildirimleri ve Türkiye'ye özel e-ticaret özellikleri. Aras, MNG, Yurtiçi, PTT ve daha fazlası için tek eklenti.
+Türkiye'nin lider WooCommerce kargo çözümü! 26+ yerli kargo firması desteği, otomatik takip, SMS bildirimleri ve Türkiye'ye özel e-ticaret özellikleri
 
 == Description ==
 
