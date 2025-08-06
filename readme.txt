@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.3.2
+Stable tag: 2.3.3
 
 Türkiye'nin lider WooCommerce kargo çözümü! 26+ yerli kargo firması desteği, otomatik takip, SMS bildirimleri ve Türkiye'ye özel e-ticaret özellikleri. Aras, MNG, Yurtiçi, PTT ve daha fazlası için tek eklenti.
 
@@ -153,6 +153,11 @@ Eklenti Türkçe ve İngilizce dillerini desteklemektedir. WPML ve Polylang gibi
 11. Kargoya verildi özellik ayarları
 
 == Changelog ==
+
+= 2.3.3 - 2025-08-07 =
+* Arayüzde minör iyileştirme
+* wordpress.org yorum ricası
+* Arayüzde performans iyileştirmesi
 
 = 2.3.2 - 2025-08-07 =
 * PHP hatası giderildi.
