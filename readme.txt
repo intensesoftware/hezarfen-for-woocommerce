@@ -35,6 +35,8 @@ Türkiye'nin lider WooCommerce kargo çözümü! 26+ yerli kargo firması deste�
 • Birgünde Kargo • Brinks Kargo • Gelal • Horoz Lojistik • Jetizz 
 • Kargo Türk • Kargoist • Kurye • PackUpp • Scotty
 
+**Toplam 26 Kargo Firması Desteği**
+
 = ⭐ ÜCRETSİZ ÖZELLİKLER =
 
 **🚚 Kargo Yönetimi**
@@ -45,7 +47,7 @@ Türkiye'nin lider WooCommerce kargo çözümü! 26+ yerli kargo firması deste�
 • SMS entegrasyonu (NetGSM ve PandaSMS)
 
 **🏠 Türkiye'ye Özel Çözümler**
-• İl/İlçe/Mahalle seçim alanları (internet bağlantısı gerektirmez)
+• İlçe/Mahalle seçim alanları
 • Posta kodu alanını tek tıkla kaldırma
 • Ödeme formunu Türkiye standartlarına göre otomatik sıralama
 • Adres alanlarının optimize edilmesi
@@ -70,6 +72,7 @@ Türkiye'nin lider WooCommerce kargo çözümü! 26+ yerli kargo firması deste�
 • Takip numaralarının otomatik girilmesi
 • Sipariş durumlarının otomatik güncellenmesi
 • Toplu kargo gönderimi
+* Otomatik kargo takip SMS'i gönderilmesi
 
 **📊 Paraşüt Muhasebe Entegrasyonu**
 • Siparişlerin otomatik faturalandırılması
