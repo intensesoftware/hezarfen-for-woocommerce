@@ -1,6 +1,6 @@
 === Hezarfen for WooCommerce - Ücretsiz manuel kargo takip özelliği (+ SMS/E-Posta) ve ilçe/mahalle, kurumsal/bireysel vergi ödeme alanları ===
 Contributors: intenseyazilim
-Tags: kargo, vergi, ilçe, mahalle, Türkiye
+Tags: kargo, kargo takip, türkiye, woocommerce, fatura
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.0
