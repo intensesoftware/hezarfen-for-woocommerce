@@ -2,6 +2,76 @@ import { initFlowbite } from 'flowbite';
 import './style.css';
 
 jQuery(document).ready(($)=>{
+  // Check if feedback should be shown
+  function shouldShowFeedback() {
+    const feedbackDismissed = localStorage.getItem('hezarfen_feedback_dismissed');
+    const reviewClicked = localStorage.getItem('hezarfen_review_clicked');
+    return !feedbackDismissed && !reviewClicked;
+  }
+
+  // Initialize feedback request
+  function initFeedbackRequest() {
+    const $feedbackRequest = $('#hezarfen-feedback-request');
+    
+    if (!shouldShowFeedback()) {
+      $feedbackRequest.hide();
+      return;
+    }
+
+    // Show feedback after a short delay to not interrupt user flow
+    setTimeout(() => {
+      $feedbackRequest.fadeIn(300);
+    }, 1000);
+
+    // Handle review link click
+    $('#hezarfen-review-positive').on('click', function() {
+      // Track that user clicked review link
+      localStorage.setItem('hezarfen_review_clicked', 'true');
+      
+      // Show thank you message
+      showThankYouMessage('Thank you for supporting Hezarfen! 🌟');
+      
+      // Hide after 3 seconds
+      setTimeout(() => {
+        $feedbackRequest.fadeOut(300);
+      }, 3000);
+    });
+
+    // Handle dismiss button
+    $('#hezarfen-feedback-dismiss').on('click', function() {
+      localStorage.setItem('hezarfen_feedback_dismissed', 'true');
+      $feedbackRequest.fadeOut(300);
+    });
+
+    // Handle close button
+    $('#hezarfen-feedback-close').on('click', function() {
+      $feedbackRequest.fadeOut(300);
+    });
+  }
+
+  // Show thank you message
+  function showThankYouMessage(message) {
+    const $feedbackRequest = $('#hezarfen-feedback-request');
+    
+    $feedbackRequest.html(`
+      <div class="flex items-center space-x-3">
+        <div class="flex-shrink-0">
+          <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <div class="flex-1">
+          <p class="text-sm text-green-700 font-medium">
+            ${message}
+          </p>
+        </div>
+      </div>
+    `);
+  }
+
+  // Initialize feedback request
+  initFeedbackRequest();
+
   $('#hezarfen-lite .h-expand').click(function () {
     var $content = $('#hezarfen-lite #shipping-companies');
 

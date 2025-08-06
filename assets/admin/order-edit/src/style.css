@@ -120,6 +120,53 @@
 
 .hez-shipment-migrate {
     a:hover, a:focus {
-        color: #fff !important;
+        opacity: 0.8;
+    }
+}
+
+/* Feedback Request Styles */
+#hezarfen-feedback-request {
+    animation: slideInFromTop 0.3s ease-out;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-left: 4px solid #3b82f6;
+}
+
+#hezarfen-feedback-request button {
+    transition: all 0.2s ease-in-out;
+}
+
+#hezarfen-feedback-request button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#hezarfen-feedback-request button:active {
+    transform: translateY(0);
+}
+
+@keyframes slideInFromTop {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Dark mode support for feedback */
+@media (prefers-color-scheme: dark) {
+    #hezarfen-feedback-request {
+        background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+        border-color: #3b82f6;
+    }
+    
+    #hezarfen-feedback-request h4 {
+        color: #dbeafe;
+    }
+    
+    #hezarfen-feedback-request p {
+        color: #bfdbfe;
     }
 }
