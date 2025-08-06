@@ -1,5 +1,5 @@
 
-=== Hezarfen - WooCommerce Türkiye Kargo Entegrasyonu ===
+=== Hezarfen - Türkiye Kargo Entegrasyonu - WooCommerce Kargo Takip ve Yönetim Eklentisi For Woocommerce ===
 Contributors: intenseyazilim, mskapusuz
 Tags: kargo, kargo takip, türkiye, woocommerce, fatura
 Requires at least: 5.3
