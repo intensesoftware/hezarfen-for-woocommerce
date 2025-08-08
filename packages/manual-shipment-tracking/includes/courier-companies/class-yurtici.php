@@ -50,6 +50,6 @@ class Courier_Yurtici extends Courier_Company {
 			return '';
 		}
 
-		return 'https://yurticikargo.com/tr/online-servisler/gonderi-sorgula?code=' . $tracking_number;
+		return 'https://www.yurticikargo.com/tr/online-servisler/gonderi-sorgula?code=' . $tracking_number;
 	}
 }
