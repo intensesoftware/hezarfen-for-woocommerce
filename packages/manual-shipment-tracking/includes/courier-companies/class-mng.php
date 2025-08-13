@@ -25,7 +25,7 @@ class Courier_MNG extends Courier_Company {
 	 * 
 	 * @var string
 	 */
-	public static $logo = 'mng-logo.svg';
+	public static $logo = 'dhl-ecommerce.svg';
 
 	/**
 	 * Returns the title.
@@ -35,7 +35,7 @@ class Courier_MNG extends Courier_Company {
 	 * @return string
 	 */
 	public static function get_title( $order_id = '' ) {
-		return __( 'MNG Kargo', 'hezarfen-for-woocommerce' );
+		return __( 'DHL E-Commerce', 'hezarfen-for-woocommerce' );
 	}
 
 	/**
@@ -50,6 +50,6 @@ class Courier_MNG extends Courier_Company {
 			return '';
 		}
 
-		return 'http://service.mngkargo.com.tr/iactive/popup/kargotakip.asp?k=' . $tracking_number;
+		return 'https://kargotakip.dhlecommerce.com.tr/?takipNo=' . $tracking_number;
 	}
 }
