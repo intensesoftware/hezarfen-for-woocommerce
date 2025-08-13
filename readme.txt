@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.3.6
+Stable tag: 2.3.7
 
 Türkiye'nin lider WooCommerce kargo çözümü! 26+ yerli kargo firması desteği, otomatik takip, SMS bildirimleri ve Türkiye'ye özel e-ticaret özellikleri
 
@@ -25,7 +25,7 @@ Türkiye'nin lider WooCommerce kargo çözümü! 26+ yerli kargo firması deste�
 = 📦 DESTEKLENEN KARGO FİRMALARI =
 
 **Popüler Kargo Firmaları:**
-• Aras Kargo • MNG Kargo • Yurtiçi Kargo • PTT Kargo • Sürat Kargo 
+• Aras Kargo • DHL E-Commerce • Yurtiçi Kargo • PTT Kargo • Sürat Kargo 
 • HepsiJET • Trendyol Express • Kolay Gelsin • Sendeo Kargo
 
 **Uluslararası Kargo:**
@@ -152,6 +152,9 @@ Eklenti Türkçe ve İngilizce dillerini desteklemektedir. WPML ve Polylang gibi
 11. Kargoya verildi özellik ayarları
 
 == Changelog ==
+= 2.3.7 - 2025-08-13 =
+* DHL E-Commerce kargo eklendi.
+
 = 2.3.6 - 2025-08-13 =
 * Kullanıcı anketi
 
