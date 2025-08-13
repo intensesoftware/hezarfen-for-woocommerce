@@ -4,6 +4,63 @@ defined('ABSPATH') || exit;
 use \Hezarfen\ManualShipmentTracking\Helper;
 ?>
 <div id="hez-order-shipments" class="hez-ui">
+
+    <?php
+    // Get today's date in Turkish format
+    $turkish_months = array(
+        1 => 'Ocak', 2 => 'Şubat', 3 => 'Mart', 4 => 'Nisan', 5 => 'Mayıs', 6 => 'Haziran',
+        7 => 'Temmuz', 8 => 'Ağustos', 9 => 'Eylül', 10 => 'Ekim', 11 => 'Kasım', 12 => 'Aralık'
+    );
+    $turkish_days = array(
+        'Monday' => 'Pazartesi', 'Tuesday' => 'Salı', 'Wednesday' => 'Çarşamba',
+        'Thursday' => 'Perşembe', 'Friday' => 'Cuma', 'Saturday' => 'Cumartesi', 'Sunday' => 'Pazar'
+    );
+    
+    $today_turkish = date('j') . ' ' . $turkish_months[date('n')] . ' ' . date('Y') . ' - ' . $turkish_days[date('l')];
+    
+    // Get the saved survey date from options
+    $saved_survey_date = get_option('hez_survey_date', '');
+    
+    // If no saved date, save today's date
+    if (empty($saved_survey_date)) {
+        update_option('hez_survey_date', $today_turkish);
+        $saved_survey_date = $today_turkish;
+    }
+    
+    // Only show survey if today's date matches saved date
+    if ($today_turkish === $saved_survey_date) :
+    ?>
+    <!-- Hezarfen User Survey -->
+    <div style="margin-bottom: 1rem; padding: 1rem; background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; position: relative;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div style="flex-shrink: 0;">
+                <svg width="20" height="20" fill="#f59e0b" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                </svg>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                    <h4 style="font-size: 0.875rem; font-weight: 600; color: #92400e; margin: 0;">
+                        Hezarfen Kullanıcı Anketi - <?php echo esc_html($today_turkish); ?>
+                    </h4>
+                    <span style="font-size: 0.75rem; color: #92400e; opacity: 0.8;">
+                        Bu uyarı bugün gün boyunca burada gösterilecektir
+                    </span>
+                </div>
+                <p style="font-size: 0.75rem; color: #92400e; margin: 0 0 0.5rem 0; line-height: 1.4;">
+                    Hezarfen'i sizin için daha hızlı, pratik ve güçlü hale getirmemize yardımcı olun. Aşağıdaki formdan eklenmesini istediğiniz özellikleri veya yaşadığınız sorunları bize iletin — geri bildirimleriniz geliştirme ekibimiz tarafından dikkatle değerlendirilir.
+                </p>
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <a href="https://intense.com.tr/hezarfen-kullanici-geri-bildirim-formu/" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 500; color: white; background: #f59e0b; border: none; border-radius: 6px; text-decoration: none; transition: background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#d97706';" onmouseout="this.style.backgroundColor='#f59e0b';">
+                        💡 Anonim Fikrimi Paylaş
+                    </a>
+                    <span style="font-size: 0.7rem; color: #92400e; opacity: 0.8;">(anonimdir, iletişim bilgileriniz toplanmaz)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <div class="mb-4 border-gray-200 dark:border-gray-700">
         <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
             <?php if (!defined('HEZARFEN_PRO_VERSION')) : ?>
