@@ -359,19 +359,58 @@ class Checkout_Block_Field_Transform {
 
 			function monitorStateChanges() {
 				document.addEventListener('change', function(e) {
-					if (e.target.name === 'billing_state' && e.target.value.startsWith('TR')) {
+					// Monitor billing state changes
+					if (e.target.id === 'billing-state' || e.target.name === 'billing_state') {
 						console.log('Hezarfen Transform: State changed to', e.target.value);
-						loadDistricts(e.target.value);
+						
+						// Check if it's a Turkish state
+						if (e.target.value && e.target.value.startsWith('TR')) {
+							// Load districts for the new state
+							loadDistricts(e.target.value);
+							
+							// Clear and disable neighborhoods when state changes
+							const neighborhoodField = document.querySelector('select[id="billing-address_1"]');
+							if (neighborhoodField) {
+								neighborhoodField.innerHTML = '<option value=""><?php echo esc_js( __( 'Select Neighborhood', 'hezarfen-for-woocommerce' ) ); ?></option>';
+								neighborhoodField.disabled = true;
+								console.log('Hezarfen Transform: Neighborhoods cleared due to state change');
+							}
+						} else {
+							console.log('Hezarfen Transform: Non-Turkish state selected, clearing districts and neighborhoods');
+							
+							// Clear districts
+							const districtField = document.querySelector('select[id="billing-city"]');
+							if (districtField) {
+								districtField.innerHTML = '<option value=""><?php echo esc_js( __( 'Select District', 'hezarfen-for-woocommerce' ) ); ?></option>';
+								districtField.disabled = true;
+							}
+							
+							// Clear neighborhoods
+							const neighborhoodField = document.querySelector('select[id="billing-address_1"]');
+							if (neighborhoodField) {
+								neighborhoodField.innerHTML = '<option value=""><?php echo esc_js( __( 'Select Neighborhood', 'hezarfen-for-woocommerce' ) ); ?></option>';
+								neighborhoodField.disabled = true;
+							}
+						}
 					}
 				});
 
 				// Monitor district changes
 				document.addEventListener('change', function(e) {
-					if (e.target.name === 'billing_city') {
-						const stateField = document.querySelector('select[name="billing_state"]');
-						if (stateField && stateField.value.startsWith('TR')) {
+					if (e.target.id === 'billing-city' || e.target.name === 'billing_city') {
+						const stateField = document.querySelector('select[id="billing-state"]');
+						if (stateField && stateField.value && stateField.value.startsWith('TR')) {
 							console.log('Hezarfen Transform: District changed to', e.target.value);
-							loadNeighborhoods(stateField.value, e.target.value);
+							if (e.target.value) {
+								loadNeighborhoods(e.target.value);
+							} else {
+								// Clear neighborhoods if no district selected
+								const neighborhoodField = document.querySelector('select[id="billing-address_1"]');
+								if (neighborhoodField) {
+									neighborhoodField.innerHTML = '<option value=""><?php echo esc_js( __( 'Select Neighborhood', 'hezarfen-for-woocommerce' ) ); ?></option>';
+									neighborhoodField.disabled = true;
+								}
+							}
 						}
 					}
 				});
