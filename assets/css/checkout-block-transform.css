@@ -1,0 +1,62 @@
+/**
+ * Checkout Block Field Transform Styles
+ * 
+ * Styles for the transformed checkout fields
+ */
+
+/* Ensure transformed select fields look consistent */
+.wp-block-woocommerce-checkout select[name="billing_city"],
+.wp-block-woocommerce-checkout select[name="billing_address_1"],
+.wp-block-woocommerce-checkout select[name="shipping_city"],
+.wp-block-woocommerce-checkout select[name="shipping_address_1"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: #fff;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+    appearance: none;
+}
+
+/* Focus states */
+.wp-block-woocommerce-checkout select[name="billing_city"]:focus,
+.wp-block-woocommerce-checkout select[name="billing_address_1"]:focus,
+.wp-block-woocommerce-checkout select[name="shipping_city"]:focus,
+.wp-block-woocommerce-checkout select[name="shipping_address_1"]:focus {
+    border-color: #007cba;
+    outline: none;
+    box-shadow: 0 0 0 1px #007cba;
+}
+
+/* Disabled state */
+.wp-block-woocommerce-checkout select[name="billing_city"]:disabled,
+.wp-block-woocommerce-checkout select[name="billing_address_1"]:disabled,
+.wp-block-woocommerce-checkout select[name="shipping_city"]:disabled,
+.wp-block-woocommerce-checkout select[name="shipping_address_1"]:disabled {
+    background-color: #f7f7f7;
+    color: #666;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Loading state indicator */
+.wp-block-woocommerce-checkout select[name="billing_city"]:disabled,
+.wp-block-woocommerce-checkout select[name="billing_address_1"]:disabled,
+.wp-block-woocommerce-checkout select[name="shipping_city"]:disabled,
+.wp-block-woocommerce-checkout select[name="shipping_address_1"]:disabled {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='10' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' stroke-dasharray='31.416' stroke-dashoffset='31.416'%3E%3Canimate attributeName='stroke-dasharray' dur='2s' values='0 31.416;15.708 15.708;0 31.416' repeatCount='indefinite'/%3E%3Canimate attributeName='stroke-dashoffset' dur='2s' values='0;-15.708;-31.416' repeatCount='indefinite'/%3E%3C/circle%3E%3C/svg%3E");
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .wp-block-woocommerce-checkout select[name="billing_city"],
+    .wp-block-woocommerce-checkout select[name="billing_address_1"],
+    .wp-block-woocommerce-checkout select[name="shipping_city"],
+    .wp-block-woocommerce-checkout select[name="shipping_address_1"] {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+}

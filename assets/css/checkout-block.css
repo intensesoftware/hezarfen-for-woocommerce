@@ -1,0 +1,73 @@
+/**
+ * Hezarfen Checkout Block Styles
+ * 
+ * Styles for the additional checkout fields in WooCommerce Checkout Block
+ */
+
+/* Ensure Turkish address fields are properly styled */
+.wc-block-checkout__form .wc-block-components-text-input[data-field-id*="hezarfen/district"],
+.wc-block-checkout__form .wc-block-components-text-input[data-field-id*="hezarfen/neighborhood"] {
+    margin-bottom: 1rem;
+}
+
+/* Style the select fields */
+.wc-block-checkout__form select[name*="hezarfen/district"],
+.wc-block-checkout__form select[name*="hezarfen/neighborhood"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: #fff;
+}
+
+/* Focus states */
+.wc-block-checkout__form select[name*="hezarfen/district"]:focus,
+.wc-block-checkout__form select[name*="hezarfen/neighborhood"]:focus {
+    border-color: #007cba;
+    outline: none;
+    box-shadow: 0 0 0 1px #007cba;
+}
+
+/* Disabled state */
+.wc-block-checkout__form select[name*="hezarfen/district"]:disabled,
+.wc-block-checkout__form select[name*="hezarfen/neighborhood"]:disabled {
+    background-color: #f7f7f7;
+    color: #666;
+    cursor: not-allowed;
+}
+
+/* Error states */
+.wc-block-checkout__form .has-error select[name*="hezarfen/district"],
+.wc-block-checkout__form .has-error select[name*="hezarfen/neighborhood"] {
+    border-color: #d63638;
+}
+
+/* Loading state indicator */
+.wc-block-checkout__form select[name*="hezarfen/district"]:disabled,
+.wc-block-checkout__form select[name*="hezarfen/neighborhood"]:disabled {
+    background-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="31.416" stroke-dashoffset="31.416"><animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416" repeatCount="indefinite"/><animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/></circle></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+}
+
+/* Hide Turkish fields by default (will be shown via JS when country is TR) */
+.wc-block-checkout__form [data-field-id*="hezarfen/district"],
+.wc-block-checkout__form [data-field-id*="hezarfen/neighborhood"] {
+    display: none;
+}
+
+/* Show Turkish fields when country is Turkey */
+.wc-block-checkout__form.country-tr [data-field-id*="hezarfen/district"],
+.wc-block-checkout__form.country-tr [data-field-id*="hezarfen/neighborhood"] {
+    display: block;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .wc-block-checkout__form select[name*="hezarfen/district"],
+    .wc-block-checkout__form select[name*="hezarfen/neighborhood"] {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+}
