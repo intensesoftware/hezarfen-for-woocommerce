@@ -97,6 +97,9 @@ class Checkout_Block_Field_Transform {
 		?>
 		<script type="text/javascript">
 		(function() {
+			// Prevent multiple simultaneous AJAX calls
+			let isLoadingDistricts = false;
+			let isLoadingNeighborhoods = false;
 			console.log('Hezarfen Transform: Initializing field transformation');
 			
 			// Wait for checkout block to be fully rendered
@@ -249,6 +252,13 @@ class Checkout_Block_Field_Transform {
 							loadNeighborhoods(this.value);
 						}
 					}
+					
+					// Trigger change event to notify WooCommerce
+					const event = new Event('change', { bubbles: true });
+					this.dispatchEvent(event);
+					
+					// Sync value to hidden input
+					syncDropdownValuesQuiet();
 				});
 				
 				console.log('Hezarfen Transform: City field transformed to district dropdown');
@@ -331,6 +341,18 @@ class Checkout_Block_Field_Transform {
 					loadNeighborhoods(districtField.value);
 				}
 				
+				// Add event listener for neighborhood selection
+				neighborhoodSelect.addEventListener('change', function() {
+					console.log('Hezarfen Transform: Neighborhood selected:', this.value);
+					
+					// Trigger change event to notify WooCommerce
+					const event = new Event('change', { bubbles: true });
+					this.dispatchEvent(event);
+					
+					// Sync value to hidden input
+					syncDropdownValuesQuiet();
+				});
+				
 				console.log('Hezarfen Transform: Address_1 field transformed to neighborhood dropdown');
 			}
 
@@ -355,6 +377,9 @@ class Checkout_Block_Field_Transform {
 
 				// Monitor state changes for Turkey
 				monitorStateChanges();
+				
+				// Ensure form data is captured
+				ensureFormDataCapture();
 			}
 
 			function monitorStateChanges() {
@@ -416,15 +441,127 @@ class Checkout_Block_Field_Transform {
 				});
 			}
 
+			function ensureFormDataCapture() {
+				// Monitor form submission to ensure dropdown values are captured
+				document.addEventListener('submit', function(e) {
+					const form = e.target;
+					if (form.classList.contains('wc-block-checkout__form') || form.querySelector('.wp-block-woocommerce-checkout')) {
+						console.log('Hezarfen Transform: Form submission detected, ensuring dropdown values are captured');
+						
+						// Ensure district value is captured
+						const districtField = document.querySelector('select[id="billing-city"]');
+						if (districtField && districtField.value) {
+							console.log('Hezarfen Transform: District value to be saved:', districtField.value);
+							
+							// Create hidden input to ensure value is submitted
+							let hiddenDistrict = form.querySelector('input[name="billing_city"]');
+							if (!hiddenDistrict) {
+								hiddenDistrict = document.createElement('input');
+								hiddenDistrict.type = 'hidden';
+								hiddenDistrict.name = 'billing_city';
+								form.appendChild(hiddenDistrict);
+							}
+							hiddenDistrict.value = districtField.value;
+						}
+						
+						// Ensure neighborhood value is captured
+						const neighborhoodField = document.querySelector('select[id="billing-address_1"]');
+						if (neighborhoodField && neighborhoodField.value) {
+							console.log('Hezarfen Transform: Neighborhood value to be saved:', neighborhoodField.value);
+							
+							// Create hidden input to ensure value is submitted
+							let hiddenNeighborhood = form.querySelector('input[name="billing_address_1"]');
+							if (!hiddenNeighborhood) {
+								hiddenNeighborhood = document.createElement('input');
+								hiddenNeighborhood.type = 'hidden';
+								hiddenNeighborhood.name = 'billing_address_1';
+								form.appendChild(hiddenNeighborhood);
+							}
+							hiddenNeighborhood.value = neighborhoodField.value;
+						}
+					}
+				}, true);
+				
+				// Also monitor for WooCommerce checkout updates
+				document.addEventListener('checkout_updated', function() {
+					console.log('Hezarfen Transform: Checkout updated, syncing dropdown values');
+					syncDropdownValues();
+				});
+				
+				// Initial sync to create hidden inputs
+				setTimeout(function() {
+					syncDropdownValuesQuiet();
+				}, 1000);
+			}
 
+			function syncDropdownValues() {
+				// Sync district value
+				const districtField = document.querySelector('select[id="billing-city"]');
+				if (districtField && districtField.value) {
+					// Update any hidden inputs or original fields
+					const hiddenDistrict = document.querySelector('input[name="billing_city"]');
+					if (hiddenDistrict) {
+						hiddenDistrict.value = districtField.value;
+					}
+				}
+				
+				// Sync neighborhood value
+				const neighborhoodField = document.querySelector('select[id="billing-address_1"]');
+				if (neighborhoodField && neighborhoodField.value) {
+					// Update any hidden inputs or original fields
+					const hiddenNeighborhood = document.querySelector('input[name="billing_address_1"]');
+					if (hiddenNeighborhood) {
+						hiddenNeighborhood.value = neighborhoodField.value;
+					}
+				}
+			}
+
+			function syncDropdownValuesQuiet() {
+				// Quiet sync - only update hidden inputs, don't trigger any loading
+				const districtField = document.querySelector('select[id="billing-city"]');
+				if (districtField && districtField.value) {
+					let hiddenDistrict = document.querySelector('input[name="billing_city"]');
+					if (!hiddenDistrict) {
+						hiddenDistrict = document.createElement('input');
+						hiddenDistrict.type = 'hidden';
+						hiddenDistrict.name = 'billing_city';
+						const form = document.querySelector('.wc-block-checkout__form') || document.querySelector('form');
+						if (form) form.appendChild(hiddenDistrict);
+					}
+					if (hiddenDistrict) {
+						hiddenDistrict.value = districtField.value;
+					}
+				}
+				
+				const neighborhoodField = document.querySelector('select[id="billing-address_1"]');
+				if (neighborhoodField && neighborhoodField.value) {
+					let hiddenNeighborhood = document.querySelector('input[name="billing_address_1"]');
+					if (!hiddenNeighborhood) {
+						hiddenNeighborhood = document.createElement('input');
+						hiddenNeighborhood.type = 'hidden';
+						hiddenNeighborhood.name = 'billing_address_1';
+						const form = document.querySelector('.wc-block-checkout__form') || document.querySelector('form');
+						if (form) form.appendChild(hiddenNeighborhood);
+					}
+					if (hiddenNeighborhood) {
+						hiddenNeighborhood.value = neighborhoodField.value;
+					}
+				}
+			}
 
 			function loadDistricts(stateValue) {
+				if (isLoadingDistricts) {
+					console.log('Hezarfen Transform: Already loading districts, skipping');
+					return;
+				}
+
 				const districtField = document.querySelector('select[id="billing-city"]');
 				if (!districtField) {
 					console.log('Hezarfen Transform: District field not found for loading options');
 					return;
 				}
 
+				isLoadingDistricts = true;
 				console.log('Hezarfen Transform: Loading districts for', stateValue);
 
 				// Show loading
@@ -459,20 +596,28 @@ class Checkout_Block_Field_Transform {
 					} else {
 						districtField.innerHTML = '<option value=""><?php echo esc_js( __( 'Error loading districts', 'hezarfen-for-woocommerce' ) ); ?></option>';
 					}
+					isLoadingDistricts = false;
 				})
 				.catch(error => {
 					console.error('Hezarfen Transform: Error loading districts', error);
 					districtField.innerHTML = '<option value=""><?php echo esc_js( __( 'Error loading districts', 'hezarfen-for-woocommerce' ) ); ?></option>';
+					isLoadingDistricts = false;
 				});
 			}
 
 			function loadNeighborhoods(districtValue) {
+				if (isLoadingNeighborhoods) {
+					console.log('Hezarfen Transform: Already loading neighborhoods, skipping');
+					return;
+				}
+
 				const neighborhoodField = document.querySelector('select[id="billing-address_1"]');
 				if (!neighborhoodField) {
 					console.log('Hezarfen Transform: Neighborhood field not found for loading options');
 					return;
 				}
 
+				isLoadingNeighborhoods = true;
 				console.log('Hezarfen Transform: Loading neighborhoods for district:', districtValue);
 
 				// Show loading
@@ -512,10 +657,12 @@ class Checkout_Block_Field_Transform {
 					} else {
 						neighborhoodField.innerHTML = '<option value=""><?php echo esc_js( __( 'Error loading neighborhoods', 'hezarfen-for-woocommerce' ) ); ?></option>';
 					}
+					isLoadingNeighborhoods = false;
 				})
 				.catch(error => {
 					console.error('Hezarfen Transform: Error loading neighborhoods', error);
 					neighborhoodField.innerHTML = '<option value=""><?php echo esc_js( __( 'Error loading neighborhoods', 'hezarfen-for-woocommerce' ) ); ?></option>';
+					isLoadingNeighborhoods = false;
 				});
 			}
 
