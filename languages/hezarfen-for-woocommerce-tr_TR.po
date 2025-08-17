@@ -923,3 +923,191 @@ msgstr "Kargo verisi silinirken hata oluştu. Lütfen tekrar deneyin."
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:143
 msgid "Campaign ended"
 msgstr "Kampanya sona erdi"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:45
+msgid "SMS Settings"
+msgstr "SMS Ayarları"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:400
+msgid "SMS Automation Settings"
+msgstr "SMS Otomasyon Ayarları"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:402
+msgid "Configure SMS notifications for order status changes using NetGSM."
+msgstr "NetGSM kullanarak sipariş durumu değişiklikleri için SMS bildirimleri yapılandırın."
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:406
+msgid "Enable SMS Automation"
+msgstr "SMS Otomasyonunu Etkinleştir"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:408
+msgid "Enable automatic SMS notifications for order status changes"
+msgstr "Sipariş durumu değişiklikleri için otomatik SMS bildirimlerini etkinleştir"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:413
+msgid "NetGSM Username"
+msgstr "NetGSM Kullanıcı Adı"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:415
+msgid "Your NetGSM username (850xxxxxxx, 312XXXXXXX etc.)"
+msgstr "NetGSM kullanıcı adınız (850xxxxxxx, 312XXXXXXX vb.)"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:420
+msgid "NetGSM Password"
+msgstr "NetGSM Şifre"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:422
+msgid "Your NetGSM API password"
+msgstr "NetGSM API şifreniz"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:427
+msgid "Message Header"
+msgstr "Mesaj Başlığı"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:429
+msgid "SMS sender name (3-11 characters)"
+msgstr "SMS gönderen adı (3-11 karakter)"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:434
+msgid "SMS Rules"
+msgstr "SMS Kuralları"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:436
+msgid "Configure SMS rules for different order status changes"
+msgstr "Farklı sipariş durumu değişiklikleri için SMS kuralları yapılandırın"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:464
+msgid "Add SMS Rule"
+msgstr "SMS Kuralı Ekle"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:489
+msgid "No SMS rules configured yet."
+msgstr "Henüz SMS kuralı yapılandırılmamış."
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:500
+msgid "Edit SMS Rule"
+msgstr "SMS Kuralını Düzenle"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:508
+msgid "Trigger"
+msgstr "Tetikleyici"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:509
+msgid "Order Status Changed"
+msgstr "Sipariş Durumu Değişti"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:513
+msgid "Condition"
+msgstr "Koşul"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:514
+msgid "New Status:"
+msgstr "Yeni Durum:"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:516
+msgid "Select status..."
+msgstr "Durum seçin..."
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:524
+msgid "Action"
+msgstr "Eylem"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:525
+msgid "Send SMS via NetGSM"
+msgstr "NetGSM ile SMS Gönder"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:527
+msgid "Phone Number:"
+msgstr "Telefon Numarası:"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:529
+msgid "Select phone type..."
+msgstr "Telefon türü seçin..."
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:530
+msgid "Billing Phone"
+msgstr "Fatura Telefonu"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:531
+msgid "Shipping Phone"
+msgstr "Kargo Telefonu"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:534
+msgid "Message Template:"
+msgstr "Mesaj Şablonu:"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:535
+msgid "Enter your SMS message template..."
+msgstr "SMS mesaj şablonunuzu girin..."
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:536
+msgid "Available Variables: {order_number}, {customer_name}, {order_status}, {order_total}"
+msgstr "Kullanılabilir Değişkenler: {order_number}, {customer_name}, {order_status}, {order_total}"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:538
+msgid "IYS Status:"
+msgstr "İYS Durumu:"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:540
+msgid "Information (0)"
+msgstr "Bilgilendirme (0)"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:541
+msgid "Commercial (11)"
+msgstr "Ticari (11)"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:543
+msgid "Select \"Information\" for informational messages or \"Commercial\" for promotional messages."
+msgstr "Bilgilendirme mesajları için \"Bilgilendirme\" veya promosyon mesajları için \"Ticari\" seçin."
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:548
+msgid "Save Rule"
+msgstr "Kuralı Kaydet"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:549
+msgid "Cancel"
+msgstr "İptal"
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:85
+msgid "Configure SMS automation for order status changes"
+msgstr "Sipariş durumu değişiklikleri için SMS otomasyonunu yapılandırın"
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:89
+msgid "SMS Automation"
+msgstr "SMS Otomasyonu"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:403
+msgid "Configure SMS notifications for order status changes."
+msgstr "Sipariş durumu değişiklikleri için SMS bildirimlerini yapılandırın."
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:505
+msgid "Action Type:"
+msgstr "Eylem Türü:"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:507
+msgid "Select action..."
+msgstr "Eylem seçin..."
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:513
+msgid "NetGSM Configuration"
+msgstr "NetGSM Yapılandırması"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:515
+msgid "NetGSM Username:"
+msgstr "NetGSM Kullanıcı Adı:"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:516
+msgid "850xxxxxxx, 312XXXXXXX etc."
+msgstr "850xxxxxxx, 312XXXXXXX vb."
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:517
+msgid "Your NetGSM username"
+msgstr "NetGSM kullanıcı adınız"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:520
+msgid "Your API password"
+msgstr "API şifreniz"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:524
+msgid "Sender name (3-11 chars)"
+msgstr "Gönderen adı (3-11 karakter)"

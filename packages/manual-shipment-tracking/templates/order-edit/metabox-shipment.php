@@ -77,6 +77,22 @@ use \Hezarfen\ManualShipmentTracking\Helper;
     <?php endif; ?>
     <div id="default-tab-content">
         <div class="<?php if (defined('HEZARFEN_PRO_VERSION')) : ?>hidden<?php endif; ?> rounded-lg" id="hezarfen-lite" role="tabpanel" aria-labelledby="hezarfen-lite-tab">
+            <!-- SMS Settings Icon Button - Top Right -->
+            <div class="flex justify-end mb-4">
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=sms_settings' ) ); ?>" 
+                   class="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-all duration-200 group" 
+                   target="_blank"
+                   title="<?php esc_attr_e( 'Configure SMS automation for order status changes', 'hezarfen-for-woocommerce' ); ?>">
+                    <svg class="w-4 h-4 mr-2 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                    </svg>
+                    <?php esc_html_e( 'SMS Automation', 'hezarfen-for-woocommerce' ); ?>
+                    <svg class="w-3 h-3 ml-1 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
+                </a>
+            </div>
+
             <div class="grid grid-cols-2 gap-8">
                 <div>
                     <p class="text-lg text-black"><?php esc_html_e('Enter Tracking Information', 'hezarfen-for-woocommerce'); ?></p>
@@ -153,6 +169,8 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                         <div class="flex justify-center mt-2">
                             <button data-order_id="<?php echo esc_attr($order_id); ?>" id="add-to-tracking-list" type="button" class="w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-normal rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"><?php esc_html_e('Add to Tracking List', 'hezarfen-for-woocommerce'); ?></button>
                         </div>
+
+
 
                     </div>
                 </div>

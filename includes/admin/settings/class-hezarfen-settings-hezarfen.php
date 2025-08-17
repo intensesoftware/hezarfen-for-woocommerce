@@ -28,6 +28,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		$this->label = 'Hezarfen';
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_and_styles' ) );
+		add_action( 'woocommerce_admin_field_sms_rules_button', array( $this, 'output_sms_rules_button' ) );
 
 		parent::__construct();
 	}
@@ -42,6 +43,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			''              => __( 'General', 'hezarfen-for-woocommerce' ),
 			'encryption'    => __( 'Encryption', 'hezarfen-for-woocommerce' ),
 			'checkout_page' => __( 'Checkout Page Settings', 'hezarfen-for-woocommerce' ),
+			'sms_settings'  => __( 'SMS Settings', 'hezarfen-for-woocommerce' ),
 		);
 
 		// if checkout field is active, show the section.
@@ -389,6 +391,174 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	}
 
 	/**
+	 * Get settings for the sms_settings section.
+	 *
+	 * @return array<array<string, string>>
+	 */
+	protected function get_settings_for_sms_settings_section() {
+		$fields = array(
+			array(
+				'title' => __( 'SMS Automation Settings', 'hezarfen-for-woocommerce' ),
+				'type'  => 'title',
+				'desc'  => __( 'Configure SMS notifications for order status changes.', 'hezarfen-for-woocommerce' ),
+				'id'    => 'hezarfen_sms_settings_title',
+			),
+			array(
+				'title'   => __( 'Enable SMS Automation', 'hezarfen-for-woocommerce' ),
+				'type'    => 'checkbox',
+				'desc'    => __( 'Enable automatic SMS notifications for order status changes', 'hezarfen-for-woocommerce' ),
+				'id'      => 'hezarfen_sms_automation_enabled',
+				'default' => 'no',
+			),
+			array(
+				'title'   => __( 'SMS Rules', 'hezarfen-for-woocommerce' ),
+				'type'    => 'sms_rules_button',
+				'desc'    => __( 'Configure SMS rules for different order status changes', 'hezarfen-for-woocommerce' ),
+				'id'      => 'hezarfen_sms_rules',
+			),
+			array(
+				'type' => 'sectionend',
+				'id'   => 'hezarfen_sms_settings_section_end',
+			),
+		);
+
+		return $fields;
+	}
+
+	/**
+	 * Output SMS rules button field
+	 *
+	 * @param array $value Field data
+	 * @return void
+	 */
+	public function output_sms_rules_button( $value ) {
+		$saved_rules = get_option( 'hezarfen_sms_rules', array() );
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+			</th>
+			<td class="forminp">
+				<button type="button" id="hezarfen-add-sms-rule" class="button button-primary">
+					<?php esc_html_e( 'Add SMS Rule', 'hezarfen-for-woocommerce' ); ?>
+				</button>
+				<p class="description"><?php echo esc_html( $value['desc'] ); ?></p>
+				
+				<!-- SMS Rules List -->
+				<div id="hezarfen-sms-rules-list" style="margin-top: 15px;">
+					<?php if ( ! empty( $saved_rules ) ) : ?>
+						<?php foreach ( $saved_rules as $index => $rule ) : ?>
+							<div class="sms-rule-item" data-rule-index="<?php echo esc_attr( $index ); ?>" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 4px;">
+								<strong><?php esc_html_e( 'Rule', 'hezarfen-for-woocommerce' ); ?> #<?php echo esc_html( $index + 1 ); ?>:</strong>
+								<?php esc_html_e( 'When order status changes to', 'hezarfen-for-woocommerce' ); ?>
+								<strong><?php echo esc_html( $rule['condition_status'] ?? '' ); ?></strong>,
+								<?php esc_html_e( 'send SMS to', 'hezarfen-for-woocommerce' ); ?>
+								<strong><?php echo esc_html( $rule['phone_type'] ?? '' ); ?></strong>
+								<div style="margin-top: 5px;">
+									<button type="button" class="button button-small edit-sms-rule" data-rule-index="<?php echo esc_attr( $index ); ?>">
+										<?php esc_html_e( 'Edit', 'hezarfen-for-woocommerce' ); ?>
+									</button>
+									<button type="button" class="button button-small delete-sms-rule" data-rule-index="<?php echo esc_attr( $index ); ?>">
+										<?php esc_html_e( 'Delete', 'hezarfen-for-woocommerce' ); ?>
+									</button>
+								</div>
+							</div>
+						<?php endforeach; ?>
+					<?php else : ?>
+						<p><?php esc_html_e( 'No SMS rules configured yet.', 'hezarfen-for-woocommerce' ); ?></p>
+					<?php endif; ?>
+				</div>
+			</td>
+		</tr>
+
+		<!-- SMS Rule Modal -->
+		<div id="hezarfen-sms-rule-modal" style="display: none;">
+			<div class="sms-rule-modal-overlay">
+				<div class="sms-rule-modal-content">
+					<div class="sms-rule-modal-header">
+						<h3 id="sms-rule-modal-title"><?php esc_html_e( 'Add SMS Rule', 'hezarfen-for-woocommerce' ); ?></h3>
+						<button type="button" class="sms-rule-modal-close">&times;</button>
+					</div>
+					<div class="sms-rule-modal-body">
+						<form id="sms-rule-form">
+							<input type="hidden" id="rule-index" value="">
+							
+							<div class="rule-section">
+								<h4><?php esc_html_e( 'Trigger', 'hezarfen-for-woocommerce' ); ?></h4>
+								<p><strong><?php esc_html_e( 'Order Status Changed', 'hezarfen-for-woocommerce' ); ?></strong></p>
+							</div>
+
+							<div class="rule-section">
+								<h4><?php esc_html_e( 'Condition', 'hezarfen-for-woocommerce' ); ?></h4>
+								<label for="condition-status"><?php esc_html_e( 'New Status:', 'hezarfen-for-woocommerce' ); ?></label>
+								<select id="condition-status" name="condition_status" required>
+									<option value=""><?php esc_html_e( 'Select status...', 'hezarfen-for-woocommerce' ); ?></option>
+									<?php foreach ( wc_get_order_statuses() as $status_key => $status_label ) : ?>
+										<option value="<?php echo esc_attr( $status_key ); ?>"><?php echo esc_html( $status_label ); ?></option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+
+							<div class="rule-section">
+								<h4><?php esc_html_e( 'Action', 'hezarfen-for-woocommerce' ); ?></h4>
+								
+								<label for="action-type"><?php esc_html_e( 'Action Type:', 'hezarfen-for-woocommerce' ); ?></label>
+								<select id="action-type" name="action_type" required>
+									<option value=""><?php esc_html_e( 'Select action...', 'hezarfen-for-woocommerce' ); ?></option>
+									<option value="netgsm"><?php esc_html_e( 'Send SMS via NetGSM', 'hezarfen-for-woocommerce' ); ?></option>
+								</select>
+
+								<!-- NetGSM Settings - Only shown when NetGSM is selected -->
+								<div id="netgsm-settings" style="display: none; margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #007cba;">
+									<h5 style="margin: 0 0 15px 0; color: #007cba;"><?php esc_html_e( 'NetGSM Configuration', 'hezarfen-for-woocommerce' ); ?></h5>
+									
+									<label for="netgsm-username"><?php esc_html_e( 'NetGSM Username:', 'hezarfen-for-woocommerce' ); ?></label>
+									<input type="text" id="netgsm-username" name="netgsm_username" placeholder="<?php esc_attr_e( '850xxxxxxx, 312XXXXXXX etc.', 'hezarfen-for-woocommerce' ); ?>">
+									<p class="description"><?php esc_html_e( 'Your NetGSM username', 'hezarfen-for-woocommerce' ); ?></p>
+
+									<label for="netgsm-password"><?php esc_html_e( 'NetGSM Password:', 'hezarfen-for-woocommerce' ); ?></label>
+									<input type="password" id="netgsm-password" name="netgsm_password" placeholder="<?php esc_attr_e( 'Your API password', 'hezarfen-for-woocommerce' ); ?>">
+									<p class="description"><?php esc_html_e( 'Your NetGSM API password', 'hezarfen-for-woocommerce' ); ?></p>
+
+									<label for="netgsm-msgheader"><?php esc_html_e( 'Message Header:', 'hezarfen-for-woocommerce' ); ?></label>
+									<input type="text" id="netgsm-msgheader" name="netgsm_msgheader" placeholder="<?php esc_attr_e( 'Sender name (3-11 chars)', 'hezarfen-for-woocommerce' ); ?>" maxlength="11">
+									<p class="description"><?php esc_html_e( 'SMS sender name (3-11 characters)', 'hezarfen-for-woocommerce' ); ?></p>
+								</div>
+
+								<!-- SMS Content Settings - Shown when any SMS action is selected -->
+								<div id="sms-content-settings" style="display: none; margin-top: 15px;">
+									<label for="phone-type"><?php esc_html_e( 'Phone Number:', 'hezarfen-for-woocommerce' ); ?></label>
+									<select id="phone-type" name="phone_type">
+										<option value=""><?php esc_html_e( 'Select phone type...', 'hezarfen-for-woocommerce' ); ?></option>
+										<option value="billing"><?php esc_html_e( 'Billing Phone', 'hezarfen-for-woocommerce' ); ?></option>
+										<option value="shipping"><?php esc_html_e( 'Shipping Phone', 'hezarfen-for-woocommerce' ); ?></option>
+									</select>
+
+									<label for="message-template"><?php esc_html_e( 'Message Template:', 'hezarfen-for-woocommerce' ); ?></label>
+									<textarea id="message-template" name="message_template" rows="4" placeholder="<?php esc_attr_e( 'Enter your SMS message template...', 'hezarfen-for-woocommerce' ); ?>"></textarea>
+									<p class="description"><?php esc_html_e( 'Available Variables: {order_number}, {customer_name}, {order_status}, {order_total}', 'hezarfen-for-woocommerce' ); ?></p>
+
+									<label for="iys-status"><?php esc_html_e( 'IYS Status:', 'hezarfen-for-woocommerce' ); ?></label>
+									<div>
+										<label><input type="radio" name="iys_status" value="0" checked> <?php esc_html_e( 'Information (0)', 'hezarfen-for-woocommerce' ); ?></label><br>
+										<label><input type="radio" name="iys_status" value="11"> <?php esc_html_e( 'Commercial (11)', 'hezarfen-for-woocommerce' ); ?></label>
+									</div>
+									<p class="description"><?php esc_html_e( 'Select "Information" for informational messages or "Commercial" for promotional messages.', 'hezarfen-for-woocommerce' ); ?></p>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="sms-rule-modal-footer">
+						<button type="button" id="save-sms-rule" class="button button-primary"><?php esc_html_e( 'Save Rule', 'hezarfen-for-woocommerce' ); ?></button>
+						<button type="button" class="button sms-rule-modal-close"><?php esc_html_e( 'Cancel', 'hezarfen-for-woocommerce' ); ?></button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
 	 * Output the settings
 	 *
 	 * @since 1.0
@@ -484,6 +654,40 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		if ( 'woocommerce_page_wc-settings' === $hook_suffix && 'encryption_recovery' === $current_section ) {
 			wp_enqueue_script( 'wc_hezarfen_settings_js', plugins_url( 'assets/admin/js/settings.js', WC_HEZARFEN_FILE ), array( 'jquery' ), WC_HEZARFEN_VERSION, true );
 			wp_enqueue_style( 'wc_hezarfen_settings_css', plugins_url( 'assets/admin/css/settings.css', WC_HEZARFEN_FILE ), array(), WC_HEZARFEN_VERSION );
+		}
+
+		if ( 'woocommerce_page_wc-settings' === $hook_suffix && 'sms_settings' === $current_section ) {
+			wp_enqueue_script( 'wc_hezarfen_sms_settings_js', plugins_url( 'assets/admin/js/sms-settings.js', WC_HEZARFEN_FILE ), array( 'jquery' ), WC_HEZARFEN_VERSION, true );
+			wp_enqueue_style( 'wc_hezarfen_sms_settings_css', plugins_url( 'assets/admin/css/sms-settings.css', WC_HEZARFEN_FILE ), array(), WC_HEZARFEN_VERSION );
+			
+			// Localize script with order statuses and other data
+			$order_statuses = wc_get_order_statuses();
+			wp_localize_script( 'wc_hezarfen_sms_settings_js', 'hezarfen_sms_settings', array(
+				'ajax_url' => admin_url( 'admin-ajax.php' ),
+				'nonce' => wp_create_nonce( 'hezarfen_sms_settings_nonce' ),
+				'order_statuses' => $order_statuses,
+				'strings' => array(
+					'add_rule' => __( 'Add SMS Rule', 'hezarfen-for-woocommerce' ),
+					'edit_rule' => __( 'Edit SMS Rule', 'hezarfen-for-woocommerce' ),
+					'delete_rule' => __( 'Delete Rule', 'hezarfen-for-woocommerce' ),
+					'save_rule' => __( 'Save Rule', 'hezarfen-for-woocommerce' ),
+					'cancel' => __( 'Cancel', 'hezarfen-for-woocommerce' ),
+					'trigger' => __( 'Trigger', 'hezarfen-for-woocommerce' ),
+					'condition' => __( 'Condition', 'hezarfen-for-woocommerce' ),
+					'action' => __( 'Action', 'hezarfen-for-woocommerce' ),
+					'order_status_changed' => __( 'Order Status Changed', 'hezarfen-for-woocommerce' ),
+					'new_status' => __( 'New Status', 'hezarfen-for-woocommerce' ),
+					'send_sms' => __( 'Send SMS via NetGSM', 'hezarfen-for-woocommerce' ),
+					'phone_type' => __( 'Phone Number', 'hezarfen-for-woocommerce' ),
+					'billing_phone' => __( 'Billing Phone', 'hezarfen-for-woocommerce' ),
+					'shipping_phone' => __( 'Shipping Phone', 'hezarfen-for-woocommerce' ),
+					'message_template' => __( 'Message Template', 'hezarfen-for-woocommerce' ),
+					'iys_status' => __( 'IYS Status', 'hezarfen-for-woocommerce' ),
+					'iys_info' => __( 'Information (0)', 'hezarfen-for-woocommerce' ),
+					'iys_commercial' => __( 'Commercial (11)', 'hezarfen-for-woocommerce' ),
+					'available_variables' => __( 'Available Variables: {order_number}, {customer_name}, {order_status}, {order_total}', 'hezarfen-for-woocommerce' ),
+				)
+			) );
 		}
 	}
 }

@@ -114,6 +114,7 @@ class Autoload {
 		require_once 'Hezarfen_Install.php';
 		require_once 'class-compatibility.php';
 		require_once 'class-notification-provider.php';
+		require_once 'class-sms-automation.php';
 
 		if ( is_admin() ) {
 			require_once 'admin/order/OrderDetails.php';
