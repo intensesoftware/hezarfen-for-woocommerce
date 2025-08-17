@@ -488,7 +488,9 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 										<option value=""><?php esc_html_e( 'Select trigger...', 'hezarfen-for-woocommerce' ); ?></option>
 										<optgroup label="<?php esc_attr_e( 'Order Status Changes', 'hezarfen-for-woocommerce' ); ?>">
 											<?php foreach ( wc_get_order_statuses() as $status_key => $status_label ) : ?>
-												<option value="<?php echo esc_attr( $status_key ); ?>"><?php echo esc_html( $status_label ); ?></option>
+												<?php if ( $status_key !== 'wc-hezarfen-shipped' ) : // Exclude our shipped status ?>
+													<option value="<?php echo esc_attr( $status_key ); ?>"><?php echo esc_html( $status_label ); ?></option>
+												<?php endif; ?>
 											<?php endforeach; ?>
 										</optgroup>
 										<optgroup label="<?php esc_attr_e( 'Shipment Events', 'hezarfen-for-woocommerce' ); ?>">
