@@ -83,7 +83,10 @@ jQuery(document).ready(function($) {
     }
 
     function openSmsRuleForm(ruleData = null) {
-        currentRuleIndex = null;
+        // Only reset currentRuleIndex if we're adding a new rule (no ruleData)
+        if (!ruleData) {
+            currentRuleIndex = null;
+        }
         
         // Show the inline form first
         $('#hezarfen-sms-rule-form-container').show();
@@ -245,11 +248,16 @@ jQuery(document).ready(function($) {
             ruleData.netgsm_msgheader = $('#netgsm-msgheader').val();
         }
 
-        if (currentRuleIndex !== null) {
+        console.log('Current rule index:', currentRuleIndex);
+        console.log('Rule data to save:', ruleData);
+        
+        if (currentRuleIndex !== null && currentRuleIndex >= 0) {
             // Edit existing rule
+            console.log('Editing existing rule at index:', currentRuleIndex);
             smsRules[currentRuleIndex] = ruleData;
         } else {
             // Add new rule
+            console.log('Adding new rule');
             smsRules.push(ruleData);
         }
 
