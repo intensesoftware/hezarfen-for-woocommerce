@@ -259,7 +259,21 @@ jQuery(document).ready(function($) {
 
     function saveSmsRulesToServer() {
         console.log('Saving rules to server:', smsRules);
-        console.log('JSON string:', JSON.stringify(smsRules));
+        
+        const jsonString = JSON.stringify(smsRules);
+        console.log('JSON string:', jsonString);
+        console.log('JSON string length:', jsonString.length);
+        console.log('JSON string first 100 chars:', jsonString.substring(0, 100));
+        
+        // Validate JSON on client side too
+        try {
+            const testParse = JSON.parse(jsonString);
+            console.log('Client-side JSON validation: OK');
+        } catch (e) {
+            console.error('Client-side JSON validation failed:', e);
+            alert('Error: Invalid JSON data generated. Please try again.');
+            return;
+        }
         
         $.ajax({
             url: hezarfen_sms_settings.ajax_url,
@@ -267,7 +281,7 @@ jQuery(document).ready(function($) {
             data: {
                 action: 'hezarfen_save_sms_rules',
                 nonce: hezarfen_sms_settings.nonce,
-                rules: JSON.stringify(smsRules)
+                rules: jsonString
             },
             success: function(response) {
                 console.log('Server response:', response);

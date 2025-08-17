@@ -206,21 +206,30 @@ class SMS_Automation {
 		// Don't sanitize JSON string - it corrupts the data
 		$rules_json = $_POST['rules'] ?? '';
 		error_log( 'Hezarfen SMS: Received rules JSON: ' . $rules_json );
+		error_log( 'Hezarfen SMS: JSON length: ' . strlen( $rules_json ) );
+		error_log( 'Hezarfen SMS: JSON first 100 chars: ' . substr( $rules_json, 0, 100 ) );
 		
 		// Validate that it's a valid JSON string
 		if ( empty( $rules_json ) ) {
 			wp_send_json_error( 'No rules data provided' );
 		}
 		
+		// Clean up any potential encoding issues
+		$rules_json = wp_unslash( $rules_json );
+		$rules_json = trim( $rules_json );
+		
+		error_log( 'Hezarfen SMS: Cleaned JSON: ' . $rules_json );
+		
 		$rules = json_decode( $rules_json, true );
 		$json_error = json_last_error();
 		
 		error_log( 'Hezarfen SMS: JSON decode error: ' . $json_error );
+		error_log( 'Hezarfen SMS: JSON error message: ' . json_last_error_msg() );
 		error_log( 'Hezarfen SMS: Decoded rules: ' . print_r( $rules, true ) );
 		error_log( 'Hezarfen SMS: Is array: ' . ( is_array( $rules ) ? 'Yes' : 'No' ) );
 
 		if ( $json_error !== JSON_ERROR_NONE ) {
-			wp_send_json_error( 'Invalid JSON data: ' . json_last_error_msg() );
+			wp_send_json_error( 'Invalid JSON data: ' . json_last_error_msg() . ' - Raw data: ' . substr( $rules_json, 0, 200 ) );
 		}
 
 		if ( ! is_array( $rules ) ) {
