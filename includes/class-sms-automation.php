@@ -232,12 +232,29 @@ class SMS_Automation {
 			'{customer_name}' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
 			'{order_status}' => wc_get_order_status_name( $order->get_status() ),
 			'{order_total}' => $order->get_formatted_order_total(),
+			'{order_date}' => $order_date ? $order_date->date_i18n( get_option( 'date_format' ) ) : '',
+			'{order_time}' => $order_date ? $order_date->date_i18n( get_option( 'time_format' ) ) : '',
+			
+			// Billing variables
 			'{billing_first_name}' => $order->get_billing_first_name(),
 			'{billing_last_name}' => $order->get_billing_last_name(),
 			'{billing_phone}' => $order->get_billing_phone(),
 			'{billing_email}' => $order->get_billing_email(),
-			'{order_date}' => $order_date ? $order_date->date_i18n( get_option( 'date_format' ) ) : '',
-			'{order_time}' => $order_date ? $order_date->date_i18n( get_option( 'time_format' ) ) : '',
+			'{billing_company}' => $order->get_billing_company(),
+			'{billing_address}' => $order->get_billing_address_1() . ( $order->get_billing_address_2() ? ' ' . $order->get_billing_address_2() : '' ),
+			'{billing_city}' => $order->get_billing_city(),
+			'{billing_country}' => $order->get_billing_country(),
+			
+			// Shipping variables
+			'{shipping_first_name}' => $order->get_shipping_first_name(),
+			'{shipping_last_name}' => $order->get_shipping_last_name(),
+			'{shipping_phone}' => $order->get_shipping_phone(),
+			'{shipping_company}' => $order->get_shipping_company(),
+			'{shipping_address}' => $order->get_shipping_address_1() . ( $order->get_shipping_address_2() ? ' ' . $order->get_shipping_address_2() : '' ),
+			'{shipping_city}' => $order->get_shipping_city(),
+			'{shipping_country}' => $order->get_shipping_country(),
+			
+			// Shipment variables
 			'{courier_company}' => $courier_name,
 			'{tracking_number}' => $tracking_number,
 			'{tracking_url}' => $tracking_url,

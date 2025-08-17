@@ -572,23 +572,37 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 										<p class="description"><?php esc_html_e( 'Available Variables (click to copy):', 'hezarfen-for-woocommerce' ); ?></p>
 										<div class="sms-variables-wrapper" style="margin-top: 10px;">
 											<strong><?php esc_html_e( 'Order Variables:', 'hezarfen-for-woocommerce' ); ?></strong><br>
-											<span class="sms-variable button button-small" data-variable="{siparis_no}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{siparis_no}</span>
-											<span class="sms-variable button button-small" data-variable="{uye_adi}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{uye_adi}</span>
-											<span class="sms-variable button button-small" data-variable="{uye_soyadi}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{uye_soyadi}</span>
-											<span class="sms-variable button button-small" data-variable="{uye_telefonu}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{uye_telefonu}</span>
-											<span class="sms-variable button button-small" data-variable="{uye_epostasi}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{uye_epostasi}</span>
-											<span class="sms-variable button button-small" data-variable="{kullanici_adi}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{kullanici_adi}</span>
-											<span class="sms-variable button button-small" data-variable="{tarih}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{tarih}</span>
-											<span class="sms-variable button button-small" data-variable="{saat}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{saat}</span>
+											<span class="sms-variable button button-small" data-variable="{order_number}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{order_number}</span>
+											<span class="sms-variable button button-small" data-variable="{customer_name}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{customer_name}</span>
+											<span class="sms-variable button button-small" data-variable="{order_status}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{order_status}</span>
+											<span class="sms-variable button button-small" data-variable="{order_total}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{order_total}</span>
+											<span class="sms-variable button button-small" data-variable="{order_date}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{order_date}</span>
+											<span class="sms-variable button button-small" data-variable="{order_time}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{order_time}</span>
+											<br><br>
+											<strong><?php esc_html_e( 'Billing Variables:', 'hezarfen-for-woocommerce' ); ?></strong><br>
+											<span class="sms-variable button button-small" data-variable="{billing_first_name}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{billing_first_name}</span>
+											<span class="sms-variable button button-small" data-variable="{billing_last_name}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{billing_last_name}</span>
+											<span class="sms-variable button button-small" data-variable="{billing_phone}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{billing_phone}</span>
+											<span class="sms-variable button button-small" data-variable="{billing_email}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{billing_email}</span>
+											<span class="sms-variable button button-small" data-variable="{billing_company}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{billing_company}</span>
+											<span class="sms-variable button button-small" data-variable="{billing_address}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{billing_address}</span>
+											<span class="sms-variable button button-small" data-variable="{billing_city}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{billing_city}</span>
+											<span class="sms-variable button button-small" data-variable="{billing_country}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{billing_country}</span>
+											<br><br>
+											<strong><?php esc_html_e( 'Shipping Variables:', 'hezarfen-for-woocommerce' ); ?></strong><br>
+											<span class="sms-variable button button-small" data-variable="{shipping_first_name}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{shipping_first_name}</span>
+											<span class="sms-variable button button-small" data-variable="{shipping_last_name}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{shipping_last_name}</span>
+											<span class="sms-variable button button-small" data-variable="{shipping_phone}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{shipping_phone}</span>
+											<span class="sms-variable button button-small" data-variable="{shipping_company}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{shipping_company}</span>
+											<span class="sms-variable button button-small" data-variable="{shipping_address}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{shipping_address}</span>
+											<span class="sms-variable button button-small" data-variable="{shipping_city}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{shipping_city}</span>
+											<span class="sms-variable button button-small" data-variable="{shipping_country}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{shipping_country}</span>
 											<br><br>
 											<strong><?php esc_html_e( 'Shipment Variables (for Order Shipped trigger):', 'hezarfen-for-woocommerce' ); ?></strong><br>
-											<span class="sms-variable button button-small" data-variable="{kargo_firmasi}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{kargo_firmasi}</span>
-											<span class="sms-variable button button-small" data-variable="{takip_kodu}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{takip_kodu}</span>
-											<span class="sms-variable button button-small" data-variable="{takip_linki}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{takip_linki}</span>
+											<span class="sms-variable button button-small" data-variable="{courier_company}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{courier_company}</span>
+											<span class="sms-variable button button-small" data-variable="{tracking_number}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{tracking_number}</span>
+											<span class="sms-variable button button-small" data-variable="{tracking_url}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{tracking_url}</span>
 										</div>
-										<p class="description" style="margin-top: 10px; font-style: italic; color: #666;">
-											<?php esc_html_e( 'Variables use Turkish names from the legacy system. Old square bracket format [variable] is also supported.', 'hezarfen-for-woocommerce' ); ?>
-										</p>
 									</td>
 								</tr>
 								<tr>

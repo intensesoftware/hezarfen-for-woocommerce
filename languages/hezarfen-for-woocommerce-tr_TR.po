@@ -955,6 +955,12 @@ msgstr "Sipariş Değişkenleri:"
 msgid "Shipment Variables (for Order Shipped trigger):"
 msgstr "Kargo Değişkenleri (Sipariş Kargoya Verildi tetikleyicisi için):"
 
+msgid "Billing Variables:"
+msgstr "Fatura Değişkenleri:"
+
+msgid "Shipping Variables:"
+msgstr "Kargo Adresi Değişkenleri:"
+
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:134
 msgid "SMS Notification Settings"
 msgstr "SMS Bildirimi Ayarları"
