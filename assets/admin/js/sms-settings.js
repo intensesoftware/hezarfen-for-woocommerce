@@ -343,4 +343,39 @@ jQuery(document).ready(function($) {
 
         $rulesList.html(html);
     }
+
+    // SMS Variable copy functionality
+    $(document).on('click', '.sms-variable', function(e) {
+        e.preventDefault();
+        const variable = $(this).data('variable');
+        const textarea = $('#message-template');
+        
+        if (variable && textarea.length) {
+            // Get current cursor position
+            const cursorPos = textarea[0].selectionStart;
+            const textBefore = textarea.val().substring(0, cursorPos);
+            const textAfter = textarea.val().substring(cursorPos);
+            
+            // Insert variable at cursor position
+            textarea.val(textBefore + variable + textAfter);
+            
+            // Set cursor position after the inserted variable
+            const newCursorPos = cursorPos + variable.length;
+            textarea[0].setSelectionRange(newCursorPos, newCursorPos);
+            
+            // Focus the textarea
+            textarea.focus();
+            
+            // Visual feedback
+            $(this).addClass('button-primary');
+            setTimeout(() => {
+                $(this).removeClass('button-primary');
+            }, 200);
+        }
+    });
+
+    // Add hover effect for variables
+    $(document).on('mouseenter', '.sms-variable', function() {
+        $(this).css('cursor', 'pointer');
+    });
 });

@@ -925,6 +925,15 @@ msgstr "%1$s durumu için %2$s telefonuna NetGSM ile SMS bildirimi gönderildi: 
 msgid "SMS notification sent via NetGSM for %1$s status to %2$s phone: %3$s (Job ID: %4$s)"
 msgstr "%1$s durumu için %2$s telefonuna NetGSM ile SMS bildirimi gönderildi: %3$s (İş ID: %4$s)"
 
+msgid "Available Variables (click to copy):"
+msgstr "Kullanılabilir Değişkenler (kopyalamak için tıklayın):"
+
+msgid "Click to copy"
+msgstr "Kopyalamak için tıklayın"
+
+msgid "Variables use Turkish names from the legacy system. Old square bracket format [variable] is also supported."
+msgstr "Değişkenler eski sistemden gelen Türkçe isimleri kullanır. Eski köşeli parantez formatı [değişken] da desteklenir."
+
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:134
 msgid "SMS Notification Settings"
 msgstr "SMS Bildirimi Ayarları"

@@ -214,6 +214,7 @@ class Settings {
 	/**
 	 * Outputs the "NetGSM SMS content" setting.
 	 * 
+	 * @deprecated This function is legacy. Use the new SMS automation system instead.
 	 * @param array<string, mixed> $setting "NetGSM SMS content" setting's data.
 	 * 
 	 * @return void

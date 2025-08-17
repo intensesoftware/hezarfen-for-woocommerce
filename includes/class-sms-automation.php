@@ -39,10 +39,21 @@ class SMS_Automation {
 			return;
 		}
 
+		// Normalize status for comparison (remove wc- prefix if present)
+		$normalized_new_status = str_replace( 'wc-', '', $new_status );
+
 		foreach ( $rules as $rule ) {
-			if ( isset( $rule['condition_status'] ) && $rule['condition_status'] === $new_status ) {
-				if ( isset( $rule['action_type'] ) && $rule['action_type'] === 'netgsm' ) {
-					$this->send_sms_for_rule( $order, $rule );
+			if ( isset( $rule['condition_status'] ) ) {
+				// Normalize rule condition status for comparison
+				$normalized_rule_status = str_replace( 'wc-', '', $rule['condition_status'] );
+				
+				error_log( 'Hezarfen SMS: Checking rule - Rule status: ' . $rule['condition_status'] . ', Normalized: ' . $normalized_rule_status );
+				
+				if ( $normalized_rule_status === $normalized_new_status ) {
+					if ( isset( $rule['action_type'] ) && $rule['action_type'] === 'netgsm' ) {
+						error_log( 'Hezarfen SMS: Rule matched, sending SMS for order ' . $order_id );
+						$this->send_sms_for_rule( $order, $rule );
+					}
 				}
 			}
 		}
@@ -133,11 +144,40 @@ class SMS_Automation {
 	 * @return string
 	 */
 	private function process_message_template( $order, $template ) {
+		$order_date = $order->get_date_created();
+		
 		$variables = array(
+			// Legacy variables with exact names and curly brackets (primary format)
+			'{siparis_no}' => $order->get_order_number(),
+			'{uye_adi}' => $order->get_billing_first_name(),
+			'{uye_soyadi}' => $order->get_billing_last_name(),
+			'{uye_telefonu}' => $order->get_billing_phone(),
+			'{uye_epostasi}' => $order->get_billing_email(),
+			'{kullanici_adi}' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
+			'{tarih}' => $order_date ? $order_date->date_i18n( get_option( 'date_format' ) ) : '',
+			'{saat}' => $order_date ? $order_date->date_i18n( get_option( 'time_format' ) ) : '',
+			
+			// English equivalents for compatibility
 			'{order_number}' => $order->get_order_number(),
 			'{customer_name}' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
 			'{order_status}' => wc_get_order_status_name( $order->get_status() ),
 			'{order_total}' => $order->get_formatted_order_total(),
+			'{billing_first_name}' => $order->get_billing_first_name(),
+			'{billing_last_name}' => $order->get_billing_last_name(),
+			'{billing_phone}' => $order->get_billing_phone(),
+			'{billing_email}' => $order->get_billing_email(),
+			'{order_date}' => $order_date ? $order_date->date_i18n( get_option( 'date_format' ) ) : '',
+			'{order_time}' => $order_date ? $order_date->date_i18n( get_option( 'time_format' ) ) : '',
+			
+			// Legacy square bracket format compatibility (automatically convert old format)
+			'[siparis_no]' => $order->get_order_number(),
+			'[uye_adi]' => $order->get_billing_first_name(),
+			'[uye_soyadi]' => $order->get_billing_last_name(),
+			'[uye_telefonu]' => $order->get_billing_phone(),
+			'[uye_epostasi]' => $order->get_billing_email(),
+			'[kullanici_adi]' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
+			'[tarih]' => $order_date ? $order_date->date_i18n( get_option( 'date_format' ) ) : '',
+			'[saat]' => $order_date ? $order_date->date_i18n( get_option( 'time_format' ) ) : '',
 		);
 
 		return str_replace( array_keys( $variables ), array_values( $variables ), $template );
@@ -383,17 +423,20 @@ class SMS_Automation {
 	 * @return void
 	 */
 	private function mark_sms_sent( $order, $rule, $phone, $message, $jobid = null ) {
+		// Normalize status for meta keys (remove wc- prefix if present)
+		$normalized_status = str_replace( 'wc-', '', $rule['condition_status'] );
+		
 		// Mark SMS as sent for this rule and status
-		$sms_sent_key = '_hezarfen_sms_sent_' . $rule['condition_status'];
+		$sms_sent_key = '_hezarfen_sms_sent_' . $normalized_status;
 		$order->update_meta_data( $sms_sent_key, 'yes' );
 		
 		// Also store when it was sent
-		$sms_sent_time_key = '_hezarfen_sms_sent_time_' . $rule['condition_status'];
+		$sms_sent_time_key = '_hezarfen_sms_sent_time_' . $normalized_status;
 		$order->update_meta_data( $sms_sent_time_key, current_time( 'mysql' ) );
 		
 		// Store job ID if available
 		if ( $jobid ) {
-			$sms_jobid_key = '_hezarfen_sms_jobid_' . $rule['condition_status'];
+			$sms_jobid_key = '_hezarfen_sms_jobid_' . $normalized_status;
 			$order->update_meta_data( $sms_jobid_key, $jobid );
 		}
 		
@@ -433,7 +476,9 @@ class SMS_Automation {
 	 * @return bool
 	 */
 	private function is_sms_already_sent( $order, $rule ) {
-		$sms_sent_key = '_hezarfen_sms_sent_' . $rule['condition_status'];
+		// Normalize status for meta key (remove wc- prefix if present)
+		$normalized_status = str_replace( 'wc-', '', $rule['condition_status'] );
+		$sms_sent_key = '_hezarfen_sms_sent_' . $normalized_status;
 		return $order->get_meta( $sms_sent_key ) === 'yes';
 	}
 

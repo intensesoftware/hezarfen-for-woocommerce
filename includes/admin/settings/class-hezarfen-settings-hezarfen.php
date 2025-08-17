@@ -562,7 +562,20 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 									</th>
 									<td>
 										<textarea id="message-template" name="message_template" rows="4" placeholder="<?php esc_attr_e( 'Enter your SMS message template...', 'hezarfen-for-woocommerce' ); ?>" style="width: 100%; max-width: 500px;"></textarea>
-										<p class="description"><?php esc_html_e( 'Available Variables: {order_number}, {customer_name}, {order_status}, {order_total}', 'hezarfen-for-woocommerce' ); ?></p>
+										<p class="description"><?php esc_html_e( 'Available Variables (click to copy):', 'hezarfen-for-woocommerce' ); ?></p>
+										<div class="sms-variables-wrapper" style="margin-top: 10px;">
+											<span class="sms-variable button button-small" data-variable="{siparis_no}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{siparis_no}</span>
+											<span class="sms-variable button button-small" data-variable="{uye_adi}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{uye_adi}</span>
+											<span class="sms-variable button button-small" data-variable="{uye_soyadi}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{uye_soyadi}</span>
+											<span class="sms-variable button button-small" data-variable="{uye_telefonu}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{uye_telefonu}</span>
+											<span class="sms-variable button button-small" data-variable="{uye_epostasi}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{uye_epostasi}</span>
+											<span class="sms-variable button button-small" data-variable="{kullanici_adi}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{kullanici_adi}</span>
+											<span class="sms-variable button button-small" data-variable="{tarih}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{tarih}</span>
+											<span class="sms-variable button button-small" data-variable="{saat}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{saat}</span>
+										</div>
+										<p class="description" style="margin-top: 10px; font-style: italic; color: #666;">
+											<?php esc_html_e( 'Variables use Turkish names from the legacy system. Old square bracket format [variable] is also supported.', 'hezarfen-for-woocommerce' ); ?>
+										</p>
 									</td>
 								</tr>
 								<tr>

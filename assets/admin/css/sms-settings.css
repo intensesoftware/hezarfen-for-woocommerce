@@ -211,3 +211,57 @@
         justify-content: center;
     }
 }
+
+/* SMS Variables Styles */
+.sms-variables-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.sms-variable {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    padding: 4px 8px !important;
+    height: auto !important;
+    line-height: 1.2 !important;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+
+.sms-variable:hover {
+    background: #e0e0e0;
+    border-color: #999;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sms-variable:active,
+.sms-variable.button-primary {
+    background: #0073aa;
+    color: white;
+    border-color: #0073aa;
+}
+
+.sms-variable:focus {
+    box-shadow: 0 0 0 2px rgba(0, 115, 170, 0.3);
+    outline: none;
+}
+
+/* Mobile responsive for variables */
+@media (max-width: 768px) {
+    .sms-variables-wrapper {
+        gap: 6px;
+    }
+    
+    .sms-variable {
+        font-size: 11px;
+        padding: 3px 6px !important;
+    }
+}
