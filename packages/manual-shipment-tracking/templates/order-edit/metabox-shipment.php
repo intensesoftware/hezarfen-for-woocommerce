@@ -76,7 +76,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
     </div>
     <?php endif; ?>
     <div id="default-tab-content">
-        <div class="hidden rounded-lg" id="hezarfen-lite" role="tabpanel" aria-labelledby="hezarfen-lite-tab">
+        <div class="<?php if (defined('HEZARFEN_PRO_VERSION')) : ?>hidden<?php endif; ?> rounded-lg" id="hezarfen-lite" role="tabpanel" aria-labelledby="hezarfen-lite-tab">
             <div class="grid grid-cols-2 gap-8">
                 <div>
                     <p class="text-lg text-black"><?php esc_html_e('Enter Tracking Information', 'hezarfen-for-woocommerce'); ?></p>
