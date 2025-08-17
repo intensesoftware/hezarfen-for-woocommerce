@@ -9,6 +9,7 @@
   "scripts": {
     "build": "npm-run-all --parallel build:*",
     "build:order-edit": "wp-scripts build assets/admin/order-edit/src/main.js --output-path=assets/admin/order-edit/build",
+    "build:flowbite": "wp-scripts build assets/admin/flowbite/src/main.js --output-path=assets/admin/flowbite/build",
     "check-engines": "wp-scripts check-engines",
     "check-licenses": "wp-scripts check-licenses",
     "format": "wp-scripts format",
@@ -20,6 +21,7 @@
     "plugin-zip": "wp-scripts plugin-zip",
     "start": "npm-run-all --parallel start:*",
     "start:order-edit": "wp-scripts start assets/admin/order-edit/src/main.js --output-path=assets/admin/order-edit/build",
+    "start:flowbite": "wp-scripts start assets/admin/flowbite/src/main.js --output-path=assets/admin/flowbite/build",
     "test:e2e": "wp-scripts test-e2e",
     "test:unit": "wp-scripts test-unit-js"
   },

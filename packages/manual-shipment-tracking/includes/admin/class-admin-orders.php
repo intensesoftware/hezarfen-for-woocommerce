@@ -156,6 +156,10 @@ class Admin_Orders {
 			$shipment_data[] = new Shipment_Data();
 		}
 
+		if( defined('HEZARFEN_PRO_VERSION') ){
+			wp_enqueue_script( 'hez_pro_flowbite', WC_HEZARFEN_UYGULAMA_URL . 'assets/admin/flowbite/build/main.js', array('jquery'), WC_HEZARFEN_VERSION );
+		}
+
 		require_once WC_HEZARFEN_UYGULAMA_YOLU . 'packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php';
 	}
 

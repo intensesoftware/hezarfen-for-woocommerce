@@ -1,10 +1,6 @@
-import { initFlowbite } from 'flowbite';
 import './style.css';
 
 jQuery(document).ready(($)=>{
-  // Initialize Flowbite components (tabs, etc.)
-  initFlowbite();
-  
   // Handle non-pro interface - show manual tracking content by default
   function initializeInterface() {
     const $tabContainer = $('#default-tab');
