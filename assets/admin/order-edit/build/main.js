@@ -170,7 +170,7 @@ jQuery(document).ready($ => {
 
     // Handle confirm button click
     modal_overlay.find('.hez-modal-confirm').off('click').on('click', function () {
-      $(this).prop('disabled', true).text('Removing...');
+      $(this).prop('disabled', true).text(hezarfen_mst_backend.removing_text);
       $.post(ajaxurl, {
         action: hezarfen_mst_backend.remove_shipment_data_action,
         _wpnonce: hezarfen_mst_backend.remove_shipment_data_nonce,
@@ -189,7 +189,7 @@ jQuery(document).ready($ => {
       }).fail(function () {
         closeModal();
         // Show error message
-        alert('Error removing shipment data. Please try again.');
+        alert(hezarfen_mst_backend.error_removing_shipment);
       });
     });
 
@@ -222,7 +222,7 @@ jQuery(document).ready($ => {
     $('#seconds').text(seconds);
     if (timeLeft < 0) {
       clearInterval(timer);
-      $('#countdown').html("Kampanya sona erdi");
+      $('#countdown').html(hezarfen_mst_backend.campaign_ended);
     }
   }
   updateCountdown(); // Run function once at first to avoid delay

@@ -911,3 +911,15 @@ msgstr "Yurtiçi Kargo"
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:101
 msgid "⭐ Love Hezarfen?"
 msgstr "⭐ Hezarfen'i Seviyor Musunuz?"
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:141
+msgid "Removing..."
+msgstr "Siliniyor..."
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:142
+msgid "Error removing shipment data. Please try again."
+msgstr "Kargo verisi silinirken hata oluştu. Lütfen tekrar deneyin."
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:143
+msgid "Campaign ended"
+msgstr "Kampanya sona erdi"
