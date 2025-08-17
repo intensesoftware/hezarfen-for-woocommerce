@@ -203,11 +203,29 @@ class SMS_Automation {
 			wp_die( 'Unauthorized' );
 		}
 
-		$rules_json = sanitize_text_field( $_POST['rules'] ?? '' );
+		// Don't sanitize JSON string - it corrupts the data
+		$rules_json = $_POST['rules'] ?? '';
+		error_log( 'Hezarfen SMS: Received rules JSON: ' . $rules_json );
+		
+		// Validate that it's a valid JSON string
+		if ( empty( $rules_json ) ) {
+			wp_send_json_error( 'No rules data provided' );
+		}
+		
 		$rules = json_decode( $rules_json, true );
+		$json_error = json_last_error();
+		
+		error_log( 'Hezarfen SMS: JSON decode error: ' . $json_error );
+		error_log( 'Hezarfen SMS: Decoded rules: ' . print_r( $rules, true ) );
+		error_log( 'Hezarfen SMS: Is array: ' . ( is_array( $rules ) ? 'Yes' : 'No' ) );
+
+		if ( $json_error !== JSON_ERROR_NONE ) {
+			wp_send_json_error( 'Invalid JSON data: ' . json_last_error_msg() );
+		}
 
 		if ( ! is_array( $rules ) ) {
-			wp_send_json_error( 'Invalid rules data' );
+			error_log( 'Hezarfen SMS: Invalid rules data - not an array' );
+			wp_send_json_error( 'Invalid rules data - not an array' );
 		}
 
 		// Sanitize rules

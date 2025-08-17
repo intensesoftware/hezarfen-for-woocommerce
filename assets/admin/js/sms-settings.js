@@ -92,6 +92,9 @@ jQuery(document).ready(function($) {
         setTimeout(function() {
             const form = document.getElementById('sms-rule-form');
             console.log('Form found:', form ? 'Yes' : 'No');
+            console.log('All forms on page:', document.querySelectorAll('form'));
+            console.log('Looking for form with ID sms-rule-form:', document.querySelector('#sms-rule-form'));
+            console.log('Forms in container:', $('#hezarfen-sms-rule-form-container').find('form'));
             
             if (ruleData) {
                 // Edit mode
@@ -169,24 +172,21 @@ jQuery(document).ready(function($) {
             return;
         }
 
-        const form = document.getElementById('sms-rule-form');
-        if (!form) {
-            console.log('Form element not found. Available forms:', document.querySelectorAll('form'));
-            alert('Form not found. Please refresh the page and try again.');
-            return;
-        }
-        
-        // Simple validation instead of HTML5 validation
+        // Simple validation using jQuery (no need to find form element)
         const conditionStatus = $('#condition-status').val();
         const actionType = $('#action-type').val();
         
+        console.log('Validation - Status:', conditionStatus, 'Action:', actionType);
+        
         if (!conditionStatus) {
             alert('Please select an order status.');
+            $('#condition-status').focus();
             return;
         }
         
         if (!actionType) {
             alert('Please select an action type.');
+            $('#action-type').focus();
             return;
         }
         
@@ -197,8 +197,35 @@ jQuery(document).ready(function($) {
             const phoneType = $('#phone-type').val();
             const messageTemplate = $('#message-template').val();
             
-            if (!username || !password || !msgheader || !phoneType || !messageTemplate) {
-                alert('Please fill in all required NetGSM fields.');
+            console.log('NetGSM validation - Username:', username, 'Password:', password ? 'Set' : 'Empty', 'Header:', msgheader, 'Phone:', phoneType, 'Message:', messageTemplate ? 'Set' : 'Empty');
+            
+            if (!username) {
+                alert('Please enter NetGSM username.');
+                $('#netgsm-username').focus();
+                return;
+            }
+            
+            if (!password) {
+                alert('Please enter NetGSM password.');
+                $('#netgsm-password').focus();
+                return;
+            }
+            
+            if (!msgheader) {
+                alert('Please enter message header.');
+                $('#netgsm-msgheader').focus();
+                return;
+            }
+            
+            if (!phoneType) {
+                alert('Please select phone type.');
+                $('#phone-type').focus();
+                return;
+            }
+            
+            if (!messageTemplate) {
+                alert('Please enter message template.');
+                $('#message-template').focus();
                 return;
             }
         }
@@ -231,6 +258,9 @@ jQuery(document).ready(function($) {
     }
 
     function saveSmsRulesToServer() {
+        console.log('Saving rules to server:', smsRules);
+        console.log('JSON string:', JSON.stringify(smsRules));
+        
         $.ajax({
             url: hezarfen_sms_settings.ajax_url,
             type: 'POST',
@@ -240,13 +270,16 @@ jQuery(document).ready(function($) {
                 rules: JSON.stringify(smsRules)
             },
             success: function(response) {
+                console.log('Server response:', response);
                 if (response.success) {
                     renderSmsRulesList();
                 } else {
+                    console.error('Server error:', response);
                     alert('Error saving SMS rules: ' + (response.data || 'Unknown error'));
                 }
             },
-            error: function() {
+            error: function(xhr, status, error) {
+                console.error('AJAX error:', xhr, status, error);
                 alert('Error saving SMS rules. Please try again.');
             }
         });
