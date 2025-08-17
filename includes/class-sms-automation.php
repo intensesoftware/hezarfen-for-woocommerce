@@ -91,10 +91,6 @@ class SMS_Automation {
 	 * @return bool
 	 */
 	private function send_sms_for_rule( $order, $rule ) {
-		// Check if SMS was already sent for this rule and order
-		if ( $this->is_sms_already_sent( $order, $rule ) ) {
-			return true; // Return true since SMS was already sent successfully
-		}
 		// Get NetGSM credentials from the rule
 		$username = $rule['netgsm_username'] ?? '';
 		$password = $rule['netgsm_password'] ?? '';
