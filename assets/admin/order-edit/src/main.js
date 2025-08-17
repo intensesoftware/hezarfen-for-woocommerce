@@ -2,6 +2,22 @@ import { initFlowbite } from 'flowbite';
 import './style.css';
 
 jQuery(document).ready(($)=>{
+  // Initialize Flowbite components (tabs, etc.)
+  initFlowbite();
+  
+  // Handle non-pro interface - show manual tracking content by default
+  function initializeInterface() {
+    const $tabContainer = $('#default-tab');
+    const $manualContent = $('#hezarfen-lite');
+    
+    // If no tabs exist (pro not available), show manual content directly
+    if ($tabContainer.length === 0) {
+      $manualContent.removeClass('hidden').show();
+    }
+  }
+  
+  // Initialize the interface
+  initializeInterface();
   // Check if feedback should be shown
   function shouldShowFeedback() {
     const feedbackDismissed = localStorage.getItem('hezarfen_feedback_dismissed');
