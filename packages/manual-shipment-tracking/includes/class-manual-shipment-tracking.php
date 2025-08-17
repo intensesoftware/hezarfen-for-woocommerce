@@ -111,6 +111,7 @@ class Manual_Shipment_Tracking {
 	 * Ship order
 	 * Internal use only
 	 *
+	 * @deprecated This method is legacy. SMS notifications are now handled by the new SMS automation system.
 	 * @param  \WC_Order     $order Order instance.
 	 * @param  Shipment_Data $shipment_data Shipment data.
 	 * @return void

@@ -19,6 +19,7 @@ class SMS_Automation {
 	 */
 	public function __construct() {
 		add_action( 'woocommerce_order_status_changed', array( $this, 'handle_order_status_change' ), 10, 4 );
+		add_action( 'hezarfen_mst_shipment_data_saved', array( $this, 'handle_order_shipped' ), 10, 2 );
 		add_action( 'wp_ajax_hezarfen_save_sms_rules', array( $this, 'ajax_save_sms_rules' ) );
 		add_action( 'wp_ajax_hezarfen_get_sms_rules', array( $this, 'ajax_get_sms_rules' ) );
 	}
@@ -57,6 +58,32 @@ class SMS_Automation {
 	}
 
 	/**
+	 * Handle order shipped event
+	 *
+	 * @param \WC_Order $order Order object
+	 * @param object $shipment_data Shipment data object
+	 * @return void
+	 */
+	public function handle_order_shipped( $order, $shipment_data ) {
+		$rules = get_option( 'hezarfen_sms_rules', array() );
+
+		if ( empty( $rules ) ) {
+			return;
+		}
+
+		foreach ( $rules as $rule ) {
+			if ( isset( $rule['condition_status'] ) && $rule['condition_status'] === 'hezarfen_order_shipped' ) {
+				if ( isset( $rule['action_type'] ) && $rule['action_type'] === 'netgsm' ) {
+					$this->send_sms_for_shipment_rule( $order, $rule, $shipment_data );
+				}
+			}
+		}
+
+		// Trigger the new action for other plugins to hook into
+		do_action( 'hezarfen_order_shipped', $order, $shipment_data );
+	}
+
+	/**
 	 * Send SMS for a specific rule
 	 *
 	 * @param \WC_Order $order Order object
@@ -83,7 +110,7 @@ class SMS_Automation {
 			return false;
 		}
 
-		// Process message template
+		// Process message template (will automatically include shipment data if available)
 		$message = $this->process_message_template( $order, $rule['message_template'] );
 
 		// Prepare SMS data
@@ -115,6 +142,27 @@ class SMS_Automation {
 	}
 
 	/**
+	 * Send SMS for a specific shipment rule
+	 *
+	 * @param \WC_Order $order Order object
+	 * @param array $rule SMS rule
+	 * @param object $shipment_data Shipment data object
+	 * @return bool
+	 */
+	private function send_sms_for_shipment_rule( $order, $rule, $shipment_data ) {
+		// Store shipment data temporarily for message processing
+		$this->current_shipment_data = $shipment_data;
+		
+		// Use the existing send_sms_for_rule method
+		$result = $this->send_sms_for_rule( $order, $rule );
+		
+		// Clean up temporary data
+		unset( $this->current_shipment_data );
+		
+		return $result;
+	}
+
+	/**
 	 * Get phone number from order
 	 *
 	 * @param \WC_Order $order Order object
@@ -140,6 +188,33 @@ class SMS_Automation {
 	private function process_message_template( $order, $template ) {
 		$order_date = $order->get_date_created();
 		
+		// Get shipment data if available
+		$courier_name = '';
+		$tracking_number = '';
+		$tracking_url = '';
+		
+		if ( isset( $this->current_shipment_data ) ) {
+			$shipment_data = $this->current_shipment_data;
+			
+			if ( isset( $shipment_data->courier_id ) && isset( $shipment_data->tracking_num ) ) {
+				$tracking_number = $shipment_data->tracking_num;
+				
+				// Get courier name if available
+				if ( method_exists( $shipment_data, 'get_courier_name' ) ) {
+					$courier_name = $shipment_data->get_courier_name();
+				} elseif ( isset( $shipment_data->courier_name ) ) {
+					$courier_name = $shipment_data->courier_name;
+				}
+				
+				// Get tracking URL if available
+				if ( method_exists( $shipment_data, 'get_tracking_url' ) ) {
+					$tracking_url = $shipment_data->get_tracking_url();
+				} elseif ( isset( $shipment_data->tracking_url ) ) {
+					$tracking_url = $shipment_data->tracking_url;
+				}
+			}
+		}
+		
 		$variables = array(
 			// Legacy variables with exact names and curly brackets (primary format)
 			'{siparis_no}' => $order->get_order_number(),
@@ -150,6 +225,11 @@ class SMS_Automation {
 			'{kullanici_adi}' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
 			'{tarih}' => $order_date ? $order_date->date_i18n( get_option( 'date_format' ) ) : '',
 			'{saat}' => $order_date ? $order_date->date_i18n( get_option( 'time_format' ) ) : '',
+			
+			// Shipment specific variables (only available when shipment data is present)
+			'{kargo_firmasi}' => $courier_name,
+			'{takip_kodu}' => $tracking_number,
+			'{takip_linki}' => $tracking_url,
 			
 			// English equivalents for compatibility
 			'{order_number}' => $order->get_order_number(),
@@ -162,6 +242,9 @@ class SMS_Automation {
 			'{billing_email}' => $order->get_billing_email(),
 			'{order_date}' => $order_date ? $order_date->date_i18n( get_option( 'date_format' ) ) : '',
 			'{order_time}' => $order_date ? $order_date->date_i18n( get_option( 'time_format' ) ) : '',
+			'{courier_company}' => $courier_name,
+			'{tracking_number}' => $tracking_number,
+			'{tracking_url}' => $tracking_url,
 			
 			// Legacy square bracket format compatibility (automatically convert old format)
 			'[siparis_no]' => $order->get_order_number(),
@@ -172,6 +255,9 @@ class SMS_Automation {
 			'[kullanici_adi]' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
 			'[tarih]' => $order_date ? $order_date->date_i18n( get_option( 'date_format' ) ) : '',
 			'[saat]' => $order_date ? $order_date->date_i18n( get_option( 'time_format' ) ) : '',
+			'[hezarfen_kargo_firmasi]' => $courier_name,
+			'[hezarfen_kargo_takip_kodu]' => $tracking_number,
+			'[hezarfen_kargo_takip_linki]' => $tracking_url,
 		);
 
 		return str_replace( array_keys( $variables ), array_values( $variables ), $template );

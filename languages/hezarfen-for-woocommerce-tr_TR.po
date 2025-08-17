@@ -934,6 +934,27 @@ msgstr "Kopyalamak için tıklayın"
 msgid "Variables use Turkish names from the legacy system. Old square bracket format [variable] is also supported."
 msgstr "Değişkenler eski sistemden gelen Türkçe isimleri kullanır. Eski köşeli parantez formatı [değişken] da desteklenir."
 
+msgid "Select trigger..."
+msgstr "Tetikleyici seçin..."
+
+msgid "Order Status Changes"
+msgstr "Sipariş Durumu Değişiklikleri"
+
+msgid "Shipment Events"
+msgstr "Kargo Olayları"
+
+msgid "Order Shipped"
+msgstr "Sipariş Kargoya Verildi"
+
+msgid "Choose when to send the SMS notification"
+msgstr "SMS bildiriminin ne zaman gönderileceğini seçin"
+
+msgid "Order Variables:"
+msgstr "Sipariş Değişkenleri:"
+
+msgid "Shipment Variables (for Order Shipped trigger):"
+msgstr "Kargo Değişkenleri (Sipariş Kargoya Verildi tetikleyicisi için):"
+
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:134
 msgid "SMS Notification Settings"
 msgstr "SMS Bildirimi Ayarları"

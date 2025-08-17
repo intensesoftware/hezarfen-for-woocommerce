@@ -484,13 +484,18 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 									<label for="condition-status"><?php esc_html_e( 'Trigger Condition', 'hezarfen-for-woocommerce' ); ?></label>
 								</th>
 								<td>
-									<p><strong><?php esc_html_e( 'When order status changes to:', 'hezarfen-for-woocommerce' ); ?></strong></p>
 									<select id="condition-status" name="condition_status" required style="width: 300px;">
-										<option value=""><?php esc_html_e( 'Select status...', 'hezarfen-for-woocommerce' ); ?></option>
-										<?php foreach ( wc_get_order_statuses() as $status_key => $status_label ) : ?>
-											<option value="<?php echo esc_attr( $status_key ); ?>"><?php echo esc_html( $status_label ); ?></option>
-										<?php endforeach; ?>
+										<option value=""><?php esc_html_e( 'Select trigger...', 'hezarfen-for-woocommerce' ); ?></option>
+										<optgroup label="<?php esc_attr_e( 'Order Status Changes', 'hezarfen-for-woocommerce' ); ?>">
+											<?php foreach ( wc_get_order_statuses() as $status_key => $status_label ) : ?>
+												<option value="<?php echo esc_attr( $status_key ); ?>"><?php echo esc_html( $status_label ); ?></option>
+											<?php endforeach; ?>
+										</optgroup>
+										<optgroup label="<?php esc_attr_e( 'Shipment Events', 'hezarfen-for-woocommerce' ); ?>">
+											<option value="hezarfen_order_shipped"><?php esc_html_e( 'Order Shipped', 'hezarfen-for-woocommerce' ); ?></option>
+										</optgroup>
 									</select>
+									<p class="description"><?php esc_html_e( 'Choose when to send the SMS notification', 'hezarfen-for-woocommerce' ); ?></p>
 								</td>
 							</tr>
 							<tr>
@@ -564,6 +569,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 										<textarea id="message-template" name="message_template" rows="4" placeholder="<?php esc_attr_e( 'Enter your SMS message template...', 'hezarfen-for-woocommerce' ); ?>" style="width: 100%; max-width: 500px;"></textarea>
 										<p class="description"><?php esc_html_e( 'Available Variables (click to copy):', 'hezarfen-for-woocommerce' ); ?></p>
 										<div class="sms-variables-wrapper" style="margin-top: 10px;">
+											<strong><?php esc_html_e( 'Order Variables:', 'hezarfen-for-woocommerce' ); ?></strong><br>
 											<span class="sms-variable button button-small" data-variable="{siparis_no}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{siparis_no}</span>
 											<span class="sms-variable button button-small" data-variable="{uye_adi}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{uye_adi}</span>
 											<span class="sms-variable button button-small" data-variable="{uye_soyadi}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{uye_soyadi}</span>
@@ -572,6 +578,11 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 											<span class="sms-variable button button-small" data-variable="{kullanici_adi}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{kullanici_adi}</span>
 											<span class="sms-variable button button-small" data-variable="{tarih}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{tarih}</span>
 											<span class="sms-variable button button-small" data-variable="{saat}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{saat}</span>
+											<br><br>
+											<strong><?php esc_html_e( 'Shipment Variables (for Order Shipped trigger):', 'hezarfen-for-woocommerce' ); ?></strong><br>
+											<span class="sms-variable button button-small" data-variable="{kargo_firmasi}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{kargo_firmasi}</span>
+											<span class="sms-variable button button-small" data-variable="{takip_kodu}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{takip_kodu}</span>
+											<span class="sms-variable button button-small" data-variable="{takip_linki}" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>">{takip_linki}</span>
 										</div>
 										<p class="description" style="margin-top: 10px; font-style: italic; color: #666;">
 											<?php esc_html_e( 'Variables use Turkish names from the legacy system. Old square bracket format [variable] is also supported.', 'hezarfen-for-woocommerce' ); ?>
