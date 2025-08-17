@@ -97,7 +97,12 @@ class SMS_Automation {
 		);
 
 		// Send SMS via NetGSM API
-		return $this->send_netgsm_sms( $data, $username, $password );
+		$result = $this->send_netgsm_sms( $data, $username, $password );
+		
+		// Log SMS attempt
+		$this->log_sms_attempt( $order, $rule, $phone, $message, $result );
+		
+		return $result;
 	}
 
 	/**
@@ -155,24 +160,128 @@ class SMS_Automation {
 			'body' => wp_json_encode( $data )
 		);
 
+		error_log( 'Hezarfen SMS: Sending SMS to NetGSM API - Data: ' . wp_json_encode( $data ) );
+
 		$response = wp_remote_post( $url, $args );
 
 		if ( is_wp_error( $response ) ) {
-			error_log( 'Hezarfen SMS: NetGSM API error - ' . $response->get_error_message() );
+			error_log( 'Hezarfen SMS: NetGSM API connection error - ' . $response->get_error_message() );
 			return false;
 		}
 
 		$response_code = wp_remote_retrieve_response_code( $response );
 		$response_body = wp_remote_retrieve_body( $response );
 
-		if ( $response_code !== 200 ) {
-			error_log( 'Hezarfen SMS: NetGSM API returned status ' . $response_code . ' - ' . $response_body );
+		error_log( 'Hezarfen SMS: NetGSM API response - Status: ' . $response_code . ', Body: ' . $response_body );
+
+		// Handle HTTP status codes
+		if ( $response_code === 406 ) {
+			error_log( 'Hezarfen SMS: NetGSM API - Request not acceptable (406)' );
+			return false;
+		} elseif ( $response_code !== 200 ) {
+			error_log( 'Hezarfen SMS: NetGSM API returned unexpected status ' . $response_code . ' - ' . $response_body );
 			return false;
 		}
 
-		// Log successful SMS
-		error_log( 'Hezarfen SMS: SMS sent successfully via NetGSM - Response: ' . $response_body );
-		return true;
+		// Parse and handle NetGSM response codes
+		return $this->handle_netgsm_response( $response_body );
+	}
+
+	/**
+	 * Handle NetGSM API response codes
+	 *
+	 * @param string $response_body Response body from NetGSM API
+	 * @return bool
+	 */
+	private function handle_netgsm_response( $response_body ) {
+		$response_body = trim( $response_body );
+		
+		// Check for success responses
+		if ( $response_body === '00' ) {
+			error_log( 'Hezarfen SMS: NetGSM - Success: No date format error' );
+			return true;
+		} elseif ( $response_body === '01' ) {
+			error_log( 'Hezarfen SMS: NetGSM - Success: Start date error corrected by system' );
+			return true;
+		} elseif ( $response_body === '02' ) {
+			error_log( 'Hezarfen SMS: NetGSM - Success: End date error corrected by system' );
+			return true;
+		} elseif ( is_numeric( $response_body ) && strlen( $response_body ) > 10 ) {
+			// Job ID response (long numeric string)
+			error_log( 'Hezarfen SMS: NetGSM - Success: SMS queued with Job ID: ' . $response_body );
+			return true;
+		}
+
+		// Handle error codes
+		switch ( $response_body ) {
+			case '20':
+				error_log( 'Hezarfen SMS: NetGSM Error 20 - Message text problem or exceeds maximum character limit' );
+				break;
+			case '30':
+				error_log( 'Hezarfen SMS: NetGSM Error 30 - Invalid username/password or no API access permission' );
+				break;
+			case '40':
+				error_log( 'Hezarfen SMS: NetGSM Error 40 - Message header (sender name) not defined in system' );
+				break;
+			case '50':
+				error_log( 'Hezarfen SMS: NetGSM Error 50 - IYS controlled sending not available for this account' );
+				break;
+			case '51':
+				error_log( 'Hezarfen SMS: NetGSM Error 51 - IYS Brand information not found for subscription' );
+				break;
+			case '70':
+				error_log( 'Hezarfen SMS: NetGSM Error 70 - Invalid query or missing required parameters' );
+				break;
+			case '80':
+				error_log( 'Hezarfen SMS: NetGSM Error 80 - Sending limit exceeded' );
+				break;
+			case '85':
+				error_log( 'Hezarfen SMS: NetGSM Error 85 - Duplicate sending limit exceeded (max 20 messages per minute to same number)' );
+				break;
+			default:
+				error_log( 'Hezarfen SMS: NetGSM - Unknown response: ' . $response_body );
+				break;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Log SMS sending attempt
+	 *
+	 * @param \WC_Order $order Order object
+	 * @param array $rule SMS rule
+	 * @param string $phone Phone number
+	 * @param string $message Message content
+	 * @param bool $success Whether SMS was sent successfully
+	 * @return void
+	 */
+	private function log_sms_attempt( $order, $rule, $phone, $message, $success ) {
+		$log_entry = array(
+			'timestamp' => current_time( 'mysql' ),
+			'order_id' => $order->get_id(),
+			'order_status' => $order->get_status(),
+			'phone' => $phone,
+			'message' => $message,
+			'rule_condition' => $rule['condition_status'] ?? '',
+			'action_type' => $rule['action_type'] ?? '',
+			'success' => $success ? 'yes' : 'no',
+		);
+
+		// Store in order meta for easy access
+		$order->add_meta_data( '_hezarfen_sms_log_' . time(), $log_entry );
+		$order->save_meta_data();
+
+		// Also log to WordPress error log
+		$status_text = $success ? 'SUCCESS' : 'FAILED';
+		error_log( sprintf(
+			'Hezarfen SMS Log: %s - Order #%d, Status: %s, Phone: %s, Message: %s',
+			$status_text,
+			$order->get_id(),
+			$order->get_status(),
+			$phone,
+			substr( $message, 0, 50 ) . '...'
+		) );
 	}
 
 	/**
