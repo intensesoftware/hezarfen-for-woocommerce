@@ -47,11 +47,8 @@ class SMS_Automation {
 				// Normalize rule condition status for comparison
 				$normalized_rule_status = str_replace( 'wc-', '', $rule['condition_status'] );
 				
-				error_log( 'Hezarfen SMS: Checking rule - Rule status: ' . $rule['condition_status'] . ', Normalized: ' . $normalized_rule_status );
-				
 				if ( $normalized_rule_status === $normalized_new_status ) {
 					if ( isset( $rule['action_type'] ) && $rule['action_type'] === 'netgsm' ) {
-						error_log( 'Hezarfen SMS: Rule matched, sending SMS for order ' . $order_id );
 						$this->send_sms_for_rule( $order, $rule );
 					}
 				}
@@ -69,7 +66,6 @@ class SMS_Automation {
 	private function send_sms_for_rule( $order, $rule ) {
 		// Check if SMS was already sent for this rule and order
 		if ( $this->is_sms_already_sent( $order, $rule ) ) {
-			error_log( 'Hezarfen SMS: SMS already sent for order ' . $order->get_id() . ' and status ' . $rule['condition_status'] );
 			return true; // Return true since SMS was already sent successfully
 		}
 		// Get NetGSM credentials from the rule
@@ -78,14 +74,12 @@ class SMS_Automation {
 		$msgheader = $rule['netgsm_msgheader'] ?? '';
 
 		if ( empty( $username ) || empty( $password ) || empty( $msgheader ) ) {
-			error_log( 'Hezarfen SMS: NetGSM credentials not configured in rule' );
 			return false;
 		}
 
 		// Get phone number based on rule
 		$phone = $this->get_phone_number( $order, $rule['phone_type'] );
 		if ( empty( $phone ) ) {
-			error_log( 'Hezarfen SMS: No phone number found for order ' . $order->get_id() );
 			return false;
 		}
 
@@ -204,26 +198,19 @@ class SMS_Automation {
 			'body' => wp_json_encode( $data )
 		);
 
-		error_log( 'Hezarfen SMS: Sending SMS to NetGSM API - Data: ' . wp_json_encode( $data ) );
-
 		$response = wp_remote_post( $url, $args );
 
 		if ( is_wp_error( $response ) ) {
-			error_log( 'Hezarfen SMS: NetGSM API connection error - ' . $response->get_error_message() );
 			return array( 'success' => false, 'jobid' => null );
 		}
 
 		$response_code = wp_remote_retrieve_response_code( $response );
 		$response_body = wp_remote_retrieve_body( $response );
 
-		error_log( 'Hezarfen SMS: NetGSM API response - Status: ' . $response_code . ', Body: ' . $response_body );
-
 		// Handle HTTP status codes
 		if ( $response_code === 406 ) {
-			error_log( 'Hezarfen SMS: NetGSM API - Request not acceptable (406)' );
 			return array( 'success' => false, 'jobid' => null );
 		} elseif ( $response_code !== 200 ) {
-			error_log( 'Hezarfen SMS: NetGSM API returned unexpected status ' . $response_code . ' - ' . $response_body );
 			return array( 'success' => false, 'jobid' => null );
 		}
 
@@ -261,52 +248,17 @@ class SMS_Automation {
 		$jobid = $response['jobid'] ?? null;
 		$description = $response['description'] ?? '';
 		
-		error_log( 'Hezarfen SMS: NetGSM JSON Response - Code: ' . $code . ', JobID: ' . $jobid . ', Description: ' . $description );
-		
 		// Handle success codes
 		switch ( $code ) {
 			case '00':
-				error_log( 'Hezarfen SMS: NetGSM - Success: No date format error' . ( $jobid ? ' - Job ID: ' . $jobid : '' ) );
 				return array( 'success' => true, 'jobid' => $jobid );
 			case '01':
-				error_log( 'Hezarfen SMS: NetGSM - Success: Start date error corrected by system' . ( $jobid ? ' - Job ID: ' . $jobid : '' ) );
 				return array( 'success' => true, 'jobid' => $jobid );
 			case '02':
-				error_log( 'Hezarfen SMS: NetGSM - Success: End date error corrected by system' . ( $jobid ? ' - Job ID: ' . $jobid : '' ) );
 				return array( 'success' => true, 'jobid' => $jobid );
 		}
 		
-		// Handle error codes
-		switch ( $code ) {
-			case '20':
-				error_log( 'Hezarfen SMS: NetGSM Error 20 - Message text problem or exceeds maximum character limit' );
-				break;
-			case '30':
-				error_log( 'Hezarfen SMS: NetGSM Error 30 - Invalid username/password or no API access permission' );
-				break;
-			case '40':
-				error_log( 'Hezarfen SMS: NetGSM Error 40 - Message header (sender name) not defined in system' );
-				break;
-			case '50':
-				error_log( 'Hezarfen SMS: NetGSM Error 50 - IYS controlled sending not available for this account' );
-				break;
-			case '51':
-				error_log( 'Hezarfen SMS: NetGSM Error 51 - IYS Brand information not found for subscription' );
-				break;
-			case '70':
-				error_log( 'Hezarfen SMS: NetGSM Error 70 - Invalid query or missing required parameters' );
-				break;
-			case '80':
-				error_log( 'Hezarfen SMS: NetGSM Error 80 - Sending limit exceeded' );
-				break;
-			case '85':
-				error_log( 'Hezarfen SMS: NetGSM Error 85 - Duplicate sending limit exceeded (max 20 messages per minute to same number)' );
-				break;
-			default:
-				error_log( 'Hezarfen SMS: NetGSM - Unknown JSON response code: ' . $code );
-				break;
-		}
-
+		// Handle error codes - all return false
 		return array( 'success' => false, 'jobid' => null );
 	}
 
@@ -319,51 +271,17 @@ class SMS_Automation {
 	private function handle_netgsm_plain_response( $response_body ) {
 		// Check for success responses
 		if ( $response_body === '00' ) {
-			error_log( 'Hezarfen SMS: NetGSM - Success: No date format error' );
 			return array( 'success' => true, 'jobid' => null );
 		} elseif ( $response_body === '01' ) {
-			error_log( 'Hezarfen SMS: NetGSM - Success: Start date error corrected by system' );
 			return array( 'success' => true, 'jobid' => null );
 		} elseif ( $response_body === '02' ) {
-			error_log( 'Hezarfen SMS: NetGSM - Success: End date error corrected by system' );
 			return array( 'success' => true, 'jobid' => null );
 		} elseif ( is_numeric( $response_body ) && strlen( $response_body ) > 10 ) {
 			// Job ID response (long numeric string)
-			error_log( 'Hezarfen SMS: NetGSM - Success: SMS queued with Job ID: ' . $response_body );
 			return array( 'success' => true, 'jobid' => $response_body );
 		}
 
-		// Handle error codes
-		switch ( $response_body ) {
-			case '20':
-				error_log( 'Hezarfen SMS: NetGSM Error 20 - Message text problem or exceeds maximum character limit' );
-				break;
-			case '30':
-				error_log( 'Hezarfen SMS: NetGSM Error 30 - Invalid username/password or no API access permission' );
-				break;
-			case '40':
-				error_log( 'Hezarfen SMS: NetGSM Error 40 - Message header (sender name) not defined in system' );
-				break;
-			case '50':
-				error_log( 'Hezarfen SMS: NetGSM Error 50 - IYS controlled sending not available for this account' );
-				break;
-			case '51':
-				error_log( 'Hezarfen SMS: NetGSM Error 51 - IYS Brand information not found for subscription' );
-				break;
-			case '70':
-				error_log( 'Hezarfen SMS: NetGSM Error 70 - Invalid query or missing required parameters' );
-				break;
-			case '80':
-				error_log( 'Hezarfen SMS: NetGSM Error 80 - Sending limit exceeded' );
-				break;
-			case '85':
-				error_log( 'Hezarfen SMS: NetGSM Error 85 - Duplicate sending limit exceeded (max 20 messages per minute to same number)' );
-				break;
-			default:
-				error_log( 'Hezarfen SMS: NetGSM - Unknown response: ' . $response_body );
-				break;
-		}
-
+		// Handle error codes - all return false
 		return array( 'success' => false, 'jobid' => null );
 	}
 
@@ -397,19 +315,6 @@ class SMS_Automation {
 		// Store in order meta for easy access
 		$order->add_meta_data( '_hezarfen_sms_log_' . time(), $log_entry );
 		$order->save_meta_data();
-
-		// Also log to WordPress error log
-		$status_text = $success ? 'SUCCESS' : 'FAILED';
-		$jobid_text = $jobid ? ' - Job ID: ' . $jobid : '';
-		error_log( sprintf(
-			'Hezarfen SMS Log: %s - Provider: NetGSM - Order #%d, Status: %s, Phone: %s, Message: %s%s',
-			$status_text,
-			$order->get_id(),
-			$order->get_status(),
-			$phone,
-			substr( $message, 0, 50 ) . '...',
-			$jobid_text
-		) );
 	}
 
 	/**
@@ -512,9 +417,6 @@ class SMS_Automation {
 
 		// Don't sanitize JSON string - it corrupts the data
 		$rules_json = $_POST['rules'] ?? '';
-		error_log( 'Hezarfen SMS: Received rules JSON: ' . $rules_json );
-		error_log( 'Hezarfen SMS: JSON length: ' . strlen( $rules_json ) );
-		error_log( 'Hezarfen SMS: JSON first 100 chars: ' . substr( $rules_json, 0, 100 ) );
 		
 		// Validate that it's a valid JSON string
 		if ( empty( $rules_json ) ) {
@@ -525,22 +427,14 @@ class SMS_Automation {
 		$rules_json = wp_unslash( $rules_json );
 		$rules_json = trim( $rules_json );
 		
-		error_log( 'Hezarfen SMS: Cleaned JSON: ' . $rules_json );
-		
 		$rules = json_decode( $rules_json, true );
 		$json_error = json_last_error();
-		
-		error_log( 'Hezarfen SMS: JSON decode error: ' . $json_error );
-		error_log( 'Hezarfen SMS: JSON error message: ' . json_last_error_msg() );
-		error_log( 'Hezarfen SMS: Decoded rules: ' . print_r( $rules, true ) );
-		error_log( 'Hezarfen SMS: Is array: ' . ( is_array( $rules ) ? 'Yes' : 'No' ) );
 
 		if ( $json_error !== JSON_ERROR_NONE ) {
 			wp_send_json_error( 'Invalid JSON data: ' . json_last_error_msg() . ' - Raw data: ' . substr( $rules_json, 0, 200 ) );
 		}
 
 		if ( ! is_array( $rules ) ) {
-			error_log( 'Hezarfen SMS: Invalid rules data - not an array' );
 			wp_send_json_error( 'Invalid rules data - not an array' );
 		}
 
