@@ -232,9 +232,47 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                 endif;
                 ?>
             </div>
-            <div id="modal-body" title="<?php esc_attr_e('Remove shipment data?', 'hezarfen-for-woocommerce'); ?>" class="hidden">
-                <span class="ui-icon ui-icon-alert"></span>
-                <p><?php esc_html_e('Are you sure you want to remove this shipment data?', 'hezarfen-for-woocommerce'); ?></p>
+            <!-- Modern Confirmation Modal -->
+            <div id="modal-body" class="hez-modal-overlay hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-description">
+                <div class="hez-modal-content bg-white rounded-lg shadow-xl max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0">
+                    <div class="p-6">
+                        <!-- Modal Header -->
+                        <div class="flex items-center mb-4">
+                            <div class="flex-shrink-0 w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <h3 id="modal-title" class="text-lg font-semibold text-gray-900">
+                                    <?php esc_html_e('Remove shipment data?', 'hezarfen-for-woocommerce'); ?>
+                                </h3>
+                            </div>
+                            <button type="button" class="hez-modal-close text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded-md p-1" aria-label="<?php esc_attr_e('Close modal', 'hezarfen-for-woocommerce'); ?>">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <!-- Modal Body -->
+                        <div class="mb-6">
+                            <p id="modal-description" class="text-sm text-gray-600 leading-relaxed">
+                                <?php esc_html_e('Are you sure you want to remove this shipment data? This action cannot be undone and the tracking information will be permanently deleted.', 'hezarfen-for-woocommerce'); ?>
+                            </p>
+                        </div>
+                        
+                        <!-- Modal Actions -->
+                        <div class="flex flex-col sm:flex-row gap-3 sm:gap-2 sm:justify-end">
+                            <button type="button" class="hez-modal-cancel w-full sm:w-auto px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200">
+                                <?php esc_html_e('Cancel', 'hezarfen-for-woocommerce'); ?>
+                            </button>
+                            <button type="button" class="hez-modal-confirm w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200">
+                                <?php esc_html_e('Remove', 'hezarfen-for-woocommerce'); ?>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <?php if (defined('HEZARFEN_PRO_VERSION')) : ?>

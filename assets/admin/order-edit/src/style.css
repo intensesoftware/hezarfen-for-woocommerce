@@ -182,3 +182,109 @@
 	gap: 15px;
 	justify-content: space-between;
 }
+
+/* Modern Modal Styles */
+.hez-modal-overlay {
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.3s ease-out;
+    z-index: 999999 !important; /* Ensure modal appears above WordPress admin bar and navigation */
+}
+
+.hez-modal-overlay.show .hez-modal-content {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.hez-modal-content {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+.hez-modal-close:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.hez-modal-cancel:hover {
+    background-color: #f9fafb;
+    border-color: #d1d5db;
+}
+
+.hez-modal-confirm:hover {
+    background-color: #dc2626;
+}
+
+.hez-modal-confirm:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.hez-modal-cancel:focus {
+    box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.1);
+}
+
+/* Modal Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Dark mode support for modal */
+@media (prefers-color-scheme: dark) {
+    .hez-modal-content {
+        background-color: #1f2937;
+        color: #f9fafb;
+    }
+    
+    .hez-modal-content h3 {
+        color: #f9fafb;
+    }
+    
+    .hez-modal-content p {
+        color: #d1d5db;
+    }
+    
+    .hez-modal-cancel {
+        background-color: #374151;
+        border-color: #4b5563;
+        color: #f9fafb;
+    }
+    
+    .hez-modal-cancel:hover {
+        background-color: #4b5563;
+    }
+    
+    .hez-modal-close {
+        color: #9ca3af;
+    }
+    
+    .hez-modal-close:hover {
+        color: #f9fafb;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* Responsive modal adjustments */
+@media (max-width: 640px) {
+    .hez-modal-content {
+        margin: 1rem;
+        max-width: calc(100vw - 2rem);
+    }
+    
+    .hez-modal-content .p-6 {
+        padding: 1.25rem;
+    }
+}

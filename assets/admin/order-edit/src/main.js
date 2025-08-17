@@ -138,43 +138,90 @@ jQuery(document).ready(($)=>{
   });
 
   function create_confirmation_modal(metabox_wrapper, shipment_row) {
-    const modal_body = metabox_wrapper.find('#modal-body');
-
-    modal_body.dialog({
-      resizable: false,
-      draggable: false,
-      height: 'auto',
-      width: 400,
-      modal: true,
-      dialogClass: 'hezarfen-mst-confirm-removal',
-      buttons: [
-        {
-          text: hezarfen_mst_backend.modal_btn_delete_text,
-          click: function () {
-            $.post(
-              ajaxurl,
-              {
-                action: hezarfen_mst_backend.remove_shipment_data_action,
-                _wpnonce: hezarfen_mst_backend.remove_shipment_data_nonce,
-                order_id: $('input#post_ID').val(),
-                meta_id: shipment_row.data('meta_id')
-              },
-              function () {
-                shipment_row.remove();
-                modal_body.dialog('destroy');
-              }
-            ).fail(function () {
-              modal_body.dialog('destroy');
-            });
+    const modal_overlay = metabox_wrapper.find('#modal-body');
+    const modal_content = modal_overlay.find('.hez-modal-content');
+    
+    // Show modal with animation
+    modal_overlay.removeClass('hidden');
+    setTimeout(() => {
+      modal_overlay.addClass('show');
+      modal_content.removeClass('scale-95 opacity-0').addClass('scale-100 opacity-100');
+    }, 10);
+    
+    // Focus management for accessibility
+    const focusableElements = modal_overlay.find('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    const firstFocusable = focusableElements.first();
+    const lastFocusable = focusableElements.last();
+    
+    firstFocusable.focus();
+    
+    // Trap focus within modal
+    modal_overlay.on('keydown', function(e) {
+      if (e.key === 'Tab') {
+        if (e.shiftKey) {
+          if (document.activeElement === firstFocusable[0]) {
+            e.preventDefault();
+            lastFocusable.focus();
           }
-        },
-        {
-          text: hezarfen_mst_backend.modal_btn_cancel_text,
-          click: function () {
-            modal_body.dialog('destroy');
+        } else {
+          if (document.activeElement === lastFocusable[0]) {
+            e.preventDefault();
+            firstFocusable.focus();
           }
         }
-      ]
+      } else if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+    
+    function closeModal() {
+      modal_content.removeClass('scale-100 opacity-100').addClass('scale-95 opacity-0');
+      setTimeout(() => {
+        modal_overlay.removeClass('show').addClass('hidden');
+        modal_overlay.off('keydown');
+      }, 300);
+    }
+    
+    // Handle confirm button click
+    modal_overlay.find('.hez-modal-confirm').off('click').on('click', function() {
+      $(this).prop('disabled', true).text('Removing...');
+      
+      $.post(
+        ajaxurl,
+        {
+          action: hezarfen_mst_backend.remove_shipment_data_action,
+          _wpnonce: hezarfen_mst_backend.remove_shipment_data_nonce,
+          order_id: $('input#post_ID').val(),
+          meta_id: shipment_row.data('meta_id')
+        },
+        function () {
+          shipment_row.fadeOut(300, function() {
+            $(this).remove();
+            // Check if no shipments left and show empty state
+            const remainingShipments = metabox_wrapper.find('tbody tr');
+            if (remainingShipments.length === 0) {
+              location.reload(); // Reload to show empty state
+            }
+          });
+          closeModal();
+        }
+      ).fail(function () {
+        closeModal();
+        // Show error message
+        alert('Error removing shipment data. Please try again.');
+      });
+    });
+    
+    // Handle cancel and close buttons
+    modal_overlay.find('.hez-modal-cancel, .hez-modal-close').off('click').on('click', function() {
+      closeModal();
+    });
+    
+    // Handle backdrop click
+    modal_overlay.on('click', function(e) {
+      if (e.target === modal_overlay[0]) {
+        closeModal();
+      }
     });
   }
 
