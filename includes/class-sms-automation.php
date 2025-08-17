@@ -1,16 +1,16 @@
 <?php
 /**
  * SMS Automation Class
- * 
- * @package Hezarfen\Inc
+ *
+ * Handles SMS automation for WooCommerce order status changes
+ *
+ * @package Hezarfen
  */
 
-namespace Hezarfen\Inc;
-
-defined( 'ABSPATH' ) || exit();
+defined( 'ABSPATH' ) || exit;
 
 /**
- * SMS Automation class for handling NetGSM SMS notifications
+ * SMS Automation class
  */
 class SMS_Automation {
 
@@ -19,8 +19,8 @@ class SMS_Automation {
 	 */
 	public function __construct() {
 		add_action( 'woocommerce_order_status_changed', array( $this, 'handle_order_status_change' ), 10, 4 );
-		add_action( 'wp_ajax_hezarfen_get_sms_rules', array( $this, 'ajax_get_sms_rules' ) );
 		add_action( 'wp_ajax_hezarfen_save_sms_rules', array( $this, 'ajax_save_sms_rules' ) );
+		add_action( 'wp_ajax_hezarfen_get_sms_rules', array( $this, 'ajax_get_sms_rules' ) );
 	}
 
 	/**
@@ -33,20 +33,14 @@ class SMS_Automation {
 	 * @return void
 	 */
 	public function handle_order_status_change( $order_id, $old_status, $new_status, $order ) {
-		// Check if SMS automation is enabled
-		if ( 'yes' !== get_option( 'hezarfen_sms_automation_enabled', 'no' ) ) {
-			return;
-		}
-
-		// Get SMS rules
 		$rules = get_option( 'hezarfen_sms_rules', array() );
+
 		if ( empty( $rules ) ) {
 			return;
 		}
 
-		// Check if any rule matches the new status
 		foreach ( $rules as $rule ) {
-			if ( isset( $rule['condition_status'] ) && $rule['condition_status'] === 'wc-' . $new_status ) {
+			if ( isset( $rule['condition_status'] ) && $rule['condition_status'] === $new_status ) {
 				if ( isset( $rule['action_type'] ) && $rule['action_type'] === 'netgsm' ) {
 					$this->send_sms_for_rule( $order, $rule );
 				}
@@ -62,6 +56,11 @@ class SMS_Automation {
 	 * @return bool
 	 */
 	private function send_sms_for_rule( $order, $rule ) {
+		// Check if SMS was already sent for this rule and order
+		if ( $this->is_sms_already_sent( $order, $rule ) ) {
+			error_log( 'Hezarfen SMS: SMS already sent for order ' . $order->get_id() . ' and status ' . $rule['condition_status'] );
+			return true; // Return true since SMS was already sent successfully
+		}
 		// Get NetGSM credentials from the rule
 		$username = $rule['netgsm_username'] ?? '';
 		$password = $rule['netgsm_password'] ?? '';
@@ -97,12 +96,17 @@ class SMS_Automation {
 		);
 
 		// Send SMS via NetGSM API
-		$result = $this->send_netgsm_sms( $data, $username, $password );
+		$sms_result = $this->send_netgsm_sms( $data, $username, $password );
 		
-		// Log SMS attempt
-		$this->log_sms_attempt( $order, $rule, $phone, $message, $result );
+		// Log SMS attempt and mark as sent if successful
+		$this->log_sms_attempt( $order, $rule, $phone, $message, $sms_result );
 		
-		return $result;
+		// Mark SMS as sent and add order note if successful
+		if ( $sms_result['success'] ) {
+			$this->mark_sms_sent( $order, $rule, $phone, $message, $sms_result['jobid'] ?? null );
+		}
+		
+		return $sms_result['success'];
 	}
 
 	/**
@@ -145,7 +149,7 @@ class SMS_Automation {
 	 * @param array $data SMS data
 	 * @param string $username NetGSM username
 	 * @param string $password NetGSM password
-	 * @return bool
+	 * @return array Array with 'success' (bool) and 'jobid' (string|null)
 	 */
 	private function send_netgsm_sms( $data, $username, $password ) {
 		$url = 'https://api.netgsm.com.tr/sms/rest/v2/send';
@@ -166,7 +170,7 @@ class SMS_Automation {
 
 		if ( is_wp_error( $response ) ) {
 			error_log( 'Hezarfen SMS: NetGSM API connection error - ' . $response->get_error_message() );
-			return false;
+			return array( 'success' => false, 'jobid' => null );
 		}
 
 		$response_code = wp_remote_retrieve_response_code( $response );
@@ -177,10 +181,10 @@ class SMS_Automation {
 		// Handle HTTP status codes
 		if ( $response_code === 406 ) {
 			error_log( 'Hezarfen SMS: NetGSM API - Request not acceptable (406)' );
-			return false;
+			return array( 'success' => false, 'jobid' => null );
 		} elseif ( $response_code !== 200 ) {
 			error_log( 'Hezarfen SMS: NetGSM API returned unexpected status ' . $response_code . ' - ' . $response_body );
-			return false;
+			return array( 'success' => false, 'jobid' => null );
 		}
 
 		// Parse and handle NetGSM response codes
@@ -191,25 +195,102 @@ class SMS_Automation {
 	 * Handle NetGSM API response codes
 	 *
 	 * @param string $response_body Response body from NetGSM API
-	 * @return bool
+	 * @return array Array with 'success' (bool) and 'jobid' (string|null)
 	 */
 	private function handle_netgsm_response( $response_body ) {
 		$response_body = trim( $response_body );
 		
+		// Try to parse as JSON first
+		$json_response = json_decode( $response_body, true );
+		if ( json_last_error() === JSON_ERROR_NONE && is_array( $json_response ) ) {
+			return $this->handle_netgsm_json_response( $json_response );
+		}
+		
+		// Fallback to plain text response handling
+		return $this->handle_netgsm_plain_response( $response_body );
+	}
+
+	/**
+	 * Handle NetGSM JSON response format
+	 *
+	 * @param array $response JSON decoded response
+	 * @return array Array with 'success' (bool) and 'jobid' (string|null)
+	 */
+	private function handle_netgsm_json_response( $response ) {
+		$code = $response['code'] ?? '';
+		$jobid = $response['jobid'] ?? null;
+		$description = $response['description'] ?? '';
+		
+		error_log( 'Hezarfen SMS: NetGSM JSON Response - Code: ' . $code . ', JobID: ' . $jobid . ', Description: ' . $description );
+		
+		// Handle success codes
+		switch ( $code ) {
+			case '00':
+				error_log( 'Hezarfen SMS: NetGSM - Success: No date format error' . ( $jobid ? ' - Job ID: ' . $jobid : '' ) );
+				return array( 'success' => true, 'jobid' => $jobid );
+			case '01':
+				error_log( 'Hezarfen SMS: NetGSM - Success: Start date error corrected by system' . ( $jobid ? ' - Job ID: ' . $jobid : '' ) );
+				return array( 'success' => true, 'jobid' => $jobid );
+			case '02':
+				error_log( 'Hezarfen SMS: NetGSM - Success: End date error corrected by system' . ( $jobid ? ' - Job ID: ' . $jobid : '' ) );
+				return array( 'success' => true, 'jobid' => $jobid );
+		}
+		
+		// Handle error codes
+		switch ( $code ) {
+			case '20':
+				error_log( 'Hezarfen SMS: NetGSM Error 20 - Message text problem or exceeds maximum character limit' );
+				break;
+			case '30':
+				error_log( 'Hezarfen SMS: NetGSM Error 30 - Invalid username/password or no API access permission' );
+				break;
+			case '40':
+				error_log( 'Hezarfen SMS: NetGSM Error 40 - Message header (sender name) not defined in system' );
+				break;
+			case '50':
+				error_log( 'Hezarfen SMS: NetGSM Error 50 - IYS controlled sending not available for this account' );
+				break;
+			case '51':
+				error_log( 'Hezarfen SMS: NetGSM Error 51 - IYS Brand information not found for subscription' );
+				break;
+			case '70':
+				error_log( 'Hezarfen SMS: NetGSM Error 70 - Invalid query or missing required parameters' );
+				break;
+			case '80':
+				error_log( 'Hezarfen SMS: NetGSM Error 80 - Sending limit exceeded' );
+				break;
+			case '85':
+				error_log( 'Hezarfen SMS: NetGSM Error 85 - Duplicate sending limit exceeded (max 20 messages per minute to same number)' );
+				break;
+			default:
+				error_log( 'Hezarfen SMS: NetGSM - Unknown JSON response code: ' . $code );
+				break;
+		}
+
+		return array( 'success' => false, 'jobid' => null );
+	}
+
+	/**
+	 * Handle NetGSM plain text response format (fallback)
+	 *
+	 * @param string $response_body Plain text response
+	 * @return array Array with 'success' (bool) and 'jobid' (string|null)
+	 */
+	private function handle_netgsm_plain_response( $response_body ) {
 		// Check for success responses
 		if ( $response_body === '00' ) {
 			error_log( 'Hezarfen SMS: NetGSM - Success: No date format error' );
-			return true;
+			return array( 'success' => true, 'jobid' => null );
 		} elseif ( $response_body === '01' ) {
 			error_log( 'Hezarfen SMS: NetGSM - Success: Start date error corrected by system' );
-			return true;
+			return array( 'success' => true, 'jobid' => null );
 		} elseif ( $response_body === '02' ) {
 			error_log( 'Hezarfen SMS: NetGSM - Success: End date error corrected by system' );
-			return true;
+			return array( 'success' => true, 'jobid' => null );
 		} elseif ( is_numeric( $response_body ) && strlen( $response_body ) > 10 ) {
 			// Job ID response (long numeric string)
 			error_log( 'Hezarfen SMS: NetGSM - Success: SMS queued with Job ID: ' . $response_body );
-			return true;
+			return array( 'success' => true, 'jobid' => $response_body );
 		}
 
 		// Handle error codes
@@ -243,7 +324,7 @@ class SMS_Automation {
 				break;
 		}
 
-		return false;
+		return array( 'success' => false, 'jobid' => null );
 	}
 
 	/**
@@ -253,10 +334,13 @@ class SMS_Automation {
 	 * @param array $rule SMS rule
 	 * @param string $phone Phone number
 	 * @param string $message Message content
-	 * @param bool $success Whether SMS was sent successfully
+	 * @param array $sms_result SMS result array with 'success' and 'jobid'
 	 * @return void
 	 */
-	private function log_sms_attempt( $order, $rule, $phone, $message, $success ) {
+	private function log_sms_attempt( $order, $rule, $phone, $message, $sms_result ) {
+		$success = $sms_result['success'] ?? false;
+		$jobid = $sms_result['jobid'] ?? null;
+		
 		$log_entry = array(
 			'timestamp' => current_time( 'mysql' ),
 			'order_id' => $order->get_id(),
@@ -266,6 +350,7 @@ class SMS_Automation {
 			'rule_condition' => $rule['condition_status'] ?? '',
 			'action_type' => $rule['action_type'] ?? '',
 			'success' => $success ? 'yes' : 'no',
+			'jobid' => $jobid,
 		);
 
 		// Store in order meta for easy access
@@ -274,14 +359,81 @@ class SMS_Automation {
 
 		// Also log to WordPress error log
 		$status_text = $success ? 'SUCCESS' : 'FAILED';
+		$jobid_text = $jobid ? ' - Job ID: ' . $jobid : '';
 		error_log( sprintf(
-			'Hezarfen SMS Log: %s - Order #%d, Status: %s, Phone: %s, Message: %s',
+			'Hezarfen SMS Log: %s - Order #%d, Status: %s, Phone: %s, Message: %s%s',
 			$status_text,
 			$order->get_id(),
 			$order->get_status(),
 			$phone,
-			substr( $message, 0, 50 ) . '...'
+			substr( $message, 0, 50 ) . '...',
+			$jobid_text
 		) );
+	}
+
+	/**
+	 * Mark SMS as sent and add order note
+	 *
+	 * @param \WC_Order $order Order object
+	 * @param array $rule SMS rule
+	 * @param string $phone Phone number
+	 * @param string $message Message content
+	 * @param string|null $jobid NetGSM Job ID
+	 * @return void
+	 */
+	private function mark_sms_sent( $order, $rule, $phone, $message, $jobid = null ) {
+		// Mark SMS as sent for this rule and status
+		$sms_sent_key = '_hezarfen_sms_sent_' . $rule['condition_status'];
+		$order->update_meta_data( $sms_sent_key, 'yes' );
+		
+		// Also store when it was sent
+		$sms_sent_time_key = '_hezarfen_sms_sent_time_' . $rule['condition_status'];
+		$order->update_meta_data( $sms_sent_time_key, current_time( 'mysql' ) );
+		
+		// Store job ID if available
+		if ( $jobid ) {
+			$sms_jobid_key = '_hezarfen_sms_jobid_' . $rule['condition_status'];
+			$order->update_meta_data( $sms_jobid_key, $jobid );
+		}
+		
+		$order->save_meta_data();
+
+		// Add order note
+		$status_name = wc_get_order_status_name( $rule['condition_status'] );
+		$phone_type = $rule['phone_type'] === 'billing' ? __( 'billing', 'hezarfen-for-woocommerce' ) : __( 'shipping', 'hezarfen-for-woocommerce' );
+		
+		if ( $jobid ) {
+			/* translators: 1: Order status name, 2: Phone type (billing/shipping), 3: Phone number, 4: Job ID */
+			$note = sprintf( 
+				__( 'SMS notification sent for %1$s status to %2$s phone: %3$s (Job ID: %4$s)', 'hezarfen-for-woocommerce' ), 
+				$status_name,
+				$phone_type,
+				$phone,
+				$jobid
+			);
+		} else {
+			/* translators: 1: Order status name, 2: Phone type (billing/shipping), 3: Phone number */
+			$note = sprintf( 
+				__( 'SMS notification sent for %1$s status to %2$s phone: %3$s', 'hezarfen-for-woocommerce' ), 
+				$status_name,
+				$phone_type,
+				$phone
+			);
+		}
+		
+		$order->add_order_note( $note );
+	}
+
+	/**
+	 * Check if SMS was already sent for this rule and order
+	 *
+	 * @param \WC_Order $order Order object
+	 * @param array $rule SMS rule
+	 * @return bool
+	 */
+	private function is_sms_already_sent( $order, $rule ) {
+		$sms_sent_key = '_hezarfen_sms_sent_' . $rule['condition_status'];
+		return $order->get_meta( $sms_sent_key ) === 'yes';
 	}
 
 	/**
