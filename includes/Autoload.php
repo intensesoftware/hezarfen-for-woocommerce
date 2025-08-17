@@ -143,6 +143,12 @@ class Autoload {
 		require_once 'Data/Abstracts/Abstract_Encryption.php';
 		require_once 'Data/PostMetaEncryption.php';
 		require_once 'Checkout.php';
+		// Temporarily disabled to avoid conflicts
+		// require_once 'Checkout_Block_Integration.php';
+		// require_once 'Checkout_Block_Simple.php';
+		// require_once 'Checkout_Block_Simple_Working.php';
+		require_once 'Checkout_Block_Field_Transform.php';
+		// require_once 'Checkout_Block_Test.php';
 		require_once 'class-my-account.php';
 		require_once 'Ajax.php';
 		require_once 'class-mahalle-local.php';
