@@ -349,6 +349,7 @@ class SMS_Automation {
 			'message' => $message,
 			'rule_condition' => $rule['condition_status'] ?? '',
 			'action_type' => $rule['action_type'] ?? '',
+			'provider' => 'NetGSM',
 			'success' => $success ? 'yes' : 'no',
 			'jobid' => $jobid,
 		);
@@ -361,7 +362,7 @@ class SMS_Automation {
 		$status_text = $success ? 'SUCCESS' : 'FAILED';
 		$jobid_text = $jobid ? ' - Job ID: ' . $jobid : '';
 		error_log( sprintf(
-			'Hezarfen SMS Log: %s - Order #%d, Status: %s, Phone: %s, Message: %s%s',
+			'Hezarfen SMS Log: %s - Provider: NetGSM - Order #%d, Status: %s, Phone: %s, Message: %s%s',
 			$status_text,
 			$order->get_id(),
 			$order->get_status(),
@@ -405,7 +406,7 @@ class SMS_Automation {
 		if ( $jobid ) {
 			/* translators: 1: Order status name, 2: Phone type (billing/shipping), 3: Phone number, 4: Job ID */
 			$note = sprintf( 
-				__( 'SMS notification sent for %1$s status to %2$s phone: %3$s (Job ID: %4$s)', 'hezarfen-for-woocommerce' ), 
+				__( 'SMS notification sent via NetGSM for %1$s status to %2$s phone: %3$s (Job ID: %4$s)', 'hezarfen-for-woocommerce' ), 
 				$status_name,
 				$phone_type,
 				$phone,
@@ -414,7 +415,7 @@ class SMS_Automation {
 		} else {
 			/* translators: 1: Order status name, 2: Phone type (billing/shipping), 3: Phone number */
 			$note = sprintf( 
-				__( 'SMS notification sent for %1$s status to %2$s phone: %3$s', 'hezarfen-for-woocommerce' ), 
+				__( 'SMS notification sent via NetGSM for %1$s status to %2$s phone: %3$s', 'hezarfen-for-woocommerce' ), 
 				$status_name,
 				$phone_type,
 				$phone

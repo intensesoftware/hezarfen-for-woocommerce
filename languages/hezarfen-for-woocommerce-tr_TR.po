@@ -919,6 +919,12 @@ msgid ""
 msgstr ""
 "%1$s durumu için %2$s telefonuna SMS bildirimi gönderildi: %3$s (İş ID: %4$s)"
 
+msgid "SMS notification sent via NetGSM for %1$s status to %2$s phone: %3$s"
+msgstr "%1$s durumu için %2$s telefonuna NetGSM ile SMS bildirimi gönderildi: %3$s"
+
+msgid "SMS notification sent via NetGSM for %1$s status to %2$s phone: %3$s (Job ID: %4$s)"
+msgstr "%1$s durumu için %2$s telefonuna NetGSM ile SMS bildirimi gönderildi: %3$s (İş ID: %4$s)"
+
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:134
 msgid "SMS Notification Settings"
 msgstr "SMS Bildirimi Ayarları"
