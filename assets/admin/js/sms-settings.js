@@ -1,6 +1,11 @@
 jQuery(document).ready(function($) {
     'use strict';
 
+    // Check if we're on the SMS settings page
+    if (typeof hezarfen_sms_settings === 'undefined') {
+        return;
+    }
+
     // SMS Rules Management
     let currentRuleIndex = null;
     let smsRules = [];
@@ -9,8 +14,9 @@ jQuery(document).ready(function($) {
     loadSmsRules();
 
     // Add SMS Rule button click
-    $('#hezarfen-add-sms-rule').on('click', function() {
-        openSmsRuleModal();
+    $('#hezarfen-add-sms-rule').on('click', function(e) {
+        e.preventDefault();
+        openSmsRuleForm();
     });
 
     // Edit SMS Rule button click
@@ -27,16 +33,9 @@ jQuery(document).ready(function($) {
         }
     });
 
-    // Modal close buttons
-    $('.sms-rule-modal-close').on('click', function() {
-        closeSmsRuleModal();
-    });
-
-    // Modal overlay click to close
-    $('.sms-rule-modal-overlay').on('click', function(e) {
-        if (e.target === this) {
-            closeSmsRuleModal();
-        }
+    // Cancel button click
+    $('#cancel-sms-rule').on('click', function() {
+        closeSmsRuleForm();
     });
 
     // Save SMS Rule button click
@@ -83,51 +82,78 @@ jQuery(document).ready(function($) {
         });
     }
 
-    function openSmsRuleModal(ruleData = null) {
+    function openSmsRuleForm(ruleData = null) {
         currentRuleIndex = null;
         
-        if (ruleData) {
-            // Edit mode
-            $('#sms-rule-modal-title').text(hezarfen_sms_settings.strings.edit_rule);
-            $('#condition-status').val(ruleData.condition_status || '');
-            $('#action-type').val(ruleData.action_type || '');
+        // Show the inline form first
+        $('#hezarfen-sms-rule-form-container').show();
+        
+        // Wait a moment for the form to be rendered
+        setTimeout(function() {
+            const form = document.getElementById('sms-rule-form');
+            console.log('Form found:', form ? 'Yes' : 'No');
             
-            // Trigger action type change to show/hide relevant fields
-            $('#action-type').trigger('change');
+            if (ruleData) {
+                // Edit mode
+                $('#sms-rule-form-title').text(hezarfen_sms_settings.strings.edit_rule);
+                $('#condition-status').val(ruleData.condition_status || '');
+                $('#action-type').val(ruleData.action_type || '');
+                
+                // Trigger action type change to show/hide relevant fields
+                $('#action-type').trigger('change');
+                
+                // Fill NetGSM fields if available
+                $('#netgsm-username').val(ruleData.netgsm_username || '');
+                $('#netgsm-password').val(ruleData.netgsm_password || '');
+                $('#netgsm-msgheader').val(ruleData.netgsm_msgheader || '');
+                
+                // Fill SMS content fields
+                $('#phone-type').val(ruleData.phone_type || '');
+                $('#message-template').val(ruleData.message_template || '');
+                $('input[name="iys_status"][value="' + (ruleData.iys_status || '0') + '"]').prop('checked', true);
+            } else {
+                // Add mode
+                $('#sms-rule-form-title').text(hezarfen_sms_settings.strings.add_rule);
+                
+                // Reset form safely
+                if (form) {
+                    form.reset();
+                }
+                
+                $('input[name="iys_status"][value="0"]').prop('checked', true);
+                
+                // Hide settings sections initially
+                $('#netgsm-settings').hide();
+                $('#sms-content-settings').hide();
+            }
             
-            // Fill NetGSM fields if available
-            $('#netgsm-username').val(ruleData.netgsm_username || '');
-            $('#netgsm-password').val(ruleData.netgsm_password || '');
-            $('#netgsm-msgheader').val(ruleData.netgsm_msgheader || '');
-            
-            // Fill SMS content fields
-            $('#phone-type').val(ruleData.phone_type || '');
-            $('#message-template').val(ruleData.message_template || '');
-            $('input[name="iys_status"][value="' + (ruleData.iys_status || '0') + '"]').prop('checked', true);
-        } else {
-            // Add mode
-            $('#sms-rule-modal-title').text(hezarfen_sms_settings.strings.add_rule);
-            $('#sms-rule-form')[0].reset();
-            $('input[name="iys_status"][value="0"]').prop('checked', true);
-            
-            // Hide settings sections initially
-            $('#netgsm-settings').hide();
-            $('#sms-content-settings').hide();
-        }
-
-        $('#hezarfen-sms-rule-modal').show();
+            // Scroll to the form
+            $('html, body').animate({
+                scrollTop: $('#hezarfen-sms-rule-form-container').offset().top - 50
+            }, 500);
+        }, 100);
     }
 
-    function closeSmsRuleModal() {
-        $('#hezarfen-sms-rule-modal').hide();
-        $('#sms-rule-form')[0].reset();
+    function closeSmsRuleForm() {
+        $('#hezarfen-sms-rule-form-container').hide();
+        
+        // Reset form safely
+        const form = document.getElementById('sms-rule-form');
+        if (form) {
+            form.reset();
+        }
+        
+        // Hide settings sections
+        $('#netgsm-settings').hide();
+        $('#sms-content-settings').hide();
+        
         currentRuleIndex = null;
     }
 
     function editSmsRule(ruleIndex) {
         if (smsRules[ruleIndex]) {
             currentRuleIndex = ruleIndex;
-            openSmsRuleModal(smsRules[ruleIndex]);
+            openSmsRuleForm(smsRules[ruleIndex]);
         }
     }
 
@@ -137,10 +163,44 @@ jQuery(document).ready(function($) {
     }
 
     function saveSmsRule() {
-        const form = $('#sms-rule-form')[0];
-        if (!form.checkValidity()) {
-            form.reportValidity();
+        // Check if form container is visible first
+        if (!$('#hezarfen-sms-rule-form-container').is(':visible')) {
+            alert('Form container is not visible. Please try again.');
             return;
+        }
+
+        const form = document.getElementById('sms-rule-form');
+        if (!form) {
+            console.log('Form element not found. Available forms:', document.querySelectorAll('form'));
+            alert('Form not found. Please refresh the page and try again.');
+            return;
+        }
+        
+        // Simple validation instead of HTML5 validation
+        const conditionStatus = $('#condition-status').val();
+        const actionType = $('#action-type').val();
+        
+        if (!conditionStatus) {
+            alert('Please select an order status.');
+            return;
+        }
+        
+        if (!actionType) {
+            alert('Please select an action type.');
+            return;
+        }
+        
+        if (actionType === 'netgsm') {
+            const username = $('#netgsm-username').val();
+            const password = $('#netgsm-password').val();
+            const msgheader = $('#netgsm-msgheader').val();
+            const phoneType = $('#phone-type').val();
+            const messageTemplate = $('#message-template').val();
+            
+            if (!username || !password || !msgheader || !phoneType || !messageTemplate) {
+                alert('Please fill in all required NetGSM fields.');
+                return;
+            }
         }
 
         const ruleData = {
@@ -167,7 +227,7 @@ jQuery(document).ready(function($) {
         }
 
         saveSmsRulesToServer();
-        closeSmsRuleModal();
+        closeSmsRuleForm();
     }
 
     function saveSmsRulesToServer() {

@@ -451,9 +451,11 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 							<div class="sms-rule-item" data-rule-index="<?php echo esc_attr( $index ); ?>" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 4px;">
 								<strong><?php esc_html_e( 'Rule', 'hezarfen-for-woocommerce' ); ?> #<?php echo esc_html( $index + 1 ); ?>:</strong>
 								<?php esc_html_e( 'When order status changes to', 'hezarfen-for-woocommerce' ); ?>
-								<strong><?php echo esc_html( $rule['condition_status'] ?? '' ); ?></strong>,
-								<?php esc_html_e( 'send SMS to', 'hezarfen-for-woocommerce' ); ?>
-								<strong><?php echo esc_html( $rule['phone_type'] ?? '' ); ?></strong>
+								<strong><?php echo esc_html( wc_get_order_status_name( str_replace( 'wc-', '', $rule['condition_status'] ?? '' ) ) ); ?></strong>,
+								<?php esc_html_e( 'send SMS via', 'hezarfen-for-woocommerce' ); ?>
+								<strong><?php echo esc_html( $rule['action_type'] === 'netgsm' ? 'NetGSM' : $rule['action_type'] ); ?></strong>
+								<?php esc_html_e( 'to', 'hezarfen-for-woocommerce' ); ?>
+								<strong><?php echo esc_html( $rule['phone_type'] === 'billing' ? __( 'Billing Phone', 'hezarfen-for-woocommerce' ) : __( 'Shipping Phone', 'hezarfen-for-woocommerce' ) ); ?></strong>
 								<div style="margin-top: 5px;">
 									<button type="button" class="button button-small edit-sms-rule" data-rule-index="<?php echo esc_attr( $index ); ?>">
 										<?php esc_html_e( 'Edit', 'hezarfen-for-woocommerce' ); ?>
@@ -468,93 +470,122 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 						<p><?php esc_html_e( 'No SMS rules configured yet.', 'hezarfen-for-woocommerce' ); ?></p>
 					<?php endif; ?>
 				</div>
-			</td>
-		</tr>
 
-		<!-- SMS Rule Modal -->
-		<div id="hezarfen-sms-rule-modal" style="display: none;">
-			<div class="sms-rule-modal-overlay">
-				<div class="sms-rule-modal-content">
-					<div class="sms-rule-modal-header">
-						<h3 id="sms-rule-modal-title"><?php esc_html_e( 'Add SMS Rule', 'hezarfen-for-woocommerce' ); ?></h3>
-						<button type="button" class="sms-rule-modal-close">&times;</button>
-					</div>
-					<div class="sms-rule-modal-body">
-						<form id="sms-rule-form">
-							<input type="hidden" id="rule-index" value="">
-							
-							<div class="rule-section">
-								<h4><?php esc_html_e( 'Trigger', 'hezarfen-for-woocommerce' ); ?></h4>
-								<p><strong><?php esc_html_e( 'Order Status Changed', 'hezarfen-for-woocommerce' ); ?></strong></p>
-							</div>
-
-							<div class="rule-section">
-								<h4><?php esc_html_e( 'Condition', 'hezarfen-for-woocommerce' ); ?></h4>
-								<label for="condition-status"><?php esc_html_e( 'New Status:', 'hezarfen-for-woocommerce' ); ?></label>
-								<select id="condition-status" name="condition_status" required>
-									<option value=""><?php esc_html_e( 'Select status...', 'hezarfen-for-woocommerce' ); ?></option>
-									<?php foreach ( wc_get_order_statuses() as $status_key => $status_label ) : ?>
-										<option value="<?php echo esc_attr( $status_key ); ?>"><?php echo esc_html( $status_label ); ?></option>
-									<?php endforeach; ?>
-								</select>
-							</div>
-
-							<div class="rule-section">
-								<h4><?php esc_html_e( 'Action', 'hezarfen-for-woocommerce' ); ?></h4>
-								
-								<label for="action-type"><?php esc_html_e( 'Action Type:', 'hezarfen-for-woocommerce' ); ?></label>
-								<select id="action-type" name="action_type" required>
-									<option value=""><?php esc_html_e( 'Select action...', 'hezarfen-for-woocommerce' ); ?></option>
-									<option value="netgsm"><?php esc_html_e( 'Send SMS via NetGSM', 'hezarfen-for-woocommerce' ); ?></option>
-								</select>
-
-								<!-- NetGSM Settings - Only shown when NetGSM is selected -->
-								<div id="netgsm-settings" style="display: none; margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #007cba;">
-									<h5 style="margin: 0 0 15px 0; color: #007cba;"><?php esc_html_e( 'NetGSM Configuration', 'hezarfen-for-woocommerce' ); ?></h5>
-									
-									<label for="netgsm-username"><?php esc_html_e( 'NetGSM Username:', 'hezarfen-for-woocommerce' ); ?></label>
-									<input type="text" id="netgsm-username" name="netgsm_username" placeholder="<?php esc_attr_e( '850xxxxxxx, 312XXXXXXX etc.', 'hezarfen-for-woocommerce' ); ?>">
-									<p class="description"><?php esc_html_e( 'Your NetGSM username', 'hezarfen-for-woocommerce' ); ?></p>
-
-									<label for="netgsm-password"><?php esc_html_e( 'NetGSM Password:', 'hezarfen-for-woocommerce' ); ?></label>
-									<input type="password" id="netgsm-password" name="netgsm_password" placeholder="<?php esc_attr_e( 'Your API password', 'hezarfen-for-woocommerce' ); ?>">
-									<p class="description"><?php esc_html_e( 'Your NetGSM API password', 'hezarfen-for-woocommerce' ); ?></p>
-
-									<label for="netgsm-msgheader"><?php esc_html_e( 'Message Header:', 'hezarfen-for-woocommerce' ); ?></label>
-									<input type="text" id="netgsm-msgheader" name="netgsm_msgheader" placeholder="<?php esc_attr_e( 'Sender name (3-11 chars)', 'hezarfen-for-woocommerce' ); ?>" maxlength="11">
-									<p class="description"><?php esc_html_e( 'SMS sender name (3-11 characters)', 'hezarfen-for-woocommerce' ); ?></p>
-								</div>
-
-								<!-- SMS Content Settings - Shown when any SMS action is selected -->
-								<div id="sms-content-settings" style="display: none; margin-top: 15px;">
-									<label for="phone-type"><?php esc_html_e( 'Phone Number:', 'hezarfen-for-woocommerce' ); ?></label>
-									<select id="phone-type" name="phone_type">
-										<option value=""><?php esc_html_e( 'Select phone type...', 'hezarfen-for-woocommerce' ); ?></option>
-										<option value="billing"><?php esc_html_e( 'Billing Phone', 'hezarfen-for-woocommerce' ); ?></option>
-										<option value="shipping"><?php esc_html_e( 'Shipping Phone', 'hezarfen-for-woocommerce' ); ?></option>
+				<!-- Inline SMS Rule Form -->
+				<div id="hezarfen-sms-rule-form-container" style="display: none; margin-top: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 6px; background: #f9f9f9;">
+					<h3 id="sms-rule-form-title"><?php esc_html_e( 'Add SMS Rule', 'hezarfen-for-woocommerce' ); ?></h3>
+					
+					<form id="sms-rule-form">
+						<input type="hidden" id="rule-index" value="">
+						
+						<table class="form-table">
+							<tr>
+								<th scope="row">
+									<label for="condition-status"><?php esc_html_e( 'Trigger Condition', 'hezarfen-for-woocommerce' ); ?></label>
+								</th>
+								<td>
+									<p><strong><?php esc_html_e( 'When order status changes to:', 'hezarfen-for-woocommerce' ); ?></strong></p>
+									<select id="condition-status" name="condition_status" required style="width: 300px;">
+										<option value=""><?php esc_html_e( 'Select status...', 'hezarfen-for-woocommerce' ); ?></option>
+										<?php foreach ( wc_get_order_statuses() as $status_key => $status_label ) : ?>
+											<option value="<?php echo esc_attr( $status_key ); ?>"><?php echo esc_html( $status_label ); ?></option>
+										<?php endforeach; ?>
 									</select>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">
+									<label for="action-type"><?php esc_html_e( 'Action Type', 'hezarfen-for-woocommerce' ); ?></label>
+								</th>
+								<td>
+									<select id="action-type" name="action_type" required style="width: 300px;">
+										<option value=""><?php esc_html_e( 'Select action...', 'hezarfen-for-woocommerce' ); ?></option>
+										<option value="netgsm"><?php esc_html_e( 'Send SMS via NetGSM', 'hezarfen-for-woocommerce' ); ?></option>
+									</select>
+								</td>
+							</tr>
+						</table>
 
-									<label for="message-template"><?php esc_html_e( 'Message Template:', 'hezarfen-for-woocommerce' ); ?></label>
-									<textarea id="message-template" name="message_template" rows="4" placeholder="<?php esc_attr_e( 'Enter your SMS message template...', 'hezarfen-for-woocommerce' ); ?>"></textarea>
-									<p class="description"><?php esc_html_e( 'Available Variables: {order_number}, {customer_name}, {order_status}, {order_total}', 'hezarfen-for-woocommerce' ); ?></p>
+						<!-- NetGSM Settings - Only shown when NetGSM is selected -->
+						<div id="netgsm-settings" style="display: none; margin-top: 20px; padding: 15px; background: #fff; border: 1px solid #007cba; border-radius: 6px;">
+							<h4 style="margin: 0 0 15px 0; color: #007cba;"><?php esc_html_e( 'NetGSM Configuration', 'hezarfen-for-woocommerce' ); ?></h4>
+							
+							<table class="form-table">
+								<tr>
+									<th scope="row">
+										<label for="netgsm-username"><?php esc_html_e( 'NetGSM Username', 'hezarfen-for-woocommerce' ); ?></label>
+									</th>
+									<td>
+										<input type="text" id="netgsm-username" name="netgsm_username" placeholder="<?php esc_attr_e( '850xxxxxxx, 312XXXXXXX etc.', 'hezarfen-for-woocommerce' ); ?>" style="width: 300px;">
+										<p class="description"><?php esc_html_e( 'Your NetGSM username', 'hezarfen-for-woocommerce' ); ?></p>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">
+										<label for="netgsm-password"><?php esc_html_e( 'NetGSM Password', 'hezarfen-for-woocommerce' ); ?></label>
+									</th>
+									<td>
+										<input type="password" id="netgsm-password" name="netgsm_password" placeholder="<?php esc_attr_e( 'Your API password', 'hezarfen-for-woocommerce' ); ?>" style="width: 300px;">
+										<p class="description"><?php esc_html_e( 'Your NetGSM API password', 'hezarfen-for-woocommerce' ); ?></p>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">
+										<label for="netgsm-msgheader"><?php esc_html_e( 'Message Header', 'hezarfen-for-woocommerce' ); ?></label>
+									</th>
+									<td>
+										<input type="text" id="netgsm-msgheader" name="netgsm_msgheader" placeholder="<?php esc_attr_e( 'Sender name (3-11 chars)', 'hezarfen-for-woocommerce' ); ?>" maxlength="11" style="width: 300px;">
+										<p class="description"><?php esc_html_e( 'SMS sender name (3-11 characters)', 'hezarfen-for-woocommerce' ); ?></p>
+									</td>
+								</tr>
+							</table>
+						</div>
 
-									<label for="iys-status"><?php esc_html_e( 'IYS Status:', 'hezarfen-for-woocommerce' ); ?></label>
-									<div>
+						<!-- SMS Content Settings - Shown when any SMS action is selected -->
+						<div id="sms-content-settings" style="display: none; margin-top: 15px;">
+							<table class="form-table">
+								<tr>
+									<th scope="row">
+										<label for="phone-type"><?php esc_html_e( 'Phone Number', 'hezarfen-for-woocommerce' ); ?></label>
+									</th>
+									<td>
+										<select id="phone-type" name="phone_type" style="width: 300px;">
+											<option value=""><?php esc_html_e( 'Select phone type...', 'hezarfen-for-woocommerce' ); ?></option>
+											<option value="billing"><?php esc_html_e( 'Billing Phone', 'hezarfen-for-woocommerce' ); ?></option>
+											<option value="shipping"><?php esc_html_e( 'Shipping Phone', 'hezarfen-for-woocommerce' ); ?></option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">
+										<label for="message-template"><?php esc_html_e( 'Message Template', 'hezarfen-for-woocommerce' ); ?></label>
+									</th>
+									<td>
+										<textarea id="message-template" name="message_template" rows="4" placeholder="<?php esc_attr_e( 'Enter your SMS message template...', 'hezarfen-for-woocommerce' ); ?>" style="width: 100%; max-width: 500px;"></textarea>
+										<p class="description"><?php esc_html_e( 'Available Variables: {order_number}, {customer_name}, {order_status}, {order_total}', 'hezarfen-for-woocommerce' ); ?></p>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">
+										<label><?php esc_html_e( 'IYS Status', 'hezarfen-for-woocommerce' ); ?></label>
+									</th>
+									<td>
 										<label><input type="radio" name="iys_status" value="0" checked> <?php esc_html_e( 'Information (0)', 'hezarfen-for-woocommerce' ); ?></label><br>
 										<label><input type="radio" name="iys_status" value="11"> <?php esc_html_e( 'Commercial (11)', 'hezarfen-for-woocommerce' ); ?></label>
-									</div>
-									<p class="description"><?php esc_html_e( 'Select "Information" for informational messages or "Commercial" for promotional messages.', 'hezarfen-for-woocommerce' ); ?></p>
-								</div>
-							</div>
-						</form>
-					</div>
-					<div class="sms-rule-modal-footer">
+										<p class="description"><?php esc_html_e( 'Select "Information" for informational messages or "Commercial" for promotional messages.', 'hezarfen-for-woocommerce' ); ?></p>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</form>
+
+					<p class="submit">
 						<button type="button" id="save-sms-rule" class="button button-primary"><?php esc_html_e( 'Save Rule', 'hezarfen-for-woocommerce' ); ?></button>
-						<button type="button" class="button sms-rule-modal-close"><?php esc_html_e( 'Cancel', 'hezarfen-for-woocommerce' ); ?></button>
-					</div>
+						<button type="button" id="cancel-sms-rule" class="button"><?php esc_html_e( 'Cancel', 'hezarfen-for-woocommerce' ); ?></button>
+					</p>
 				</div>
-			</div>
-		</div>
+			</td>
+		</tr>
 		<?php
 	}
 

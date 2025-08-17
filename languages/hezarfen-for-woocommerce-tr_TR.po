@@ -1111,3 +1111,19 @@ msgstr "API şifreniz"
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:524
 msgid "Sender name (3-11 chars)"
 msgstr "Gönderen adı (3-11 karakter)"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:457
+msgid "to"
+msgstr "için"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:484
+msgid "Trigger Condition"
+msgstr "Tetikleyici Koşul"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:487
+msgid "When order status changes to:"
+msgstr "Sipariş durumu şuna değiştiğinde:"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:498
+msgid "Action Type"
+msgstr "Eylem Türü"
