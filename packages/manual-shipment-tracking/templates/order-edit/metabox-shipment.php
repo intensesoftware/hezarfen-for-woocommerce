@@ -238,7 +238,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
             </div>
         </div>
         <?php if (defined('HEZARFEN_PRO_VERSION')) : ?>
-        <div class="hidden rounded-lg" id="hezarfen-pro" role="tabpanel" aria-labelledby="hezarfen-pro-tab">
+        <div class="<?php if (!defined('HEZARFEN_PRO_VERSION')) : ?>hidden<?php endif; ?> rounded-lg" id="hezarfen-pro" role="tabpanel" aria-labelledby="hezarfen-pro-tab">
             <?php do_action('hez_admin_order_edit_shipment_edits', $order_id); ?>
         </div>
         <?php endif; ?>
