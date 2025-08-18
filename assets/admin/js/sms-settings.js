@@ -335,31 +335,38 @@ jQuery(document).ready(function($) {
 
         let html = '';
         smsRules.forEach(function(rule, index) {
-            const statusLabel = hezarfen_sms_settings.order_statuses[rule.condition_status] || rule.condition_status;
+            let statusLabel = hezarfen_sms_settings.order_statuses[rule.condition_status] || rule.condition_status;
+            if (rule.condition_status === 'hezarfen_order_shipped') {
+                statusLabel = hezarfen_sms_settings.strings.order_shipped_label;
+            }
             const phoneTypeLabel = rule.phone_type === 'billing' ? 
                 hezarfen_sms_settings.strings.billing_phone : 
                 hezarfen_sms_settings.strings.shipping_phone;
             
             let actionTypeLabel = rule.action_type;
         if (rule.action_type === 'netgsm') {
-            actionTypeLabel = 'NetGSM';
+            actionTypeLabel = hezarfen_sms_settings.strings.netgsm_label;
         } else if (rule.action_type === 'netgsm_legacy') {
-            actionTypeLabel = 'NetGSM Legacy';
+            actionTypeLabel = hezarfen_sms_settings.strings.netgsm_legacy_label;
         } else if (rule.action_type === 'pandasms_legacy') {
-            actionTypeLabel = 'PandaSMS Legacy';
+            actionTypeLabel = hezarfen_sms_settings.strings.pandasms_legacy_label;
         }
+
+            const ruleDescription = hezarfen_sms_settings.strings.rule_description
+                .replace('%1$s', `<strong>${statusLabel}</strong>`)
+                .replace('%2$s', `<strong>${actionTypeLabel}</strong>`)
+                .replace('%3$s', `<strong>${phoneTypeLabel}</strong>`);
 
             html += `
                 <div class="sms-rule-item" data-rule-index="${index}" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 4px;">
-                    <strong>Rule #${index + 1}:</strong>
-                    When order status changes to <strong>${statusLabel}</strong>,
-                    send SMS via <strong>${actionTypeLabel}</strong> to <strong>${phoneTypeLabel}</strong>
+                    <strong>${hezarfen_sms_settings.strings.rule_number.replace('%d', index + 1)}</strong>
+                    ${ruleDescription}
                     <div style="margin-top: 5px;">
                         <button type="button" class="button button-small edit-sms-rule" data-rule-index="${index}">
-                            Edit
+                            ${hezarfen_sms_settings.strings.edit_button}
                         </button>
                         <button type="button" class="button button-small delete-sms-rule" data-rule-index="${index}">
-                            Delete
+                            ${hezarfen_sms_settings.strings.delete_button}
                         </button>
                     </div>
                 </div>
@@ -637,7 +644,7 @@ jQuery(document).ready(function($) {
 		}
 		
 		// Show loading state
-		$saveBtn.prop('disabled', true).text('Connecting...');
+		$saveBtn.prop('disabled', true).text(hezarfen_sms_settings.strings.connecting);
 		
 		$.ajax({
 			url: hezarfen_sms_settings.ajax_url,
@@ -681,7 +688,7 @@ jQuery(document).ready(function($) {
 		const $loadButton = $('#netgsm-load-senders');
 		
 		if (username && password && password.length >= 6) {
-			$senderSelect.prop('disabled', false).html('<option value="">Loading senders automatically...</option>');
+			$senderSelect.prop('disabled', false).html('<option value="">' + hezarfen_sms_settings.strings.loading_senders_auto + '</option>');
 			$loadButton.show();
 			// Auto-load senders
 			loadNetGsmSenders();
@@ -706,7 +713,7 @@ jQuery(document).ready(function($) {
 				$senderSelect.prop('disabled', true).html('<option value="">' + hezarfen_sms_settings.strings.password_min_length + '</option>');
 				$loadButton.hide();
 			} else {
-				$senderSelect.prop('disabled', true).html('<option value="">Will load senders in 1.5 seconds...</option>');
+				$senderSelect.prop('disabled', true).html('<option value="">' + hezarfen_sms_settings.strings.will_load_senders + '</option>');
 				$loadButton.show();
 			}
 		} else if (username || password) {
@@ -791,12 +798,12 @@ jQuery(document).ready(function($) {
 		const $senderSelect = $('#netgsm-modal-msgheader');
 		
 		// Update immediately
-		$senderSelect.html(`<option value="">Loading senders in ${countdown.toFixed(1)}s...</option>`);
+		$senderSelect.html('<option value="">' + hezarfen_sms_settings.strings.loading_senders_countdown.replace('%s', countdown.toFixed(1)) + '</option>');
 		
 		countdownInterval = setInterval(function() {
 			countdown -= 0.1;
 			if (countdown > 0) {
-				$senderSelect.html(`<option value="">Loading senders in ${countdown.toFixed(1)}s...</option>`);
+				$senderSelect.html('<option value="">' + hezarfen_sms_settings.strings.loading_senders_countdown.replace('%s', countdown.toFixed(1)) + '</option>');
 			} else {
 				clearInterval(countdownInterval);
 				countdownInterval = null;
@@ -821,7 +828,7 @@ jQuery(document).ready(function($) {
 		}
 		
 		// Show loading state
-		$senderSelect.prop('disabled', true).html('<option value="">Loading senders...</option>');
+		$senderSelect.prop('disabled', true).html('<option value="">' + hezarfen_sms_settings.strings.loading_senders + '</option>');
 		$loadButton.find('svg').addClass('animate-spin');
 		
 		$.ajax({
@@ -836,7 +843,7 @@ jQuery(document).ready(function($) {
 			success: function(response) {
 				if (response.success && response.data.senders) {
 					const senders = response.data.senders;
-					let options = '<option value="">Select a sender</option>';
+					let options = '<option value="">' + hezarfen_sms_settings.strings.select_sender + '</option>';
 					
 					senders.forEach(function(sender) {
 						options += `<option value="${sender}">${sender}</option>`;
@@ -852,12 +859,12 @@ jQuery(document).ready(function($) {
 						showInlineAlert(hezarfen_sms_settings.strings.found_senders_multiple.replace('%d', senders.length), 'success');
 					}
 				} else {
-					$senderSelect.html('<option value="">Error loading senders</option>');
+					$senderSelect.html('<option value="">' + hezarfen_sms_settings.strings.error_loading_senders + '</option>');
 					showInlineAlert('Error: ' + (response.data || hezarfen_sms_settings.strings.failed_to_load_senders), 'error');
 				}
 			},
 			error: function() {
-				$senderSelect.html('<option value="">Error loading senders</option>');
+				$senderSelect.html('<option value="">' + hezarfen_sms_settings.strings.error_loading_senders + '</option>');
 				showInlineAlert(hezarfen_sms_settings.strings.network_error_loading_senders, 'error');
 			},
 			complete: function() {

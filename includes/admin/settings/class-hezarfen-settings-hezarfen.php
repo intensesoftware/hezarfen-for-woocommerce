@@ -450,22 +450,35 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 						<?php foreach ( $saved_rules as $index => $rule ) : ?>
 							<div class="sms-rule-item" data-rule-index="<?php echo esc_attr( $index ); ?>" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 4px;">
 								<strong><?php esc_html_e( 'Rule', 'hezarfen-for-woocommerce' ); ?> #<?php echo esc_html( $index + 1 ); ?>:</strong>
-								<?php esc_html_e( 'When order status changes to', 'hezarfen-for-woocommerce' ); ?>
-								<strong><?php echo esc_html( wc_get_order_status_name( str_replace( 'wc-', '', $rule['condition_status'] ?? '' ) ) ); ?></strong>,
-								<?php esc_html_e( 'send SMS via', 'hezarfen-for-woocommerce' ); ?>
-								<strong><?php 
+								<?php 
+									$condition_status = $rule['condition_status'] ?? '';
+									if ( $condition_status === 'hezarfen_order_shipped' ) {
+										$status_label = __( 'Order Shipped', 'hezarfen-for-woocommerce' );
+									} else {
+										$status_label = wc_get_order_status_name( str_replace( 'wc-', '', $condition_status ) );
+									}
+
 									$action_label = $rule['action_type'];
 									if ( $rule['action_type'] === 'netgsm' ) {
-										$action_label = 'NetGSM';
+										$action_label = __( 'NetGSM', 'hezarfen-for-woocommerce' );
 									} elseif ( $rule['action_type'] === 'netgsm_legacy' ) {
-										$action_label = 'NetGSM Official Plugin (Legacy)';
+										$action_label = __( 'NetGSM Official Plugin (Legacy)', 'hezarfen-for-woocommerce' );
 									} elseif ( $rule['action_type'] === 'pandasms_legacy' ) {
-										$action_label = 'PandaSMS Official Plugin (Legacy)';
+										$action_label = __( 'PandaSMS Official Plugin (Legacy)', 'hezarfen-for-woocommerce' );
 									}
-									echo esc_html( $action_label ); 
-								?></strong>
-								<?php esc_html_e( 'to', 'hezarfen-for-woocommerce' ); ?>
-								<strong><?php echo esc_html( $rule['phone_type'] === 'billing' ? __( 'Billing Phone', 'hezarfen-for-woocommerce' ) : __( 'Shipping Phone', 'hezarfen-for-woocommerce' ) ); ?></strong>
+
+									$phone_label = $rule['phone_type'] === 'billing' ? __( 'Billing Phone', 'hezarfen-for-woocommerce' ) : __( 'Shipping Phone', 'hezarfen-for-woocommerce' );
+
+									echo wp_kses( 
+										sprintf( 
+											__( 'When order status changes to %1$s, send SMS via %2$s to %3$s', 'hezarfen-for-woocommerce' ),
+											'<strong>' . esc_html( $status_label ) . '</strong>',
+											'<strong>' . esc_html( $action_label ) . '</strong>',
+											'<strong>' . esc_html( $phone_label ) . '</strong>'
+										),
+										array( 'strong' => array() )
+									);
+								?>
 								<div style="margin-top: 5px;">
 									<button type="button" class="button button-small edit-sms-rule" data-rule-index="<?php echo esc_attr( $index ); ?>">
 										<?php esc_html_e( 'Edit', 'hezarfen-for-woocommerce' ); ?>
@@ -952,6 +965,21 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					'password_min_length' => __( 'Password must be at least 6 characters', 'hezarfen-for-woocommerce' ),
 					'enter_password_min' => __( 'Enter password (min 6 characters)', 'hezarfen-for-woocommerce' ),
 					'enter_username' => __( 'Enter username', 'hezarfen-for-woocommerce' ),
+					'will_load_senders' => __( 'Will load senders in 1.5 seconds...', 'hezarfen-for-woocommerce' ),
+					'loading_senders_auto' => __( 'Loading senders automatically...', 'hezarfen-for-woocommerce' ),
+					'loading_senders_countdown' => __( 'Loading senders in %ss...', 'hezarfen-for-woocommerce' ),
+					'loading_senders' => __( 'Loading senders...', 'hezarfen-for-woocommerce' ),
+					'error_loading_senders' => __( 'Error loading senders', 'hezarfen-for-woocommerce' ),
+					'select_sender' => __( 'Select a sender', 'hezarfen-for-woocommerce' ),
+					'connecting' => __( 'Connecting...', 'hezarfen-for-woocommerce' ),
+					'rule_number' => __( 'Rule #%d:', 'hezarfen-for-woocommerce' ),
+					'rule_description' => __( 'When order status changes to %1$s, send SMS via %2$s to %3$s', 'hezarfen-for-woocommerce' ),
+					'edit_button' => __( 'Edit', 'hezarfen-for-woocommerce' ),
+					'delete_button' => __( 'Delete', 'hezarfen-for-woocommerce' ),
+					'netgsm_label' => __( 'NetGSM', 'hezarfen-for-woocommerce' ),
+					'netgsm_legacy_label' => __( 'NetGSM Official Plugin (Legacy)', 'hezarfen-for-woocommerce' ),
+					'pandasms_legacy_label' => __( 'PandaSMS Official Plugin (Legacy)', 'hezarfen-for-woocommerce' ),
+					'order_shipped_label' => __( 'Order Shipped', 'hezarfen-for-woocommerce' ),
 					'trigger' => __( 'Trigger', 'hezarfen-for-woocommerce' ),
 					'condition' => __( 'Condition', 'hezarfen-for-woocommerce' ),
 					'action' => __( 'Action', 'hezarfen-for-woocommerce' ),
