@@ -8,7 +8,7 @@ Requires PHP: 7.0
 License: GPL2
 Stable tag: 2.4.0
 
-Türkiye'nin lider WooCommerce kargo çözümü! 26+ yerli kargo firması desteği, otomatik takip, SMS bildirimleri ve Türkiye'ye özel e-ticaret özellikleri. En iyi WooCommerce eklentileri arasında yer alan kapsamlı kargo entegrasyonu ve sipariş yönetim sistemi.
+Türkiye'nin lider WooCommerce kargo çözümü! 23 kargo firması, SMS otomasyonu, il/ilçe/mahalle, TC kimlik ve vergi alanları desteği.
 
 == Description ==
 
