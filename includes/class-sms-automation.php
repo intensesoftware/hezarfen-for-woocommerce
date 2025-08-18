@@ -390,19 +390,11 @@ class SMS_Automation {
 			if ( isset( $shipment_data->courier_id ) && isset( $shipment_data->tracking_num ) ) {
 				$tracking_number = $shipment_data->tracking_num;
 				
-				// Get courier name if available
-				if ( method_exists( $shipment_data, 'get_courier_name' ) ) {
-					$courier_name = $shipment_data->get_courier_name();
-				} elseif ( isset( $shipment_data->courier_name ) ) {
-					$courier_name = $shipment_data->courier_name;
-				}
+				// Get courier name from courier_title property
+				$courier_name = $shipment_data->courier_title ?? '';
 				
-				// Get tracking URL if available
-				if ( method_exists( $shipment_data, 'get_tracking_url' ) ) {
-					$tracking_url = $shipment_data->get_tracking_url();
-				} elseif ( isset( $shipment_data->tracking_url ) ) {
-					$tracking_url = $shipment_data->tracking_url;
-				}
+				// Get tracking URL from tracking_url property
+				$tracking_url = $shipment_data->tracking_url ?? '';
 			}
 		}
 		
