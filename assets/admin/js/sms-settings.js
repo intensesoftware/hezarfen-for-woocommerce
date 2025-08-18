@@ -54,7 +54,7 @@ jQuery(document).ready(function($) {
         
         // Remove all required attributes
         $('#netgsm-username, #netgsm-password, #netgsm-msgheader').removeAttr('required');
-        $('#netgsm-legacy-message').removeAttr('required');
+        $('#netgsm-legacy-message, #netgsm-legacy-phone-type').removeAttr('required');
         $('#phone-type, #message-template').removeAttr('required');
         
         if (actionType === 'netgsm') {
@@ -66,11 +66,11 @@ jQuery(document).ready(function($) {
             $('#phone-type, #message-template').attr('required', true);
         } else if (actionType === 'netgsm_legacy') {
             $('#netgsm-legacy-settings').show();
-            $('#sms-content-settings').show();
+            // Don't show sms-content-settings for legacy - it has its own phone type handling
             
             // Make NetGSM legacy fields required
             $('#netgsm-legacy-message').attr('required', true);
-            $('#phone-type').attr('required', true);
+            $('#netgsm-legacy-phone-type').attr('required', true);
         }
     });
 
@@ -125,6 +125,7 @@ jQuery(document).ready(function($) {
                 
                 // Fill NetGSM Legacy fields if available
                 $('#netgsm-legacy-message').val(ruleData.netgsm_legacy_message || '');
+                $('#netgsm-legacy-phone-type').val(ruleData.phone_type || '');
                 
                 // Fill SMS content fields
                 $('#phone-type').val(ruleData.phone_type || '');
@@ -245,14 +246,14 @@ jQuery(document).ready(function($) {
                 return;
             }
         } else if (actionType === 'netgsm_legacy') {
-            const phoneType = $('#phone-type').val();
+            const phoneType = $('#netgsm-legacy-phone-type').val();
             const legacyMessage = $('#netgsm-legacy-message').val();
             
             console.log('NetGSM Legacy validation - Phone:', phoneType, 'Message:', legacyMessage ? 'Set' : 'Empty');
             
             if (!phoneType) {
                 alert('Please select phone type.');
-                $('#phone-type').focus();
+                $('#netgsm-legacy-phone-type').focus();
                 return;
             }
             
@@ -265,18 +266,18 @@ jQuery(document).ready(function($) {
 
         const ruleData = {
             condition_status: $('#condition-status').val(),
-            action_type: $('#action-type').val(),
-            phone_type: $('#phone-type').val(),
+            action_type: actionType,
+            phone_type: actionType === 'netgsm_legacy' ? $('#netgsm-legacy-phone-type').val() : $('#phone-type').val(),
             message_template: $('#message-template').val(),
             iys_status: $('input[name="iys_status"]:checked').val()
         };
 
         // Add NetGSM specific fields if NetGSM is selected
-        if ($('#action-type').val() === 'netgsm') {
+        if (actionType === 'netgsm') {
             ruleData.netgsm_username = $('#netgsm-username').val();
             ruleData.netgsm_password = $('#netgsm-password').val();
             ruleData.netgsm_msgheader = $('#netgsm-msgheader').val();
-        } else if ($('#action-type').val() === 'netgsm_legacy') {
+        } else if (actionType === 'netgsm_legacy') {
             ruleData.netgsm_legacy_message = $('#netgsm-legacy-message').val();
         }
 

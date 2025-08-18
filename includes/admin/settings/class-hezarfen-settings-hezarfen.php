@@ -569,6 +569,18 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 							<table class="form-table">
 								<tr>
 									<th scope="row">
+										<label for="netgsm-legacy-phone-type"><?php esc_html_e( 'Phone Number', 'hezarfen-for-woocommerce' ); ?></label>
+									</th>
+									<td>
+										<select id="netgsm-legacy-phone-type" name="netgsm_legacy_phone_type" style="width: 300px;">
+											<option value=""><?php esc_html_e( 'Select phone type...', 'hezarfen-for-woocommerce' ); ?></option>
+											<option value="billing"><?php esc_html_e( 'Billing Phone', 'hezarfen-for-woocommerce' ); ?></option>
+											<option value="shipping"><?php esc_html_e( 'Shipping Phone', 'hezarfen-for-woocommerce' ); ?></option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">
 										<label for="netgsm-legacy-message"><?php esc_html_e( 'SMS Message Template', 'hezarfen-for-woocommerce' ); ?></label>
 									</th>
 									<td>
