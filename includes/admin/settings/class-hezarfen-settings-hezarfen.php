@@ -518,9 +518,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 									<select id="action-type" name="action_type" required style="width: 300px;">
 										<option value=""><?php esc_html_e( 'Select action...', 'hezarfen-for-woocommerce' ); ?></option>
 										<option value="netgsm"><?php esc_html_e( 'Send SMS via NetGSM', 'hezarfen-for-woocommerce' ); ?></option>
-										<?php if ( \Hezarfen\ManualShipmentTracking\Netgsm::is_netgsm_active() ) : ?>
-											<option value="netgsm_legacy"><?php esc_html_e( 'Send SMS via NetGSM Official Plugin (Legacy - Deprecated Soon)', 'hezarfen-for-woocommerce' ); ?></option>
-										<?php endif; ?>
+																			<option value="netgsm_legacy"><?php esc_html_e( 'Send SMS via NetGSM Official Plugin (Legacy - Deprecated Soon)', 'hezarfen-for-woocommerce' ); ?></option>
 																			<option value="pandasms_legacy"><?php esc_html_e( 'Send SMS via PandaSMS Official Plugin', 'hezarfen-for-woocommerce' ); ?></option>
 									</select>
 								</td>
@@ -563,11 +561,22 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 						</div>
 
 						<!-- NetGSM Legacy Settings - Only shown when NetGSM Legacy is selected -->
-						<div id="netgsm-legacy-settings" style="display: none; margin-top: 20px; padding: 15px; background: #fff; border: 1px solid #d63638; border-radius: 6px;">
-							<h4 style="margin: 0 0 15px 0; color: #d63638;"><?php esc_html_e( 'NetGSM Legacy Configuration (Deprecated Soon)', 'hezarfen-for-woocommerce' ); ?></h4>
-							<p style="color: #d63638; font-style: italic; margin-bottom: 15px;">
-								<?php esc_html_e( 'This option uses the NetGSM official WordPress plugin and will be deprecated soon. Please consider migrating to the direct NetGSM integration.', 'hezarfen-for-woocommerce' ); ?>
-							</p>
+						<div id="netgsm-legacy-settings" style="display: none; margin-top: 20px; padding: 15px; background: #fff; border: 1px solid <?php echo \Hezarfen\ManualShipmentTracking\Netgsm::is_netgsm_active() ? '#d63638' : '#dc3232'; ?>; border-radius: 6px;">
+							<h4 style="margin: 0 0 15px 0; color: <?php echo \Hezarfen\ManualShipmentTracking\Netgsm::is_netgsm_active() ? '#d63638' : '#dc3232'; ?>;"><?php esc_html_e( 'NetGSM Legacy Configuration (Deprecated Soon)', 'hezarfen-for-woocommerce' ); ?></h4>
+							<?php if ( \Hezarfen\ManualShipmentTracking\Netgsm::is_netgsm_active() ) : ?>
+								<p style="color: #d63638; font-style: italic; margin-bottom: 15px;">
+									<?php esc_html_e( 'This option uses the NetGSM official WordPress plugin and will be deprecated soon. Please consider migrating to the direct NetGSM integration.', 'hezarfen-for-woocommerce' ); ?>
+								</p>
+							<?php else : ?>
+								<div style="background: #fff2cd; border: 1px solid #f39c12; border-radius: 4px; padding: 12px; margin-bottom: 15px;">
+									<p style="margin: 0; color: #856404; font-weight: 500;">
+										⚠️ <?php esc_html_e( 'Warning: NetGSM plugin is not active!', 'hezarfen-for-woocommerce' ); ?>
+									</p>
+									<p style="margin: 8px 0 0 0; color: #856404;">
+										<?php esc_html_e( 'Please install and activate the NetGSM plugin to use this SMS integration.', 'hezarfen-for-woocommerce' ); ?>
+									</p>
+														</div>
+						<?php endif; ?>
 							
 							<table class="form-table">
 								<tr>
