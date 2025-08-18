@@ -32,6 +32,7 @@ class Autoload {
 		$this->load_assets();
 
 		add_action( 'plugins_loaded', array( $this, 'load_packages' ) );
+		add_action( 'plugins_loaded', array( $this, 'init_mss_integration' ) );
 	}
 
 	/**
@@ -116,6 +117,9 @@ class Autoload {
 		require_once 'class-notification-provider.php';
 		require_once 'class-sms-automation.php';
 
+		// Load MSS Integration
+		require_once 'mss/class-mss-integration.php';
+
 		if ( is_admin() ) {
 			require_once 'admin/order/OrderDetails.php';
 		}
@@ -130,6 +134,15 @@ class Autoload {
 		foreach ( $this->packages as $package_name ) {
 			require_once WC_HEZARFEN_UYGULAMA_YOLU . "packages/$package_name/$package_name.php";
 		}
+	}
+
+	/**
+	 * Initialize MSS Integration
+	 * 
+	 * @return void
+	 */
+	public function init_mss_integration() {
+		new \Hezarfen\Inc\MSS\MSS_Integration();
 	}
 }
 
