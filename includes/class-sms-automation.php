@@ -181,8 +181,9 @@ class SMS_Automation {
 			return false;
 		}
 
-		// Get the legacy message template
-		$message = $rule['netgsm_legacy_message'] ?? '';
+		// Get the legacy message template from Manual Shipment Tracking settings
+		$legacy_content = get_option( \Hezarfen\ManualShipmentTracking\Settings::OPT_NETGSM_CONTENT, '' );
+		$message = $legacy_content ? \Hezarfen\ManualShipmentTracking\Netgsm::convert_netgsm_metas_to_hezarfen_variables( $legacy_content ) : '';
 		if ( empty( $message ) ) {
 			return false;
 		}
@@ -235,8 +236,9 @@ class SMS_Automation {
 			return false;
 		}
 
-		// Get the legacy message template
-		$message = $rule['netgsm_legacy_message'] ?? '';
+		// Get the legacy message template from Manual Shipment Tracking settings
+		$legacy_content = get_option( \Hezarfen\ManualShipmentTracking\Settings::OPT_NETGSM_CONTENT, '' );
+		$message = $legacy_content ? \Hezarfen\ManualShipmentTracking\Netgsm::convert_netgsm_metas_to_hezarfen_variables( $legacy_content ) : '';
 		if ( empty( $message ) ) {
 			unset( $this->current_shipment_data );
 			return false;
@@ -432,14 +434,10 @@ class SMS_Automation {
 	 * @return void
 	 */
 	private function write_to_legacy_storage( $order, $message, $shipment_data = null ) {
-		// Store the message in the NetGSM legacy option format
-		$legacy_option_key = 'netgsm_order_status_text_' . \Hezarfen\ManualShipmentTracking\Manual_Shipment_Tracking::DB_SHIPPED_ORDER_STATUS;
-		update_option( $legacy_option_key, $message );
+		// Don't overwrite the existing NetGSM content - it's managed from Manual Shipment Tracking settings
+		// Just ensure the processed message variables are available for NetGSM plugin
 		
-		// Also store it in the Hezarfen MST NetGSM content option for compatibility
-		update_option( \Hezarfen\ManualShipmentTracking\Settings::OPT_NETGSM_CONTENT, $message );
-		
-		// If shipment data is available, store the shipment-specific meta data
+		// If shipment data is available, store the shipment-specific meta data for NetGSM plugin
 		if ( $shipment_data ) {
 			$order->update_meta_data( \Hezarfen\ManualShipmentTracking\Netgsm::COURIER_TITLE_META_KEY, $shipment_data->courier_title ?? '' );
 			$order->update_meta_data( \Hezarfen\ManualShipmentTracking\Netgsm::TRACKING_NUM_META_KEY, $shipment_data->tracking_num ?? '' );

@@ -584,12 +584,17 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 										<label for="netgsm-legacy-message"><?php esc_html_e( 'SMS Message Template', 'hezarfen-for-woocommerce' ); ?></label>
 									</th>
 									<td>
-										<textarea id="netgsm-legacy-message" name="netgsm_legacy_message" rows="4" style="width: 100%; max-width: 500px;" placeholder="<?php esc_attr_e( 'Enter your SMS message template...', 'hezarfen-for-woocommerce' ); ?>"></textarea>
-										<p class="description">
-											<?php esc_html_e( 'Available variables:', 'hezarfen-for-woocommerce' ); ?>
-											<?php foreach ( \Hezarfen\ManualShipmentTracking\Netgsm::AVAILABLE_VARIABLES as $variable ) : ?>
-												<code><?php echo esc_html( $variable ); ?></code>
-											<?php endforeach; ?>
+										<?php 
+										$legacy_content = get_option( \Hezarfen\ManualShipmentTracking\Settings::OPT_NETGSM_CONTENT, '' );
+										$display_content = $legacy_content ? \Hezarfen\ManualShipmentTracking\Netgsm::convert_netgsm_metas_to_hezarfen_variables( $legacy_content ) : '';
+										?>
+										<textarea id="netgsm-legacy-message" name="netgsm_legacy_message" rows="4" style="width: 100%; max-width: 500px; background-color: #f9f9f9;" readonly><?php echo esc_textarea( $display_content ); ?></textarea>
+										<p class="description" style="color: #666;">
+											<?php esc_html_e( 'This content is synced with the NetGSM SMS content setting in Manual Shipment Tracking. To edit, go to WooCommerce > Settings > Hezarfen > Manual Shipment Tracking.', 'hezarfen-for-woocommerce' ); ?>
+											<br><br>
+											<a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=manual_shipment_tracking' ) ); ?>" target="_blank" class="button button-secondary">
+												<?php esc_html_e( 'Edit NetGSM SMS Content', 'hezarfen-for-woocommerce' ); ?>
+											</a>
 										</p>
 									</td>
 								</tr>

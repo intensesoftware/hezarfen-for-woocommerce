@@ -132,6 +132,7 @@ class Settings {
 				array(
 					'type'  => 'title',
 					'title' => __( 'SMS Notification Settings', 'hezarfen-for-woocommerce' ),
+					'desc'  => '<div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px; padding: 12px; margin: 10px 0;"><strong>' . __( 'Notice:', 'hezarfen-for-woocommerce' ) . '</strong> ' . sprintf( __( 'SMS automation settings have been moved to a new, more advanced system. You can now configure multiple SMS rules with different triggers and conditions. %sManage SMS Rules%s', 'hezarfen-for-woocommerce' ), '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=sms_automation' ) ) . '" style="text-decoration: none; font-weight: bold;">', '</a>' ) . '<br><br>' . __( 'The settings below are for legacy compatibility only and will be deprecated soon. Please migrate to the new SMS automation system.', 'hezarfen-for-woocommerce' ) . '</div>',
 				),
 				array(
 					'type'  => 'checkbox',
