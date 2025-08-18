@@ -439,6 +439,31 @@ jQuery(document).ready(function($) {
 		loadNetGsmSenders();
 	});
 
+	// Toggle password visibility
+	$(document).on('click', '#netgsm-toggle-password', function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		
+		const $passwordInput = $('#netgsm-modal-password');
+		const $eyeClosed = $('#netgsm-eye-closed');
+		const $eyeOpen = $('#netgsm-eye-open');
+		
+		if ($passwordInput.attr('type') === 'password') {
+			// Show password
+			$passwordInput.attr('type', 'text');
+			$eyeClosed.hide();
+			$eyeOpen.show();
+		} else {
+			// Hide password
+			$passwordInput.attr('type', 'password');
+			$eyeClosed.show();
+			$eyeOpen.hide();
+		}
+		
+		// Keep focus on password input for better UX
+		$passwordInput.focus();
+	});
+
 	// Auto-load senders when username and password are entered (with debounce)
 	$(document).on('input', '#netgsm-modal-username, #netgsm-modal-password', function() {
 		// Immediate feedback while typing
@@ -455,8 +480,8 @@ jQuery(document).ready(function($) {
 		const username = $('#netgsm-modal-username').val().trim();
 		const password = $('#netgsm-modal-password').val().trim();
 		
-		// Only start countdown if both fields have values
-		if (username && password) {
+		// Only start countdown if both fields have values and password is long enough
+		if (username && password && password.length >= 6) {
 			startLoadCountdown();
 		}
 		
@@ -555,6 +580,11 @@ jQuery(document).ready(function($) {
 		$senderSelect.prop('disabled', true).html('<option value="">First enter username and password above</option>');
 		$('#netgsm-load-senders').hide();
 		
+		// Reset password visibility to hidden state
+		$('#netgsm-modal-password').attr('type', 'password');
+		$('#netgsm-eye-closed').show();
+		$('#netgsm-eye-open').hide();
+		
 		// Focus first input
 		$('#netgsm-modal-username').focus();
 	}
@@ -650,11 +680,14 @@ jQuery(document).ready(function($) {
 		const $senderSelect = $('#netgsm-modal-msgheader');
 		const $loadButton = $('#netgsm-load-senders');
 		
-		if (username && password) {
+		if (username && password && password.length >= 6) {
 			$senderSelect.prop('disabled', false).html('<option value="">Loading senders automatically...</option>');
 			$loadButton.show();
 			// Auto-load senders
 			loadNetGsmSenders();
+		} else if (username && password && password.length < 6) {
+			$senderSelect.prop('disabled', true).html('<option value="">' + hezarfen_sms_settings.strings.password_min_length + '</option>');
+			$loadButton.hide();
 		} else {
 			$senderSelect.prop('disabled', true).html('<option value="">First enter username and password above</option>');
 			$loadButton.hide();
@@ -668,10 +701,22 @@ jQuery(document).ready(function($) {
 		const $loadButton = $('#netgsm-load-senders');
 		
 		if (username && password) {
-			$senderSelect.prop('disabled', true).html('<option value="">Will load senders in 1.5 seconds...</option>');
-			$loadButton.show();
+			// Check password length requirement
+			if (password.length < 6) {
+				$senderSelect.prop('disabled', true).html('<option value="">' + hezarfen_sms_settings.strings.password_min_length + '</option>');
+				$loadButton.hide();
+			} else {
+				$senderSelect.prop('disabled', true).html('<option value="">Will load senders in 1.5 seconds...</option>');
+				$loadButton.show();
+			}
 		} else if (username || password) {
-			$senderSelect.prop('disabled', true).html('<option value="">Enter both username and password</option>');
+			if (username && !password) {
+				$senderSelect.prop('disabled', true).html('<option value="">' + hezarfen_sms_settings.strings.enter_password_min + '</option>');
+			} else if (password && !username) {
+				$senderSelect.prop('disabled', true).html('<option value="">' + hezarfen_sms_settings.strings.enter_username + '</option>');
+			} else {
+				$senderSelect.prop('disabled', true).html('<option value="">Enter both username and password</option>');
+			}
 			$loadButton.hide();
 		} else {
 			$senderSelect.prop('disabled', true).html('<option value="">First enter username and password above</option>');
@@ -767,6 +812,11 @@ jQuery(document).ready(function($) {
 		
 		if (!username || !password) {
 			showInlineAlert(hezarfen_sms_settings.strings.please_enter_credentials, 'error');
+			return;
+		}
+		
+		if (password.length < 6) {
+			showInlineAlert(hezarfen_sms_settings.strings.password_min_length, 'error');
 			return;
 		}
 		

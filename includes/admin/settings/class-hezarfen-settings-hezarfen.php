@@ -802,7 +802,18 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 								<label for="netgsm-modal-password" class="block text-sm font-medium text-gray-700 mb-1" style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.25rem;">
 									<?php esc_html_e('NetGSM Password', 'hezarfen-for-woocommerce'); ?>
 								</label>
-								<input type="password" id="netgsm-modal-password" name="password" placeholder="<?php esc_attr_e('Your API password', 'hezarfen-for-woocommerce'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem;" required>
+								<div style="position: relative;">
+									<input type="password" id="netgsm-modal-password" name="password" placeholder="<?php esc_attr_e('Your API password', 'hezarfen-for-woocommerce'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" style="width: 100%; padding: 0.5rem 2.5rem 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem;" required>
+									<button type="button" id="netgsm-toggle-password" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600" style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); color: #9ca3af; padding: 0.25rem; border: none; background: none; cursor: pointer;" tabindex="-1" aria-label="<?php esc_attr_e('Toggle password visibility', 'hezarfen-for-woocommerce'); ?>">
+										<svg id="netgsm-eye-closed" class="w-4 h-4" style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
+										</svg>
+										<svg id="netgsm-eye-open" class="w-4 h-4" style="width: 16px; height: 16px; display: none;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+										</svg>
+									</button>
+								</div>
 							</div>
 							
 							<div class="mb-4" style="margin-bottom: 1rem;">
@@ -938,6 +949,9 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					'credentials_saved_successfully' => __( 'NetGSM credentials saved successfully!', 'hezarfen-for-woocommerce' ),
 					'failed_to_save_credentials' => __( 'Failed to save credentials', 'hezarfen-for-woocommerce' ),
 					'network_error_saving_credentials' => __( 'Network error occurred while saving credentials', 'hezarfen-for-woocommerce' ),
+					'password_min_length' => __( 'Password must be at least 6 characters', 'hezarfen-for-woocommerce' ),
+					'enter_password_min' => __( 'Enter password (min 6 characters)', 'hezarfen-for-woocommerce' ),
+					'enter_username' => __( 'Enter username', 'hezarfen-for-woocommerce' ),
 					'trigger' => __( 'Trigger', 'hezarfen-for-woocommerce' ),
 					'condition' => __( 'Condition', 'hezarfen-for-woocommerce' ),
 					'action' => __( 'Action', 'hezarfen-for-woocommerce' ),

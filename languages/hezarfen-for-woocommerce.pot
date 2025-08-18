@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-17 16:23+0000\n"
+"POT-Creation-Date: 2025-08-18 10:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -24,15 +24,15 @@ msgid ""
 "update it."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:519
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:798
 msgid "850xxxxxxx, 312XXXXXXX etc."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:708
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:946
 msgid "Action"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:498
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:515
 msgid "Action Type"
 msgstr ""
 
@@ -41,8 +41,8 @@ msgid "Add new shipment"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:443
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:476
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:701
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:486
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:924
 msgid "Add SMS Rule"
 msgstr ""
 
@@ -50,11 +50,11 @@ msgstr ""
 msgid "Add to Tracking List"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:163
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:134
 msgid "Advanced Settings"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:332
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:312
 msgid "An error occured when installing and activating the PandaSMS plugin."
 msgstr ""
 
@@ -72,12 +72,19 @@ msgstr ""
 msgid "Auto sort fields in checkout form?"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:238
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:823
+msgid "Available sender names from your NetGSM account"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:218
 msgid "Available Variables"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:565
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:719
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:630
+msgid "Available Variables (click to copy):"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:957
 msgid ""
 "Available Variables: {order_number}, {customer_name}, {order_status}, "
 "{order_total}"
@@ -94,7 +101,7 @@ msgstr ""
 msgid "BCC"
 msgstr ""
 
-#: includes/class-hezarfen.php:137
+#: includes/class-hezarfen.php:141
 msgid ""
 "Because the Woocommerce Checkout Blocks feature is active on your website, "
 "<strong>Hezarfen for Woocommerce</strong> plugin doesn't work on the "
@@ -103,14 +110,19 @@ msgid ""
 "status/#reverting-to-shortcodes-with-woocommerce-8-3'>these instructions</a>."
 msgstr ""
 
-#: includes/class-sms-automation.php:403
+#: includes/class-sms-automation.php:718
 msgid "billing"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:458
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:554
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:713
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:468
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:563
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:619
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:951
 msgid "Billing Phone"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:652
+msgid "Billing Variables"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-birgunde.php:38
@@ -125,8 +137,9 @@ msgstr ""
 msgid "Campaign ended"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:584
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:705
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:715
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:832
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:929
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:139
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:286
 msgid "Cancel"
@@ -171,12 +184,44 @@ msgstr ""
 msgid "Choose a courier company"
 msgstr ""
 
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:510
+msgid "Choose when to send the SMS notification"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:639
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:640
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:641
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:642
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:643
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:644
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:655
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:656
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:657
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:658
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:659
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:660
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:661
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:662
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:673
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:674
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:675
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:676
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:677
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:678
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:679
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:691
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:692
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:693
+msgid "Click to copy"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:780
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:269
 msgid "Close modal"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:574
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:718
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:705
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:956
 msgid "Commercial (11)"
 msgstr ""
 
@@ -184,7 +229,7 @@ msgstr ""
 msgid "Company"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:707
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:945
 msgid "Condition"
 msgstr ""
 
@@ -200,6 +245,14 @@ msgstr ""
 msgid "Configure SMS rules for different order status changes"
 msgstr ""
 
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:835
+msgid "Connect"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:777
+msgid "Connect to NetGSM"
+msgstr ""
+
 #: packages/manual-shipment-tracking/includes/class-my-account.php:119
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:213
 #: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:33
@@ -207,16 +260,16 @@ msgstr ""
 msgid "Courier Company"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:192
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:163
 msgid "Courier company post meta key"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:464
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:474
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:138
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:703
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:926
 msgid "Delete Rule"
 msgstr ""
 
@@ -239,11 +292,15 @@ msgid ""
 "Takip Plugin or Kargo Takip Türkiye plugin."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:461
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:471
 msgid "Edit"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:702
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:582
+msgid "Edit NetGSM SMS Content"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:925
 msgid "Edit SMS Rule"
 msgstr ""
 
@@ -257,10 +314,6 @@ msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:407
 msgid "Enable SMS Automation"
-msgstr ""
-
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:138
-msgid "Enable SMS notification when order shipped"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:44
@@ -296,20 +349,20 @@ msgstr ""
 msgid "Enter invoice title"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:188
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:159
 msgid "Enter order status id. E.g: wc-shipped"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:195
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:942
+msgid "Enter password (min 6 characters)"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:166
 msgid "Enter post meta key for courier company"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:202
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:173
 msgid "Enter post meta key for tracking number"
-msgstr ""
-
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:155
-msgid "Enter SMS content."
 msgstr ""
 
 #: includes/Checkout.php:358
@@ -328,7 +381,17 @@ msgstr ""
 msgid "Enter Tracking Information"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:564
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:943
+msgid "Enter username"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:790
+msgid ""
+"Enter your NetGSM credentials to enable SMS functionality across all "
+"features."
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:629
 msgid "Enter your SMS message template..."
 msgstr ""
 
@@ -345,12 +408,37 @@ msgstr ""
 msgid "Everything seems fine."
 msgstr ""
 
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:933
+msgid "Failed to load senders"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:939
+msgid "Failed to save credentials"
+msgstr ""
+
 #: packages/manual-shipment-tracking/includes/courier-companies/class-fedex.php:38
 msgid "FedEx"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:212
 msgid "Fetching data.."
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:814
+msgid "First enter username and password above"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:688
+msgid "for Order Shipped trigger"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:935
+msgid "Found %d senders available"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:934
+#, php-format
+msgid "Found 1 sender: %s"
 msgstr ""
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:315
@@ -394,6 +482,10 @@ msgstr ""
 msgid "Hezarfen Cargo Tracking & SMS Notifications"
 msgstr ""
 
+#: includes/class-hezarfen.php:245
+msgid "Hezarfen SMS Migration Complete!"
+msgstr ""
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:103
 msgid "Hide postcode fields in My Account > Address pages?"
 msgstr ""
@@ -434,7 +526,7 @@ msgid ""
 "sent to T.C. no values will become unreadable."
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:168
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:139
 msgid ""
 "If you used a shipment tracking plugin before, check this to recognize your "
 "old shipment tracking plugin's data."
@@ -447,13 +539,17 @@ msgid ""
 " type the emails separated with comma."
 msgstr ""
 
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:182
+msgid "Important Notice:"
+msgstr ""
+
 #. %s SMS notification provider
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:107
 #, php-format
 msgid "In order to %1$s integration work, the %2$s plugin must be activated."
 msgstr ""
 
-#: includes/class-hezarfen.php:121
+#: includes/class-hezarfen.php:125
 msgid ""
 "In order to <strong>Hezarfen for WooCommerce</strong> plugin work, please "
 "remove the <strong>Intense Türkiye İl İlçe Eklentisi For WooCommerce</strong>"
@@ -474,21 +570,31 @@ msgid ""
 "select courier from below and add it to your tracking list."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:573
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:717
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:704
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:955
 msgid "Information (0)"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:330
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:310
 msgid "Install & activate PandaSMS for Woocommerce plugin"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:328
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:308
 msgid "Installing.."
 msgstr ""
 
 #. Author of the plugin
 msgid "Intense Yazılım Ltd."
+msgstr ""
+
+#: includes/class-sms-automation.php:969
+msgid "Invalid request parameters. Please check your credentials."
+msgstr ""
+
+#: includes/class-sms-automation.php:968
+msgid ""
+"Invalid username/password or API access denied. Please check your "
+"credentials and API permissions."
 msgstr ""
 
 #: includes/Checkout.php:344
@@ -511,8 +617,8 @@ msgstr ""
 msgid "It checks encryption key whetever placed to the wp-config.php"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:570
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:716
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:701
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:954
 msgid "IYS Status"
 msgstr ""
 
@@ -560,40 +666,61 @@ msgstr ""
 msgid "Maybe Later"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:534
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:810
 msgid "Message Header"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:561
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:715
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:626
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:953
 msgid "Message Template"
 msgstr ""
 
-#: includes/class-hezarfen.php:77 includes/Checkout.php:524
+#: includes/class-hezarfen.php:81 includes/Checkout.php:524
 msgid "Neighborhood"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:511
+#: includes/class-sms-automation.php:976
+#, php-format
+msgid "NetGSM API error (Code: %s)"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:530
 msgid "NetGSM Configuration"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:525
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:938
+msgid "NetGSM credentials saved successfully!"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:539
+msgid "NetGSM Legacy Configuration (Deprecated Soon)"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:803
 msgid "NetGSM Password"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:152
-msgid "NetGSM SMS content"
+#: includes/class-sms-automation.php:970 includes/class-sms-automation.php:971
+msgid "NetGSM system error. Please try again later."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:516
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:796
 msgid "NetGSM Username"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:932
+msgid "Network error occurred while loading senders"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:940
+msgid "Network error occurred while saving credentials"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:361
 msgid "New Encryption Key"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:710
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:948
 msgid "New Status"
 msgstr ""
 
@@ -602,11 +729,15 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+#: includes/class-sms-automation.php:986
+msgid "No message headers found in NetGSM response"
+msgstr ""
+
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:91
 msgid "No shipment data found"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:470
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:480
 msgid "No SMS rules configured yet."
 msgstr ""
 
@@ -614,10 +745,7 @@ msgstr ""
 msgid "Nothing to Track Yet"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:144
-msgid "Notification Provider"
-msgstr ""
-
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:507
 #: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:23
 msgid "Order Shipped"
 msgstr ""
@@ -626,54 +754,96 @@ msgstr ""
 msgid "Order Shipped emails are sent when an order have been shipped."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:709
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:947
 msgid "Order Status Changed"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:185
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:499
+msgid "Order Status Changes"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:156
 msgid "Order status ID (optional)"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:636
+msgid "Order Variables"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-packupp.php:38
 msgid "PackUpp"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:331
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:592
+msgid "PandaSMS Configuration"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:595
+msgid ""
+"PandaSMS message content is configured in the PandaSMS plugin settings. This "
+"integration will use the trigger \"Sipariş kargoya verildiğinde\" with "
+"shipment variables."
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:311
 msgid "PandaSMS plugin is successfully installed and activated."
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:941
+msgid "Password must be at least 6 characters"
 msgstr ""
 
 #: includes/Checkout.php:349 includes/admin/order/OrderDetails.php:48
 msgid "Personal"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:549
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:712
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:558
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:614
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:950
 msgid "Phone Number"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:640
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:931
+msgid "Please enter username and password first"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:550
+msgid ""
+"Please install and activate the NetGSM plugin to use this SMS integration."
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:603
+msgid ""
+"Please install and activate the PandaSMS plugin to use this SMS integration."
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:863
 msgid "Please place the encryption key in the wp-config.php file."
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:937
+msgid "Please select a message header"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-ptt.php:38
 msgid "PTT Kargo"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:174
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:145
 msgid "Recognition type"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:180
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:151
 msgid "Recognize custom post meta data"
 msgstr ""
 
 #. %s Supported plugins.
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:179
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:150
 #, php-format
 msgid "Recognize supported plugins: (%s)"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:167
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:138
 msgid "Recognize third party plugins' data"
 msgstr ""
 
@@ -693,16 +863,20 @@ msgstr ""
 msgid "Rule"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:583
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:704
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:714
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:927
 msgid "Save Rule"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:928
+msgid "Saving rule..."
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-scotty.php:38
 msgid "Scotty"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:575
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:706
 msgid ""
 "Select \"Information\" for informational messages or \"Commercial\" for "
 "promotional messages."
@@ -712,38 +886,43 @@ msgstr ""
 msgid "Select a Courier Company"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:502
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:519
 msgid "Select action..."
 msgstr ""
 
 #: includes/Autoload.php:64 includes/class-hezarfen-wc-helper.php:24
-#: includes/class-hezarfen.php:78
+#: includes/class-hezarfen.php:82
 msgid "Select an option"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:553
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:562
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:618
 msgid "Select phone type..."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:489
-msgid "Select status..."
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:498
+msgid "Select trigger..."
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:455
 msgid "send SMS via"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:503
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:711
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:520
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:949
 msgid "Send SMS via NetGSM"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:521
+msgid "Send SMS via NetGSM Official Plugin (Legacy - Deprecated Soon)"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:522
+msgid "Send SMS via PandaSMS Official Plugin"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-sendeo.php:38
 msgid "Sendeo Kargo"
-msgstr ""
-
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:537
-msgid "Sender name (3-11 chars)"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:55
@@ -754,12 +933,20 @@ msgstr ""
 msgid "Shipment Barcode / Automated Shipment Tracking"
 msgstr ""
 
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:506
+msgid "Shipment Events"
+msgstr ""
+
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:76
 msgid "Shipment in pieces"
 msgstr ""
 
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:687
+msgid "Shipment Variables"
+msgstr ""
+
 #. %s: number of orders
-#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:154
+#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:159
 #, php-format
 msgid "Shipped (%s)"
 msgid_plural "Shipped (%s)"
@@ -790,14 +977,19 @@ msgid_plural "Shipped (Kargo Takip Turkiye Plugin) (%s)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-sms-automation.php:403
+#: includes/class-sms-automation.php:718
 msgid "shipping"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:458
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:555
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:714
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:468
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:564
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:620
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:952
 msgid "Shipping Phone"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:670
+msgid "Shipping Variables"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:83
@@ -829,34 +1021,49 @@ msgstr ""
 msgid "SMS Automation Settings"
 msgstr ""
 
-#. 1: Order status name, 2: Phone type (billing/shipping), 3: Phone number
-#: includes/class-sms-automation.php:417
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:182
 #, php-format
-msgid "SMS notification sent for %1$s status to %2$s phone: %3$s"
+msgid ""
+"SMS automation settings have been moved to a new, more advanced system. You "
+"can now configure multiple SMS rules with different triggers and conditions. "
+"%sManage SMS Rules%s"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:570
+msgid "SMS Message Template"
+msgstr ""
+
+#. 1: Order status name, 2: Phone type (billing/shipping), 3: Phone number
+#: includes/class-sms-automation.php:732
+#, php-format
+msgid "SMS notification sent via NetGSM for %1$s status to %2$s phone: %3$s"
 msgstr ""
 
 #. 1: Order status name, 2: Phone type (billing/shipping), 3: Phone number, 4: Job ID
-#: includes/class-sms-automation.php:408
+#: includes/class-sms-automation.php:723
 #, php-format
 msgid ""
-"SMS notification sent for %1$s status to %2$s phone: %3$s (Job ID: %4$s)"
+"SMS notification sent via NetGSM for %1$s status to %2$s phone: %3$s (Job ID:"
+" %4$s)"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:134
-msgid "SMS Notification Settings"
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:181
+msgid "SMS Notification Settings (Legacy)"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:414
 msgid "SMS Rules"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:538
-msgid "SMS sender name (3-11 characters)"
-msgstr ""
-
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:46
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:89
 msgid "SMS Settings"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:182
+msgid ""
+"SMS settings have been moved to the new SMS automation system. This legacy "
+"section has been removed."
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:93
@@ -902,6 +1109,19 @@ msgstr ""
 msgid "There are no tracking numbers added to the tracking list."
 msgstr ""
 
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:579
+msgid ""
+"This content is synced with the NetGSM SMS content setting in Manual "
+"Shipment Tracking. To edit, go to WooCommerce > Settings > Hezarfen > Manual "
+"Shipment Tracking."
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:542
+msgid ""
+"This option uses the NetGSM official WordPress plugin and will be deprecated "
+"soon. Please consider migrating to the direct NetGSM integration."
+msgstr ""
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:354
 msgid ""
 "This page allows you to generate a new encryption key. Before proceeding, "
@@ -919,11 +1139,11 @@ msgstr ""
 msgid "TNT"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:457
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:467
 msgid "to"
 msgstr ""
 
-#: includes/class-hezarfen.php:70 includes/Checkout.php:507
+#: includes/class-hezarfen.php:74 includes/Checkout.php:507
 msgid "Town / City"
 msgstr ""
 
@@ -957,7 +1177,7 @@ msgstr ""
 msgid "Tracking Number"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:199
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:170
 msgid "Tracking number post meta key"
 msgstr ""
 
@@ -965,11 +1185,11 @@ msgstr ""
 msgid "Trendyol Express"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:706
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:944
 msgid "Trigger"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:484
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:494
 msgid "Trigger Condition"
 msgstr ""
 
@@ -983,8 +1203,20 @@ msgstr ""
 msgid "UPS Kargo"
 msgstr ""
 
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:936
+msgid "Username and password are required"
+msgstr ""
+
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:314
 msgid "Visit Hezarfen Shipment Settings"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:547
+msgid "Warning: NetGSM plugin is not active!"
+msgstr ""
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:600
+msgid "Warning: PandaSMS plugin is not active!"
 msgstr ""
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:120
@@ -998,11 +1230,7 @@ msgstr ""
 msgid "When order status changes to"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:487
-msgid "When order status changes to:"
-msgstr ""
-
-#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:143
+#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:148
 msgctxt "WooCommerce Order status"
 msgid "Shipped"
 msgstr ""
@@ -1047,16 +1275,15 @@ msgstr ""
 msgid "Your Address"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:528
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:805
 msgid "Your API password"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:529
-msgid "Your NetGSM API password"
-msgstr ""
-
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:520
-msgid "Your NetGSM username"
+#: includes/class-hezarfen.php:248
+#, php-format
+msgid ""
+"Your legacy NetGSM SMS settings have been automatically migrated to the new "
+"SMS automation system. %sView SMS Rules%s"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:44

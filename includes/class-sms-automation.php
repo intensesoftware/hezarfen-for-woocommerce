@@ -936,7 +936,8 @@ class SMS_Automation {
 			'password' => $password,
 		) );
 
-		$response = wp_remote_post( $url, array(
+		$response = wp_remote_request( $url, array(
+			'method' => 'GET',
 			'headers' => array(
 				'Content-Type' => 'application/json',
 			),
