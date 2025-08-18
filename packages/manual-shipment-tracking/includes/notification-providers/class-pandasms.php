@@ -46,7 +46,7 @@ class Pandasms extends MST_Notification_Provider {
 	 * Constructor
 	 */
 	public function __construct() {
-		add_filter( 'pandasms_wc_siparis_bildirim_tetikleyicileri', array( __CLASS__, 'add_new_trigger' ) );
+		// Filter is now added globally in Manual_Shipment_Tracking::initialize_classes()
 	}
 
 	/**
@@ -94,6 +94,11 @@ class Pandasms extends MST_Notification_Provider {
 	 * @return array<string, mixed>
 	 */
 	public static function add_new_trigger( $triggers ) {
+		// Bail if PandaSMS method is not set up
+		if ( ! self::is_plugin_ready() ) {
+			return $triggers;
+		}
+
 		// remove the "Shipped" order status that added automatically by PandaSMS plugin.
 		unset( $triggers[ 'ps_wc_siparis_durum_degisiklik_' . Manual_Shipment_Tracking::DB_SHIPPED_ORDER_STATUS ] );
 

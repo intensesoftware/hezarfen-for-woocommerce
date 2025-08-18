@@ -96,6 +96,11 @@ class Manual_Shipment_Tracking {
 		Admin_Orders::init();
 		Third_Party_Data_Support::init();
 
+		// Add PandaSMS filter globally if the plugin is ready
+		if ( Pandasms::is_plugin_ready() ) {
+			add_filter( 'pandasms_wc_siparis_bildirim_tetikleyicileri', array( Pandasms::class, 'add_new_trigger' ) );
+		}
+
 		if ( 'yes' === get_option( Settings::OPT_ENABLE_SMS ) ) {
 			$selected_provider = get_option( Settings::OPT_NOTIF_PROVIDER );
 
