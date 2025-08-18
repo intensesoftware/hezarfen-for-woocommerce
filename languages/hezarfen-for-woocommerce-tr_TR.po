@@ -1644,4 +1644,20 @@ msgstr "Yurtiçi Kargo"
 msgid "⭐ Love Hezarfen?"
 msgstr "⭐ Hezarfen'i Seviyor Musunuz?"
 
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:932
+msgid "Connected to NetGSM"
+msgstr "NetGSM'e Bağlandı"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:933
+msgid "Change Credentials"
+msgstr "Bilgileri Değiştir"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:934
+msgid "Username"
+msgstr "Kullanıcı Adı"
+
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:935
+msgid "Sender"
+msgstr "Gönderici"
+
 

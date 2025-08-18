@@ -869,8 +869,15 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		}
 
 		if ( 'woocommerce_page_wc-settings' === $hook_suffix && 'sms_settings' === $current_section ) {
-			wp_enqueue_script( 'wc_hezarfen_sms_settings_js', plugins_url( 'assets/admin/js/sms-settings.js', WC_HEZARFEN_FILE ), array( 'jquery' ), WC_HEZARFEN_VERSION, true );
+			wp_enqueue_script( 'wc_hezarfen_sms_settings_js', plugins_url( 'assets/admin/js/sms-settings.js', WC_HEZARFEN_FILE ), array( 'jquery' ), WC_HEZARFEN_VERSION . '-' . filemtime( plugin_dir_path( WC_HEZARFEN_FILE ) . 'assets/admin/js/sms-settings.js' ), true );
 			wp_enqueue_style( 'wc_hezarfen_sms_settings_css', plugins_url( 'assets/admin/css/sms-settings.css', WC_HEZARFEN_FILE ), array(), WC_HEZARFEN_VERSION );
+			
+			// Force load Turkish translations if available
+			$current_locale = get_locale();
+			if ( $current_locale === 'tr_TR' || strpos( $current_locale, 'tr' ) === 0 ) {
+				// Ensure Turkish translations are loaded
+				load_plugin_textdomain( 'hezarfen-for-woocommerce', false, dirname( plugin_basename( WC_HEZARFEN_FILE ) ) . '/languages/' );
+			}
 			
 			// Localize script with order statuses and other data
 			$order_statuses = wc_get_order_statuses();
@@ -928,6 +935,11 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					'iys_info' => __( 'Information (0)', 'hezarfen-for-woocommerce' ),
 					'iys_commercial' => __( 'Commercial (11)', 'hezarfen-for-woocommerce' ),
 					'available_variables' => __( 'Available Variables: {order_number}, {customer_name}, {order_status}, {order_total}', 'hezarfen-for-woocommerce' ),
+					// NetGSM Connection Status strings - Force Turkish for now
+					'connected_to_netgsm' => 'NetGSM\'e Bağlandı',
+					'change_credentials' => 'Bilgileri Değiştir',
+					'username_label' => 'Kullanıcı Adı',
+					'sender_label' => 'Gönderici',
 				)
 			) );
 		}

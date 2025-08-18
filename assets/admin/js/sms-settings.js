@@ -528,6 +528,7 @@ jQuery(document).ready(function($) {
 	function updateNetGsmConnectionUI(isConnected, credentials) {
 		const $statusContainer = $('#netgsm-connection-status');
 		
+		
 		if (isConnected) {
 			$statusContainer.html(`
 				<div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #d1edff; border: 1px solid #0073aa; border-radius: 4px;">
@@ -536,12 +537,12 @@ jQuery(document).ready(function($) {
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
 						</svg>
 						<div>
-							<strong style="color: #0073aa;">Connected to NetGSM</strong>
-							<p style="margin: 0; font-size: 12px; color: #0073aa;">Username: ${credentials.username} | Sender: ${credentials.msgheader}</p>
+							<strong style="color: #0073aa;">${hezarfen_sms_settings.strings.connected_to_netgsm}</strong>
+							<p style="margin: 0; font-size: 12px; color: #0073aa;">${hezarfen_sms_settings.strings.username_label}: ${credentials.username} | ${hezarfen_sms_settings.strings.sender_label}: ${credentials.msgheader}</p>
 						</div>
 					</div>
 					<button type="button" id="netgsm-connect-btn" class="button button-secondary" style="background: #0073aa; color: white; border-color: #0073aa;">
-						Change Credentials
+						${hezarfen_sms_settings.strings.change_credentials}
 					</button>
 				</div>
 			`);
