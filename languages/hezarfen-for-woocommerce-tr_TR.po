@@ -1534,7 +1534,7 @@ msgstr "Uyarı: PandaSMS eklentisi aktif değil!"
 msgid ""
 "We noticed you're using our manual tracking feature! If Hezarfen has helped "
 "your store, please consider leaving a review on WordPress.org. Your feedback "
-"helps other store owners discover our plugin."
+"helps other store owners discover our plugin.\n"
 msgstr ""
 "Hezarfen’in kargo takip özelliğini kullandığınızı farkettik. Eğer eklentimiz "
 "işinizi kolaylaştırdıysa, WordPress.org sayfamızda kısa bir yorum bırakmanız "
@@ -1643,3 +1643,5 @@ msgstr "Yurtiçi Kargo"
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:117
 msgid "⭐ Love Hezarfen?"
 msgstr "⭐ Hezarfen'i Seviyor Musunuz?"
+
+

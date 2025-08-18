@@ -389,6 +389,25 @@ class SMS_Automation {
 			'{takip_kodu}' => __( 'Tracking Number', 'hezarfen-for-woocommerce' ),
 			'{takip_linki}' => __( 'Tracking URL', 'hezarfen-for-woocommerce' ),
 			
+			// New Turkish variables
+			'{siparis_durumu}' => __( 'Order Status', 'hezarfen-for-woocommerce' ),
+			'{siparis_toplami}' => __( 'Order Total', 'hezarfen-for-woocommerce' ),
+			'{fatura_adi}' => __( 'Billing First Name', 'hezarfen-for-woocommerce' ),
+			'{fatura_soyadi}' => __( 'Billing Last Name', 'hezarfen-for-woocommerce' ),
+			'{fatura_telefonu}' => __( 'Billing Phone', 'hezarfen-for-woocommerce' ),
+			'{fatura_epostasi}' => __( 'Billing Email', 'hezarfen-for-woocommerce' ),
+			'{fatura_sirket}' => __( 'Billing Company', 'hezarfen-for-woocommerce' ),
+			'{fatura_adresi}' => __( 'Billing Address', 'hezarfen-for-woocommerce' ),
+			'{fatura_sehir}' => __( 'Billing City', 'hezarfen-for-woocommerce' ),
+			'{fatura_ulke}' => __( 'Billing Country', 'hezarfen-for-woocommerce' ),
+			'{kargo_adi}' => __( 'Shipping First Name', 'hezarfen-for-woocommerce' ),
+			'{kargo_soyadi}' => __( 'Shipping Last Name', 'hezarfen-for-woocommerce' ),
+			'{kargo_telefonu}' => __( 'Shipping Phone', 'hezarfen-for-woocommerce' ),
+			'{kargo_sirket}' => __( 'Shipping Company', 'hezarfen-for-woocommerce' ),
+			'{kargo_adresi}' => __( 'Shipping Address', 'hezarfen-for-woocommerce' ),
+			'{kargo_sehir}' => __( 'Shipping City', 'hezarfen-for-woocommerce' ),
+			'{kargo_ulke}' => __( 'Shipping Country', 'hezarfen-for-woocommerce' ),
+			
 			// English variables
 			'{order_number}' => __( 'Order Number', 'hezarfen-for-woocommerce' ),
 			'{customer_name}' => __( 'Customer Full Name', 'hezarfen-for-woocommerce' ),
@@ -442,6 +461,23 @@ class SMS_Automation {
 				'{customer_email}' => '{uye_epostasi}',
 				'{order_date}' => '{tarih}',
 				'{order_time}' => '{saat}',
+				'{order_status}' => '{siparis_durumu}',
+				'{order_total}' => '{siparis_toplami}',
+				'{billing_first_name}' => '{fatura_adi}',
+				'{billing_last_name}' => '{fatura_soyadi}',
+				'{billing_phone}' => '{fatura_telefonu}',
+				'{billing_email}' => '{fatura_epostasi}',
+				'{billing_company}' => '{fatura_sirket}',
+				'{billing_address}' => '{fatura_adresi}',
+				'{billing_city}' => '{fatura_sehir}',
+				'{billing_country}' => '{fatura_ulke}',
+				'{shipping_first_name}' => '{kargo_adi}',
+				'{shipping_last_name}' => '{kargo_soyadi}',
+				'{shipping_phone}' => '{kargo_telefonu}',
+				'{shipping_company}' => '{kargo_sirket}',
+				'{shipping_address}' => '{kargo_adresi}',
+				'{shipping_city}' => '{kargo_sehir}',
+				'{shipping_country}' => '{kargo_ulke}',
 				'{courier_company}' => '{kargo_firmasi}',
 				'{tracking_number}' => '{takip_kodu}',
 				'{tracking_url}' => '{takip_linki}',
@@ -465,26 +501,36 @@ class SMS_Automation {
 		$output = '<div class="hezarfen-sms-variables">';
 		$output .= '<h4>' . __( 'Available Variables', 'hezarfen-for-woocommerce' ) . '</h4>';
 		
-		// Group variables by category
+		// Group variables by category - use Turkish variables for Turkish locale
+		$is_turkish = ( get_locale() === 'tr_TR' );
+		
 		$categories = array(
 			'order' => array(
 				'title' => __( 'Order Variables', 'hezarfen-for-woocommerce' ),
-				'vars' => array( '{order_number}', '{customer_name}', '{order_status}', '{order_total}', '{order_date}', '{order_time}' )
+				'vars' => $is_turkish ? 
+					array( '{siparis_no}', '{kullanici_adi}', '{siparis_durumu}', '{siparis_toplami}', '{tarih}', '{saat}' ) :
+					array( '{order_number}', '{customer_name}', '{order_status}', '{order_total}', '{order_date}', '{order_time}' )
 			),
 			'billing' => array(
 				'title' => __( 'Billing Variables', 'hezarfen-for-woocommerce' ),
-				'vars' => array( '{billing_first_name}', '{billing_last_name}', '{billing_phone}', '{billing_email}', '{billing_company}', '{billing_address}', '{billing_city}', '{billing_country}' )
+				'vars' => $is_turkish ?
+					array( '{fatura_adi}', '{fatura_soyadi}', '{fatura_telefonu}', '{fatura_epostasi}', '{fatura_sirket}', '{fatura_adresi}', '{fatura_sehir}', '{fatura_ulke}' ) :
+					array( '{billing_first_name}', '{billing_last_name}', '{billing_phone}', '{billing_email}', '{billing_company}', '{billing_address}', '{billing_city}', '{billing_country}' )
 			),
 			'shipping' => array(
 				'title' => __( 'Shipping Variables', 'hezarfen-for-woocommerce' ),
-				'vars' => array( '{shipping_first_name}', '{shipping_last_name}', '{shipping_phone}', '{shipping_company}', '{shipping_address}', '{shipping_city}', '{shipping_country}' )
+				'vars' => $is_turkish ?
+					array( '{kargo_adi}', '{kargo_soyadi}', '{kargo_telefonu}', '{kargo_sirket}', '{kargo_adresi}', '{kargo_sehir}', '{kargo_ulke}' ) :
+					array( '{shipping_first_name}', '{shipping_last_name}', '{shipping_phone}', '{shipping_company}', '{shipping_address}', '{shipping_city}', '{shipping_country}' )
 			)
 		);
 		
 		if ( $include_shipment_vars ) {
 			$categories['shipment'] = array(
 				'title' => __( 'Shipment Variables', 'hezarfen-for-woocommerce' ),
-				'vars' => array( '{courier_company}', '{tracking_number}', '{tracking_url}' )
+				'vars' => $is_turkish ?
+					array( '{kargo_firmasi}', '{takip_kodu}', '{takip_linki}' ) :
+					array( '{courier_company}', '{tracking_number}', '{tracking_url}' )
 			);
 		}
 		
@@ -495,15 +541,8 @@ class SMS_Automation {
 			
 			foreach ( $category['vars'] as $var ) {
 				if ( isset( $descriptions[ $var ] ) ) {
-					$display_var = $var;
-					
-					// Use localized variable name if available
-					if ( isset( $localized_vars[ $var ] ) ) {
-						$display_var = $localized_vars[ $var ];
-					}
-					
 					$output .= '<li>';
-					$output .= '<code class="variable-code" data-variable="' . esc_attr( $display_var ) . '">' . esc_html( $display_var ) . '</code>';
+					$output .= '<code class="variable-code" data-variable="' . esc_attr( $var ) . '">' . esc_html( $var ) . '</code>';
 					$output .= ' - ' . esc_html( $descriptions[ $var ] );
 					$output .= '</li>';
 				}
@@ -595,80 +634,60 @@ class SMS_Automation {
 	 * @return void
 	 */
 	public static function output_available_variables( $include_shipment_vars = true ) {
-		echo self::get_formatted_variable_list( $include_shipment_vars );
+		$descriptions = self::get_sms_variable_descriptions();
+		$is_turkish = ( get_locale() === 'tr_TR' );
 		
-		// Add JavaScript for copy functionality
+		// Group variables by category - use Turkish variables for Turkish locale
+		$categories = array(
+			'order' => array(
+				'title' => __( 'Order Variables', 'hezarfen-for-woocommerce' ),
+				'vars' => $is_turkish ? 
+					array( '{siparis_no}', '{kullanici_adi}', '{siparis_durumu}', '{siparis_toplami}', '{tarih}', '{saat}' ) :
+					array( '{order_number}', '{customer_name}', '{order_status}', '{order_total}', '{order_date}', '{order_time}' )
+			),
+			'billing' => array(
+				'title' => __( 'Billing Variables', 'hezarfen-for-woocommerce' ),
+				'vars' => $is_turkish ?
+					array( '{fatura_adi}', '{fatura_soyadi}', '{fatura_telefonu}', '{fatura_epostasi}', '{fatura_sirket}', '{fatura_adresi}', '{fatura_sehir}', '{fatura_ulke}' ) :
+					array( '{billing_first_name}', '{billing_last_name}', '{billing_phone}', '{billing_email}', '{billing_company}', '{billing_address}', '{billing_city}', '{billing_country}' )
+			),
+			'shipping' => array(
+				'title' => __( 'Shipping Variables', 'hezarfen-for-woocommerce' ),
+				'vars' => $is_turkish ?
+					array( '{kargo_adi}', '{kargo_soyadi}', '{kargo_telefonu}', '{kargo_sirket}', '{kargo_adresi}', '{kargo_sehir}', '{kargo_ulke}' ) :
+					array( '{shipping_first_name}', '{shipping_last_name}', '{shipping_phone}', '{shipping_company}', '{shipping_address}', '{shipping_city}', '{shipping_country}' )
+			)
+		);
+		
+		if ( $include_shipment_vars ) {
+			$categories['shipment'] = array(
+				'title' => __( 'Shipment Variables', 'hezarfen-for-woocommerce' ),
+				'vars' => $is_turkish ?
+					array( '{kargo_firmasi}', '{takip_kodu}', '{takip_linki}' ) :
+					array( '{courier_company}', '{tracking_number}', '{tracking_url}' )
+			);
+		}
+		
 		?>
-		<script type="text/javascript">
-		jQuery(document).ready(function($) {
-			// Copy variable to clipboard when clicked
-			$(document).on('click', '.variable-code', function() {
-				var variable = $(this).data('variable');
-				
-				// Create temporary input element
-				var tempInput = $('<input>');
-				$('body').append(tempInput);
-				tempInput.val(variable).select();
-				
-				try {
-					document.execCommand('copy');
-					
-					// Show feedback
-					var $this = $(this);
-					var originalText = $this.text();
-					$this.text('<?php echo esc_js( __( 'Copied!', 'hezarfen-for-woocommerce' ) ); ?>');
-					
-					setTimeout(function() {
-						$this.text(originalText);
-					}, 1000);
-				} catch (err) {
-					console.log('Copy failed');
-				}
-				
-				tempInput.remove();
-			});
-		});
-		</script>
-		<style type="text/css">
-		.hezarfen-sms-variables {
-			background: #f9f9f9;
-			border: 1px solid #ddd;
-			padding: 15px;
-			margin: 10px 0;
-			border-radius: 4px;
-		}
-		.hezarfen-sms-variables h4 {
-			margin-top: 0;
-			color: #333;
-		}
-		.variable-category {
-			margin-bottom: 15px;
-		}
-		.variable-category h5 {
-			margin: 10px 0 5px 0;
-			color: #666;
-			font-size: 13px;
-			text-transform: uppercase;
-		}
-		.variable-list {
-			margin: 0;
-			padding-left: 20px;
-		}
-		.variable-list li {
-			margin-bottom: 5px;
-		}
-		.variable-code {
-			background: #e7e7e7;
-			padding: 2px 6px;
-			border-radius: 3px;
-			font-family: monospace;
-			cursor: pointer;
-			transition: background-color 0.2s;
-		}
-		.variable-code:hover {
-			background: #d4edda;
-		}
-		</style>
+		<p class="description"><?php esc_html_e( 'Available Variables (click to copy):', 'hezarfen-for-woocommerce' ); ?></p>
+		<div class="sms-variables-wrapper" style="margin-top: 10px;">
+			<?php foreach ( $categories as $category_key => $category ): ?>
+				<div class="sms-variable-group">
+					<h4 class="sms-variable-group-title" data-group="<?php echo esc_attr( $category_key ); ?>" style="cursor: pointer; margin: 10px 0 5px 0; padding: 8px; background: #f0f0f1; border-left: 4px solid #0073aa; display: flex; align-items: center;">
+						<span class="dashicons <?php echo $category_key === 'order' ? 'dashicons-arrow-down-alt2' : 'dashicons-arrow-right-alt2'; ?>" style="margin-right: 5px;"></span>
+						<?php echo esc_html( $category['title'] ); ?>
+						<?php if ( $category_key === 'shipment' ): ?>
+							<span style="font-size: 12px; color: #666; margin-left: 10px;">(<?php esc_html_e( 'for Order Shipped trigger', 'hezarfen-for-woocommerce' ); ?>)</span>
+						<?php endif; ?>
+					</h4>
+					<div class="sms-variable-group-content" data-group-content="<?php echo esc_attr( $category_key ); ?>" style="<?php echo $category_key === 'order' ? 'padding: 10px; background: #fff; border: 1px solid #ddd; margin-bottom: 10px;' : 'display: none; padding: 10px; background: #fff; border: 1px solid #ddd; margin-bottom: 10px;'; ?>">
+						<?php foreach ( $category['vars'] as $var ): ?>
+							<span class="sms-variable button button-small" data-variable="<?php echo esc_attr( $var ); ?>" title="<?php esc_attr_e( 'Click to copy', 'hezarfen-for-woocommerce' ); ?>" style="cursor: pointer;"><?php echo esc_html( $var ); ?></span>
+						<?php endforeach; ?>
+					</div>
+				</div>
+			<?php endforeach; ?>
+		</div>
 		<?php
 	}
 
@@ -710,12 +729,31 @@ class SMS_Automation {
 			'{uye_epostasi}' => $order->get_billing_email(),
 			'{kullanici_adi}' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
 			'{tarih}' => $order_date ? $order_date->date_i18n( get_option( 'date_format' ) ) : '',
-			'{saat}' => $order_date ? $order_date->date_i18n( get_option( 'time_format' ) ) : '',
+			'{saat}' => $order_date ? $order_date->date_i18n( 'H:i' ) : '',
 			
 			// Shipment specific variables (only available when shipment data is present)
 			'{kargo_firmasi}' => $courier_name,
 			'{takip_kodu}' => $tracking_number,
 			'{takip_linki}' => $tracking_url,
+			
+			// Additional Turkish variables for new system
+			'{siparis_durumu}' => wc_get_order_status_name( $order->get_status() ),
+			'{siparis_toplami}' => $order->get_formatted_order_total(),
+			'{fatura_adi}' => $order->get_billing_first_name(),
+			'{fatura_soyadi}' => $order->get_billing_last_name(),
+			'{fatura_telefonu}' => $order->get_billing_phone(),
+			'{fatura_epostasi}' => $order->get_billing_email(),
+			'{fatura_sirket}' => $order->get_billing_company(),
+			'{fatura_adresi}' => $order->get_billing_address_1() . ( $order->get_billing_address_2() ? ' ' . $order->get_billing_address_2() : '' ),
+			'{fatura_sehir}' => $order->get_billing_city(),
+			'{fatura_ulke}' => $order->get_billing_country(),
+			'{kargo_adi}' => $order->get_shipping_first_name(),
+			'{kargo_soyadi}' => $order->get_shipping_last_name(),
+			'{kargo_telefonu}' => $order->get_shipping_phone(),
+			'{kargo_sirket}' => $order->get_shipping_company(),
+			'{kargo_adresi}' => $order->get_shipping_address_1() . ( $order->get_shipping_address_2() ? ' ' . $order->get_shipping_address_2() : '' ),
+			'{kargo_sehir}' => $order->get_shipping_city(),
+			'{kargo_ulke}' => $order->get_shipping_country(),
 			
 			// English equivalents for compatibility
 			'{order_number}' => $order->get_order_number(),
@@ -723,7 +761,7 @@ class SMS_Automation {
 			'{order_status}' => wc_get_order_status_name( $order->get_status() ),
 			'{order_total}' => $order->get_formatted_order_total(),
 			'{order_date}' => $order_date ? $order_date->date_i18n( get_option( 'date_format' ) ) : '',
-			'{order_time}' => $order_date ? $order_date->date_i18n( get_option( 'time_format' ) ) : '',
+			'{order_time}' => $order_date ? $order_date->date_i18n( 'H:i' ) : '',
 			
 			// Billing variables
 			'{billing_first_name}' => $order->get_billing_first_name(),
@@ -757,7 +795,7 @@ class SMS_Automation {
 			'[uye_epostasi]' => $order->get_billing_email(),
 			'[kullanici_adi]' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
 			'[tarih]' => $order_date ? $order_date->date_i18n( get_option( 'date_format' ) ) : '',
-			'[saat]' => $order_date ? $order_date->date_i18n( get_option( 'time_format' ) ) : '',
+			'[saat]' => $order_date ? $order_date->date_i18n( 'H:i' ) : '',
 			'[hezarfen_kargo_firmasi]' => $courier_name,
 			'[hezarfen_kargo_takip_kodu]' => $tracking_number,
 			'[hezarfen_kargo_takip_linki]' => $tracking_url,
@@ -797,7 +835,7 @@ class SMS_Automation {
 			'[uye_epostasi]' => $order->get_billing_email(),
 			'[kullanici_adi]' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
 			'[tarih]' => $order_date ? $order_date->date_i18n( get_option( 'date_format' ) ) : '',
-			'[saat]' => $order_date ? $order_date->date_i18n( get_option( 'time_format' ) ) : '',
+			'[saat]' => $order_date ? $order_date->date_i18n( 'H:i' ) : '',
 			'[hezarfen_kargo_firmasi]' => $courier_name,
 			'[hezarfen_kargo_takip_kodu]' => $tracking_number,
 			'[hezarfen_kargo_takip_linki]' => $tracking_url,
