@@ -521,9 +521,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 										<?php if ( \Hezarfen\ManualShipmentTracking\Netgsm::is_netgsm_active() ) : ?>
 											<option value="netgsm_legacy"><?php esc_html_e( 'Send SMS via NetGSM Official Plugin (Legacy - Deprecated Soon)', 'hezarfen-for-woocommerce' ); ?></option>
 										<?php endif; ?>
-										<?php if ( \Hezarfen\ManualShipmentTracking\Pandasms::is_plugin_ready() ) : ?>
-											<option value="pandasms_legacy"><?php esc_html_e( 'Send SMS via PandaSMS Official Plugin', 'hezarfen-for-woocommerce' ); ?></option>
-										<?php endif; ?>
+																			<option value="pandasms_legacy"><?php esc_html_e( 'Send SMS via PandaSMS Official Plugin', 'hezarfen-for-woocommerce' ); ?></option>
 									</select>
 								</td>
 							</tr>
@@ -607,11 +605,22 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 						</div>
 
 						<!-- PandaSMS Legacy Settings - Only shown when PandaSMS Legacy is selected -->
-						<div id="pandasms-legacy-settings" style="display: none; margin-top: 20px; padding: 15px; background: #fff; border: 1px solid #0073aa; border-radius: 6px;">
-							<h4 style="margin: 0 0 15px 0; color: #0073aa;"><?php esc_html_e( 'PandaSMS Configuration', 'hezarfen-for-woocommerce' ); ?></h4>
-							<p class="description" style="margin-top: 10px;">
-								<?php esc_html_e( 'PandaSMS message content is configured in the PandaSMS plugin settings. This integration will use the trigger "Sipariş kargoya verildiğinde" with shipment variables.', 'hezarfen-for-woocommerce' ); ?>
-							</p>
+						<div id="pandasms-legacy-settings" style="display: none; margin-top: 20px; padding: 15px; background: #fff; border: 1px solid <?php echo \Hezarfen\ManualShipmentTracking\Pandasms::is_plugin_ready() ? '#0073aa' : '#d63638'; ?>; border-radius: 6px;">
+							<h4 style="margin: 0 0 15px 0; color: <?php echo \Hezarfen\ManualShipmentTracking\Pandasms::is_plugin_ready() ? '#0073aa' : '#d63638'; ?>;"><?php esc_html_e( 'PandaSMS Configuration', 'hezarfen-for-woocommerce' ); ?></h4>
+							<?php if ( \Hezarfen\ManualShipmentTracking\Pandasms::is_plugin_ready() ) : ?>
+								<p class="description" style="margin-top: 10px;">
+									<?php esc_html_e( 'PandaSMS message content is configured in the PandaSMS plugin settings. This integration will use the trigger "Sipariş kargoya verildiğinde" with shipment variables.', 'hezarfen-for-woocommerce' ); ?>
+								</p>
+							<?php else : ?>
+								<div style="background: #fff2cd; border: 1px solid #f39c12; border-radius: 4px; padding: 12px; margin-bottom: 15px;">
+									<p style="margin: 0; color: #856404; font-weight: 500;">
+										⚠️ <?php esc_html_e( 'Warning: PandaSMS plugin is not active!', 'hezarfen-for-woocommerce' ); ?>
+									</p>
+									<p style="margin: 8px 0 0 0; color: #856404;">
+										<?php esc_html_e( 'Please install and activate the PandaSMS plugin to use this SMS integration.', 'hezarfen-for-woocommerce' ); ?>
+									</p>
+								</div>
+							<?php endif; ?>
 						</div>
 
 						<!-- SMS Content Settings - Shown when any SMS action is selected -->
