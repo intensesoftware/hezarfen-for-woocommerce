@@ -430,6 +430,12 @@ class SMS_Automation {
 		// Normalize status for meta keys (remove wc- prefix if present)
 		$normalized_status = str_replace( 'wc-', '', $rule['condition_status'] );
 		
+		// Special handling for hezarfen_order_shipped condition status
+		if ( $rule['condition_status'] === 'hezarfen_order_shipped' && isset( $this->current_shipment_data ) ) {
+			$this->current_shipment_data->sms_sent = true;
+			$this->current_shipment_data->save();
+		}
+		
 		// Mark SMS as sent for this rule and status
 		$sms_sent_key = '_hezarfen_sms_sent_' . $normalized_status;
 		$order->update_meta_data( $sms_sent_key, 'yes' );

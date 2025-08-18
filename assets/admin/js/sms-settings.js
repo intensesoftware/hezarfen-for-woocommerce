@@ -374,8 +374,26 @@ jQuery(document).ready(function($) {
         }
     });
 
-    // Add hover effect for variables
-    $(document).on('mouseenter', '.sms-variable', function() {
-        $(this).css('cursor', 'pointer');
-    });
+    		// Add hover effect for variables
+		$(document).on('mouseenter', '.sms-variable', function() {
+			$(this).css('cursor', 'pointer');
+		});
+
+		// Variable group toggle functionality
+		$(document).on('click', '.sms-variable-group-title', function(e) {
+			e.preventDefault();
+			const $title = $(this);
+			const $content = $title.next('.sms-variable-group-content');
+			const $icon = $title.find('.dashicons');
+			
+			// Toggle content visibility
+			$content.slideToggle(200);
+			
+			// Toggle icon
+			if ($icon.hasClass('dashicons-arrow-down-alt2')) {
+				$icon.removeClass('dashicons-arrow-down-alt2').addClass('dashicons-arrow-right-alt2');
+			} else {
+				$icon.removeClass('dashicons-arrow-right-alt2').addClass('dashicons-arrow-down-alt2');
+			}
+		});
 });
