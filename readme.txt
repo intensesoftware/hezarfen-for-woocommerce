@@ -59,6 +59,12 @@ Türkiye'nin lider WooCommerce kargo çözümü! 26+ yerli kargo firması deste�
 • T.C. Kimlik numaralarının şifrelenerek saklanması
 • Güvenli anahtar yönetimi
 
+= ⚡ Performans =
+Hezarfen, yetkin bir ekip tarafından geliştirilmiştir. Ekibimiz, dünyanın en çok kullanılan WordPress tema ve eklentilerinin geliştirilmesinde geçmişte görev almış deneyimli yazılımcılardan oluşur. Bu birikim, eklentinin yüksek performans, stabilite ve ölçeklenebilirlik sunmasını sağlar.
+
+= 🛡️ KVKK Uyumluluğu =
+Hezarfen, KVKK’nın yurt dışına kişisel veri aktarımına ilişkin hükümleriyle uyumludur. Bilinen bazı kargo SaaS çözümleri müşteri verilerini yurtdışına taşıyabilirken, Hezarfen verilerinizi Türkiye sınırları içinde tutar ve uyumluluk yükümlülüklerinizi destekler.
+
 == Installation ==
 
 = Otomatik Kurulum =
