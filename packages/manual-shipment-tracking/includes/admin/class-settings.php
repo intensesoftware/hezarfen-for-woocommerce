@@ -131,35 +131,6 @@ class Settings {
 				),
 				array(
 					'type'  => 'title',
-					'title' => __( 'SMS Notification Settings', 'hezarfen-for-woocommerce' ),
-				),
-				array(
-					'type'  => 'checkbox',
-					'title' => __( 'Enable SMS notification when order shipped', 'hezarfen-for-woocommerce' ),
-					'id'    => self::OPT_ENABLE_SMS,
-					'class' => 'enable-sms-notif',
-				),
-				array(
-					'type'     => 'radio',
-					'title'    => __( 'Notification Provider', 'hezarfen-for-woocommerce' ),
-					'id'       => self::OPT_NOTIF_PROVIDER,
-					'class'    => 'notification notif-provider',
-					'options'  => isset( $notification_providers ) ? $notification_providers : array(),
-					'disabled' => Helper::get_not_ready_providers(),
-				),
-				array(
-					'type'        => 'hezarfen_mst_netgsm_sms_content_textarea',
-					'title'       => __( 'NetGSM SMS content', 'hezarfen-for-woocommerce' ),
-					'id'          => self::OPT_NETGSM_CONTENT,
-					'class'       => 'notification netgsm sms-content',
-					'placeholder' => __( 'Enter SMS content.', 'hezarfen-for-woocommerce' ),
-				),
-				array(
-					'type' => 'sectionend',
-					'id'   => 'hezarfen_mst_sms_notification',
-				),
-				array(
-					'type'  => 'title',
 					'title' => __( 'Advanced Settings', 'hezarfen-for-woocommerce' ),
 				),
 				array(
@@ -205,6 +176,15 @@ class Settings {
 					'type' => 'sectionend',
 					'id'   => 'hezarfen_mst_advanced',
 				),
+				array(
+					'type'  => 'title',
+					'title' => __( 'SMS Notification Settings (Legacy)', 'hezarfen-for-woocommerce' ),
+					'desc'  => '<div style="background: #fff3cd; border: 2px solid #f39c12; border-radius: 6px; padding: 15px; margin: 15px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><div style="display: flex; align-items: center; margin-bottom: 10px;"><span style="font-size: 20px; margin-right: 8px;">⚠️</span><strong style="color: #d68910; font-size: 16px;">' . __( 'Important Notice:', 'hezarfen-for-woocommerce' ) . '</strong></div><p style="margin: 0 0 12px 0; line-height: 1.5;">' . sprintf( __( 'SMS automation settings have been moved to a new, more advanced system. You can now configure multiple SMS rules with different triggers and conditions. %sManage SMS Rules%s', 'hezarfen-for-woocommerce' ), '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=sms_settings' ) ) . '" style="color: #0073aa; text-decoration: none; font-weight: bold; border-bottom: 1px solid #0073aa;">', '</a>' ) . '</p><p style="margin: 0; color: #856404; font-style: italic;">' . __( 'SMS settings have been moved to the new SMS automation system. This legacy section has been removed.', 'hezarfen-for-woocommerce' ) . '</p></div>',
+				),
+				array(
+					'type' => 'sectionend',
+					'id'   => 'hezarfen_mst_sms_notification',
+				)
 			);
 		}
 

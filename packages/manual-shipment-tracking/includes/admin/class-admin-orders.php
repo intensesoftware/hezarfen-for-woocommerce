@@ -112,7 +112,7 @@ class Admin_Orders {
 
 		add_meta_box(
 			'hezarfen-mst-order-edit-metabox',
-			__( 'Hezarfen Cargo Tracking', 'hezarfen-for-woocommerce' ),
+			__( 'Hezarfen Cargo Tracking & SMS Notifications', 'hezarfen-for-woocommerce' ),
 			array( __CLASS__, 'render_order_edit_metabox' ),
 			$screen,
 			'normal',
@@ -138,6 +138,9 @@ class Admin_Orders {
 				'modal_btn_delete_text'       => __( 'Delete', 'hezarfen-for-woocommerce' ),
 				'modal_btn_cancel_text'       => __( 'Cancel', 'hezarfen-for-woocommerce' ),
 				'thank_you_message'           => __( 'Thank you for supporting Hezarfen! 🌟', 'hezarfen-for-woocommerce' ),
+				'removing_text'               => __( 'Removing...', 'hezarfen-for-woocommerce' ),
+				'error_removing_shipment'     => __( 'Error removing shipment data. Please try again.', 'hezarfen-for-woocommerce' ),
+				'campaign_ended'              => __( 'Campaign ended', 'hezarfen-for-woocommerce' ),
 				'courier_logo_base_url'       => HEZARFEN_MST_COURIER_LOGO_URL,
 				'remove_shipment_data_action' => Admin_Ajax::REMOVE_SHIPMENT_DATA_ACTION,
 				'remove_shipment_data_nonce'  => wp_create_nonce( Admin_Ajax::REMOVE_SHIPMENT_DATA_NONCE ),
@@ -154,6 +157,10 @@ class Admin_Orders {
 
 		if ( ! $shipment_data ) {
 			$shipment_data[] = new Shipment_Data();
+		}
+
+		if( defined('HEZARFEN_PRO_VERSION') ){
+			wp_enqueue_script( 'hez_pro_flowbite', WC_HEZARFEN_UYGULAMA_URL . 'assets/admin/flowbite/build/main.js', array('jquery'), WC_HEZARFEN_VERSION );
 		}
 
 		require_once WC_HEZARFEN_UYGULAMA_YOLU . 'packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php';

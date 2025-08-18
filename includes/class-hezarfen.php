@@ -51,6 +51,10 @@ class Hezarfen {
 
 		add_action( 'plugins_loaded', array( $this, 'check_addons_and_show_notices' ) );
 		add_action( 'plugins_loaded', array( $this, 'define_constants' ) );
+		add_action( 'admin_notices', array( $this, 'show_migration_notice' ) );
+		
+		// Trigger SMS migration on admin init to catch plugin updates
+		add_action( 'admin_init', array( 'Hezarfen_Install', 'migrate_legacy_sms_settings' ) );
 		add_action( 'plugins_loaded', array( $this, 'force_enable_address2_field' ) );
 		add_filter( 'woocommerce_get_settings_pages', array( $this, 'add_hezarfen_setting_page' ) );
 		add_filter( 'woocommerce_get_country_locale', array( $this, 'modify_tr_locale' ), PHP_INT_MAX - 2 );
@@ -227,6 +231,32 @@ class Hezarfen {
 		// Set modified data back to response
 		$response->set_data($response_data);
 		return $response;
+	}
+	
+	/**
+	 * Show migration notice when SMS settings are migrated
+	 *
+	 * @return void
+	 */
+	public function show_migration_notice() {
+		if ( get_transient( 'hezarfen_sms_migration_notice' ) ) {
+			?>
+			<div class="notice notice-success is-dismissible">
+				<p>
+					<strong><?php esc_html_e( 'Hezarfen SMS Migration Complete!', 'hezarfen-for-woocommerce' ); ?></strong>
+					<?php 
+					printf( 
+						esc_html__( 'Your legacy SMS settings have been automatically migrated to the new SMS automation system and SMS automation has been enabled. %sView SMS Settings%s', 'hezarfen-for-woocommerce' ),
+						'<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=sms_settings' ) ) . '">',
+						'</a>'
+					);
+					?>
+				</p>
+			</div>
+			<?php
+			// Delete the transient so it only shows once
+			delete_transient( 'hezarfen_sms_migration_notice' );
+		}
 	}
 
 	/**

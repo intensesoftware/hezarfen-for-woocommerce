@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Hezarfen - Türkiye Kargo Entegrasyonu - WooCommerce Kargo Takip ve Yönetim Eklentisi For Woocommerce
  * Description: Türkiye'nin WooCommerce kargo eklentisi - 26+ kargo firmalası için takip, sms, e-posta bildirimleri
- * Version: 2.3.7
+ * Version: 2.4.0-beta.2
  * Author: Intense Yazılım Ltd.
  * Author URI: https://intense.com.tr
  * Developer: Intense Yazılım Ltd.
@@ -25,7 +25,7 @@ if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins',
 	return;
 }
 
-define( 'WC_HEZARFEN_VERSION', '2.3.7' );
+define( 'WC_HEZARFEN_VERSION', '2.4.0-beta.2' );
 define( 'WC_HEZARFEN_MIN_MBGB_VERSION', '0.6.1' );
 define( 'WC_HEZARFEN_FILE', __FILE__ );
 define( 'WC_HEZARFEN_UYGULAMA_YOLU', plugin_dir_path( __FILE__ ) );
@@ -46,6 +46,21 @@ function hezarfen_load_plugin_textdomain() {
 		basename( dirname( __FILE__ ) ) . '/languages/'
 	);
 }
+
+/**
+ * Add settings link to plugin actions
+ * 
+ * @param array $links Plugin action links
+ * @return array Modified plugin action links
+ */
+function hezarfen_add_settings_link( $links ) {
+	$settings_link = '<a href="' . admin_url( 'admin.php?page=wc-settings&tab=hezarfen' ) . '">' . __( 'Settings', 'hezarfen-for-woocommerce' ) . '</a>';
+	array_unshift( $links, $settings_link );
+	return $links;
+}
+
+// Add settings link to plugins page
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'hezarfen_add_settings_link' );
 
 // Declare our plugin compatible with the Woocommerce HPOS feature.
 add_action(
