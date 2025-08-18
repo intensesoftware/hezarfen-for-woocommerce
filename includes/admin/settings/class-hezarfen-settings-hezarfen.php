@@ -859,6 +859,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					'edit_rule' => __( 'Edit SMS Rule', 'hezarfen-for-woocommerce' ),
 					'delete_rule' => __( 'Delete Rule', 'hezarfen-for-woocommerce' ),
 					'save_rule' => __( 'Save Rule', 'hezarfen-for-woocommerce' ),
+					'saving_rule' => __( 'Saving rule...', 'hezarfen-for-woocommerce' ),
 					'cancel' => __( 'Cancel', 'hezarfen-for-woocommerce' ),
 					'trigger' => __( 'Trigger', 'hezarfen-for-woocommerce' ),
 					'condition' => __( 'Condition', 'hezarfen-for-woocommerce' ),

@@ -443,4 +443,46 @@ jQuery(document).ready(function($) {
 				$icon.removeClass('dashicons-arrow-right-alt2').addClass('dashicons-arrow-down-alt2');
 			}
 		});
+
+	// Auto-save SMS rule when main "Save Changes" button is clicked
+	$('form#mainform').on('submit', function(e) {
+		// Check if SMS rule form is visible and has data
+		if ($('#hezarfen-sms-rule-form-container').is(':visible')) {
+			// Check if there's any data in the form that should be saved
+			const conditionStatus = $('#condition-status').val();
+			const actionType = $('#action-type').val();
+			
+			if (conditionStatus && actionType) {
+				// Prevent the main form from submitting immediately
+				e.preventDefault();
+				
+				// Show a brief message to user
+				const $submitButton = $(this).find('input[type="submit"], button[type="submit"]');
+				const originalText = $submitButton.val() || $submitButton.text();
+				$submitButton.prop('disabled', true);
+				if ($submitButton.is('input')) {
+					$submitButton.val(hezarfen_sms_settings.strings.saving_rule || 'Saving rule...');
+				} else {
+					$submitButton.text(hezarfen_sms_settings.strings.saving_rule || 'Saving rule...');
+				}
+				
+				// Save the SMS rule first
+				saveSmsRule();
+				
+				// Wait a moment for the AJAX to complete, then submit the main form
+				setTimeout(function() {
+					// Restore button state
+					$submitButton.prop('disabled', false);
+					if ($submitButton.is('input')) {
+						$submitButton.val(originalText);
+					} else {
+						$submitButton.text(originalText);
+					}
+					
+					// Submit the main form
+					$('form#mainform').off('submit').submit();
+				}, 1000);
+			}
+		}
+	});
 });
