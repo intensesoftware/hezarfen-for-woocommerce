@@ -86,7 +86,7 @@ class Admin_Ajax {
 	public static function remove_shipment_data() {
 		check_ajax_referer( self::REMOVE_SHIPMENT_DATA_NONCE );
 
-		if ( empty( $_POST['meta_id'] ) || empty( $_POST['meta_id'] ) ) {
+		if ( empty( $_POST['meta_id'] ) || empty( $_POST['order_id'] ) ) {
 			wp_send_json_error( null, 400 );
 		}
 
@@ -100,6 +100,6 @@ class Admin_Ajax {
 			}
 		}
 
-		wp_send_json_success();
+		wp_send_json_error( null, 404 );
 	}
 }

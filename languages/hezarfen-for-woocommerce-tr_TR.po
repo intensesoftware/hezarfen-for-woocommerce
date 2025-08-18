@@ -6,7 +6,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2025-08-18 11:26+0000\n"
+"PO-Revision-Date: 2025-08-18 11:33+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -76,6 +76,7 @@ msgstr "Ödeme formundaki alanlar otomatik olarak sıralansın mı?"
 msgid "Available sender names from your NetGSM account"
 msgstr "NetGSM hesabınızdaki kullanılabilir gönderici adları"
 
+#: includes/class-sms-automation.php:466
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:218
 msgid "Available Variables"
 msgstr "Kullanabileceğiniz Değişkenler"
@@ -120,10 +121,35 @@ msgstr ""
 "talimatları</a> uygulayarak kolaylıkla eski ödeme sayfası sistemini aktif "
 "edebilirsiniz."
 
-#: includes/class-sms-automation.php:710
-msgid "billing"
-msgstr "fatura"
+#: includes/class-sms-automation.php:406
+msgid "Billing Address"
+msgstr "Fatura Adresi"
 
+#: includes/class-sms-automation.php:407
+msgid "Billing City"
+msgstr "Fatura İlçe"
+
+#: includes/class-sms-automation.php:405
+msgid "Billing Company"
+msgstr "Fatura Firma Adı"
+
+#: includes/class-sms-automation.php:408
+msgid "Billing Country"
+msgstr "Fatura Ülke"
+
+#: includes/class-sms-automation.php:404
+msgid "Billing Email"
+msgstr "Fatura E-Posta"
+
+#: includes/class-sms-automation.php:401
+msgid "Billing First Name"
+msgstr "Fatura Adı"
+
+#: includes/class-sms-automation.php:402
+msgid "Billing Last Name"
+msgstr "Fatura Soyadı"
+
+#: includes/class-sms-automation.php:403 includes/class-sms-automation.php:585
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:470
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:576
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:632
@@ -131,6 +157,7 @@ msgstr "fatura"
 msgid "Billing Phone"
 msgstr "Fatura Telefonu"
 
+#: includes/class-sms-automation.php:475
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:665
 msgid "Billing Variables"
 msgstr "Fatura Değişkenleri"
@@ -154,6 +181,10 @@ msgstr "Kampanya sona erdi"
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:286
 msgid "Cancel"
 msgstr "İptal"
+
+#: includes/class-sms-automation.php:557
+msgid "Cancelled"
+msgstr "İptal Edildi"
 
 #: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:143
 msgid "CC"
@@ -201,6 +232,10 @@ msgstr "Kargo firmasını seçiniz"
 msgid "Choose when to send the SMS notification"
 msgstr "SMS bildiriminin ne zaman gönderileceğini seçin"
 
+#: includes/class-sms-automation.php:540
+msgid "Click on any variable to copy it to your clipboard."
+msgstr "Kopyalamak için tıklayın"
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:652
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:653
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:654
@@ -242,6 +277,10 @@ msgstr "Ticari (11)"
 msgid "Company"
 msgstr "Kurumsal"
 
+#: includes/class-sms-automation.php:556
+msgid "Completed"
+msgstr "Tamamlandı"
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:984
 msgid "Condition"
 msgstr "Koşul"
@@ -270,6 +309,11 @@ msgstr "NETGSM'i Bağla"
 msgid "Connecting..."
 msgstr "Bağlanıyor..."
 
+#: includes/class-sms-automation.php:619
+msgid "Copied!"
+msgstr "Kopyalandı!"
+
+#: includes/class-sms-automation.php:388 includes/class-sms-automation.php:420
 #: packages/manual-shipment-tracking/includes/class-my-account.php:119
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:213
 #: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:33
@@ -280,6 +324,26 @@ msgstr "Kargo Firması"
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:163
 msgid "Courier company post meta key"
 msgstr "Kargo firması post meta keyi"
+
+#: includes/class-sms-automation.php:384
+msgid "Customer Email"
+msgstr "Müşteri E-Posta"
+
+#: includes/class-sms-automation.php:381
+msgid "Customer First Name"
+msgstr "Müşteri Adı"
+
+#: includes/class-sms-automation.php:385 includes/class-sms-automation.php:394
+msgid "Customer Full Name"
+msgstr "Müşteri Tam Adı"
+
+#: includes/class-sms-automation.php:382
+msgid "Customer Last Name"
+msgstr "Müşteri Soyadı"
+
+#: includes/class-sms-automation.php:383
+msgid "Customer Phone"
+msgstr "Müşteri Telefon"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:487
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:978
@@ -305,6 +369,10 @@ msgid ""
 msgstr ""
 "Bu ayarı kullanabilmek için Checkout Field Editor for WooCommerce "
 "eklentisini devre dışı bırakınız."
+
+#: includes/class-sms-automation.php:560
+msgid "Draft"
+msgstr "Taslak"
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:309
 msgid ""
@@ -437,6 +505,10 @@ msgstr "Kargo verisi silinirken hata oluştu. Lütfen tekrar deneyin."
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:333
 msgid "Everything seems fine."
 msgstr "Her şey yolunda gözüküyor."
+
+#: includes/class-sms-automation.php:559
+msgid "Failed"
+msgstr "Başarısız"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:957
 msgid "Failed to load senders"
@@ -663,12 +735,12 @@ msgstr "Yükleniyor.."
 msgid "Intense Yazılım Ltd."
 msgstr "Intense Software Ltd."
 
-#: includes/class-sms-automation.php:974
+#: includes/class-sms-automation.php:1285
 msgid "Invalid request parameters. Please check your credentials."
 msgstr ""
 "Geçersiz istek parametreleri. Lütfen kimlik bilgilerinizi kontrol edin."
 
-#: includes/class-sms-automation.php:973
+#: includes/class-sms-automation.php:1284
 msgid ""
 "Invalid username/password or API access denied. Please check your "
 "credentials and API permissions."
@@ -735,6 +807,10 @@ msgstr "Kurye"
 msgid "Leave a Review"
 msgstr "Yorum Bırak"
 
+#: includes/class-sms-automation.php:519
+msgid "Legacy Turkish Variables"
+msgstr "Eski Değişkenler"
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:969
 msgid "Loading senders automatically..."
 msgstr "Gönderici başlıkları yükleniyor..."
@@ -779,12 +855,13 @@ msgstr "Mesaj Şablonu:"
 msgid "Neighborhood"
 msgstr "Mahalle"
 
+#: includes/class-sms-automation.php:572
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:463
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:979
 msgid "NetGSM"
 msgstr "NetGSM"
 
-#: includes/class-sms-automation.php:981
+#: includes/class-sms-automation.php:1292
 #, php-format
 msgid "NetGSM API error (Code: %s)"
 msgstr "NetGSM API hatası (Kod: %s)"
@@ -801,6 +878,7 @@ msgstr "NetGSM bilgileriniz başarıyla kaydedildi!"
 msgid "NetGSM Legacy Configuration (Deprecated Soon)"
 msgstr "NetGSM Ayarları (Yakında Kullanımdan Kaldırılacak)"
 
+#: includes/class-sms-automation.php:573
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:465
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:980
 msgid "NetGSM Official Plugin (Legacy)"
@@ -810,7 +888,8 @@ msgstr "NetGSM Resmi Eklentisi"
 msgid "NetGSM Password"
 msgstr "NetGSM Şifre"
 
-#: includes/class-sms-automation.php:975 includes/class-sms-automation.php:976
+#: includes/class-sms-automation.php:1286
+#: includes/class-sms-automation.php:1287
 msgid "NetGSM system error. Please try again later."
 msgstr "NetGSM sistem hatası. Lütfen daha sonra tekrar deneyiniz."
 
@@ -841,7 +920,8 @@ msgstr "Yeni Durum:"
 msgid "No"
 msgstr "Hayır"
 
-#: includes/class-sms-automation.php:968 includes/class-sms-automation.php:995
+#: includes/class-sms-automation.php:1279
+#: includes/class-sms-automation.php:1306
 msgid "No message headers found in NetGSM response"
 msgstr "NetGSM'de gönderici adınız bulunamadı"
 
@@ -857,6 +937,19 @@ msgstr "Henüz SMS kuralı yapılandırılmamış."
 msgid "Nothing to Track Yet"
 msgstr "Henüz takip edilebilecek bir gönderi yok."
 
+#: includes/class-sms-automation.php:555
+msgid "On hold"
+msgstr "Beklemede"
+
+#: includes/class-sms-automation.php:386 includes/class-sms-automation.php:397
+msgid "Order Date"
+msgstr "Sipariş Tarihi"
+
+#: includes/class-sms-automation.php:380 includes/class-sms-automation.php:393
+msgid "Order Number"
+msgstr "Sipariş Numarası"
+
+#: includes/class-sms-automation.php:561
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:456
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:520
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:982
@@ -867,6 +960,10 @@ msgstr "Kargoya Verildi"
 #: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:24
 msgid "Order Shipped emails are sent when an order have been shipped."
 msgstr "Kargoya Verildi epostası, sipariş kargoya verildiğinde gönderilir."
+
+#: includes/class-sms-automation.php:395
+msgid "Order Status"
+msgstr "Sipariş Durumu"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:986
 msgid "Order Status Changed"
@@ -880,6 +977,15 @@ msgstr "Sipariş Durumu Değişiklikleri"
 msgid "Order status ID (optional)"
 msgstr "Sipariş durumu ID'si (opsiyonel)"
 
+#: includes/class-sms-automation.php:387 includes/class-sms-automation.php:398
+msgid "Order Time"
+msgstr "Sipariş Zamanı"
+
+#: includes/class-sms-automation.php:396
+msgid "Order Total"
+msgstr "Sipariş Toplamı"
+
+#: includes/class-sms-automation.php:471
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:649
 msgid "Order Variables"
 msgstr "Sipariş Değişkenleri"
@@ -902,6 +1008,7 @@ msgstr ""
 "entegrasyon, 'Sipariş kargoya verildiğinde' tetikleyicisini ve gönderi "
 "değişkenlerini kullanacaktır."
 
+#: includes/class-sms-automation.php:574
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:467
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:981
 msgid "PandaSMS Official Plugin (Legacy)"
@@ -914,6 +1021,10 @@ msgstr "PandaSMS eklentisi başarıyla yüklendi ve aktif edildi."
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:965
 msgid "Password must be at least 6 characters"
 msgstr "Şifre en az 6 karakter olmalı"
+
+#: includes/class-sms-automation.php:553
+msgid "Pending payment"
+msgstr "ödeme bekliyor"
 
 #: includes/Checkout.php:349 includes/admin/order/OrderDetails.php:48
 msgid "Personal"
@@ -953,6 +1064,10 @@ msgstr "Lütfen şifreleme anahtarını wp-config.php dosyasına yerleştirin."
 msgid "Please select a message header"
 msgstr "Lütfen gönderim başlığını seçiniz"
 
+#: includes/class-sms-automation.php:554
+msgid "Processing"
+msgstr "Hazırlanıyor"
+
 #: packages/manual-shipment-tracking/includes/courier-companies/class-ptt.php:38
 msgid "PTT Kargo"
 msgstr "PTT Kargo"
@@ -974,6 +1089,10 @@ msgstr "Desteklenen eklentilerin verilerini algıla: (%s)"
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:138
 msgid "Recognize third party plugins' data"
 msgstr "Üçüncü taraf eklentilerin verilerini algıla"
+
+#: includes/class-sms-automation.php:558
+msgid "Refunded"
+msgstr "İade edildi"
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:289
 msgid "Remove"
@@ -1079,6 +1198,7 @@ msgstr "Kargo Olayları"
 msgid "Shipment in pieces"
 msgstr "Parçalı gönderi"
 
+#: includes/class-sms-automation.php:486
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:700
 msgid "Shipment Variables"
 msgstr "Kargo Değişkenleri"
@@ -1115,10 +1235,31 @@ msgid_plural "Shipped (Kargo Takip Turkiye Plugin) (%s)"
 msgstr[0] "Kargoya Verildi (Kargo Takip Turkiye Eklentisi) (%s)"
 msgstr[1] "Kargoya Verildi (Kargo Takip Turkiye Eklentisi) (%s)"
 
-#: includes/class-sms-automation.php:710
-msgid "shipping"
-msgstr "kargo"
+#: includes/class-sms-automation.php:415
+msgid "Shipping Address"
+msgstr "Teslimat Adresi"
 
+#: includes/class-sms-automation.php:416
+msgid "Shipping City"
+msgstr "Teslimat İlçe"
+
+#: includes/class-sms-automation.php:414
+msgid "Shipping Company"
+msgstr "Teslimat Firma Adı"
+
+#: includes/class-sms-automation.php:417
+msgid "Shipping Country"
+msgstr "Teslimat Ülke"
+
+#: includes/class-sms-automation.php:411
+msgid "Shipping First Name"
+msgstr "Teslimat Ad"
+
+#: includes/class-sms-automation.php:412
+msgid "Shipping Last Name"
+msgstr "Teslimat Soyad"
+
+#: includes/class-sms-automation.php:413 includes/class-sms-automation.php:586
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:470
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:577
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:633
@@ -1126,6 +1267,7 @@ msgstr "kargo"
 msgid "Shipping Phone"
 msgstr "Kargo Telefonu"
 
+#: includes/class-sms-automation.php:479
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:683
 msgid "Shipping Variables"
 msgstr "Kargo Adresi Değişkenleri"
@@ -1175,14 +1317,14 @@ msgid "SMS Message Template"
 msgstr "SMS Mesaj Şablonları"
 
 #. 1: Order status name, 2: Phone type (billing/shipping), 3: Phone number
-#: includes/class-sms-automation.php:724
+#: includes/class-sms-automation.php:1035
 #, php-format
 msgid "SMS notification sent via NetGSM for %1$s status to %2$s phone: %3$s"
 msgstr ""
 "%1$s durumu için %2$s telefonuna NetGSM ile SMS bildirimi gönderildi: %3$s"
 
 #. 1: Order status name, 2: Phone type (billing/shipping), 3: Phone number, 4: Job ID
-#: includes/class-sms-automation.php:715
+#: includes/class-sms-automation.php:1026
 #, php-format
 msgid ""
 "SMS notification sent via NetGSM for %1$s status to %2$s phone: %3$s (Job ID:"
@@ -1331,6 +1473,7 @@ msgstr "Müşterinin %s e-posta adresine kargo takip bilgileri gönderilmiştir.
 msgid "Tracking information SMS sent to %s"
 msgstr "Kargo takip SMS'i %s GSM numarasına gönderildi"
 
+#: includes/class-sms-automation.php:389 includes/class-sms-automation.php:421
 #: packages/manual-shipment-tracking/includes/class-my-account.php:120
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:214
 #: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:38
@@ -1342,6 +1485,10 @@ msgstr "Kargo Takip No"
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:170
 msgid "Tracking number post meta key"
 msgstr "Kargo takip no post meta keyi"
+
+#: includes/class-sms-automation.php:390 includes/class-sms-automation.php:422
+msgid "Tracking URL"
+msgstr "Takip Linki"
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-trendyol-express.php:38
 msgid "Trendyol Express"

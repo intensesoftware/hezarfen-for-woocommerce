@@ -140,6 +140,10 @@ jQuery(document).ready(($)=>{
   function create_confirmation_modal(metabox_wrapper, shipment_row) {
     const modal_overlay = metabox_wrapper.find('#modal-body');
     const modal_content = modal_overlay.find('.hez-modal-content');
+    const $confirmButton = modal_overlay.find('.hez-modal-confirm');
+    
+    // Reset button state before showing modal
+    $confirmButton.prop('disabled', false).text(hezarfen_mst_backend.modal_btn_delete_text);
     
     // Show modal with animation
     modal_overlay.removeClass('hidden');
@@ -184,7 +188,10 @@ jQuery(document).ready(($)=>{
     
     // Handle confirm button click
     modal_overlay.find('.hez-modal-confirm').off('click').on('click', function() {
-      $(this).prop('disabled', true).text(hezarfen_mst_backend.removing_text);
+      const $confirmButton = $(this);
+      const originalText = $confirmButton.text();
+      
+      $confirmButton.prop('disabled', true).text(hezarfen_mst_backend.removing_text);
       
       $.post(
         ajaxurl,
@@ -206,6 +213,8 @@ jQuery(document).ready(($)=>{
           closeModal();
         }
       ).fail(function () {
+        // Reset button state on error
+        $confirmButton.prop('disabled', false).text(originalText);
         closeModal();
         // Show error message
         alert(hezarfen_mst_backend.error_removing_shipment);

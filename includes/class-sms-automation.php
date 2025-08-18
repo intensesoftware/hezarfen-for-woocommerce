@@ -370,6 +370,309 @@ class SMS_Automation {
 	}
 
 	/**
+	 * Get available SMS variables with their descriptions for translation
+	 *
+	 * @return array Array of variable descriptions for translation
+	 */
+	public static function get_sms_variable_descriptions() {
+		return array(
+			// Turkish variables (legacy)
+			'{siparis_no}' => __( 'Order Number', 'hezarfen-for-woocommerce' ),
+			'{uye_adi}' => __( 'Customer First Name', 'hezarfen-for-woocommerce' ),
+			'{uye_soyadi}' => __( 'Customer Last Name', 'hezarfen-for-woocommerce' ),
+			'{uye_telefonu}' => __( 'Customer Phone', 'hezarfen-for-woocommerce' ),
+			'{uye_epostasi}' => __( 'Customer Email', 'hezarfen-for-woocommerce' ),
+			'{kullanici_adi}' => __( 'Customer Full Name', 'hezarfen-for-woocommerce' ),
+			'{tarih}' => __( 'Order Date', 'hezarfen-for-woocommerce' ),
+			'{saat}' => __( 'Order Time', 'hezarfen-for-woocommerce' ),
+			'{kargo_firmasi}' => __( 'Courier Company', 'hezarfen-for-woocommerce' ),
+			'{takip_kodu}' => __( 'Tracking Number', 'hezarfen-for-woocommerce' ),
+			'{takip_linki}' => __( 'Tracking URL', 'hezarfen-for-woocommerce' ),
+			
+			// English variables
+			'{order_number}' => __( 'Order Number', 'hezarfen-for-woocommerce' ),
+			'{customer_name}' => __( 'Customer Full Name', 'hezarfen-for-woocommerce' ),
+			'{order_status}' => __( 'Order Status', 'hezarfen-for-woocommerce' ),
+			'{order_total}' => __( 'Order Total', 'hezarfen-for-woocommerce' ),
+			'{order_date}' => __( 'Order Date', 'hezarfen-for-woocommerce' ),
+			'{order_time}' => __( 'Order Time', 'hezarfen-for-woocommerce' ),
+			
+			// Billing variables
+			'{billing_first_name}' => __( 'Billing First Name', 'hezarfen-for-woocommerce' ),
+			'{billing_last_name}' => __( 'Billing Last Name', 'hezarfen-for-woocommerce' ),
+			'{billing_phone}' => __( 'Billing Phone', 'hezarfen-for-woocommerce' ),
+			'{billing_email}' => __( 'Billing Email', 'hezarfen-for-woocommerce' ),
+			'{billing_company}' => __( 'Billing Company', 'hezarfen-for-woocommerce' ),
+			'{billing_address}' => __( 'Billing Address', 'hezarfen-for-woocommerce' ),
+			'{billing_city}' => __( 'Billing City', 'hezarfen-for-woocommerce' ),
+			'{billing_country}' => __( 'Billing Country', 'hezarfen-for-woocommerce' ),
+			
+			// Shipping variables
+			'{shipping_first_name}' => __( 'Shipping First Name', 'hezarfen-for-woocommerce' ),
+			'{shipping_last_name}' => __( 'Shipping Last Name', 'hezarfen-for-woocommerce' ),
+			'{shipping_phone}' => __( 'Shipping Phone', 'hezarfen-for-woocommerce' ),
+			'{shipping_company}' => __( 'Shipping Company', 'hezarfen-for-woocommerce' ),
+			'{shipping_address}' => __( 'Shipping Address', 'hezarfen-for-woocommerce' ),
+			'{shipping_city}' => __( 'Shipping City', 'hezarfen-for-woocommerce' ),
+			'{shipping_country}' => __( 'Shipping Country', 'hezarfen-for-woocommerce' ),
+			
+			// Shipment variables
+			'{courier_company}' => __( 'Courier Company', 'hezarfen-for-woocommerce' ),
+			'{tracking_number}' => __( 'Tracking Number', 'hezarfen-for-woocommerce' ),
+			'{tracking_url}' => __( 'Tracking URL', 'hezarfen-for-woocommerce' ),
+		);
+	}
+
+	/**
+	 * Get localized SMS variable names (for different languages)
+	 *
+	 * @return array Array of localized variable names
+	 */
+	public static function get_localized_sms_variables() {
+		$locale = get_locale();
+		
+		// For Turkish locale, provide Turkish variable names
+		if ( $locale === 'tr_TR' ) {
+			return array(
+				'{order_number}' => '{siparis_no}',
+				'{customer_name}' => '{kullanici_adi}',
+				'{customer_first_name}' => '{uye_adi}',
+				'{customer_last_name}' => '{uye_soyadi}',
+				'{customer_phone}' => '{uye_telefonu}',
+				'{customer_email}' => '{uye_epostasi}',
+				'{order_date}' => '{tarih}',
+				'{order_time}' => '{saat}',
+				'{courier_company}' => '{kargo_firmasi}',
+				'{tracking_number}' => '{takip_kodu}',
+				'{tracking_url}' => '{takip_linki}',
+			);
+		}
+		
+		// For other locales, return English variables as default
+		return array();
+	}
+
+	/**
+	 * Get formatted variable list for display in admin interface
+	 *
+	 * @param bool $include_shipment_vars Whether to include shipment-specific variables
+	 * @return string HTML formatted variable list
+	 */
+	public static function get_formatted_variable_list( $include_shipment_vars = true ) {
+		$descriptions = self::get_sms_variable_descriptions();
+		$localized_vars = self::get_localized_sms_variables();
+		
+		$output = '<div class="hezarfen-sms-variables">';
+		$output .= '<h4>' . __( 'Available Variables', 'hezarfen-for-woocommerce' ) . '</h4>';
+		
+		// Group variables by category
+		$categories = array(
+			'order' => array(
+				'title' => __( 'Order Variables', 'hezarfen-for-woocommerce' ),
+				'vars' => array( '{order_number}', '{customer_name}', '{order_status}', '{order_total}', '{order_date}', '{order_time}' )
+			),
+			'billing' => array(
+				'title' => __( 'Billing Variables', 'hezarfen-for-woocommerce' ),
+				'vars' => array( '{billing_first_name}', '{billing_last_name}', '{billing_phone}', '{billing_email}', '{billing_company}', '{billing_address}', '{billing_city}', '{billing_country}' )
+			),
+			'shipping' => array(
+				'title' => __( 'Shipping Variables', 'hezarfen-for-woocommerce' ),
+				'vars' => array( '{shipping_first_name}', '{shipping_last_name}', '{shipping_phone}', '{shipping_company}', '{shipping_address}', '{shipping_city}', '{shipping_country}' )
+			)
+		);
+		
+		if ( $include_shipment_vars ) {
+			$categories['shipment'] = array(
+				'title' => __( 'Shipment Variables', 'hezarfen-for-woocommerce' ),
+				'vars' => array( '{courier_company}', '{tracking_number}', '{tracking_url}' )
+			);
+		}
+		
+		foreach ( $categories as $category ) {
+			$output .= '<div class="variable-category">';
+			$output .= '<h5>' . $category['title'] . '</h5>';
+			$output .= '<ul class="variable-list">';
+			
+			foreach ( $category['vars'] as $var ) {
+				if ( isset( $descriptions[ $var ] ) ) {
+					$display_var = $var;
+					
+					// Use localized variable name if available
+					if ( isset( $localized_vars[ $var ] ) ) {
+						$display_var = $localized_vars[ $var ];
+					}
+					
+					$output .= '<li>';
+					$output .= '<code class="variable-code" data-variable="' . esc_attr( $display_var ) . '">' . esc_html( $display_var ) . '</code>';
+					$output .= ' - ' . esc_html( $descriptions[ $var ] );
+					$output .= '</li>';
+				}
+			}
+			
+			$output .= '</ul>';
+			$output .= '</div>';
+		}
+		
+		// Add legacy Turkish variables section if locale is Turkish
+		if ( get_locale() === 'tr_TR' ) {
+			$output .= '<div class="variable-category">';
+			$output .= '<h5>' . __( 'Legacy Turkish Variables', 'hezarfen-for-woocommerce' ) . '</h5>';
+			$output .= '<ul class="variable-list">';
+			
+			$legacy_vars = array( '{siparis_no}', '{uye_adi}', '{uye_soyadi}', '{uye_telefonu}', '{uye_epostasi}', '{kullanici_adi}', '{tarih}', '{saat}' );
+			if ( $include_shipment_vars ) {
+				$legacy_vars = array_merge( $legacy_vars, array( '{kargo_firmasi}', '{takip_kodu}', '{takip_linki}' ) );
+			}
+			
+			foreach ( $legacy_vars as $var ) {
+				if ( isset( $descriptions[ $var ] ) ) {
+					$output .= '<li>';
+					$output .= '<code class="variable-code" data-variable="' . esc_attr( $var ) . '">' . esc_html( $var ) . '</code>';
+					$output .= ' - ' . esc_html( $descriptions[ $var ] );
+					$output .= '</li>';
+				}
+			}
+			
+			$output .= '</ul>';
+			$output .= '</div>';
+		}
+		
+		$output .= '<p class="description">' . __( 'Click on any variable to copy it to your clipboard.', 'hezarfen-for-woocommerce' ) . '</p>';
+		$output .= '</div>';
+		
+		return $output;
+	}
+
+	/**
+	 * Get translatable order status names
+	 *
+	 * @return array Array of translatable status names
+	 */
+	public static function get_translatable_order_status_names() {
+		return array(
+			'pending' => __( 'Pending payment', 'hezarfen-for-woocommerce' ),
+			'processing' => __( 'Processing', 'hezarfen-for-woocommerce' ),
+			'on-hold' => __( 'On hold', 'hezarfen-for-woocommerce' ),
+			'completed' => __( 'Completed', 'hezarfen-for-woocommerce' ),
+			'cancelled' => __( 'Cancelled', 'hezarfen-for-woocommerce' ),
+			'refunded' => __( 'Refunded', 'hezarfen-for-woocommerce' ),
+			'failed' => __( 'Failed', 'hezarfen-for-woocommerce' ),
+			'checkout-draft' => __( 'Draft', 'hezarfen-for-woocommerce' ),
+			'hezarfen_order_shipped' => __( 'Order Shipped', 'hezarfen-for-woocommerce' ),
+		);
+	}
+
+	/**
+	 * Get translatable SMS action type names
+	 *
+	 * @return array Array of translatable action type names
+	 */
+	public static function get_translatable_action_type_names() {
+		return array(
+			'netgsm' => __( 'NetGSM', 'hezarfen-for-woocommerce' ),
+			'netgsm_legacy' => __( 'NetGSM Official Plugin (Legacy)', 'hezarfen-for-woocommerce' ),
+			'pandasms_legacy' => __( 'PandaSMS Official Plugin (Legacy)', 'hezarfen-for-woocommerce' ),
+		);
+	}
+
+	/**
+	 * Get translatable phone type names
+	 *
+	 * @return array Array of translatable phone type names
+	 */
+	public static function get_translatable_phone_type_names() {
+		return array(
+			'billing' => __( 'Billing Phone', 'hezarfen-for-woocommerce' ),
+			'shipping' => __( 'Shipping Phone', 'hezarfen-for-woocommerce' ),
+		);
+	}
+
+	/**
+	 * Output available variables for admin interface
+	 * This method can be called from settings pages to display available variables
+	 *
+	 * @param bool $include_shipment_vars Whether to include shipment variables
+	 * @return void
+	 */
+	public static function output_available_variables( $include_shipment_vars = true ) {
+		echo self::get_formatted_variable_list( $include_shipment_vars );
+		
+		// Add JavaScript for copy functionality
+		?>
+		<script type="text/javascript">
+		jQuery(document).ready(function($) {
+			// Copy variable to clipboard when clicked
+			$(document).on('click', '.variable-code', function() {
+				var variable = $(this).data('variable');
+				
+				// Create temporary input element
+				var tempInput = $('<input>');
+				$('body').append(tempInput);
+				tempInput.val(variable).select();
+				
+				try {
+					document.execCommand('copy');
+					
+					// Show feedback
+					var $this = $(this);
+					var originalText = $this.text();
+					$this.text('<?php echo esc_js( __( 'Copied!', 'hezarfen-for-woocommerce' ) ); ?>');
+					
+					setTimeout(function() {
+						$this.text(originalText);
+					}, 1000);
+				} catch (err) {
+					console.log('Copy failed');
+				}
+				
+				tempInput.remove();
+			});
+		});
+		</script>
+		<style type="text/css">
+		.hezarfen-sms-variables {
+			background: #f9f9f9;
+			border: 1px solid #ddd;
+			padding: 15px;
+			margin: 10px 0;
+			border-radius: 4px;
+		}
+		.hezarfen-sms-variables h4 {
+			margin-top: 0;
+			color: #333;
+		}
+		.variable-category {
+			margin-bottom: 15px;
+		}
+		.variable-category h5 {
+			margin: 10px 0 5px 0;
+			color: #666;
+			font-size: 13px;
+			text-transform: uppercase;
+		}
+		.variable-list {
+			margin: 0;
+			padding-left: 20px;
+		}
+		.variable-list li {
+			margin-bottom: 5px;
+		}
+		.variable-code {
+			background: #e7e7e7;
+			padding: 2px 6px;
+			border-radius: 3px;
+			font-family: monospace;
+			cursor: pointer;
+			transition: background-color 0.2s;
+		}
+		.variable-code:hover {
+			background: #d4edda;
+		}
+		</style>
+		<?php
+	}
+
+	/**
 	 * Process message template with order variables
 	 *
 	 * @param \WC_Order $order Order object
@@ -706,8 +1009,16 @@ class SMS_Automation {
 		$order->save_meta_data();
 
 		// Add order note
-		$status_name = wc_get_order_status_name( $rule['condition_status'] );
-		$phone_type = $rule['phone_type'] === 'billing' ? __( 'billing', 'hezarfen-for-woocommerce' ) : __( 'shipping', 'hezarfen-for-woocommerce' );
+		$translatable_statuses = self::get_translatable_order_status_names();
+		$translatable_phone_types = self::get_translatable_phone_type_names();
+		
+		$status_name = isset( $translatable_statuses[ $rule['condition_status'] ] ) 
+			? $translatable_statuses[ $rule['condition_status'] ] 
+			: wc_get_order_status_name( $rule['condition_status'] );
+		
+		$phone_type = isset( $translatable_phone_types[ $rule['phone_type'] ] ) 
+			? $translatable_phone_types[ $rule['phone_type'] ] 
+			: $rule['phone_type'];
 		
 		if ( $jobid ) {
 			/* translators: 1: Order status name, 2: Phone type (billing/shipping), 3: Phone number, 4: Job ID */
