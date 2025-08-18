@@ -529,35 +529,9 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 						<div id="netgsm-settings" style="display: none; margin-top: 20px; padding: 15px; background: #fff; border: 1px solid #007cba; border-radius: 6px;">
 							<h4 style="margin: 0 0 15px 0; color: #007cba;"><?php esc_html_e( 'NetGSM Configuration', 'hezarfen-for-woocommerce' ); ?></h4>
 							
-							<table class="form-table">
-								<tr>
-									<th scope="row">
-										<label for="netgsm-username"><?php esc_html_e( 'NetGSM Username', 'hezarfen-for-woocommerce' ); ?></label>
-									</th>
-									<td>
-										<input type="text" id="netgsm-username" name="netgsm_username" placeholder="<?php esc_attr_e( '850xxxxxxx, 312XXXXXXX etc.', 'hezarfen-for-woocommerce' ); ?>" style="width: 300px;">
-										<p class="description"><?php esc_html_e( 'Your NetGSM username', 'hezarfen-for-woocommerce' ); ?></p>
-									</td>
-								</tr>
-								<tr>
-									<th scope="row">
-										<label for="netgsm-password"><?php esc_html_e( 'NetGSM Password', 'hezarfen-for-woocommerce' ); ?></label>
-									</th>
-									<td>
-										<input type="password" id="netgsm-password" name="netgsm_password" placeholder="<?php esc_attr_e( 'Your API password', 'hezarfen-for-woocommerce' ); ?>" style="width: 300px;">
-										<p class="description"><?php esc_html_e( 'Your NetGSM API password', 'hezarfen-for-woocommerce' ); ?></p>
-									</td>
-								</tr>
-								<tr>
-									<th scope="row">
-										<label for="netgsm-msgheader"><?php esc_html_e( 'Message Header', 'hezarfen-for-woocommerce' ); ?></label>
-									</th>
-									<td>
-										<input type="text" id="netgsm-msgheader" name="netgsm_msgheader" placeholder="<?php esc_attr_e( 'Sender name (3-11 chars)', 'hezarfen-for-woocommerce' ); ?>" maxlength="11" style="width: 300px;">
-										<p class="description"><?php esc_html_e( 'SMS sender name (3-11 characters)', 'hezarfen-for-woocommerce' ); ?></p>
-									</td>
-								</tr>
-							</table>
+							<div id="netgsm-connection-status">
+								<!-- This will be populated by JavaScript -->
+							</div>
 						</div>
 
 						<!-- NetGSM Legacy Settings - Only shown when NetGSM Legacy is selected -->
@@ -772,7 +746,99 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		} else {
 			$settings = $this->get_settings_for_section( $current_section );
 			WC_Admin_Settings::output_fields( $settings );
+			
+			// Add NetGSM credentials modal for SMS settings section
+			if ( 'sms_settings' === $current_section ) {
+				$this->output_netgsm_credentials_modal();
+			}
 		}
+	}
+
+	/**
+	 * Output NetGSM credentials modal
+	 *
+	 * @return void
+	 */
+	private function output_netgsm_credentials_modal() {
+		?>
+		<!-- NetGSM Credentials Modal -->
+		<div id="netgsm-credentials-modal" class="hez-modal-overlay hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="netgsm-modal-title" aria-describedby="netgsm-modal-description" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: none; align-items: center; justify-content: center; z-index: 9999;">
+			<div class="hez-modal-content bg-white rounded-lg shadow-xl max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" style="background: white; border-radius: 8px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); max-width: 28rem; width: 100%; margin: 0 1rem; transform: scale(0.95); opacity: 0; transition: all 0.3s;">
+				<div class="p-6" style="padding: 1.5rem;">
+					<!-- Modal Header -->
+					<div class="flex items-center mb-4" style="display: flex; align-items: center; margin-bottom: 1rem;">
+						<div class="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3" style="flex-shrink: 0; width: 2.5rem; height: 2.5rem; background-color: #dbeafe; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 0.75rem;">
+							<svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1.5rem; height: 1.5rem; color: #2563eb;">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path>
+							</svg>
+						</div>
+						<div class="flex-1" style="flex: 1;">
+							<h3 id="netgsm-modal-title" class="text-lg font-semibold text-gray-900" style="font-size: 1.125rem; font-weight: 600; color: #111827;">
+								<?php esc_html_e('Connect to NetGSM', 'hezarfen-for-woocommerce'); ?>
+							</h3>
+						</div>
+						<button type="button" class="netgsm-modal-close text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md p-1" aria-label="<?php esc_attr_e('Close modal', 'hezarfen-for-woocommerce'); ?>" style="color: #9ca3af; padding: 0.25rem; border-radius: 0.375rem;">
+							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" style="width: 1.25rem; height: 1.25rem;">
+								<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+							</svg>
+						</button>
+					</div>
+					
+					<!-- Modal Body -->
+					<div class="mb-6" style="margin-bottom: 1.5rem;">
+						<p id="netgsm-modal-description" class="text-sm text-gray-600 leading-relaxed mb-4" style="font-size: 0.875rem; color: #4b5563; line-height: 1.625; margin-bottom: 1rem;">
+							<?php esc_html_e('Enter your NetGSM credentials to enable SMS functionality across all features.', 'hezarfen-for-woocommerce'); ?>
+						</p>
+						
+						<form id="netgsm-credentials-form">
+							<div class="mb-4" style="margin-bottom: 1rem;">
+								<label for="netgsm-modal-username" class="block text-sm font-medium text-gray-700 mb-1" style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.25rem;">
+									<?php esc_html_e('NetGSM Username', 'hezarfen-for-woocommerce'); ?>
+								</label>
+								<input type="text" id="netgsm-modal-username" name="username" placeholder="<?php esc_attr_e('850xxxxxxx, 312XXXXXXX etc.', 'hezarfen-for-woocommerce'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem;" required>
+							</div>
+							
+							<div class="mb-4" style="margin-bottom: 1rem;">
+								<label for="netgsm-modal-password" class="block text-sm font-medium text-gray-700 mb-1" style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.25rem;">
+									<?php esc_html_e('NetGSM Password', 'hezarfen-for-woocommerce'); ?>
+								</label>
+								<input type="password" id="netgsm-modal-password" name="password" placeholder="<?php esc_attr_e('Your API password', 'hezarfen-for-woocommerce'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem;" required>
+							</div>
+							
+							<div class="mb-4" style="margin-bottom: 1rem;">
+								<label for="netgsm-modal-msgheader" class="block text-sm font-medium text-gray-700 mb-1" style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.25rem;">
+									<?php esc_html_e('Message Header', 'hezarfen-for-woocommerce'); ?>
+								</label>
+								<div style="position: relative;">
+									<select id="netgsm-modal-msgheader" name="msgheader" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem;" required disabled>
+										<option value=""><?php esc_html_e('First enter username and password above', 'hezarfen-for-woocommerce'); ?></option>
+									</select>
+									<button type="button" id="netgsm-load-senders" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600 hover:text-blue-800 focus:outline-none" style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); color: #2563eb; display: none;">
+										<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 1rem; height: 1rem;">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+										</svg>
+									</button>
+								</div>
+								<p class="text-xs text-gray-500 mt-1" style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">
+									<?php esc_html_e('Available sender names from your NetGSM account', 'hezarfen-for-woocommerce'); ?>
+								</p>
+							</div>
+						</form>
+					</div>
+					
+					<!-- Modal Actions -->
+					<div class="flex flex-col sm:flex-row gap-3 sm:gap-2 sm:justify-end" style="display: flex; flex-direction: column; gap: 0.75rem;">
+						<button type="button" class="netgsm-modal-cancel w-full sm:w-auto px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200" style="width: 100%; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; color: #374151; background-color: white; border: 1px solid #d1d5db; border-radius: 0.375rem;">
+							<?php esc_html_e('Cancel', 'hezarfen-for-woocommerce'); ?>
+						</button>
+						<button type="button" id="netgsm-save-credentials" class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200" style="width: 100%; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; color: white; background-color: #2563eb; border: 1px solid transparent; border-radius: 0.375rem;">
+							<?php esc_html_e('Connect', 'hezarfen-for-woocommerce'); ?>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php
 	}
 	
 	/**
@@ -861,6 +927,17 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					'save_rule' => __( 'Save Rule', 'hezarfen-for-woocommerce' ),
 					'saving_rule' => __( 'Saving rule...', 'hezarfen-for-woocommerce' ),
 					'cancel' => __( 'Cancel', 'hezarfen-for-woocommerce' ),
+					// Inline alert messages
+					'please_enter_credentials' => __( 'Please enter username and password first', 'hezarfen-for-woocommerce' ),
+					'network_error_loading_senders' => __( 'Network error occurred while loading senders', 'hezarfen-for-woocommerce' ),
+					'failed_to_load_senders' => __( 'Failed to load senders', 'hezarfen-for-woocommerce' ),
+					'found_sender_single' => __( 'Found 1 sender: %s', 'hezarfen-for-woocommerce' ),
+					'found_senders_multiple' => __( 'Found %d senders available', 'hezarfen-for-woocommerce' ),
+					'credentials_required' => __( 'Username and password are required', 'hezarfen-for-woocommerce' ),
+					'select_message_header' => __( 'Please select a message header', 'hezarfen-for-woocommerce' ),
+					'credentials_saved_successfully' => __( 'NetGSM credentials saved successfully!', 'hezarfen-for-woocommerce' ),
+					'failed_to_save_credentials' => __( 'Failed to save credentials', 'hezarfen-for-woocommerce' ),
+					'network_error_saving_credentials' => __( 'Network error occurred while saving credentials', 'hezarfen-for-woocommerce' ),
 					'trigger' => __( 'Trigger', 'hezarfen-for-woocommerce' ),
 					'condition' => __( 'Condition', 'hezarfen-for-woocommerce' ),
 					'action' => __( 'Action', 'hezarfen-for-woocommerce' ),

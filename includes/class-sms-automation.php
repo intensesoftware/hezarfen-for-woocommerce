@@ -22,6 +22,9 @@ class SMS_Automation {
 		add_action( 'hezarfen_mst_shipment_data_saved', array( $this, 'handle_order_shipped' ), 10, 2 );
 		add_action( 'wp_ajax_hezarfen_save_sms_rules', array( $this, 'ajax_save_sms_rules' ) );
 		add_action( 'wp_ajax_hezarfen_get_sms_rules', array( $this, 'ajax_get_sms_rules' ) );
+		add_action( 'wp_ajax_hezarfen_save_netgsm_credentials', array( $this, 'ajax_save_netgsm_credentials' ) );
+		add_action( 'wp_ajax_hezarfen_get_netgsm_credentials', array( $this, 'ajax_get_netgsm_credentials' ) );
+		add_action( 'wp_ajax_hezarfen_get_netgsm_senders', array( $this, 'ajax_get_netgsm_senders' ) );
 	}
 
 	/**
@@ -99,10 +102,15 @@ class SMS_Automation {
 	 * @return bool
 	 */
 	private function send_sms_for_rule( $order, $rule ) {
-		// Get NetGSM credentials from the rule
-		$username = $rule['netgsm_username'] ?? '';
-		$password = $rule['netgsm_password'] ?? '';
-		$msgheader = $rule['netgsm_msgheader'] ?? '';
+		// Get global NetGSM credentials
+		$credentials = self::get_global_netgsm_credentials();
+		if ( ! $credentials ) {
+			return false;
+		}
+
+		$username = $credentials['username'] ?? '';
+		$password = $credentials['password'] ?? '';
+		$msgheader = $credentials['msgheader'] ?? '';
 
 		if ( empty( $username ) || empty( $password ) || empty( $msgheader ) ) {
 			return false;
@@ -811,18 +819,201 @@ class SMS_Automation {
 				'iys_status' => sanitize_text_field( $rule['iys_status'] ?? '0' ),
 			);
 
-			// Add NetGSM specific fields if action type is netgsm
-			if ( isset( $rule['action_type'] ) && $rule['action_type'] === 'netgsm' ) {
-				$sanitized_rule['netgsm_username'] = sanitize_text_field( $rule['netgsm_username'] ?? '' );
-				$sanitized_rule['netgsm_password'] = sanitize_text_field( $rule['netgsm_password'] ?? '' );
-				$sanitized_rule['netgsm_msgheader'] = sanitize_text_field( $rule['netgsm_msgheader'] ?? '' );
-			}
+			// NetGSM credentials are now stored globally, no need to save with individual rules
 
 			$sanitized_rules[] = $sanitized_rule;
 		}
 
 		update_option( 'hezarfen_sms_rules', $sanitized_rules );
 		wp_send_json_success( 'Rules saved successfully' );
+	}
+
+	/**
+	 * Get global NetGSM credentials
+	 *
+	 * @return array|false
+	 */
+	public static function get_global_netgsm_credentials() {
+		return get_option( 'hezarfen_global_netgsm_credentials', false );
+	}
+
+	/**
+	 * Check if global NetGSM credentials are configured
+	 *
+	 * @return bool
+	 */
+	public static function is_netgsm_connected() {
+		$credentials = self::get_global_netgsm_credentials();
+		return $credentials && !empty( $credentials['username'] ) && !empty( $credentials['password'] ) && !empty( $credentials['msgheader'] );
+	}
+
+	/**
+	 * Save global NetGSM credentials
+	 *
+	 * @param array $credentials
+	 * @return bool
+	 */
+	public static function save_global_netgsm_credentials( $credentials ) {
+		$sanitized_credentials = array(
+			'username' => sanitize_text_field( $credentials['username'] ?? '' ),
+			'password' => sanitize_text_field( $credentials['password'] ?? '' ),
+			'msgheader' => sanitize_text_field( $credentials['msgheader'] ?? '' ),
+		);
+
+		return update_option( 'hezarfen_global_netgsm_credentials', $sanitized_credentials );
+	}
+
+	/**
+	 * AJAX handler to save NetGSM credentials
+	 *
+	 * @return void
+	 */
+	public function ajax_save_netgsm_credentials() {
+		check_ajax_referer( 'hezarfen_sms_settings_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_die( 'Unauthorized' );
+		}
+
+		$username = sanitize_text_field( $_POST['username'] ?? '' );
+		$password = sanitize_text_field( $_POST['password'] ?? '' );
+		$msgheader = sanitize_text_field( $_POST['msgheader'] ?? '' );
+
+		if ( empty( $username ) || empty( $password ) || empty( $msgheader ) ) {
+			wp_send_json_error( 'All fields are required' );
+		}
+
+		$credentials = array(
+			'username' => $username,
+			'password' => $password,
+			'msgheader' => $msgheader,
+		);
+
+		if ( self::save_global_netgsm_credentials( $credentials ) ) {
+			wp_send_json_success( 'NetGSM credentials saved successfully' );
+		} else {
+			wp_send_json_error( 'Failed to save NetGSM credentials' );
+		}
+	}
+
+	/**
+	 * AJAX handler to get NetGSM credentials status
+	 *
+	 * @return void
+	 */
+	public function ajax_get_netgsm_credentials() {
+		check_ajax_referer( 'hezarfen_sms_settings_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_die( 'Unauthorized' );
+		}
+
+		$credentials = self::get_global_netgsm_credentials();
+		$is_connected = self::is_netgsm_connected();
+
+		wp_send_json_success( array(
+			'is_connected' => $is_connected,
+			'credentials' => $is_connected ? array(
+				'username' => $credentials['username'],
+				'msgheader' => $credentials['msgheader'],
+				// Don't send password back for security
+			) : null,
+		) );
+	}
+
+	/**
+	 * Fetch available message headers from NetGSM API
+	 *
+	 * @param string $username NetGSM username
+	 * @param string $password NetGSM password
+	 * @return array|WP_Error
+	 */
+	public static function fetch_netgsm_message_headers( $username, $password ) {
+		$url = 'https://api.netgsm.com.tr/sms/rest/v2/msgheader';
+		
+		$body = wp_json_encode( array(
+			'usercode' => $username,
+			'password' => $password,
+		) );
+
+		$response = wp_remote_post( $url, array(
+			'headers' => array(
+				'Content-Type' => 'application/json',
+			),
+			'body' => $body,
+			'timeout' => 30,
+			'sslverify' => false,
+		) );
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$response_code = wp_remote_retrieve_response_code( $response );
+		$response_body = wp_remote_retrieve_body( $response );
+
+		if ( $response_code !== 200 ) {
+			return new WP_Error( 'netgsm_api_error', 'NetGSM API returned error code: ' . $response_code );
+		}
+
+		$data = json_decode( $response_body, true );
+
+		if ( json_last_error() !== JSON_ERROR_NONE ) {
+			return new WP_Error( 'json_decode_error', 'Failed to decode NetGSM API response' );
+		}
+
+		// Handle error responses from NetGSM
+		if ( isset( $data['code'] ) ) {
+			$error_messages = array(
+				'30' => __( 'Invalid username/password or API access denied. Please check your credentials and API permissions.', 'hezarfen-for-woocommerce' ),
+				'70' => __( 'Invalid request parameters. Please check your credentials.', 'hezarfen-for-woocommerce' ),
+				'100' => __( 'NetGSM system error. Please try again later.', 'hezarfen-for-woocommerce' ),
+				'101' => __( 'NetGSM system error. Please try again later.', 'hezarfen-for-woocommerce' ),
+			);
+
+			$error_message = isset( $error_messages[ $data['code'] ] ) 
+				? $error_messages[ $data['code'] ] 
+				: sprintf( __( 'NetGSM API error (Code: %s)', 'hezarfen-for-woocommerce' ), $data['code'] );
+
+			return new WP_Error( 'netgsm_api_error', $error_message );
+		}
+
+		// Return message headers if available
+		if ( isset( $data['msgheader'] ) && is_array( $data['msgheader'] ) ) {
+			return $data['msgheader'];
+		}
+
+		return new WP_Error( 'no_msgheader', __( 'No message headers found in NetGSM response', 'hezarfen-for-woocommerce' ) );
+	}
+
+	/**
+	 * AJAX handler to get NetGSM message headers
+	 *
+	 * @return void
+	 */
+	public function ajax_get_netgsm_senders() {
+		check_ajax_referer( 'hezarfen_sms_settings_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_die( 'Unauthorized' );
+		}
+
+		$username = sanitize_text_field( $_POST['username'] ?? '' );
+		$password = sanitize_text_field( $_POST['password'] ?? '' );
+
+		if ( empty( $username ) || empty( $password ) ) {
+			wp_send_json_error( 'Username and password are required' );
+		}
+
+		$message_headers = self::fetch_netgsm_message_headers( $username, $password );
+
+		if ( is_wp_error( $message_headers ) ) {
+			wp_send_json_error( $message_headers->get_error_message() );
+		}
+
+		wp_send_json_success( array(
+			'senders' => $message_headers,
+		) );
 	}
 }
 
