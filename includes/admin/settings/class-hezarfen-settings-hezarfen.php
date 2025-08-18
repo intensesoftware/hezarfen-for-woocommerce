@@ -453,7 +453,15 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 								<?php esc_html_e( 'When order status changes to', 'hezarfen-for-woocommerce' ); ?>
 								<strong><?php echo esc_html( wc_get_order_status_name( str_replace( 'wc-', '', $rule['condition_status'] ?? '' ) ) ); ?></strong>,
 								<?php esc_html_e( 'send SMS via', 'hezarfen-for-woocommerce' ); ?>
-								<strong><?php echo esc_html( $rule['action_type'] === 'netgsm' ? 'NetGSM' : $rule['action_type'] ); ?></strong>
+								<strong><?php 
+									$action_label = $rule['action_type'];
+									if ( $rule['action_type'] === 'netgsm' ) {
+										$action_label = 'NetGSM';
+									} elseif ( $rule['action_type'] === 'netgsm_legacy' ) {
+										$action_label = 'NetGSM Official Plugin (Legacy)';
+									}
+									echo esc_html( $action_label ); 
+								?></strong>
 								<?php esc_html_e( 'to', 'hezarfen-for-woocommerce' ); ?>
 								<strong><?php echo esc_html( $rule['phone_type'] === 'billing' ? __( 'Billing Phone', 'hezarfen-for-woocommerce' ) : __( 'Shipping Phone', 'hezarfen-for-woocommerce' ) ); ?></strong>
 								<div style="margin-top: 5px;">
@@ -508,6 +516,9 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 									<select id="action-type" name="action_type" required style="width: 300px;">
 										<option value=""><?php esc_html_e( 'Select action...', 'hezarfen-for-woocommerce' ); ?></option>
 										<option value="netgsm"><?php esc_html_e( 'Send SMS via NetGSM', 'hezarfen-for-woocommerce' ); ?></option>
+										<?php if ( \Hezarfen\ManualShipmentTracking\Netgsm::is_netgsm_active() ) : ?>
+											<option value="netgsm_legacy"><?php esc_html_e( 'Send SMS via NetGSM Official Plugin (Legacy - Deprecated Soon)', 'hezarfen-for-woocommerce' ); ?></option>
+										<?php endif; ?>
 									</select>
 								</td>
 							</tr>
@@ -543,6 +554,31 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 									<td>
 										<input type="text" id="netgsm-msgheader" name="netgsm_msgheader" placeholder="<?php esc_attr_e( 'Sender name (3-11 chars)', 'hezarfen-for-woocommerce' ); ?>" maxlength="11" style="width: 300px;">
 										<p class="description"><?php esc_html_e( 'SMS sender name (3-11 characters)', 'hezarfen-for-woocommerce' ); ?></p>
+									</td>
+								</tr>
+							</table>
+						</div>
+
+						<!-- NetGSM Legacy Settings - Only shown when NetGSM Legacy is selected -->
+						<div id="netgsm-legacy-settings" style="display: none; margin-top: 20px; padding: 15px; background: #fff; border: 1px solid #d63638; border-radius: 6px;">
+							<h4 style="margin: 0 0 15px 0; color: #d63638;"><?php esc_html_e( 'NetGSM Legacy Configuration (Deprecated Soon)', 'hezarfen-for-woocommerce' ); ?></h4>
+							<p style="color: #d63638; font-style: italic; margin-bottom: 15px;">
+								<?php esc_html_e( 'This option uses the NetGSM official WordPress plugin and will be deprecated soon. Please consider migrating to the direct NetGSM integration.', 'hezarfen-for-woocommerce' ); ?>
+							</p>
+							
+							<table class="form-table">
+								<tr>
+									<th scope="row">
+										<label for="netgsm-legacy-message"><?php esc_html_e( 'SMS Message Template', 'hezarfen-for-woocommerce' ); ?></label>
+									</th>
+									<td>
+										<textarea id="netgsm-legacy-message" name="netgsm_legacy_message" rows="4" style="width: 100%; max-width: 500px;" placeholder="<?php esc_attr_e( 'Enter your SMS message template...', 'hezarfen-for-woocommerce' ); ?>"></textarea>
+										<p class="description">
+											<?php esc_html_e( 'Available variables:', 'hezarfen-for-woocommerce' ); ?>
+											<?php foreach ( \Hezarfen\ManualShipmentTracking\Netgsm::AVAILABLE_VARIABLES as $variable ) : ?>
+												<code><?php echo esc_html( $variable ); ?></code>
+											<?php endforeach; ?>
+										</p>
 									</td>
 								</tr>
 							</table>

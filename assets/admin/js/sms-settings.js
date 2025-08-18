@@ -47,6 +47,16 @@ jQuery(document).ready(function($) {
     $(document).on('change', '#action-type', function() {
         const actionType = $(this).val();
         
+        // Hide all settings first
+        $('#netgsm-settings').hide();
+        $('#netgsm-legacy-settings').hide();
+        $('#sms-content-settings').hide();
+        
+        // Remove all required attributes
+        $('#netgsm-username, #netgsm-password, #netgsm-msgheader').removeAttr('required');
+        $('#netgsm-legacy-message').removeAttr('required');
+        $('#phone-type, #message-template').removeAttr('required');
+        
         if (actionType === 'netgsm') {
             $('#netgsm-settings').show();
             $('#sms-content-settings').show();
@@ -54,13 +64,13 @@ jQuery(document).ready(function($) {
             // Make NetGSM fields required
             $('#netgsm-username, #netgsm-password, #netgsm-msgheader').attr('required', true);
             $('#phone-type, #message-template').attr('required', true);
-        } else {
-            $('#netgsm-settings').hide();
-            $('#sms-content-settings').hide();
+        } else if (actionType === 'netgsm_legacy') {
+            $('#netgsm-legacy-settings').show();
+            $('#sms-content-settings').show();
             
-            // Remove required attribute
-            $('#netgsm-username, #netgsm-password, #netgsm-msgheader').removeAttr('required');
-            $('#phone-type, #message-template').removeAttr('required');
+            // Make NetGSM legacy fields required
+            $('#netgsm-legacy-message').attr('required', true);
+            $('#phone-type').attr('required', true);
         }
     });
 
@@ -112,6 +122,9 @@ jQuery(document).ready(function($) {
                 $('#netgsm-username').val(ruleData.netgsm_username || '');
                 $('#netgsm-password').val(ruleData.netgsm_password || '');
                 $('#netgsm-msgheader').val(ruleData.netgsm_msgheader || '');
+                
+                // Fill NetGSM Legacy fields if available
+                $('#netgsm-legacy-message').val(ruleData.netgsm_legacy_message || '');
                 
                 // Fill SMS content fields
                 $('#phone-type').val(ruleData.phone_type || '');
@@ -231,6 +244,23 @@ jQuery(document).ready(function($) {
                 $('#message-template').focus();
                 return;
             }
+        } else if (actionType === 'netgsm_legacy') {
+            const phoneType = $('#phone-type').val();
+            const legacyMessage = $('#netgsm-legacy-message').val();
+            
+            console.log('NetGSM Legacy validation - Phone:', phoneType, 'Message:', legacyMessage ? 'Set' : 'Empty');
+            
+            if (!phoneType) {
+                alert('Please select phone type.');
+                $('#phone-type').focus();
+                return;
+            }
+            
+            if (!legacyMessage) {
+                alert('Please enter SMS message template.');
+                $('#netgsm-legacy-message').focus();
+                return;
+            }
         }
 
         const ruleData = {
@@ -246,6 +276,8 @@ jQuery(document).ready(function($) {
             ruleData.netgsm_username = $('#netgsm-username').val();
             ruleData.netgsm_password = $('#netgsm-password').val();
             ruleData.netgsm_msgheader = $('#netgsm-msgheader').val();
+        } else if ($('#action-type').val() === 'netgsm_legacy') {
+            ruleData.netgsm_legacy_message = $('#netgsm-legacy-message').val();
         }
 
         console.log('Current rule index:', currentRuleIndex);
@@ -322,7 +354,12 @@ jQuery(document).ready(function($) {
                 hezarfen_sms_settings.strings.billing_phone : 
                 hezarfen_sms_settings.strings.shipping_phone;
             
-            const actionTypeLabel = rule.action_type === 'netgsm' ? 'NetGSM' : rule.action_type;
+            let actionTypeLabel = rule.action_type;
+        if (rule.action_type === 'netgsm') {
+            actionTypeLabel = 'NetGSM';
+        } else if (rule.action_type === 'netgsm_legacy') {
+            actionTypeLabel = 'NetGSM Legacy';
+        }
 
             html += `
                 <div class="sms-rule-item" data-rule-index="${index}" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 4px;">

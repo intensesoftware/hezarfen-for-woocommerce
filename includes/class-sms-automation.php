@@ -51,6 +51,8 @@ class SMS_Automation {
 				if ( $normalized_rule_status === $normalized_new_status ) {
 					if ( isset( $rule['action_type'] ) && $rule['action_type'] === 'netgsm' ) {
 						$this->send_sms_for_rule( $order, $rule );
+					} elseif ( isset( $rule['action_type'] ) && $rule['action_type'] === 'netgsm_legacy' ) {
+						$this->send_sms_for_legacy_rule( $order, $rule );
 					}
 				}
 			}
@@ -75,6 +77,8 @@ class SMS_Automation {
 			if ( isset( $rule['condition_status'] ) && $rule['condition_status'] === 'hezarfen_order_shipped' ) {
 				if ( isset( $rule['action_type'] ) && $rule['action_type'] === 'netgsm' ) {
 					$this->send_sms_for_shipment_rule( $order, $rule, $shipment_data );
+				} elseif ( isset( $rule['action_type'] ) && $rule['action_type'] === 'netgsm_legacy' ) {
+					$this->send_sms_for_legacy_shipment_rule( $order, $rule, $shipment_data );
 				}
 			}
 		}
@@ -155,6 +159,104 @@ class SMS_Automation {
 		// Clean up temporary data
 		unset( $this->current_shipment_data );
 		
+		return $result;
+	}
+
+	/**
+	 * Send SMS for a legacy rule (using NetGSM official plugin)
+	 *
+	 * @param \WC_Order $order Order object
+	 * @param array $rule SMS rule
+	 * @return bool
+	 */
+	private function send_sms_for_legacy_rule( $order, $rule ) {
+		// Check if NetGSM plugin is available
+		if ( ! \Hezarfen\ManualShipmentTracking\Netgsm::is_netgsm_active() ) {
+			return false;
+		}
+
+		// Get phone number based on rule
+		$phone = $this->get_phone_number( $order, $rule['phone_type'] );
+		if ( empty( $phone ) ) {
+			return false;
+		}
+
+		// Get the legacy message template
+		$message = $rule['netgsm_legacy_message'] ?? '';
+		if ( empty( $message ) ) {
+			return false;
+		}
+
+		// Process message template with NetGSM variables
+		$processed_message = $this->process_legacy_message_template( $order, $message );
+
+		// Create a temporary shipment data object for legacy compatibility
+		$temp_shipment_data = new \Hezarfen\ManualShipmentTracking\Shipment_Data( array(
+			'order_id' => $order->get_id(),
+			'courier_title' => '',
+			'tracking_num' => '',
+			'tracking_url' => '',
+			'sms_sent' => false
+		) );
+
+		// Use the legacy NetGSM class to send SMS
+		$netgsm_provider = new \Hezarfen\ManualShipmentTracking\Netgsm();
+		$result = $netgsm_provider->perform_sending( $order, $temp_shipment_data );
+
+		// Mark SMS as sent if successful
+		if ( $result ) {
+			$this->mark_sms_sent( $order, $rule, $phone, $processed_message );
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Send SMS for a legacy shipment rule (using NetGSM official plugin)
+	 *
+	 * @param \WC_Order $order Order object
+	 * @param array $rule SMS rule
+	 * @param object $shipment_data Shipment data object
+	 * @return bool
+	 */
+	private function send_sms_for_legacy_shipment_rule( $order, $rule, $shipment_data ) {
+		// Check if NetGSM plugin is available
+		if ( ! \Hezarfen\ManualShipmentTracking\Netgsm::is_netgsm_active() ) {
+			return false;
+		}
+
+		// Store shipment data temporarily for message processing and mark_sms_sent
+		$this->current_shipment_data = $shipment_data;
+
+		// Get phone number based on rule
+		$phone = $this->get_phone_number( $order, $rule['phone_type'] );
+		if ( empty( $phone ) ) {
+			unset( $this->current_shipment_data );
+			return false;
+		}
+
+		// Get the legacy message template
+		$message = $rule['netgsm_legacy_message'] ?? '';
+		if ( empty( $message ) ) {
+			unset( $this->current_shipment_data );
+			return false;
+		}
+
+		// Process message template with NetGSM variables and shipment data
+		$processed_message = $this->process_legacy_message_template( $order, $message, $shipment_data );
+
+		// Use the legacy NetGSM class to send SMS
+		$netgsm_provider = new \Hezarfen\ManualShipmentTracking\Netgsm();
+		$result = $netgsm_provider->perform_sending( $order, $shipment_data );
+
+		// Mark SMS as sent if successful
+		if ( $result ) {
+			$this->mark_sms_sent( $order, $rule, $phone, $processed_message );
+		}
+
+		// Clean up temporary data
+		unset( $this->current_shipment_data );
+
 		return $result;
 	}
 
@@ -274,6 +376,76 @@ class SMS_Automation {
 		);
 
 		return str_replace( array_keys( $variables ), array_values( $variables ), $template );
+	}
+
+	/**
+	 * Process legacy message template with NetGSM variables and write to legacy storage
+	 *
+	 * @param \WC_Order $order Order object
+	 * @param string $template Message template
+	 * @param object $shipment_data Optional shipment data object
+	 * @return string
+	 */
+	private function process_legacy_message_template( $order, $template, $shipment_data = null ) {
+		$order_date = $order->get_date_created();
+		
+		// Get shipment data if available
+		$courier_name = '';
+		$tracking_number = '';
+		$tracking_url = '';
+		
+		if ( $shipment_data ) {
+			$courier_name = $shipment_data->courier_title ?? '';
+			$tracking_number = $shipment_data->tracking_num ?? '';
+			$tracking_url = $shipment_data->tracking_url ?? '';
+		}
+		
+		// NetGSM legacy variables (square bracket format)
+		$variables = array(
+			'[siparis_no]' => $order->get_order_number(),
+			'[uye_adi]' => $order->get_billing_first_name(),
+			'[uye_soyadi]' => $order->get_billing_last_name(),
+			'[uye_telefonu]' => $order->get_billing_phone(),
+			'[uye_epostasi]' => $order->get_billing_email(),
+			'[kullanici_adi]' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
+			'[tarih]' => $order_date ? $order_date->date_i18n( get_option( 'date_format' ) ) : '',
+			'[saat]' => $order_date ? $order_date->date_i18n( get_option( 'time_format' ) ) : '',
+			'[hezarfen_kargo_firmasi]' => $courier_name,
+			'[hezarfen_kargo_takip_kodu]' => $tracking_number,
+			'[hezarfen_kargo_takip_linki]' => $tracking_url,
+		);
+
+		$processed_message = str_replace( array_keys( $variables ), array_values( $variables ), $template );
+		
+		// Write the processed message to legacy storage for NetGSM plugin to use
+		$this->write_to_legacy_storage( $order, $processed_message, $shipment_data );
+		
+		return $processed_message;
+	}
+
+	/**
+	 * Write message to legacy NetGSM storage
+	 *
+	 * @param \WC_Order $order Order object
+	 * @param string $message Processed message
+	 * @param object $shipment_data Optional shipment data object
+	 * @return void
+	 */
+	private function write_to_legacy_storage( $order, $message, $shipment_data = null ) {
+		// Store the message in the NetGSM legacy option format
+		$legacy_option_key = 'netgsm_order_status_text_' . \Hezarfen\ManualShipmentTracking\Manual_Shipment_Tracking::DB_SHIPPED_ORDER_STATUS;
+		update_option( $legacy_option_key, $message );
+		
+		// Also store it in the Hezarfen MST NetGSM content option for compatibility
+		update_option( \Hezarfen\ManualShipmentTracking\Settings::OPT_NETGSM_CONTENT, $message );
+		
+		// If shipment data is available, store the shipment-specific meta data
+		if ( $shipment_data ) {
+			$order->update_meta_data( \Hezarfen\ManualShipmentTracking\Netgsm::COURIER_TITLE_META_KEY, $shipment_data->courier_title ?? '' );
+			$order->update_meta_data( \Hezarfen\ManualShipmentTracking\Netgsm::TRACKING_NUM_META_KEY, $shipment_data->tracking_num ?? '' );
+			$order->update_meta_data( \Hezarfen\ManualShipmentTracking\Netgsm::TRACKING_URL_META_KEY, $shipment_data->tracking_url ?? '' );
+			$order->save();
+		}
 	}
 
 	/**
