@@ -56,6 +56,7 @@ class Hezarfen {
 		
 		// Trigger SMS migration on admin init to catch plugin updates
 		add_action( 'admin_init', array( 'Hezarfen_Install', 'migrate_legacy_sms_settings' ) );
+		add_action( 'plugins_loaded', array( $this, 'force_enable_address2_field' ) );
 		add_filter( 'woocommerce_get_settings_pages', array( $this, 'add_hezarfen_setting_page' ) );
 		add_filter( 'woocommerce_get_country_locale', array( $this, 'modify_tr_locale' ), PHP_INT_MAX - 2 );
 		add_filter('woocommerce_rest_prepare_shop_order_object', array( $this, 'add_virtual_order_metas_to_metadata' ), 10, 2);
@@ -268,6 +269,26 @@ class Hezarfen {
 	public function show_address2_field_notice() {
 		// Completely disable the notice functionality
 		return;
+
+	/**
+	 * Silently force enable address_2 field if it's hidden
+	 * No admin notices will be shown
+	 *
+	 * @return void
+	 */
+	public function force_enable_address2_field() {
+		// Only run if WooCommerce is active
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
+		// Check if address_2 field is hidden
+		$address_2_visibility = get_option( 'woocommerce_checkout_address_2_field', 'optional' );
+		
+		// If address_2 field is hidden, silently enable it
+		if ( 'hidden' === $address_2_visibility ) {
+			update_option( 'woocommerce_checkout_address_2_field', 'optional' );
+		}
 	}
 }
 
