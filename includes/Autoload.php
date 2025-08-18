@@ -32,7 +32,9 @@ class Autoload {
 		$this->load_assets();
 
 		add_action( 'plugins_loaded', array( $this, 'load_packages' ) );
-		add_action( 'plugins_loaded', array( $this, 'init_mss_integration' ) );
+		
+		// Initialize MSS integration immediately
+		$this->init_mss_integration();
 	}
 
 	/**

@@ -41,6 +41,12 @@ class Intense_MSS_Yonetim_Arayuzu {
 		add_action( 'add_meta_boxes', array( $this, 'intense_form_taslaklari_metabox_ekle' ) );
 
 		$this->options = get_option( 'intense_mss_ayarlar', array() );
+		
+		// Register post type immediately if we're past the init hook
+		// This ensures post type is available even if instantiated late
+		if ( did_action( 'init' ) ) {
+			$this->ozel_post_tipi();
+		}
 	}
 
 	/**
@@ -50,7 +56,7 @@ class Intense_MSS_Yonetim_Arayuzu {
 	 */
 	public function mevcut_sozlesme_taslaklari_liste() {
 		$args = array(
-			'post_type' => 'mss',
+			'post_type' => 'intense_mss_form',
 		);
 
 		return get_posts( $args );
@@ -103,7 +109,7 @@ class Intense_MSS_Yonetim_Arayuzu {
 	 */
 	public function stilleri_yukle( $hook_suffix ) {
 		if ( 'intense-mss_page_intense-mss-kayitli-sozlesmeler' === $hook_suffix ) {
-			wp_enqueue_style( 'in-mss-kayitli-sozlesmeler', INTENSE_MSS_UYGULAMA_URL . 'assets/css/admin/kayitli-sozlesmeler.css', array(), INTENSE_MSS_VERSIYON );
+			wp_enqueue_style( 'in-mss-kayitli-sozlesmeler', INTENSE_MSS_UYGULAMA_URL . 'assets/css/admin/kayitli-sozlesmeler.css', array(), WC_HEZARFEN_VERSION );
 		}
 	}
 
@@ -113,7 +119,7 @@ class Intense_MSS_Yonetim_Arayuzu {
 	 * @return void
 	 */
 	public function intense_form_taslaklari_metabox_ekle() {
-		add_meta_box( 'intense-form-taslaklari-meta-box', __( 'Form Değişkenleri', 'intense-mss-for-woocommerce' ), array( $this, 'intense_form_taslaklari_metabox_icerik' ), 'mss', 'side' );
+		add_meta_box( 'intense-form-taslaklari-meta-box', __( 'Form Değişkenleri', 'intense-mss-for-woocommerce' ), array( $this, 'intense_form_taslaklari_metabox_icerik' ), 'intense_mss_form', 'side' );
 	}
 
 	/**
@@ -174,7 +180,7 @@ class Intense_MSS_Yonetim_Arayuzu {
 
 		<p>Örnek: {ORNEKALAN_VERGINO} veya {ORNEKALAN_custom_field_1} gibi istediğiniz sayıda özel alan için bu formatı kullanabilirsiniz.</p>
 
-		<div style="font-size:11px;text-align:left;margin-top:15px;float:left;color:#a9a4a4"><?php echo esc_html( INTENSE_MSS_VERSIYON ); ?></div>
+		<div style="font-size:11px;text-align:left;margin-top:15px;float:left;color:#a9a4a4"><?php echo esc_html( WC_HEZARFEN_VERSION ); ?></div>
 
 		<div style="clear:right;text-align:right">
 			<a href="https://intense.com.tr" refl="noreferrer nofollow" target="_blank">
@@ -213,7 +219,7 @@ class Intense_MSS_Yonetim_Arayuzu {
 			__( 'Sözleşme Taslakları', 'intense-mss-for-woocommerce' ),
 			__( 'Sözleşme Taslakları', 'intense-mss-for-woocommerce' ),
 			'manage_options',
-			'edit.php?post_type=mss'
+			'edit.php?post_type=intense_mss_form'
 		);
 
 		add_submenu_page(
@@ -879,5 +885,3 @@ class Intense_MSS_Yonetim_Arayuzu {
 		<?php
 	}
 }
-
-new Intense_MSS_Yonetim_Arayuzu();

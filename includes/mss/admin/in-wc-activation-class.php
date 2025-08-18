@@ -56,14 +56,14 @@ class Aktivasyon_Deaktivasyon {
 	public static function on() {
 		$mevcut_version = get_option( 'intense_wc_mss_versiyon', '0.0' );
 
-		if( version_compare( $mevcut_version, INTENSE_MSS_VERSIYON, '>=' ) ) {
+		if( version_compare( $mevcut_version, WC_HEZARFEN_VERSION, '>=' ) ) {
 			return;
 		}
 
 		// veritabanı güncellemelerini başlat.
 		self::db_upgrade( $mevcut_version );
 
-		update_option( 'intense_wc_mss_versiyon', INTENSE_MSS_VERSIYON );
+		update_option( 'intense_wc_mss_versiyon', WC_HEZARFEN_VERSION );
 	}
 
 	/**
