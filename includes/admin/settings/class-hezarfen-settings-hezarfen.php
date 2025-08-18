@@ -522,7 +522,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 											<option value="netgsm_legacy"><?php esc_html_e( 'Send SMS via NetGSM Official Plugin (Legacy - Deprecated Soon)', 'hezarfen-for-woocommerce' ); ?></option>
 										<?php endif; ?>
 										<?php if ( \Hezarfen\ManualShipmentTracking\Pandasms::is_plugin_ready() ) : ?>
-											<option value="pandasms_legacy"><?php esc_html_e( 'Send SMS via PandaSMS Official Plugin (Legacy - Deprecated Soon)', 'hezarfen-for-woocommerce' ); ?></option>
+											<option value="pandasms_legacy"><?php esc_html_e( 'Send SMS via PandaSMS Official Plugin', 'hezarfen-for-woocommerce' ); ?></option>
 										<?php endif; ?>
 									</select>
 								</td>
@@ -607,26 +607,8 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 						</div>
 
 						<!-- PandaSMS Legacy Settings - Only shown when PandaSMS Legacy is selected -->
-						<div id="pandasms-legacy-settings" style="display: none; margin-top: 20px; padding: 15px; background: #fff; border: 1px solid #d63638; border-radius: 6px;">
-							<h4 style="margin: 0 0 15px 0; color: #d63638;"><?php esc_html_e( 'PandaSMS Legacy Configuration (Deprecated Soon)', 'hezarfen-for-woocommerce' ); ?></h4>
-							<p style="color: #d63638; font-style: italic; margin-bottom: 15px;">
-								<?php esc_html_e( 'This option uses the PandaSMS official WordPress plugin and will be deprecated soon. Please consider migrating to the direct NetGSM integration.', 'hezarfen-for-woocommerce' ); ?>
-							</p>
-							
-							<table class="form-table">
-								<tr>
-									<th scope="row">
-										<label for="pandasms-legacy-phone-type"><?php esc_html_e( 'Phone Number', 'hezarfen-for-woocommerce' ); ?></label>
-									</th>
-									<td>
-										<select id="pandasms-legacy-phone-type" name="pandasms_legacy_phone_type" style="width: 300px;">
-											<option value=""><?php esc_html_e( 'Select phone type...', 'hezarfen-for-woocommerce' ); ?></option>
-											<option value="billing"><?php esc_html_e( 'Billing Phone', 'hezarfen-for-woocommerce' ); ?></option>
-											<option value="shipping"><?php esc_html_e( 'Shipping Phone', 'hezarfen-for-woocommerce' ); ?></option>
-										</select>
-									</td>
-								</tr>
-							</table>
+						<div id="pandasms-legacy-settings" style="display: none; margin-top: 20px; padding: 15px; background: #fff; border: 1px solid #0073aa; border-radius: 6px;">
+							<h4 style="margin: 0 0 15px 0; color: #0073aa;"><?php esc_html_e( 'PandaSMS Configuration', 'hezarfen-for-woocommerce' ); ?></h4>
 							<p class="description" style="margin-top: 10px;">
 								<?php esc_html_e( 'PandaSMS message content is configured in the PandaSMS plugin settings. This integration will use the trigger "Sipariş kargoya verildiğinde" with shipment variables.', 'hezarfen-for-woocommerce' ); ?>
 							</p>

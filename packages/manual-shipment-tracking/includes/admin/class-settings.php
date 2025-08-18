@@ -194,7 +194,6 @@ class Settings {
 	/**
 	 * Outputs the "NetGSM SMS content" setting.
 	 * 
-	 * @deprecated This function is legacy. Use the new SMS automation system instead.
 	 * @param array<string, mixed> $setting "NetGSM SMS content" setting's data.
 	 * 
 	 * @return void
@@ -286,63 +285,6 @@ class Settings {
 		if ( 'woocommerce_page_wc-settings' === $hook_suffix && self::SECTION === $current_section ) {
 			wp_enqueue_script( 'hezarfen_mst_settings_js', HEZARFEN_MST_ASSETS_URL . 'js/admin/settings.js', array(), WC_HEZARFEN_VERSION, false );
 			wp_enqueue_style( 'hezarfen_mst_settings_css', HEZARFEN_MST_ASSETS_URL . 'css/admin/settings.css', array(), WC_HEZARFEN_VERSION );
-			
-			// Add inline CSS for legacy SMS section styling
-			$legacy_css = '
-				/* Style the entire SMS notification section */
-				.wc-settings-sub-title:has(+ .form-table) h3:contains("SMS Notification Settings (Legacy)") + .form-table,
-				h3:contains("SMS Notification Settings (Legacy)") ~ .form-table:first-of-type,
-				.form-table:has(tr:first-child th:contains("Enable SMS notification when order shipped")) {
-					background: rgba(255, 243, 205, 0.3);
-					border: 2px solid #f39c12;
-					border-radius: 8px;
-					padding: 20px;
-					margin: 15px 0;
-					position: relative;
-				}
-				
-				/* Add legacy label to the section */
-				.form-table:has(tr:first-child th:contains("Enable SMS notification when order shipped"))::before {
-					content: "⚠️ LEGACY SETTINGS - Will be deprecated soon";
-					position: absolute;
-					top: -12px;
-					left: 20px;
-					background: #fff3cd;
-					color: #856404;
-					font-weight: bold;
-					font-size: 12px;
-					padding: 6px 12px;
-					border: 2px solid #f39c12;
-					border-radius: 4px;
-					box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-				}
-				
-				/* Alternative approach using section IDs */
-				#hezarfen_mst_sms_notification .form-table {
-					background: rgba(255, 243, 205, 0.3);
-					border: 2px solid #f39c12;
-					border-radius: 8px;
-					padding: 20px;
-					margin: 15px 0;
-					position: relative;
-				}
-				
-				#hezarfen_mst_sms_notification .form-table::before {
-					content: "⚠️ LEGACY SETTINGS - Will be deprecated soon";
-					position: absolute;
-					top: -12px;
-					left: 20px;
-					background: #fff3cd;
-					color: #856404;
-					font-weight: bold;
-					font-size: 12px;
-					padding: 6px 12px;
-					border: 2px solid #f39c12;
-					border-radius: 4px;
-					box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-				}
-			';
-			wp_add_inline_style( 'hezarfen_mst_settings_css', $legacy_css );
 
 			$object_props = array(
 				'netgsm_key'                => Netgsm::$id,

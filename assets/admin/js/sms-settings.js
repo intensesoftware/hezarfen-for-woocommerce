@@ -56,7 +56,6 @@ jQuery(document).ready(function($) {
         // Remove all required attributes
         $('#netgsm-username, #netgsm-password, #netgsm-msgheader').removeAttr('required');
         $('#netgsm-legacy-phone-type').removeAttr('required');
-        $('#pandasms-legacy-phone-type').removeAttr('required');
         $('#phone-type, #message-template').removeAttr('required');
         
         if (actionType === 'netgsm') {
@@ -74,10 +73,7 @@ jQuery(document).ready(function($) {
             $('#netgsm-legacy-phone-type').attr('required', true);
         } else if (actionType === 'pandasms_legacy') {
             $('#pandasms-legacy-settings').show();
-            // Don't show sms-content-settings for legacy - it has its own phone type handling
-            
-            // Make PandaSMS legacy fields required (message is configured in PandaSMS plugin)
-            $('#pandasms-legacy-phone-type').attr('required', true);
+            // Don't show sms-content-settings for legacy - message is configured in PandaSMS plugin
         }
     });
 
@@ -133,8 +129,7 @@ jQuery(document).ready(function($) {
                 // Fill NetGSM Legacy fields if available (message is synced, only set phone type)
                 $('#netgsm-legacy-phone-type').val(ruleData.phone_type || '');
                 
-                // Fill PandaSMS Legacy fields if available (message is configured in PandaSMS plugin)
-                $('#pandasms-legacy-phone-type').val(ruleData.phone_type || '');
+                // PandaSMS Legacy - message is configured in PandaSMS plugin
                 
                 // Fill SMS content fields
                 $('#phone-type').val(ruleData.phone_type || '');
@@ -267,24 +262,14 @@ jQuery(document).ready(function($) {
             
             // No need to validate message since it's synced from legacy settings
         } else if (actionType === 'pandasms_legacy') {
-            const phoneType = $('#pandasms-legacy-phone-type').val();
-            
-            console.log('PandaSMS Legacy validation - Phone:', phoneType);
-            
-            if (!phoneType) {
-                alert('Please select phone type.');
-                $('#pandasms-legacy-phone-type').focus();
-                return;
-            }
-            
-            // No need to validate message since it's configured in PandaSMS plugin
+            // No validation needed - message is configured in PandaSMS plugin
         }
 
         const ruleData = {
             condition_status: $('#condition-status').val(),
             action_type: actionType,
             phone_type: actionType === 'netgsm_legacy' ? $('#netgsm-legacy-phone-type').val() : 
-                        actionType === 'pandasms_legacy' ? $('#pandasms-legacy-phone-type').val() : 
+                        actionType === 'pandasms_legacy' ? 'billing' : 
                         $('#phone-type').val(),
             message_template: $('#message-template').val(),
             iys_status: $('input[name="iys_status"]:checked').val()
