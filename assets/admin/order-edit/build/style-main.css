@@ -1028,6 +1028,9 @@ video:where(.hez-ui,.hez-ui *) {
 .static {
   position: static !important;
 }
+.fixed {
+  position: fixed !important;
+}
 .absolute {
   position: absolute !important;
 }
