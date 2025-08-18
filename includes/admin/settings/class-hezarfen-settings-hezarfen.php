@@ -648,9 +648,10 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 										<label><?php esc_html_e( 'IYS Status', 'hezarfen-for-woocommerce' ); ?></label>
 									</th>
 									<td>
-										<label><input type="radio" name="iys_status" value="0" checked> <?php esc_html_e( 'Information (0)', 'hezarfen-for-woocommerce' ); ?></label><br>
-										<label><input type="radio" name="iys_status" value="11"> <?php esc_html_e( 'Commercial (11)', 'hezarfen-for-woocommerce' ); ?></label>
-										<p class="description"><?php esc_html_e( 'Select "Information" for informational messages or "Commercial" for promotional messages.', 'hezarfen-for-woocommerce' ); ?></p>
+										<label><input type="radio" name="iys_status" value="0" checked> <?php esc_html_e( 'Information', 'hezarfen-for-woocommerce' ); ?></label><br>
+										<label><input type="radio" name="iys_status" value="11"> <?php esc_html_e( 'Commercial - Campaign, promotion, celebration etc. - Individual', 'hezarfen-for-woocommerce' ); ?></label><br>
+										<label><input type="radio" name="iys_status" value="12"> <?php esc_html_e( 'Commercial - Campaign, promotion, celebration etc. - Business', 'hezarfen-for-woocommerce' ); ?></label>
+										<p class="description"><?php esc_html_e( 'Select "Information" for informational messages, "Commercial - Individual" for promotional messages to individuals, or "Commercial - Business" for promotional messages to businesses.', 'hezarfen-for-woocommerce' ); ?></p>
 									</td>
 								</tr>
 							</table>
