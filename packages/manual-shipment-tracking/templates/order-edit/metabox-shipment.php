@@ -5,62 +5,6 @@ use \Hezarfen\ManualShipmentTracking\Helper;
 ?>
 <div id="hez-order-shipments" class="hez-ui">
 
-    <?php
-    // Get today's date in Turkish format
-    $turkish_months = array(
-        1 => 'Ocak', 2 => 'Şubat', 3 => 'Mart', 4 => 'Nisan', 5 => 'Mayıs', 6 => 'Haziran',
-        7 => 'Temmuz', 8 => 'Ağustos', 9 => 'Eylül', 10 => 'Ekim', 11 => 'Kasım', 12 => 'Aralık'
-    );
-    $turkish_days = array(
-        'Monday' => 'Pazartesi', 'Tuesday' => 'Salı', 'Wednesday' => 'Çarşamba',
-        'Thursday' => 'Perşembe', 'Friday' => 'Cuma', 'Saturday' => 'Cumartesi', 'Sunday' => 'Pazar'
-    );
-    
-    $today_turkish = date('j') . ' ' . $turkish_months[date('n')] . ' ' . date('Y') . ' - ' . $turkish_days[date('l')];
-    
-    // Get the saved survey date from options
-    $saved_survey_date = get_option('hez_survey_date', '');
-    
-    // If no saved date, save today's date
-    if (empty($saved_survey_date)) {
-        update_option('hez_survey_date', $today_turkish);
-        $saved_survey_date = $today_turkish;
-    }
-    
-    // Only show survey if today's date matches saved date
-    if ($today_turkish === $saved_survey_date) :
-    ?>
-    <!-- Hezarfen User Survey -->
-    <div style="margin-bottom: 1rem; padding: 1rem; background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; position: relative;">
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
-            <div style="flex-shrink: 0;">
-                <svg width="20" height="20" fill="#f59e0b" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
-                </svg>
-            </div>
-            <div style="flex: 1; min-width: 0;">
-                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
-                    <h4 style="font-size: 0.875rem; font-weight: 600; color: #92400e; margin: 0;">
-                        Hezarfen Kullanıcı Anketi - <?php echo esc_html($today_turkish); ?>
-                    </h4>
-                    <span style="font-size: 0.75rem; color: #92400e; opacity: 0.8;">
-                        Bu uyarı bugün gün boyunca burada gösterilecektir
-                    </span>
-                </div>
-                <p style="font-size: 0.75rem; color: #92400e; margin: 0 0 0.5rem 0; line-height: 1.4;">
-                    Hezarfen'i sizin için daha hızlı, pratik ve güçlü hale getirmemize yardımcı olun. Aşağıdaki formdan eklenmesini istediğiniz özellikleri veya yaşadığınız sorunları bize iletin — geri bildirimleriniz geliştirme ekibimiz tarafından dikkatle değerlendirilir.
-                </p>
-                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                    <a href="https://intense.com.tr/hezarfen-kullanici-geri-bildirim-formu/" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 500; color: white; background: #f59e0b; border: none; border-radius: 6px; text-decoration: none; transition: background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#d97706';" onmouseout="this.style.backgroundColor='#f59e0b';">
-                        💡 Anonim Fikrimi Paylaş
-                    </a>
-                    <span style="font-size: 0.7rem; color: #92400e; opacity: 0.8;">(anonimdir, iletişim bilgileriniz toplanmaz)</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <?php endif; ?>
-
     <?php if (defined('HEZARFEN_PRO_VERSION')) : ?>
     <div class="mb-4 border-gray-200 dark:border-gray-700">
         <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
@@ -102,41 +46,6 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                         <div class="mb-5">
                             <label for="tracking-num-input" class="font-light text-gray-1 block mb-2 text-sm dark:text-white"><?php esc_html_e('Tracking Number', 'hezarfen-for-woocommerce'); ?></label>
                             <input type="text" id="tracking-num-input" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-3 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" />
-                        </div>
-                        
-                        <!-- Smart Feedback Request Message -->
-                        <div id="hezarfen-feedback-request" class="mb-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg shadow-sm" style="display: none;">
-                            <div class="flex items-start space-x-3">
-                                <div class="flex-shrink-0">
-                                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
-                                    </svg>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <h4 class="text-sm font-medium text-blue-900 mb-1">
-                                        <?php esc_html_e('⭐ Love Hezarfen?', 'hezarfen-for-woocommerce'); ?>
-                                    </h4>
-                                    <p class="text-sm text-blue-700 mb-3">
-                                        <?php esc_html_e('We noticed you\'re using our manual tracking feature! If Hezarfen has helped your store, please consider leaving a review on WordPress.org. Your feedback helps other store owners discover our plugin.', 'hezarfen-for-woocommerce'); ?>
-                                    </p>
-                                    <div class="flex items-center space-x-3">
-                                        <a href="https://wordpress.org/support/plugin/hezarfen-for-woocommerce/reviews/#new-post" target="_blank" id="hezarfen-review-positive" class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-green-700 bg-green-100 border border-green-200 rounded-md hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200">
-                                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
-                                            </svg>
-                                            <?php esc_html_e('Leave a Review', 'hezarfen-for-woocommerce'); ?>
-                                        </a>
-                                        <button type="button" id="hezarfen-feedback-dismiss" class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-gray-600 bg-gray-100 border border-gray-200 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-200">
-                                            <?php esc_html_e('Maybe Later', 'hezarfen-for-woocommerce'); ?>
-                                        </button>
-                                    </div>
-                                </div>
-                                <button type="button" id="hezarfen-feedback-close" class="flex-shrink-0 text-gray-400 hover:text-gray-600 focus:outline-none">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                                    </svg>
-                                </button>
-                            </div>
                         </div>
                         
                         <div class="mb-2">
