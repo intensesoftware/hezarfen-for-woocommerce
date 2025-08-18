@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.3.7
+Stable tag: 2.4.0
 
 Türkiye'nin lider WooCommerce kargo çözümü! 26+ yerli kargo firması desteği, otomatik takip, SMS bildirimleri ve Türkiye'ye özel e-ticaret özellikleri. En iyi WooCommerce eklentileri arasında yer alan kapsamlı kargo entegrasyonu ve sipariş yönetim sistemi.
 
@@ -40,7 +40,8 @@ Türkiye'nin lider WooCommerce kargo çözümü! 26+ yerli kargo firması deste�
 • "Kargoya Verildi" sipariş durumu ve gönderi takibi
 • Müşteri panelinde detaylı kargo görüntüleme ve sipariş takibi
 • Otomatik e-posta bildirimleri ve iade süreç yönetimi
-• SMS entegrasyonu (NetGSM ve PandaSMS) ile Kargoya Verildi ve Diğer Sipariş Durumlarında SMS bilgilendirme
+• **YENİ: SMS Otomasyonu** - NetGSM ve PandaSMS ile gelişmiş otomatik SMS bildirimleri
+• SMS entegrasyonu ile Kargoya Verildi ve tüm sipariş durumlarında özelleştirilebilir SMS bilgilendirme
 • Intense WooCommerce Mesafeli Satış Sözleşmesi Eklentisiyle tam uyumluluk (otomatik olarak kurumsal/bireysel vergi alanlarını çeker.)
 
 **🏠 Türkiye'ye Özel Çözümler**
@@ -102,7 +103,7 @@ T.C. Kimlik numarası alanının görünmesi için şifreleme özelliğinin akti
 Tüm il/ilçe/mahalle verileri eklenti içerisinde yer almaktadır. İnternet bağlantısı veya harici bir servise ihtiyaç duymaz, tamamen offline çalışır.
 
 = WooCommerce SMS eklentisi ile SMS bildirimleri nasıl gönderilir? =
-NetGSM hesabınız varsa, API bilgilerinizi girerek müşterilerinize otomatik kargo SMS bilgilendirme gönderebilirsiniz. Bu WooCommerce SMS eklentisi özelliğini, WooCommerce > Ayarlar > Hezarfen > SMS Ayarları bölümünden yapılandırabilirsiniz.
+**YENİ SMS Otomasyonu** ile NetGSM hesabınız varsa, API bilgilerinizi girerek müşterilerinize otomatik SMS bildirimleri gönderebilirsiniz. WooCommerce > Ayarlar > Hezarfen > SMS Ayarları bölümünden gelişmiş SMS kuralları oluşturabilir, farklı sipariş durumları için özel SMS şablonları tanımlayabilirsiniz. Legacy NetGSM/PandaSMS ayarlarınız otomatik olarak yeni sisteme aktarılır.
 
 = Kurumsal ve bireysel fatura ayrımı nasıl yapılır? =
 WooCommerce > Ayarlar > Hezarfen > Ödeme Sayfası Ayarları menüsünden "Ödeme ekranında vergi alanlarını göster" seçeneğini aktifleştirdiğinizde, müşterileriniz kurumsal veya bireysel fatura seçimi yapabilir.
@@ -136,6 +137,20 @@ Bu Türkçe WooCommerce eklentisi, Türkçe ve İngilizce dillerini desteklemekt
 11. Kargoya verildi özellik ayarları
 
 == Changelog ==
+
+= 2.4.0-beta.1 - 2025-08-18 =
+* **YENİ ÖZELLİK: SMS Otomasyonu Sistemi** - Sipariş durumu değişikliklerinde otomatik SMS gönderimi
+* **YENİ ÖZELLİK: Gelişmiş SMS Kuralları** - Farklı sipariş durumları için özelleştirilebilir SMS kuralları
+* **YENİ ÖZELLİK: NetGSM Yerleşik Entegrasyonu** - NetGSM API'si ile doğrudan entegrasyon
+* **YENİ ÖZELLİK: Legacy SMS Migrasyonu** - Eski NetGSM/PandaSMS ayarlarının otomatik aktarımı ve SMS otomasyonunun otomatik etkinleştirilmesi
+* **YENİ ÖZELLİK: SMS Şablon Editörü** - Özelleştirilebilir SMS mesaj şablonları ve NetGSM değişkenleri
+* **İYİLEŞTİRME: Sipariş Düzenleme Arayüzü** - Modern ve temiz tasarım, gelişmiş kullanıcı deneyimi
+* **İYİLEŞTİRME: Otomatik Address2 Etkinleştirme** - Gizli adres alanları sessizce otomatik etkinleştiriliyor
+* **İYİLEŞTİRME: Ayarlar Hızlı Erişim** - Eklenti listesinde doğrudan ayarlar bağlantısı eklendi
+* **İYİLEŞTİRME: UI Temizliği** - Gereksiz upsell, anket ve geri bildirim içerikleri kaldırıldı
+* **DÜZELTME: PandaSMS Entegrasyonu** - PandaSMS legacy entegrasyonu hata düzeltmeleri
+* **DÜZELTME: Asset Optimizasyonu** - Kullanılmayan admin JavaScript ve CSS dosyaları kaldırıldı
+
 = 2.3.7 - 2025-08-13 =
 * DHL E-Commerce kargo eklendi.
 
