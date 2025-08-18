@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.4.0
+Stable tag: 2.4.1
 
 Türkiye'nin lider WooCommerce kargo çözümü! 23 kargo firması, SMS otomasyonu, il/ilçe/mahalle, TC kimlik ve vergi alanları desteği.
 
@@ -137,8 +137,10 @@ Bu Türkçe WooCommerce eklentisi, Türkçe ve İngilizce dillerini desteklemekt
 11. Kargoya verildi özellik ayarları
 
 == Changelog ==
+= 2.4.1 - 2015-08-18 =
+* readme.txt update
 
-= 2.4.0-beta.1 - 2025-08-18 =
+= 2.4.0 - 2025-08-18 =
 * **YENİ ÖZELLİK: SMS Otomasyonu Sistemi** - Sipariş durumu değişikliklerinde otomatik SMS gönderimi
 * **YENİ ÖZELLİK: Gelişmiş SMS Kuralları** - Farklı sipariş durumları için özelleştirilebilir SMS kuralları
 * **YENİ ÖZELLİK: NetGSM Yerleşik Entegrasyonu** - NetGSM API'si ile doğrudan entegrasyon
