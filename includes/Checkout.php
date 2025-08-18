@@ -173,6 +173,11 @@ class Checkout {
 	 * @return array<string, mixed>
 	 */
 	public function make_visible_address2_label( $fields ) {
+		// Check if address_2 field exists and has label_class
+		if ( ! isset( $fields['address_2'] ) || ! isset( $fields['address_2']['label_class'] ) ) {
+			return $fields;
+		}
+
 		$needs_removal_label_class = array_search( 'screen-reader-text', $fields['address_2']['label_class'] );
 
 		if ( false !== $needs_removal_label_class ) {
@@ -189,12 +194,19 @@ class Checkout {
 	 * @return array<string, mixed>
 	 */
 	public function make_address2_required_and_update_the_label( $fields ) {
-		$fields['billing']['billing_address_2']['required']      = true;
-		$fields['billing']['billing_address_2']['label']         = __( 'Your Address', 'hezarfen-for-woocommerce' );
-		$fields['billing']['billing_address_2']['placeholder']   = __( 'Enter your street, avenue, building, and apartment number information.', 'hezarfen-for-woocommerce' );
-		$fields['shipping']['shipping_address_2']['required']    = true;
-		$fields['shipping']['shipping_address_2']['label']       = __( 'Your Address', 'hezarfen-for-woocommerce' );
-		$fields['shipping']['shipping_address_2']['placeholder'] = __( 'Enter your street, avenue, building, and apartment number information.', 'hezarfen-for-woocommerce' );
+		// Check if billing address_2 field exists before modifying it
+		if ( isset( $fields['billing']['billing_address_2'] ) ) {
+			$fields['billing']['billing_address_2']['required']      = true;
+			$fields['billing']['billing_address_2']['label']         = __( 'Your Address', 'hezarfen-for-woocommerce' );
+			$fields['billing']['billing_address_2']['placeholder']   = __( 'Enter your street, avenue, building, and apartment number information.', 'hezarfen-for-woocommerce' );
+		}
+		
+		// Check if shipping address_2 field exists before modifying it
+		if ( isset( $fields['shipping']['shipping_address_2'] ) ) {
+			$fields['shipping']['shipping_address_2']['required']    = true;
+			$fields['shipping']['shipping_address_2']['label']       = __( 'Your Address', 'hezarfen-for-woocommerce' );
+			$fields['shipping']['shipping_address_2']['placeholder'] = __( 'Enter your street, avenue, building, and apartment number information.', 'hezarfen-for-woocommerce' );
+		}
 
 		return $fields;
 	}
@@ -336,8 +348,8 @@ class Checkout {
 	public function add_tax_fields( $fields ) {
 		$invoice_type_value = ( new \WC_Checkout() )->get_value( 'billing_hez_invoice_type' );
 
-		$address_2_priority = $fields['billing']['billing_address_2']['priority'] ?? 0;
-		$address_1_priority = $fields['billing']['billing_address_1']['priority'];
+		$address_2_priority = isset( $fields['billing']['billing_address_2']['priority'] ) ? $fields['billing']['billing_address_2']['priority'] : 0;
+		$address_1_priority = isset( $fields['billing']['billing_address_1']['priority'] ) ? $fields['billing']['billing_address_1']['priority'] : 0;
 
 		$fields['billing']['billing_hez_invoice_type'] = array(
 			'id'       => 'hezarfen_invoice_type',

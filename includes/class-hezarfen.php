@@ -52,6 +52,7 @@ class Hezarfen {
 		add_action( 'plugins_loaded', array( $this, 'check_addons_and_show_notices' ) );
 		add_action( 'plugins_loaded', array( $this, 'define_constants' ) );
 		add_action( 'admin_notices', array( $this, 'show_migration_notice' ) );
+		add_action( 'admin_notices', array( $this, 'show_address2_field_notice' ) );
 		
 		// Trigger SMS migration on admin init to catch plugin updates
 		add_action( 'admin_init', array( 'Hezarfen_Install', 'migrate_legacy_sms_settings' ) );
@@ -256,6 +257,17 @@ class Hezarfen {
 			// Delete the transient so it only shows once
 			delete_transient( 'hezarfen_sms_migration_notice' );
 		}
+	}
+
+	/**
+	 * Show admin notice when address_2 field is hidden but required for Hezarfen
+	 * COMPLETELY DISABLED - No notice will be shown
+	 *
+	 * @return void
+	 */
+	public function show_address2_field_notice() {
+		// Completely disable the notice functionality
+		return;
 	}
 }
 
