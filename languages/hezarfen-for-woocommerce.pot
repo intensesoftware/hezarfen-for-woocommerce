@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 10:58+0000\n"
+"POT-Creation-Date: 2025-08-18 11:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -110,7 +110,7 @@ msgid ""
 "status/#reverting-to-shortcodes-with-woocommerce-8-3'>these instructions</a>."
 msgstr ""
 
-#: includes/class-sms-automation.php:718
+#: includes/class-sms-automation.php:710
 msgid "billing"
 msgstr ""
 
@@ -597,11 +597,11 @@ msgstr ""
 msgid "Intense Yazılım Ltd."
 msgstr ""
 
-#: includes/class-sms-automation.php:982
+#: includes/class-sms-automation.php:974
 msgid "Invalid request parameters. Please check your credentials."
 msgstr ""
 
-#: includes/class-sms-automation.php:981
+#: includes/class-sms-automation.php:973
 msgid ""
 "Invalid username/password or API access denied. Please check your "
 "credentials and API permissions."
@@ -707,7 +707,7 @@ msgstr ""
 msgid "NetGSM"
 msgstr ""
 
-#: includes/class-sms-automation.php:989
+#: includes/class-sms-automation.php:981
 #, php-format
 msgid "NetGSM API error (Code: %s)"
 msgstr ""
@@ -733,7 +733,7 @@ msgstr ""
 msgid "NetGSM Password"
 msgstr ""
 
-#: includes/class-sms-automation.php:983 includes/class-sms-automation.php:984
+#: includes/class-sms-automation.php:975 includes/class-sms-automation.php:976
 msgid "NetGSM system error. Please try again later."
 msgstr ""
 
@@ -762,7 +762,7 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: includes/class-sms-automation.php:976 includes/class-sms-automation.php:1003
+#: includes/class-sms-automation.php:968 includes/class-sms-automation.php:995
 msgid "No message headers found in NetGSM response"
 msgstr ""
 
@@ -969,6 +969,10 @@ msgstr ""
 msgid "Sendeo Kargo"
 msgstr ""
 
+#: hezarfen-for-woocommerce.php:57
+msgid "Settings"
+msgstr ""
+
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:55
 msgid "Shipment"
 msgstr ""
@@ -1021,7 +1025,7 @@ msgid_plural "Shipped (Kargo Takip Turkiye Plugin) (%s)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-sms-automation.php:718
+#: includes/class-sms-automation.php:710
 msgid "shipping"
 msgstr ""
 
@@ -1078,13 +1082,13 @@ msgid "SMS Message Template"
 msgstr ""
 
 #. 1: Order status name, 2: Phone type (billing/shipping), 3: Phone number
-#: includes/class-sms-automation.php:732
+#: includes/class-sms-automation.php:724
 #, php-format
 msgid "SMS notification sent via NetGSM for %1$s status to %2$s phone: %3$s"
 msgstr ""
 
 #. 1: Order status name, 2: Phone type (billing/shipping), 3: Phone number, 4: Job ID
-#: includes/class-sms-automation.php:723
+#: includes/class-sms-automation.php:715
 #, php-format
 msgid ""
 "SMS notification sent via NetGSM for %1$s status to %2$s phone: %3$s (Job ID:"
