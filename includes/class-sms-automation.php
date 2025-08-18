@@ -931,20 +931,21 @@ class SMS_Automation {
 	public static function fetch_netgsm_message_headers( $username, $password ) {
 		$url = 'https://api.netgsm.com.tr/sms/rest/v2/msgheader';
 		
-		$body = wp_json_encode( array(
-			'usercode' => $username,
-			'password' => $password,
-		) );
-
-		$response = wp_remote_request( $url, array(
-			'method' => 'GET',
-			'headers' => array(
-				'Content-Type' => 'application/json',
+		// Create Basic Auth header
+		$credentials = base64_encode( $username . ':' . $password );
+		
+		// WordPress HTTP API arguments
+		$args = array(
+			'method'      => 'GET',
+			'headers'     => array(
+				'Authorization' => 'Basic ' . $credentials,
 			),
-			'body' => $body,
-			'timeout' => 30,
-			'sslverify' => false,
-		) );
+			'timeout'     => 30,
+			'sslverify'   => false,
+		);
+		
+		// Make API call
+		$response = wp_remote_get( $url, $args );
 
 		if ( is_wp_error( $response ) ) {
 			return $response;
@@ -963,8 +964,19 @@ class SMS_Automation {
 			return new WP_Error( 'json_decode_error', 'Failed to decode NetGSM API response' );
 		}
 
-		// Handle error responses from NetGSM
+		// Handle NetGSM response codes
 		if ( isset( $data['code'] ) ) {
+			// Code "00" means success
+			if ( $data['code'] === '00' ) {
+				// Return message headers if available (NetGSM uses "msgheaders" plural)
+				if ( isset( $data['msgheaders'] ) && is_array( $data['msgheaders'] ) ) {
+					return $data['msgheaders'];
+				}
+				
+				return new WP_Error( 'no_msgheaders', __( 'No message headers found in NetGSM response', 'hezarfen-for-woocommerce' ) );
+			}
+			
+			// Handle error codes
 			$error_messages = array(
 				'30' => __( 'Invalid username/password or API access denied. Please check your credentials and API permissions.', 'hezarfen-for-woocommerce' ),
 				'70' => __( 'Invalid request parameters. Please check your credentials.', 'hezarfen-for-woocommerce' ),
@@ -979,12 +991,16 @@ class SMS_Automation {
 			return new WP_Error( 'netgsm_api_error', $error_message );
 		}
 
-		// Return message headers if available
+		// Fallback: try to find message headers in different formats
+		if ( isset( $data['msgheaders'] ) && is_array( $data['msgheaders'] ) ) {
+			return $data['msgheaders'];
+		}
+		
 		if ( isset( $data['msgheader'] ) && is_array( $data['msgheader'] ) ) {
 			return $data['msgheader'];
 		}
 
-		return new WP_Error( 'no_msgheader', __( 'No message headers found in NetGSM response', 'hezarfen-for-woocommerce' ) );
+		return new WP_Error( 'no_msgheaders', __( 'No message headers found in NetGSM response', 'hezarfen-for-woocommerce' ) );
 	}
 
 	/**
