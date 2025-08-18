@@ -1,7 +1,7 @@
 
 === Hezarfen - Türkiye Kargo Entegrasyonu - WooCommerce Kargo Takip ve Yönetim Eklentisi For Woocommerce ===
 Contributors: intenseyazilim, mskapusuz
-Tags: woocommerce kargo takip mdodülü, ödeme alanları, fatura bilgileri, sipariş gönderim, sms bildirimleri
+Tags: kargo, kargo takip, türkiye, woocommerce, fatura
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.0
