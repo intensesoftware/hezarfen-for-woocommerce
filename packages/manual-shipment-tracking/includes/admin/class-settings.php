@@ -131,8 +131,8 @@ class Settings {
 				),
 				array(
 					'type'  => 'title',
-					'title' => __( 'SMS Notification Settings', 'hezarfen-for-woocommerce' ),
-					'desc'  => '<div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px; padding: 12px; margin: 10px 0;"><strong>' . __( 'Notice:', 'hezarfen-for-woocommerce' ) . '</strong> ' . sprintf( __( 'SMS automation settings have been moved to a new, more advanced system. You can now configure multiple SMS rules with different triggers and conditions. %sManage SMS Rules%s', 'hezarfen-for-woocommerce' ), '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=sms_automation' ) ) . '" style="text-decoration: none; font-weight: bold;">', '</a>' ) . '<br><br>' . __( 'The settings below are for legacy compatibility only and will be deprecated soon. Please migrate to the new SMS automation system.', 'hezarfen-for-woocommerce' ) . '</div>',
+					'title' => __( 'SMS Notification Settings (Legacy)', 'hezarfen-for-woocommerce' ),
+					'desc'  => '<div style="background: #fff3cd; border: 2px solid #f39c12; border-radius: 6px; padding: 15px; margin: 15px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><div style="display: flex; align-items: center; margin-bottom: 10px;"><span style="font-size: 20px; margin-right: 8px;">⚠️</span><strong style="color: #d68910; font-size: 16px;">' . __( 'Important Notice:', 'hezarfen-for-woocommerce' ) . '</strong></div><p style="margin: 0 0 12px 0; line-height: 1.5;">' . sprintf( __( 'SMS automation settings have been moved to a new, more advanced system. You can now configure multiple SMS rules with different triggers and conditions. %sManage SMS Rules%s', 'hezarfen-for-woocommerce' ), '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=sms_settings' ) ) . '" style="color: #0073aa; text-decoration: none; font-weight: bold; border-bottom: 1px solid #0073aa;">', '</a>' ) . '</p><p style="margin: 0; color: #856404; font-style: italic;">' . __( 'The settings below are for legacy compatibility only and will be deprecated soon. Please migrate to the new SMS automation system.', 'hezarfen-for-woocommerce' ) . '</p></div>',
 				),
 				array(
 					'type'  => 'checkbox',
@@ -307,6 +307,63 @@ class Settings {
 		if ( 'woocommerce_page_wc-settings' === $hook_suffix && self::SECTION === $current_section ) {
 			wp_enqueue_script( 'hezarfen_mst_settings_js', HEZARFEN_MST_ASSETS_URL . 'js/admin/settings.js', array(), WC_HEZARFEN_VERSION, false );
 			wp_enqueue_style( 'hezarfen_mst_settings_css', HEZARFEN_MST_ASSETS_URL . 'css/admin/settings.css', array(), WC_HEZARFEN_VERSION );
+			
+			// Add inline CSS for legacy SMS section styling
+			$legacy_css = '
+				/* Style the entire SMS notification section */
+				.wc-settings-sub-title:has(+ .form-table) h3:contains("SMS Notification Settings (Legacy)") + .form-table,
+				h3:contains("SMS Notification Settings (Legacy)") ~ .form-table:first-of-type,
+				.form-table:has(tr:first-child th:contains("Enable SMS notification when order shipped")) {
+					background: rgba(255, 243, 205, 0.3);
+					border: 2px solid #f39c12;
+					border-radius: 8px;
+					padding: 20px;
+					margin: 15px 0;
+					position: relative;
+				}
+				
+				/* Add legacy label to the section */
+				.form-table:has(tr:first-child th:contains("Enable SMS notification when order shipped"))::before {
+					content: "⚠️ LEGACY SETTINGS - Will be deprecated soon";
+					position: absolute;
+					top: -12px;
+					left: 20px;
+					background: #fff3cd;
+					color: #856404;
+					font-weight: bold;
+					font-size: 12px;
+					padding: 6px 12px;
+					border: 2px solid #f39c12;
+					border-radius: 4px;
+					box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+				}
+				
+				/* Alternative approach using section IDs */
+				#hezarfen_mst_sms_notification .form-table {
+					background: rgba(255, 243, 205, 0.3);
+					border: 2px solid #f39c12;
+					border-radius: 8px;
+					padding: 20px;
+					margin: 15px 0;
+					position: relative;
+				}
+				
+				#hezarfen_mst_sms_notification .form-table::before {
+					content: "⚠️ LEGACY SETTINGS - Will be deprecated soon";
+					position: absolute;
+					top: -12px;
+					left: 20px;
+					background: #fff3cd;
+					color: #856404;
+					font-weight: bold;
+					font-size: 12px;
+					padding: 6px 12px;
+					border: 2px solid #f39c12;
+					border-radius: 4px;
+					box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+				}
+			';
+			wp_add_inline_style( 'hezarfen_mst_settings_css', $legacy_css );
 
 			$object_props = array(
 				'netgsm_key'                => Netgsm::$id,
