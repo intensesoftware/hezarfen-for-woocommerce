@@ -131,6 +131,9 @@ class Hezarfen_Install {
 		if ( $migration_performed ) {
 			update_option( 'hezarfen_sms_rules', $existing_rules );
 			
+			// Automatically enable SMS automation when legacy settings are migrated
+			update_option( 'hezarfen_sms_automation_enabled', 'yes' );
+			
 			// Set a transient to show admin notice
 			set_transient( 'hezarfen_sms_migration_notice', true, 300 ); // Show for 5 minutes
 		}

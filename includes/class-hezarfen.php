@@ -246,7 +246,7 @@ class Hezarfen {
 					<strong><?php esc_html_e( 'Hezarfen SMS Migration Complete!', 'hezarfen-for-woocommerce' ); ?></strong>
 					<?php 
 					printf( 
-						esc_html__( 'Your legacy NetGSM SMS settings have been automatically migrated to the new SMS automation system. %sView SMS Rules%s', 'hezarfen-for-woocommerce' ),
+						esc_html__( 'Your legacy SMS settings have been automatically migrated to the new SMS automation system and SMS automation has been enabled. %sView SMS Settings%s', 'hezarfen-for-woocommerce' ),
 						'<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=sms_settings' ) ) . '">',
 						'</a>'
 					);
