@@ -50,11 +50,13 @@ jQuery(document).ready(function($) {
         // Hide all settings first
         $('#netgsm-settings').hide();
         $('#netgsm-legacy-settings').hide();
+        $('#pandasms-legacy-settings').hide();
         $('#sms-content-settings').hide();
         
         // Remove all required attributes
         $('#netgsm-username, #netgsm-password, #netgsm-msgheader').removeAttr('required');
         $('#netgsm-legacy-phone-type').removeAttr('required');
+        $('#pandasms-legacy-phone-type').removeAttr('required');
         $('#phone-type, #message-template').removeAttr('required');
         
         if (actionType === 'netgsm') {
@@ -70,6 +72,12 @@ jQuery(document).ready(function($) {
             
             // Make NetGSM legacy fields required (message is synced, so only phone type is required)
             $('#netgsm-legacy-phone-type').attr('required', true);
+        } else if (actionType === 'pandasms_legacy') {
+            $('#pandasms-legacy-settings').show();
+            // Don't show sms-content-settings for legacy - it has its own phone type handling
+            
+            // Make PandaSMS legacy fields required (message is configured in PandaSMS plugin)
+            $('#pandasms-legacy-phone-type').attr('required', true);
         }
     });
 
@@ -124,6 +132,9 @@ jQuery(document).ready(function($) {
                 
                 // Fill NetGSM Legacy fields if available (message is synced, only set phone type)
                 $('#netgsm-legacy-phone-type').val(ruleData.phone_type || '');
+                
+                // Fill PandaSMS Legacy fields if available (message is configured in PandaSMS plugin)
+                $('#pandasms-legacy-phone-type').val(ruleData.phone_type || '');
                 
                 // Fill SMS content fields
                 $('#phone-type').val(ruleData.phone_type || '');
@@ -255,12 +266,26 @@ jQuery(document).ready(function($) {
             }
             
             // No need to validate message since it's synced from legacy settings
+        } else if (actionType === 'pandasms_legacy') {
+            const phoneType = $('#pandasms-legacy-phone-type').val();
+            
+            console.log('PandaSMS Legacy validation - Phone:', phoneType);
+            
+            if (!phoneType) {
+                alert('Please select phone type.');
+                $('#pandasms-legacy-phone-type').focus();
+                return;
+            }
+            
+            // No need to validate message since it's configured in PandaSMS plugin
         }
 
         const ruleData = {
             condition_status: $('#condition-status').val(),
             action_type: actionType,
-            phone_type: actionType === 'netgsm_legacy' ? $('#netgsm-legacy-phone-type').val() : $('#phone-type').val(),
+            phone_type: actionType === 'netgsm_legacy' ? $('#netgsm-legacy-phone-type').val() : 
+                        actionType === 'pandasms_legacy' ? $('#pandasms-legacy-phone-type').val() : 
+                        $('#phone-type').val(),
             message_template: $('#message-template').val(),
             iys_status: $('input[name="iys_status"]:checked').val()
         };
@@ -273,6 +298,9 @@ jQuery(document).ready(function($) {
         } else if (actionType === 'netgsm_legacy') {
             // Message is synced from legacy settings, no need to store it in rule data
             ruleData.netgsm_legacy_synced = true;
+        } else if (actionType === 'pandasms_legacy') {
+            // Message is configured in PandaSMS plugin, no need to store it in rule data
+            ruleData.pandasms_legacy_synced = true;
         }
 
         console.log('Current rule index:', currentRuleIndex);
@@ -354,6 +382,8 @@ jQuery(document).ready(function($) {
             actionTypeLabel = 'NetGSM';
         } else if (rule.action_type === 'netgsm_legacy') {
             actionTypeLabel = 'NetGSM Legacy';
+        } else if (rule.action_type === 'pandasms_legacy') {
+            actionTypeLabel = 'PandaSMS Legacy';
         }
 
             html += `

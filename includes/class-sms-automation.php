@@ -53,6 +53,8 @@ class SMS_Automation {
 						$this->send_sms_for_rule( $order, $rule );
 					} elseif ( isset( $rule['action_type'] ) && $rule['action_type'] === 'netgsm_legacy' ) {
 						$this->send_sms_for_legacy_rule( $order, $rule );
+					} elseif ( isset( $rule['action_type'] ) && $rule['action_type'] === 'pandasms_legacy' ) {
+						$this->send_sms_for_pandasms_legacy_rule( $order, $rule );
 					}
 				}
 			}
@@ -79,6 +81,8 @@ class SMS_Automation {
 					$this->send_sms_for_shipment_rule( $order, $rule, $shipment_data );
 				} elseif ( isset( $rule['action_type'] ) && $rule['action_type'] === 'netgsm_legacy' ) {
 					$this->send_sms_for_legacy_shipment_rule( $order, $rule, $shipment_data );
+				} elseif ( isset( $rule['action_type'] ) && $rule['action_type'] === 'pandasms_legacy' ) {
+					$this->send_sms_for_pandasms_legacy_shipment_rule( $order, $rule, $shipment_data );
 				}
 			}
 		}
@@ -254,6 +258,85 @@ class SMS_Automation {
 		// Mark SMS as sent if successful
 		if ( $result ) {
 			$this->mark_sms_sent( $order, $rule, $phone, $processed_message );
+		}
+
+		// Clean up temporary data
+		unset( $this->current_shipment_data );
+
+		return $result;
+	}
+
+	/**
+	 * Send SMS for a PandaSMS legacy rule (using PandaSMS official plugin)
+	 *
+	 * @param \WC_Order $order Order object
+	 * @param array $rule SMS rule
+	 * @return bool
+	 */
+	private function send_sms_for_pandasms_legacy_rule( $order, $rule ) {
+		// Check if PandaSMS plugin is available
+		if ( ! \Hezarfen\ManualShipmentTracking\Pandasms::is_plugin_ready() ) {
+			return false;
+		}
+
+		// Get phone number based on rule
+		$phone = $this->get_phone_number( $order, $rule['phone_type'] );
+		if ( empty( $phone ) ) {
+			return false;
+		}
+
+		// Create a temporary shipment data object for legacy compatibility
+		$temp_shipment_data = new \Hezarfen\ManualShipmentTracking\Shipment_Data( array(
+			'order_id' => $order->get_id(),
+			'courier_title' => '',
+			'tracking_num' => '',
+			'tracking_url' => '',
+			'sms_sent' => false
+		) );
+
+		// Use the legacy PandaSMS class to send SMS
+		$pandasms_provider = new \Hezarfen\ManualShipmentTracking\Pandasms();
+		$result = $pandasms_provider->perform_sending( $order, $temp_shipment_data );
+
+		// Mark SMS as sent if successful
+		if ( $result ) {
+			$this->mark_sms_sent( $order, $rule, $phone, 'PandaSMS Legacy SMS' );
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Send SMS for a PandaSMS legacy shipment rule (using PandaSMS official plugin)
+	 *
+	 * @param \WC_Order $order Order object
+	 * @param array $rule SMS rule
+	 * @param object $shipment_data Shipment data object
+	 * @return bool
+	 */
+	private function send_sms_for_pandasms_legacy_shipment_rule( $order, $rule, $shipment_data ) {
+		// Check if PandaSMS plugin is available
+		if ( ! \Hezarfen\ManualShipmentTracking\Pandasms::is_plugin_ready() ) {
+			return false;
+		}
+
+		// Store shipment data temporarily for message processing and mark_sms_sent
+		$this->current_shipment_data = $shipment_data;
+
+		// Get phone number based on rule
+		$phone = $this->get_phone_number( $order, $rule['phone_type'] );
+		if ( empty( $phone ) ) {
+			unset( $this->current_shipment_data );
+			return false;
+		}
+
+		// Use the legacy PandaSMS class to send SMS
+		$pandasms_provider = new \Hezarfen\ManualShipmentTracking\Pandasms();
+		$result = $pandasms_provider->perform_sending( $order, $shipment_data );
+
+		// Mark SMS as sent if successful
+		if ( $result ) {
+			$this->mark_sms_sent( $order, $rule, $phone, 'PandaSMS Legacy SMS with shipment data' );
 		}
 
 		// Clean up temporary data
