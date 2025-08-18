@@ -64,7 +64,7 @@ Türkiye'nin lider WooCommerce kargo çözümü! 23 kargo firması, SMS otomasyo
 Hezarfen, yetkin bir ekip tarafından geliştirilmiştir. Ekibimiz, dünyanın en çok kullanılan WordPress tema ve eklentilerinin geliştirilmesinde geçmişte görev almış deneyimli yazılımcılardan oluşur. Bu birikim, eklentinin yüksek performans, stabilite ve ölçeklenebilirlik sunmasını sağlar.
 
 = 🛡️ KVKK Uyumluluğu =
-Hezarfen, KVKK’nın yurt dışına kişisel veri aktarımına ilişkin hükümleriyle uyumludur. Bilinen bazı kargo SaaS çözümleri kargo müşteri verilerini yurtdışına taşıyabilirken (sunucularının yurtdışında olması sebebiyle), Hezarfen verilerinizi Türkiye sınırları içinde tutar ve uyumluluk yükümlülüklerinizi destekler.
+Hezarfen, KVKK’nın yurt dışına kişisel veri aktarımına ilişkin hükümleriyle uyumludur. Bilinen bazı kargo SaaS çözümleri kargo müşteri verilerini yurtdışına taşıyabilirken (sunucularının yurtdışında olması sebebiyle), Hezarfen verilerinizi kargo takip işlemleri için verilerinizi yurt dışına çıkarmaz.
 
 == Installation ==
 
