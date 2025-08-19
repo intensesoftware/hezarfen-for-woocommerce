@@ -60,8 +60,8 @@ $allowed_tags = [
 	</p>
 	<?php endif; ?>
 
-	<?php if ( ! in_array( 'custom_1', $gosterilmeyecek_sozlesmeler, true ) && $ayarlar['ozel_sozlesme_1_taslak_id'] > 0 ):
-		$ozel_sozleme_1_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['ozel_sozlesme_1_taslak_id'], 'mss', true ) );
+	<?php if ( ! in_array( 'custom_1', $gosterilmeyecek_sozlesmeler, true ) && $hezarfen_mss_settings['ozel_sozlesme_1_taslak_id'] > 0 ):
+		$ozel_sozleme_1_post = get_post( apply_filters( 'wpml_object_id', $hezarfen_mss_settings['ozel_sozlesme_1_taslak_id'], 'intense_mss_form', true ) );
 	?>
 	<p class="form-row in-sozlesme-onay-checkbox validate-required">
 
@@ -83,8 +83,8 @@ $allowed_tags = [
 		endif;
 	?>
 
-	<?php if ( ! in_array( 'custom_2', $gosterilmeyecek_sozlesmeler, true ) && $ayarlar['ozel_sozlesme_2_taslak_id'] > 0 ):
-		$ozel_sozleme_2_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['ozel_sozlesme_2_taslak_id'], 'mss', true ) );
+	<?php if ( ! in_array( 'custom_2', $gosterilmeyecek_sozlesmeler, true ) && $hezarfen_mss_settings['ozel_sozlesme_2_taslak_id'] > 0 ):
+		$ozel_sozleme_2_post = get_post( apply_filters( 'wpml_object_id', $hezarfen_mss_settings['ozel_sozlesme_2_taslak_id'], 'intense_mss_form', true ) );
 	?>
 	<p class="form-row in-sozlesme-onay-checkbox validate-required">
 

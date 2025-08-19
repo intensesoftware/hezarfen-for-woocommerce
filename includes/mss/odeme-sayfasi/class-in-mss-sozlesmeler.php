@@ -160,48 +160,48 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 		$ayarlar = get_option( 'hezarfen_mss_settings' );
 
 		// her iki form da eşleştirilmemişse, sonlandır.
-		if ( ! $ayarlar['obf_taslak_id'] > 0 && ! $ayarlar['mss_taslak_id'] > 0 ) {
+		if ( ! (isset($ayarlar['obf_taslak_id']) && $ayarlar['obf_taslak_id'] > 0) && ! (isset($ayarlar['mss_taslak_id']) && $ayarlar['mss_taslak_id'] > 0) ) {
 			return;
 		}
 
-		if ( $ayarlar['ozel_sozlesme_1_taslak_id'] > 0 ) {
-			$ozel_sozleme_1_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['ozel_sozlesme_1_taslak_id'], 'mss', true ) );
+		if ( isset($ayarlar['ozel_sozlesme_1_taslak_id']) && $ayarlar['ozel_sozlesme_1_taslak_id'] > 0 ) {
+			$ozel_sozleme_1_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['ozel_sozlesme_1_taslak_id'], 'intense_mss_form', true ) );
 
 			$raw_content_ozel_sozlesme_1 = wpautop( $ozel_sozleme_1_post->post_content );
 
 			$ozel_sozlesme_1_content = $this->html_forma_degiskenleri_bas( $this->forma_ozel_alan_tutuculari_yerlestir( $this->form_hezarfen_destegi( $raw_content_ozel_sozlesme_1 ) ) );
 		}
 
-		if ( $ayarlar['ozel_sozlesme_2_taslak_id'] > 0 ) {
-			$ozel_sozleme_2_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['ozel_sozlesme_2_taslak_id'], 'mss', true ) );
+		if ( isset($ayarlar['ozel_sozlesme_2_taslak_id']) && $ayarlar['ozel_sozlesme_2_taslak_id'] > 0 ) {
+			$ozel_sozleme_2_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['ozel_sozlesme_2_taslak_id'], 'intense_mss_form', true ) );
 
 			$raw_content_ozel_sozlesme_2 = wpautop( $ozel_sozleme_2_post->post_content );
 
 			$ozel_sozlesme_2_content = $this->html_forma_degiskenleri_bas( $this->forma_ozel_alan_tutuculari_yerlestir( $this->form_hezarfen_destegi( $raw_content_ozel_sozlesme_2 ) ) );
 		}
 
-		if ( $ayarlar['obf_taslak_id'] > 0 ) {
-			$obf_taslak_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['obf_taslak_id'], 'mss', true ) );
+		if ( isset($ayarlar['obf_taslak_id']) && $ayarlar['obf_taslak_id'] > 0 ) {
+			$obf_taslak_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['obf_taslak_id'], 'intense_mss_form', true ) );
 
 			$raw_content_obf = wpautop( $obf_taslak_post->post_content );
 
 			$obf_content = $this->html_forma_degiskenleri_bas( $this->forma_ozel_alan_tutuculari_yerlestir( $this->form_hezarfen_destegi( $raw_content_obf ) ) );
 		}
 
-		if ( $ayarlar['mss_taslak_id'] > 0 ) {
-			$mss_taslak_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['mss_taslak_id'], 'mss', true ) );
+		if ( isset($ayarlar['mss_taslak_id']) && $ayarlar['mss_taslak_id'] > 0 ) {
+			$mss_taslak_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['mss_taslak_id'], 'intense_mss_form', true ) );
 
 			$raw_content_mss = wpautop( $mss_taslak_post->post_content );
 
 			$mss_content = $this->html_forma_degiskenleri_bas( $this->forma_ozel_alan_tutuculari_yerlestir( $this->form_hezarfen_destegi( $raw_content_mss ) ) );
 		}
 
-		if ( 'inline' === (string) $ayarlar['odeme_sayfasinda_sozlesme_gosterim_tipi'] ) {
-			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'fonksiyonlar/odeme-sayfasi/views/html-odeme-sozlesmeler-inline.php';
-		} elseif ( 'modal' === (string) $ayarlar['odeme_sayfasinda_sozlesme_gosterim_tipi'] ) {
-			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'fonksiyonlar/odeme-sayfasi/views/html-odeme-sozlesmeler-modal.php';
+		if ( 'inline' === (string) (isset($ayarlar['odeme_sayfasinda_sozlesme_gosterim_tipi']) ? $ayarlar['odeme_sayfasinda_sozlesme_gosterim_tipi'] : 'inline') ) {
+			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'includes/mss/odeme-sayfasi/views/html-odeme-sozlesmeler-inline.php';
+		} elseif ( 'modal' === (string) (isset($ayarlar['odeme_sayfasinda_sozlesme_gosterim_tipi']) ? $ayarlar['odeme_sayfasinda_sozlesme_gosterim_tipi'] : 'inline') ) {
+			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'includes/mss/odeme-sayfasi/views/html-odeme-sozlesmeler-modal.php';
 		} else {
-			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'fonksiyonlar/odeme-sayfasi/views/html-odeme-sozlesmeler-inline.php';
+			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'includes/mss/odeme-sayfasi/views/html-odeme-sozlesmeler-inline.php';
 		}
 	}
 
@@ -216,11 +216,11 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 		$gosterim_tipi = isset($ayarlar['odeme_sayfasinda_sozlesme_gosterim_tipi']) ? $ayarlar['odeme_sayfasinda_sozlesme_gosterim_tipi'] : 'inline';
 
 		if ( 'inline' === $gosterim_tipi ) {
-			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'fonksiyonlar/odeme-sayfasi/views/html-sozlesme-onay-checkbox-inline.php';
+			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'includes/mss/odeme-sayfasi/views/html-sozlesme-onay-checkbox-inline.php';
 		} elseif ( 'modal' === $gosterim_tipi ) {
-			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'fonksiyonlar/odeme-sayfasi/views/html-sozlesme-onay-checkbox-modal.php';
+			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'includes/mss/odeme-sayfasi/views/html-sozlesme-onay-checkbox-modal.php';
 		} else {
-			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'fonksiyonlar/odeme-sayfasi/views/html-sozlesme-onay-checkbox-inline.php';
+			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'includes/mss/odeme-sayfasi/views/html-sozlesme-onay-checkbox-inline.php';
 		}
 	}
 
@@ -243,12 +243,12 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 		}
 
 		if ( ! in_array( 'custom_1', $gosterilmeyecek_sozlesmeler, true ) && $ayarlar['ozel_sozlesme_1_taslak_id'] > 0 && empty ( $_POST['intense_ozel_sozlesme_1_onay_checkbox'] ) ) {
-			$ozel_sozleme_1_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['ozel_sozlesme_1_taslak_id'], 'mss', true ) );
+			$ozel_sozleme_1_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['ozel_sozlesme_1_taslak_id'], 'intense_mss_form', true ) );
 			wc_add_notice( sprintf( __( 'You need to read and accept the %s.', 'intense-mss-for-woocommerce' ), $ozel_sozleme_1_post->post_title), 'error' );
 		}
 
 		if ( ! in_array( 'custom_2', $gosterilmeyecek_sozlesmeler, true ) && $ayarlar['ozel_sozlesme_2_taslak_id'] > 0 && empty ( $_POST['intense_ozel_sozlesme_2_onay_checkbox'] ) ) {
-			$ozel_sozleme_2_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['ozel_sozlesme_2_taslak_id'], 'mss', true ) );
+			$ozel_sozleme_2_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['ozel_sozlesme_2_taslak_id'], 'intense_mss_form', true ) );
 			wc_add_notice( sprintf( __( 'You need to read and accept the %s.', 'intense-mss-for-woocommerce' ), $ozel_sozleme_2_post->post_title), 'error' );
 		}
 		//phpcs:enable

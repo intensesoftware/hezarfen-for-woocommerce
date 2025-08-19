@@ -100,14 +100,14 @@ class IN_MSS_SiparisSonrasi {
 		$has_ozel_sozlesme_2 = isset($hezarfen_mss_settings['ozel_sozlesme_2_taslak_id']) && $hezarfen_mss_settings['ozel_sozlesme_2_taslak_id'] > 0;
 
 		if ( $has_ozel_sozlesme_1 ) {
-			$ozel_sozlesme_1_post = get_post( apply_filters( 'wpml_object_id', $hezarfen_mss_settings['ozel_sozlesme_1_taslak_id'], 'mss', true ) );
+			$ozel_sozlesme_1_post = get_post( apply_filters( 'wpml_object_id', $hezarfen_mss_settings['ozel_sozlesme_1_taslak_id'], 'intense_mss_form', true ) );
 			$ozel_sozlesme_1_baslik = $ozel_sozlesme_1_post->post_title;
 		}else{
 			$ozel_sozlesme_1_baslik = null;
 		}
 
 		if ( $has_ozel_sozlesme_2 ) {
-			$ozel_sozlesme_2_post = get_post( apply_filters( 'wpml_object_id', $hezarfen_mss_settings['ozel_sozlesme_2_taslak_id'], 'mss', true ) );
+			$ozel_sozlesme_2_post = get_post( apply_filters( 'wpml_object_id', $hezarfen_mss_settings['ozel_sozlesme_2_taslak_id'], 'intense_mss_form', true ) );
 			$ozel_sozlesme_2_baslik = $ozel_sozlesme_2_post->post_title;
 		}else{
 			$ozel_sozlesme_2_baslik = null;
@@ -261,14 +261,14 @@ class IN_MSS_SiparisSonrasi {
 		$has_ozel_sozlesme_2 = isset($hezarfen_mss_settings['ozel_sozlesme_2_taslak_id']) && $hezarfen_mss_settings['ozel_sozlesme_2_taslak_id'] > 0;
 
 		if ( $has_ozel_sozlesme_1 ) {
-			$ozel_sozlesme_1_post = get_post( apply_filters( 'wpml_object_id', $hezarfen_mss_settings['ozel_sozlesme_1_taslak_id'], 'mss', true ) );
+			$ozel_sozlesme_1_post = get_post( apply_filters( 'wpml_object_id', $hezarfen_mss_settings['ozel_sozlesme_1_taslak_id'], 'intense_mss_form', true ) );
 			$ozel_sozlesme_1_baslik = $ozel_sozlesme_1_post->post_title;
 		}else{
 			$ozel_sozlesme_1_baslik = null;
 		}
 
 		if ( $has_ozel_sozlesme_2 ) {
-			$ozel_sozlesme_2_post = get_post( apply_filters( 'wpml_object_id', $hezarfen_mss_settings['ozel_sozlesme_2_taslak_id'], 'mss', true ) );
+			$ozel_sozlesme_2_post = get_post( apply_filters( 'wpml_object_id', $hezarfen_mss_settings['ozel_sozlesme_2_taslak_id'], 'intense_mss_form', true ) );
 			$ozel_sozlesme_2_baslik = $ozel_sozlesme_2_post->post_title;
 		}else{
 			$ozel_sozlesme_2_baslik = null;
@@ -426,7 +426,7 @@ class IN_MSS_SiparisSonrasi {
 		}
 
 		if ( $ayarlar['obf_taslak_id'] > 0 ) {
-			$obf_taslak_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['obf_taslak_id'], 'mss', true ) );
+			$obf_taslak_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['obf_taslak_id'], 'intense_mss_form', true ) );
 
 			$raw_content_obf = wpautop( $obf_taslak_post->post_content );
 
@@ -434,7 +434,7 @@ class IN_MSS_SiparisSonrasi {
 		}
 
 		if ( $ayarlar['mss_taslak_id'] > 0 ) {
-			$mss_taslak_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['mss_taslak_id'], 'mss', true ) );
+			$mss_taslak_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['mss_taslak_id'], 'intense_mss_form', true ) );
 
 			$raw_content_mss = wpautop( $mss_taslak_post->post_content );
 
@@ -442,7 +442,7 @@ class IN_MSS_SiparisSonrasi {
 		}
 
 		if ( $ayarlar['ozel_sozlesme_1_taslak_id'] > 0 ) {
-			$ozel_sozlesme_1_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['ozel_sozlesme_1_taslak_id'], 'mss', true ) );
+			$ozel_sozlesme_1_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['ozel_sozlesme_1_taslak_id'], 'intense_mss_form', true ) );
 
 			$raw_content_ozel_sozlesme_1 = wpautop( $ozel_sozlesme_1_post->post_content );
 
@@ -452,7 +452,7 @@ class IN_MSS_SiparisSonrasi {
 		}
 
 		if ( $ayarlar['ozel_sozlesme_2_taslak_id'] > 0 ) {
-			$ozel_sozlesme_2_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['ozel_sozlesme_2_taslak_id'], 'mss', true ) );
+			$ozel_sozlesme_2_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['ozel_sozlesme_2_taslak_id'], 'intense_mss_form', true ) );
 
 			$raw_content_ozel_sozlesme_2 = wpautop( $ozel_sozlesme_2_post->post_content );
 
