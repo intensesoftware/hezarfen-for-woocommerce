@@ -158,61 +158,10 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 	 */
 	public function render_forms() {
 		// Use the new dynamic contract renderer
-		if ( class_exists( 'Hezarfen\Inc\MSS\Core\Contract_Renderer' ) ) {
-			$settings = get_option( 'hezarfen_mss_settings', array() );
-			$display_type = isset($settings['odeme_sayfasinda_sozlesme_gosterim_tipi']) ? $settings['odeme_sayfasinda_sozlesme_gosterim_tipi'] : 'inline';
-			
-			\Hezarfen\Inc\MSS\Core\Contract_Renderer::render_contracts( $display_type );
-			return;
-		}
-
-		// Fallback to old system if new classes are not available
-		$ayarlar = get_option( 'hezarfen_mss_settings' );
-
-		// her iki form da eşleştirilmemişse, sonlandır.
-		if ( ! (isset($ayarlar['obf_taslak_id']) && $ayarlar['obf_taslak_id'] > 0) && ! (isset($ayarlar['mss_taslak_id']) && $ayarlar['mss_taslak_id'] > 0) ) {
-			return;
-		}
-
-		if ( isset($ayarlar['ozel_sozlesme_1_taslak_id']) && $ayarlar['ozel_sozlesme_1_taslak_id'] > 0 ) {
-			$ozel_sozleme_1_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['ozel_sozlesme_1_taslak_id'], 'intense_mss_form', true ) );
-
-			$raw_content_ozel_sozlesme_1 = wpautop( $ozel_sozleme_1_post->post_content );
-
-			$ozel_sozlesme_1_content = $this->html_forma_degiskenleri_bas( $this->forma_ozel_alan_tutuculari_yerlestir( $this->form_hezarfen_destegi( $raw_content_ozel_sozlesme_1 ) ) );
-		}
-
-		if ( isset($ayarlar['ozel_sozlesme_2_taslak_id']) && $ayarlar['ozel_sozlesme_2_taslak_id'] > 0 ) {
-			$ozel_sozleme_2_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['ozel_sozlesme_2_taslak_id'], 'intense_mss_form', true ) );
-
-			$raw_content_ozel_sozlesme_2 = wpautop( $ozel_sozleme_2_post->post_content );
-
-			$ozel_sozlesme_2_content = $this->html_forma_degiskenleri_bas( $this->forma_ozel_alan_tutuculari_yerlestir( $this->form_hezarfen_destegi( $raw_content_ozel_sozlesme_2 ) ) );
-		}
-
-		if ( isset($ayarlar['obf_taslak_id']) && $ayarlar['obf_taslak_id'] > 0 ) {
-			$obf_taslak_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['obf_taslak_id'], 'intense_mss_form', true ) );
-
-			$raw_content_obf = wpautop( $obf_taslak_post->post_content );
-
-			$obf_content = $this->html_forma_degiskenleri_bas( $this->forma_ozel_alan_tutuculari_yerlestir( $this->form_hezarfen_destegi( $raw_content_obf ) ) );
-		}
-
-		if ( isset($ayarlar['mss_taslak_id']) && $ayarlar['mss_taslak_id'] > 0 ) {
-			$mss_taslak_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['mss_taslak_id'], 'intense_mss_form', true ) );
-
-			$raw_content_mss = wpautop( $mss_taslak_post->post_content );
-
-			$mss_content = $this->html_forma_degiskenleri_bas( $this->forma_ozel_alan_tutuculari_yerlestir( $this->form_hezarfen_destegi( $raw_content_mss ) ) );
-		}
-
-		if ( 'inline' === (string) (isset($ayarlar['odeme_sayfasinda_sozlesme_gosterim_tipi']) ? $ayarlar['odeme_sayfasinda_sozlesme_gosterim_tipi'] : 'inline') ) {
-			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'includes/mss/odeme-sayfasi/views/html-odeme-sozlesmeler-inline.php';
-		} elseif ( 'modal' === (string) (isset($ayarlar['odeme_sayfasinda_sozlesme_gosterim_tipi']) ? $ayarlar['odeme_sayfasinda_sozlesme_gosterim_tipi'] : 'inline') ) {
-			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'includes/mss/odeme-sayfasi/views/html-odeme-sozlesmeler-modal.php';
-		} else {
-			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'includes/mss/odeme-sayfasi/views/html-odeme-sozlesmeler-inline.php';
-		}
+		$settings = get_option( 'hezarfen_mss_settings', array() );
+		$display_type = isset($settings['odeme_sayfasinda_sozlesme_gosterim_tipi']) ? $settings['odeme_sayfasinda_sozlesme_gosterim_tipi'] : 'inline';
+		
+		\Hezarfen\Inc\MSS\Core\Contract_Renderer::render_contracts( $display_type );
 	}
 
 	/**
@@ -222,23 +171,7 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 	 */
 	public function intense_mss_onay_checkbox() {
 		// Use the new dynamic contract renderer for checkboxes
-		if ( class_exists( 'Hezarfen\Inc\MSS\Core\Contract_Renderer' ) ) {
-			\Hezarfen\Inc\MSS\Core\Contract_Renderer::render_contract_checkboxes();
-			return;
-		}
-
-		// Fallback to old system
-		$ayarlar = get_option( 'hezarfen_mss_settings' );
-
-		$gosterim_tipi = isset($ayarlar['odeme_sayfasinda_sozlesme_gosterim_tipi']) ? $ayarlar['odeme_sayfasinda_sozlesme_gosterim_tipi'] : 'inline';
-
-		if ( 'inline' === $gosterim_tipi ) {
-			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'includes/mss/odeme-sayfasi/views/html-sozlesme-onay-checkbox-inline.php';
-		} elseif ( 'modal' === $gosterim_tipi ) {
-			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'includes/mss/odeme-sayfasi/views/html-sozlesme-onay-checkbox-modal.php';
-		} else {
-			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'includes/mss/odeme-sayfasi/views/html-sozlesme-onay-checkbox-inline.php';
-		}
+		\Hezarfen\Inc\MSS\Core\Contract_Renderer::render_contract_checkboxes();
 	}
 
 	/**
@@ -248,34 +181,7 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 	 */
 	public function intense_mss_checkout_process() {
 		// Use the new dynamic contract validator
-		if ( class_exists( 'Hezarfen\Inc\MSS\Core\Contract_Validator' ) ) {
-			\Hezarfen\Inc\MSS\Core\Contract_Validator::validate_checkout_contracts();
-			return;
-		}
-
-		// Fallback to old validation system
-		$ayarlar = get_option( 'hezarfen_mss_settings' );
-		$gosterilmeyecek_sozlesmeler = array_key_exists( 'gosterilmeyecek_sozlesmeler', $ayarlar ) ? $ayarlar['gosterilmeyecek_sozlesmeler'] : array();
-
-		//phpcs:disable
-		if ( ! in_array( 'mss', $gosterilmeyecek_sozlesmeler, true ) && empty( $_POST['intense_mss_onay_checkbox'] ) ) {
-			wc_add_notice( __( 'You need to read and accept the distance sales contract.', 'intense-mss-for-woocommerce' ), 'error' );
-		}
-
-		if ( ! in_array( 'obf', $gosterilmeyecek_sozlesmeler, true ) && empty ( $_POST['intense_obf_onay_checkbox'] ) ) {
-			wc_add_notice( __( 'You need to read and accept the preliminary information form.', 'intense-mss-for-woocommerce' ), 'error' );
-		}
-
-		if ( ! in_array( 'custom_1', $gosterilmeyecek_sozlesmeler, true ) && isset($ayarlar['ozel_sozlesme_1_taslak_id']) && $ayarlar['ozel_sozlesme_1_taslak_id'] > 0 && empty ( $_POST['intense_ozel_sozlesme_1_onay_checkbox'] ) ) {
-			$ozel_sozleme_1_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['ozel_sozlesme_1_taslak_id'], 'intense_mss_form', true ) );
-			wc_add_notice( sprintf( __( 'You need to read and accept the %s.', 'intense-mss-for-woocommerce' ), $ozel_sozleme_1_post->post_title), 'error' );
-		}
-
-		if ( ! in_array( 'custom_2', $gosterilmeyecek_sozlesmeler, true ) && isset($ayarlar['ozel_sozlesme_2_taslak_id']) && $ayarlar['ozel_sozlesme_2_taslak_id'] > 0 && empty ( $_POST['intense_ozel_sozlesme_2_onay_checkbox'] ) ) {
-			$ozel_sozleme_2_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['ozel_sozlesme_2_taslak_id'], 'intense_mss_form', true ) );
-			wc_add_notice( sprintf( __( 'You need to read and accept the %s.', 'intense-mss-for-woocommerce' ), $ozel_sozleme_2_post->post_title), 'error' );
-		}
-		//phpcs:enable
+		\Hezarfen\Inc\MSS\Core\Contract_Validator::validate_checkout_contracts();
 	}
 
 	/**

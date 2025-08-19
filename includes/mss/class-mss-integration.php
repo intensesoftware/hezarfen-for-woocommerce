@@ -109,12 +109,15 @@ class MSS_Integration {
 	 * Maybe load frontend functionality if MSS is configured
 	 */
 	public function maybe_load_frontend() {
-		$ayarlar = get_option( 'hezarfen_mss_settings' );
-		$mss_taslak_id = $ayarlar['mss_taslak_id'] ?? null;
-		$obf_taslak_id = $ayarlar['obf_taslak_id'] ?? null;
+		// Check if MSS is enabled and has active contracts
+		$mss_enabled = get_option( 'hezarfen_mss_enabled', 'no' );
 		
-		if ( $ayarlar && $mss_taslak_id && $obf_taslak_id ) {
-			$this->load_frontend_functionality();
+		if ( 'yes' === $mss_enabled ) {
+			// Check if there are any active contracts
+			$active_contracts = \Hezarfen\Inc\MSS\Core\Contract_Manager::get_active_contracts();
+			if ( ! empty( $active_contracts ) ) {
+				$this->load_frontend_functionality();
+			}
 		}
 	}
 	

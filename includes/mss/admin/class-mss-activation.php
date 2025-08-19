@@ -52,8 +52,7 @@ class MSS_Activation {
 		// Any initial setup tasks can go here
 		// For now, just ensure options exist
 		$default_options = array(
-			'mss_taslak_id' => '',
-			'obf_taslak_id' => '',
+			// No hardcoded template IDs - using flexible contract system
 		);
 		
 		$existing_options = get_option( 'hezarfen_mss_settings', array() );

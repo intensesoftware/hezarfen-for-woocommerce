@@ -94,24 +94,17 @@ class IN_MSS_SiparisSonrasi {
 		$ozel_sozlesme_1_content = $render['ozel_sozlesme_1_content'];
 		$ozel_sozlesme_2_content = $render['ozel_sozlesme_2_content'];
 
-		$hezarfen_mss_settings = get_option( 'hezarfen_mss_settings', array() );
-
-		$has_ozel_sozlesme_1 = isset($hezarfen_mss_settings['ozel_sozlesme_1_taslak_id']) && $hezarfen_mss_settings['ozel_sozlesme_1_taslak_id'] > 0;
-		$has_ozel_sozlesme_2 = isset($hezarfen_mss_settings['ozel_sozlesme_2_taslak_id']) && $hezarfen_mss_settings['ozel_sozlesme_2_taslak_id'] > 0;
-
-		if ( $has_ozel_sozlesme_1 ) {
-			$ozel_sozlesme_1_post = get_post( apply_filters( 'wpml_object_id', $hezarfen_mss_settings['ozel_sozlesme_1_taslak_id'], 'intense_mss_form', true ) );
-			$ozel_sozlesme_1_baslik = $ozel_sozlesme_1_post->post_title;
-		}else{
-			$ozel_sozlesme_1_baslik = null;
+		// Get contract titles from the new dynamic system
+		$active_contracts = \Hezarfen\Inc\MSS\Core\Contract_Manager::get_active_contracts();
+		$contract_titles = array();
+		
+		foreach ( $active_contracts as $contract ) {
+			$contract_titles[ $contract['type'] ] = $contract['name'];
 		}
-
-		if ( $has_ozel_sozlesme_2 ) {
-			$ozel_sozlesme_2_post = get_post( apply_filters( 'wpml_object_id', $hezarfen_mss_settings['ozel_sozlesme_2_taslak_id'], 'intense_mss_form', true ) );
-			$ozel_sozlesme_2_baslik = $ozel_sozlesme_2_post->post_title;
-		}else{
-			$ozel_sozlesme_2_baslik = null;
-		}
+		
+		// Set titles for backward compatibility (these are used in database storage)
+		$ozel_sozlesme_1_baslik = isset( $contract_titles['cayma_hakki'] ) ? $contract_titles['cayma_hakki'] : null;
+		$ozel_sozlesme_2_baslik = isset( $contract_titles['custom'] ) ? $contract_titles['custom'] : null;
 
 		global $wpdb;
 
@@ -418,55 +411,41 @@ class IN_MSS_SiparisSonrasi {
 	 * @return array
 	 */
 	private function render_forms( $order_id ) {
-		$ayarlar = get_option( 'hezarfen_mss_settings' );
-
-		// her iki form da eşleştirilmemişse, sonlandır.
-		if ( ! $ayarlar['obf_taslak_id'] > 0 && ! $ayarlar['mss_taslak_id'] > 0 ) {
-			return;
+		// Use the new dynamic contract system
+		$active_contracts = \Hezarfen\Inc\MSS\Core\Contract_Manager::get_active_contracts();
+		
+		$contract_contents = array();
+		
+		// Process each active contract
+		foreach ( $active_contracts as $contract ) {
+			if ( ! empty( $contract['content'] ) ) {
+				$raw_content = wpautop( $contract['content'] );
+				$processed_content = $this->html_forma_degiskenleri_bas( $raw_content, $order_id );
+				
+				// Map contract types to expected array keys for backward compatibility
+				switch ( $contract['type'] ) {
+					case 'mesafeli_satis_sozlesmesi':
+						$contract_contents['mss'] = $processed_content;
+						break;
+					case 'on_bilgilendirme_formu':
+						$contract_contents['obf'] = $processed_content;
+						break;
+					case 'cayma_hakki':
+					case 'custom':
+						// For custom contracts, use a dynamic key
+						$contract_contents['custom_' . $contract['id']] = $processed_content;
+						break;
+				}
+			}
 		}
 
-		if ( $ayarlar['obf_taslak_id'] > 0 ) {
-			$obf_taslak_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['obf_taslak_id'], 'intense_mss_form', true ) );
-
-			$raw_content_obf = wpautop( $obf_taslak_post->post_content );
-
-			$obf_content = $this->html_forma_degiskenleri_bas( $raw_content_obf, $order_id );
-		}
-
-		if ( $ayarlar['mss_taslak_id'] > 0 ) {
-			$mss_taslak_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['mss_taslak_id'], 'intense_mss_form', true ) );
-
-			$raw_content_mss = wpautop( $mss_taslak_post->post_content );
-
-			$mss_content = $this->html_forma_degiskenleri_bas( $raw_content_mss, $order_id );
-		}
-
-		if ( $ayarlar['ozel_sozlesme_1_taslak_id'] > 0 ) {
-			$ozel_sozlesme_1_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['ozel_sozlesme_1_taslak_id'], 'intense_mss_form', true ) );
-
-			$raw_content_ozel_sozlesme_1 = wpautop( $ozel_sozlesme_1_post->post_content );
-
-			$ozel_sozlesme_1_content = $this->html_forma_degiskenleri_bas( $raw_content_ozel_sozlesme_1, $order_id );
-		}else{
-			$ozel_sozlesme_1_content = '';
-		}
-
-		if ( $ayarlar['ozel_sozlesme_2_taslak_id'] > 0 ) {
-			$ozel_sozlesme_2_post = get_post( apply_filters( 'wpml_object_id', $ayarlar['ozel_sozlesme_2_taslak_id'], 'intense_mss_form', true ) );
-
-			$raw_content_ozel_sozlesme_2 = wpautop( $ozel_sozlesme_2_post->post_content );
-
-			$ozel_sozlesme_2_content = $this->html_forma_degiskenleri_bas( $raw_content_ozel_sozlesme_2, $order_id );
-		}else{
-			$ozel_sozlesme_2_content = '';
-		}
-
-		return array(
-			'mss' => $mss_content,
-			'obf' => $obf_content,
-			'ozel_sozlesme_1_content' => $ozel_sozlesme_1_content,
-			'ozel_sozlesme_2_content' => $ozel_sozlesme_2_content
-		);
+		// Ensure backward compatibility by providing empty values for missing contracts
+		return array_merge( array(
+			'mss' => '',
+			'obf' => '',
+			'ozel_sozlesme_1_content' => '',
+			'ozel_sozlesme_2_content' => ''
+		), $contract_contents );
 	}
 }
 
