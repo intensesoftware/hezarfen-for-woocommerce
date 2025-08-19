@@ -74,15 +74,9 @@ class Contract_Validator {
 			$errors[] = __( 'Invalid contract type selected.', 'hezarfen-for-woocommerce' );
 		}
 
-		// Validate template ID
-		if ( ! empty( $contract_data['template_id'] ) ) {
-			$template_id = intval( $contract_data['template_id'] );
-			if ( $template_id > 0 ) {
-				$post = get_post( $template_id );
-				if ( ! $post || $post->post_type !== 'intense_mss_form' ) {
-					$errors[] = __( 'Invalid template selected.', 'hezarfen-for-woocommerce' );
-				}
-			}
+		// Validate content
+		if ( isset( $contract_data['content'] ) ) {
+			$contract_data['content'] = wp_kses_post( $contract_data['content'] );
 		}
 
 		// Validate display order

@@ -51,25 +51,17 @@ class Contract_Renderer {
 	}
 
 	/**
-	 * Get contract content by processing template
+	 * Get contract content by processing stored content
 	 *
 	 * @param array $contract Contract data.
 	 * @return string|false
 	 */
 	private static function get_contract_content( $contract ) {
-		if ( empty( $contract['template_id'] ) ) {
+		if ( empty( $contract['content'] ) ) {
 			return false;
 		}
 
-		$template_post = get_post( 
-			apply_filters( 'wpml_object_id', $contract['template_id'], 'intense_mss_form', true ) 
-		);
-
-		if ( ! $template_post ) {
-			return false;
-		}
-
-		$raw_content = wpautop( $template_post->post_content );
+		$raw_content = wpautop( $contract['content'] );
 		
 		// Process template variables
 		$processed_content = self::process_template_variables( $raw_content );

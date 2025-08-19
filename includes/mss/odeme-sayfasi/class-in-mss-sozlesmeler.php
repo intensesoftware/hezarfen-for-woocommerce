@@ -50,7 +50,7 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 	 * @param  string $statik_form sözleşme taslağı.
 	 * @return string
 	 */
-	private function html_forma_degiskenleri_bas( $statik_form ) {
+	public function html_forma_degiskenleri_bas( $statik_form ) {
 		$dinamik_form = str_replace(
 			array(
 				'{FATURA_TAM_AD_UNVANI}',
@@ -98,7 +98,7 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 	 * @param  string $form_icerik sözleşme taslağı.
 	 * @return string
 	 */
-	private function forma_ozel_alan_tutuculari_yerlestir( $form_icerik ) {
+	public function forma_ozel_alan_tutuculari_yerlestir( $form_icerik ) {
 		// özel alan deseni.
 		$desen = '/\{OZELALAN_(.*?)\}/';
 
@@ -123,7 +123,7 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 	 * @param  string $form_icerik
 	 * @return string
 	 */
-	private function form_hezarfen_destegi( $form_icerik ) {
+	public function form_hezarfen_destegi( $form_icerik ) {
 		if( ! $this->hezarfen_aktif() ) {
 			return $form_icerik;
 		}

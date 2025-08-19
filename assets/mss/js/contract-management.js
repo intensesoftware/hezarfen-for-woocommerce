@@ -13,10 +13,12 @@
         bindEvents: function() {
             $(document).on('click', '#add-new-contract', this.showAddModal);
             $(document).on('click', '.edit-contract', this.showEditModal);
+            $(document).on('click', '.edit-content', this.showContentModal);
             $(document).on('click', '.delete-contract', this.deleteContract);
             $(document).on('click', '.duplicate-contract', this.duplicateContract);
             $(document).on('click', '#save-contract', this.saveContract);
-            $(document).on('click', '#cancel-contract, .hezarfen-modal-close', this.hideModal);
+            $(document).on('click', '#save-content', this.saveContent);
+            $(document).on('click', '#cancel-contract, #cancel-content, .hezarfen-modal-close', this.hideModal);
             $(document).on('click', '.hezarfen-modal', this.handleModalClick);
         },
 
@@ -30,24 +32,82 @@
         showEditModal: function(e) {
             e.preventDefault();
             var contractId = $(this).data('contract-id');
-            var $row = $('tr[data-contract-id="' + contractId + '"]');
             
-            // Populate form with existing data
-            ContractManager.populateForm($row, contractId);
+            // Load contract data via AJAX
+            ContractManager.loadContractData(contractId);
             $('#modal-title').text(hezarfen_contract_ajax.strings.edit_contract || 'Edit Contract');
             $('#contract-modal').show();
         },
 
-        populateForm: function($row, contractId) {
-            // This is a simplified version - in a real implementation,
-            // you'd make an AJAX call to get the full contract data
-            $('#contract-id').val(contractId);
+        loadContractData: function(contractId) {
+            $.ajax({
+                url: hezarfen_contract_ajax.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'hezarfen_get_contract',
+                    nonce: hezarfen_contract_ajax.nonce,
+                    contract_id: contractId
+                },
+                success: function(response) {
+                    if (response.success) {
+                        ContractManager.populateForm(response.data);
+                    } else {
+                        ContractManager.showNotice(response.data || 'Failed to load contract data', 'error');
+                    }
+                },
+                error: function() {
+                    ContractManager.showNotice('Network error occurred', 'error');
+                }
+            });
+        },
+
+        populateForm: function(contract) {
+            $('#contract-id').val(contract.id);
+            $('#contract-name').val(contract.name);
+            $('#contract-type').val(contract.type);
+            $('#custom-label').val(contract.custom_label || '');
+            $('#display-order').val(contract.display_order || 999);
+            $('#contract-enabled').prop('checked', contract.enabled);
+            $('#contract-required').prop('checked', contract.required);
+        },
+
+        showContentModal: function(e) {
+            e.preventDefault();
+            var contractId = $(this).data('contract-id');
             
-            // Extract data from the row (this is basic - you might want to store data attributes)
-            var name = $row.find('td:first strong').text();
-            $('#contract-name').val(name);
-            
-            // You would populate other fields based on stored data or AJAX response
+            // Load contract data and show content editor
+            ContractManager.loadContentData(contractId);
+            $('#content-modal').show();
+        },
+
+        loadContentData: function(contractId) {
+            $.ajax({
+                url: hezarfen_contract_ajax.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'hezarfen_get_contract',
+                    nonce: hezarfen_contract_ajax.nonce,
+                    contract_id: contractId
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#content-contract-id').val(response.data.id);
+                        $('#content-modal-title').text('Edit Content: ' + response.data.name);
+                        
+                        // Set content in TinyMCE editor
+                        if (typeof tinyMCE !== 'undefined' && tinyMCE.get('contract-content-editor')) {
+                            tinyMCE.get('contract-content-editor').setContent(response.data.content || '');
+                        } else {
+                            $('#contract-content-editor').val(response.data.content || '');
+                        }
+                    } else {
+                        ContractManager.showNotice(response.data || 'Failed to load contract data', 'error');
+                    }
+                },
+                error: function() {
+                    ContractManager.showNotice('Network error occurred', 'error');
+                }
+            });
         },
 
         resetForm: function() {
@@ -80,7 +140,7 @@
                 contract_id: $('#contract-id').val(),
                 contract_name: $('#contract-name').val(),
                 contract_type: $('#contract-type').val(),
-                contract_template: $('#contract-template').val(),
+                contract_content: '', // No content in basic form
                 custom_label: $('#custom-label').val(),
                 display_order: $('#display-order').val(),
                 contract_enabled: $('#contract-enabled').is(':checked') ? '1' : '',
@@ -96,6 +156,51 @@
                         ContractManager.showNotice(response.data.message, 'success');
                         ContractManager.hideModal();
                         // Reload page to show updated list
+                        window.location.reload();
+                    } else {
+                        ContractManager.showNotice(response.data || 'An error occurred', 'error');
+                    }
+                },
+                error: function() {
+                    ContractManager.showNotice('Network error occurred', 'error');
+                },
+                complete: function() {
+                    $button.prop('disabled', false).text(originalText);
+                }
+            });
+        },
+
+        saveContent: function(e) {
+            e.preventDefault();
+            
+            var $button = $(this);
+            var originalText = $button.text();
+
+            // Get content from TinyMCE editor
+            var content = '';
+            if (typeof tinyMCE !== 'undefined' && tinyMCE.get('contract-content-editor')) {
+                content = tinyMCE.get('contract-content-editor').getContent();
+            } else {
+                content = $('#contract-content-editor').val();
+            }
+
+            // Disable button and show loading
+            $button.prop('disabled', true).text(hezarfen_contract_ajax.strings.saving);
+
+            $.ajax({
+                url: hezarfen_contract_ajax.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'hezarfen_save_content',
+                    nonce: hezarfen_contract_ajax.nonce,
+                    contract_id: $('#content-contract-id').val(),
+                    contract_content: content
+                },
+                success: function(response) {
+                    if (response.success) {
+                        ContractManager.showNotice(response.data.message, 'success');
+                        ContractManager.hideModal();
+                        // Reload page to show updated content preview
                         window.location.reload();
                     } else {
                         ContractManager.showNotice(response.data || 'An error occurred', 'error');
@@ -213,6 +318,7 @@
         hideModal: function(e) {
             if (e) e.preventDefault();
             $('#contract-modal').hide();
+            $('#content-modal').hide();
         },
 
         handleModalClick: function(e) {

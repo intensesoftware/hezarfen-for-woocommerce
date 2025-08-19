@@ -32,7 +32,7 @@ class Contract_Manager {
 	}
 
 	/**
-	 * Get active contracts (enabled and with template assigned)
+	 * Get active contracts (enabled and with content)
 	 *
 	 * @return array
 	 */
@@ -55,6 +55,29 @@ class Contract_Manager {
 	}
 
 	/**
+	 * Get all contracts (regardless of content status)
+	 *
+	 * @return array
+	 */
+	public static function get_all_contracts() {
+		$contracts = self::get_contracts();
+		$all = array();
+
+		foreach ( $contracts as $contract ) {
+			if ( isset( $contract['enabled'] ) && $contract['enabled'] ) {
+				$all[] = $contract;
+			}
+		}
+
+		// Sort by display order
+		usort( $all, function( $a, $b ) {
+			return intval( $a['display_order'] ) - intval( $b['display_order'] );
+		});
+
+		return $all;
+	}
+
+	/**
 	 * Check if contract is active
 	 *
 	 * @param array $contract Contract data.
@@ -63,8 +86,8 @@ class Contract_Manager {
 	public static function is_contract_active( $contract ) {
 		return isset( $contract['enabled'] ) && 
 		       $contract['enabled'] && 
-		       isset( $contract['template_id'] ) && 
-		       $contract['template_id'] > 0;
+		       isset( $contract['content'] ) && 
+		       ! empty( trim( $contract['content'] ) );
 	}
 
 	/**

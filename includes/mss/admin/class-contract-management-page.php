@@ -25,6 +25,8 @@ class Contract_Management_Page {
 	 */
 	public function __construct() {
 		add_action( 'wp_ajax_hezarfen_save_contract', array( $this, 'ajax_save_contract' ) );
+		add_action( 'wp_ajax_hezarfen_get_contract', array( $this, 'ajax_get_contract' ) );
+		add_action( 'wp_ajax_hezarfen_save_content', array( $this, 'ajax_save_content' ) );
 		add_action( 'wp_ajax_hezarfen_delete_contract', array( $this, 'ajax_delete_contract' ) );
 		add_action( 'wp_ajax_hezarfen_duplicate_contract', array( $this, 'ajax_duplicate_contract' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
@@ -82,7 +84,6 @@ class Contract_Management_Page {
 	public function render_contract_management() {
 		$contracts = Contract_Manager::get_contracts();
 		$contract_types = Contract_Types::get_types_for_dropdown();
-		$templates = $this->get_available_templates();
 		?>
 		<div class="hezarfen-contract-management">
 			<div class="contract-management-header">
@@ -103,7 +104,7 @@ class Contract_Management_Page {
 							<tr>
 								<th><?php esc_html_e( 'Name', 'hezarfen-for-woocommerce' ); ?></th>
 								<th><?php esc_html_e( 'Type', 'hezarfen-for-woocommerce' ); ?></th>
-								<th><?php esc_html_e( 'Template', 'hezarfen-for-woocommerce' ); ?></th>
+								<th><?php esc_html_e( 'Content', 'hezarfen-for-woocommerce' ); ?></th>
 								<th><?php esc_html_e( 'Status', 'hezarfen-for-woocommerce' ); ?></th>
 								<th><?php esc_html_e( 'Required', 'hezarfen-for-woocommerce' ); ?></th>
 								<th><?php esc_html_e( 'Order', 'hezarfen-for-woocommerce' ); ?></th>
@@ -127,10 +128,11 @@ class Contract_Management_Page {
 									</td>
 									<td>
 										<?php
-										if ( ! empty( $contract['template_id'] ) && isset( $templates[ $contract['template_id'] ] ) ) {
-											echo esc_html( $templates[ $contract['template_id'] ] );
+										if ( ! empty( $contract['content'] ) ) {
+											$content_preview = wp_trim_words( strip_tags( $contract['content'] ), 10, '...' );
+											echo '<span title="' . esc_attr( $content_preview ) . '">' . esc_html( $content_preview ) . '</span>';
 										} else {
-											echo '<span class="dashicons dashicons-warning" title="' . esc_attr__( 'No template assigned', 'hezarfen-for-woocommerce' ) . '"></span>';
+											echo '<span class="dashicons dashicons-warning" title="' . esc_attr__( 'No content added', 'hezarfen-for-woocommerce' ) . '"></span>';
 										}
 										?>
 									</td>
@@ -147,6 +149,9 @@ class Contract_Management_Page {
 										<div class="row-actions">
 											<button type="button" class="button button-small edit-contract" data-contract-id="<?php echo esc_attr( $contract['id'] ); ?>">
 												<?php esc_html_e( 'Edit', 'hezarfen-for-woocommerce' ); ?>
+											</button>
+											<button type="button" class="button button-small edit-content" data-contract-id="<?php echo esc_attr( $contract['id'] ); ?>">
+												<?php esc_html_e( 'Edit Content', 'hezarfen-for-woocommerce' ); ?>
 											</button>
 											<button type="button" class="button button-small duplicate-contract" data-contract-id="<?php echo esc_attr( $contract['id'] ); ?>">
 												<?php esc_html_e( 'Duplicate', 'hezarfen-for-woocommerce' ); ?>
@@ -199,23 +204,7 @@ class Contract_Management_Page {
 									<p class="description"><?php esc_html_e( 'Choose the type of contract.', 'hezarfen-for-woocommerce' ); ?></p>
 								</td>
 							</tr>
-							<tr>
-								<th scope="row">
-									<label for="contract-template"><?php esc_html_e( 'Template', 'hezarfen-for-woocommerce' ); ?></label>
-								</th>
-								<td>
-									<select id="contract-template" name="contract_template">
-										<option value=""><?php esc_html_e( 'Select Template', 'hezarfen-for-woocommerce' ); ?></option>
-										<?php foreach ( $templates as $id => $title ) : ?>
-											<option value="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $title ); ?></option>
-										<?php endforeach; ?>
-									</select>
-									<p class="description">
-										<?php esc_html_e( 'Select a template for this contract.', 'hezarfen-for-woocommerce' ); ?>
-										<a href="<?php echo admin_url( 'post-new.php?post_type=intense_mss_form' ); ?>" target="_blank"><?php esc_html_e( 'Create New Template', 'hezarfen-for-woocommerce' ); ?></a>
-									</p>
-								</td>
-							</tr>
+
 							<tr>
 								<th scope="row">
 									<label for="custom-label"><?php esc_html_e( 'Custom Label', 'hezarfen-for-woocommerce' ); ?></label>
@@ -261,30 +250,66 @@ class Contract_Management_Page {
 				</div>
 			</div>
 		</div>
+
+		<!-- Content Editor Modal -->
+		<div id="content-modal" class="hezarfen-modal" style="display: none;">
+			<div class="hezarfen-modal-content">
+				<div class="hezarfen-modal-header">
+					<h2 id="content-modal-title"><?php esc_html_e( 'Edit Contract Content', 'hezarfen-for-woocommerce' ); ?></h2>
+					<button type="button" class="hezarfen-modal-close">&times;</button>
+				</div>
+				<div class="hezarfen-modal-body">
+					<form id="content-form">
+						<input type="hidden" id="content-contract-id" name="content_contract_id" value="" />
+						
+						<table class="form-table">
+							<tr>
+								<th scope="row">
+									<label for="contract-content-editor"><?php esc_html_e( 'Content', 'hezarfen-for-woocommerce' ); ?></label>
+								</th>
+								<td>
+									<?php
+									wp_editor( '', 'contract-content-editor', array(
+										'textarea_name' => 'contract_content_editor',
+										'textarea_rows' => 15,
+										'media_buttons' => true,
+										'teeny'         => false,
+										'quicktags'     => true,
+									) );
+									?>
+									<p class="description">
+										<?php esc_html_e( 'Enter the contract content. You can use HTML and the following variables:', 'hezarfen-for-woocommerce' ); ?>
+										<br>
+										<strong><?php esc_html_e( 'Available Variables:', 'hezarfen-for-woocommerce' ); ?></strong><br>
+										<code>{FATURA_TAM_AD_UNVANI}</code> - <?php esc_html_e( 'Billing full name', 'hezarfen-for-woocommerce' ); ?><br>
+										<code>{FATURA_ADRESI}</code> - <?php esc_html_e( 'Billing address', 'hezarfen-for-woocommerce' ); ?><br>
+										<code>{ALICI_ADRESI}</code> - <?php esc_html_e( 'Customer address', 'hezarfen-for-woocommerce' ); ?><br>
+										<code>{ALICI_TELEFONU}</code> - <?php esc_html_e( 'Customer phone', 'hezarfen-for-woocommerce' ); ?><br>
+										<code>{ALICI_EPOSTA}</code> - <?php esc_html_e( 'Customer email', 'hezarfen-for-woocommerce' ); ?><br>
+										<code>{GUNCEL_TARIH}</code> - <?php esc_html_e( 'Current date', 'hezarfen-for-woocommerce' ); ?><br>
+										<code>{URUNLER}</code> - <?php esc_html_e( 'Products summary', 'hezarfen-for-woocommerce' ); ?><br>
+										<code>{ODEME_YONTEMI}</code> - <?php esc_html_e( 'Payment method', 'hezarfen-for-woocommerce' ); ?><br>
+										<code>{KARGO_BEDELI}</code> - <?php esc_html_e( 'Shipping cost', 'hezarfen-for-woocommerce' ); ?>
+									</p>
+								</td>
+							</tr>
+						</table>
+					</form>
+				</div>
+				<div class="hezarfen-modal-footer">
+					<button type="button" class="button button-primary" id="save-content">
+						<?php esc_html_e( 'Save Content', 'hezarfen-for-woocommerce' ); ?>
+					</button>
+					<button type="button" class="button" id="cancel-content">
+						<?php esc_html_e( 'Cancel', 'hezarfen-for-woocommerce' ); ?>
+					</button>
+				</div>
+			</div>
+		</div>
 		<?php
 	}
 
-	/**
-	 * Get available templates
-	 *
-	 * @return array
-	 */
-	private function get_available_templates() {
-		$posts = get_posts( array(
-			'post_type'      => 'intense_mss_form',
-			'post_status'    => 'publish',
-			'posts_per_page' => -1,
-			'orderby'        => 'title',
-			'order'          => 'ASC',
-		) );
 
-		$templates = array();
-		foreach ( $posts as $post ) {
-			$templates[ $post->ID ] = $post->post_title;
-		}
-
-		return $templates;
-	}
 
 	/**
 	 * AJAX handler for saving contracts
@@ -300,7 +325,7 @@ class Contract_Management_Page {
 			'id'            => sanitize_text_field( $_POST['contract_id'] ),
 			'name'          => sanitize_text_field( $_POST['contract_name'] ),
 			'type'          => sanitize_text_field( $_POST['contract_type'] ),
-			'template_id'   => intval( $_POST['contract_template'] ),
+			'content'       => isset( $_POST['contract_content'] ) ? wp_kses_post( $_POST['contract_content'] ) : '',
 			'custom_label'  => sanitize_text_field( $_POST['custom_label'] ),
 			'display_order' => intval( $_POST['display_order'] ),
 			'enabled'       => ! empty( $_POST['contract_enabled'] ),
@@ -327,6 +352,59 @@ class Contract_Management_Page {
 		wp_send_json_success( array(
 			'message' => __( 'Contract saved successfully.', 'hezarfen-for-woocommerce' ),
 			'contract' => $validated,
+		) );
+	}
+
+	/**
+	 * AJAX handler for getting contract data
+	 */
+	public function ajax_get_contract() {
+		check_ajax_referer( 'hezarfen_contract_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_die( -1, 403 );
+		}
+
+		$contract_id = sanitize_text_field( $_POST['contract_id'] );
+		$contract = Contract_Manager::get_contract( $contract_id );
+
+		if ( ! $contract ) {
+			wp_send_json_error( __( 'Contract not found.', 'hezarfen-for-woocommerce' ) );
+		}
+
+		wp_send_json_success( $contract );
+	}
+
+	/**
+	 * AJAX handler for saving contract content
+	 */
+	public function ajax_save_content() {
+		check_ajax_referer( 'hezarfen_contract_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_die( -1, 403 );
+		}
+
+		$contract_id = sanitize_text_field( $_POST['contract_id'] );
+		$content = wp_kses_post( $_POST['contract_content'] );
+
+		// Get existing contract
+		$contract = Contract_Manager::get_contract( $contract_id );
+		if ( ! $contract ) {
+			wp_send_json_error( __( 'Contract not found.', 'hezarfen-for-woocommerce' ) );
+		}
+
+		// Update only the content
+		$contract['content'] = $content;
+
+		// Save contract
+		$result = Contract_Manager::save_contract( $contract );
+		if ( is_wp_error( $result ) ) {
+			wp_send_json_error( $result->get_error_message() );
+		}
+
+		wp_send_json_success( array(
+			'message' => __( 'Contract content saved successfully.', 'hezarfen-for-woocommerce' ),
 		) );
 	}
 

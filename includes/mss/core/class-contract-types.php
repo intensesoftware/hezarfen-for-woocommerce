@@ -109,7 +109,7 @@ class Contract_Types {
 			'id'            => uniqid( 'contract_' ),
 			'name'          => $type['label'],
 			'type'          => $type_key,
-			'template_id'   => 0,
+			'content'       => '',
 			'enabled'       => true,
 			'required'      => $type['default_required'],
 			'display_order' => 999,
