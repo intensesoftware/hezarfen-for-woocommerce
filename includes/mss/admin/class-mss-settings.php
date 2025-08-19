@@ -61,23 +61,7 @@ class MSS_Settings {
 				'type'    => 'checkbox',
 			),
 			
-			array(
-				'title'    => __( 'MSS Taslak', 'hezarfen-for-woocommerce' ),
-				'desc'     => __( 'Mesafeli Satış Sözleşmesi taslağını seçin', 'hezarfen-for-woocommerce' ),
-				'id'       => 'hezarfen_mss_settings[mss_taslak_id]',
-				'type'     => 'select',
-				'options'  => $this->get_contract_templates(),
-				'class'    => 'wc-enhanced-select',
-			),
-			
-			array(
-				'title'    => __( 'Ön Bilgilendirme Formu Taslak', 'hezarfen-for-woocommerce' ),
-				'desc'     => __( 'Ön Bilgilendirme Formu taslağını seçin', 'hezarfen-for-woocommerce' ),
-				'id'       => 'hezarfen_mss_settings[obf_taslak_id]',
-				'type'     => 'select',
-				'options'  => $this->get_contract_templates(),
-				'class'    => 'wc-enhanced-select',
-			),
+
 			
 			array(
 				'title'    => __( 'Sözleşme Gösterim Tipi', 'hezarfen-for-woocommerce' ),
@@ -213,25 +197,15 @@ class MSS_Settings {
 	 * Output contract management field
 	 */
 	public function output_contract_management( $value ) {
+		// Create a temporary instance just for rendering
+		$management_page = new \Hezarfen\Inc\MSS\Admin\Contract_Management_Page();
 		?>
 		<tr valign="top">
 			<th scope="row" class="titledesc">
 				<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 			</th>
 			<td class="forminp">
-				<div class="mss-contract-management">
-					<p>
-						<a href="<?php echo admin_url( 'post-new.php?post_type=intense_mss_form' ); ?>" class="button button-primary">
-							<?php _e( 'Yeni Sözleşme Taslağı Oluştur', 'hezarfen-for-woocommerce' ); ?>
-						</a>
-						<a href="<?php echo admin_url( 'edit.php?post_type=intense_mss_form' ); ?>" class="button">
-							<?php _e( 'Mevcut Taslakları Görüntüle', 'hezarfen-for-woocommerce' ); ?>
-						</a>
-					</p>
-					<p class="description">
-						<?php _e( 'Sözleşme taslakları oluşturduktan sonra yukarıdaki dropdown menülerden seçebilirsiniz.', 'hezarfen-for-woocommerce' ); ?>
-					</p>
-				</div>
+				<?php $management_page->render_contract_management(); ?>
 			</td>
 		</tr>
 		<?php
