@@ -248,24 +248,21 @@ class IN_MSS_SiparisSonrasi {
 		$ozel_sozlesme_1_content = $render['ozel_sozlesme_1_content'];
 		$ozel_sozlesme_2_content = $render['ozel_sozlesme_2_content'];
 
-		$hezarfen_mss_settings = get_option( 'hezarfen_mss_settings', array() );
-
-		$has_ozel_sozlesme_1 = isset($hezarfen_mss_settings['ozel_sozlesme_1_taslak_id']) && $hezarfen_mss_settings['ozel_sozlesme_1_taslak_id'] > 0;
-		$has_ozel_sozlesme_2 = isset($hezarfen_mss_settings['ozel_sozlesme_2_taslak_id']) && $hezarfen_mss_settings['ozel_sozlesme_2_taslak_id'] > 0;
-
-		if ( $has_ozel_sozlesme_1 ) {
-			$ozel_sozlesme_1_post = get_post( apply_filters( 'wpml_object_id', $hezarfen_mss_settings['ozel_sozlesme_1_taslak_id'], 'intense_mss_form', true ) );
-			$ozel_sozlesme_1_baslik = $ozel_sozlesme_1_post->post_title;
-		}else{
-			$ozel_sozlesme_1_baslik = null;
+		// Get active contracts from the new dynamic system
+		$active_contracts = \Hezarfen\Inc\MSS\Core\Contract_Manager::get_active_contracts();
+		$contract_titles = array();
+		
+		foreach ( $active_contracts as $contract ) {
+			$contract_titles[ $contract['type'] ] = $contract['name'];
 		}
-
-		if ( $has_ozel_sozlesme_2 ) {
-			$ozel_sozlesme_2_post = get_post( apply_filters( 'wpml_object_id', $hezarfen_mss_settings['ozel_sozlesme_2_taslak_id'], 'intense_mss_form', true ) );
-			$ozel_sozlesme_2_baslik = $ozel_sozlesme_2_post->post_title;
-		}else{
-			$ozel_sozlesme_2_baslik = null;
-		}
+		
+		// Set titles for backward compatibility (these are used in email display)
+		$ozel_sozlesme_1_baslik = isset( $contract_titles['cayma_hakki'] ) ? $contract_titles['cayma_hakki'] : null;
+		$ozel_sozlesme_2_baslik = isset( $contract_titles['custom'] ) ? $contract_titles['custom'] : null;
+		
+		// Check if contracts exist
+		$has_ozel_sozlesme_1 = ! empty( $ozel_sozlesme_1_baslik );
+		$has_ozel_sozlesme_2 = ! empty( $ozel_sozlesme_2_baslik );
 
 		if( $has_ozel_sozlesme_1 ):
 		?>
