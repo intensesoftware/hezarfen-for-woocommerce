@@ -69,6 +69,7 @@ class MSS_Integration {
 		// Load core classes
 		require_once HEZARFEN_MSS_PATH . 'core/class-contract-types.php';
 		require_once HEZARFEN_MSS_PATH . 'core/class-contract-manager.php';
+		require_once HEZARFEN_MSS_PATH . 'core/class-template-processor.php';
 		require_once HEZARFEN_MSS_PATH . 'core/class-contract-renderer.php';
 		require_once HEZARFEN_MSS_PATH . 'core/class-contract-validator.php';
 		

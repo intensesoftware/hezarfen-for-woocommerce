@@ -63,39 +63,13 @@ class Contract_Renderer {
 
 		$raw_content = wpautop( $contract['content'] );
 		
-		// Process template variables
-		$processed_content = self::process_template_variables( $raw_content );
+		// Process template variables using the dedicated processor
+		$processed_content = Template_Processor::process_variables( $raw_content );
 		
 		return $processed_content;
 	}
 
-	/**
-	 * Process template variables in content
-	 *
-	 * @param string $content Raw content.
-	 * @return string
-	 */
-	private static function process_template_variables( $content ) {
-		// Include the existing utility trait if available
-		if ( class_exists( 'IN_MSS_OdemeSayfasi_Sozlesmeler' ) ) {
-			$sozlesmeler = new \IN_MSS_OdemeSayfasi_Sozlesmeler();
-			
-			// Use existing methods if available
-			if ( method_exists( $sozlesmeler, 'html_forma_degiskenleri_bas' ) ) {
-				$content = $sozlesmeler->html_forma_degiskenleri_bas( $content );
-			}
-			
-			if ( method_exists( $sozlesmeler, 'forma_ozel_alan_tutuculari_yerlestir' ) ) {
-				$content = $sozlesmeler->forma_ozel_alan_tutuculari_yerlestir( $content );
-			}
-			
-			if ( method_exists( $sozlesmeler, 'form_hezarfen_destegi' ) ) {
-				$content = $sozlesmeler->form_hezarfen_destegi( $content );
-			}
-		}
 
-		return $content;
-	}
 
 	/**
 	 * Render inline view

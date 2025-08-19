@@ -420,7 +420,7 @@ class IN_MSS_SiparisSonrasi {
 		foreach ( $active_contracts as $contract ) {
 			if ( ! empty( $contract['content'] ) ) {
 				$raw_content = wpautop( $contract['content'] );
-				$processed_content = $this->html_forma_degiskenleri_bas( $raw_content, $order_id );
+				$processed_content = \Hezarfen\Inc\MSS\Core\Template_Processor::process_variables( $raw_content, $order_id );
 				
 				// Map contract types to expected array keys for backward compatibility
 				switch ( $contract['type'] ) {
