@@ -95,7 +95,7 @@ class MSS_Integration {
 	 * Maybe load frontend functionality if MSS is configured
 	 */
 	public function maybe_load_frontend() {
-		$ayarlar = get_option( 'intense_mss_ayarlar' );
+		$ayarlar = get_option( 'hezarfen_mss_settings' );
 		$mss_taslak_id = $ayarlar['mss_taslak_id'] ?? null;
 		$obf_taslak_id = $ayarlar['obf_taslak_id'] ?? null;
 		

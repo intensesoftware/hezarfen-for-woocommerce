@@ -56,9 +56,9 @@ class MSS_Activation {
 			'obf_taslak_id' => '',
 		);
 		
-		$existing_options = get_option( 'intense_mss_ayarlar', array() );
+		$existing_options = get_option( 'hezarfen_mss_settings', array() );
 		$merged_options = wp_parse_args( $existing_options, $default_options );
 		
-		update_option( 'intense_mss_ayarlar', $merged_options );
+		update_option( 'hezarfen_mss_settings', $merged_options );
 	}
 }

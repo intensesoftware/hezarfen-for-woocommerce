@@ -37,7 +37,7 @@ class Aktivasyon_Deaktivasyon {
 	 * @return void
 	 */
 	public static function db_upgrade( $mevcut_version ) {
-		include_once INTENSE_MSS_UYGULAMA_PATH . 'fonksiyonlar/admin/migrate/in-wc-mss-class-upgrade-fonksiyonlar.php';
+		include_once WC_HEZARFEN_UYGULAMA_YOLU . 'fonksiyonlar/admin/migrate/in-wc-mss-class-upgrade-fonksiyonlar.php';
 
 		foreach ( self::$db_updates as $version => $db_upgrade_functions ) {
 			foreach ( $db_upgrade_functions as $db_upgrade_function_adi ) {

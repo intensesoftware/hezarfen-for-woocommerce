@@ -157,7 +157,7 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 	 * @return void
 	 */
 	public function render_forms() {
-		$ayarlar = get_option( 'intense_mss_ayarlar' );
+		$ayarlar = get_option( 'hezarfen_mss_settings' );
 
 		// her iki form da eşleştirilmemişse, sonlandır.
 		if ( ! $ayarlar['obf_taslak_id'] > 0 && ! $ayarlar['mss_taslak_id'] > 0 ) {
@@ -197,11 +197,11 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 		}
 
 		if ( 'inline' === (string) $ayarlar['odeme_sayfasinda_sozlesme_gosterim_tipi'] ) {
-			include_once INTENSE_MSS_UYGULAMA_PATH . 'fonksiyonlar/odeme-sayfasi/views/html-odeme-sozlesmeler-inline.php';
+			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'fonksiyonlar/odeme-sayfasi/views/html-odeme-sozlesmeler-inline.php';
 		} elseif ( 'modal' === (string) $ayarlar['odeme_sayfasinda_sozlesme_gosterim_tipi'] ) {
-			include_once INTENSE_MSS_UYGULAMA_PATH . 'fonksiyonlar/odeme-sayfasi/views/html-odeme-sozlesmeler-modal.php';
+			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'fonksiyonlar/odeme-sayfasi/views/html-odeme-sozlesmeler-modal.php';
 		} else {
-			include_once INTENSE_MSS_UYGULAMA_PATH . 'fonksiyonlar/odeme-sayfasi/views/html-odeme-sozlesmeler-inline.php';
+			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'fonksiyonlar/odeme-sayfasi/views/html-odeme-sozlesmeler-inline.php';
 		}
 	}
 
@@ -211,14 +211,16 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 	 * @return void
 	 */
 	public function intense_mss_onay_checkbox() {
-		$ayarlar = get_option( 'intense_mss_ayarlar' );
+		$ayarlar = get_option( 'hezarfen_mss_settings' );
 
-		if ( 'inline' === $ayarlar['odeme_sayfasinda_sozlesme_gosterim_tipi'] ) {
-			include_once INTENSE_MSS_UYGULAMA_PATH . 'fonksiyonlar/odeme-sayfasi/views/html-sozlesme-onay-checkbox-inline.php';
-		} elseif ( 'modal' === $ayarlar['odeme_sayfasinda_sozlesme_gosterim_tipi'] ) {
-			include_once INTENSE_MSS_UYGULAMA_PATH . 'fonksiyonlar/odeme-sayfasi/views/html-sozlesme-onay-checkbox-modal.php';
+		$gosterim_tipi = isset($ayarlar['odeme_sayfasinda_sozlesme_gosterim_tipi']) ? $ayarlar['odeme_sayfasinda_sozlesme_gosterim_tipi'] : 'inline';
+
+		if ( 'inline' === $gosterim_tipi ) {
+			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'fonksiyonlar/odeme-sayfasi/views/html-sozlesme-onay-checkbox-inline.php';
+		} elseif ( 'modal' === $gosterim_tipi ) {
+			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'fonksiyonlar/odeme-sayfasi/views/html-sozlesme-onay-checkbox-modal.php';
 		} else {
-			include_once INTENSE_MSS_UYGULAMA_PATH . 'fonksiyonlar/odeme-sayfasi/views/html-sozlesme-onay-checkbox-inline.php';
+			include_once WC_HEZARFEN_UYGULAMA_YOLU . 'fonksiyonlar/odeme-sayfasi/views/html-sozlesme-onay-checkbox-inline.php';
 		}
 	}
 
@@ -228,7 +230,7 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 	 * @return void
 	 */
 	public function intense_mss_checkout_process() {
-		$ayarlar = get_option( 'intense_mss_ayarlar' );
+		$ayarlar = get_option( 'hezarfen_mss_settings' );
 		$gosterilmeyecek_sozlesmeler = array_key_exists( 'gosterilmeyecek_sozlesmeler', $ayarlar ) ? $ayarlar['gosterilmeyecek_sozlesmeler'] : array();
 
 		//phpcs:disable

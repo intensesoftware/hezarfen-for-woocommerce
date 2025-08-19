@@ -34,13 +34,12 @@ class IN_MSS_SiparisSonrasi {
 	 */
 	public function __construct() {
 
-		$this->ayarlar = get_option( 'intense_mss_ayarlar' );
+		$this->ayarlar = get_option( 'hezarfen_mss_settings' );
 
-		/*
-		 * Sozlesme oluşma tipi 'işleniyor' seçili ise, sipariş işleniyor durumuna gelince sözleşmeyi oluştur.
-		 * Yeni siparişte veya default ayarda ise, sipariş alınınca işlem yap.
-		 */
-		if ( 'isleniyor' === $this->ayarlar['sozlesme_olusturma_tipi'] ) {
+		$sozlesme_olusturma_tipi = isset($this->ayarlar['sozlesme_olusturma_tipi']) ? $this->ayarlar['sozlesme_olusturma_tipi'] : 'yeni_siparis';
+
+		// Use the variable instead of directly accessing the array
+		if ( 'isleniyor' === $sozlesme_olusturma_tipi ) {
 			add_action( 'woocommerce_order_status_processing', array( $this, 'sozlesmeleri_isleme_al' ) );
 		} else {
 			add_action( 'woocommerce_thankyou', array( $this, 'sozlesmeleri_isleme_al' ) );
@@ -95,20 +94,20 @@ class IN_MSS_SiparisSonrasi {
 		$ozel_sozlesme_1_content = $render['ozel_sozlesme_1_content'];
 		$ozel_sozlesme_2_content = $render['ozel_sozlesme_2_content'];
 
-		$intense_mss_ayarlar = get_option( 'intense_mss_ayarlar', array() );
+		$hezarfen_mss_settings = get_option( 'hezarfen_mss_settings', array() );
 
-		$has_ozel_sozlesme_1 = $intense_mss_ayarlar['ozel_sozlesme_1_taslak_id'] > 0;
-		$has_ozel_sozlesme_2 = $intense_mss_ayarlar['ozel_sozlesme_2_taslak_id'] > 0;
+		$has_ozel_sozlesme_1 = isset($hezarfen_mss_settings['ozel_sozlesme_1_taslak_id']) && $hezarfen_mss_settings['ozel_sozlesme_1_taslak_id'] > 0;
+		$has_ozel_sozlesme_2 = isset($hezarfen_mss_settings['ozel_sozlesme_2_taslak_id']) && $hezarfen_mss_settings['ozel_sozlesme_2_taslak_id'] > 0;
 
 		if ( $has_ozel_sozlesme_1 ) {
-			$ozel_sozlesme_1_post = get_post( apply_filters( 'wpml_object_id', $intense_mss_ayarlar['ozel_sozlesme_1_taslak_id'], 'mss', true ) );
+			$ozel_sozlesme_1_post = get_post( apply_filters( 'wpml_object_id', $hezarfen_mss_settings['ozel_sozlesme_1_taslak_id'], 'mss', true ) );
 			$ozel_sozlesme_1_baslik = $ozel_sozlesme_1_post->post_title;
 		}else{
 			$ozel_sozlesme_1_baslik = null;
 		}
 
 		if ( $has_ozel_sozlesme_2 ) {
-			$ozel_sozlesme_2_post = get_post( apply_filters( 'wpml_object_id', $intense_mss_ayarlar['ozel_sozlesme_2_taslak_id'], 'mss', true ) );
+			$ozel_sozlesme_2_post = get_post( apply_filters( 'wpml_object_id', $hezarfen_mss_settings['ozel_sozlesme_2_taslak_id'], 'mss', true ) );
 			$ozel_sozlesme_2_baslik = $ozel_sozlesme_2_post->post_title;
 		}else{
 			$ozel_sozlesme_2_baslik = null;
@@ -146,7 +145,7 @@ class IN_MSS_SiparisSonrasi {
 		 *
 		 * E-Posta Gönderimi
 		 */
-		$uygulama_ayarlar = get_option( 'intense_mss_ayarlar' );
+		$uygulama_ayarlar = get_option( 'hezarfen_mss_settings' );
 
 		$yonetici_sozlesme_saklama_eposta_adresi = $uygulama_ayarlar['yonetici_sozlesme_saklama_eposta_adresi'];
 
@@ -256,20 +255,20 @@ class IN_MSS_SiparisSonrasi {
 		$ozel_sozlesme_1_content = $render['ozel_sozlesme_1_content'];
 		$ozel_sozlesme_2_content = $render['ozel_sozlesme_2_content'];
 
-		$intense_mss_ayarlar = get_option( 'intense_mss_ayarlar', array() );
+		$hezarfen_mss_settings = get_option( 'hezarfen_mss_settings', array() );
 
-		$has_ozel_sozlesme_1 = $intense_mss_ayarlar['ozel_sozlesme_1_taslak_id'] > 0;
-		$has_ozel_sozlesme_2 = $intense_mss_ayarlar['ozel_sozlesme_2_taslak_id'] > 0;
+		$has_ozel_sozlesme_1 = isset($hezarfen_mss_settings['ozel_sozlesme_1_taslak_id']) && $hezarfen_mss_settings['ozel_sozlesme_1_taslak_id'] > 0;
+		$has_ozel_sozlesme_2 = isset($hezarfen_mss_settings['ozel_sozlesme_2_taslak_id']) && $hezarfen_mss_settings['ozel_sozlesme_2_taslak_id'] > 0;
 
 		if ( $has_ozel_sozlesme_1 ) {
-			$ozel_sozlesme_1_post = get_post( apply_filters( 'wpml_object_id', $intense_mss_ayarlar['ozel_sozlesme_1_taslak_id'], 'mss', true ) );
+			$ozel_sozlesme_1_post = get_post( apply_filters( 'wpml_object_id', $hezarfen_mss_settings['ozel_sozlesme_1_taslak_id'], 'mss', true ) );
 			$ozel_sozlesme_1_baslik = $ozel_sozlesme_1_post->post_title;
 		}else{
 			$ozel_sozlesme_1_baslik = null;
 		}
 
 		if ( $has_ozel_sozlesme_2 ) {
-			$ozel_sozlesme_2_post = get_post( apply_filters( 'wpml_object_id', $intense_mss_ayarlar['ozel_sozlesme_2_taslak_id'], 'mss', true ) );
+			$ozel_sozlesme_2_post = get_post( apply_filters( 'wpml_object_id', $hezarfen_mss_settings['ozel_sozlesme_2_taslak_id'], 'mss', true ) );
 			$ozel_sozlesme_2_baslik = $ozel_sozlesme_2_post->post_title;
 		}else{
 			$ozel_sozlesme_2_baslik = null;
@@ -419,7 +418,7 @@ class IN_MSS_SiparisSonrasi {
 	 * @return array
 	 */
 	private function render_forms( $order_id ) {
-		$ayarlar = get_option( 'intense_mss_ayarlar' );
+		$ayarlar = get_option( 'hezarfen_mss_settings' );
 
 		// her iki form da eşleştirilmemişse, sonlandır.
 		if ( ! $ayarlar['obf_taslak_id'] > 0 && ! $ayarlar['mss_taslak_id'] > 0 ) {

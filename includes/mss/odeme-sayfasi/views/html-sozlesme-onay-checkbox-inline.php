@@ -9,9 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$intense_mss_ayarlar = get_option( 'intense_mss_ayarlar', array() );
+$hezarfen_mss_settings = get_option( 'hezarfen_mss_settings', array() );
 
-$sozlesme_onay_checkbox_varsayilan_durum = (int) $intense_mss_ayarlar['sozlesme_onay_checkbox_varsayilan_durum'];
+$sozlesme_onay_checkbox_varsayilan_durum = isset($hezarfen_mss_settings['sozlesme_onay_checkbox_varsayilan_durum']) ? (int) $hezarfen_mss_settings['sozlesme_onay_checkbox_varsayilan_durum'] : 0;
 
 $gosterilmeyecek_sozlesmeler = array_key_exists( 'gosterilmeyecek_sozlesmeler', $ayarlar ) ? $ayarlar['gosterilmeyecek_sozlesmeler'] : array();
 ?>

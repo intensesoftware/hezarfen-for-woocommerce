@@ -64,7 +64,7 @@ class MSS_Settings {
 			array(
 				'title'    => __( 'MSS Taslak', 'hezarfen-for-woocommerce' ),
 				'desc'     => __( 'Mesafeli Satış Sözleşmesi taslağını seçin', 'hezarfen-for-woocommerce' ),
-				'id'       => 'intense_mss_ayarlar[mss_taslak_id]',
+				'id'       => 'hezarfen_mss_settings[mss_taslak_id]',
 				'type'     => 'select',
 				'options'  => $this->get_contract_templates(),
 				'class'    => 'wc-enhanced-select',
@@ -73,10 +73,34 @@ class MSS_Settings {
 			array(
 				'title'    => __( 'Ön Bilgilendirme Formu Taslak', 'hezarfen-for-woocommerce' ),
 				'desc'     => __( 'Ön Bilgilendirme Formu taslağını seçin', 'hezarfen-for-woocommerce' ),
-				'id'       => 'intense_mss_ayarlar[obf_taslak_id]',
+				'id'       => 'hezarfen_mss_settings[obf_taslak_id]',
 				'type'     => 'select',
 				'options'  => $this->get_contract_templates(),
 				'class'    => 'wc-enhanced-select',
+			),
+			
+			array(
+				'title'    => __( 'Sözleşme Gösterim Tipi', 'hezarfen-for-woocommerce' ),
+				'desc'     => __( 'Sözleşmenin ödeme sayfasında nasıl gösterileceğini seçin.', 'hezarfen-for-woocommerce' ),
+				'id'       => 'hezarfen_mss_settings[odeme_sayfasinda_sozlesme_gosterim_tipi]',
+				'type'     => 'select',
+				'options'  => array(
+					'inline' => __( 'Sayfa İçi', 'hezarfen-for-woocommerce' ),
+					'modal'  => __( 'Modal', 'hezarfen-for-woocommerce' ),
+				),
+				'default'  => 'inline',
+			),
+			
+			array(
+				'title'    => __( 'Sözleşme Oluşturma Tipi', 'hezarfen-for-woocommerce' ),
+				'desc'     => __( 'Sözleşmenin ne zaman oluşturulacağını seçin.', 'hezarfen-for-woocommerce' ),
+				'id'       => 'hezarfen_mss_settings[sozlesme_olusturma_tipi]',
+				'type'     => 'select',
+				'options'  => array(
+					'yeni_siparis' => __( 'Sipariş Alındığında', 'hezarfen-for-woocommerce' ),
+					'isleniyor'    => __( 'Sipariş Hazırlanıyor Durumuna Geldiğinde', 'hezarfen-for-woocommerce' ),
+				),
+				'default'  => 'yeni_siparis',
 			),
 			
 			array(
@@ -138,9 +162,9 @@ class MSS_Settings {
 		}
 		
 		// Handle MSS specific settings save
-		if ( isset( $_POST['intense_mss_ayarlar'] ) && is_array( $_POST['intense_mss_ayarlar'] ) ) {
-			$mss_settings = array_map( 'sanitize_text_field', $_POST['intense_mss_ayarlar'] );
-			update_option( 'intense_mss_ayarlar', $mss_settings );
+		if ( isset( $_POST['hezarfen_mss_settings'] ) && is_array( $_POST['hezarfen_mss_settings'] ) ) {
+			$mss_settings = array_map( 'sanitize_text_field', $_POST['hezarfen_mss_settings'] );
+			update_option( 'hezarfen_mss_settings', $mss_settings );
 		}
 	}
 	

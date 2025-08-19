@@ -35,7 +35,7 @@ class IN_MSS_KullaniciArayuz {
 
 		$sozlesme_detaylar = $this->get_sozlesme_detaylar( $siparis_no );
 
-		$ayarlar = get_option( 'intense_mss_ayarlar', array() );
+		$ayarlar = get_option( 'hezarfen_mss_settings', array() );
 		$gosterilmeyecek_sozlesmeler = array_key_exists( 'gosterilmeyecek_sozlesmeler', $ayarlar ) ? $ayarlar['gosterilmeyecek_sozlesmeler'] : array();
 
 		if ( empty( $sozlesme_detaylar ) ) {

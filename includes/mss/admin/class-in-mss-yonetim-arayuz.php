@@ -40,7 +40,7 @@ class Intense_MSS_Yonetim_Arayuzu {
 		add_action( 'admin_enqueue_scripts', array( $this, 'stilleri_yukle' ) );
 		add_action( 'add_meta_boxes', array( $this, 'intense_form_taslaklari_metabox_ekle' ) );
 
-		$this->options = get_option( 'intense_mss_ayarlar', array() );
+		$this->options = get_option( 'hezarfen_mss_settings', array() );
 		
 		// Register post type immediately if we're past the init hook
 		// This ensures post type is available even if instantiated late
@@ -541,7 +541,7 @@ class Intense_MSS_Yonetim_Arayuzu {
 	public function intense_mss_page_init() {
 		register_setting(
 			'intense_mss_alanlar',
-			'intense_mss_ayarlar',
+			'hezarfen_mss_settings',
 			array( $this, 'sanitize' )
 		);
 
@@ -690,7 +690,7 @@ class Intense_MSS_Yonetim_Arayuzu {
 		$sozlesme_taslaklari = $this->mevcut_sozlesme_taslaklari_liste();
 
 		?>
-		<select name="intense_mss_ayarlar[mss_taslak_id]">
+		<select name="hezarfen_mss_settings[mss_taslak_id]">
 			<option value=""><?php esc_html_e( 'Lütfen Seçiniz', 'intense-mss-for-woocommerce' ); ?></option>
 			<?php
 			foreach ( $sozlesme_taslaklari as $sozlesme ) {
@@ -720,7 +720,7 @@ class Intense_MSS_Yonetim_Arayuzu {
 		$sozlesme_taslaklari = $this->mevcut_sozlesme_taslaklari_liste();
 
 		?>
-		<select name="intense_mss_ayarlar[obf_taslak_id]">
+		<select name="hezarfen_mss_settings[obf_taslak_id]">
 			<option value=""><?php esc_html_e( 'Lütfen Seçiniz', 'intense-mss-for-woocommerce' ); ?></option>
 			<?php
 			foreach ( $sozlesme_taslaklari as $sozlesme ) {
@@ -750,7 +750,7 @@ class Intense_MSS_Yonetim_Arayuzu {
 		$sozlesme_taslaklari = $this->mevcut_sozlesme_taslaklari_liste();
 
 		?>
-		<select name="intense_mss_ayarlar[ozel_sozlesme_1_taslak_id]">
+		<select name="hezarfen_mss_settings[ozel_sozlesme_1_taslak_id]">
 			<option value=""><?php esc_html_e( 'Lütfen Seçiniz', 'intense-mss-for-woocommerce' ); ?></option>
 			<?php
 			foreach ( $sozlesme_taslaklari as $sozlesme ) {
@@ -780,7 +780,7 @@ class Intense_MSS_Yonetim_Arayuzu {
 		$sozlesme_taslaklari = $this->mevcut_sozlesme_taslaklari_liste();
 
 		?>
-		<select name="intense_mss_ayarlar[ozel_sozlesme_2_taslak_id]">
+		<select name="hezarfen_mss_settings[ozel_sozlesme_2_taslak_id]">
 			<option value=""><?php esc_html_e( 'Lütfen Seçiniz', 'intense-mss-for-woocommerce' ); ?></option>
 			<?php
 			foreach ( $sozlesme_taslaklari as $sozlesme ) {
@@ -819,7 +819,7 @@ class Intense_MSS_Yonetim_Arayuzu {
 		?>
 		<?php foreach($sozlesme_tipleri as $sozlesme_tipi => $sozlesme_tipi_label): ?>
 			<p>
-				<input <?php if(in_array( $sozlesme_tipi, $value, true )): ?>checked<?php endif; ?> type="checkbox" id="<?php echo esc_attr( $sozlesme_tipi ); ?>" name="intense_mss_ayarlar[gosterilmeyecek_sozlesmeler][]" value="<?php echo esc_attr( $sozlesme_tipi ); ?>" />
+				<input <?php if(in_array( $sozlesme_tipi, $value, true )): ?>checked<?php endif; ?> type="checkbox" id="<?php echo esc_attr( $sozlesme_tipi ); ?>" name="hezarfen_mss_settings[gosterilmeyecek_sozlesmeler][]" value="<?php echo esc_attr( $sozlesme_tipi ); ?>" />
 				<label for="<?php echo esc_attr( $sozlesme_tipi ); ?>"><?php echo esc_html( $sozlesme_tipi_label ); ?></label>
 			</p>
 		<?php endforeach; ?>
@@ -834,7 +834,7 @@ class Intense_MSS_Yonetim_Arayuzu {
 	public function intense_sozlesme_saklama_eposta_adresi_callback() {
 		$value = $this->options['yonetici_sozlesme_saklama_eposta_adresi'] ?? '';
 
-		printf( '<input name="intense_mss_ayarlar[yonetici_sozlesme_saklama_eposta_adresi]" value="%s" />', esc_html( $value ) );
+		printf( '<input name="hezarfen_mss_settings[yonetici_sozlesme_saklama_eposta_adresi]" value="%s" />', esc_html( $value ) );
 	}
 
 	/**
@@ -846,7 +846,7 @@ class Intense_MSS_Yonetim_Arayuzu {
 		$value = $this->options['sozlesme_onay_checkbox_varsayilan_durum'] ?? '';
 
 		?>
-		<select name="intense_mss_ayarlar[sozlesme_onay_checkbox_varsayilan_durum]">
+		<select name="hezarfen_mss_settings[sozlesme_onay_checkbox_varsayilan_durum]">
 			<option <?php echo ( '0' === $value ) ? 'selected' : ''; ?> value='0'><?php esc_html_e( 'İşaretsiz', 'intense-mss-for-woocommerce' ); ?></option>
 			<option <?php echo ( '1' === $value ) ? 'selected' : ''; ?> value='1'><?php esc_html_e( 'İşaretli', 'intense-mss-for-woocommerce' ); ?></option>
 		</select>
@@ -861,7 +861,7 @@ class Intense_MSS_Yonetim_Arayuzu {
 	public function odeme_sayfasinda_sozlesme_gosterim_tipi() {
 		$value = $this->options['odeme_sayfasinda_sozlesme_gosterim_tipi'] ?? '';
 		?>
-		<select name="intense_mss_ayarlar[odeme_sayfasinda_sozlesme_gosterim_tipi]">
+		<select name="hezarfen_mss_settings[odeme_sayfasinda_sozlesme_gosterim_tipi]">
 			<option <?php echo 'inline' === $value ? 'selected' : ''; ?> value='inline'><?php esc_html_e( 'Sayfa içi', 'intense-mss-for-woocommerce' ); ?></option>
 			<option <?php echo 'modal' === $value ? 'selected' : ''; ?> value='modal'><?php esc_html_e( 'Modal', 'intense-mss-for-woocommerce' ); ?></option>
 		</select>
@@ -878,7 +878,7 @@ class Intense_MSS_Yonetim_Arayuzu {
 	public function sozlesme_olusturma_tipi() {
 		$value = $this->options['sozlesme_olusturma_tipi'] ?? '';
 		?>
-		<select name="intense_mss_ayarlar[sozlesme_olusturma_tipi]">
+		<select name="hezarfen_mss_settings[sozlesme_olusturma_tipi]">
 			<option value="yeni_siparis" <?php selected( $value, 'yeni_siparis' ); ?>><?php esc_html_e( 'Sipariş alındığında', 'intense-mss-for-woocommerce' ); ?></option>
 			<option value="isleniyor" <?php selected( $value, 'isleniyor' ); ?>><?php esc_html_e( 'Sipariş işleniyor durumuna geldiğinde', 'intense-mss-for-woocommerce' ); ?></option>
 		</select>
