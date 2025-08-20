@@ -154,10 +154,10 @@ Yanlış yazımlar, eklentimizi ararken doğru sonuçlara ulaşmanızı engelley
 
 Hezarfen **23 farklı kargo firmasını** desteklemektedir:
 
-Aras Kargo, Birgünde Kargo, Brinks Kargo, CDEK, DHL, FedEx, Gelal, HepsiJET, Horoz Lojistik, Jetizz, Kargo Türk, Kargoist, Kolay Gelsin, Kurye, MNG Kargo, PackUpp, PTT Kargo, Scotty, Sendeo Kargo, Sürat Kargo, TNT, Trendyol Express, UPS Kargo, Yurtiçi Kargo
+HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express, UPS Kargo, Birgünde Kargo, Brinks Kargo, CDEK, DHL, FedEx, Gelal, Horoz Lojistik, Jetizz, Kargo Türk, Kargoist, Kolay Gelsin, Kurye, PackUpp, Scotty, TNT
 
 == Screenshots ==
-1. WooCommerce kargo takip numarası giriş alanı
+1. WooCommerce kargo takip numarası giriş alanı (HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo vb. toplamda 23 kargo firması)
 2. WooCommerce siparişe girilmiş kargo takip numaralarının sipariş detayında listelenmesi
 3. SMS kuralları (kargoya verildiğinde veya sipariş durumuna göre SMS oluşturabilme)
 4. NetGSM ile Kargoya verildi SMS düzenleme ekranı
