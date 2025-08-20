@@ -137,15 +137,12 @@ Tıpkı bir hezarfen gibi, eklentimiz de WooCommerce için birçok özelliği te
 ✅ **Doğru yazım:** Hezarfen  
 📢 **Doğru okunuş:** [He-zaaR-fen]  
 
-❌ **Yanlış yazımlar (kullanmayın):**  
+❌ **Yanlış yazımlar (kullanmayın):** 
+- Hazarfen
 - Hazarfen
 - Hezerfen  
 - Hezerfan  
-- Hezarfan  
-- Hezarfın  
-- Hezarfin  
-- Hezar-fen  
-- Hezar_fen
+- Hezarfan
 
 Yanlış yazımlar, eklentimizi ararken doğru sonuçlara ulaşmanızı engelleyebilir. Aramalarda her zaman **Hezarfen** şeklinde yazmanızı tavsiye ederiz.
 
