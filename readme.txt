@@ -146,6 +146,7 @@ Tıpkı bir hezarfen gibi, eklentimiz de WooCommerce için birçok özelliği te
 - Hazerfan
 - Hezarfen
 - Hezerfen
+- Hazerfen
 
 Yanlış yazımlar, eklentimizi ararken doğru sonuçlara ulaşmanızı engelleyebilir. Aramalarda her zaman **Hezarfen** şeklinde yazmanızı tavsiye ederiz.
 
