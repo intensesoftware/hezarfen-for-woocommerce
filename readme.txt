@@ -20,7 +20,7 @@ Türkiye'nin lider WooCommerce kargo takip eklentisi! 23 kargo firması, SMS oto
 ✅ **Müşteri Memnuniyeti**: WooCommerce SMS eklentisi ile SMS bilgilendirme ve e-posta bildirimleriyle müşterilerinizi bilgilendirin
 ✅ **Türkiye'ye Özel**: İl/ilçe/mahalle seçimi, TC No doğrulama, vergi ekleme ve vergi bilgileri
 ✅ **Tek Entegratör**: 23 kargo firması tek eklentide, kapsamlı kargo sistemi
-✅ **Kolay Kullanım**: Kurulum sonrası hemen kullanmaya başlayın, sözleşme gerektirmez
+✅ **Kolay Kullanım**: Kurulum sonrası hemen kullanmaya başlayın
 
 = 📦 DESTEKLENEN KARGO FİRMALARI =
 
