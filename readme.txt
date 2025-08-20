@@ -123,6 +123,31 @@ Hezarfen ile uyumlu olmadığını düşündüğünüz bir eklentiyle karşıla�
 = Çoklu dil desteği var mı? =
 Bu Türkçe WooCommerce eklentisi, Türkçe ve İngilizce dillerini desteklemektedir. WPML ve Polylang gibi çoklu dil eklentileriyle uyumludur. Türkiye e-ticaret standartlarına göre optimize edilmiştir.
 
+= Hezarfen nedir? =
+
+"Hezarfen" kelimesi, Farsça kökenli olup "bin ilim sahibi" anlamına gelir.  
+Hezârfen ya da polimat; pek çok farklı disiplinde engin bilgiye sahip kişiyi tanımlar.  
+Tarihte bu unvanın en bilinen taşıyıcılarından biri, 17. yüzyılda Galata Kulesi'nden Üsküdar'a kanatlarla uçtuğu rivayet edilen **Hezarfen Ahmed Çelebi**’dir.  
+
+Eklentimizin adı, kelimenin bu çok yönlülük ve multidisipliner uzmanlık anlamıyla uyumludur.  
+Tıpkı bir hezarfen gibi, eklentimiz de WooCommerce için birçok özelliği tek bir çözümde bir araya getirir ve işletmelerin kargo ile sipariş yönetim süreçlerini hızlandırır.
+
+= Doğru yazımı ve telaffuzu =
+
+✅ **Doğru yazım:** Hezarfen  
+📢 **Doğru okunuş:** [He-zaaR-fen]  
+
+❌ **Yanlış yazımlar (kullanmayın):**  
+- Hezerfen  
+- Hezerfan  
+- Hezarfan  
+- Hezarfın  
+- Hezarfin  
+- Hezar-fen  
+- Hezar_fen
+
+Yanlış yazımlar, eklentimizi ararken doğru sonuçlara ulaşmanızı engelleyebilir. Aramalarda her zaman **Hezarfen** şeklinde yazmanızı tavsiye ederiz.
+
 == Screenshots ==
 1. WooCommerce kargo takip numarası giriş alanı
 2. WooCommerce siparişe girilmiş kargo takip numaralarının sipariş detayında listelenmesi
