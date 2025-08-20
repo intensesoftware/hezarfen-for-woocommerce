@@ -138,6 +138,7 @@ Tıpkı bir hezarfen gibi, eklentimiz de WooCommerce için birçok özelliği te
 📢 **Doğru okunuş:** [He-zaaR-fen]  
 
 ❌ **Yanlış yazımlar (kullanmayın):**  
+- Hazarfen
 - Hezerfen  
 - Hezerfan  
 - Hezarfan  
