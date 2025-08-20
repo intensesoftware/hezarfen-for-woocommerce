@@ -188,7 +188,7 @@ Yanlış yazımlar, eklentimizi ararken doğru sonuçlara ulaşmanızı engelley
 * Kullanıcı anketi
 
 = 2.3.5 - 2025-08-08 =
-* Yurtiçi Kargo takip linki düzeltildi.
+* Yurt içi Kargo takip linki düzeltildi.
 
 = 2.3.4 - 2025-08-07 =
 * Gereksiz dil dosyalarının silinmesi
