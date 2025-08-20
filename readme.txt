@@ -229,7 +229,7 @@ Yanlış yazımlar, eklentimizi ararken doğru sonuçlara ulaşmanızı engelley
 * WordPress admin ekranında farklı eklentiler tarafından Bootstrap kütüphanelerinin kullanılması durumunda, Hezarfen eklentisinin etkilenmemesi sağlandı.
 
 = 2.0.1 - 2024-04-15 =
-* Kargo takip özelliği eklendi. (kargo takip numarası girebilme, kargoya verildi durumu, SMS entegrasyonu)
+* Kargo takip özelliği eklendi. (kargo takip numarası girebilme, kargoya verildi durumu, SMS entegrasyonu). Eklenen kargo firmaları: Aras Kargo, Birgünde Kargo, Brinks Kargo, CDEK, DHL, FedEx, Gelal, hepsiJET, Horoz Lojistik, Jetizz, Kargo Türk, Kargoist, Kolay Gelsin, Kurye, MNG Kargo, PackUpp, PTT Kargo, Scotty, Sendeo Kargo, Sürat Kargo, TNT, Trendyol Express, UPS Kargo, Yurtiçi Kargo
 
 = 1.6.8 - 2024-04-15 =
 * HPOS desteği eklendi.
