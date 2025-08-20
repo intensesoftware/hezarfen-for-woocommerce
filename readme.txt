@@ -1,6 +1,6 @@
 
 === Hezarfen - Türkiye Kargo Entegrasyonu - WooCommerce Kargo Takip ve Yönetim Eklentisi For Woocommerce ===
-Contributors: intenseyazilim, mskapusuz
+Contributors: intenseyazilim, mucahitbal, mskapusuz
 Tags: kargo, kargo takip, türkiye, woocommerce, fatura
 Requires at least: 5.3
 Tested up to: 6.8
@@ -8,7 +8,7 @@ Requires PHP: 7.0
 License: GPL2
 Stable tag: 2.4.1
 
-Türkiye'nin lider WooCommerce kargo çözümü! 23 kargo firması, SMS otomasyonu, il/ilçe/mahalle, TC kimlik ve vergi alanları desteği.
+Türkiye'nin lider WooCommerce kargo takip eklentisi! 23 kargo firması, SMS otomasyonu, il/ilçe/mahalle, TC kimlik ve vergi alanları desteği.
 
 == Description ==
 
@@ -33,10 +33,10 @@ Türkiye'nin lider WooCommerce kargo çözümü! 23 kargo firması, SMS otomasyo
 
 **Toplam 23 Kargo Firması Desteği**
 
-= ⭐ ÜCRETSİZ ÖZELLİKLER =
+= ⭐ TAMAMEN ÜCRETSİZ =
 
 **🚚 Kargo Yönetimi ve WooCommerce Kargo Takip Modülü**
-• Manuel kargo takip numarası girişi ve sipariş yönetimi
+• Kargo takip numarası girişi ve sipariş yönetimi
 • "Kargoya Verildi" sipariş durumu ve gönderi takibi
 • Müşteri panelinde detaylı kargo görüntüleme ve sipariş takibi
 • Otomatik e-posta bildirimleri ve iade süreç yönetimi
@@ -88,7 +88,7 @@ Hezarfen, KVKK’nın yurt dışına kişisel veri aktarımına ilişkin hüküm
 == Frequently Asked Questions ==
 
 = Bu WooCommerce eklentisi tamamen ücretsiz mi? =
-Evet, yukarıda listelenen özellikler tamamen ücretsizdir. 23 kargo firması için manuel takip, WooCommerce kargo takip modülü, il/ilçe/mahalle seçimi, TC kimlik no alanı gibi özellikler ücretsiz sunulmaktadır. Pro özellikleri (otomatik kargo entegrasyonu, Paraşüt e-arşiv/e-fatura entegrasyonu) ücretlidir. En iyi WooCommerce eklentileri arasında yer alan bu çözüm.
+Evet, yukarıda listelenen özellikler tamamen ücretsizdir. 23 kargo firması için manuel takip, WooCommerce kargo takip modülü, il/ilçe/mahalle seçimi, TC kimlik no alanı gibi özellikler ücretsiz sunulmaktadır. Pro özellikleri (otomatik woocommerce kargo entegrasyonu, Paraşüt e-arşiv/e-fatura entegrasyonu) ücretlidir. En iyi WooCommerce eklentileri arasında yer alan bu çözüm.
 
 = Hangi WooCommerce sürümleriyle uyumlu? =
 WooCommerce 5.0 ve üzeri tüm sürümlerle uyumludur. HPOS (High Performance Order Storage) desteği mevcuttur.
