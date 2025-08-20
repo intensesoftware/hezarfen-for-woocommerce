@@ -150,6 +150,12 @@ Tıpkı bir hezarfen gibi, eklentimiz de WooCommerce için birçok özelliği te
 
 Yanlış yazımlar, eklentimizi ararken doğru sonuçlara ulaşmanızı engelleyebilir. Aramalarda her zaman **Hezarfen** şeklinde yazmanızı tavsiye ederiz.
 
+= Hangi kargo firmalarını destekliyor?
+
+Hezarfen **23 farklı kargo firmasını** desteklemektedir:
+
+Aras Kargo, Birgünde Kargo, Brinks Kargo, CDEK, DHL, FedEx, Gelal, HepsiJET, Horoz Lojistik, Jetizz, Kargo Türk, Kargoist, Kolay Gelsin, Kurye, MNG Kargo, PackUpp, PTT Kargo, Scotty, Sendeo Kargo, Sürat Kargo, TNT, Trendyol Express, UPS Kargo, Yurtiçi Kargo
+
 == Screenshots ==
 1. WooCommerce kargo takip numarası giriş alanı
 2. WooCommerce siparişe girilmiş kargo takip numaralarının sipariş detayında listelenmesi
