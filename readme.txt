@@ -124,17 +124,18 @@ Hezarfen ile uyumlu olmadığını düşündüğünüz bir eklentiyle karşıla�
 Bu Türkçe WooCommerce eklentisi, Türkçe ve İngilizce dillerini desteklemektedir. WPML ve Polylang gibi çoklu dil eklentileriyle uyumludur. Türkiye e-ticaret standartlarına göre optimize edilmiştir.
 
 == Screenshots ==
-1. Kargo takip no giriş alanı
-2. Kargoya verildi maili
-3. Müşteri hesabım sayfası kargo detayları
-4. Ödeme formu ayarlar ekranı
-5. Opsiyonel mahalle.io servisi aktifken ödeme ekranı
-6. Opsiyonel mahalle.io servisi kullanılmadığında ödeme ekranı
-7. Kurumsal vergi bilgileri
-8. Bireysel vergi bilgileri
-9. Kargo takip özellik ayarları
-10. Sipariş liste ekranında kargo takip bilgilerinin görünmesi
-11. Kargoya verildi özellik ayarları
+1. WooCommerce sipariş kargo takip numarası giriş alanı
+2. WooCommerce siparişe girilmiş kargo takip numaralarının sipariş detayında listelenmesi
+3. SMS kuralları (kargoya verildiğinde veya sipariş durumuna göre SMS oluşturabilme)
+4. NetGSM ile Kargoya verildi SMS düzenleme ekranı
+5. Ödeme ekranında mahalle alanının gösterilmesi
+6. Müşteri hesabım sayfası sipariş detayında kargo bilgilerinin gösterilmesi
+7. Ödeme ekranının sıralanması
+8. Posta kodu kapatabilme, ödeme ekranı sıralayabilme özelliklerinin kontrolü
+9. Müşteriye gönderilen kargoya verildi e-postasının yönetimi
+10. Ödeme ekranında kurumsal vergi alanları (vergi dairesi ve vergi numarası)
+11. Ödeme ekranında kurumsal bireysel alanları (T.C. Kimlik Numarası)
+12. Sipariş liste ekranında kargo bilgilerinin görüntülenmesi
 
 == Changelog ==
 = 2.4.1 - 2015-08-18 =
