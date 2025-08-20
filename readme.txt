@@ -12,7 +12,7 @@ Türkiye'nin lider WooCommerce kargo takip eklentisi! 23 kargo firması, SMS oto
 
 == Description ==
 
-**Hezarfen**, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo ve ödeme yönetim eklentisidir. Bu WooCommerce kargo entegrasyonu eklentisi, 23 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel WooCommerce kargo takip deneyimi sunar ve Türkiye'ye özgü mahalle, fatura ve vergi alanlarıyla ödeme ekranınızı Türkiye'ye uyumlu hale getirir.
+**Hezarfen**, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo ve ödeme yönetim eklentisidir. Bu WooCommerce kargo entegrasyon eklentisi, 23 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel WooCommerce kargo takip deneyimi sunar ve Türkiye'ye özgü mahalle, fatura ve vergi alanlarıyla ödeme ekranınızı Türkiye'ye uyumlu hale getirir.
 
 = 🚀 NEDEN HEZARFEN? =
 
@@ -124,7 +124,7 @@ Hezarfen ile uyumlu olmadığını düşündüğünüz bir eklentiyle karşıla�
 Bu Türkçe WooCommerce eklentisi, Türkçe ve İngilizce dillerini desteklemektedir. WPML ve Polylang gibi çoklu dil eklentileriyle uyumludur. Türkiye e-ticaret standartlarına göre optimize edilmiştir.
 
 == Screenshots ==
-1. WooCommerce sipariş kargo takip numarası giriş alanı
+1. WooCommerce kargo takip numarası giriş alanı
 2. WooCommerce siparişe girilmiş kargo takip numaralarının sipariş detayında listelenmesi
 3. SMS kuralları (kargoya verildiğinde veya sipariş durumuna göre SMS oluşturabilme)
 4. NetGSM ile Kargoya verildi SMS düzenleme ekranı
