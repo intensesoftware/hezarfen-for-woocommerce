@@ -8,8 +8,7 @@ Requires PHP: 7.0
 License: GPL2
 Stable tag: 2.4.1
 
-Türkiye'nin lider WooCommerce kargo takip eklentisi! 23 kargo firması, SMS otomasyonu, il/ilçe/mahalle, TC kimlik ve vergi alanları desteği.
-
+Tamamen ücretsiz Türkiye'nin lider WooCommerce kargo takip eklentisi! 23 kargo, SMS, ilçe/mahalle, TC kimlik ve vergi alanı desteği
 == Description ==
 
 **Hezarfen**, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo ve ödeme yönetim eklentisidir. Bu WooCommerce kargo entegrasyon eklentisi, 23 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel WooCommerce kargo takip deneyimi sunar ve Türkiye'ye özgü mahalle, fatura ve vergi alanlarıyla ödeme ekranınızı Türkiye'ye uyumlu hale getirir.
@@ -19,7 +18,7 @@ Türkiye'nin lider WooCommerce kargo takip eklentisi! 23 kargo firması, SMS oto
 ✅ **Zaman Tasarrufu**: Manuel kargo işlemlerinizi otomatikleştirin, sipariş takibi kolaylaştırın
 ✅ **Müşteri Memnuniyeti**: WooCommerce SMS eklentisi ile SMS bilgilendirme ve e-posta bildirimleriyle müşterilerinizi bilgilendirin
 ✅ **Türkiye'ye Özel**: İl/ilçe/mahalle seçimi, TC No doğrulama, vergi ekleme ve vergi bilgileri
-✅ **Tek Entegratör**: 23 kargo firması tek eklentide, kapsamlı kargo sistemi
+✅ SMS Otomasyonu: Sipariş kargoya verildiğinde veya sipariş durumu değiştiğinde otomatik olarak, seçtiğiniz şablonlarla SMS gönderilsin.
 ✅ **Kolay Kullanım**: Kurulum sonrası hemen kullanmaya başlayın
 
 = 📦 DESTEKLENEN KARGO FİRMALARI =
@@ -40,7 +39,6 @@ Türkiye'nin lider WooCommerce kargo takip eklentisi! 23 kargo firması, SMS oto
 • "Kargoya Verildi" sipariş durumu ve gönderi takibi
 • Müşteri panelinde detaylı kargo görüntüleme ve sipariş takibi
 • Otomatik e-posta bildirimleri ve iade süreç yönetimi
-• **YENİ: SMS Otomasyonu** - NetGSM ve PandaSMS ile gelişmiş otomatik SMS bildirimleri
 • SMS entegrasyonu ile Kargoya Verildi ve tüm sipariş durumlarında özelleştirilebilir SMS bilgilendirme
 • Intense WooCommerce Mesafeli Satış Sözleşmesi Eklentisiyle tam uyumluluk (otomatik olarak kurumsal/bireysel vergi alanlarını çeker.)
 
