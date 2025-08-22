@@ -8,7 +8,7 @@ Requires PHP: 7.0
 License: GPL2
 Stable tag: 2.4.1
 
-TAMAMEN ÜCRETSİZ 🚀 2000+ AKTİF KULLANICI! Türkiye'nin lider WooCommerce kargo takip eklentisi: 23 kargo firması, SMS, ilçe/mahalle, TC kimlik ve vergi alanı desteği
+TAMAMEN ÜCRETSİZ 🚀 2000+ AKTİF KULLANICI! Türkiye’nin lider WooCommerce kargo takip eklentisi: 23 kargo, SMS, ilçe/mahalle, TC kimlik & vergi desteği
 == Description ==
 
 **Tamamen Ücretsiz!** Hezarfen, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo ve ödeme yönetim eklentisidir. Bu WooCommerce kargo entegrasyon eklentisi, 23 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel WooCommerce kargo takip deneyimi sunar ve Türkiye'ye özgü mahalle, fatura ve vergi alanlarıyla ödeme ekranınızı Türkiye'ye uyumlu hale getirir.
