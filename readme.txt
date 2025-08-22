@@ -86,7 +86,7 @@ Hezarfen, KVKK’nın yurt dışına kişisel veri aktarımına ilişkin hüküm
 == Frequently Asked Questions ==
 
 = Bu WooCommerce eklentisi tamamen ücretsiz mi? =
-Evet, yukarıda listelenen özellikler tamamen ücretsizdir. 23 kargo firması için manuel takip, WooCommerce kargo takip modülü, il/ilçe/mahalle seçimi, TC kimlik no alanı gibi özellikler ücretsiz sunulmaktadır. Pro özellikleri (otomatik woocommerce kargo entegrasyonu, Paraşüt e-arşiv/e-fatura entegrasyonu) ücretlidir. En iyi WooCommerce eklentileri arasında yer alan bu çözüm.
+Evet, yukarıda listelenen özellikler tamamen ücretsizdir. 23 kargo firması için manuel takip, WooCommerce kargo takip modülü, il/ilçe/mahalle seçimi, TC kimlik no alanı gibi özellikler ücretsiz sunulmaktadır.Ayrıca, Hezarfen'in intense.com.tr üzerinde satılan Pro versiyonu mevcuttur. Pro versiyonda otomatik woocommerce kargo entegrasyonu, Paraşüt e-arşiv/e-fatura entegrasyonu özellikleri bulunmaktadır.
 
 = Hangi WooCommerce sürümleriyle uyumlu? =
 WooCommerce 5.0 ve üzeri tüm sürümlerle uyumludur. HPOS (High Performance Order Storage) desteği mevcuttur.
