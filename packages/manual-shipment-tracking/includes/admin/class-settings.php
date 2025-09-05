@@ -45,6 +45,10 @@ class Settings {
 			add_filter( 'woocommerce_get_settings_' . self::HEZARFEN_WC_SETTINGS_ID, array( __CLASS__, 'add_settings_to_section' ), 10, 2 );
 			add_action( 'woocommerce_settings_save_hezarfen', array( __CLASS__, 'settings_save' ) );
 		}
+
+		// Add Hepsijet integration settings
+		add_filter( 'woocommerce_get_sections_' . self::HEZARFEN_WC_SETTINGS_ID, array( __CLASS__, 'add_hepsijet_section' ) );
+		add_filter( 'woocommerce_get_settings_' . self::HEZARFEN_WC_SETTINGS_ID, array( __CLASS__, 'add_hepsijet_settings' ), 10, 2 );
 	}
 
 	/**
@@ -270,6 +274,68 @@ class Settings {
 	private static function check_posted_custom_meta_keys() {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		return ! empty( $_POST[ self::OPT_COURIER_CUSTOM_META ] ) || ! empty( $_POST[ self::OPT_TRACKING_NUM_CUSTOM_META ] );
+	}
+
+	/**
+	 * Adds Hepsijet integration section.
+	 * 
+	 * @param array<string, string> $hezarfen_sections Hezarfen's sections.
+	 * 
+	 * @return array<string, string>
+	 */
+	public static function add_hepsijet_section( $hezarfen_sections ) {
+		$hezarfen_sections['hepsijet_integration'] = __( 'Hepsijet Integration', 'hezarfen-for-woocommerce' );
+		return $hezarfen_sections;
+	}
+
+	/**
+	 * Adds Hepsijet integration settings.
+	 * 
+	 * @param array<array<string, string>> $settings Other sections' settings.
+	 * @param string                       $current_section Current section.
+	 * 
+	 * @return array<array<string, string>>
+	 */
+	public static function add_hepsijet_settings( $settings, $current_section ) {
+		if ( 'hepsijet_integration' !== $current_section ) {
+			return $settings;
+		}
+
+		$cities = ( new \WC_Countries() )->get_states('TR');
+		$cities = array_combine( $cities, array_values($cities) );
+
+		return array(
+			array(
+				'type'  => 'title',
+				'title' => __( 'Hepsijet API Relay Settings', 'hezarfen-for-woocommerce' ),
+				'desc'  => __( 'Configure your Hepsijet API Relay credentials. The relay handles all Hepsijet API communication and company settings.', 'hezarfen-for-woocommerce' ),
+			),
+			array(
+				'title' => __( 'Consumer Key', 'hezarfen-for-woocommerce' ),
+				'type' => 'text',
+				'id' => 'hezarfen_hepsijet_consumer_key',
+				'default' => '',
+				'desc' => __( 'Consumer Key from Hepsijet API Relay plugin', 'hezarfen-for-woocommerce' )
+			),
+			array(
+				'title' => __( 'Consumer Secret', 'hezarfen-for-woocommerce' ),
+				'type' => 'password',
+				'id' => 'hezarfen_hepsijet_consumer_secret',
+				'default' => '',
+				'desc' => __( 'Consumer Secret from Hepsijet API Relay plugin', 'hezarfen-for-woocommerce' )
+			),
+			array(
+				'title' => __( 'Enable Debug Mode', 'hezarfen-for-woocommerce' ),
+				'type' => 'checkbox',
+				'id' => 'hezarfen_hepsijet_enable_debug_mode',
+				'default' => 'no',
+				'desc' => __( 'Enable debug logging for API requests and responses', 'hezarfen-for-woocommerce' )
+			),
+			array(
+				'type' => 'sectionend',
+				'id' => 'hezarfen_hepsijet_relay_settings'
+			),
+		);
 	}
 
 	/**

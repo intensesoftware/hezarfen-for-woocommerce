@@ -18,5 +18,8 @@
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "phpstan/extension-installer": true
         }
+    },
+    "require": {
+        "tecnickcom/tcpdf": "^6.10"
     }
 }

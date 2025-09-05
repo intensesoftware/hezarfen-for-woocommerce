@@ -112,6 +112,197 @@ jQuery(document).ready(($)=>{
     );
   });
 
+  // Handle courier selection changes
+  metabox_wrapper.find('input[name="courier-company-select"]').on('change', function() {
+    const selectedCourier = $(this).val();
+    const standardFields = $('#standard-tracking-fields');
+    const hepsijetFields = $('#hepsijet-integration-fields');
+    const standardButton = $('#add-to-tracking-list');
+    const hepsijetButton = $('#create-hepsijet-shipment');
+
+    if (selectedCourier === 'hepsijet-entegrasyon') {
+      // Show Hepsijet integration fields
+      standardFields.addClass('hidden');
+      hepsijetFields.removeClass('hidden');
+      standardButton.addClass('hidden');
+      hepsijetButton.removeClass('hidden');
+      
+      // Reset conditional fields when showing Hepsijet fields
+      $('#hepsijet-delivery-slot-container').addClass('hidden');
+      $('#hepsijet-return-date-container').addClass('hidden');
+    } else {
+      // Show standard tracking fields
+      standardFields.removeClass('hidden');
+      hepsijetFields.addClass('hidden');
+      standardButton.removeClass('hidden');
+      hepsijetButton.addClass('hidden');
+    }
+  });
+  
+  // Show Hepsijet fields by default if Hepsijet option is selected
+  if ($('#courier-company-select-hepsijet-entegrasyon').is(':checked')) {
+    const standardFields = $('#standard-tracking-fields');
+    const hepsijetFields = $('#hepsijet-integration-fields');
+    const standardButton = $('#add-to-tracking-list');
+    const hepsijetButton = $('#create-hepsijet-shipment');
+    
+    // Show Hepsijet integration fields
+    standardFields.addClass('hidden');
+    hepsijetFields.removeClass('hidden');
+    standardButton.addClass('hidden');
+    hepsijetButton.removeClass('hidden');
+  }
+  
+  // Handle delivery type selection
+  metabox_wrapper.find('#hepsijet-delivery-type').on('change', function() {
+    const selectedType = $(this).val();
+    const deliverySlotContainer = $('#hepsijet-delivery-slot-container');
+    const returnDateContainer = $('#hepsijet-return-date-container');
+    
+    // Hide all conditional containers first
+    deliverySlotContainer.addClass('hidden');
+    returnDateContainer.addClass('hidden');
+    
+    // Show relevant container based on selection
+    if (selectedType === 'sameday' || selectedType === 'nextday') {
+      deliverySlotContainer.removeClass('hidden');
+    } else if (selectedType === 'returned') {
+      returnDateContainer.removeClass('hidden');
+      loadReturnDates();
+    }
+  });
+  
+  // Show notification function
+  function showNotification(message, type = 'info') {
+    // Remove any existing notifications
+    $('.hez-notification').remove();
+    
+    // Create notification element
+    const notification = $(`
+      <div class="hez-notification fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-md transform transition-all duration-300 translate-x-full">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            ${type === 'success' ? '<svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>' : 
+              type === 'error' ? '<svg class="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>' :
+              '<svg class="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>'}
+          </div>
+          <div class="ml-3">
+            <p class="text-sm font-medium text-gray-900">${message}</p>
+          </div>
+          <div class="ml-auto pl-3">
+            <button class="hez-notification-close inline-flex text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
+              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    `);
+    
+    // Add to body
+    $('body').append(notification);
+    
+    // Animate in
+    setTimeout(() => {
+      notification.removeClass('translate-x-full');
+    }, 100);
+    
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+      notification.addClass('translate-x-full');
+      setTimeout(() => {
+        notification.remove();
+      }, 300);
+    }, 5000);
+    
+    // Handle close button
+    notification.find('.hez-notification-close').on('click', function() {
+      notification.addClass('translate-x-full');
+      setTimeout(() => {
+        notification.remove();
+      }, 300);
+    });
+  }
+
+  // Load available return dates from API
+  function loadReturnDates() {
+    const returnDateSelect = $('#hepsijet-return-date');
+    returnDateSelect.html('<option value="">Loading available dates...</option>');
+    
+    // Get order shipping city and district
+    const orderId = $('#create-hepsijet-shipment').data('order_id');
+    
+    // Get shipping city and district from WooCommerce order edit screen shipping metabox
+    const shippingDistrict = $('#_shipping_city').val() || 'Istanbul';
+    
+    // Get human-readable district name from the shipping state field display
+    let shippingCity = '';
+    const shippingStateField = $('#_shipping_state');
+    if (shippingStateField.length) {
+      // Try to get the selected option text (human-readable name)
+      const selectedOption = shippingStateField.find('option:selected');
+      if (selectedOption.length && selectedOption.text()) {
+        shippingCity = selectedOption.text();
+      } else {
+        // Fallback: try to get from the field's display value
+        shippingCity = shippingStateField.val() ;
+      }
+    }
+    
+    const startDate = new Date().toISOString().split('T')[0]; // Today
+    const endDate = new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 10 days later
+    
+    const data = {
+      action: 'hezarfen_mst_get_return_dates',
+      _wpnonce: hezarfen_mst_backend.get_return_dates_nonce,
+      start_date: startDate,
+      end_date: endDate,
+      city: shippingCity,
+      district: shippingDistrict
+    };
+    
+    $.post(ajaxurl, data, function(response) {
+      console.log('Return dates API response:', response);
+      
+      if (response.success && response.data) {
+        console.log('Response data:', response.data);
+        
+        if (response.data.dates && response.data.dates.length > 0) {
+          let options = '<option value="">Select return date</option>';
+          response.data.dates.forEach(function(date) {
+            options += `<option value="${date}">${date}</option>`;
+          });
+          returnDateSelect.html(options);
+          
+          // Show success message if available
+          if (response.data.message) {
+            console.log('Return dates loaded:', response.data.message);
+          }
+        } else {
+          // No dates available, show the message from API
+          const message = response.data.message || 'No available return dates';
+          console.log('Setting message in dropdown:', message);
+          
+          // Show nice notification
+          showNotification(message, 'info');
+          
+          // Set dropdown to show no dates available
+          returnDateSelect.html('<option value="">No available return dates</option>');
+          
+          // Log the message for debugging
+          console.log('No return dates available:', message);
+        }
+      } else {
+        console.log('Response not successful or missing data:', response);
+        returnDateSelect.html('<option value="">Error loading dates</option>');
+      }
+    }).fail(function(xhr, status, error) {
+      console.error('Failed to load return dates:', {xhr, status, error});
+      returnDateSelect.html('<option value="">Error loading dates</option>');
+    });
+  }
+
   const addToTrackList = metabox_wrapper.find('#add-to-tracking-list');
 
   addToTrackList.on('click', function() {
@@ -122,7 +313,6 @@ jQuery(document).ready(($)=>{
       _wpnonce: hezarfen_mst_backend.new_shipment_data_nonce,
       order_id: $(this).data('order_id')
     };
-
 
     data[hezarfen_mst_backend.new_shipment_courier_html_name] = form.find('input[name="courier-company-select"]:checked').val();
     data[hezarfen_mst_backend.new_shipment_tracking_num_html_name] = form.find('#tracking-num-input').val();
@@ -136,6 +326,700 @@ jQuery(document).ready(($)=>{
     ).fail(function () {
     });
   });
+
+  // Handle Hepsijet shipment creation
+  const createHepsijetShipment = metabox_wrapper.find('#create-hepsijet-shipment');
+
+  createHepsijetShipment.on('click', function() {
+    const $button = $(this);
+    const originalText = $button.text();
+    const packageCount = $('#hepsijet-package-count').val();
+    const desi = $('#hepsijet-desi').val();
+    const deliveryType = $('#hepsijet-delivery-type').val();
+    const deliverySlot = $('#hepsijet-delivery-slot').val();
+    const returnDate = $('#hepsijet-return-date').val();
+
+    // Validate inputs
+    if (!packageCount || !desi || packageCount < 1 || desi < 0.01) {
+      alert('Lütfen koli adedi ve desi değerlerini doğru giriniz.');
+      return;
+    }
+
+    // Validate delivery type specific fields
+    if ((deliveryType === 'sameday' || deliveryType === 'nextday') && !deliverySlot) {
+      alert('Lütfen teslimat saatini seçiniz.');
+      return;
+    }
+
+    if (deliveryType === 'returned' && !returnDate) {
+      alert('Lütfen iade tarihini seçiniz.');
+      return;
+    }
+
+    // Disable button and show loading state
+    $button.prop('disabled', true).text('Gönderi oluşturuluyor...');
+
+    const data = {
+      action: hezarfen_mst_backend.create_hepsijet_shipment_action,
+      _wpnonce: hezarfen_mst_backend.create_hepsijet_shipment_nonce,
+      order_id: $(this).data('order_id'),
+      package_count: packageCount,
+      desi: desi,
+      type: deliveryType,
+      delivery_slot: deliverySlot || '',
+      delivery_date: returnDate || ''
+    };
+
+    $.post(
+      ajaxurl,
+      data,
+      function (response) {
+        if (response.success) {
+          location.reload();
+        } else {
+          alert('Hata: ' + (response.data || 'Bilinmeyen hata'));
+        }
+      }
+    ).fail(function (xhr) {
+      const errorMsg = xhr.responseJSON && xhr.responseJSON.data ? xhr.responseJSON.data : 'Bağlantı hatası';
+      alert('Hata: ' + errorMsg);
+    }).always(function() {
+      // Re-enable button
+      $button.prop('disabled', false).text(originalText);
+    });
+  });
+
+  // Handle Hepsijet check details button (using event delegation)
+  $(document).off('click', '.check-hepsijet-details').on('click', '.check-hepsijet-details', function(e) {
+    e.preventDefault(); // Prevent form submission
+    e.stopPropagation(); // Stop event bubbling
+    
+    const deliveryNo = $(this).data('delivery_no');
+    const orderId = $(this).data('order_id');
+    const modal = $('#hepsijet-details-modal');
+    const content = $('#hepsijet-details-content');
+
+    // Validate required data
+    if (!deliveryNo || !orderId) {
+      alert('Missing delivery number or order ID');
+      return;
+    }
+
+    // Show modal
+    modal.removeClass('hidden');
+    setTimeout(() => {
+      modal.find('.hez-modal-content').removeClass('scale-95 opacity-0').addClass('scale-100 opacity-100');
+    }, 10);
+
+    // Set loading state
+    content.html('<p class="text-sm text-gray-600">Loading shipment details...</p>');
+
+    // Make AJAX request
+    const data = {
+      action: hezarfen_mst_backend.track_hepsijet_shipment_action,
+      _wpnonce: hezarfen_mst_backend.track_hepsijet_shipment_nonce,
+      delivery_no: deliveryNo
+    };
+
+    console.log('Tracking request data:', data);
+
+    $.post(ajaxurl, data, function(response) {
+      if (response.success) {
+        content.html(formatHepsijetDetails(response.data));
+      } else {
+        const errorMsg = response.data || 'Unknown error';
+        content.html('<div class="bg-red-50 border border-red-200 rounded p-3"><p class="text-sm text-red-600"><strong>Error:</strong> ' + errorMsg + '</p></div>');
+      }
+    }).fail(function(xhr) {
+      const errorMsg = xhr.responseJSON && xhr.responseJSON.data ? xhr.responseJSON.data : 'Connection error occurred';
+      content.html('<div class="bg-red-50 border border-red-200 rounded p-3"><p class="text-sm text-red-600"><strong>Connection Error:</strong> ' + errorMsg + '</p></div>');
+    });
+  });
+
+  // Handle Hepsijet barcode button (using event delegation)
+  $(document).off('click', '.get-hepsijet-barcode').on('click', '.get-hepsijet-barcode', function(e) {
+    e.preventDefault(); // Prevent form submission
+    e.stopPropagation(); // Stop event bubbling
+    
+    const $button = $(this);
+    const deliveryNo = $button.data('delivery_no');
+    const orderId = $button.data('order_id');
+    const originalText = $button.text();
+
+    // Validate required data
+    if (!deliveryNo || !orderId) {
+      alert('Missing delivery number or order ID');
+      return;
+    }
+
+    // Set loading state
+    $button.prop('disabled', true).text('Loading...');
+
+    // Show barcode modal
+    showBarcodeModal(deliveryNo, orderId, function() {
+      $button.prop('disabled', false).text(originalText);
+    });
+  });
+
+  // Handle Hepsijet cancel button (using event delegation)
+  $(document).off('click', '.cancel-hepsijet-shipment').on('click', '.cancel-hepsijet-shipment', function(e) {
+    e.preventDefault(); // Prevent form submission
+    e.stopPropagation(); // Stop event bubbling
+    
+    if (!confirm('Gönderi iptal edilecektir, onaylıyor musunuz?')) {
+      return;
+    }
+
+    const $button = $(this);
+    const deliveryNo = $button.data('delivery_no');
+    const originalText = $button.text();
+
+    // Set loading state
+    $button.prop('disabled', true).text('İptal ediliyor...');
+
+    const orderId = $button.data('order_id');
+
+    // Validate required data
+    if (!deliveryNo || !orderId) {
+      alert('Missing required data for cancellation');
+      $button.prop('disabled', false).text(originalText);
+      return;
+    }
+
+    const data = {
+      action: hezarfen_mst_backend.cancel_hepsijet_shipment_action,
+      _wpnonce: hezarfen_mst_backend.cancel_hepsijet_shipment_nonce,
+      delivery_no: deliveryNo,
+      order_id: orderId
+    };
+
+    console.log('Cancel request data:', data);
+
+    $.post(ajaxurl, data, function(response) {
+      if (response.success) {
+        // Update UI to show cancelled state instead of reloading
+        updateShipmentToCancelledState($button);
+        alert('Gönderi başarıyla iptal edildi');
+      } else {
+        // Show the specific error message from the API response
+        const errorMessage = response.data || 'Bilinmeyen hata';
+        alert('Hata: ' + errorMessage);
+      }
+    }).fail(function(xhr, status, error) {
+      // Handle HTTP errors (like 400, 500, etc.)
+      let errorMessage = 'Bağlantı hatası';
+      
+      try {
+        // Try to parse the response to get the error message
+        const response = JSON.parse(xhr.responseText);
+        if (response.data) {
+          errorMessage = response.data;
+        }
+      } catch (e) {
+        // If parsing fails, use the HTTP status text
+        if (xhr.statusText) {
+          errorMessage = xhr.statusText;
+        }
+      }
+      
+      alert('Hata: ' + errorMessage);
+    }).always(function() {
+      $button.prop('disabled', false).text(originalText);
+    });
+  });
+
+  // Handle KargoGate balance check button
+  $(document).on('click', '#check-kargogate-balance', function(e) {
+    e.preventDefault();
+    
+    const $button = $(this);
+    const originalText = $button.text();
+    
+    // Set loading state
+    $button.prop('disabled', true).text(hezarfen_mst_backend.checking_balance_text);
+    
+    loadKargoGateBalance().always(function() {
+      // Reset button state
+      $button.prop('disabled', false).text(originalText);
+    });
+  });
+
+  // Close details modal
+  $(document).on('click', '.hez-details-modal-close', function() {
+    closeDetailsModal();
+  });
+
+  // Close details modal on backdrop click
+  $(document).on('click', '#hepsijet-details-modal', function(e) {
+    if (e.target === this) {
+      closeDetailsModal();
+    }
+  });
+
+  // Close details modal on escape key
+  $(document).on('keydown', function(e) {
+    if (e.key === 'Escape') {
+      if (!$('#hepsijet-details-modal').hasClass('hidden')) {
+        closeDetailsModal();
+      }
+      if (!$('#hepsijet-barcode-modal').hasClass('hidden')) {
+        closeBarcodeModal();
+      }
+    }
+  });
+
+  // Close barcode modal handlers
+  $(document).on('click', '.hez-barcode-modal-close', function() {
+    closeBarcodeModal();
+  });
+
+  $(document).on('click', '#hepsijet-barcode-modal', function(e) {
+    if (e.target === this) {
+      closeBarcodeModal();
+    }
+  });
+
+  function closeDetailsModal() {
+    const modal = $('#hepsijet-details-modal');
+    modal.find('.hez-modal-content').removeClass('scale-100 opacity-100').addClass('scale-95 opacity-0');
+    setTimeout(() => {
+      modal.addClass('hidden');
+    }, 300);
+  }
+
+  function closeBarcodeModal() {
+    const modal = $('#hepsijet-barcode-modal');
+    modal.find('.hez-modal-content').removeClass('scale-100 opacity-100').addClass('scale-95 opacity-0');
+    setTimeout(() => {
+      modal.addClass('hidden');
+      // Clear iframe src and reset container
+      $('#barcode-pdf-frame').attr('src', '');
+      $('#hepsijet-barcode-content').html(`
+        <div class="transform -rotate-90 origin-center">
+          <iframe id="barcode-pdf-frame" style="width: 600px; height: 400px; border: 1px solid #ddd;" src=""></iframe>
+        </div>
+      `);
+    }, 300);
+  }
+
+  // Update shipment row to show cancelled state
+  function updateShipmentToCancelledState($button) {
+    const $row = $button.closest('tr');
+    
+    // Update row styling
+    $row.removeClass('bg-white').addClass('bg-gray-100 opacity-60');
+    
+    // Update courier title with strikethrough and badge
+    const $courierCell = $row.find('th:first');
+    $courierCell.addClass('text-gray-500 line-through');
+    $courierCell.append('<span class="ml-2 px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">Cancelled</span>');
+    
+    // Update details cell (now the second column after removing tracking number column)
+    const $detailsCell = $row.find('td:first');
+    const currentTime = new Date().toLocaleString('tr-TR', {
+      day: '2-digit',
+      month: '2-digit', 
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    
+    // Extract current koli and desi values
+    const koliText = $detailsCell.text().includes('Koli:') ? $detailsCell.text().split('Koli: ')[1].split(' ')[0] : 'N/A';
+    const desiText = $detailsCell.text().includes('Desi:') ? $detailsCell.text().split('Desi: ')[1].trim() : 'N/A';
+    
+    $detailsCell.html(`
+      <div class="text-xs text-gray-500">
+        <div class="line-through">Koli: ${koliText}</div>
+        <div class="line-through">Desi: ${desiText}</div>
+        <div class="text-red-600 font-medium mt-1">Cancelled: ${currentTime}</div>
+      </div>
+    `);
+    
+    // Update actions cell (now the last column)
+    const $actionsCell = $row.find('td:last');
+    const deliveryNo = $button.data('delivery_no');
+    const orderId = $button.data('order_id');
+    
+    $actionsCell.html(`
+      <div class="flex gap-1 flex-wrap">
+        <span class="px-2 py-1 bg-gray-300 text-gray-600 rounded text-xs cursor-not-allowed" title="Barcode not available for cancelled shipments">Barcode</span>
+        <button type="button" data-delivery_no="${deliveryNo}" data-order_id="${orderId}" class="check-hepsijet-details cursor-pointer focus:outline-none hover:opacity-80 bg-blue-600 text-white px-2 py-1 rounded text-xs" title="Check tracking details">Details</button>
+        <span class="px-2 py-1 bg-gray-300 text-gray-600 rounded text-xs cursor-not-allowed">Cancelled</span>
+      </div>
+    `);
+  }
+
+  // Show barcode modal with PDF
+  function showBarcodeModal(deliveryNo, orderId, callback) {
+    const modal = $('#hepsijet-barcode-modal');
+    const pdfFrame = $('#barcode-pdf-frame');
+    
+    console.log('Opening barcode modal for:', { deliveryNo, orderId });
+    
+    // Store data on modal for later use
+    modal.data('current-delivery-no', deliveryNo);
+    modal.data('current-order-id', orderId);
+    
+    // Show modal
+    modal.removeClass('hidden');
+    setTimeout(() => {
+      modal.find('.hez-modal-content').removeClass('scale-95 opacity-0').addClass('scale-100 opacity-100');
+    }, 10);
+
+    // Show loading state
+    pdfFrame.parent().html('<p class="text-sm text-gray-600">Preparing barcode label...</p>');
+
+    // Single AJAX call to get everything
+    const data = {
+      action: hezarfen_mst_backend.get_hepsijet_barcode_pdf_action,
+      _wpnonce: hezarfen_mst_backend.get_hepsijet_barcode_pdf_nonce,
+      delivery_no: deliveryNo,
+      order_id: orderId
+    };
+
+    $.post(ajaxurl, data, function(response) {
+      console.log('AJAX Response received:', response);
+      console.log('Response success:', response.success);
+      console.log('Response data:', response.data);
+      
+      if (response.success) {
+        // Store PDF data FIRST before displaying anything (now contains base64 data)
+        modal.data('pdf-url', response.data.pdf_url);
+        
+        // Display barcode image (now PDF data is available) - handle async
+        displayBarcodeImage(response.data.barcode_data, pdfFrame).catch(error => {
+          console.error('Error displaying barcode/PDF:', error);
+          pdfFrame.parent().html('<div class="bg-red-50 border border-red-200 rounded p-3"><p class="text-sm text-red-600"><strong>Error:</strong> ' + error.message + '</p></div>');
+        });
+        
+        console.log('Combined request successful:', response.data);
+        console.log('PDF data stored (base64):', response.data.pdf_url ? 'Yes' : 'No');
+      } else {
+        console.error('AJAX Response error:', response.data);
+        pdfFrame.parent().html('<div class="bg-red-50 border border-red-200 rounded p-3"><p class="text-sm text-red-600"><strong>Error:</strong> ' + (response.data || 'Unknown error') + '</p></div>');
+      }
+      
+      if (callback) callback();
+    }).fail(function(xhr) {
+      console.error('AJAX Request failed:', xhr);
+      console.error('Status:', xhr.status);
+      console.error('Response Text:', xhr.responseText);
+      
+      const errorMsg = xhr.responseJSON && xhr.responseJSON.data ? xhr.responseJSON.data : 'Connection error occurred';
+      pdfFrame.parent().html('<div class="bg-red-50 border border-red-200 rounded p-3"><p class="text-sm text-red-600"><strong>Connection Error:</strong> ' + errorMsg + '</p></div>');
+      
+      if (callback) callback();
+    });
+  }
+
+  // Load order information
+    // function loadOrderInfo(orderId, container) {
+  //   const data = {
+  //     action: hezarfen_mst_backend.get_order_info_action,
+  //     _wpnonce: hezarfen_mst_backend.get_order_info_nonce,
+  //     order_id: orderId
+  //   };
+  //
+  //   $.post(ajaxurl, data, function(response) {
+  //     if (response.success) {
+  //       container.html(formatOrderInfo(response.data));
+  //     } else {
+  //       container.html('<p class="text-sm text-red-600">Error loading order info</p>');
+  //     }
+  //   }).fail(function() {
+  //       container.html('<p class="text-sm text-red-600">Failed to load order info</p>');
+  //   });
+  // }
+
+  // Load barcode image via Relay API - NO LONGER NEEDED
+  // function loadBarcodePDF(deliveryNo, iframe, callback) {
+  //   const data = {
+  //     action: hezarfen_mst_backend.get_hepsijet_barcode_action,
+  //     _wpnonce: hezarfen_mst_backend.get_hepsijet_barcode_nonce,
+  //     delivery_no: deliveryNo
+  //   };
+  //
+  //   console.log('Loading barcode image for delivery:', deliveryNo);
+  //
+  //   $.post(ajaxurl, data, function(response) {
+  //     console.log('Barcode image response:', response);
+  //     console.log('Response success:', response.success);
+  //     console.log('Response data type:', typeof response.data);
+  //     console.log('Response data:', response.data);
+  //     
+  //     if (response.success && response.data && Array.isArray(response.data) && response.data.length > 0) {
+  //       try {
+  //         // Relay API returns array of base64 images directly
+  //         let imageData = response.data[0];
+  //         
+  //         console.log('Image data length:', imageData.length);
+  //         console.log('Image data prefix:', imageData.substring(0, 50));
+  //         console.log('Image data type:', typeof imageData);
+  //         
+  //         // The data is already in data:image/jpeg;base64 format
+  //         if (!imageData.startsWith('data:image/')) {
+  //           imageData = 'data:image/jpeg;base64,' + imageData;
+  //         }
+  //         
+  //         // Replace iframe with image element for better display
+  //         const container = iframe.parent();
+  //         container.html(`
+  //           <div class="transform -rotate-90 origin-center flex justify-center">
+  //             <img id="barcode-image" src="${imageData}" 
+  //                  style="max-width: 600px; max-height: 400px; border: 1px solid #ddd;" 
+  //                  alt="Hepsijet Barcode Label" />
+  //           </div>
+  //         `);
+  //         
+  //         // Store data for download button on both the image and modal
+  //         $('#barcode-image').data('image-data', imageData);
+  //         $('#barcode-image').data('delivery-no', deliveryNo);
+  //         $('#hepsijet-barcode-modal').data('image-data', imageData);
+  //         $('#hepsijet-barcode-modal').data('delivery-no', deliveryNo);
+  //         
+  //         console.log('Barcode image loaded successfully');
+  //         console.log('Data stored on elements:', {
+  //           imageElement: $('#barcode-image').data('image-data') ? 'YES' : 'NO',
+  //           modalElement: $('#hepsijet-barcode-modal').data('image-data') ? 'YES' : 'NO',
+  //           imageDataLength: imageData.length
+  //         });
+  //         
+  //       } catch (error) {
+  //         console.error('Image display error:', error);
+  //         iframe.parent().html('<p class="text-red-600 text-center">Barcode yüklenemedi: ' + error.message + '</p>');
+  //       }
+  //     } else {
+  //       console.error('Invalid barcode response:', response);
+  //       iframe.parent().html('<p class="text-red-600 text-center">Barcode alınamadı: ' + (response.data || 'Invalid response') + '</p>');
+  //       }
+  //     
+  //     if (callback) callback();
+  //   }).fail(function(xhr) {
+  //     console.error('Barcode request failed:', xhr);
+  //     iframe.parent().html('<p class="text-red-600 text-center">Bağlantı hatası</p>');
+  //     if (callback) callback();
+  //   });
+  // }
+
+
+
+    // Display PDF directly in the modal with async loading
+  async function displayBarcodeImage(barcodeData, container) {
+    const modal = $('#hepsijet-barcode-modal');
+    const pdfData = modal.data('pdf-url'); // This now contains base64 data
+    
+    console.log('displayBarcodeImage called with:', { barcodeData, pdfData });
+    console.log('Modal data:', modal.data());
+    
+    if (pdfData) {
+      console.log('PDF data found, embedding PDF viewer...');
+      
+      // Show loading state with spinner - target the specific container by ID
+      const targetContainer = $('#hepsijet-barcode-content');
+      console.log('Targeting container by ID:', targetContainer);
+      
+      targetContainer.html(`
+        <div class="w-full h-96 flex flex-col justify-center items-center">
+          <div class="text-sm text-gray-600 mb-4">PDF hazırlanıyor...</div>
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      `);
+      
+      try {
+        // Since PDF is already generated as base64, we can display it immediately
+        console.log('PDF data ready, embedding PDF viewer');
+        // Replace container with PDF viewer using base64 data
+        targetContainer.html(`
+          <div class="w-full h-5/6 flex justify-center">
+            <iframe 
+              id="pdf-viewer" 
+              src="${pdfData}" 
+              style="width: 100%; height: 100%; border: 1px solid #ddd; border-radius: 4px;" 
+              frameborder="0"
+              title="Hepsijet Shipment Label PDF">
+            </iframe>
+          </div>
+        `);
+        
+        console.log('PDF embedded successfully using base64 data');
+      } catch (error) {
+        console.error('PDF display failed:', error);
+        // Fallback to barcode image if PDF display fails
+        displayBarcodeImageFallback(barcodeData, container);
+      }
+    } else {
+      console.log('No PDF data found, falling back to barcode image');
+      displayBarcodeImageFallback(barcodeData, container);
+    }
+  }
+  
+
+  
+  // Fallback to barcode image display
+  function displayBarcodeImageFallback(barcodeData, container) {
+    if (Array.isArray(barcodeData) && barcodeData.length > 0) {
+      try {
+        // Get the first barcode image (base64 data)
+        let imageData = barcodeData[0];
+        
+        // The data is already in data:image/jpeg;base64 format
+        if (!imageData.startsWith('data:image/')) {
+          imageData = 'data:image/jpeg;base64,' + imageData;
+        }
+        
+        // Replace container with image element
+        container.parent().html(`
+          <div class="transform -rotate-90 origin-center flex justify-center">
+            <img id="barcode-image" src="${imageData}" 
+                 style="max-width: 600px; max-height: 400px; border: 1px solid #ddd;" 
+                 alt="Hepsijet Barcode Label" />
+          </div>
+        `);
+        
+        console.log('Barcode image displayed as fallback');
+      } catch (error) {
+        console.error('Image display error:', error);
+        container.parent().html('<p class="text-red-600 text-center">Barcode yüklenemedi: ' + error.message + '</p>');
+      }
+    } else {
+      console.log('No barcode data available either');
+      container.parent().html('<p class="text-red-600 text-center">PDF ve barcode verisi bulunamadı</p>');
+    }
+  }
+
+  // Download button removed - PDF is now embedded directly in the modal
+
+  // Generate PDF with order information and barcode using TCPDF
+  function generatePDFWithOrderAndBarcode(orderInfoHtml, imageData, deliveryNo) {
+    // Get order ID from modal data
+    const orderId = $('#hepsijet-barcode-modal').data('current-order-id');
+    
+    if (!orderId) {
+      alert('Order ID not found. Please try again.');
+      return;
+    }
+
+    // Show loading state
+    const downloadBtn = $('#download-barcode-pdf');
+    const originalText = downloadBtn.text();
+    downloadBtn.prop('disabled', true).text('Generating PDF...');
+
+    // Make AJAX request to generate PDF
+    const data = {
+      action: 'hezarfen_mst_test_pdf_endpoint', // Test with simple endpoint first
+      order_id: orderId,
+      delivery_no: deliveryNo
+    };
+
+    $.post(ajaxurl, data, function(response) {
+      if (response.success && response.data.pdf_url) {
+        // Download the generated PDF
+        const link = document.createElement('a');
+        link.href = response.data.pdf_url;
+        link.download = `hepsijet-shipment-${deliveryNo}.pdf`;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        console.log('PDF generated successfully:', response.data.pdf_url);
+      } else {
+        alert('PDF generation failed: ' + (response.data || 'Unknown error'));
+      }
+    }).fail(function(xhr) {
+      console.error('PDF generation request failed:', xhr);
+      alert('PDF generation failed. Please check the console for details.');
+    }).always(function() {
+      // Restore button state
+      downloadBtn.prop('disabled', false).text(originalText);
+    });
+  }
+
+  // Fallback function to download image as file
+  function downloadImageAsFile(imageData, deliveryNo) {
+    try {
+      const response = fetch(imageData);
+      response.then(res => res.blob()).then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `hepsijet-barcode-${deliveryNo}.jpg`;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      }).catch(error => {
+        console.error('Download error:', error);
+        alert('Download hatası: ' + error.message);
+      });
+    } catch (error) {
+      console.error('Download preparation error:', error);
+      alert('Download hazırlık hatası: ' + error.message);
+    }
+  }
+
+  // Format Hepsijet details response
+  function formatHepsijetDetails(data) {
+    if (!data || !data.data || !Array.isArray(data.data) || data.data.length === 0) {
+      return '<div class="bg-yellow-50 border border-yellow-200 rounded p-3"><p class="text-sm text-yellow-600">No tracking information available</p></div>';
+    }
+
+    const shipmentData = data.data[0];
+    const transactions = shipmentData.transactions || [];
+
+    let html = '<div class="space-y-4">';
+    
+    // Basic info
+    html += '<div class="bg-blue-50 border border-blue-200 p-3 rounded">';
+    html += '<h4 class="font-medium text-blue-900 mb-2">📦 Shipment Information</h4>';
+    html += '<div class="text-sm text-blue-700 space-y-1">';
+    html += '<div><strong>Status:</strong> <span class="px-2 py-1 bg-blue-100 rounded text-xs">' + (shipmentData.deliveryStatus || 'Unknown') + '</span></div>';
+    html += '<div><strong>Delivery No:</strong> ' + (shipmentData.customerDeliveryNo || 'N/A') + '</div>';
+    if (shipmentData.trackingUrl) {
+      html += '<div><strong>Tracking URL:</strong> <a href="' + shipmentData.trackingUrl + '" target="_blank" class="text-blue-600 underline">Open</a></div>';
+    }
+    html += '</div>';
+    html += '</div>';
+
+    // Tracking history
+    if (transactions.length > 0) {
+      html += '<div class="bg-gray-50 border border-gray-200 p-3 rounded mt-6">';
+      html += '<h4 class="font-medium text-gray-900 mb-2">📋 Tracking History</h4>';
+      html += '<div class="space-y-2 max-h-64 overflow-y-auto">';
+      
+      // Sort transactions by date (newest first)
+      const sortedTransactions = [...transactions].sort((a, b) => {
+        const dateA = new Date(a.transactionDateTime || 0);
+        const dateB = new Date(b.transactionDateTime || 0);
+        return dateB - dateA;
+      });
+      
+      sortedTransactions.forEach(function(transaction, index) {
+        const isLatest = index === 0;
+        html += '<div class="' + (isLatest ? 'bg-green-50 border border-green-200' : 'bg-white border border-gray-200') + ' p-2 rounded text-xs">';
+        html += '<div class="font-medium text-gray-900">' + (transaction.transaction || 'N/A') + '</div>';
+        if (transaction.location) {
+          html += '<div class="text-gray-600">📍 ' + transaction.location + '</div>';
+        }
+        if (transaction.transactionDateTime) {
+          html += '<div class="text-gray-500">🕒 ' + transaction.transactionDateTime + '</div>';
+        }
+        html += '</div>';
+      });
+      
+      html += '</div>';
+      html += '</div>';
+    } else {
+      html += '<div class="bg-gray-50 border border-gray-200 p-3 rounded">';
+      html += '<p class="text-sm text-gray-600">No tracking history available yet</p>';
+      html += '</div>';
+    }
+
+    html += '</div>';
+    return html;
+  }
 
   function create_confirmation_modal(metabox_wrapper, shipment_row) {
     const modal_overlay = metabox_wrapper.find('#modal-body');
@@ -283,4 +1167,30 @@ jQuery(document).ready(($)=>{
 			$('._billing_hez_tax_office_field').removeClass('hezarfen-hide-form-field');
 		}
 	}
+
+  // Load KargoGate wallet balance
+  function loadKargoGateBalance() {
+    const balanceElement = $('#kargogate-balance');
+    
+    // Set loading state
+    balanceElement.text('Loading...');
+    
+    const data = {
+      action: hezarfen_mst_backend.get_kargogate_balance_action,
+      _wpnonce: hezarfen_mst_backend.get_kargogate_balance_nonce
+    };
+
+    return $.post(ajaxurl, data, function(response) {
+      if (response.success && response.data.balance && response.data.balance.formatted) {
+        // Use HTML content since the formatted balance includes HTML
+        balanceElement.html(response.data.balance.formatted);
+      } else {
+        balanceElement.text('Error loading balance');
+        console.error('Balance error:', response.data);
+      }
+    }).fail(function(xhr, status, error) {
+      balanceElement.text('Connection error');
+      console.error('Balance AJAX error:', error);
+    });
+  }
 });

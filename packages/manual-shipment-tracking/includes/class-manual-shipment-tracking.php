@@ -12,6 +12,9 @@ defined( 'ABSPATH' ) || exit;
 require_once HEZARFEN_MST_PATH . 'models/class-shipment-data.php';
 require_once 'class-courier-company.php';
 require_once 'class-helper.php';
+require_once 'class-shipping-details.php';
+require_once 'trait-log.php';
+require_once 'trait-helper.php';
 require_once 'admin/class-settings.php';
 require_once 'email/class-email.php';
 require_once 'class-my-account.php';
@@ -69,6 +72,9 @@ class Manual_Shipment_Tracking {
 	public static function init() {
 		self::instance();
 		add_action( 'hezarfen_mst_shipment_data_saved', array( __CLASS__, 'ship_order' ), 10, 2 );
+		
+		// Register ActionScheduler hook for Hepsijet shipment monitoring
+		add_action( 'hezarfen_monitor_hepsijet_shipment', array( 'Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration', 'monitor_shipment_status' ), 10, 2 );
 	}
 
 	/**
@@ -177,12 +183,13 @@ class Manual_Shipment_Tracking {
 			Courier_PTT::$id              => Courier_PTT::class,
 			Courier_UPS::$id              => Courier_UPS::class,
 			Courier_Surat::$id            => Courier_Surat::class,
-			Courier_Hepsijet::$id         => Courier_Hepsijet::class,
 			Courier_Trendyol_Express::$id => Courier_Trendyol_Express::class,
 			Courier_Kargoist::$id         => Courier_Kargoist::class,
 			Courier_Jetizz::$id           => Courier_Jetizz::class,
 			Courier_Gelal::$id            => Courier_Gelal::class,
 			Courier_Birgunde::$id         => Courier_Birgunde::class,
+			Courier_Hepsijet::$id         => Courier_Hepsijet::class,
+			Courier_Hepsijet_Entegrasyon::$id => Courier_Hepsijet_Entegrasyon::class,
 			Courier_Scotty::$id           => Courier_Scotty::class,
 			Courier_Packupp::$id          => Courier_Packupp::class,
 			Courier_Kolay_Gelsin::$id     => Courier_Kolay_Gelsin::class,
