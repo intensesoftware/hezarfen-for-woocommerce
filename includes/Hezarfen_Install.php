@@ -25,6 +25,8 @@ class Hezarfen_Install {
 		self::update_db_version();
 		
 		self::migrate_legacy_sms_settings();
+		
+		self::setup_mss_database();
 	}
 	
 	/**
@@ -140,5 +142,39 @@ class Hezarfen_Install {
 		
 		// Mark migration as completed
 		update_option( 'hezarfen_sms_migration_completed', true );
+	}
+	
+	/**
+	 * Setup MSS database tables
+	 *
+	 * @return void
+	 */
+	public static function setup_mss_database() {
+		global $wpdb;
+		
+		$current_db_version = get_option( 'hezarfen_db_version', '0.0' );
+		
+		// Only create MSS table if we're upgrading to v2.5.0 or later
+		if ( version_compare( $current_db_version, '2.5.0', '<' ) ) {
+			$table_name = $wpdb->prefix . 'hezarfen_contracts';
+			
+			// Create dynamic contracts table (v2.5.0 - fully dynamic agreements)
+			$sql = "CREATE TABLE $table_name (
+				`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+				`order_id` bigint(20) unsigned NOT NULL,
+				`contract_name` varchar(255) NOT NULL,
+				`contract_content` longtext NOT NULL,
+				`ip_address` varchar(45) NOT NULL,
+				`user_agent` varchar(500) DEFAULT NULL,
+				`created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				`updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+				PRIMARY KEY (`id`),
+				KEY `order_id` (`order_id`),
+				KEY `created_at` (`created_at`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+			
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			dbDelta( $sql );
+		}
 	}
 }

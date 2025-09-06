@@ -1,0 +1,35 @@
+/* MSS Admin Styles */
+.mss-contract-management {
+    padding: 10px 0;
+}
+
+.mss-contract-management .button {
+    margin-right: 10px;
+}
+
+.mss-contract-management .description {
+    margin-top: 10px;
+    font-style: italic;
+    color: #666;
+}
+
+.mss-variables {
+    font-size: 12px;
+}
+
+.mss-variables code {
+    background: #f1f1f1;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 11px;
+}
+
+.mss-variables h4 {
+    margin: 15px 0 10px 0;
+    color: #23282d;
+}
+
+.mss-variables p {
+    margin: 5px 0;
+    font-size: 12px;
+}
