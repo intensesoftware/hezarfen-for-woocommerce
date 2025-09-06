@@ -1,26 +1,25 @@
 
 === Hezarfen - Türkiye Kargo Entegrasyonu - WooCommerce Kargo Takip ve Yönetim Eklentisi For Woocommerce ===
-Contributors: intenseyazilim, mskapusuz
-Tags: kargo, kargo takip, türkiye, woocommerce, fatura
+Contributors: intenseyazilim, mucahitbal, mskapusuz
+Tags: kargo, kargo takip, hepsijet, mng, fatura
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.0
 License: GPL2
 Stable tag: 2.4.1
 
-Türkiye'nin lider WooCommerce kargo çözümü! 23 kargo firması, SMS otomasyonu, il/ilçe/mahalle, TC kimlik ve vergi alanları desteği.
-
+TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ! Türkiye’nin Lider WooCommerce Kargo Takip Eklentisi: 23 kargo, SMS, ilçe/mahalle, TC kimlik & vergi desteği
 == Description ==
 
-**Hezarfen**, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo ve ödeme yönetim eklentisidir. Bu WooCommerce kargo entegrasyonu eklentisi, 23 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel WooCommerce kargo takip deneyimi sunar ve Türkiye'ye özgü mahalle, fatura ve vergi alanlarıyla ödeme ekranınızı Türkiye'ye uyumlu hale getirir.
+**Tamamen Ücretsiz!** Hezarfen, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo ve ödeme yönetim eklentisidir. Bu WooCommerce kargo entegrasyon eklentisi, 23 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel WooCommerce kargo takip deneyimi sunar ve Türkiye'ye özgü mahalle, fatura ve vergi alanlarıyla ödeme ekranınızı Türkiye'ye uyumlu hale getirir.
 
-= 🚀 NEDEN HEZARFEN? =
+= 🚀 2000+ WooCommerce Sitesi tarafından kullanılıyor! =
 
 ✅ **Zaman Tasarrufu**: Manuel kargo işlemlerinizi otomatikleştirin, sipariş takibi kolaylaştırın
 ✅ **Müşteri Memnuniyeti**: WooCommerce SMS eklentisi ile SMS bilgilendirme ve e-posta bildirimleriyle müşterilerinizi bilgilendirin
 ✅ **Türkiye'ye Özel**: İl/ilçe/mahalle seçimi, TC No doğrulama, vergi ekleme ve vergi bilgileri
-✅ **Tek Entegratör**: 23 kargo firması tek eklentide, kapsamlı kargo sistemi
-✅ **Kolay Kullanım**: Kurulum sonrası hemen kullanmaya başlayın, sözleşme gerektirmez
+✅ SMS Otomasyonu: Sipariş kargoya verildiğinde veya sipariş durumu değiştiğinde otomatik olarak, seçtiğiniz şablonlarla SMS gönderilsin.
+✅ **Kolay Kullanım**: Kurulum sonrası hemen kullanmaya başlayın
 
 = 📦 DESTEKLENEN KARGO FİRMALARI =
 
@@ -33,14 +32,13 @@ Türkiye'nin lider WooCommerce kargo çözümü! 23 kargo firması, SMS otomasyo
 
 **Toplam 23 Kargo Firması Desteği**
 
-= ⭐ ÜCRETSİZ ÖZELLİKLER =
+= ⭐ TAMAMEN ÜCRETSİZ =
 
 **🚚 Kargo Yönetimi ve WooCommerce Kargo Takip Modülü**
-• Manuel kargo takip numarası girişi ve sipariş yönetimi
+• Kargo takip numarası girişi ve sipariş yönetimi
 • "Kargoya Verildi" sipariş durumu ve gönderi takibi
 • Müşteri panelinde detaylı kargo görüntüleme ve sipariş takibi
 • Otomatik e-posta bildirimleri ve iade süreç yönetimi
-• **YENİ: SMS Otomasyonu** - NetGSM ve PandaSMS ile gelişmiş otomatik SMS bildirimleri
 • SMS entegrasyonu ile Kargoya Verildi ve tüm sipariş durumlarında özelleştirilebilir SMS bilgilendirme
 • Intense WooCommerce Mesafeli Satış Sözleşmesi Eklentisiyle tam uyumluluk (otomatik olarak kurumsal/bireysel vergi alanlarını çeker.)
 
@@ -88,7 +86,7 @@ Hezarfen, KVKK’nın yurt dışına kişisel veri aktarımına ilişkin hüküm
 == Frequently Asked Questions ==
 
 = Bu WooCommerce eklentisi tamamen ücretsiz mi? =
-Evet, yukarıda listelenen özellikler tamamen ücretsizdir. 23 kargo firması için manuel takip, WooCommerce kargo takip modülü, il/ilçe/mahalle seçimi, TC kimlik no alanı gibi özellikler ücretsiz sunulmaktadır. Pro özellikleri (otomatik kargo entegrasyonu, Paraşüt e-arşiv/e-fatura entegrasyonu) ücretlidir. En iyi WooCommerce eklentileri arasında yer alan bu çözüm.
+Evet, yukarıda listelenen özellikler tamamen ücretsizdir. 23 kargo firması için manuel takip, WooCommerce kargo takip modülü, il/ilçe/mahalle seçimi, TC kimlik no alanı gibi özellikler ücretsiz sunulmaktadır.Ayrıca, Hezarfen'in intense.com.tr üzerinde satılan Pro versiyonu mevcuttur. Pro versiyonda otomatik woocommerce kargo entegrasyonu, Paraşüt e-arşiv/e-fatura entegrasyonu özellikleri bulunmaktadır.
 
 = Hangi WooCommerce sürümleriyle uyumlu? =
 WooCommerce 5.0 ve üzeri tüm sürümlerle uyumludur. HPOS (High Performance Order Storage) desteği mevcuttur.
@@ -123,18 +121,52 @@ Hezarfen ile uyumlu olmadığını düşündüğünüz bir eklentiyle karşıla�
 = Çoklu dil desteği var mı? =
 Bu Türkçe WooCommerce eklentisi, Türkçe ve İngilizce dillerini desteklemektedir. WPML ve Polylang gibi çoklu dil eklentileriyle uyumludur. Türkiye e-ticaret standartlarına göre optimize edilmiştir.
 
+= Hezarfen nedir? =
+
+"Hezarfen" kelimesi, Farsça kökenli olup "bin ilim sahibi" anlamına gelir.  
+Hezârfen ya da polimat; pek çok farklı disiplinde engin bilgiye sahip kişiyi tanımlar.  
+Tarihte bu unvanın en bilinen taşıyıcılarından biri, 17. yüzyılda Galata Kulesi'nden Üsküdar'a kanatlarla uçtuğu rivayet edilen **Hezarfen Ahmed Çelebi**’dir.  
+
+Eklentimizin adı, kelimenin bu çok yönlülük ve multidisipliner uzmanlık anlamıyla uyumludur.  
+Tıpkı bir hezarfen gibi, eklentimiz de WooCommerce için birçok özelliği tek bir çözümde bir araya getirir ve işletmelerin kargo ile sipariş yönetim süreçlerini hızlandırır.
+
+= Doğru yazımı ve telaffuzu =
+
+✅ **Doğru yazım:** Hezarfen  
+📢 **Doğru okunuş:** [He-zaaR-fen]  
+
+❌ **Yanlış yazımlar (kullanmayın):** 
+- Hazarfen
+- Hazarfen
+- Hezerfen  
+- Hezerfan  
+- Hezarfan
+- Hazerfan
+- Hezarfen
+- Hezerfen
+- Hazerfen
+
+Yanlış yazımlar, eklentimizi ararken doğru sonuçlara ulaşmanızı engelleyebilir. Aramalarda her zaman **Hezarfen** şeklinde yazmanızı tavsiye ederiz.
+
+= Hangi kargo firmalarını destekliyor?
+
+Hezarfen **23 farklı kargo firmasını** desteklemektedir:
+
+HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express, UPS Kargo, Birgünde Kargo, Brinks Kargo, CDEK, DHL, FedEx, Gelal, Horoz Lojistik, Jetizz, Kargo Türk, Kargoist, Kolay Gelsin, Kurye, PackUpp, Scotty, TNT
+
 == Screenshots ==
-1. Kargo takip no giriş alanı
-2. Kargoya verildi maili
-3. Müşteri hesabım sayfası kargo detayları
-4. Ödeme formu ayarlar ekranı
-5. Opsiyonel mahalle.io servisi aktifken ödeme ekranı
-6. Opsiyonel mahalle.io servisi kullanılmadığında ödeme ekranı
-7. Kurumsal vergi bilgileri
-8. Bireysel vergi bilgileri
-9. Kargo takip özellik ayarları
-10. Sipariş liste ekranında kargo takip bilgilerinin görünmesi
-11. Kargoya verildi özellik ayarları
+1. WooCommerce kargo takip numarası giriş alanı (HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo vb. toplamda 23 kargo firması)
+2. WooCommerce siparişe girilmiş kargo takip numaralarının sipariş detayında listelenmesi
+3. SMS kuralları (kargoya verildiğinde veya sipariş durumuna göre SMS oluşturabilme)
+4. NetGSM ile Kargoya verildi SMS düzenleme ekranı
+5. Ödeme ekranında mahalle alanının gösterilmesi
+6. Müşteri hesabım sayfası sipariş detayında kargo bilgilerinin gösterilmesi
+7. Ödeme ekranının sıralanması
+8. Posta kodu kapatabilme, ödeme ekranı sıralayabilme özelliklerinin kontrolü
+9. Müşteriye gönderilen kargoya verildi e-postasının yönetimi
+10. Ödeme ekranında kurumsal vergi alanları (vergi dairesi ve vergi numarası)
+11. Ödeme ekranında kurumsal bireysel alanları (T.C. Kimlik Numarası)
+12. Sipariş liste ekranında kargo bilgilerinin görüntülenmesi
 
 == Changelog ==
 = 2.4.1 - 2015-08-18 =
@@ -160,7 +192,7 @@ Bu Türkçe WooCommerce eklentisi, Türkçe ve İngilizce dillerini desteklemekt
 * Kullanıcı anketi
 
 = 2.3.5 - 2025-08-08 =
-* Yurtiçi Kargo takip linki düzeltildi.
+* Yurt içi Kargo takip linki düzeltildi.
 
 = 2.3.4 - 2025-08-07 =
 * Gereksiz dil dosyalarının silinmesi
@@ -201,7 +233,7 @@ Bu Türkçe WooCommerce eklentisi, Türkçe ve İngilizce dillerini desteklemekt
 * WordPress admin ekranında farklı eklentiler tarafından Bootstrap kütüphanelerinin kullanılması durumunda, Hezarfen eklentisinin etkilenmemesi sağlandı.
 
 = 2.0.1 - 2024-04-15 =
-* Kargo takip özelliği eklendi. (kargo takip numarası girebilme, kargoya verildi durumu, SMS entegrasyonu)
+* Kargo takip özelliği eklendi. (kargo takip numarası girebilme, kargoya verildi durumu, SMS entegrasyonu). Eklenen kargo firmaları: Aras Kargo, Birgünde Kargo, Brinks Kargo, CDEK, DHL, FedEx, Gelal, hepsiJET, Horoz Lojistik, Jetizz, Kargo Türk, Kargoist, Kolay Gelsin, Kurye, MNG Kargo, PackUpp, PTT Kargo, Scotty, Sendeo Kargo, Sürat Kargo, TNT, Trendyol Express, UPS Kargo, Yurtiçi Kargo
 
 = 1.6.8 - 2024-04-15 =
 * HPOS desteği eklendi.
