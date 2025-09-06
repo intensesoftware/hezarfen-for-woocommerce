@@ -38,6 +38,7 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 		add_action( 'woocommerce_checkout_process', array( $this, 'intense_mss_checkout_process' ) );
 
 		add_action( 'wp_footer', array( $this, 'jquery_adres_degisiklikleri_checkout_guncellemesi' ) );
+		add_action( 'wp_footer', array( $this, 'add_contract_modal_script' ) );
 
 		add_action( 'wp_ajax_adres_bilgilerini_guncelle_callback', array( $this, 'adres_bilgilerini_guncelle_callback' ) );
 
@@ -161,6 +162,8 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 		$settings = get_option( 'hezarfen_mss_settings', array() );
 		$display_type = isset($settings['odeme_sayfasinda_sozlesme_gosterim_tipi']) ? $settings['odeme_sayfasinda_sozlesme_gosterim_tipi'] : 'inline';
 		
+		echo '<script>console.log("Display type: ' . $display_type . '");</script>';
+		
 		\Hezarfen\Inc\MSS\Core\Contract_Renderer::render_contracts( $display_type );
 	}
 
@@ -278,6 +281,162 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 		$woocommerce->customer->set_shipping_company( sanitize_text_field( $_POST['shipping_company'] ) );
 
 		wp_die();
+	}
+
+	/**
+	 * Add contract modal JavaScript to footer
+	 *
+	 * @return void
+	 */
+	public function add_contract_modal_script() {
+		// Only add on checkout page
+		if ( ! is_checkout() ) {
+			return;
+		}
+		?>
+		<script>
+		console.log('Checkout contract modal script loaded');
+		
+		function initCheckoutContractModals() {
+			// Add modal styles to ensure visibility
+			var style = document.createElement('style');
+			style.textContent = `
+				.hezarfen-modal {
+					display: none !important;
+					position: fixed !important;
+					z-index: 999999 !important;
+					left: 0 !important;
+					top: 0 !important;
+					width: 100% !important;
+					height: 100% !important;
+					background-color: rgba(0,0,0,0.5) !important;
+				}
+				.hezarfen-modal-container {
+					position: relative !important;
+					background-color: #fff !important;
+					margin: 5% auto !important;
+					padding: 20px !important;
+					border: 1px solid #888 !important;
+					width: 80% !important;
+					max-width: 800px !important;
+					max-height: 80vh !important;
+					overflow-y: auto !important;
+					border-radius: 4px !important;
+					box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+				}
+				.hezarfen-modal-header {
+					display: flex !important;
+					justify-content: space-between !important;
+					align-items: center !important;
+					padding-bottom: 10px !important;
+					border-bottom: 1px solid #eee !important;
+					margin-bottom: 15px !important;
+				}
+				.hezarfen-modal-close {
+					background: none !important;
+					border: none !important;
+					font-size: 24px !important;
+					cursor: pointer !important;
+					color: #666 !important;
+				}
+			`;
+			document.head.appendChild(style);
+			
+			// Use event delegation for contract links (works even if elements are added dynamically)
+			document.addEventListener('click', function(e) {
+				if (e.target && e.target.classList.contains('contract-modal-link')) {
+					e.preventDefault();
+					e.stopPropagation();
+					
+					var contractId = e.target.getAttribute('data-contract-id');
+					var contractName = e.target.textContent;
+					
+					// Create a simple test modal instead of using the existing one
+					var modalOverlay = document.createElement('div');
+					modalOverlay.className = 'hezarfen-test-modal';
+					modalOverlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999999; display: flex; align-items: center; justify-content: center;';
+					
+					var modalContent = document.createElement('div');
+					modalContent.style.cssText = 'background: white; padding: 30px; border-radius: 8px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;';
+					
+					var modalHeader = document.createElement('div');
+					modalHeader.style.cssText = 'display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;';
+					
+					var modalTitle = document.createElement('h3');
+					modalTitle.style.cssText = 'margin: 0; color: #333;';
+					modalTitle.textContent = contractName;
+					
+					var closeButton = document.createElement('button');
+					closeButton.style.cssText = 'background: none; border: none; font-size: 24px; cursor: pointer; color: #666;';
+					closeButton.innerHTML = '&times;';
+					closeButton.onclick = function() {
+						document.body.removeChild(modalOverlay);
+						document.body.style.overflow = '';
+					};
+					
+					var modalBody = document.createElement('div');
+					modalBody.style.cssText = 'color: #666; line-height: 1.6;';
+					modalBody.innerHTML = `
+						<p>Bu sözleşme içeriği burada görüntülenecek.</p>
+						<p>Contract ID: ${contractId}</p>
+						<p>Sözleşme detayları yükleniyor...</p>
+					`;
+					
+					// Click overlay to close
+					modalOverlay.onclick = function(e) {
+						if (e.target === modalOverlay) {
+							document.body.removeChild(modalOverlay);
+							document.body.style.overflow = '';
+						}
+					};
+					
+					modalHeader.appendChild(modalTitle);
+					modalHeader.appendChild(closeButton);
+					modalContent.appendChild(modalHeader);
+					modalContent.appendChild(modalBody);
+					modalOverlay.appendChild(modalContent);
+					
+					document.body.appendChild(modalOverlay);
+					document.body.style.overflow = 'hidden';
+					
+					return false;
+				}
+			});
+
+			// Handle modal close buttons
+			document.addEventListener('click', function(e) {
+				if (e.target.classList.contains('hezarfen-modal-close') || 
+					e.target.classList.contains('hezarfen-modal-overlay')) {
+					var modal = e.target.closest('.hezarfen-modal');
+					if (modal) {
+						modal.style.display = 'none';
+						document.body.style.overflow = '';
+					}
+				}
+			});
+
+			// Handle ESC key to close modals
+			document.addEventListener('keydown', function(e) {
+				if (e.key === 'Escape') {
+					document.querySelectorAll('.hezarfen-modal').forEach(function(modal) {
+						modal.style.display = 'none';
+					});
+					document.body.style.overflow = '';
+				}
+			});
+		}
+		
+		// Try multiple ways to initialize
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', initCheckoutContractModals);
+		} else {
+			initCheckoutContractModals();
+		}
+		
+		// Also try with a small delay
+		setTimeout(initCheckoutContractModals, 500);
+		</script>
+		<?php
 	}
 }
 

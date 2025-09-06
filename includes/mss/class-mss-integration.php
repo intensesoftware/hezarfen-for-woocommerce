@@ -134,31 +134,16 @@ class MSS_Integration {
 	public function enqueue_frontend_assets() {
 		if ( is_checkout() || is_view_order_page() ) {
 			wp_enqueue_script(
-				'magnific-popup',
-				HEZARFEN_MSS_URL . 'kutuphane/magnific-popup/jquery.magnific-popup.min.js',
+				'hezarfen-mss-modal',
+				HEZARFEN_MSS_URL . 'js/modal.js',
 				array( 'jquery' ),
 				HEZARFEN_MSS_VERSION,
 				true
 			);
 			
 			wp_enqueue_style(
-				'magnific-popup',
-				HEZARFEN_MSS_URL . 'kutuphane/magnific-popup/magnific-popup.css',
-				array(),
-				HEZARFEN_MSS_VERSION
-			);
-			
-			wp_enqueue_script(
-				'hezarfen-mss-popup',
-				HEZARFEN_MSS_URL . 'js/magnific-popup-init.js',
-				array( 'jquery', 'magnific-popup' ),
-				HEZARFEN_MSS_VERSION,
-				true
-			);
-			
-			wp_enqueue_style(
-				'hezarfen-mss-popup-style',
-				HEZARFEN_MSS_URL . 'css/magnific-popup-init.css',
+				'hezarfen-mss-modal',
+				HEZARFEN_MSS_URL . 'css/modal.css',
 				array(),
 				HEZARFEN_MSS_VERSION
 			);

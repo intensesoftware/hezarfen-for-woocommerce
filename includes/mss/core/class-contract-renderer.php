@@ -183,28 +183,96 @@ class Contract_Renderer {
 	 * @return void
 	 */
 	private static function render_modal_view( $contract_contents ) {
-		// Modal view implementation
-		// This would include modal structure and JavaScript
+		echo '<script>console.log("Rendering modal view with ' . count($contract_contents) . ' contracts");</script>';
 		?>
-		<div id="checkout-sozlesmeler-modal">
-			<?php foreach ( $contract_contents as $item ) : ?>
-				<div class="sozlesme-modal-trigger" data-contract-id="<?php echo esc_attr( $item['contract']['id'] ); ?>">
-					<a href="#" class="sozlesme-modal-link">
-						<?php echo esc_html( $item['contract']['custom_label'] ?: $item['contract']['name'] ); ?>
-					</a>
-				</div>
-				
-				<div class="sozlesme-modal-content" id="modal-<?php echo esc_attr( $item['contract']['id'] ); ?>" style="display: none;">
-					<div class="modal-header">
-						<h4><?php echo esc_html( $item['contract']['name'] ); ?></h4>
-						<button class="modal-close">&times;</button>
+		<!-- Contract Modals -->
+		<?php foreach ( $contract_contents as $item ) : ?>
+			<div class="hezarfen-modal" id="hezarfen-modal-<?php echo esc_attr( $item['contract']['id'] ); ?>">
+				<div class="hezarfen-modal-overlay"></div>
+				<div class="hezarfen-modal-container">
+					<div class="hezarfen-modal-header">
+						<h3><?php echo esc_html( $item['contract']['name'] ); ?></h3>
+						<button type="button" class="hezarfen-modal-close">&times;</button>
 					</div>
-					<div class="modal-body">
+					<div class="hezarfen-modal-content">
 						<?php echo wp_kses_post( $item['content'] ); ?>
 					</div>
+					<div class="hezarfen-modal-footer">
+						<button type="button" class="hezarfen-modal-close button"><?php esc_html_e( 'Close', 'hezarfen-for-woocommerce' ); ?></button>
+					</div>
 				</div>
-			<?php endforeach; ?>
-		</div>
+			</div>
+		<?php endforeach; ?>
+
+
+		<style>
+		.contract-modal-link {
+			text-decoration: none;
+			color: #0073aa;
+			cursor: pointer;
+		}
+		.contract-modal-link:hover {
+			text-decoration: underline;
+		}
+		.hezarfen-modal {
+			display: none;
+			position: fixed;
+			z-index: 1000;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+		}
+		.hezarfen-modal-overlay {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+		}
+		.hezarfen-modal-container {
+			position: relative;
+			background-color: #fff;
+			margin: 5% auto;
+			padding: 0;
+			border: 1px solid #888;
+			width: 80%;
+			max-width: 800px;
+			max-height: 80vh;
+			overflow-y: auto;
+			border-radius: 4px;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		}
+		.hezarfen-modal-header {
+			padding: 20px;
+			border-bottom: 1px solid #eee;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+		.hezarfen-modal-header h3 {
+			margin: 0;
+		}
+		.hezarfen-modal-close {
+			background: none;
+			border: none;
+			font-size: 24px;
+			cursor: pointer;
+			color: #666;
+		}
+		.hezarfen-modal-close:hover {
+			color: #000;
+		}
+		.hezarfen-modal-content {
+			padding: 20px;
+		}
+		.hezarfen-modal-footer {
+			padding: 20px;
+			border-top: 1px solid #eee;
+			text-align: right;
+		}
+		</style>
 		<?php
 	}
 
@@ -217,7 +285,11 @@ class Contract_Renderer {
 		$settings = get_option( 'hezarfen_mss_settings', array() );
 		$contracts = isset( $settings['contracts'] ) ? $settings['contracts'] : array();
 		
+		// Debug output
+		echo '<script>console.log("Checkout contracts found: ' . count($contracts) . '");</script>';
+		
 		if ( empty( $contracts ) ) {
+			echo '<script>console.log("No contracts configured in settings");</script>';
 			return;
 		}
 		
@@ -248,6 +320,7 @@ class Contract_Renderer {
 					continue;
 				}
 				?>
+				<script>console.log("Rendering contract checkbox for: <?php echo esc_js( $contract['name'] ); ?>");</script>
 				<p class="form-row in-sozlesme-onay-checkbox validate-required">
 					<label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
 						<input 
@@ -260,7 +333,7 @@ class Contract_Renderer {
 						<span><?php 
 							printf( 
 								__( '%s sözleşmesini okudum ve kabul ediyorum.', 'hezarfen-for-woocommerce' ), 
-								esc_html( $contract['name'] )
+								'<a href="#" class="contract-modal-link" data-contract-id="' . esc_attr( $contract['id'] ) . '">' . esc_html( $contract['name'] ) . '</a>'
 							);
 						?></span>
 					</label>
