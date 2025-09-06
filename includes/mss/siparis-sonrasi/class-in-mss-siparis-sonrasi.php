@@ -119,43 +119,31 @@ class IN_MSS_SiparisSonrasi {
 		$ip_address = $this->get_client_ip();
 		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] ) : '';
 
-		// Save contracts dynamically based on active contracts
+		// Get rendered contract contents from the contract renderer
+		$settings = get_option( 'hezarfen_mss_settings', array() );
+		$active_contracts = isset( $settings['contracts'] ) ? $settings['contracts'] : array();
+		
 		$contracts_to_save = array();
 		
-		// Add MSS contract if content exists
-		if ( ! empty( $intense_mss ) ) {
-			$contracts_to_save[] = array(
-				'type' => 'mss',
-				'name' => 'Mesafeli Satış Sözleşmesi',
-				'content' => $intense_mss,
+		// Process each active contract
+		foreach ( $active_contracts as $contract_config ) {
+			if ( empty( $contract_config['enabled'] ) || empty( $contract_config['template_id'] ) ) {
+				continue;
+			}
+			
+			// Get the contract content from the template
+			$contract_content = \Hezarfen\Inc\MSS\Core\Contract_Renderer::get_contract_content_from_template( 
+				$contract_config['template_id'], 
+				$order_id 
 			);
-		}
-		
-		// Add OBF contract if content exists
-		if ( ! empty( $intense_obf ) ) {
-			$contracts_to_save[] = array(
-				'type' => 'obf',
-				'name' => 'Ön Bilgilendirme Formu',
-				'content' => $intense_obf,
-			);
-		}
-		
-		// Add custom contract 1 if content exists
-		if ( ! empty( $ozel_sozlesme_1_content ) && ! empty( $ozel_sozlesme_1_baslik ) ) {
-			$contracts_to_save[] = array(
-				'type' => 'custom_1',
-				'name' => $ozel_sozlesme_1_baslik,
-				'content' => $ozel_sozlesme_1_content,
-			);
-		}
-		
-		// Add custom contract 2 if content exists
-		if ( ! empty( $ozel_sozlesme_2_content ) && ! empty( $ozel_sozlesme_2_baslik ) ) {
-			$contracts_to_save[] = array(
-				'type' => 'custom_2',
-				'name' => $ozel_sozlesme_2_baslik,
-				'content' => $ozel_sozlesme_2_content,
-			);
+			
+			// Only save if there's actual content
+			if ( ! empty( $contract_content ) ) {
+				$contracts_to_save[] = array(
+					'name' => $contract_config['name'],
+					'content' => $contract_content,
+				);
+			}
 		}
 		
 		// Save each contract as a separate record
@@ -164,13 +152,12 @@ class IN_MSS_SiparisSonrasi {
 				$wpdb->prefix . 'hezarfen_contracts',
 				array(
 					'order_id'        => $order_id,
-					'contract_type'   => $contract['type'],
 					'contract_name'   => $contract['name'],
 					'contract_content' => $contract['content'],
 					'ip_address'      => $ip_address,
 					'user_agent'      => $user_agent,
 				),
-				array( '%d', '%s', '%s', '%s', '%s', '%s' )
+				array( '%d', '%s', '%s', '%s', '%s' )
 			);
 		}
 

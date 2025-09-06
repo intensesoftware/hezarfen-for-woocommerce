@@ -158,11 +158,10 @@ class Hezarfen_Install {
 		if ( version_compare( $current_db_version, '2.5.0', '<' ) ) {
 			$table_name = $wpdb->prefix . 'hezarfen_contracts';
 			
-			// Create dynamic contracts table (v2.5.0 - supports any agreement type)
+			// Create dynamic contracts table (v2.5.0 - fully dynamic agreements)
 			$sql = "CREATE TABLE $table_name (
 				`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 				`order_id` bigint(20) unsigned NOT NULL,
-				`contract_type` varchar(50) NOT NULL,
 				`contract_name` varchar(255) NOT NULL,
 				`contract_content` longtext NOT NULL,
 				`ip_address` varchar(45) NOT NULL,
@@ -171,7 +170,6 @@ class Hezarfen_Install {
 				`updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 				PRIMARY KEY (`id`),
 				KEY `order_id` (`order_id`),
-				KEY `contract_type` (`contract_type`),
 				KEY `created_at` (`created_at`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
 			

@@ -224,29 +224,21 @@ class Intense_MSS_Yonetim_Arayuzu {
 
 		$this->sayfa_basi( $sayfa );
 
-		// Handle contract viewing (any contract type) or search
+		// Handle contract viewing
 		if ( isset( $_GET['id'] ) && ! empty( $_GET['id'] ) ) {
 			// This is a contract view request
 			$id = intval( $_GET['id'] );
-			$contract_type = isset( $_GET['type'] ) ? sanitize_text_field( $_GET['type'] ) : null;
 			
 			if ( ! $id ) {
 				echo '<p>' . esc_html__( 'Invalid contract ID.', 'hezarfen-for-woocommerce' ) . '</p>';
 				return;
 			}
 			
-			// Build query - if type is specified, filter by it, otherwise just get by ID
-			if ( $contract_type ) {
-				$contract = $wpdb->get_row( $wpdb->prepare( 
-					"SELECT * FROM {$wpdb->prefix}hezarfen_contracts WHERE id=%d AND contract_type=%s", 
-					$id, $contract_type 
-				) );
-			} else {
-				$contract = $wpdb->get_row( $wpdb->prepare( 
-					"SELECT * FROM {$wpdb->prefix}hezarfen_contracts WHERE id=%d", 
-					$id 
-				) );
-			}
+			// Get contract by ID
+			$contract = $wpdb->get_row( $wpdb->prepare( 
+				"SELECT * FROM {$wpdb->prefix}hezarfen_contracts WHERE id=%d", 
+				$id 
+			) );
 			
 			if ( ! $contract ) {
 				echo '<p>' . esc_html__( 'Contract not found.', 'hezarfen-for-woocommerce' ) . '</p>';
@@ -255,7 +247,6 @@ class Intense_MSS_Yonetim_Arayuzu {
 			
 			?>
 			<p><strong><?php echo esc_html__( 'Order ID:', 'hezarfen-for-woocommerce' ); ?></strong> <?php echo esc_html( $contract->order_id ); ?></p>
-			<p><strong><?php echo esc_html__( 'Contract Type:', 'hezarfen-for-woocommerce' ); ?></strong> <?php echo esc_html( $contract->contract_type ); ?></p>
 			<p><strong><?php echo esc_html__( 'Created Date:', 'hezarfen-for-woocommerce' ); ?></strong> <?php echo esc_html( $contract->created_at ); ?></p>
 			<p><strong><?php echo esc_html__( 'IP Address:', 'hezarfen-for-woocommerce' ); ?></strong> <?php echo esc_html( $contract->ip_address ); ?></p>
 			<h3 style="margin-top:30px"><?php echo esc_html( $contract->contract_name ); ?></h3>
@@ -271,7 +262,7 @@ class Intense_MSS_Yonetim_Arayuzu {
 			$siparis_no = isset( $_GET['siparis_no'] ) ? intval( $_GET['siparis_no'] ) : null;
 
 			if ( $siparis_no ) {
-				$contracts = $wpdb->get_results( $wpdb->prepare( "SELECT id, order_id, contract_type, contract_name, created_at, ip_address FROM {$wpdb->prefix}hezarfen_contracts WHERE order_id=%d ORDER BY created_at DESC", $siparis_no ) );
+				$contracts = $wpdb->get_results( $wpdb->prepare( "SELECT id, order_id, contract_name, created_at, ip_address FROM {$wpdb->prefix}hezarfen_contracts WHERE order_id=%d ORDER BY created_at DESC", $siparis_no ) );
 				if ( $contracts ) {
 					$this->contracts_html_table( $contracts );
 				} else {
@@ -371,7 +362,6 @@ class Intense_MSS_Yonetim_Arayuzu {
 			<thead align="left">
 			<tr>
 				<th><?php echo esc_html__( 'Order ID', 'hezarfen-for-woocommerce' ); ?></th>
-				<th><?php echo esc_html__( 'Contract Type', 'hezarfen-for-woocommerce' ); ?></th>
 				<th><?php echo esc_html__( 'Contract Name', 'hezarfen-for-woocommerce' ); ?></th>
 				<th><?php echo esc_html__( 'IP Address', 'hezarfen-for-woocommerce' ); ?></th>
 				<th><?php echo esc_html__( 'Created Date', 'hezarfen-for-woocommerce' ); ?></th>
@@ -390,16 +380,15 @@ class Intense_MSS_Yonetim_Arayuzu {
 				$first_contract = $order_contracts[0];
 				?>
 				<tr>
-					<td width="10%" rowspan="<?php echo count( $order_contracts ); ?>"><?php echo esc_html( $order_id ); ?></td>
+					<td width="15%" rowspan="<?php echo count( $order_contracts ); ?>"><?php echo esc_html( $order_id ); ?></td>
 					<?php foreach ( $order_contracts as $index => $contract ) : ?>
 						<?php if ( $index > 0 ) echo '<tr>'; ?>
-						<td width="15%"><?php echo esc_html( $contract->contract_type ); ?></td>
-						<td width="25%"><?php echo esc_html( $contract->contract_name ); ?></td>
+						<td width="30%"><?php echo esc_html( $contract->contract_name ); ?></td>
 						<td width="15%"><?php echo esc_html( $contract->ip_address ); ?></td>
-						<td width="15%"><?php echo esc_html( date_i18n( 'd/m/Y H:i:s', strtotime( $contract->created_at ) ) ); ?></td>
+						<td width="20%"><?php echo esc_html( date_i18n( 'd/m/Y H:i:s', strtotime( $contract->created_at ) ) ); ?></td>
 						<td width="20%">
 							<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-							<a target='_blank' href="<?php echo wp_nonce_url( "admin.php?page=intense-mss-kayitli-sozlesmeler&sayfa=view&id={$contract->id}&type={$contract->contract_type}", self::NONCE_ACTION ); ?>" class="button button-small">
+							<a target='_blank' href="<?php echo wp_nonce_url( "admin.php?page=intense-mss-kayitli-sozlesmeler&id={$contract->id}", self::NONCE_ACTION ); ?>" class="button button-small">
 								<?php echo esc_html__( 'View Contract', 'hezarfen-for-woocommerce' ); ?>
 							</a>
 						</td>
