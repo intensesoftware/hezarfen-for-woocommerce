@@ -36,36 +36,17 @@ class Intense_MSS_Yonetim_Arayuzu {
 		// Removed admin_menu action since we're integrating with hezarfen settings
 		// add_action( 'admin_menu', array( $this, 'in_mss_panel_kaydi' ) );
 		add_action( 'admin_init', array( $this, 'intense_mss_page_init' ) );
-		add_action( 'init', array( $this, 'ozel_post_tipi' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'stilleri_yukle' ) );
-		add_action( 'add_meta_boxes', array( $this, 'intense_form_taslaklari_metabox_ekle' ) );
 
 		$this->options = get_option( 'hezarfen_mss_settings', array() );
-		
-		// Register post type immediately if we're past the init hook
-		// This ensures post type is available even if instantiated late
-		if ( did_action( 'init' ) ) {
-			$this->ozel_post_tipi();
-		}
 	}
 
 	/**
-	 * Mevcut sozlesme taslaklari (MSS templates + WordPress pages)
+	 * Mevcut sozlesme taslaklari (WordPress pages only)
 	 *
 	 * @return array
 	 */
 	public function mevcut_sozlesme_taslaklari_liste() {
-		$templates = array();
-		
-		// Get MSS form templates
-		$mss_templates = get_posts( array(
-			'post_type' => 'intense_mss_form',
-			'post_status' => 'publish',
-			'posts_per_page' => -1,
-			'orderby' => 'title',
-			'order' => 'ASC',
-		) );
-		
 		// Get WordPress pages
 		$pages = get_posts( array(
 			'post_type' => 'page',
@@ -75,65 +56,9 @@ class Intense_MSS_Yonetim_Arayuzu {
 			'order' => 'ASC',
 		) );
 		
-		// Add MSS templates with prefix
-		foreach ( $mss_templates as $template ) {
-			$template->post_title = '[MSS] ' . $template->post_title;
-			$template->template_type = 'mss_form';
-			$templates[] = $template;
-		}
-		
-		// Add pages with prefix
-		foreach ( $pages as $page ) {
-			$page->post_title = '[Sayfa] ' . $page->post_title;
-			$page->template_type = 'page';
-			$templates[] = $page;
-		}
-		
-		// Sort combined array by title
-		usort( $templates, function( $a, $b ) {
-			return strcmp( $a->post_title, $b->post_title );
-		} );
-		
-		return $templates;
+		return $pages;
 	}
 
-	/**
-	 * CPT tanimi
-	 *
-	 * @return void
-	 */
-	public function ozel_post_tipi() {
-		$labels = array(
-			'name'               => __( 'MSS Form Taslakları', 'hezarfen-for-woocommerce' ),
-			'singular_name'      => __( 'MSS Form Taslağı', 'hezarfen-for-woocommerce' ),
-			'menu_name'          => __( 'MSS Taslakları', 'hezarfen-for-woocommerce' ),
-			'add_new'            => __( 'Yeni Ekle', 'hezarfen-for-woocommerce' ),
-			'add_new_item'       => __( 'Yeni Taslak Ekle', 'hezarfen-for-woocommerce' ),
-			'edit_item'          => __( 'Taslağı Düzenle', 'hezarfen-for-woocommerce' ),
-			'new_item'           => __( 'Yeni Taslak', 'hezarfen-for-woocommerce' ),
-			'view_item'          => __( 'Taslağı Görüntüle', 'hezarfen-for-woocommerce' ),
-			'search_items'       => __( 'Taslak Ara', 'hezarfen-for-woocommerce' ),
-			'not_found'          => __( 'Taslak bulunamadı', 'hezarfen-for-woocommerce' ),
-			'not_found_in_trash' => __( 'Çöp kutusunda taslak bulunamadı', 'hezarfen-for-woocommerce' ),
-		);
-		
-		$args = array(
-			'labels'              => $labels,
-			'public'              => false,
-			'publicly_queryable'  => false,
-			'show_ui'             => true,
-			'show_in_menu'        => false, // We'll show it in hezarfen settings
-			'query_var'           => false,
-			'rewrite'             => false,
-			'capability_type'     => 'post',
-			'has_archive'         => false,
-			'hierarchical'        => false,
-			'menu_position'       => null,
-			'supports'            => array( 'title', 'editor' ),
-		);
-
-		register_post_type( 'intense_mss_form', $args );
-	}
 
 	/**
 	 * Stilleri yükler.
@@ -148,14 +73,6 @@ class Intense_MSS_Yonetim_Arayuzu {
 		}
 	}
 
-	/**
-	 * Sozlesme taslaklari duzenleme ekraninda degiskenlerin gosterilmesi icin meta Box tanimi
-	 *
-	 * @return void
-	 */
-	public function intense_form_taslaklari_metabox_ekle() {
-		add_meta_box( 'intense-form-taslaklari-meta-box', __( 'Form Değişkenleri', 'intense-mss-for-woocommerce' ), array( $this, 'intense_form_taslaklari_metabox_icerik' ), 'intense_mss_form', 'side' );
-	}
 
 	/**
 	 * Meta box icerigi
@@ -249,13 +166,6 @@ class Intense_MSS_Yonetim_Arayuzu {
 			array( $this, 'kayitli_sozlesmeler' )
 		);
 
-		add_submenu_page(
-			'intense-mss',
-			__( 'Sözleşme Taslakları', 'intense-mss-for-woocommerce' ),
-			__( 'Sözleşme Taslakları', 'intense-mss-for-woocommerce' ),
-			'manage_options',
-			'edit.php?post_type=intense_mss_form'
-		);
 
 		add_submenu_page(
 			'intense-mss',

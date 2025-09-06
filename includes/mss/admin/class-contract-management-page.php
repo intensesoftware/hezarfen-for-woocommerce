@@ -40,16 +40,7 @@ class Contract_Management_Page {
 	private function get_template_options() {
 		$options = '';
 		
-		// Get MSS form templates
-		$mss_templates = get_posts( array(
-			'post_type' => 'intense_mss_form',
-			'post_status' => 'publish',
-			'posts_per_page' => -1,
-			'orderby' => 'title',
-			'order' => 'ASC',
-		) );
-		
-		// Get WordPress pages
+		// Get WordPress pages only
 		$pages = get_posts( array(
 			'post_type' => 'page',
 			'post_status' => 'publish',
@@ -57,19 +48,6 @@ class Contract_Management_Page {
 			'orderby' => 'title',
 			'order' => 'ASC',
 		) );
-		
-		// Add MSS templates with prefix
-		if ( ! empty( $mss_templates ) ) {
-			$options .= '<optgroup label="' . esc_attr__( 'MSS Templates', 'hezarfen-for-woocommerce' ) . '">';
-			foreach ( $mss_templates as $template ) {
-				$options .= sprintf(
-					'<option value="%d" data-type="mss_form">[MSS] %s</option>',
-					$template->ID,
-					esc_html( $template->post_title )
-				);
-			}
-			$options .= '</optgroup>';
-		}
 		
 		// Add pages with prefix
 		if ( ! empty( $pages ) ) {

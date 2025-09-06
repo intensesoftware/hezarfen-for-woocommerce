@@ -71,9 +71,9 @@ class Contract_Renderer {
 	}
 
 	/**
-	 * Get contract content from template ID
+	 * Get contract content from WordPress page template ID
 	 *
-	 * @param int $template_id Template post ID.
+	 * @param int $template_id WordPress page ID.
 	 * @param int $order_id Optional order ID for order-specific variables.
 	 * @return string|false
 	 */
@@ -84,7 +84,8 @@ class Contract_Renderer {
 		
 		$template_post = get_post( intval( $template_id ) );
 		
-		if ( ! $template_post || ! in_array( $template_post->post_status, array( 'publish' ) ) ) {
+		// Only allow WordPress pages
+		if ( ! $template_post || $template_post->post_type !== 'page' || $template_post->post_status !== 'publish' ) {
 			return false;
 		}
 		
@@ -129,16 +130,14 @@ class Contract_Renderer {
 	private static function get_contract_content( $contract ) {
 		$raw_content = '';
 		
-		// Check if content is stored directly (traditional MSS form)
+		// Check if content is stored directly
 		if ( ! empty( $contract['content'] ) ) {
 			$raw_content = $contract['content'];
 		}
 		// Check if content should be retrieved from a WordPress page
 		elseif ( ! empty( $contract['template_id'] ) ) {
 			$template_post = get_post( $contract['template_id'] );
-			if ( $template_post && $template_post->post_type === 'page' ) {
-				$raw_content = $template_post->post_content;
-			} elseif ( $template_post && $template_post->post_type === 'intense_mss_form' ) {
+			if ( $template_post && $template_post->post_type === 'page' && $template_post->post_status === 'publish' ) {
 				$raw_content = $template_post->post_content;
 			}
 		}

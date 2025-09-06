@@ -95,7 +95,7 @@ class MSS_Settings {
 			array(
 				'title' => __( 'Sözleşme Şablonları', 'hezarfen-for-woocommerce' ),
 				'type'  => 'title',
-				'desc'  => __( 'Sözleşme şablonlarını yönetin. + butonu ile yeni sözleşme ekleyebilir, X butonu ile silebilirsiniz.', 'hezarfen-for-woocommerce' ),
+				'desc'  => __( 'WordPress sayfalarını sözleşme şablonu olarak kullanın. + butonu ile yeni sözleşme ekleyebilir, X butonu ile silebilirsiniz.', 'hezarfen-for-woocommerce' ),
 				'id'    => 'hezarfen_mss_templates_title'
 			),
 			
@@ -115,19 +115,10 @@ class MSS_Settings {
 	}
 	
 	/**
-	 * Get template options for dropdown (MSS forms + WordPress pages)
+	 * Get template options for dropdown (WordPress pages only)
 	 */
 	private function get_template_options() {
-		$templates = array( '' => __( 'Şablon seçin...', 'hezarfen-for-woocommerce' ) );
-		
-		// Get MSS form templates
-		$mss_templates = get_posts( array(
-			'post_type'      => 'intense_mss_form',
-			'post_status'    => 'publish',
-			'posts_per_page' => -1,
-			'orderby'        => 'title',
-			'order'          => 'ASC',
-		) );
+		$templates = array( '' => __( 'Sayfa seçin...', 'hezarfen-for-woocommerce' ) );
 		
 		// Get WordPress pages
 		$pages = get_posts( array(
@@ -138,14 +129,9 @@ class MSS_Settings {
 			'order'          => 'ASC',
 		) );
 		
-		// Add MSS templates with prefix
-		foreach ( $mss_templates as $template ) {
-			$templates[ $template->ID ] = '[MSS] ' . $template->post_title;
-		}
-		
-		// Add pages with prefix
+		// Add pages
 		foreach ( $pages as $page ) {
-			$templates[ $page->ID ] = '[Sayfa] ' . $page->post_title;
+			$templates[ $page->ID ] = $page->post_title;
 		}
 		
 		return $templates;
@@ -201,8 +187,7 @@ class MSS_Settings {
 	 * Initialize MSS admin functionality
 	 */
 	private function init_mss_admin() {
-		// Post types are handled by the original MSS admin class
-		// Add custom field type for dynamic contract management
+		// Add custom field type for dynamic contract management (WordPress pages only)
 		add_action( 'woocommerce_admin_field_mss_dynamic_contracts', array( $this, 'output_dynamic_contracts' ) );
 	}
 
@@ -251,7 +236,7 @@ class MSS_Settings {
 											   class="regular-text" />
 									</div>
 									<div class="contract-field">
-										<label><?php esc_html_e( 'Şablon:', 'hezarfen-for-woocommerce' ); ?></label>
+										<label><?php esc_html_e( 'WordPress Sayfası:', 'hezarfen-for-woocommerce' ); ?></label>
 										<select name="hezarfen_mss_settings[contracts][<?php echo esc_attr( $index ); ?>][template_id]" class="regular-text">
 											<?php foreach ( $template_options as $option_value => $option_label ): ?>
 												<option value="<?php echo esc_attr( $option_value ); ?>" 
@@ -358,7 +343,7 @@ class MSS_Settings {
 											   placeholder="Sözleşme adını girin" />
 									</div>
 									<div class="contract-field">
-										<label><?php esc_html_e( 'Şablon:', 'hezarfen-for-woocommerce' ); ?></label>
+										<label><?php esc_html_e( 'WordPress Sayfası:', 'hezarfen-for-woocommerce' ); ?></label>
 										<select name="hezarfen_mss_settings[contracts][${contractIndex}][template_id]" class="regular-text">
 											${optionsHtml}
 										</select>
