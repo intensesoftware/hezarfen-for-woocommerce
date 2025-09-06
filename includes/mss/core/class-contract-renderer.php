@@ -214,8 +214,12 @@ class Contract_Renderer {
 	 * @return void
 	 */
 	public static function render_contract_checkboxes() {
-		$contracts = Contract_Manager::get_active_contracts();
-		$settings  = get_option( 'hezarfen_mss_settings', array() );
+		$settings = get_option( 'hezarfen_mss_settings', array() );
+		$contracts = isset( $settings['contracts'] ) ? $settings['contracts'] : array();
+		
+		if ( empty( $contracts ) ) {
+			return;
+		}
 		
 		$hidden_contracts = isset( $settings['gosterilmeyecek_sozlesmeler'] ) 
 			? $settings['gosterilmeyecek_sozlesmeler'] 
@@ -228,26 +232,39 @@ class Contract_Renderer {
 		?>
 		<div class="in-sozlesme-onay-checkboxes">
 			<?php foreach ( $contracts as $contract ) : ?>
-				<?php if ( ! in_array( $contract['type'], $hidden_contracts, true ) ) : ?>
-					<p class="form-row in-sozlesme-onay-checkbox <?php echo $contract['required'] ? 'validate-required' : ''; ?>">
-						<label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
-							<input 
-								type="checkbox" 
-								class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox" 
-								name="contract_<?php echo esc_attr( $contract['id'] ); ?>_checkbox"
-								<?php checked( $default_checked, 1 ); ?>
-								<?php echo $contract['required'] ? 'required' : ''; ?>
-							/>
-							<span><?php 
-								$label = $contract['custom_label'] ?: sprintf( 
-									__( 'I agree to the %s.', 'hezarfen-for-woocommerce' ), 
-									$contract['name'] 
-								);
-								echo esc_html( $label );
-							?></span>
-						</label>
-					</p>
-				<?php endif; ?>
+				<?php 
+				// Skip disabled contracts
+				if ( empty( $contract['enabled'] ) ) {
+					continue;
+				}
+				
+				// Skip contracts without templates
+				if ( empty( $contract['template_id'] ) ) {
+					continue;
+				}
+				
+				// Check if this contract type should be hidden
+				if ( in_array( $contract['id'], $hidden_contracts, true ) ) {
+					continue;
+				}
+				?>
+				<p class="form-row in-sozlesme-onay-checkbox validate-required">
+					<label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
+						<input 
+							type="checkbox" 
+							class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox" 
+							name="contract_<?php echo esc_attr( $contract['id'] ); ?>_checkbox"
+							<?php checked( $default_checked, 1 ); ?>
+							required
+						/>
+						<span><?php 
+							printf( 
+								__( '%s sözleşmesini okudum ve kabul ediyorum.', 'hezarfen-for-woocommerce' ), 
+								esc_html( $contract['name'] )
+							);
+						?></span>
+					</label>
+				</p>
 			<?php endforeach; ?>
 		</div>
 		<?php

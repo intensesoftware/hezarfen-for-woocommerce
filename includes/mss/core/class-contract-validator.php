@@ -22,16 +22,30 @@ class Contract_Validator {
 	 * @return void
 	 */
 	public static function validate_checkout_contracts() {
-		$required_contracts = Contract_Manager::get_required_contracts();
-		$settings          = get_option( 'hezarfen_mss_settings', array() );
+		$settings = get_option( 'hezarfen_mss_settings', array() );
+		$contracts = isset( $settings['contracts'] ) ? $settings['contracts'] : array();
+		
+		if ( empty( $contracts ) ) {
+			return;
+		}
 		
 		$hidden_contracts = isset( $settings['gosterilmeyecek_sozlesmeler'] ) 
 			? $settings['gosterilmeyecek_sozlesmeler'] 
 			: array();
 
-		foreach ( $required_contracts as $contract ) {
+		foreach ( $contracts as $contract ) {
+			// Skip disabled contracts
+			if ( empty( $contract['enabled'] ) ) {
+				continue;
+			}
+			
+			// Skip contracts without templates
+			if ( empty( $contract['template_id'] ) ) {
+				continue;
+			}
+			
 			// Skip validation for hidden contracts
-			if ( in_array( $contract['type'], $hidden_contracts, true ) ) {
+			if ( in_array( $contract['id'], $hidden_contracts, true ) ) {
 				continue;
 			}
 
@@ -39,8 +53,8 @@ class Contract_Validator {
 			
 			if ( empty( $_POST[ $checkbox_name ] ) ) {
 				$error_message = sprintf(
-					__( 'You must agree to the %s to proceed.', 'hezarfen-for-woocommerce' ),
-					$contract['name']
+					__( '%s sözleşmesini kabul etmelisiniz.', 'hezarfen-for-woocommerce' ),
+					esc_html( $contract['name'] )
 				);
 				
 				wc_add_notice( $error_message, 'error' );
