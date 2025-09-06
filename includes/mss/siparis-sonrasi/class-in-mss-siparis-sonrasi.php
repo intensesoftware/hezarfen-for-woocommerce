@@ -408,19 +408,47 @@ class IN_MSS_SiparisSonrasi {
 	 * @return array
 	 */
 	private function render_forms( $order_id ) {
-		// Use the new settings-based template system
+		// Use the new dynamic contracts system
+		$settings = get_option( 'hezarfen_mss_settings', array() );
+		$contracts = isset( $settings['contracts'] ) ? $settings['contracts'] : array();
+		
 		$contract_contents = array();
 		
-		// Get contract content using the new settings-based approach
-		$contract_contents['mss'] = \Hezarfen\Inc\MSS\Core\Contract_Renderer::get_contract_content_by_type( 'mss', $order_id ) ?: '';
-		$contract_contents['obf'] = \Hezarfen\Inc\MSS\Core\Contract_Renderer::get_contract_content_by_type( 'obf', $order_id ) ?: '';
-		$contract_contents['ozel_sozlesme_1_content'] = \Hezarfen\Inc\MSS\Core\Contract_Renderer::get_contract_content_by_type( 'cayma', $order_id ) ?: '';
-		$contract_contents['ozel_sozlesme_2_content'] = \Hezarfen\Inc\MSS\Core\Contract_Renderer::get_contract_content_by_type( 'ozel1', $order_id ) ?: '';
+		// Initialize with empty values for backward compatibility
+		$contract_contents['mss'] = '';
+		$contract_contents['obf'] = '';
+		$contract_contents['ozel_sozlesme_1_content'] = '';
+		$contract_contents['ozel_sozlesme_2_content'] = '';
 		
-		// Add additional custom contract if configured
-		$ozel2_content = \Hezarfen\Inc\MSS\Core\Contract_Renderer::get_contract_content_by_type( 'ozel2', $order_id );
-		if ( $ozel2_content ) {
-			$contract_contents['ozel_sozlesme_3_content'] = $ozel2_content;
+		// Process dynamic contracts
+		foreach ( $contracts as $contract ) {
+			// Skip disabled contracts
+			if ( empty( $contract['enabled'] ) ) {
+				continue;
+			}
+			
+			// Skip contracts without templates
+			if ( empty( $contract['template_id'] ) ) {
+				continue;
+			}
+			
+			$content = \Hezarfen\Inc\MSS\Core\Contract_Renderer::get_contract_content_from_template( $contract['template_id'], $order_id );
+			
+			if ( $content ) {
+				// Map known contract IDs to backward compatible keys
+				switch ( $contract['id'] ) {
+					case 'mss':
+						$contract_contents['mss'] = $content;
+						break;
+					case 'obf':
+						$contract_contents['obf'] = $content;
+						break;
+					default:
+						// For custom contracts, use dynamic keys
+						$contract_contents['custom_' . $contract['id']] = $content;
+						break;
+				}
+			}
 		}
 
 		return $contract_contents;

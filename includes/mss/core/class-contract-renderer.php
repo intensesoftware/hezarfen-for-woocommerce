@@ -71,22 +71,18 @@ class Contract_Renderer {
 	}
 
 	/**
-	 * Get contract content from settings-based template selection
+	 * Get contract content from template ID
 	 *
-	 * @param string $contract_type Contract type (mss, obf, cayma, ozel1, ozel2).
-	 * @param int    $order_id Optional order ID for order-specific variables.
+	 * @param int $template_id Template post ID.
+	 * @param int $order_id Optional order ID for order-specific variables.
 	 * @return string|false
 	 */
-	public static function get_contract_content_by_type( $contract_type, $order_id = null ) {
-		$settings = get_option( 'hezarfen_mss_settings', array() );
-		$template_key = $contract_type . '_template_id';
-		
-		if ( empty( $settings[ $template_key ] ) ) {
+	public static function get_contract_content_from_template( $template_id, $order_id = null ) {
+		if ( empty( $template_id ) ) {
 			return false;
 		}
 		
-		$template_id = intval( $settings[ $template_key ] );
-		$template_post = get_post( $template_id );
+		$template_post = get_post( intval( $template_id ) );
 		
 		if ( ! $template_post || ! in_array( $template_post->post_status, array( 'publish' ) ) ) {
 			return false;
@@ -104,6 +100,24 @@ class Contract_Renderer {
 		$processed_content = Template_Processor::process_variables( $processed_content, $order_id );
 		
 		return $processed_content;
+	}
+
+	/**
+	 * Get contract content from settings-based template selection (legacy)
+	 *
+	 * @param string $contract_type Contract type (mss, obf, cayma, ozel1, ozel2).
+	 * @param int    $order_id Optional order ID for order-specific variables.
+	 * @return string|false
+	 */
+	public static function get_contract_content_by_type( $contract_type, $order_id = null ) {
+		$settings = get_option( 'hezarfen_mss_settings', array() );
+		$template_key = $contract_type . '_template_id';
+		
+		if ( empty( $settings[ $template_key ] ) ) {
+			return false;
+		}
+		
+		return self::get_contract_content_from_template( $settings[ $template_key ], $order_id );
 	}
 
 	/**
