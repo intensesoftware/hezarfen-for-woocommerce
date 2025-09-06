@@ -243,7 +243,7 @@ class Contract_Renderer {
 					continue;
 				}
 				
-				// Check if this contract type should be hidden
+				// Skip validation for hidden contracts (by contract ID)
 				if ( in_array( $contract['id'], $hidden_contracts, true ) ) {
 					continue;
 				}

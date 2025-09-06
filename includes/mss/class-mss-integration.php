@@ -67,19 +67,9 @@ class MSS_Integration {
 		require_once HEZARFEN_MSS_PATH . 'trait-in-mss.php';
 		
 		// Load core classes
-		require_once HEZARFEN_MSS_PATH . 'core/class-contract-types.php';
-		require_once HEZARFEN_MSS_PATH . 'core/class-contract-manager.php';
 		require_once HEZARFEN_MSS_PATH . 'core/class-template-processor.php';
 		require_once HEZARFEN_MSS_PATH . 'core/class-contract-renderer.php';
 		require_once HEZARFEN_MSS_PATH . 'core/class-contract-validator.php';
-		
-		// MSS activation is now handled by Hezarfen's core installation
-		
-		// Load original MSS admin class for post types (without menu)
-		require_once HEZARFEN_MSS_PATH . 'admin/class-in-mss-yonetim-arayuz.php';
-		
-		// Load contract management page
-		require_once HEZARFEN_MSS_PATH . 'admin/class-contract-management-page.php';
 		
 		// Load settings integration
 		require_once HEZARFEN_MSS_PATH . 'admin/class-mss-settings.php';
@@ -89,15 +79,9 @@ class MSS_Integration {
 	 * Initialize MSS functionality
 	 */
 	public function init_mss() {
-		// MSS initialization is now handled by Hezarfen's core
-		
-		// Initialize the original MSS admin class (for post types and meta boxes)
-		// This needs to be done early so post types are registered properly
-		new \Intense_MSS_Yonetim_Arayuzu();
-		
-		// Initialize contract management page (for admin functionality)
+		// Initialize MSS settings integration with Hezarfen
 		if ( is_admin() ) {
-			new \Hezarfen\Inc\MSS\Admin\Contract_Management_Page();
+			new \Hezarfen\Inc\MSS\MSS_Settings();
 		}
 		
 		// Check if MSS is properly configured and load frontend if needed
@@ -112,9 +96,19 @@ class MSS_Integration {
 		$mss_enabled = get_option( 'hezarfen_mss_enabled', 'no' );
 		
 		if ( 'yes' === $mss_enabled ) {
-			// Check if there are any active contracts
-			$active_contracts = \Hezarfen\Inc\MSS\Core\Contract_Manager::get_active_contracts();
-			if ( ! empty( $active_contracts ) ) {
+			// Check if there are any active contracts in settings
+			$settings = get_option( 'hezarfen_mss_settings', array() );
+			$contracts = isset( $settings['contracts'] ) ? $settings['contracts'] : array();
+			
+			$has_active_contracts = false;
+			foreach ( $contracts as $contract ) {
+				if ( ! empty( $contract['enabled'] ) && ! empty( $contract['template_id'] ) ) {
+					$has_active_contracts = true;
+					break;
+				}
+			}
+			
+			if ( $has_active_contracts ) {
 				$this->load_frontend_functionality();
 			}
 		}

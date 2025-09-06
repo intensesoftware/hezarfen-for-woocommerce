@@ -85,27 +85,7 @@ class IN_MSS_SiparisSonrasi {
 	 * @return void
 	 */
 	public function sozlesmeleri_isleme_al( $order_id ) {
-		$render = $this->render_forms( $order_id );
-
 		$order = wc_get_order( $order_id );
-
-		$intense_obf = $render['obf'];
-		$intense_mss = $render['mss'];
-		$ozel_sozlesme_1_content = $render['ozel_sozlesme_1_content'];
-		$ozel_sozlesme_2_content = $render['ozel_sozlesme_2_content'];
-
-		// Get contract titles from the new dynamic system
-		$active_contracts = \Hezarfen\Inc\MSS\Core\Contract_Manager::get_active_contracts();
-		$contract_titles = array();
-		
-		foreach ( $active_contracts as $contract ) {
-			$contract_titles[ $contract['type'] ] = $contract['name'];
-		}
-		
-		// Set titles for backward compatibility (these are used in database storage)
-		$ozel_sozlesme_1_baslik = isset( $contract_titles['cayma_hakki'] ) ? $contract_titles['cayma_hakki'] : null;
-		$ozel_sozlesme_2_baslik = isset( $contract_titles['custom'] ) ? $contract_titles['custom'] : null;
-
 		global $wpdb;
 
 		// Check if contracts already exist for this order
@@ -240,69 +220,36 @@ class IN_MSS_SiparisSonrasi {
 	private function email_icerik( $order ) {
 		$order_id = $order->get_id();
 
-		// Bu siparis icin daha once e-posta gonderimi yapildi mi?
+		// Check if email was already sent for this order
 		$eposta_gonderildi_mi = $order->get_meta( '_in_mss_eposta_gonderildi_mi', true );
 
-		// daha önceden e-posta göndeirldiyse, sözleşmeleleri tekrar gönderme.
+		// Don't send contracts again if already sent
 		if ( 1 === $eposta_gonderildi_mi ) {
 			return;
 		}
 
 		update_post_meta( $order_id, '_in_mss_eposta_gonderildi_mi', 1 );
 
-		$render = $this->render_forms( $order_id );
+		// Get contracts from database (they should already be saved)
+		global $wpdb;
+		$contracts = $wpdb->get_results( $wpdb->prepare( 
+			"SELECT * FROM {$wpdb->prefix}hezarfen_contracts WHERE order_id=%d ORDER BY created_at ASC", 
+			$order_id 
+		) );
 
-		$intense_obf = $render['obf'];
-		$intense_mss = $render['mss'];
-
-		$ozel_sozlesme_1_content = $render['ozel_sozlesme_1_content'];
-		$ozel_sozlesme_2_content = $render['ozel_sozlesme_2_content'];
-
-		// Get active contracts from the new dynamic system
-		$active_contracts = \Hezarfen\Inc\MSS\Core\Contract_Manager::get_active_contracts();
-		$contract_titles = array();
-		
-		foreach ( $active_contracts as $contract ) {
-			$contract_titles[ $contract['type'] ] = $contract['name'];
+		if ( empty( $contracts ) ) {
+			return;
 		}
-		
-		// Set titles for backward compatibility (these are used in email display)
-		$ozel_sozlesme_1_baslik = isset( $contract_titles['cayma_hakki'] ) ? $contract_titles['cayma_hakki'] : null;
-		$ozel_sozlesme_2_baslik = isset( $contract_titles['custom'] ) ? $contract_titles['custom'] : null;
-		
-		// Check if contracts exist
-		$has_ozel_sozlesme_1 = ! empty( $ozel_sozlesme_1_baslik );
-		$has_ozel_sozlesme_2 = ! empty( $ozel_sozlesme_2_baslik );
 
-		if( $has_ozel_sozlesme_1 ):
-		?>
-		<h3><?php echo esc_html( $ozel_sozlesme_1_baslik ); ?></h3>
-		<div style="height:300px;overflow:scroll;margin-bottom:15px;border:1px solid #dddddd;padding:15px">
-			<?php echo wp_kses_post( $ozel_sozlesme_1_content ); ?>
-		</div>
-		<?php
-		endif;
-
-		if( $has_ozel_sozlesme_2 ):
+		// Display each contract dynamically
+		foreach ( $contracts as $contract ) {
 			?>
-			<h3><?php echo esc_html( $ozel_sozlesme_2_baslik ); ?></h3>
+			<h3><?php echo esc_html( $contract->contract_name ); ?></h3>
 			<div style="height:300px;overflow:scroll;margin-bottom:15px;border:1px solid #dddddd;padding:15px">
-				<?php echo wp_kses_post( $ozel_sozlesme_2_content ); ?>
+				<?php echo wp_kses_post( $contract->contract_content ); ?>
 			</div>
 			<?php
-		endif;
-		?>
-
-		<h3><?php esc_html_e( 'Preliminary Information Form', 'intense-mss-for-woocommerce' ); ?></h3>
-		<div style="height:300px;overflow:scroll;margin-bottom:15px;border:1px solid #dddddd;padding:15px">
-			<?php echo wp_kses_post( $intense_obf ); ?>
-		</div>
-
-		<h3><?php esc_html_e( 'Distance Sales Agreement', 'intense-mss-for-woocommerce' ); ?></h3>
-		<div style="height:300px;overflow:scroll;margin-bottom:15px;border:1px solid #dddddd;padding:15px">
-			<?php echo wp_kses_post( $intense_mss ); ?>
-		</div>
-		<?php
+		}
 	}
 
 	/**
@@ -411,58 +358,6 @@ class IN_MSS_SiparisSonrasi {
 		return $dinamik_form;
 	}
 
-	/**
-	 * Render form
-	 *
-	 * @param  int $order_id WC Order ID.
-	 * @return array
-	 */
-	private function render_forms( $order_id ) {
-		// Use the new dynamic contracts system
-		$settings = get_option( 'hezarfen_mss_settings', array() );
-		$contracts = isset( $settings['contracts'] ) ? $settings['contracts'] : array();
-		
-		$contract_contents = array();
-		
-		// Initialize with empty values for backward compatibility
-		$contract_contents['mss'] = '';
-		$contract_contents['obf'] = '';
-		$contract_contents['ozel_sozlesme_1_content'] = '';
-		$contract_contents['ozel_sozlesme_2_content'] = '';
-		
-		// Process dynamic contracts
-		foreach ( $contracts as $contract ) {
-			// Skip disabled contracts
-			if ( empty( $contract['enabled'] ) ) {
-				continue;
-			}
-			
-			// Skip contracts without templates
-			if ( empty( $contract['template_id'] ) ) {
-				continue;
-			}
-			
-			$content = \Hezarfen\Inc\MSS\Core\Contract_Renderer::get_contract_content_from_template( $contract['template_id'], $order_id );
-			
-			if ( $content ) {
-				// Map known contract IDs to backward compatible keys
-				switch ( $contract['id'] ) {
-					case 'mss':
-						$contract_contents['mss'] = $content;
-						break;
-					case 'obf':
-						$contract_contents['obf'] = $content;
-						break;
-					default:
-						// For custom contracts, use dynamic keys
-						$contract_contents['custom_' . $contract['id']] = $content;
-						break;
-				}
-			}
-		}
-
-		return $contract_contents;
-	}
 }
 
 new IN_MSS_SiparisSonrasi();
