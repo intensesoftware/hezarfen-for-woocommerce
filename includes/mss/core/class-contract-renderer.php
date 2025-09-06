@@ -17,29 +17,49 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Contract_Renderer {
 
 	/**
-	 * Render all active contracts
+	 * Render contracts on checkout page using dynamic contracts from settings
 	 *
 	 * @param string $display_type Display type (inline|modal).
 	 * @return void
 	 */
 	public static function render_contracts( $display_type = 'inline' ) {
-		$contracts = Contract_Manager::get_active_contracts();
+		$settings = get_option( 'hezarfen_mss_settings', array() );
+		$contracts = isset( $settings['contracts'] ) ? $settings['contracts'] : array();
 		
 		if ( empty( $contracts ) ) {
 			return;
 		}
-
+		
 		$contract_contents = array();
 		
-		// Process each contract
 		foreach ( $contracts as $contract ) {
-			$content = self::get_contract_content( $contract );
+			// Skip disabled contracts
+			if ( empty( $contract['enabled'] ) ) {
+				continue;
+			}
+			
+			// Skip contracts without templates
+			if ( empty( $contract['template_id'] ) ) {
+				continue;
+			}
+			
+			$content = self::get_contract_content_from_template( $contract['template_id'] );
 			if ( $content ) {
 				$contract_contents[] = array(
-					'contract' => $contract,
-					'content'  => $content,
+					'contract' => array(
+						'id' => $contract['id'],
+						'name' => $contract['name'],
+						'type' => $contract['id'],
+						'enabled' => true,
+						'required' => true,
+					),
+					'content' => $content,
 				);
 			}
+		}
+
+		if ( empty( $contract_contents ) ) {
+			return;
 		}
 
 		// Render based on display type
@@ -51,20 +71,72 @@ class Contract_Renderer {
 	}
 
 	/**
-	 * Get contract content by processing stored content
+	 * Get contract content from settings-based template selection
+	 *
+	 * @param string $contract_type Contract type (mss, obf, cayma, ozel1, ozel2).
+	 * @param int    $order_id Optional order ID for order-specific variables.
+	 * @return string|false
+	 */
+	public static function get_contract_content_by_type( $contract_type, $order_id = null ) {
+		$settings = get_option( 'hezarfen_mss_settings', array() );
+		$template_key = $contract_type . '_template_id';
+		
+		if ( empty( $settings[ $template_key ] ) ) {
+			return false;
+		}
+		
+		$template_id = intval( $settings[ $template_key ] );
+		$template_post = get_post( $template_id );
+		
+		if ( ! $template_post || ! in_array( $template_post->post_status, array( 'publish' ) ) ) {
+			return false;
+		}
+		
+		$raw_content = $template_post->post_content;
+		
+		if ( empty( $raw_content ) ) {
+			return false;
+		}
+
+		$processed_content = wpautop( $raw_content );
+		
+		// Process template variables using the dedicated processor
+		$processed_content = Template_Processor::process_variables( $processed_content, $order_id );
+		
+		return $processed_content;
+	}
+
+	/**
+	 * Get contract content by processing stored content or WordPress page content (legacy)
 	 *
 	 * @param array $contract Contract data.
 	 * @return string|false
 	 */
 	private static function get_contract_content( $contract ) {
-		if ( empty( $contract['content'] ) ) {
+		$raw_content = '';
+		
+		// Check if content is stored directly (traditional MSS form)
+		if ( ! empty( $contract['content'] ) ) {
+			$raw_content = $contract['content'];
+		}
+		// Check if content should be retrieved from a WordPress page
+		elseif ( ! empty( $contract['template_id'] ) ) {
+			$template_post = get_post( $contract['template_id'] );
+			if ( $template_post && $template_post->post_type === 'page' ) {
+				$raw_content = $template_post->post_content;
+			} elseif ( $template_post && $template_post->post_type === 'intense_mss_form' ) {
+				$raw_content = $template_post->post_content;
+			}
+		}
+		
+		if ( empty( $raw_content ) ) {
 			return false;
 		}
 
-		$raw_content = wpautop( $contract['content'] );
+		$processed_content = wpautop( $raw_content );
 		
 		// Process template variables using the dedicated processor
-		$processed_content = Template_Processor::process_variables( $raw_content );
+		$processed_content = Template_Processor::process_variables( $processed_content );
 		
 		return $processed_content;
 	}

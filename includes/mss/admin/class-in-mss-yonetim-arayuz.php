@@ -50,16 +50,51 @@ class Intense_MSS_Yonetim_Arayuzu {
 	}
 
 	/**
-	 * Mevcut sozlesme taslaklari
+	 * Mevcut sozlesme taslaklari (MSS templates + WordPress pages)
 	 *
 	 * @return array
 	 */
 	public function mevcut_sozlesme_taslaklari_liste() {
-		$args = array(
+		$templates = array();
+		
+		// Get MSS form templates
+		$mss_templates = get_posts( array(
 			'post_type' => 'intense_mss_form',
-		);
-
-		return get_posts( $args );
+			'post_status' => 'publish',
+			'posts_per_page' => -1,
+			'orderby' => 'title',
+			'order' => 'ASC',
+		) );
+		
+		// Get WordPress pages
+		$pages = get_posts( array(
+			'post_type' => 'page',
+			'post_status' => 'publish',
+			'posts_per_page' => -1,
+			'orderby' => 'title',
+			'order' => 'ASC',
+		) );
+		
+		// Add MSS templates with prefix
+		foreach ( $mss_templates as $template ) {
+			$template->post_title = '[MSS] ' . $template->post_title;
+			$template->template_type = 'mss_form';
+			$templates[] = $template;
+		}
+		
+		// Add pages with prefix
+		foreach ( $pages as $page ) {
+			$page->post_title = '[Sayfa] ' . $page->post_title;
+			$page->template_type = 'page';
+			$templates[] = $page;
+		}
+		
+		// Sort combined array by title
+		usort( $templates, function( $a, $b ) {
+			return strcmp( $a->post_title, $b->post_title );
+		} );
+		
+		return $templates;
 	}
 
 	/**

@@ -408,41 +408,22 @@ class IN_MSS_SiparisSonrasi {
 	 * @return array
 	 */
 	private function render_forms( $order_id ) {
-		// Use the new dynamic contract system
-		$active_contracts = \Hezarfen\Inc\MSS\Core\Contract_Manager::get_active_contracts();
-		
+		// Use the new settings-based template system
 		$contract_contents = array();
 		
-		// Process each active contract
-		foreach ( $active_contracts as $contract ) {
-			if ( ! empty( $contract['content'] ) ) {
-				$raw_content = wpautop( $contract['content'] );
-				$processed_content = \Hezarfen\Inc\MSS\Core\Template_Processor::process_variables( $raw_content, $order_id );
-				
-				// Map contract types to expected array keys for backward compatibility
-				switch ( $contract['type'] ) {
-					case 'mesafeli_satis_sozlesmesi':
-						$contract_contents['mss'] = $processed_content;
-						break;
-					case 'on_bilgilendirme_formu':
-						$contract_contents['obf'] = $processed_content;
-						break;
-					case 'cayma_hakki':
-					case 'custom':
-						// For custom contracts, use a dynamic key
-						$contract_contents['custom_' . $contract['id']] = $processed_content;
-						break;
-				}
-			}
+		// Get contract content using the new settings-based approach
+		$contract_contents['mss'] = \Hezarfen\Inc\MSS\Core\Contract_Renderer::get_contract_content_by_type( 'mss', $order_id ) ?: '';
+		$contract_contents['obf'] = \Hezarfen\Inc\MSS\Core\Contract_Renderer::get_contract_content_by_type( 'obf', $order_id ) ?: '';
+		$contract_contents['ozel_sozlesme_1_content'] = \Hezarfen\Inc\MSS\Core\Contract_Renderer::get_contract_content_by_type( 'cayma', $order_id ) ?: '';
+		$contract_contents['ozel_sozlesme_2_content'] = \Hezarfen\Inc\MSS\Core\Contract_Renderer::get_contract_content_by_type( 'ozel1', $order_id ) ?: '';
+		
+		// Add additional custom contract if configured
+		$ozel2_content = \Hezarfen\Inc\MSS\Core\Contract_Renderer::get_contract_content_by_type( 'ozel2', $order_id );
+		if ( $ozel2_content ) {
+			$contract_contents['ozel_sozlesme_3_content'] = $ozel2_content;
 		}
 
-		// Ensure backward compatibility by providing empty values for missing contracts
-		return array_merge( array(
-			'mss' => '',
-			'obf' => '',
-			'ozel_sozlesme_1_content' => '',
-			'ozel_sozlesme_2_content' => ''
-		), $contract_contents );
+		return $contract_contents;
 	}
 }
 

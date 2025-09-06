@@ -33,6 +33,61 @@ class Contract_Management_Page {
 	}
 
 	/**
+	 * Get template options for dropdown (MSS forms + WordPress pages)
+	 *
+	 * @return string
+	 */
+	private function get_template_options() {
+		$options = '';
+		
+		// Get MSS form templates
+		$mss_templates = get_posts( array(
+			'post_type' => 'intense_mss_form',
+			'post_status' => 'publish',
+			'posts_per_page' => -1,
+			'orderby' => 'title',
+			'order' => 'ASC',
+		) );
+		
+		// Get WordPress pages
+		$pages = get_posts( array(
+			'post_type' => 'page',
+			'post_status' => 'publish',
+			'posts_per_page' => -1,
+			'orderby' => 'title',
+			'order' => 'ASC',
+		) );
+		
+		// Add MSS templates with prefix
+		if ( ! empty( $mss_templates ) ) {
+			$options .= '<optgroup label="' . esc_attr__( 'MSS Templates', 'hezarfen-for-woocommerce' ) . '">';
+			foreach ( $mss_templates as $template ) {
+				$options .= sprintf(
+					'<option value="%d" data-type="mss_form">[MSS] %s</option>',
+					$template->ID,
+					esc_html( $template->post_title )
+				);
+			}
+			$options .= '</optgroup>';
+		}
+		
+		// Add pages with prefix
+		if ( ! empty( $pages ) ) {
+			$options .= '<optgroup label="' . esc_attr__( 'WordPress Pages', 'hezarfen-for-woocommerce' ) . '">';
+			foreach ( $pages as $page ) {
+				$options .= sprintf(
+					'<option value="%d" data-type="page">[Sayfa] %s</option>',
+					$page->ID,
+					esc_html( $page->post_title )
+				);
+			}
+			$options .= '</optgroup>';
+		}
+		
+		return $options;
+	}
+
+	/**
 	 * Enqueue admin scripts
 	 *
 	 * @param string $hook_suffix Current admin page hook suffix.
@@ -265,6 +320,32 @@ class Contract_Management_Page {
 						<table class="form-table">
 							<tr>
 								<th scope="row">
+									<label for="content-source"><?php esc_html_e( 'Content Source', 'hezarfen-for-woocommerce' ); ?></label>
+								</th>
+								<td>
+									<select id="content-source" name="content_source">
+										<option value="manual"><?php esc_html_e( 'Manual Content', 'hezarfen-for-woocommerce' ); ?></option>
+										<option value="template"><?php esc_html_e( 'From Template', 'hezarfen-for-woocommerce' ); ?></option>
+									</select>
+									<p class="description"><?php esc_html_e( 'Choose whether to create content manually or use an existing template.', 'hezarfen-for-woocommerce' ); ?></p>
+								</td>
+							</tr>
+							
+							<tr id="template-selection-row" style="display: none;">
+								<th scope="row">
+									<label for="template-select"><?php esc_html_e( 'Select Template', 'hezarfen-for-woocommerce' ); ?></label>
+								</th>
+								<td>
+									<select id="template-select" name="template_id">
+										<option value=""><?php esc_html_e( 'Choose a template...', 'hezarfen-for-woocommerce' ); ?></option>
+										<?php echo $this->get_template_options(); ?>
+									</select>
+									<p class="description"><?php esc_html_e( 'Select a WordPress page or MSS form to use as template content.', 'hezarfen-for-woocommerce' ); ?></p>
+								</td>
+							</tr>
+							
+							<tr id="manual-content-row">
+								<th scope="row">
 									<label for="contract-content-editor"><?php esc_html_e( 'Content', 'hezarfen-for-woocommerce' ); ?></label>
 								</th>
 								<td>
@@ -386,16 +467,31 @@ class Contract_Management_Page {
 		}
 
 		$contract_id = sanitize_text_field( $_POST['contract_id'] );
-		$content = wp_kses_post( $_POST['contract_content'] );
-
+		$content_source = sanitize_text_field( $_POST['content_source'] ?? 'manual' );
+		
 		// Get existing contract
 		$contract = Contract_Manager::get_contract( $contract_id );
 		if ( ! $contract ) {
 			wp_send_json_error( __( 'Contract not found.', 'hezarfen-for-woocommerce' ) );
 		}
 
-		// Update only the content
-		$contract['content'] = $content;
+		// Handle content based on source
+		if ( $content_source === 'template' ) {
+			$template_id = intval( $_POST['template_id'] ?? 0 );
+			if ( $template_id ) {
+				// Clear manual content and set template ID
+				$contract['content'] = '';
+				$contract['template_id'] = $template_id;
+			} else {
+				wp_send_json_error( __( 'Please select a template.', 'hezarfen-for-woocommerce' ) );
+			}
+		} else {
+			// Manual content
+			$content = wp_kses_post( $_POST['contract_content'] );
+			$contract['content'] = $content;
+			// Clear template ID when using manual content
+			$contract['template_id'] = '';
+		}
 
 		// Save contract
 		$result = Contract_Manager::save_contract( $contract );

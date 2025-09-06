@@ -20,6 +20,7 @@
             $(document).on('click', '#save-content', this.saveContent);
             $(document).on('click', '#cancel-contract, #cancel-content, .hezarfen-modal-close', this.hideModal);
             $(document).on('click', '.hezarfen-modal', this.handleModalClick);
+            $(document).on('change', '#content-source', this.toggleContentSource);
         },
 
         showAddModal: function(e) {
@@ -94,11 +95,23 @@
                         $('#content-contract-id').val(response.data.id);
                         $('#content-modal-title').text('Edit Content: ' + response.data.name);
                         
-                        // Set content in TinyMCE editor
-                        if (typeof tinyMCE !== 'undefined' && tinyMCE.get('contract-content-editor')) {
-                            tinyMCE.get('contract-content-editor').setContent(response.data.content || '');
+                        // Check if using template or manual content
+                        if (response.data.template_id && response.data.template_id > 0) {
+                            // Using template
+                            $('#content-source').val('template');
+                            $('#template-select').val(response.data.template_id);
+                            ContractManager.toggleContentSource();
                         } else {
-                            $('#contract-content-editor').val(response.data.content || '');
+                            // Using manual content
+                            $('#content-source').val('manual');
+                            ContractManager.toggleContentSource();
+                            
+                            // Set content in TinyMCE editor
+                            if (typeof tinyMCE !== 'undefined' && tinyMCE.get('contract-content-editor')) {
+                                tinyMCE.get('contract-content-editor').setContent(response.data.content || '');
+                            } else {
+                                $('#contract-content-editor').val(response.data.content || '');
+                            }
                         }
                     } else {
                         ContractManager.showNotice(response.data || 'Failed to load contract data', 'error');
@@ -175,13 +188,31 @@
             
             var $button = $(this);
             var originalText = $button.text();
+            var contentSource = $('#content-source').val();
+            var data = {
+                action: 'hezarfen_save_content',
+                nonce: hezarfen_contract_ajax.nonce,
+                contract_id: $('#content-contract-id').val(),
+                content_source: contentSource
+            };
 
-            // Get content from TinyMCE editor
-            var content = '';
-            if (typeof tinyMCE !== 'undefined' && tinyMCE.get('contract-content-editor')) {
-                content = tinyMCE.get('contract-content-editor').getContent();
+            if (contentSource === 'template') {
+                // Template mode
+                var templateId = $('#template-select').val();
+                if (!templateId) {
+                    ContractManager.showNotice('Please select a template.', 'error');
+                    return;
+                }
+                data.template_id = templateId;
             } else {
-                content = $('#contract-content-editor').val();
+                // Manual content mode
+                var content = '';
+                if (typeof tinyMCE !== 'undefined' && tinyMCE.get('contract-content-editor')) {
+                    content = tinyMCE.get('contract-content-editor').getContent();
+                } else {
+                    content = $('#contract-content-editor').val();
+                }
+                data.contract_content = content;
             }
 
             // Disable button and show loading
@@ -190,12 +221,7 @@
             $.ajax({
                 url: hezarfen_contract_ajax.ajax_url,
                 type: 'POST',
-                data: {
-                    action: 'hezarfen_save_content',
-                    nonce: hezarfen_contract_ajax.nonce,
-                    contract_id: $('#content-contract-id').val(),
-                    contract_content: content
-                },
+                data: data,
                 success: function(response) {
                     if (response.success) {
                         ContractManager.showNotice(response.data.message, 'success');
@@ -213,6 +239,18 @@
                     $button.prop('disabled', false).text(originalText);
                 }
             });
+        },
+
+        toggleContentSource: function() {
+            var contentSource = $('#content-source').val();
+            
+            if (contentSource === 'template') {
+                $('#template-selection-row').show();
+                $('#manual-content-row').hide();
+            } else {
+                $('#template-selection-row').hide();
+                $('#manual-content-row').show();
+            }
         },
 
         deleteContract: function(e) {

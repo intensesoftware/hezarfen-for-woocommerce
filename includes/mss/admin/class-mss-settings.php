@@ -93,21 +93,21 @@ class MSS_Settings {
 			),
 			
 			array(
-				'title' => __( 'Sözleşme Yönetimi', 'hezarfen-for-woocommerce' ),
+				'title' => __( 'Sözleşme Şablonları', 'hezarfen-for-woocommerce' ),
 				'type'  => 'title',
-				'desc'  => __( 'Sözleşme taslakları oluşturun ve yönetin.', 'hezarfen-for-woocommerce' ),
-				'id'    => 'hezarfen_mss_management_title'
+				'desc'  => __( 'Sözleşme şablonlarını yönetin. + butonu ile yeni sözleşme ekleyebilir, X butonu ile silebilirsiniz.', 'hezarfen-for-woocommerce' ),
+				'id'    => 'hezarfen_mss_templates_title'
 			),
 			
 			array(
-				'title' => __( 'Sözleşme Taslakları', 'hezarfen-for-woocommerce' ),
-				'type'  => 'mss_contract_management',
-				'id'    => 'hezarfen_mss_contract_management',
+				'title' => __( 'Aktif Sözleşmeler', 'hezarfen-for-woocommerce' ),
+				'type'  => 'mss_dynamic_contracts',
+				'id'    => 'hezarfen_mss_dynamic_contracts',
 			),
 			
 			array(
 				'type' => 'sectionend',
-				'id'   => 'hezarfen_mss_management_title'
+				'id'   => 'hezarfen_mss_templates_title'
 			),
 		);
 		
@@ -115,12 +115,13 @@ class MSS_Settings {
 	}
 	
 	/**
-	 * Get contract templates for dropdown
+	 * Get template options for dropdown (MSS forms + WordPress pages)
 	 */
-	private function get_contract_templates() {
-		$templates = array( '' => __( 'Seçin...', 'hezarfen-for-woocommerce' ) );
+	private function get_template_options() {
+		$templates = array( '' => __( 'Şablon seçin...', 'hezarfen-for-woocommerce' ) );
 		
-		$posts = get_posts( array(
+		// Get MSS form templates
+		$mss_templates = get_posts( array(
 			'post_type'      => 'intense_mss_form',
 			'post_status'    => 'publish',
 			'posts_per_page' => -1,
@@ -128,8 +129,23 @@ class MSS_Settings {
 			'order'          => 'ASC',
 		) );
 		
-		foreach ( $posts as $post ) {
-			$templates[ $post->ID ] = $post->post_title;
+		// Get WordPress pages
+		$pages = get_posts( array(
+			'post_type'      => 'page',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'orderby'        => 'title',
+			'order'          => 'ASC',
+		) );
+		
+		// Add MSS templates with prefix
+		foreach ( $mss_templates as $template ) {
+			$templates[ $template->ID ] = '[MSS] ' . $template->post_title;
+		}
+		
+		// Add pages with prefix
+		foreach ( $pages as $page ) {
+			$templates[ $page->ID ] = '[Sayfa] ' . $page->post_title;
 		}
 		
 		return $templates;
@@ -186,26 +202,196 @@ class MSS_Settings {
 	 */
 	private function init_mss_admin() {
 		// Post types are handled by the original MSS admin class
-		// Just add custom field type for contract management
-		add_action( 'woocommerce_admin_field_mss_contract_management', array( $this, 'output_contract_management' ) );
+		// Add custom field type for dynamic contract management
+		add_action( 'woocommerce_admin_field_mss_dynamic_contracts', array( $this, 'output_dynamic_contracts' ) );
 	}
-	
 
-
-	
 	/**
-	 * Output contract management field
+	 * Output dynamic contracts management field
 	 */
-	public function output_contract_management( $value ) {
-		// Create a temporary instance just for rendering
-		$management_page = new \Hezarfen\Inc\MSS\Admin\Contract_Management_Page();
+	public function output_dynamic_contracts( $value ) {
+		$settings = get_option( 'hezarfen_mss_settings', array() );
+		$contracts = isset( $settings['contracts'] ) ? $settings['contracts'] : array();
+		
+		// Set default contracts if empty
+		if ( empty( $contracts ) ) {
+			$contracts = array(
+				array(
+					'id' => 'mss',
+					'name' => 'Mesafeli Satış Sözleşmesi',
+					'template_id' => '',
+					'enabled' => true,
+				),
+				array(
+					'id' => 'obf',
+					'name' => 'Ön Bilgilendirme Formu',
+					'template_id' => '',
+					'enabled' => true,
+				),
+			);
+		}
+		
+		$template_options = $this->get_template_options();
 		?>
 		<tr valign="top">
 			<th scope="row" class="titledesc">
 				<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 			</th>
 			<td class="forminp">
-				<?php $management_page->render_contract_management(); ?>
+				<div id="mss-dynamic-contracts">
+					<div id="contracts-list">
+						<?php foreach ( $contracts as $index => $contract ): ?>
+							<div class="contract-item" data-index="<?php echo esc_attr( $index ); ?>">
+								<div class="contract-fields">
+									<div class="contract-field">
+										<label><?php esc_html_e( 'Sözleşme Adı:', 'hezarfen-for-woocommerce' ); ?></label>
+										<input type="text" 
+											   name="hezarfen_mss_settings[contracts][<?php echo esc_attr( $index ); ?>][name]" 
+											   value="<?php echo esc_attr( $contract['name'] ); ?>" 
+											   class="regular-text" />
+									</div>
+									<div class="contract-field">
+										<label><?php esc_html_e( 'Şablon:', 'hezarfen-for-woocommerce' ); ?></label>
+										<select name="hezarfen_mss_settings[contracts][<?php echo esc_attr( $index ); ?>][template_id]" class="regular-text">
+											<?php foreach ( $template_options as $option_value => $option_label ): ?>
+												<option value="<?php echo esc_attr( $option_value ); ?>" 
+													<?php selected( $contract['template_id'], $option_value ); ?>>
+													<?php echo esc_html( $option_label ); ?>
+												</option>
+											<?php endforeach; ?>
+										</select>
+									</div>
+									<div class="contract-field">
+										<label>
+											<input type="checkbox" 
+												   name="hezarfen_mss_settings[contracts][<?php echo esc_attr( $index ); ?>][enabled]" 
+												   value="1" 
+												   <?php checked( !empty( $contract['enabled'] ) ); ?> />
+											<?php esc_html_e( 'Etkin', 'hezarfen-for-woocommerce' ); ?>
+										</label>
+									</div>
+									<div class="contract-actions">
+										<button type="button" class="button remove-contract" title="<?php esc_attr_e( 'Sözleşmeyi Sil', 'hezarfen-for-woocommerce' ); ?>">×</button>
+									</div>
+								</div>
+								<input type="hidden" name="hezarfen_mss_settings[contracts][<?php echo esc_attr( $index ); ?>][id]" value="<?php echo esc_attr( $contract['id'] ); ?>" />
+							</div>
+						<?php endforeach; ?>
+					</div>
+					<div class="add-contract-section">
+						<button type="button" id="add-new-contract" class="button button-secondary">
+							+ <?php esc_html_e( 'Yeni Sözleşme Ekle', 'hezarfen-for-woocommerce' ); ?>
+						</button>
+					</div>
+				</div>
+				
+				<style>
+				#mss-dynamic-contracts {
+					max-width: 800px;
+				}
+				.contract-item {
+					background: #f9f9f9;
+					border: 1px solid #ddd;
+					padding: 15px;
+					margin-bottom: 10px;
+					border-radius: 4px;
+				}
+				.contract-fields {
+					display: flex;
+					align-items: center;
+					gap: 15px;
+					flex-wrap: wrap;
+				}
+				.contract-field {
+					display: flex;
+					flex-direction: column;
+					min-width: 150px;
+				}
+				.contract-field label {
+					font-weight: 600;
+					margin-bottom: 5px;
+				}
+				.contract-actions {
+					margin-left: auto;
+				}
+				.remove-contract {
+					background: #dc3232;
+					color: white;
+					border: none;
+					width: 30px;
+					height: 30px;
+					border-radius: 50%;
+					font-size: 18px;
+					line-height: 1;
+					cursor: pointer;
+				}
+				.remove-contract:hover {
+					background: #a00;
+				}
+				.add-contract-section {
+					margin-top: 15px;
+				}
+				</style>
+				
+				<script>
+				jQuery(document).ready(function($) {
+					let contractIndex = <?php echo count( $contracts ); ?>;
+					
+					// Add new contract
+					$('#add-new-contract').on('click', function() {
+						const templateOptions = <?php echo json_encode( $template_options ); ?>;
+						let optionsHtml = '';
+						
+						for (const [value, label] of Object.entries(templateOptions)) {
+							optionsHtml += `<option value="${value}">${label}</option>`;
+						}
+						
+						const contractHtml = `
+							<div class="contract-item" data-index="${contractIndex}">
+								<div class="contract-fields">
+									<div class="contract-field">
+										<label><?php esc_html_e( 'Sözleşme Adı:', 'hezarfen-for-woocommerce' ); ?></label>
+										<input type="text" 
+											   name="hezarfen_mss_settings[contracts][${contractIndex}][name]" 
+											   value="" 
+											   class="regular-text" 
+											   placeholder="Sözleşme adını girin" />
+									</div>
+									<div class="contract-field">
+										<label><?php esc_html_e( 'Şablon:', 'hezarfen-for-woocommerce' ); ?></label>
+										<select name="hezarfen_mss_settings[contracts][${contractIndex}][template_id]" class="regular-text">
+											${optionsHtml}
+										</select>
+									</div>
+									<div class="contract-field">
+										<label>
+											<input type="checkbox" 
+												   name="hezarfen_mss_settings[contracts][${contractIndex}][enabled]" 
+												   value="1" 
+												   checked />
+											<?php esc_html_e( 'Etkin', 'hezarfen-for-woocommerce' ); ?>
+										</label>
+									</div>
+									<div class="contract-actions">
+										<button type="button" class="button remove-contract" title="<?php esc_attr_e( 'Sözleşmeyi Sil', 'hezarfen-for-woocommerce' ); ?>">×</button>
+									</div>
+								</div>
+								<input type="hidden" name="hezarfen_mss_settings[contracts][${contractIndex}][id]" value="contract_${contractIndex}" />
+							</div>
+						`;
+						
+						$('#contracts-list').append(contractHtml);
+						contractIndex++;
+					});
+					
+					// Remove contract
+					$(document).on('click', '.remove-contract', function() {
+						if (confirm('<?php esc_js( __( 'Bu sözleşmeyi silmek istediğinizden emin misiniz?', 'hezarfen-for-woocommerce' ) ); ?>')) {
+							$(this).closest('.contract-item').remove();
+						}
+					});
+				});
+				</script>
 			</td>
 		</tr>
 		<?php

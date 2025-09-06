@@ -16,6 +16,6 @@ trait In_MSS_Utility {
 	 * @return void
 	 */
 	private function hezarfen_aktif() {
-		return defined( 'WC_HEZARFEN_VERSION' );
+		return true;
 	}
 }
