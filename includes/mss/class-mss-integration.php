@@ -73,8 +73,7 @@ class MSS_Integration {
 		require_once HEZARFEN_MSS_PATH . 'core/class-contract-renderer.php';
 		require_once HEZARFEN_MSS_PATH . 'core/class-contract-validator.php';
 		
-		// Load activation/deactivation handler without licensing
-		require_once HEZARFEN_MSS_PATH . 'admin/class-mss-activation.php';
+		// MSS activation is now handled by Hezarfen's core installation
 		
 		// Load original MSS admin class for post types (without menu)
 		require_once HEZARFEN_MSS_PATH . 'admin/class-in-mss-yonetim-arayuz.php';
@@ -90,8 +89,7 @@ class MSS_Integration {
 	 * Initialize MSS functionality
 	 */
 	public function init_mss() {
-		// Initialize activation/deactivation
-		\Hezarfen\Inc\MSS\MSS_Activation::init();
+		// MSS initialization is now handled by Hezarfen's core
 		
 		// Initialize the original MSS admin class (for post types and meta boxes)
 		// This needs to be done early so post types are registered properly

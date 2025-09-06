@@ -108,31 +108,71 @@ class IN_MSS_SiparisSonrasi {
 
 		global $wpdb;
 
-		$kayitli_sozlesme_query  = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}intense_sozlesmeler WHERE order_id=%s", $order_id ) );
-		$toplam_kayitli_sozlesme = count( $kayitli_sozlesme_query );
+		// Check if contracts already exist for this order
+		$existing_contracts = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}hezarfen_contracts WHERE order_id=%s", $order_id ) );
 
-		/** Eğer sözleşme daha önceden kayıt edildiyse, tekrar işlem yapma */
-		if ( $toplam_kayitli_sozlesme > 0 ) {
+		/** If contracts already saved, don't process again */
+		if ( ! empty( $existing_contracts ) ) {
 			return;
 		}
 
-		$ip_adresi    = $this->get_client_ip();
-		$islem_zamani = current_time( 'mysql' );
+		$ip_address = $this->get_client_ip();
+		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] ) : '';
 
-		$wpdb->insert(
-			$wpdb->prefix . 'intense_sozlesmeler',
-			array(
-				'order_id'    => $order_id,
-				'mss_icerik'  => $intense_mss,
-				'obf_icerik'  => $intense_obf,
-				'ozel_sozlesme_1_baslik' => $ozel_sozlesme_1_baslik,
-				'ozel_sozlesme_1_icerik' => $ozel_sozlesme_1_content,
-				'ozel_sozlesme_2_baslik' => $ozel_sozlesme_2_baslik,
-				'ozel_sozlesme_2_icerik' => $ozel_sozlesme_2_content,
-				'ip_adresi'   => $ip_adresi,
-				'islem_zaman' => $islem_zamani,
-			)
-		);
+		// Save contracts dynamically based on active contracts
+		$contracts_to_save = array();
+		
+		// Add MSS contract if content exists
+		if ( ! empty( $intense_mss ) ) {
+			$contracts_to_save[] = array(
+				'type' => 'mss',
+				'name' => 'Mesafeli Satış Sözleşmesi',
+				'content' => $intense_mss,
+			);
+		}
+		
+		// Add OBF contract if content exists
+		if ( ! empty( $intense_obf ) ) {
+			$contracts_to_save[] = array(
+				'type' => 'obf',
+				'name' => 'Ön Bilgilendirme Formu',
+				'content' => $intense_obf,
+			);
+		}
+		
+		// Add custom contract 1 if content exists
+		if ( ! empty( $ozel_sozlesme_1_content ) && ! empty( $ozel_sozlesme_1_baslik ) ) {
+			$contracts_to_save[] = array(
+				'type' => 'custom_1',
+				'name' => $ozel_sozlesme_1_baslik,
+				'content' => $ozel_sozlesme_1_content,
+			);
+		}
+		
+		// Add custom contract 2 if content exists
+		if ( ! empty( $ozel_sozlesme_2_content ) && ! empty( $ozel_sozlesme_2_baslik ) ) {
+			$contracts_to_save[] = array(
+				'type' => 'custom_2',
+				'name' => $ozel_sozlesme_2_baslik,
+				'content' => $ozel_sozlesme_2_content,
+			);
+		}
+		
+		// Save each contract as a separate record
+		foreach ( $contracts_to_save as $contract ) {
+			$wpdb->insert(
+				$wpdb->prefix . 'hezarfen_contracts',
+				array(
+					'order_id'        => $order_id,
+					'contract_type'   => $contract['type'],
+					'contract_name'   => $contract['name'],
+					'contract_content' => $contract['content'],
+					'ip_address'      => $ip_address,
+					'user_agent'      => $user_agent,
+				),
+				array( '%d', '%s', '%s', '%s', '%s', '%s' )
+			);
+		}
 
 		/**
 		 *
@@ -142,41 +182,24 @@ class IN_MSS_SiparisSonrasi {
 
 		$yonetici_sozlesme_saklama_eposta_adresi = $uygulama_ayarlar['yonetici_sozlesme_saklama_eposta_adresi'];
 
-		if ( $yonetici_sozlesme_saklama_eposta_adresi ) {
-			$konu = sprintf( '%s Nolu Sipariş Mesafeli Satış Sözleşmesi ve Ön Bilgilendirme Formu', $order_id );
+		if ( $yonetici_sozlesme_saklama_eposta_adresi && ! empty( $contracts_to_save ) ) {
+			$subject = sprintf( 'Order #%s - Contracts and Agreements', $order_id );
 
-			$mesaj = '<p>' . esc_html__( 'Tarih:', 'intense-mss-for-woocommerce' ) . ' ' . esc_html( date_i18n( 'd/m/Y', strtotime( $islem_zamani ) ) ) . '</p>';
+			$message = '<p><strong>' . esc_html__( 'Date:', 'hezarfen-for-woocommerce' ) . '</strong> ' . esc_html( date_i18n( 'd/m/Y' ) ) . '</p>';
+			$message .= '<p><strong>' . esc_html__( 'Time:', 'hezarfen-for-woocommerce' ) . '</strong> ' . esc_html( date_i18n( 'H:i:s' ) ) . '</p>';
+			$message .= '<p><strong>' . esc_html__( 'IP Address:', 'hezarfen-for-woocommerce' ) . '</strong> ' . esc_html( $ip_address ) . '</p>';
+			$message .= '<p><strong>' . esc_html__( 'Order Number:', 'hezarfen-for-woocommerce' ) . '</strong> ' . $order->get_order_number() . '</p>';
+			$message .= '<hr>';
 
-			$mesaj .= '<p>' . esc_html__( 'Zaman:', 'intense-mss-for-woocommerce' ) . ' ' . esc_html( date_i18n( 'H:i:s', strtotime( $islem_zamani ) ) ) . '</p>';
-
-			$mesaj .= '<p>' . esc_html__( 'IP Adresi:', 'intense-mss-for-woocommerce' ) . ' ' . esc_html( $ip_adresi ) . '</p>';
-
-			$mesaj .= '<p>' . esc_html__( 'Sipariş No:', 'intense-mss-for-woocommerce' ) . ' ' . $order->get_order_number() . '</p>';
-
-			if( $has_ozel_sozlesme_1 ) {
-				$mesaj .= '<h2>' . esc_html( $ozel_sozlesme_1_baslik ) . '</h2>';
-
-				$mesaj .= sprintf( '<div>%s</div>', $ozel_sozlesme_1_content );
+			// Add each contract to the email
+			foreach ( $contracts_to_save as $contract ) {
+				$message .= '<h2>' . esc_html( $contract['name'] ) . '</h2>';
+				$message .= '<div>' . $contract['content'] . '</div>';
+				$message .= '<hr>';
 			}
-
-			if( $has_ozel_sozlesme_2 ) {
-				$mesaj .= '<h2>' . esc_html( $ozel_sozlesme_2_baslik ) . '</h2>';
-
-				$mesaj .= sprintf( '<div>%s</div>', $ozel_sozlesme_2_content );
-			}
-
-			$mesaj .= '<h2>' . __( 'Mesafeli Satış Sözleşmesi:', 'intense-mss-for-woocommerce' ) . '</h2>';
-
-			$mesaj .= sprintf( '<div>%s</div>', $intense_mss );
-
-			$mesaj .= '<h2>' . __( 'Ön Bilgilendirme Formu:', 'intense-mss-for-woocommerce' ) . '</h2>';
-
-			$mesaj .= sprintf( '<div>%s</div>', $intense_obf );
 
 			add_filter( 'wp_mail_content_type', array( $this, 'intense_wp_mail_formati_html_yap' ) );
-
-			wp_mail( $yonetici_sozlesme_saklama_eposta_adresi, $konu, $mesaj );
-
+			wp_mail( $yonetici_sozlesme_saklama_eposta_adresi, $subject, $message );
 			remove_filter( 'wp_mail_content_type', array( $this, 'intense_wp_mail_formati_html_yap' ) );
 		}
 	}

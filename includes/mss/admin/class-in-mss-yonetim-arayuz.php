@@ -224,78 +224,43 @@ class Intense_MSS_Yonetim_Arayuzu {
 
 		$this->sayfa_basi( $sayfa );
 
-		if ( 'mss' === $sayfa ) {
-
-			$id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
-
+		// Handle contract viewing (any contract type) or search
+		if ( isset( $_GET['id'] ) && ! empty( $_GET['id'] ) ) {
+			// This is a contract view request
+			$id = intval( $_GET['id'] );
+			$contract_type = isset( $_GET['type'] ) ? sanitize_text_field( $_GET['type'] ) : null;
+			
 			if ( ! $id ) {
+				echo '<p>' . esc_html__( 'Invalid contract ID.', 'hezarfen-for-woocommerce' ) . '</p>';
 				return;
 			}
-
-			$detaylar = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}intense_sozlesmeler WHERE id=%s", $id ) );
-			$icerik   = $detaylar->mss_icerik;
-
-			?>
-			<p><strong><?php echo esc_html__( 'Sipariş No:', 'intense-mss-for-woocommerce' ); ?></strong><?php echo esc_html( $detaylar->order_id ); ?><p>
-			<p><strong><?php echo esc_html__( 'Onay Tarihi:', 'intense-mss-for-woocommerce' ); ?></strong><?php echo esc_html( $detaylar->islem_zaman ); ?><p>
-			<h3 style="margin-top:30px"><?php echo esc_html__( 'Mesafeli Satış Sözleşmesi', 'intense-mss-for-woocommerce' ); ?></h3>
-			<?php
-			echo wp_kses_post( $icerik );
-
-		} elseif ( 'obf' === $sayfa ) {
-
-			$id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
-
-			if ( ! $id ) {
+			
+			// Build query - if type is specified, filter by it, otherwise just get by ID
+			if ( $contract_type ) {
+				$contract = $wpdb->get_row( $wpdb->prepare( 
+					"SELECT * FROM {$wpdb->prefix}hezarfen_contracts WHERE id=%d AND contract_type=%s", 
+					$id, $contract_type 
+				) );
+			} else {
+				$contract = $wpdb->get_row( $wpdb->prepare( 
+					"SELECT * FROM {$wpdb->prefix}hezarfen_contracts WHERE id=%d", 
+					$id 
+				) );
+			}
+			
+			if ( ! $contract ) {
+				echo '<p>' . esc_html__( 'Contract not found.', 'hezarfen-for-woocommerce' ) . '</p>';
 				return;
 			}
-
-			$detaylar = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}intense_sozlesmeler WHERE id=%s", $id ) );
-			$icerik   = $detaylar->obf_icerik;
-
+			
 			?>
-			<p><strong><?php echo esc_html__( 'Sipariş No:', 'intense-mss-for-woocommerce' ); ?></strong><?php echo esc_html( $detaylar->order_id ); ?></p>
-			<p><strong><?php echo esc_html__( 'Onay Tarihi:', 'intense-mss-for-woocommerce' ); ?></strong><?php echo esc_html( $detaylar->islem_zaman ); ?></p>
-			<h3 style="margin-top:30px"><?php echo esc_html__( 'Ön Bilgilendirme Formu', 'intense-mss-for-woocommerce' ); ?></h3>
-
+			<p><strong><?php echo esc_html__( 'Order ID:', 'hezarfen-for-woocommerce' ); ?></strong> <?php echo esc_html( $contract->order_id ); ?></p>
+			<p><strong><?php echo esc_html__( 'Contract Type:', 'hezarfen-for-woocommerce' ); ?></strong> <?php echo esc_html( $contract->contract_type ); ?></p>
+			<p><strong><?php echo esc_html__( 'Created Date:', 'hezarfen-for-woocommerce' ); ?></strong> <?php echo esc_html( $contract->created_at ); ?></p>
+			<p><strong><?php echo esc_html__( 'IP Address:', 'hezarfen-for-woocommerce' ); ?></strong> <?php echo esc_html( $contract->ip_address ); ?></p>
+			<h3 style="margin-top:30px"><?php echo esc_html( $contract->contract_name ); ?></h3>
 			<?php
-			echo wp_kses_post( $icerik );
-
-		} elseif ( 'ozel-sozlesme-1' === $sayfa ) {
-			$id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
-
-			if ( ! $id ) {
-				return;
-			}
-
-			$detaylar = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}intense_sozlesmeler WHERE id=%s", $id ) );
-			$icerik   = $detaylar->ozel_sozlesme_1_icerik;
-
-			?>
-			<p><strong><?php echo esc_html__( 'Sipariş No:', 'intense-mss-for-woocommerce' ); ?></strong><?php echo esc_html( $detaylar->order_id ); ?></p>
-			<p><strong><?php echo esc_html__( 'Onay Tarihi:', 'intense-mss-for-woocommerce' ); ?></strong><?php echo esc_html( $detaylar->islem_zaman ); ?></p>
-			<h3 style="margin-top:30px"><?php echo esc_html( $detaylar->ozel_sozlesme_1_baslik ); ?></h3>
-
-			<?php
-			echo wp_kses_post( $icerik );
-
-		}elseif ( 'ozel-sozlesme-2' === $sayfa ) {
-			$id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
-
-			if ( ! $id ) {
-				return;
-			}
-
-			$detaylar = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}intense_sozlesmeler WHERE id=%s", $id ) );
-			$icerik   = $detaylar->ozel_sozlesme_2_icerik;
-
-			?>
-			<p><strong><?php echo esc_html__( 'Sipariş No:', 'intense-mss-for-woocommerce' ); ?></strong><?php echo esc_html( $detaylar->order_id ); ?></p>
-			<p><strong><?php echo esc_html__( 'Onay Tarihi:', 'intense-mss-for-woocommerce' ); ?></strong><?php echo esc_html( $detaylar->islem_zaman ); ?></p>
-			<h3 style="margin-top:30px"><?php echo esc_html( $detaylar->ozel_sozlesme_2_baslik ); ?></h3>
-
-			<?php
-			echo wp_kses_post( $icerik );
+			echo wp_kses_post( $contract->contract_content );
 
 		} elseif ( 'arama' === $sayfa ) {
 			?>
@@ -306,37 +271,49 @@ class Intense_MSS_Yonetim_Arayuzu {
 			$siparis_no = isset( $_GET['siparis_no'] ) ? intval( $_GET['siparis_no'] ) : null;
 
 			if ( $siparis_no ) {
-				$sozlesme = $wpdb->get_results( $wpdb->prepare( "SELECT id, order_id, islem_zaman, ip_adresi FROM {$wpdb->prefix}intense_sozlesmeler WHERE order_id=%d", $siparis_no ) );
-				if ( $sozlesme ) {
-					$this->sozlesmeler_html_tablosu( $sozlesme );
+				$contracts = $wpdb->get_results( $wpdb->prepare( "SELECT id, order_id, contract_type, contract_name, created_at, ip_address FROM {$wpdb->prefix}hezarfen_contracts WHERE order_id=%d ORDER BY created_at DESC", $siparis_no ) );
+				if ( $contracts ) {
+					$this->contracts_html_table( $contracts );
 				} else {
 					?>
-					<p><strong><?php esc_html_e( 'Kayıt bulunamadı.', 'intense-mss-for-woocommerce' ); ?></strong></p>
+					<p><strong><?php esc_html_e( 'No records found.', 'hezarfen-for-woocommerce' ); ?></strong></p>
 					<?php
 				}
 			}
 		} else {
-			$toplam_sozlesme_sayisi = intval( $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}intense_sozlesmeler" ) );
-			$sayfa_sayisi           = ceil( $toplam_sozlesme_sayisi / self::SAYFA_BASI_SOZLESME_SAYISI );
+			// Group contracts by order_id to get unique orders
+			$total_orders = intval( $wpdb->get_var( "SELECT COUNT(DISTINCT order_id) FROM {$wpdb->prefix}hezarfen_contracts" ) );
+			$page_count = ceil( $total_orders / self::SAYFA_BASI_SOZLESME_SAYISI );
 
-			$sayfa_no = isset( $_GET['sayfa_no'] ) ? intval( $_GET['sayfa_no'] ) : 1;
-			if ( $sayfa_no < 1 || $sayfa_no > $sayfa_sayisi ) {
-				$sayfa_no = 1;
+			$page_no = isset( $_GET['sayfa_no'] ) ? intval( $_GET['sayfa_no'] ) : 1;
+			if ( $page_no < 1 || $page_no > $page_count ) {
+				$page_no = 1;
 			}
-			$limit_icin_baslangic = ( $sayfa_no - 1 ) * self::SAYFA_BASI_SOZLESME_SAYISI;
+			$limit_start = ( $page_no - 1 ) * self::SAYFA_BASI_SOZLESME_SAYISI;
 
-			$sozlesmeler               = $wpdb->get_results( $wpdb->prepare( "SELECT id, order_id, islem_zaman, ozel_sozlesme_1_baslik, ozel_sozlesme_2_baslik, ip_adresi FROM {$wpdb->prefix}intense_sozlesmeler ORDER BY id DESC LIMIT %d,%d", $limit_icin_baslangic, self::SAYFA_BASI_SOZLESME_SAYISI ) );
-			$sayfadaki_sozlesme_sayisi = count( $sozlesmeler );
+			// Get latest contract for each order (grouped by order_id)
+			$contracts = $wpdb->get_results( $wpdb->prepare( 
+				"SELECT c1.* FROM {$wpdb->prefix}hezarfen_contracts c1
+				INNER JOIN (
+					SELECT order_id, MAX(created_at) as max_date 
+					FROM {$wpdb->prefix}hezarfen_contracts 
+					GROUP BY order_id
+				) c2 ON c1.order_id = c2.order_id AND c1.created_at = c2.max_date
+				ORDER BY c1.created_at DESC 
+				LIMIT %d,%d", 
+				$limit_start, self::SAYFA_BASI_SOZLESME_SAYISI 
+			) );
+			$contracts_on_page = count( $contracts );
 
-			if ( $toplam_sozlesme_sayisi ) {
-				$this->sayfa_secici( $sayfa_no, $sayfa_sayisi, $sayfadaki_sozlesme_sayisi );
+			if ( $total_orders ) {
+				$this->sayfa_secici( $page_no, $page_count, $contracts_on_page );
 				$this->arama_kutusu();
 			}
 
-			$this->sozlesmeler_html_tablosu( $sozlesmeler );
+			$this->contracts_html_table( $contracts );
 
-			if ( $toplam_sozlesme_sayisi ) {
-				$this->sayfa_secici( $sayfa_no, $sayfa_sayisi, $sayfadaki_sozlesme_sayisi );
+			if ( $total_orders ) {
+				$this->sayfa_secici( $page_no, $page_count, $contracts_on_page );
 			}
 		}
 
@@ -381,54 +358,53 @@ class Intense_MSS_Yonetim_Arayuzu {
 	 *
 	 * @return void
 	 */
-	private function sozlesmeler_html_tablosu( $sozlesmeler ) {
+	private function contracts_html_table( $contracts ) {
+		if ( empty( $contracts ) ) {
+			echo '<p>' . esc_html__( 'No contracts found.', 'hezarfen-for-woocommerce' ) . '</p>';
+			return;
+		}
+		
+		global $wpdb;
 		?>
 		<div class="clear"></div>
 		<table class="intense-mss-agreements-table" border="1">
 			<thead align="left">
 			<tr>
-				<th><?php echo esc_html__( 'Sipariş No', 'intense-mss-for-woocommerce' ); ?></th>
-				<th><?php echo esc_html__( 'Mesafeli Satış Sözleşmesi', 'intense-mss-for-woocommerce' ); ?></th>
-				<th><?php echo esc_html__( 'Ön Bilgilendirme Formu', 'intense-mss-for-woocommerce' ); ?></th>
-				<th><?php echo esc_html__( 'Özel Sözleşme - 1', 'intense-mss-for-woocommerce' ); ?></th>
-				<th><?php echo esc_html__( 'Özel Sözleşme - 2', 'intense-mss-for-woocommerce' ); ?></th>
-				<th><?php echo esc_html__( 'IP Adresi', 'intense-mss-for-woocommerce' ); ?></th>
-				<th><?php echo esc_html__( 'Tarih', 'intense-mss-for-woocommerce' ); ?></th>
-				<th><?php echo esc_html__( 'Zaman', 'intense-mss-for-woocommerce' ); ?></th>
+				<th><?php echo esc_html__( 'Order ID', 'hezarfen-for-woocommerce' ); ?></th>
+				<th><?php echo esc_html__( 'Contract Type', 'hezarfen-for-woocommerce' ); ?></th>
+				<th><?php echo esc_html__( 'Contract Name', 'hezarfen-for-woocommerce' ); ?></th>
+				<th><?php echo esc_html__( 'IP Address', 'hezarfen-for-woocommerce' ); ?></th>
+				<th><?php echo esc_html__( 'Created Date', 'hezarfen-for-woocommerce' ); ?></th>
+				<th><?php echo esc_html__( 'Actions', 'hezarfen-for-woocommerce' ); ?></th>
 			</tr>
 			</thead>
 			<tbody>
-			<?php foreach ( $sozlesmeler as $sozlesme ) { ?>
+			<?php 
+			// Group contracts by order_id for display
+			$grouped_contracts = array();
+			foreach ( $contracts as $contract ) {
+				$grouped_contracts[$contract->order_id][] = $contract;
+			}
+			
+			foreach ( $grouped_contracts as $order_id => $order_contracts ) {
+				$first_contract = $order_contracts[0];
+				?>
 				<tr>
-					<td width="10%"><?php echo esc_html( $sozlesme->order_id ); ?></td>
-					<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-					<td width="15%"><a target='_blank' href="<?php echo wp_nonce_url( "admin.php?page=intense-mss-kayitli-sozlesmeler&sayfa=mss&id={$sozlesme->id}", self::NONCE_ACTION ); ?>"><?php echo esc_html__( 'Görüntüle', 'intense-mss-for-woocommerce' ); ?></a></td>
-					<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-					<td width="15%"><a target='_blank' href="<?php echo wp_nonce_url( "admin.php?page=intense-mss-kayitli-sozlesmeler&sayfa=obf&id={$sozlesme->id}", self::NONCE_ACTION ); ?>"><?php echo esc_html__( 'Görüntüle', 'intense-mss-for-woocommerce' ); ?></a></td>
-
-					<td width="15%">
-						<?php
-						if( ! is_null( $sozlesme->ozel_sozlesme_1_baslik ) ):
-							echo esc_html( $sozlesme->ozel_sozlesme_1_baslik ) ;
-						?>
-						- <a target='_blank' href="<?php echo wp_nonce_url( "admin.php?page=intense-mss-kayitli-sozlesmeler&sayfa=ozel-sozlesme-1&id={$sozlesme->id}", self::NONCE_ACTION ); ?>"><?php echo esc_html__( 'Görüntüle', 'intense-mss-for-woocommerce' ); ?>
-						</a>
-						<?php endif; ?>
-					</td>
-
-					<td width="15%">
-						<?php
-						if( ! is_null( $sozlesme->ozel_sozlesme_2_baslik ) ):
-							echo esc_html( $sozlesme->ozel_sozlesme_2_baslik ) ;
-						?>
-						- <a target='_blank' href="<?php echo wp_nonce_url( "admin.php?page=intense-mss-kayitli-sozlesmeler&sayfa=ozel-sozlesme-2&id={$sozlesme->id}", self::NONCE_ACTION ); ?>"><?php echo esc_html__( 'Görüntüle', 'intense-mss-for-woocommerce' ); ?>
-						</a>
-						<?php endif; ?>
-					</td>
-
-					<td width="10%"><?php echo esc_html( $sozlesme->ip_adresi ); ?></td>
-					<td width="10%"><?php echo esc_html( date_i18n( 'd/m/Y', strtotime( $sozlesme->islem_zaman ) ) ); ?></td>
-					<td width="10%"><?php echo esc_html( date_i18n( 'H:i:s', strtotime( $sozlesme->islem_zaman ) ) ); ?></td>
+					<td width="10%" rowspan="<?php echo count( $order_contracts ); ?>"><?php echo esc_html( $order_id ); ?></td>
+					<?php foreach ( $order_contracts as $index => $contract ) : ?>
+						<?php if ( $index > 0 ) echo '<tr>'; ?>
+						<td width="15%"><?php echo esc_html( $contract->contract_type ); ?></td>
+						<td width="25%"><?php echo esc_html( $contract->contract_name ); ?></td>
+						<td width="15%"><?php echo esc_html( $contract->ip_address ); ?></td>
+						<td width="15%"><?php echo esc_html( date_i18n( 'd/m/Y H:i:s', strtotime( $contract->created_at ) ) ); ?></td>
+						<td width="20%">
+							<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+							<a target='_blank' href="<?php echo wp_nonce_url( "admin.php?page=intense-mss-kayitli-sozlesmeler&sayfa=view&id={$contract->id}&type={$contract->contract_type}", self::NONCE_ACTION ); ?>" class="button button-small">
+								<?php echo esc_html__( 'View Contract', 'hezarfen-for-woocommerce' ); ?>
+							</a>
+						</td>
+						<?php if ( $index > 0 ) echo '</tr>'; ?>
+					<?php endforeach; ?>
 				</tr>
 			<?php } ?>
 			</tbody>
