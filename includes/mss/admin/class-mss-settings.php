@@ -149,8 +149,19 @@ class MSS_Settings {
 		
 		// Handle MSS specific settings save
 		if ( isset( $_POST['hezarfen_mss_settings'] ) && is_array( $_POST['hezarfen_mss_settings'] ) ) {
-			$mss_settings = array_map( 'sanitize_text_field', $_POST['hezarfen_mss_settings'] );
+			$mss_settings = $this->sanitize_settings_recursively( $_POST['hezarfen_mss_settings'] );
 			update_option( 'hezarfen_mss_settings', $mss_settings );
+		}
+	}
+	
+	/**
+	 * Recursively sanitize settings array
+	 */
+	private function sanitize_settings_recursively( $data ) {
+		if ( is_array( $data ) ) {
+			return array_map( array( $this, 'sanitize_settings_recursively' ), $data );
+		} else {
+			return sanitize_text_field( $data );
 		}
 	}
 	
