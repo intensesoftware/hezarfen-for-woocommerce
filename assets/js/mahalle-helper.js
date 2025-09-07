@@ -19,7 +19,12 @@ class hezarfen_mahalle_helper {
 		field = jQuery(field);
 		field.selectWoo({
 			width: '100%',
-			placeholder: hezarfen_mahalle_helper_backend.select_option_text
+			placeholder: hezarfen_mahalle_helper_backend.select_option_text,
+			language: {
+				noResults: function() {
+					return hezarfen_mahalle_helper_backend.no_results_text;
+				}
+			}
 		});
 	}
 
