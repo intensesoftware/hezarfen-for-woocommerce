@@ -50,10 +50,17 @@ class Template_Processor {
 			if ( $order_id && empty( $form_data ) ) {
 				$order = wc_get_order( $order_id );
 				if ( $order ) {
+					// Get TC number and decrypt it if needed
+					$tc_number = $order->get_meta( '_billing_hez_TC_number' );
+					if ( $tc_number ) {
+						// Try to decrypt the TC number
+						$tc_number = ( new \Hezarfen\Inc\Data\PostMetaEncryption() )->decrypt( $tc_number );
+					}
+					
 					$hezarfen_data = array(
 						'billing_hez_tax_office' => $order->get_meta( '_billing_hez_tax_office' ),
 						'billing_hez_tax_number' => $order->get_meta( '_billing_hez_tax_number' ),
-						'billing_hez_TC_number' => $order->get_meta( '_billing_hez_TC_number' ),
+						'billing_hez_TC_number' => $tc_number,
 					);
 				}
 			}
@@ -323,11 +330,18 @@ class Template_Processor {
 	 * @return string
 	 */
 	private static function process_hezarfen_support( $content, $form_data = array() ) {
+		// Get TC number and decrypt it if needed (for form data)
+		$tc_number = isset( $form_data['billing_hez_TC_number'] ) ? $form_data['billing_hez_TC_number'] : '';
+		if ( $tc_number ) {
+			// Try to decrypt the TC number if it's encrypted
+			$tc_number = ( new \Hezarfen\Inc\Data\PostMetaEncryption() )->decrypt( $tc_number );
+		}
+		
 		// Hezarfen invoice field replacements
 		$hezarfen_replacements = array(
 			'{{hezarfen_kurumsal_vergi_daire}}' => isset( $form_data['billing_hez_tax_office'] ) ? sanitize_text_field( $form_data['billing_hez_tax_office'] ) : '',
 			'{{hezarfen_kurumsal_vergi_no}}' => isset( $form_data['billing_hez_tax_number'] ) ? sanitize_text_field( $form_data['billing_hez_tax_number'] ) : '',
-			'{{hezarfen_bireysel_tc}}' => isset( $form_data['billing_hez_TC_number'] ) ? sanitize_text_field( $form_data['billing_hez_TC_number'] ) : '',
+			'{{hezarfen_bireysel_tc}}' => sanitize_text_field( $tc_number ),
 		);
 
 		// Replace Hezarfen field placeholders with actual values
