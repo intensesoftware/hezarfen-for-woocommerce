@@ -348,7 +348,7 @@ class Contract_Renderer {
 				$contract_links = array();
 				foreach ( $active_contracts as $contract ) {
 					$contract_name = $is_turkish ? self::get_ek( $contract['name'] ) : $contract['name'];
-					$contract_links[] = '<a href="#" class="contract-modal-link" data-contract-id="' . esc_attr( $contract['id'] ) . '">' . esc_html( $contract_name ) . '</a>';
+					$contract_links[] = '<a href="#" class="contract-modal-link" data-contract-id="' . esc_attr( $contract['id'] ) . '" data-contract-name="' . esc_attr( $contract['name'] ) . '">' . esc_html( $contract_name ) . '</a>';
 				}
 				
 				$combined_text = '';
@@ -392,9 +392,10 @@ class Contract_Renderer {
 								required
 							/>
 							<span><?php 
+								$contract_name = $is_turkish ? self::get_ek( $contract['name'] ) : $contract['name'];
 								printf( 
 									__( 'I have read and agree to the %s.', 'hezarfen-for-woocommerce' ), 
-									'<a href="#" class="contract-modal-link" data-contract-id="' . esc_attr( $contract['id'] ) . '">' . esc_html( $contract['name'] ) . '</a>'
+									'<a href="#" class="contract-modal-link" data-contract-id="' . esc_attr( $contract['id'] ) . '" data-contract-name="' . esc_attr( $contract['name'] ) . '">' . esc_html( $contract_name ) . '</a>'
 								);
 							?></span>
 						</label>
@@ -541,7 +542,7 @@ class Contract_Renderer {
 					allContractLinks.forEach(function(link) {
 						contracts.push({
 							id: link.getAttribute('data-contract-id'),
-							name: link.textContent.trim()
+							name: link.getAttribute('data-contract-name')
 						});
 					});
 					
