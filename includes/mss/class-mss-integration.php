@@ -94,7 +94,7 @@ class MSS_Integration {
 	 */
 	public function maybe_load_frontend() {
 		// Check if MSS is enabled and has active contracts
-		$mss_enabled = get_option( 'hezarfen_mss_enabled', 'no' );
+		$mss_enabled = get_option( 'hezarfen_contracts_enabled', 'no' );
 		
 		if ( 'yes' === $mss_enabled ) {
 			// Check if there are any active contracts in settings

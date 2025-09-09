@@ -56,7 +56,7 @@ class Contracts_Settings {
 			array(
 				'title'   => __( 'MSS Etkin', 'hezarfen-for-woocommerce' ),
 				'desc'    => __( 'Mesafeli Satış Sözleşmesi özelliğini etkinleştir', 'hezarfen-for-woocommerce' ),
-				'id'      => 'hezarfen_mss_enabled',
+				'id'      => 'hezarfen_contracts_enabled',
 				'default' => 'no',
 				'type'    => 'checkbox',
 			),
