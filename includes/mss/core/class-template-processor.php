@@ -218,6 +218,9 @@ class Template_Processor {
 	 * @return string
 	 */
 	private static function process_form_variables( $content, $form_data ) {
+		// Check if "Ship to different address" is enabled
+		$ship_to_different = isset( $form_data['ship_to_different_address'] ) && ! empty( $form_data['ship_to_different_address'] );
+		
 		$replacements = array(
 			// Form data variables (from checkout form)
 			'{{fatura_adi}}' => isset( $form_data['billing_first_name'] ) ? sanitize_text_field( $form_data['billing_first_name'] ) : '',
@@ -228,16 +231,34 @@ class Template_Processor {
 			'{{fatura_sehir}}' => isset( $form_data['billing_city'] ) ? sanitize_text_field( $form_data['billing_city'] ) : '',
 			'{{fatura_posta_kodu}}' => isset( $form_data['billing_postcode'] ) ? sanitize_text_field( $form_data['billing_postcode'] ) : '',
 			'{{fatura_ulke}}' => isset( $form_data['billing_country'] ) ? self::get_country_name( sanitize_text_field( $form_data['billing_country'] ) ) : '',
-			
-			'{{teslimat_adi}}' => isset( $form_data['shipping_first_name'] ) ? sanitize_text_field( $form_data['shipping_first_name'] ) : ( isset( $form_data['billing_first_name'] ) ? sanitize_text_field( $form_data['billing_first_name'] ) : '' ),
-			'{{teslimat_soyadi}}' => isset( $form_data['shipping_last_name'] ) ? sanitize_text_field( $form_data['shipping_last_name'] ) : ( isset( $form_data['billing_last_name'] ) ? sanitize_text_field( $form_data['billing_last_name'] ) : '' ),
-			'{{teslimat_sirket}}' => isset( $form_data['shipping_company'] ) ? sanitize_text_field( $form_data['shipping_company'] ) : ( isset( $form_data['billing_company'] ) ? sanitize_text_field( $form_data['billing_company'] ) : '' ),
-			'{{teslimat_adres_1}}' => isset( $form_data['shipping_address_1'] ) ? sanitize_text_field( $form_data['shipping_address_1'] ) : ( isset( $form_data['billing_address_1'] ) ? sanitize_text_field( $form_data['billing_address_1'] ) : '' ),
-			'{{teslimat_adres_2}}' => isset( $form_data['shipping_address_2'] ) ? sanitize_text_field( $form_data['shipping_address_2'] ) : ( isset( $form_data['billing_address_2'] ) ? sanitize_text_field( $form_data['billing_address_2'] ) : '' ),
-			'{{teslimat_sehir}}' => isset( $form_data['shipping_city'] ) ? sanitize_text_field( $form_data['shipping_city'] ) : ( isset( $form_data['billing_city'] ) ? sanitize_text_field( $form_data['billing_city'] ) : '' ),
-			'{{teslimat_posta_kodu}}' => isset( $form_data['shipping_postcode'] ) ? sanitize_text_field( $form_data['shipping_postcode'] ) : ( isset( $form_data['billing_postcode'] ) ? sanitize_text_field( $form_data['billing_postcode'] ) : '' ),
-			'{{teslimat_ulke}}' => isset( $form_data['shipping_country'] ) ? self::get_country_name( sanitize_text_field( $form_data['shipping_country'] ) ) : ( isset( $form_data['billing_country'] ) ? self::get_country_name( sanitize_text_field( $form_data['billing_country'] ) ) : '' ),
 		);
+		
+		// Handle shipping address - use billing if not shipping to different address
+		if ( $ship_to_different ) {
+			// Use actual shipping data when ship to different address is enabled
+			$replacements = array_merge( $replacements, array(
+				'{{teslimat_adi}}' => isset( $form_data['shipping_first_name'] ) ? sanitize_text_field( $form_data['shipping_first_name'] ) : '',
+				'{{teslimat_soyadi}}' => isset( $form_data['shipping_last_name'] ) ? sanitize_text_field( $form_data['shipping_last_name'] ) : '',
+				'{{teslimat_sirket}}' => isset( $form_data['shipping_company'] ) ? sanitize_text_field( $form_data['shipping_company'] ) : '',
+				'{{teslimat_adres_1}}' => isset( $form_data['shipping_address_1'] ) ? sanitize_text_field( $form_data['shipping_address_1'] ) : '',
+				'{{teslimat_adres_2}}' => isset( $form_data['shipping_address_2'] ) ? sanitize_text_field( $form_data['shipping_address_2'] ) : '',
+				'{{teslimat_sehir}}' => isset( $form_data['shipping_city'] ) ? sanitize_text_field( $form_data['shipping_city'] ) : '',
+				'{{teslimat_posta_kodu}}' => isset( $form_data['shipping_postcode'] ) ? sanitize_text_field( $form_data['shipping_postcode'] ) : '',
+				'{{teslimat_ulke}}' => isset( $form_data['shipping_country'] ) ? self::get_country_name( sanitize_text_field( $form_data['shipping_country'] ) ) : '',
+			) );
+		} else {
+			// Use billing data for shipping when not shipping to different address
+			$replacements = array_merge( $replacements, array(
+				'{{teslimat_adi}}' => isset( $form_data['billing_first_name'] ) ? sanitize_text_field( $form_data['billing_first_name'] ) : '',
+				'{{teslimat_soyadi}}' => isset( $form_data['billing_last_name'] ) ? sanitize_text_field( $form_data['billing_last_name'] ) : '',
+				'{{teslimat_sirket}}' => isset( $form_data['billing_company'] ) ? sanitize_text_field( $form_data['billing_company'] ) : '',
+				'{{teslimat_adres_1}}' => isset( $form_data['billing_address_1'] ) ? sanitize_text_field( $form_data['billing_address_1'] ) : '',
+				'{{teslimat_adres_2}}' => isset( $form_data['billing_address_2'] ) ? sanitize_text_field( $form_data['billing_address_2'] ) : '',
+				'{{teslimat_sehir}}' => isset( $form_data['billing_city'] ) ? sanitize_text_field( $form_data['billing_city'] ) : '',
+				'{{teslimat_posta_kodu}}' => isset( $form_data['billing_postcode'] ) ? sanitize_text_field( $form_data['billing_postcode'] ) : '',
+				'{{teslimat_ulke}}' => isset( $form_data['billing_country'] ) ? self::get_country_name( sanitize_text_field( $form_data['billing_country'] ) ) : '',
+			) );
+		}
 		
 		return str_replace( array_keys( $replacements ), array_values( $replacements ), $content );
 	}
