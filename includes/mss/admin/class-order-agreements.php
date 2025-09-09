@@ -126,11 +126,6 @@ class Order_Agreements {
 												<strong><?php esc_html_e( 'IP Address:', 'hezarfen-for-woocommerce' ); ?></strong> 
 												<?php echo esc_html( $agreement->ip_address ); ?>
 											</div>
-											<div>
-												<button type="button" class="button button-small print-agreement-tab" data-agreement-id="<?php echo esc_attr( $agreement->id ); ?>" data-agreement-name="<?php echo esc_attr( $agreement->contract_name ); ?>">
-													<?php esc_html_e( 'Print', 'hezarfen-for-woocommerce' ); ?>
-												</button>
-											</div>
 										</div>
 										<?php if ( ! empty( $agreement->user_agent ) ) : ?>
 											<div style="margin-top: 8px; font-size: 11px; color: #666;">
@@ -187,34 +182,6 @@ class Order_Agreements {
 			// Close modal
 			$('.hezarfen-modal-close, .hezarfen-modal-overlay').on('click', function() {
 				$('#hezarfen-agreements-modal').hide();
-			});
-			
-			// Print specific agreement from tab
-			$('.print-agreement-tab').on('click', function() {
-				var agreementId = $(this).data('agreement-id');
-				var agreementName = $(this).data('agreement-name');
-				var content = $('#tab-' + agreementId + ' .agreement-content').html();
-				
-				var printWindow = window.open('', '_blank');
-				printWindow.document.write(`
-					<html>
-						<head>
-							<title>${agreementName}</title>
-							<style>
-								body { font-family: Arial, sans-serif; margin: 20px; }
-								h1 { color: #333; border-bottom: 2px solid #333; padding-bottom: 10px; }
-								.print-date { color: #666; font-size: 12px; margin-bottom: 20px; }
-							</style>
-						</head>
-						<body>
-							<h1>${agreementName}</h1>
-							<div class="print-date"><?php esc_html_e( 'Printed on:', 'hezarfen-for-woocommerce' ); ?> ${new Date().toLocaleString()}</div>
-							<div>${content}</div>
-						</body>
-					</html>
-				`);
-				printWindow.document.close();
-				printWindow.print();
 			});
 			
 			// ESC key to close modal
