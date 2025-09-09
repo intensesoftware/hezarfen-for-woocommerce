@@ -1,0 +1,363 @@
+/* Hezarfen Customer Agreements Modal Styles */
+
+.hezarfen-customer-modal {
+	position: fixed !important;
+	top: 0 !important;
+	left: 0 !important;
+	width: 100% !important;
+	height: 100% !important;
+	z-index: 999999 !important;
+	background: rgba(0, 0, 0, 0.8) !important;
+}
+
+.hezarfen-customer-modal .hezarfen-modal-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.hezarfen-customer-modal .hezarfen-modal-content {
+	position: absolute !important;
+	top: 50% !important;
+	left: 50% !important;
+	transform: translate(-50%, -50%) !important;
+	background: #fff !important;
+	border-radius: 8px !important;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+	max-width: 900px !important;
+	width: 95% !important;
+	max-height: 90vh !important;
+	overflow: hidden !important;
+	display: flex !important;
+	flex-direction: column !important;
+}
+
+.hezarfen-customer-modal .hezarfen-modal-header {
+	display: flex !important;
+	justify-content: space-between !important;
+	align-items: center !important;
+	padding: 20px !important;
+	border-bottom: 1px solid #eee !important;
+	background: #f8f9fa !important;
+}
+
+.hezarfen-customer-modal .hezarfen-modal-header h2 {
+	margin: 0 !important;
+	color: #333 !important;
+	font-size: 1.5em !important;
+	font-weight: 600 !important;
+}
+
+.hezarfen-customer-modal .hezarfen-modal-close {
+	background: none !important;
+	border: none !important;
+	font-size: 28px !important;
+	cursor: pointer !important;
+	color: #666 !important;
+	padding: 0 !important;
+	width: 40px !important;
+	height: 40px !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	border-radius: 50% !important;
+	transition: all 0.2s ease !important;
+}
+
+.hezarfen-customer-modal .hezarfen-modal-close:hover {
+	background: #e9ecef !important;
+	color: #333 !important;
+}
+
+.hezarfen-customer-modal .hezarfen-modal-body {
+	flex: 1 !important;
+	overflow: hidden !important;
+	display: flex !important;
+	flex-direction: column !important;
+}
+
+.hezarfen-customer-modal .hezarfen-agreement-tabs {
+	display: flex !important;
+	flex-direction: column !important;
+	height: 100% !important;
+}
+
+.hezarfen-customer-modal .hezarfen-tab-nav {
+	display: flex !important;
+	background: #f1f3f4 !important;
+	border-bottom: 1px solid #dee2e6 !important;
+	overflow-x: auto !important;
+	flex-shrink: 0 !important;
+}
+
+.hezarfen-customer-modal .hezarfen-tab-button {
+	background: none !important;
+	border: none !important;
+	padding: 15px 20px !important;
+	cursor: pointer !important;
+	white-space: nowrap !important;
+	border-bottom: 3px solid transparent !important;
+	font-size: 14px !important;
+	color: #495057 !important;
+	transition: all 0.2s ease !important;
+	font-weight: 500 !important;
+	font-family: inherit !important;
+}
+
+.hezarfen-customer-modal .hezarfen-tab-button:hover {
+	background: #e9ecef !important;
+	color: #212529 !important;
+}
+
+.hezarfen-customer-modal .hezarfen-tab-button.active {
+	background: #fff !important;
+	color: #0073aa !important;
+	border-bottom-color: #0073aa !important;
+	font-weight: 600 !important;
+}
+
+.hezarfen-customer-modal .hezarfen-tab-content {
+	flex: 1 !important;
+	overflow: hidden !important;
+}
+
+.hezarfen-customer-modal .hezarfen-tab-pane {
+	display: none !important;
+	padding: 20px !important;
+	height: 100% !important;
+	overflow-y: auto !important;
+}
+
+.hezarfen-customer-modal .hezarfen-tab-pane.active {
+	display: block !important;
+}
+
+.hezarfen-customer-modal .agreement-meta {
+	margin-bottom: 20px !important;
+	background: #f9f9f9 !important;
+	padding: 15px !important;
+	border-radius: 4px !important;
+	border: 1px solid #e9ecef !important;
+}
+
+.hezarfen-customer-modal .agreement-meta > div {
+	display: grid !important;
+	grid-template-columns: 1fr 1fr !important;
+	gap: 15px !important;
+}
+
+.hezarfen-customer-modal .agreement-content {
+	font-size: 14px !important;
+	line-height: 1.6 !important;
+	max-height: 400px !important;
+	overflow-y: auto !important;
+	padding: 15px !important;
+	background: #fff !important;
+	border: 1px solid #ddd !important;
+	border-radius: 4px !important;
+}
+
+.hezarfen-customer-modal .agreement-content h1,
+.hezarfen-customer-modal .agreement-content h2,
+.hezarfen-customer-modal .agreement-content h3,
+.hezarfen-customer-modal .agreement-content h4,
+.hezarfen-customer-modal .agreement-content h5,
+.hezarfen-customer-modal .agreement-content h6 {
+	color: #333 !important;
+	margin-top: 0 !important;
+	margin-bottom: 15px !important;
+}
+
+.hezarfen-customer-modal .agreement-content p {
+	margin-bottom: 12px !important;
+	color: #555 !important;
+}
+
+.hezarfen-customer-modal .agreement-content ul,
+.hezarfen-customer-modal .agreement-content ol {
+	margin-bottom: 15px !important;
+	padding-left: 20px !important;
+}
+
+.hezarfen-customer-modal .agreement-content li {
+	margin-bottom: 5px !important;
+}
+
+/* Agreement summary styles */
+.hezarfen-agreements-summary {
+	margin: 15px 0 !important;
+}
+
+.hezarfen-agreements-summary .agreements-list {
+	list-style: none !important;
+	padding: 0 !important;
+	margin: 15px 0 !important;
+}
+
+.hezarfen-agreements-summary .agreements-list li {
+	padding: 8px 0 !important;
+	border-bottom: 1px solid #eee !important;
+}
+
+.hezarfen-agreements-summary .agreements-list li:last-child {
+	border-bottom: none !important;
+}
+
+.hezarfen-agreements-summary .agreement-name {
+	font-weight: 500 !important;
+	color: #333 !important;
+}
+
+.hezarfen-agreements-summary .agreement-summary-item {
+	display: inline-block !important;
+	margin: 5px 10px 5px 0 !important;
+	padding: 8px 12px !important;
+	background: #f8f9fa !important;
+	border: 1px solid #dee2e6 !important;
+	border-radius: 4px !important;
+}
+
+/* View Agreements Button */
+.hezarfen-view-agreements-btn {
+	background: #0073aa !important;
+	color: #fff !important;
+	border: 1px solid #0073aa !important;
+	padding: 8px 16px !important;
+	border-radius: 4px !important;
+	cursor: pointer !important;
+	font-size: 14px !important;
+	transition: all 0.2s ease !important;
+	text-decoration: none !important;
+}
+
+.hezarfen-view-agreements-btn:hover {
+	background: #005a87 !important;
+	border-color: #005a87 !important;
+	color: #fff !important;
+}
+
+.hezarfen-view-agreements-btn:focus {
+	box-shadow: 0 0 0 2px rgba(0, 115, 170, 0.2) !important;
+	outline: none !important;
+}
+
+/* Body scroll lock */
+body.hezarfen-modal-open {
+	overflow: hidden !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+	.hezarfen-customer-modal .hezarfen-modal-content {
+		width: 98% !important;
+		height: 95vh !important;
+		max-width: none !important;
+		max-height: none !important;
+		border-radius: 0 !important;
+		top: 2.5vh !important;
+		transform: translateX(-50%) !important;
+	}
+	
+	.hezarfen-customer-modal .hezarfen-modal-header {
+		padding: 15px !important;
+	}
+	
+	.hezarfen-customer-modal .hezarfen-modal-header h2 {
+		font-size: 1.2em !important;
+	}
+	
+	.hezarfen-customer-modal .hezarfen-tab-button {
+		padding: 12px 15px !important;
+		font-size: 13px !important;
+	}
+	
+	.hezarfen-customer-modal .hezarfen-tab-pane {
+		padding: 15px !important;
+	}
+	
+	.hezarfen-customer-modal .agreement-meta > div {
+		grid-template-columns: 1fr !important;
+		gap: 10px !important;
+	}
+	
+	.hezarfen-agreements-summary .agreement-summary-item {
+		display: block !important;
+		margin: 5px 0 !important;
+	}
+}
+
+@media (max-width: 480px) {
+	.hezarfen-customer-modal .hezarfen-tab-button {
+		padding: 10px 12px !important;
+		font-size: 12px !important;
+	}
+	
+	.hezarfen-customer-modal .hezarfen-modal-header {
+		padding: 12px !important;
+	}
+	
+	.hezarfen-customer-modal .hezarfen-tab-pane {
+		padding: 12px !important;
+	}
+}
+
+/* Print styles for agreement content */
+@media print {
+	.hezarfen-customer-modal .hezarfen-modal-overlay,
+	.hezarfen-customer-modal .hezarfen-modal-close,
+	.hezarfen-customer-modal .hezarfen-tab-nav {
+		display: none !important;
+	}
+	
+	.hezarfen-customer-modal .hezarfen-modal-content {
+		position: static !important;
+		transform: none !important;
+		box-shadow: none !important;
+		max-width: none !important;
+		width: 100% !important;
+		height: auto !important;
+		max-height: none !important;
+		background: #fff !important;
+	}
+	
+	.hezarfen-customer-modal .hezarfen-modal-header {
+		background: #fff !important;
+		border-bottom: 2px solid #333 !important;
+	}
+	
+	.hezarfen-customer-modal .hezarfen-tab-pane {
+		display: block !important;
+		page-break-before: always;
+		padding: 0 !important;
+	}
+	
+	.hezarfen-customer-modal .hezarfen-tab-pane:first-child {
+		page-break-before: avoid;
+	}
+	
+	.hezarfen-customer-modal .agreement-meta {
+		background: #f5f5f5 !important;
+		border: 1px solid #ccc !important;
+	}
+}
+
+/* Animation for modal */
+.hezarfen-customer-modal {
+	opacity: 0;
+	transition: opacity 0.2s ease;
+}
+
+.hezarfen-customer-modal.show {
+	opacity: 1;
+}
+
+.hezarfen-customer-modal .hezarfen-modal-content {
+	transform: translate(-50%, -60%) scale(0.9);
+	transition: transform 0.2s ease;
+}
+
+.hezarfen-customer-modal.show .hezarfen-modal-content {
+	transform: translate(-50%, -50%) scale(1);
+}

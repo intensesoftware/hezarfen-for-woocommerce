@@ -68,6 +68,7 @@ class MSS_Integration {
 		require_once HEZARFEN_MSS_PATH . 'core/class-contract-renderer.php';
 		require_once HEZARFEN_MSS_PATH . 'core/class-contract-validator.php';
 		require_once HEZARFEN_MSS_PATH . 'core/class-post-order-processor.php';
+		require_once HEZARFEN_MSS_PATH . 'frontend/class-customer-agreements.php';
 		
 		// Load settings integration
 		require_once HEZARFEN_MSS_PATH . 'admin/class-mss-settings.php';
@@ -121,6 +122,7 @@ class MSS_Integration {
 		// Initialize core MSS functionality
 		\Hezarfen\Inc\MSS\Core\Contract_Renderer::init_checkout_hooks();
 		\Hezarfen\Inc\MSS\Core\Post_Order_Processor::init();
+		\Hezarfen\Inc\MSS\Frontend\Customer_Agreements::init();
 		
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_assets' ) );
 	}

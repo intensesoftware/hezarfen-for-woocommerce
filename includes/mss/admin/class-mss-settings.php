@@ -267,14 +267,20 @@ class MSS_Settings {
 									</div>
 									<div class="contract-field">
 										<label><?php esc_html_e( 'WordPress Sayfası:', 'hezarfen-for-woocommerce' ); ?></label>
-										<select name="hezarfen_mss_settings[contracts][<?php echo esc_attr( $index ); ?>][template_id]" class="regular-text">
-											<?php foreach ( $template_options as $option_value => $option_label ): ?>
-												<option value="<?php echo esc_attr( $option_value ); ?>" 
-													<?php selected( $contract['template_id'], $option_value ); ?>>
-													<?php echo esc_html( $option_label ); ?>
-												</option>
-											<?php endforeach; ?>
-										</select>
+										<div class="page-selection-wrapper">
+											<select name="hezarfen_mss_settings[contracts][<?php echo esc_attr( $index ); ?>][template_id]" class="regular-text page-selector">
+												<?php foreach ( $template_options as $option_value => $option_label ): ?>
+													<option value="<?php echo esc_attr( $option_value ); ?>" 
+														<?php selected( $contract['template_id'], $option_value ); ?>>
+														<?php echo esc_html( $option_label ); ?>
+													</option>
+												<?php endforeach; ?>
+											</select>
+											<a href="#" class="page-link" style="display: none; margin-left: 10px; color: #0073aa; text-decoration: none;" target="_blank">
+												<span class="dashicons dashicons-edit" style="font-size: 16px; width: 16px; height: 16px; line-height: 1;"></span>
+												<?php esc_html_e( 'Sayfayı Düzenle', 'hezarfen-for-woocommerce' ); ?>
+											</a>
+										</div>
 									</div>
 									<div class="contract-field">
 										<label>
@@ -374,9 +380,15 @@ class MSS_Settings {
 									</div>
 									<div class="contract-field">
 										<label><?php esc_html_e( 'WordPress Sayfası:', 'hezarfen-for-woocommerce' ); ?></label>
-										<select name="hezarfen_mss_settings[contracts][${contractIndex}][template_id]" class="regular-text">
-											${optionsHtml}
-										</select>
+										<div class="page-selection-wrapper">
+											<select name="hezarfen_mss_settings[contracts][${contractIndex}][template_id]" class="regular-text page-selector">
+												${optionsHtml}
+											</select>
+											<a href="#" class="page-link" style="display: none; margin-left: 10px; color: #0073aa; text-decoration: none;" target="_blank">
+												<span class="dashicons dashicons-edit" style="font-size: 16px; width: 16px; height: 16px; line-height: 1;"></span>
+												<?php esc_html_e( 'Sayfayı Düzenle', 'hezarfen-for-woocommerce' ); ?>
+											</a>
+										</div>
 									</div>
 									<div class="contract-field">
 										<label>
@@ -404,6 +416,31 @@ class MSS_Settings {
 						if (confirm('<?php esc_js( __( 'Bu sözleşmeyi silmek istediğinizden emin misiniz?', 'hezarfen-for-woocommerce' ) ); ?>')) {
 							$(this).closest('.contract-item').remove();
 						}
+					});
+					
+					// Handle real-time page link updates
+					function updatePageLink($select) {
+						const $wrapper = $select.closest('.page-selection-wrapper');
+						const $link = $wrapper.find('.page-link');
+						const selectedPageId = $select.val();
+						
+						if (selectedPageId && selectedPageId !== '') {
+							// Get the WordPress admin edit URL for the page
+							const editUrl = '<?php echo admin_url("post.php?action=edit&post="); ?>' + selectedPageId;
+							$link.attr('href', editUrl).show();
+						} else {
+							$link.hide();
+						}
+					}
+					
+					// Update links on page selector change
+					$(document).on('change', '.page-selector', function() {
+						updatePageLink($(this));
+					});
+					
+					// Initialize links on page load
+					$('.page-selector').each(function() {
+						updatePageLink($(this));
 					});
 				});
 		</script>

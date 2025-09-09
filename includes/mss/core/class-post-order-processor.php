@@ -81,6 +81,16 @@ class Post_Order_Processor {
 	 * @param \WC_Email $email Email object.
 	 */
 	public static function include_contracts_in_email( $order, $sent_to_admin, $plain_text, $email ) {
+		// Only include in actual emails, not on frontend pages
+		if ( ! is_object( $email ) || ! is_a( $email, 'WC_Email' ) ) {
+			return;
+		}
+		
+		// Don't include in admin emails
+		if ( $sent_to_admin ) {
+			return;
+		}
+		
 		if ( ! apply_filters( 'hezarfen_mss_include_agreements_in_customer_email', true ) ) {
 			return;
 		}

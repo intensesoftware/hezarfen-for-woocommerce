@@ -33,3 +33,36 @@
     margin: 5px 0;
     font-size: 12px;
 }
+
+/* Page selection wrapper styles */
+.page-selection-wrapper {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.page-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #0073aa;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 4px 8px;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+}
+
+.page-link:hover {
+    color: #005177;
+    background-color: #f0f6fc;
+    text-decoration: none;
+}
+
+.page-link .dashicons {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 1;
+}
