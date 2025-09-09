@@ -33,7 +33,7 @@ class Contracts_Settings {
 	 * Add MSS section to Hezarfen settings
 	 */
 	public function add_section( $sections ) {
-		$sections[ self::SECTION ] = __( 'Contracts & Agreements', 'hezarfen-for-woocommerce' );
+		$sections[ self::SECTION ] = 'Contracts & Agreements';
 		return $sections;
 	}
 	
@@ -47,15 +47,15 @@ class Contracts_Settings {
 		
 		$mss_settings = array(
 			array(
-				'title' => __( 'Mesafeli Satış Sözleşmesi Ayarları', 'hezarfen-for-woocommerce' ),
+				'title' => 'Distance Sales Contract Settings',
 				'type'  => 'title',
-				'desc'  => __( 'Web sitenize mesafeli satış sözleşmesi ve ön bilgilendirme form desteği ekleyin.', 'hezarfen-for-woocommerce' ),
+				'desc'  => 'Add distance sales contract and pre-information form support to your website.',
 				'id'    => 'hezarfen_mss_title'
 			),
 			
 			array(
-				'title'   => __( 'MSS Etkin', 'hezarfen-for-woocommerce' ),
-				'desc'    => __( 'Mesafeli Satış Sözleşmesi özelliğini etkinleştir', 'hezarfen-for-woocommerce' ),
+				'title'   => 'DSC Enabled',
+				'desc'    => 'Enable Distance Sales Contract feature',
 				'id'      => 'hezarfen_contracts_enabled',
 				'default' => 'no',
 				'type'    => 'checkbox',
@@ -64,13 +64,13 @@ class Contracts_Settings {
 
 			
 			array(
-				'title'    => __( 'Sözleşme Ayarları', 'hezarfen-for-woocommerce' ),
-				'desc'     => __( 'Sözleşmenin ödeme sayfasında nasıl gösterileceğini seçin. Sözleşmeler sipariş durumu "Hazırlanıyor" olduğunda otomatik olarak oluşturulur.', 'hezarfen-for-woocommerce' ),
+				'title'    => 'Contract Settings',
+				'desc'     => 'Choose how the contract will be displayed on the payment page. Contracts are automatically created when order status is "Processing".',
 				'id'       => 'hezarfen_mss_settings[odeme_sayfasinda_sozlesme_gosterim_tipi]',
 				'type'     => 'select',
 				'options'  => array(
-					'inline' => __( 'Sayfa İçi', 'hezarfen-for-woocommerce' ),
-					'modal'  => __( 'Modal', 'hezarfen-for-woocommerce' ),
+					'inline' => 'Inline',
+					'modal'  => 'Modal',
 				),
 				'default'  => 'inline',
 			),
@@ -81,14 +81,14 @@ class Contracts_Settings {
 			),
 			
 			array(
-				'title' => __( 'Sözleşme Şablonları', 'hezarfen-for-woocommerce' ),
+				'title' => 'Contract Templates',
 				'type'  => 'title',
-				'desc'  => __( 'WordPress sayfalarını sözleşme şablonu olarak kullanın. + butonu ile yeni sözleşme ekleyebilir, X butonu ile silebilirsiniz.', 'hezarfen-for-woocommerce' ),
+				'desc'  => 'Use WordPress pages as contract templates. You can add new contracts with the + button and delete them with the X button.',
 				'id'    => 'hezarfen_mss_templates_title'
 			),
 			
 			array(
-				'title' => __( 'Aktif Sözleşmeler', 'hezarfen-for-woocommerce' ),
+				'title' => 'Active Contracts',
 				'type'  => 'mss_dynamic_contracts',
 				'id'    => 'hezarfen_mss_dynamic_contracts',
 			),
@@ -99,14 +99,14 @@ class Contracts_Settings {
 			),
 			
 			array(
-				'title' => __( 'Kullanılabilir Değişkenler', 'hezarfen-for-woocommerce' ),
+				'title' => 'Available Variables',
 				'type'  => 'title',
-				'desc'  => __( 'Sözleşme şablonlarınızda aşağıdaki değişkenleri kullanabilirsiniz. Bu değişkenler sipariş verildiğinde otomatik olarak gerçek verilerle değiştirilir.', 'hezarfen-for-woocommerce' ),
+				'desc'  => 'You can use the following variables in your contract templates. These variables are automatically replaced with real data when an order is placed.',
 				'id'    => 'hezarfen_mss_variables_title'
 			),
 			
 			array(
-				'title' => __( 'Mevcut Değişkenler', 'hezarfen-for-woocommerce' ),
+				'title' => 'Current Variables',
 				'type'  => 'mss_available_variables',
 				'id'    => 'hezarfen_mss_available_variables',
 			),
@@ -124,7 +124,7 @@ class Contracts_Settings {
 	 * Get template options for dropdown (WordPress pages only)
 	 */
 	private function get_template_options() {
-		$templates = array( '' => __( 'Sayfa seçin...', 'hezarfen-for-woocommerce' ) );
+		$templates = array( '' => 'Select page...' );
 		
 		// Get WordPress pages
 		$pages = get_posts( array(
@@ -221,13 +221,13 @@ class Contracts_Settings {
 			$contracts = array(
 				array(
 					'id' => 'mss',
-					'name' => 'Mesafeli Satış Sözleşmesi',
+					'name' => 'Distance Sales Contract',
 					'template_id' => '',
 					'enabled' => true,
 				),
 				array(
 					'id' => 'obf',
-					'name' => 'Ön Bilgilendirme Formu',
+					'name' => 'Pre-Information Form',
 					'template_id' => '',
 					'enabled' => true,
 				),
@@ -247,14 +247,14 @@ class Contracts_Settings {
 							<div class="contract-item" data-index="<?php echo esc_attr( $index ); ?>">
 								<div class="contract-fields">
 									<div class="contract-field">
-										<label><?php esc_html_e( 'Sözleşme Adı:', 'hezarfen-for-woocommerce' ); ?></label>
+										<label>Contract Name:</label>
 										<input type="text" 
 											   name="hezarfen_mss_settings[contracts][<?php echo esc_attr( $index ); ?>][name]" 
 											   value="<?php echo esc_attr( $contract['name'] ); ?>" 
 											   class="regular-text" />
 									</div>
 									<div class="contract-field">
-										<label><?php esc_html_e( 'WordPress Sayfası:', 'hezarfen-for-woocommerce' ); ?></label>
+										<label>WordPress Page:</label>
 										<div class="page-selection-wrapper">
 											<select name="hezarfen_mss_settings[contracts][<?php echo esc_attr( $index ); ?>][template_id]" class="regular-text page-selector">
 												<?php foreach ( $template_options as $option_value => $option_label ): ?>
@@ -266,7 +266,7 @@ class Contracts_Settings {
 											</select>
 											<a href="#" class="page-link" style="display: none; margin-left: 10px; color: #0073aa; text-decoration: none;" target="_blank">
 												<span class="dashicons dashicons-edit" style="font-size: 16px; width: 16px; height: 16px; line-height: 1;"></span>
-												<?php esc_html_e( 'Sayfayı Düzenle', 'hezarfen-for-woocommerce' ); ?>
+												Edit Page
 											</a>
 										</div>
 									</div>
@@ -276,11 +276,11 @@ class Contracts_Settings {
 												   name="hezarfen_mss_settings[contracts][<?php echo esc_attr( $index ); ?>][enabled]" 
 												   value="1" 
 												   <?php checked( !empty( $contract['enabled'] ) ); ?> />
-											<?php esc_html_e( 'Etkin', 'hezarfen-for-woocommerce' ); ?>
+											Enabled
 										</label>
 									</div>
 									<div class="contract-actions">
-										<button type="button" class="button remove-contract" title="<?php esc_attr_e( 'Sözleşmeyi Sil', 'hezarfen-for-woocommerce' ); ?>">×</button>
+										<button type="button" class="button remove-contract" title="Delete Contract">×</button>
 									</div>
 								</div>
 								<input type="hidden" name="hezarfen_mss_settings[contracts][<?php echo esc_attr( $index ); ?>][id]" value="<?php echo esc_attr( $contract['id'] ); ?>" />
@@ -289,7 +289,7 @@ class Contracts_Settings {
 					</div>
 					<div class="add-contract-section">
 						<button type="button" id="add-new-contract" class="button button-secondary">
-							+ <?php esc_html_e( 'Yeni Sözleşme Ekle', 'hezarfen-for-woocommerce' ); ?>
+							+ Add New Contract
 						</button>
 					</div>
 				</div>
@@ -359,22 +359,22 @@ class Contracts_Settings {
 							<div class="contract-item" data-index="${contractIndex}">
 								<div class="contract-fields">
 									<div class="contract-field">
-										<label><?php esc_html_e( 'Sözleşme Adı:', 'hezarfen-for-woocommerce' ); ?></label>
+										<label>Contract Name:</label>
 										<input type="text" 
 											   name="hezarfen_mss_settings[contracts][${contractIndex}][name]" 
 											   value="" 
 											   class="regular-text" 
-											   placeholder="Sözleşme adını girin" />
+											   placeholder="Enter contract name" />
 									</div>
 									<div class="contract-field">
-										<label><?php esc_html_e( 'WordPress Sayfası:', 'hezarfen-for-woocommerce' ); ?></label>
+										<label>WordPress Page:</label>
 										<div class="page-selection-wrapper">
 											<select name="hezarfen_mss_settings[contracts][${contractIndex}][template_id]" class="regular-text page-selector">
 												${optionsHtml}
 											</select>
 											<a href="#" class="page-link" style="display: none; margin-left: 10px; color: #0073aa; text-decoration: none;" target="_blank">
 												<span class="dashicons dashicons-edit" style="font-size: 16px; width: 16px; height: 16px; line-height: 1;"></span>
-												<?php esc_html_e( 'Sayfayı Düzenle', 'hezarfen-for-woocommerce' ); ?>
+												Edit Page
 											</a>
 										</div>
 									</div>
@@ -384,11 +384,11 @@ class Contracts_Settings {
 												   name="hezarfen_mss_settings[contracts][${contractIndex}][enabled]" 
 												   value="1" 
 												   checked />
-											<?php esc_html_e( 'Etkin', 'hezarfen-for-woocommerce' ); ?>
+											Enabled
 										</label>
 									</div>
 									<div class="contract-actions">
-										<button type="button" class="button remove-contract" title="<?php esc_attr_e( 'Sözleşmeyi Sil', 'hezarfen-for-woocommerce' ); ?>">×</button>
+										<button type="button" class="button remove-contract" title="Delete Contract">×</button>
 									</div>
 								</div>
 								<input type="hidden" name="hezarfen_mss_settings[contracts][${contractIndex}][id]" value="contract_${contractIndex}" />
@@ -401,7 +401,7 @@ class Contracts_Settings {
 					
 					// Remove contract
 					$(document).on('click', '.remove-contract', function() {
-						if (confirm('<?php esc_js( __( 'Bu sözleşmeyi silmek istediğinizden emin misiniz?', 'hezarfen-for-woocommerce' ) ); ?>')) {
+						if (confirm('Are you sure you want to delete this contract?')) {
 							$(this).closest('.contract-item').remove();
 						}
 					});
@@ -443,61 +443,61 @@ class Contracts_Settings {
 public function output_available_variables( $value ) {
 	$variables = array(
 		// Order Variables
-		'Sipariş Bilgileri' => array(
-			'{{siparis_no}}' => 'Sipariş numarası',
-			'{{siparis_tarihi}}' => 'Sipariş tarihi',
-			'{{siparis_saati}}' => 'Sipariş saati',
-			'{{toplam_tutar}}' => 'Sipariş toplamı (KDV dahil)',
-			'{{ara_toplam}}' => 'Sipariş ara toplamı (KDV hariç)',
-			'{{toplam_vergi_tutar}}' => 'KDV tutarı',
-			'{{kargo_ucreti}}' => 'Kargo ücreti',
-			'{{urunler}}' => 'Sipariş edilen ürünler listesi',
-			'{{odeme_yontemi}}' => 'Ödeme yöntemi',
-			'{{indirim_toplami}}' => 'İndirim tutarı',
+		'Order Information' => array(
+			'{{siparis_no}}' => 'Order number',
+			'{{siparis_tarihi}}' => 'Order date',
+			'{{siparis_saati}}' => 'Order time',
+			'{{toplam_tutar}}' => 'Order total (including tax)',
+			'{{ara_toplam}}' => 'Order subtotal (excluding tax)',
+			'{{toplam_vergi_tutar}}' => 'Tax amount',
+			'{{kargo_ucreti}}' => 'Shipping cost',
+			'{{urunler}}' => 'List of ordered products',
+			'{{odeme_yontemi}}' => 'Payment method',
+			'{{indirim_toplami}}' => 'Discount amount',
 		),
 		
 		
 		// Billing Address Variables
-		'Fatura Adresi' => array(
-			'{{fatura_adi}}' => 'Fatura adı',
-			'{{fatura_soyadi}}' => 'Fatura soyadı',
-			'{{fatura_sirket}}' => 'Fatura şirket adı',
-			'{{fatura_adres_1}}' => 'Fatura adresi satır 1',
-			'{{fatura_adres_2}}' => 'Fatura adresi satır 2',
-			'{{fatura_sehir}}' => 'Fatura şehir',
-			'{{fatura_posta_kodu}}' => 'Fatura posta kodu',
-			'{{fatura_ulke}}' => 'Fatura ülke',
+		'Billing Address' => array(
+			'{{fatura_adi}}' => 'Billing first name',
+			'{{fatura_soyadi}}' => 'Billing last name',
+			'{{fatura_sirket}}' => 'Billing company name',
+			'{{fatura_adres_1}}' => 'Billing address line 1',
+			'{{fatura_adres_2}}' => 'Billing address line 2',
+			'{{fatura_sehir}}' => 'Billing city',
+			'{{fatura_posta_kodu}}' => 'Billing postal code',
+			'{{fatura_ulke}}' => 'Billing country',
 		),
 		
 		// Shipping Address Variables
-		'Teslimat Adresi' => array(
-			'{{teslimat_adi}}' => 'Teslimat adı',
-			'{{teslimat_soyadi}}' => 'Teslimat soyadı',
-			'{{teslimat_sirket}}' => 'Teslimat şirket adı',
-			'{{teslimat_adres_1}}' => 'Teslimat adresi satır 1',
-			'{{teslimat_adres_2}}' => 'Teslimat adresi satır 2',
-			'{{teslimat_sehir}}' => 'Teslimat şehir',
-			'{{teslimat_posta_kodu}}' => 'Teslimat posta kodu',
-			'{{teslimat_ulke}}' => 'Teslimat ülke',
+		'Shipping Address' => array(
+			'{{teslimat_adi}}' => 'Shipping first name',
+			'{{teslimat_soyadi}}' => 'Shipping last name',
+			'{{teslimat_sirket}}' => 'Shipping company name',
+			'{{teslimat_adres_1}}' => 'Shipping address line 1',
+			'{{teslimat_adres_2}}' => 'Shipping address line 2',
+			'{{teslimat_sehir}}' => 'Shipping city',
+			'{{teslimat_posta_kodu}}' => 'Shipping postal code',
+			'{{teslimat_ulke}}' => 'Shipping country',
 		),
 		
 		// Site Variables
-		'Site Bilgileri' => array(
-			'{{site_adi}}' => 'Site adı',
+		'Site Information' => array(
+			'{{site_adi}}' => 'Site name',
 			'{{site_url}}' => 'Site URL',
 		),
 		
 		// Date Variables
-		'Tarih Bilgileri' => array(
-			'{{bugunun_tarihi}}' => 'Bugünün tarihi',
-			'{{su_an}}' => 'Şu anki tarih ve saat',
+		'Date Information' => array(
+			'{{bugunun_tarihi}}' => 'Today\'s date',
+			'{{su_an}}' => 'Current date and time',
 		),
 		
 		// Hezarfen Invoice Fields
-		'Hezarfen Fatura Alanları' => array(
-			'{{hezarfen_kurumsal_vergi_daire}}' => 'Kurumsal vergi dairesi',
-			'{{hezarfen_kurumsal_vergi_no}}' => 'Kurumsal vergi numarası',
-			'{{hezarfen_bireysel_tc}}' => 'Bireysel TC kimlik numarası',
+		'Hezarfen Invoice Fields' => array(
+			'{{hezarfen_kurumsal_vergi_daire}}' => 'Corporate tax office',
+			'{{hezarfen_kurumsal_vergi_no}}' => 'Corporate tax number',
+			'{{hezarfen_bireysel_tc}}' => 'Individual ID number',
 		),
 	);
 	
@@ -517,7 +517,7 @@ public function output_available_variables( $value ) {
 							<?php foreach ( $vars as $variable => $description ): ?>
 								<div style="background: #f9f9f9; padding: 8px 12px; border-radius: 3px; font-family: monospace; font-size: 13px; color: #d63384; cursor: pointer;" 
 									 onclick="copyToClipboard('<?php echo esc_js( $variable ); ?>')" 
-									 title="Kopyalamak için tıklayın">
+									 title="Click to copy">
 									<?php echo esc_html( $variable ); ?>
 								</div>
 								<div style="padding: 8px 12px; color: #666; font-size: 13px;">
@@ -529,9 +529,9 @@ public function output_available_variables( $value ) {
 				<?php endforeach; ?>
 				
 				<div style="background: #e7f3ff; padding: 15px; border-radius: 5px; margin-top: 20px; border-left: 4px solid #0073aa;">
-					<strong>💡 Kullanım:</strong><br>
-					Bu değişkenleri WordPress sayfa editöründe sözleşme metninizin içine yazın. 
-					Sipariş verildiğinde bu değişkenler otomatik olarak gerçek verilerle değiştirilecektir.
+					<strong>💡 Usage:</strong><br>
+					Write these variables into your contract text in the WordPress page editor. 
+					When an order is placed, these variables will be automatically replaced with real data.
 				</div>
 			</div>
 			
@@ -578,7 +578,7 @@ public function output_available_variables( $value ) {
 			
 			function showCopyNotification(text) {
 				var notification = document.createElement('div');
-				notification.innerHTML = '✓ Kopyalandı: ' + text;
+				notification.innerHTML = '✓ Copied: ' + text;
 				notification.style.cssText = 'position: fixed; top: 60px; right: 20px; background: #00a32a; color: white; padding: 10px 15px; border-radius: 3px; z-index: 9999; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);';
 				document.body.appendChild(notification);
 				
@@ -591,7 +591,7 @@ public function output_available_variables( $value ) {
 			
 			function showCopyError() {
 				var notification = document.createElement('div');
-				notification.innerHTML = '❌ Kopyalama başarısız. Lütfen manuel olarak seçip kopyalayın.';
+				notification.innerHTML = '❌ Copy failed. Please select and copy manually.';
 				notification.style.cssText = 'position: fixed; top: 60px; right: 20px; background: #dc3545; color: white; padding: 10px 15px; border-radius: 3px; z-index: 9999; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);';
 				document.body.appendChild(notification);
 				
