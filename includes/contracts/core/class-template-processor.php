@@ -50,6 +50,9 @@ class Template_Processor {
 			if ( $order_id && empty( $form_data ) ) {
 				$order = wc_get_order( $order_id );
 				if ( $order ) {
+					// Get invoice type from order
+					$invoice_type = $order->get_meta( '_billing_hez_invoice_type' );
+					
 					// Get TC number and decrypt it if needed
 					$tc_number = $order->get_meta( '_billing_hez_TC_number' );
 					if ( $tc_number ) {
@@ -57,10 +60,32 @@ class Template_Processor {
 						$tc_number = ( new \Hezarfen\Inc\Data\PostMetaEncryption() )->decrypt( $tc_number );
 					}
 					
+					// Conditional field values based on invoice type
+					$tax_office = '';
+					$tax_number = '';
+					$tc_number_display = '';
+					
+					if ( 'company' === $invoice_type ) {
+						// For company: show tax office and tax number, hide TC number
+						$tax_office = $order->get_meta( '_billing_hez_tax_office' );
+						$tax_number = $order->get_meta( '_billing_hez_tax_number' );
+						$tc_number_display = ''; // Empty for company
+					} elseif ( 'person' === $invoice_type ) {
+						// For person: show TC number, hide tax office and tax number
+						$tax_office = ''; // Empty for person
+						$tax_number = ''; // Empty for person
+						$tc_number_display = $tc_number;
+					} else {
+						// Fallback: show all fields if type is not determined
+						$tax_office = $order->get_meta( '_billing_hez_tax_office' );
+						$tax_number = $order->get_meta( '_billing_hez_tax_number' );
+						$tc_number_display = $tc_number;
+					}
+					
 					$hezarfen_data = array(
-						'billing_hez_tax_office' => $order->get_meta( '_billing_hez_tax_office' ),
-						'billing_hez_tax_number' => $order->get_meta( '_billing_hez_tax_number' ),
-						'billing_hez_TC_number' => $tc_number,
+						'billing_hez_tax_office' => $tax_office,
+						'billing_hez_tax_number' => $tax_number,
+						'billing_hez_TC_number' => $tc_number_display,
 					);
 				}
 			}
@@ -330,6 +355,9 @@ class Template_Processor {
 	 * @return string
 	 */
 	private static function process_hezarfen_support( $content, $form_data = array() ) {
+		// Get invoice type to determine which fields to show
+		$invoice_type = isset( $form_data['billing_hez_invoice_type'] ) ? $form_data['billing_hez_invoice_type'] : '';
+		
 		// Get TC number and decrypt it if needed (for form data)
 		$tc_number = isset( $form_data['billing_hez_TC_number'] ) ? $form_data['billing_hez_TC_number'] : '';
 		if ( $tc_number ) {
@@ -337,11 +365,33 @@ class Template_Processor {
 			$tc_number = ( new \Hezarfen\Inc\Data\PostMetaEncryption() )->decrypt( $tc_number );
 		}
 		
+		// Conditional field values based on invoice type
+		$tax_office = '';
+		$tax_number = '';
+		$tc_number_display = '';
+		
+		if ( 'company' === $invoice_type ) {
+			// For company: show tax office and tax number, hide TC number
+			$tax_office = isset( $form_data['billing_hez_tax_office'] ) ? sanitize_text_field( $form_data['billing_hez_tax_office'] ) : '';
+			$tax_number = isset( $form_data['billing_hez_tax_number'] ) ? sanitize_text_field( $form_data['billing_hez_tax_number'] ) : '';
+			$tc_number_display = ''; // Empty for company
+		} elseif ( 'person' === $invoice_type ) {
+			// For person: show TC number, hide tax office and tax number
+			$tax_office = ''; // Empty for person
+			$tax_number = ''; // Empty for person
+			$tc_number_display = sanitize_text_field( $tc_number );
+		} else {
+			// Fallback: show all fields if type is not determined
+			$tax_office = isset( $form_data['billing_hez_tax_office'] ) ? sanitize_text_field( $form_data['billing_hez_tax_office'] ) : '';
+			$tax_number = isset( $form_data['billing_hez_tax_number'] ) ? sanitize_text_field( $form_data['billing_hez_tax_number'] ) : '';
+			$tc_number_display = sanitize_text_field( $tc_number );
+		}
+		
 		// Hezarfen invoice field replacements
 		$hezarfen_replacements = array(
-			'{{hezarfen_kurumsal_vergi_daire}}' => isset( $form_data['billing_hez_tax_office'] ) ? sanitize_text_field( $form_data['billing_hez_tax_office'] ) : '',
-			'{{hezarfen_kurumsal_vergi_no}}' => isset( $form_data['billing_hez_tax_number'] ) ? sanitize_text_field( $form_data['billing_hez_tax_number'] ) : '',
-			'{{hezarfen_bireysel_tc}}' => sanitize_text_field( $tc_number ),
+			'{{hezarfen_kurumsal_vergi_daire}}' => $tax_office,
+			'{{hezarfen_kurumsal_vergi_no}}' => $tax_number,
+			'{{hezarfen_bireysel_tc}}' => $tc_number_display,
 		);
 
 		// Replace Hezarfen field placeholders with actual values
