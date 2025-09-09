@@ -9,14 +9,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use In_MSS_Utility as Utility;
-
 /**
  * Siparis sonrasi islemlerini yurutur (siparis verilerine gore sozlesme olusturma, e-posta vs.)
  */
 class IN_MSS_SiparisSonrasi {
-	use Utility;
-
 	const REGEX_PATTERN_HEZARFEN_FATURA_BIREYSEL = '/@IF_HEZARFEN_FAT_BIREYSEL\s*([\s\S]*?)\s*@END(?:IF)?_HEZARFEN_FAT_BIREYSEL/';
 	const REGEX_PATTERN_HEZARFEN_FATURA_KURUMSAL = '/@IF_HEZARFEN_FAT_KURUMSAL\s*([\s\S]*?)\s*@END(?:IF)?_HEZARFEN_FAT_KURUMSAL/';
 
@@ -250,112 +246,6 @@ class IN_MSS_SiparisSonrasi {
 			</div>
 			<?php
 		}
-	}
-
-	/**
-	 * HTML forma degiskenlerin yerlestirilmesi
-	 *
-	 * @param  string $statik_form ham sozlesme taslagi.
-	 * @param  int    $order_id WC siparis ID.
-	 * @return string
-	 */
-	private function html_forma_degiskenleri_bas( $statik_form, $order_id ) {
-
-		$siparis_degiskenler = new IN_MSS_SiparisDegiskenler( $order_id );
-
-		$form_degiskenler = array(
-			'{FATURA_TAM_AD_UNVANI}',
-			'{FATURA_ADRESI}',
-			'{ALICI_ADRESI}',
-			'{ALICI_TELEFONU}',
-			'{ALICI_EPOSTA}',
-			'{ALICI_TAM_AD_UNVANI}',
-			'{GUNCEL_TARIH}',
-			'{URUNLER}',
-			'{ODEME_YONTEMI}',
-			'{KARGO_BEDELI}',
-			'{KARGO_HARIC_SIPARIS_TUTARI}',
-			'{KARGO_DAHIL_SIPARIS_TUTARI}',
-			'{INDIRIM_TOPLAMI}',
-			'{INDIRIM_TOPLAM_VERGISI}',
-			'{EK_UCRET_DETAYLARI}',
-		);
-
-		$form_degisken_degerler = array(
-			$siparis_degiskenler->get_fatura_unvani(),
-			$siparis_degiskenler->get_fatura_adres(),
-			$siparis_degiskenler->get_musteri_adres(),
-			$siparis_degiskenler->get_musteri_telefon(),
-			$siparis_degiskenler->get_musteri_email(),
-			$siparis_degiskenler->get_musteri_unvani(),
-			date_i18n( 'd/m/Y' ),
-			$siparis_degiskenler->get_siparis_urun_ozeti(),
-			$siparis_degiskenler->get_siparis_odeme_yontemi(),
-			wc_price( $siparis_degiskenler->get_siparis_kargo_bedeli() ),
-			wc_price( $siparis_degiskenler->get_siparis_kargo_haric_bedel() ),
-			wc_price( $siparis_degiskenler->get_siparis_kargo_dahil_bedel() ),
-			wc_price( $siparis_degiskenler->get_indirim_toplami() ),
-			wc_price( $siparis_degiskenler->get_indirim_toplam_vergisi() ),
-			$siparis_degiskenler->get_ek_ucret_detaylari(),
-		);
-
-		$order = wc_get_order( $order_id );
-
-		if( $this->hezarfen_aktif() ) {
-			$form_degiskenler[] = '{HEZARFEN_BIREYSEL_TC}';
-			$form_degiskenler[] = '{HEZARFEN_KURUMSAL_VERGI_DAIRE}';
-			$form_degiskenler[] = '{HEZARFEN_KURUMSAL_VERGI_NO}';
-
-			$form_degisken_degerler[] = $siparis_degiskenler->get_hezarfen_fatura_TC();
-			$form_degisken_degerler[] = $siparis_degiskenler->get_hezarfen_fatura_vergi_daire();
-			$form_degisken_degerler[] = $siparis_degiskenler->get_hezarfen_fatura_vergi_no();
-
-			$fatura_tipi = $order->get_meta( '_billing_hez_invoice_type' );
-
-			if( $fatura_tipi === 'person' ) {
-				// Kurumsal blok içeriğini temizle
-				$statik_form = preg_replace( self::REGEX_PATTERN_HEZARFEN_FATURA_KURUMSAL, '', $statik_form );
-
-				// Bireysel IF bloklarini temizle, içeriğini tut.
-				$statik_form = str_replace(['@IF_HEZARFEN_FAT_BIREYSEL', '@ENDIF_HEZARFEN_FAT_BIREYSEL'], '', $statik_form);
-			}else if( $fatura_tipi === 'company' ) {
-				// Bireysel blok içeriğini temizle
-				$statik_form = preg_replace( self::REGEX_PATTERN_HEZARFEN_FATURA_BIREYSEL, '', $statik_form );
-
-				// Kurumsal IF bloklarini temizle, içeriğini tut.
-				$statik_form = str_replace(['@IF_HEZARFEN_FAT_KURUMSAL', '@ENDIF_HEZARFEN_FAT_KURUMSAL'], '', $statik_form);
-			}
-		}
-
-		$dinamik_form = str_replace(
-			$form_degiskenler,
-			$form_degisken_degerler,
-			$statik_form
-		);
-
-		$desen = '/\{OZELALAN_(.*?)\}/';
-
-		// özel alanların tespiti.
-		preg_match_all( $desen, $dinamik_form, $ozel_alan_adlari );
-
-		// özel alan değişkenlerinin yerine konulması.
-		foreach ( $ozel_alan_adlari[1] as $ozel_alan_name ) {
-
-			$ozel_alan_value = $order->get_meta( $ozel_alan_name, true );
-
-			if ( ! $ozel_alan_value ) {
-				$ozel_alan_value = $order->get_meta( sprintf( '_%s', $ozel_alan_name ), true );
-			}
-
-			$dinamik_form = str_replace(
-				sprintf( '{OZELALAN_%s}', $ozel_alan_name ),
-				$ozel_alan_value,
-				$dinamik_form
-			);
-
-		}
-
-		return $dinamik_form;
 	}
 
 }

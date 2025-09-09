@@ -63,9 +63,6 @@ class MSS_Integration {
 	 * Load dependencies
 	 */
 	private function load_dependencies() {
-		// Load trait first
-		require_once HEZARFEN_MSS_PATH . 'trait-in-mss.php';
-		
 		// Load core classes
 		require_once HEZARFEN_MSS_PATH . 'core/class-template-processor.php';
 		require_once HEZARFEN_MSS_PATH . 'core/class-contract-renderer.php';
