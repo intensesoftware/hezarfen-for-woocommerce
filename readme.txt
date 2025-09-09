@@ -1,7 +1,7 @@
 
 === Hezarfen - Türkiye Kargo Entegrasyonu - WooCommerce Kargo Takip ve Yönetim Eklentisi For Woocommerce ===
 Contributors: intenseyazilim, mucahitbal, mskapusuz
-Tags: kargo, sözleşme, hepsijet, mng, fatura
+Tags: kargo, sözleşmeler, hepsijet, mng, fatura
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.0
