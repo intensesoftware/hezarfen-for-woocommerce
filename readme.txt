@@ -42,11 +42,13 @@ TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ! Türkiye'nin Lider WooCommerce Kargo 
 • SMS entegrasyonu ile Kargoya Verildi ve tüm sipariş durumlarında özelleştirilebilir SMS bilgilendirme
 
 **📋 Mesafeli Satış Sözleşmesi (MSS) ve Ön Bilgilendirme Formu**
-• Dinamik sözleşme oluşturma ve yönetimi
+• Dinamik sözleşme oluşturma ve yönetimi (mesafeli satış s. ve ön bilgilendirme formu dışında cayma hakkı vs gibi dilediğiniz sözleşmeleri ekleyebilirsiniz.)
 • WordPress sayfalarını sözleşme şablonu olarak kullanma
 • Ödeme sayfasında sözleşme gösterimi (sayfa içi veya modal)
 • Otomatik değişken değiştirme sistemi (müşteri adı, sipariş tarihi, ürün bilgileri vb.)
-• Sözleşme kabul zorunluluğu ve doğrulama
+• Otomatik oluşan sözleşmelerin müşteri hesabım sayfası sipariş detayında gösterilmesi
+• Sözleşmelerin otomatik olarak sipariş alındı mailinde yer alması
+• Sözleşme kabul zorunluluğu ve doğrulama (hangi sözleşmelerin onay gerektirdiği kontrol edilebiliyor.)
 • Sipariş bazında sözleşme arşivleme ve saklama
 • KVKK uyumlu güvenli veri saklama
 
