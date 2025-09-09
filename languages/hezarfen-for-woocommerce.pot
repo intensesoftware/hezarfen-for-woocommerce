@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-07 14:01+0000\n"
+"POT-Creation-Date: 2025-09-09 14:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -28,12 +28,33 @@ msgstr ""
 msgid "850xxxxxxx, 312XXXXXXX etc."
 msgstr ""
 
+#: includes/contracts/admin/class-order-agreements.php:132
+msgid "Accepted:"
+msgstr ""
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:927
 msgid "Action"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:528
 msgid "Action Type"
+msgstr ""
+
+#: includes/contracts/admin/class-order-agreements.php:84
+msgid "Actions"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:91
+msgid "Active Contracts"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:52
+msgid ""
+"Add distance sales contract and pre-information form support to your website."
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:303
+msgid "Add New Contract"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:137
@@ -54,12 +75,28 @@ msgstr ""
 msgid "Advanced Settings"
 msgstr ""
 
+#: includes/contracts/frontend/class-customer-agreements.php:185
+msgid "Agreement Accepted:"
+msgstr ""
+
+#: includes/contracts/admin/class-order-agreements.php:81
+msgid "Agreement Name"
+msgstr ""
+
+#: includes/contracts/frontend/class-customer-agreements.php:106
+msgid "Agreements"
+msgstr ""
+
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:312
 msgid "An error occured when installing and activating the PandaSMS plugin."
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-aras.php:38
 msgid "Aras Kargo"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:369
+msgid "Are you sure you want to delete this contract?"
 msgstr ""
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:188
@@ -77,6 +114,7 @@ msgid "Available sender names from your NetGSM account"
 msgstr ""
 
 #: includes/class-sms-automation.php:502
+#: includes/contracts/admin/class-contracts-settings.php:102
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:218
 msgid "Available Variables"
 msgstr ""
@@ -111,20 +149,42 @@ msgid ""
 "status/#reverting-to-shortcodes-with-woocommerce-8-3'>these instructions</a>."
 msgstr ""
 
+#. Billing Address Variables
 #: includes/class-sms-automation.php:400 includes/class-sms-automation.php:425
+#: includes/contracts/admin/class-contracts-settings.php:493
 msgid "Billing Address"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:497
+msgid "Billing address line 1"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:498
+msgid "Billing address line 2"
 msgstr ""
 
 #: includes/class-sms-automation.php:401 includes/class-sms-automation.php:426
 msgid "Billing City"
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:499
+msgid "Billing city"
+msgstr ""
+
 #: includes/class-sms-automation.php:399 includes/class-sms-automation.php:424
 msgid "Billing Company"
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:496
+msgid "Billing company name"
+msgstr ""
+
 #: includes/class-sms-automation.php:402 includes/class-sms-automation.php:427
 msgid "Billing Country"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:501
+msgid "Billing country"
 msgstr ""
 
 #: includes/class-sms-automation.php:398 includes/class-sms-automation.php:423
@@ -135,8 +195,16 @@ msgstr ""
 msgid "Billing First Name"
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:494
+msgid "Billing first name"
+msgstr ""
+
 #: includes/class-sms-automation.php:396 includes/class-sms-automation.php:421
 msgid "Billing Last Name"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:495
+msgid "Billing last name"
 msgstr ""
 
 #: includes/class-sms-automation.php:397 includes/class-sms-automation.php:422
@@ -146,6 +214,10 @@ msgstr ""
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:632
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:932
 msgid "Billing Phone"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:500
+msgid "Billing postal code"
 msgstr ""
 
 #: includes/class-sms-automation.php:515 includes/class-sms-automation.php:649
@@ -215,6 +287,12 @@ msgstr ""
 msgid "Choose a courier company"
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:68
+msgid ""
+"Choose how the contract will be displayed on the payment page. Contracts are "
+"automatically created when order status is \"Processing\"."
+msgstr ""
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:523
 msgid "Choose when to send the SMS notification"
 msgstr ""
@@ -225,6 +303,10 @@ msgstr ""
 
 #: includes/class-sms-automation.php:685
 msgid "Click to copy"
+msgstr ""
+
+#: includes/contracts/core/class-contract-renderer.php:178
+msgid "Close"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:728
@@ -280,6 +362,36 @@ msgstr ""
 msgid "Connecting..."
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:252
+#: includes/contracts/admin/class-contracts-settings.php:362
+msgid "Contract Name:"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:67
+msgid "Contract Settings"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:84
+msgid "Contract Templates"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:36
+msgid "Contracts & Agreements"
+msgstr ""
+
+#: includes/contracts/core/class-contract-renderer.php:146
+#: includes/contracts/core/class-contract-renderer.php:444
+msgid "Contracts and Forms"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:531
+msgid "Corporate tax number"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:530
+msgid "Corporate tax office"
+msgstr ""
+
 #: includes/class-sms-automation.php:388 includes/class-sms-automation.php:439
 #: packages/manual-shipment-tracking/includes/class-my-account.php:119
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:213
@@ -290,6 +402,23 @@ msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:163
 msgid "Courier company post meta key"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:525
+msgid "Current date and time"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:109
+msgid "Current Variables"
+msgstr ""
+
+#: includes/contracts/admin/class-order-agreements.php:40
+#: includes/contracts/admin/class-order-agreements.php:114
+msgid "Customer Agreements"
+msgstr ""
+
+#: includes/contracts/core/class-post-order-processor.php:243
+msgid "Customer Agreements Saved"
 msgstr ""
 
 #: includes/class-sms-automation.php:384
@@ -312,10 +441,32 @@ msgstr ""
 msgid "Customer Phone"
 msgstr ""
 
+#: includes/contracts/core/class-post-order-processor.php:249
+msgid "Customer:"
+msgstr ""
+
+#: includes/contracts/admin/class-order-agreements.php:82
+msgid "Date Accepted"
+msgstr ""
+
+#. Date Variables
+#: includes/contracts/admin/class-contracts-settings.php:523
+msgid "Date Information"
+msgstr ""
+
+#: includes/contracts/core/class-post-order-processor.php:251
+msgid "Date:"
+msgstr ""
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:487
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:920
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:138
 msgid "Delete"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:294
+#: includes/contracts/admin/class-contracts-settings.php:367
+msgid "Delete Contract"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:892
@@ -335,8 +486,24 @@ msgid ""
 "Disable the Checkout Field Editor for WooCommerce plugin to use this setting."
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:488
+msgid "Discount amount"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:224
+msgid "Distance Sales Contract"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:50
+msgid "Distance Sales Contract Settings"
+msgstr ""
+
 #: includes/class-sms-automation.php:599
 msgid "Draft"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:57
+msgid "DSC Enabled"
 msgstr ""
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:218
@@ -354,12 +521,25 @@ msgstr ""
 msgid "Edit NetGSM SMS Content"
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:271
+#: includes/contracts/admin/class-contracts-settings.php:364
+msgid "Edit Page"
+msgstr ""
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:891
 msgid "Edit SMS Rule"
 msgstr ""
 
+#: includes/contracts/core/class-post-order-processor.php:250
+msgid "Email:"
+msgstr ""
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:409
 msgid "Enable automatic SMS notifications for order status changes"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:58
+msgid "Enable Distance Sales Contract feature"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:60
@@ -368,6 +548,11 @@ msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:407
 msgid "Enable SMS Automation"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:281
+#: includes/contracts/admin/class-contracts-settings.php:365
+msgid "Enabled"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:44
@@ -397,6 +582,10 @@ msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:139
 msgid "Encryption Settings"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:368
+msgid "Enter contract name"
 msgstr ""
 
 #: includes/Checkout.php:385
@@ -544,6 +733,11 @@ msgstr ""
 msgid "Hezarfen Cargo Tracking & SMS Notifications"
 msgstr ""
 
+#. Hezarfen Invoice Fields
+#: includes/contracts/admin/class-contracts-settings.php:529
+msgid "Hezarfen Invoice Fields"
+msgstr ""
+
 #: includes/class-hezarfen.php:246
 msgid "Hezarfen SMS Migration Complete!"
 msgstr ""
@@ -569,6 +763,22 @@ msgid ""
 "I backed up the key to a secure area and placed it in the wp-config file. In "
 "case the encryption key value is deleted from the wp-config.php file, all "
 "past orders will be transferred to T.C. I know I cannot access ID data."
+msgstr ""
+
+#: includes/contracts/core/class-contract-renderer.php:357
+#: includes/contracts/core/class-contract-renderer.php:364
+#, php-format
+msgid "I have read and agree to %s and %s."
+msgstr ""
+
+#: includes/contracts/core/class-contract-renderer.php:396
+#, php-format
+msgid "I have read and agree to the %s."
+msgstr ""
+
+#: includes/contracts/core/class-contract-validator.php:83
+#, php-format
+msgid "I must agree to the %s."
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:379
@@ -632,12 +842,20 @@ msgid ""
 "select courier from below and add it to your tracking list."
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:532
+msgid "Individual ID number"
+msgstr ""
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:651
 msgid "Information"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:936
 msgid "Information (0)"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:72
+msgid "Inline"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:310
@@ -668,6 +886,16 @@ msgstr ""
 
 #: includes/admin/order/OrderDetails.php:45
 msgid "Invoice type"
+msgstr ""
+
+#: includes/contracts/admin/class-order-agreements.php:83
+msgid "IP Address"
+msgstr ""
+
+#: includes/contracts/core/class-post-order-processor.php:252
+#: includes/contracts/frontend/class-customer-agreements.php:189
+#: includes/contracts/admin/class-order-agreements.php:136
+msgid "IP Address:"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:287
@@ -715,6 +943,10 @@ msgstr ""
 msgid "Legacy Turkish Variables"
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:486
+msgid "List of ordered products"
+msgstr ""
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:911
 msgid "Loading senders automatically..."
 msgstr ""
@@ -747,6 +979,10 @@ msgstr ""
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:639
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:934
 msgid "Message Template"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:73
+msgid "Modal"
 msgstr ""
 
 #: includes/class-hezarfen.php:82 includes/Checkout.php:536
@@ -816,12 +1052,20 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+#: includes/contracts/frontend/class-customer-agreements.php:108
+msgid "No agreements were saved for this order."
+msgstr ""
+
+#: includes/contracts/admin/class-order-agreements.php:67
+msgid "No customer agreements found for this order."
+msgstr ""
+
 #: includes/class-sms-automation.php:1317
 #: includes/class-sms-automation.php:1344
 msgid "No message headers found in NetGSM response"
 msgstr ""
 
-#: includes/Autoload.php:65
+#: includes/Autoload.php:68
 msgid "No results found"
 msgstr ""
 
@@ -841,12 +1085,35 @@ msgstr ""
 msgid "On hold"
 msgstr ""
 
+#: includes/contracts/core/class-post-order-processor.php:214
+#, php-format
+msgid "Order #%s - Customer Agreements Saved"
+msgstr ""
+
 #: includes/class-sms-automation.php:386 includes/class-sms-automation.php:416
 msgid "Order Date"
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:480
+msgid "Order date"
+msgstr ""
+
+#. Order Variables
+#: includes/contracts/core/class-post-order-processor.php:247
+#: includes/contracts/admin/class-contracts-settings.php:478
+msgid "Order Information"
+msgstr ""
+
 #: includes/class-sms-automation.php:380 includes/class-sms-automation.php:412
 msgid "Order Number"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:479
+msgid "Order number"
+msgstr ""
+
+#: includes/contracts/core/class-post-order-processor.php:248
+msgid "Order Number:"
 msgstr ""
 
 #: includes/class-sms-automation.php:600
@@ -877,12 +1144,24 @@ msgstr ""
 msgid "Order status ID (optional)"
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:483
+msgid "Order subtotal (excluding tax)"
+msgstr ""
+
 #: includes/class-sms-automation.php:387 includes/class-sms-automation.php:417
 msgid "Order Time"
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:481
+msgid "Order time"
+msgstr ""
+
 #: includes/class-sms-automation.php:394 includes/class-sms-automation.php:415
 msgid "Order Total"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:482
+msgid "Order total (including tax)"
 msgstr ""
 
 #: includes/class-sms-automation.php:509 includes/class-sms-automation.php:643
@@ -916,6 +1195,10 @@ msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:907
 msgid "Password must be at least 6 characters"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:487
+msgid "Payment method"
 msgstr ""
 
 #: includes/class-sms-automation.php:592
@@ -952,6 +1235,15 @@ msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:903
 msgid "Please select a message header"
+msgstr ""
+
+#: includes/contracts/admin/class-order-agreements.php:69
+#: includes/contracts/admin/class-order-agreements.php:104
+msgid "Powered by"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:231
+msgid "Pre-Information Form"
 msgstr ""
 
 #: includes/class-sms-automation.php:593
@@ -996,6 +1288,11 @@ msgstr ""
 msgid "Removing..."
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:290
+#: includes/contracts/admin/class-contracts-settings.php:366
+msgid "Require User Agreement"
+msgstr ""
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:452
 msgid "Rule"
 msgstr ""
@@ -1007,6 +1304,10 @@ msgstr ""
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:662
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:893
 msgid "Save Rule"
+msgstr ""
+
+#: includes/contracts/core/class-post-order-processor.php:256
+msgid "Saved Agreements:"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:894
@@ -1036,9 +1337,13 @@ msgstr ""
 msgid "Select action..."
 msgstr ""
 
-#: includes/Autoload.php:64 includes/class-hezarfen-wc-helper.php:24
+#: includes/Autoload.php:67 includes/class-hezarfen-wc-helper.php:24
 #: includes/class-hezarfen.php:83
 msgid "Select an option"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:127
+msgid "Select page..."
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:575
@@ -1092,7 +1397,7 @@ msgid "Shipment Variables"
 msgstr ""
 
 #. %s: number of orders
-#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:159
+#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:160
 #, php-format
 msgid "Shipped (%s)"
 msgid_plural "Shipped (%s)"
@@ -1123,28 +1428,62 @@ msgid_plural "Shipped (Kargo Takip Turkiye Plugin) (%s)"
 msgstr[0] ""
 msgstr[1] ""
 
+#. Shipping Address Variables
 #: includes/class-sms-automation.php:407 includes/class-sms-automation.php:434
+#: includes/contracts/admin/class-contracts-settings.php:505
 msgid "Shipping Address"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:509
+msgid "Shipping address line 1"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:510
+msgid "Shipping address line 2"
 msgstr ""
 
 #: includes/class-sms-automation.php:408 includes/class-sms-automation.php:435
 msgid "Shipping City"
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:511
+msgid "Shipping city"
+msgstr ""
+
 #: includes/class-sms-automation.php:406 includes/class-sms-automation.php:433
 msgid "Shipping Company"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:508
+msgid "Shipping company name"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:485
+msgid "Shipping cost"
 msgstr ""
 
 #: includes/class-sms-automation.php:409 includes/class-sms-automation.php:436
 msgid "Shipping Country"
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:513
+msgid "Shipping country"
+msgstr ""
+
 #: includes/class-sms-automation.php:403 includes/class-sms-automation.php:430
 msgid "Shipping First Name"
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:506
+msgid "Shipping first name"
+msgstr ""
+
 #: includes/class-sms-automation.php:404 includes/class-sms-automation.php:431
 msgid "Shipping Last Name"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:507
+msgid "Shipping last name"
 msgstr ""
 
 #: includes/class-sms-automation.php:405 includes/class-sms-automation.php:432
@@ -1154,6 +1493,10 @@ msgstr ""
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:633
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:933
 msgid "Shipping Phone"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:512
+msgid "Shipping postal code"
 msgstr ""
 
 #: includes/class-sms-automation.php:521 includes/class-sms-automation.php:655
@@ -1179,6 +1522,19 @@ msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:269
 msgid "Show T.C. Identity Field on checkout page "
+msgstr ""
+
+#. Site Variables
+#: includes/contracts/admin/class-contracts-settings.php:517
+msgid "Site Information"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:518
+msgid "Site name"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:519
+msgid "Site URL"
 msgstr ""
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:111
@@ -1253,6 +1609,10 @@ msgstr ""
 msgid "T.C. Identity Number"
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:484
+msgid "Tax amount"
+msgstr ""
+
 #: includes/Checkout.php:395 includes/admin/order/OrderDetails.php:55
 msgid "Tax Number"
 msgstr ""
@@ -1284,6 +1644,10 @@ msgid ""
 "Shipment Tracking."
 msgstr ""
 
+#: includes/contracts/core/class-post-order-processor.php:271
+msgid "This email was automatically generated by Hezarfen for WooCommerce."
+msgstr ""
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:555
 msgid ""
 "This option uses the NetGSM official WordPress plugin and will be deprecated "
@@ -1305,6 +1669,10 @@ msgstr ""
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-tnt.php:38
 msgid "TNT"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:524
+msgid "Today's date"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:755
@@ -1369,15 +1737,42 @@ msgstr ""
 #. Description of the plugin
 msgid ""
 "Türkiye'nin WooCommerce kargo eklentisi - 26+ kargo firmalası için takip, "
-"sms, e-posta bildirimleri"
+"sms, e-posta bildirimleri + Mesafeli Satış Sözleşmesi desteği"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-ups.php:38
 msgid "UPS Kargo"
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:564
+msgid "Usage:"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:86
+msgid ""
+"Use WordPress pages as contract templates. You can add new contracts with "
+"the + button and delete them with the X button."
+msgstr ""
+
+#: includes/contracts/admin/class-order-agreements.php:142
+msgid "User Agent:"
+msgstr ""
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:902
 msgid "Username and password are required"
+msgstr ""
+
+#: includes/contracts/admin/class-order-agreements.php:95
+msgid "View"
+msgstr ""
+
+#: includes/contracts/frontend/class-customer-agreements.php:76
+#: includes/contracts/frontend/class-customer-agreements.php:139
+msgid "View Agreements"
+msgstr ""
+
+#: includes/contracts/core/class-post-order-processor.php:272
+msgid "View Order in Admin"
 msgstr ""
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:223
@@ -1398,11 +1793,25 @@ msgstr ""
 msgid "When order status changes to %1$s, send SMS via %2$s to %3$s"
 msgstr ""
 
+#: includes/contracts/core/class-template-processor.php:236
+msgid "Will be assigned after order"
+msgstr ""
+
+#: includes/contracts/core/class-template-processor.php:106
+#: includes/contracts/core/class-template-processor.php:238
+msgid "Will be determined after order"
+msgstr ""
+
+#: includes/contracts/core/class-template-processor.php:244
+#: includes/contracts/core/class-template-processor.php:306
+msgid "Will be determined at payment"
+msgstr ""
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:910
 msgid "Will load senders in 1.5 seconds..."
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:148
+#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:149
 msgctxt "WooCommerce Order status"
 msgid "Shipped"
 msgstr ""
@@ -1422,9 +1831,26 @@ msgctxt "WooCommerce Order status"
 msgid "Shipped (Kargo Takip Turkiye Plugin)"
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:259
+#: includes/contracts/admin/class-contracts-settings.php:363
+msgid "WordPress Page:"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:565
+msgid ""
+"Write these variables into your contract text in the WordPress page editor. "
+"When an order is placed, these variables will be automatically replaced with "
+"real data."
+msgstr ""
+
 #: includes/admin/settings/views/encryption.php:47
 #: includes/admin/settings/views/encryption.php:80
 msgid "Yes"
+msgstr ""
+
+#: includes/contracts/frontend/class-customer-agreements.php:59
+#: includes/contracts/frontend/class-customer-agreements.php:122
+msgid "You accepted the following agreements for this order:"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:76
@@ -1442,9 +1868,25 @@ msgid ""
 "number field does not appear on the checkout."
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:104
+msgid ""
+"You can use the following variables in your contract templates. These "
+"variables are automatically replaced with real data when an order is placed."
+msgstr ""
+
+#: includes/contracts/core/class-contract-validator.php:73
+msgid "You must accept the agreements."
+msgstr ""
+
 #: includes/Checkout.php:162 includes/Checkout.php:200
 #: includes/Checkout.php:207
 msgid "Your Address"
+msgstr ""
+
+#: includes/contracts/frontend/class-customer-agreements.php:56
+#: includes/contracts/frontend/class-customer-agreements.php:119
+#: includes/contracts/frontend/class-customer-agreements.php:167
+msgid "Your Agreements"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:754
