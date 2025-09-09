@@ -43,10 +43,7 @@ class Template_Processor {
 	 */
 	private static function process_basic_variables( $content ) {
 		$replacements = array(
-			// Old format (keep for backward compatibility)
-			'{GUNCEL_TARIH}' => date_i18n( 'd/m/Y' ),
-			
-			// New format - Site Variables
+			// Site Variables
 			'{{site_adi}}' => get_bloginfo( 'name' ),
 			'{{site_url}}' => home_url(),
 			
@@ -80,14 +77,7 @@ class Template_Processor {
 		$total_without_shipping = $order->get_total() - $shipping_total;
 		
 		$replacements = array(
-			'{URUNLER}'              => self::get_order_items_summary( $order ),
-			'{ODEME_YONTEMI}'        => $order->get_payment_method_title(),
-			'{KARGO_BEDELI}'         => wc_price( $shipping_total ),
-			'{KARGO_HARIC_SIPARIS_TUTARI}' => wc_price( $total_without_shipping ),
-			'{KARGO_DAHIL_SIPARIS_TUTARI}' => wc_price( $order->get_total() ),
-			'{INDIRIM_TOPLAMI}'      => wc_price( $order->get_total_discount() ),
-			
-			// New format - Order Variables
+			// Order Variables
 			'{{siparis_no}}' => $order->get_order_number(),
 			'{{siparis_tarihi}}' => $order->get_date_created()->date_i18n( 'd/m/Y' ),
 			'{{siparis_saati}}' => $order->get_date_created()->date_i18n( 'H:i:s' ),
@@ -96,6 +86,9 @@ class Template_Processor {
 			'{{siparis_ara_toplam}}' => wc_price( $order->get_subtotal() ),
 			'{{siparis_kdv}}' => wc_price( $order->get_total_tax() ),
 			'{{kargo_ucreti}}' => wc_price( $shipping_total ),
+			'{{urunler}}' => self::get_order_items_summary( $order ),
+			'{{odeme_yontemi}}' => $order->get_payment_method_title(),
+			'{{indirim_toplami}}' => wc_price( $order->get_total_discount() ),
 			
 			// New format - Billing Address Variables
 			'{{fatura_adi}}' => $order->get_billing_first_name(),

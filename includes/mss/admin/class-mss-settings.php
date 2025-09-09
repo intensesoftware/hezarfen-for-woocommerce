@@ -427,6 +427,9 @@ public function output_available_variables( $value ) {
 			'{{siparis_ara_toplam}}' => 'Sipariş ara toplamı (KDV hariç)',
 			'{{siparis_kdv}}' => 'KDV tutarı',
 			'{{kargo_ucreti}}' => 'Kargo ücreti',
+			'{{urunler}}' => 'Sipariş edilen ürünler listesi',
+			'{{odeme_yontemi}}' => 'Ödeme yöntemi',
+			'{{indirim_toplami}}' => 'İndirim tutarı',
 		),
 		
 		
