@@ -63,7 +63,12 @@ class Order_Agreements {
 		
 		if ( empty( $agreements ) ) {
 			?>
-			<p><?php esc_html_e( 'No customer agreements found for this order.', 'hezarfen-for-woocommerce' ); ?></p>
+			<div style="text-align: center; padding: 20px; color: #666;">
+				<p><?php esc_html_e( 'No customer agreements found for this order.', 'hezarfen-for-woocommerce' ); ?></p>
+				<p style="font-size: 11px; margin-top: 15px;">
+					<em><?php esc_html_e( 'Powered by', 'hezarfen-for-woocommerce' ); ?> <strong>Hezarfen for WooCommerce</strong></em>
+				</p>
+			</div>
 			<?php
 			return;
 		}
@@ -94,6 +99,11 @@ class Order_Agreements {
 					<?php endforeach; ?>
 				</tbody>
 			</table>
+			<div style="text-align: right; margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee;">
+				<small style="color: #666; font-style: italic;">
+					<?php esc_html_e( 'Powered by', 'hezarfen-for-woocommerce' ); ?> <strong>Hezarfen for WooCommerce</strong>
+				</small>
+			</div>
 		</div>
 		
 		<!-- Single Modal with Tabs for all agreements -->
