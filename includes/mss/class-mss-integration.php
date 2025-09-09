@@ -120,12 +120,8 @@ class MSS_Integration {
 	 * Load frontend functionality
 	 */
 	private function load_frontend_functionality() {
-		require_once HEZARFEN_MSS_PATH . 'odeme-sayfasi/class-in-mss-odeme-sayfasi-kullanici-degiskenler.php';
-		require_once HEZARFEN_MSS_PATH . 'odeme-sayfasi/class-in-mss-odeme-sayfasi-sepet-degiskenler.php';
 		require_once HEZARFEN_MSS_PATH . 'odeme-sayfasi/class-in-mss-sozlesmeler.php';
 		require_once HEZARFEN_MSS_PATH . 'siparis-sonrasi/class-in-mss-siparis-sonrasi.php';
-		require_once HEZARFEN_MSS_PATH . 'siparis-sonrasi/class-in-mss-siparis-degiskenler.php';
-		require_once HEZARFEN_MSS_PATH . 'siparis-detayi/class-in-mss-kullanici-arayuz.php';
 		
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_assets' ) );
 	}
