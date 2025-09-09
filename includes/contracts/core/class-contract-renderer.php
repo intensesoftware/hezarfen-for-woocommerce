@@ -679,38 +679,4 @@ class Contract_Renderer {
 		<?php
 	}
 
-	/**
-	 * Process Hezarfen invoice field support
-	 *
-	 * @param string $form_icerik Form content.
-	 * @return string
-	 */
-	public static function process_hezarfen_support( $form_icerik ) {
-		// Check if Hezarfen patterns exist (from siparis-sonrasi class)
-		if ( ! class_exists( 'IN_MSS_SiparisSonrasi' ) ) {
-			return $form_icerik;
-		}
-
-		$form_icerik = preg_replace_callback( IN_MSS_SiparisSonrasi::REGEX_PATTERN_HEZARFEN_FATURA_KURUMSAL, function($matches) {
-			return sprintf('<div class="%s %s">%s</div>', self::HEZ_FAT_CONDITIONAL_DIV_WRAPPER_CLASS, self::HEZ_FAT_KURUMSAL_DIV_WRAPPER_CLASS, $matches[1]);
-		}, $form_icerik );
-
-		$form_icerik = preg_replace_callback( IN_MSS_SiparisSonrasi::REGEX_PATTERN_HEZARFEN_FATURA_BIREYSEL, function($matches) {
-			return sprintf('<div class="%s %s">%s</div>', self::HEZ_FAT_CONDITIONAL_DIV_WRAPPER_CLASS, self::HEZ_FAT_BIREYSEL_DIV_WRAPPER_CLASS, $matches[1]);
-		}, $form_icerik );
-
-		$mapper = [
-			'/\{HEZARFEN_KURUMSAL_VERGI_DAIRE\}/'=>'billing_hez_tax_office',
-			'/\{HEZARFEN_KURUMSAL_VERGI_NO}/'=>'billing_hez_tax_number',
-			'/\{HEZARFEN_BIREYSEL_TC\}/'=>'billing_hez_TC_number',
-		];
-
-		foreach($mapper as $degisken_callback=>$input_name) {
-			$form_icerik = preg_replace_callback($degisken_callback, function($matches) use ($input_name){
-				return sprintf('<span data-mss-custom-field-id="%1$s" class="obf_mss_ozelalan obf_mss_ozelalan_%1$s"></span>', $input_name );
-			}, $form_icerik);
-		}
-
-		return $form_icerik;
-	}
 }

@@ -43,6 +43,23 @@ class Template_Processor {
 			$content = self::process_form_variables( $content, $form_data );
 		}
 		
+		// Process Hezarfen invoice field support (only when form data is available or for orders)
+		if ( ! empty( $form_data ) || $order_id ) {
+			$hezarfen_data = $form_data;
+			// For orders, get the data from order meta instead of form data
+			if ( $order_id && empty( $form_data ) ) {
+				$order = wc_get_order( $order_id );
+				if ( $order ) {
+					$hezarfen_data = array(
+						'billing_hez_tax_office' => $order->get_meta( '_billing_hez_tax_office' ),
+						'billing_hez_tax_number' => $order->get_meta( '_billing_hez_tax_number' ),
+						'billing_hez_TC_number' => $order->get_meta( '_billing_hez_TC_number' ),
+					);
+				}
+			}
+			$content = self::process_hezarfen_support( $content, $hezarfen_data );
+		}
+		
 		return $content;
 	}
 
@@ -296,5 +313,24 @@ class Template_Processor {
 	private static function get_country_name( $country_code ) {
 		$countries = WC()->countries->get_countries();
 		return isset( $countries[ $country_code ] ) ? $countries[ $country_code ] : $country_code;
+	}
+
+	/**
+	 * Process Hezarfen invoice field support
+	 *
+	 * @param string $content Form content.
+	 * @param array  $form_data Optional form data for real-time processing.
+	 * @return string
+	 */
+	private static function process_hezarfen_support( $content, $form_data = array() ) {
+		// Hezarfen invoice field replacements
+		$hezarfen_replacements = array(
+			'{{hezarfen_kurumsal_vergi_daire}}' => isset( $form_data['billing_hez_tax_office'] ) ? sanitize_text_field( $form_data['billing_hez_tax_office'] ) : '',
+			'{{hezarfen_kurumsal_vergi_no}}' => isset( $form_data['billing_hez_tax_number'] ) ? sanitize_text_field( $form_data['billing_hez_tax_number'] ) : '',
+			'{{hezarfen_bireysel_tc}}' => isset( $form_data['billing_hez_TC_number'] ) ? sanitize_text_field( $form_data['billing_hez_TC_number'] ) : '',
+		);
+
+		// Replace Hezarfen field placeholders with actual values
+		return str_replace( array_keys( $hezarfen_replacements ), array_values( $hezarfen_replacements ), $content );
 	}
 }

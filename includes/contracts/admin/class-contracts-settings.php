@@ -504,6 +504,13 @@ public function output_available_variables( $value ) {
 			'{{bugunun_tarihi}}' => 'Bugünün tarihi',
 			'{{su_an}}' => 'Şu anki tarih ve saat',
 		),
+		
+		// Hezarfen Invoice Fields
+		'Hezarfen Fatura Alanları' => array(
+			'{{hezarfen_kurumsal_vergi_daire}}' => 'Kurumsal vergi dairesi',
+			'{{hezarfen_kurumsal_vergi_no}}' => 'Kurumsal vergi numarası',
+			'{{hezarfen_bireysel_tc}}' => 'Bireysel TC kimlik numarası',
+		),
 	);
 	
 	?>
