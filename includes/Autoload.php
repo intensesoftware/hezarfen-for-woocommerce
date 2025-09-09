@@ -65,6 +65,7 @@ class Autoload {
 			array(
 				'api_url'            => WC_HEZARFEN_NEIGH_API_URL,
 				'select_option_text' => __( 'Select an option', 'hezarfen-for-woocommerce' ),
+				'no_results_text'    => __( 'No results found', 'hezarfen-for-woocommerce' ),
 			)
 		);
 

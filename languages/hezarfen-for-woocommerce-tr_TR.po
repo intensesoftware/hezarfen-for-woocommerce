@@ -6,7 +6,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2025-08-18 12:52+0000\n"
+"PO-Revision-Date: 2025-09-07 14:01+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -902,6 +902,10 @@ msgstr "Hayır"
 #: includes/class-sms-automation.php:1344
 msgid "No message headers found in NetGSM response"
 msgstr "NetGSM'de gönderici adınız bulunamadı"
+
+#: includes/Autoload.php:65
+msgid "No results found"
+msgstr "Sonuç bulunamadı"
 
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:91
 msgid "No shipment data found"
