@@ -655,15 +655,50 @@ class Contract_Renderer {
 				}
 			});
 
-			// Handle ESC key to close modals
+		}
+		
+		// Global ESC key handler for all Hezarfen modals (outside of init function)
+		if (!window.hezarfenEscListenerAdded) {
 			document.addEventListener('keydown', function(e) {
-				if (e.key === 'Escape') {
-					document.querySelectorAll('.hezarfen-modal').forEach(function(modal) {
-						modal.style.display = 'none';
+				if (e.key === 'Escape' || e.keyCode === 27) {
+					console.log('ESC key pressed, looking for Hezarfen modals');
+					
+					// Try multiple selectors to find visible modals
+					var allModals = document.querySelectorAll('.hezarfen-unified-modal, .hezarfen-modal');
+					var visibleModals = [];
+					
+					allModals.forEach(function(modal) {
+						var style = window.getComputedStyle(modal);
+						var display = style.display;
+						var visibility = style.visibility;
+						var opacity = style.opacity;
+						
+						console.log('Modal found:', modal, 'class:', modal.className, 'display:', display, 'visibility:', visibility, 'opacity:', opacity);
+						
+						// Check if modal is visible (not none, not hidden, opacity > 0)
+						if (display !== 'none' && visibility !== 'hidden' && opacity !== '0') {
+							visibleModals.push(modal);
+						}
 					});
-					document.body.style.overflow = '';
+					
+					console.log('Found visible modals:', visibleModals.length);
+					if (visibleModals.length > 0) {
+						visibleModals.forEach(function(modal) {
+							console.log('Closing modal:', modal);
+							// Remove modal from DOM (same as close button)
+							if (modal.parentNode) {
+								modal.parentNode.removeChild(modal);
+							}
+						});
+						document.body.style.overflow = '';
+						// Prevent default behavior
+						e.preventDefault();
+						e.stopPropagation();
+					}
 				}
 			});
+			window.hezarfenEscListenerAdded = true;
+			console.log('Hezarfen ESC key listener added');
 		}
 		
 		// Try multiple ways to initialize
