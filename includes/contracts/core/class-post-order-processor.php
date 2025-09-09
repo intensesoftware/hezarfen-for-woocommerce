@@ -26,19 +26,9 @@ class Post_Order_Processor {
 	public static function init() {
 		error_log( 'Hezarfen Post_Order_Processor::init() called' );
 		
-		$settings = get_option( 'hezarfen_mss_settings', array() );
-		$contract_creation_type = isset( $settings['sozlesme_olusturma_tipi'] ) ? $settings['sozlesme_olusturma_tipi'] : 'yeni_siparis';
-
-		error_log( 'Hezarfen Contract creation type: ' . $contract_creation_type );
-
-		// Hook based on when contracts should be created
-		if ( 'isleniyor' === $contract_creation_type ) {
-			add_action( 'woocommerce_order_status_processing', array( __CLASS__, 'process_order_contracts' ) );
-			error_log( 'Hezarfen Hooked to woocommerce_order_status_processing' );
-		} else {
-			add_action( 'woocommerce_thankyou', array( __CLASS__, 'process_order_contracts' ) );
-			error_log( 'Hezarfen Hooked to woocommerce_thankyou' );
-		}
+		// Agreements will be created when order status becomes processing
+		add_action( 'woocommerce_order_status_processing', array( __CLASS__, 'process_order_contracts' ) );
+		error_log( 'Hezarfen Hooked to woocommerce_order_status_processing' );
 
 		// Hook for including contracts in customer emails
 		add_action( 'woocommerce_email_customer_details', array( __CLASS__, 'include_contracts_in_email' ), 100, 4 );
@@ -105,27 +95,13 @@ class Post_Order_Processor {
 		// Debug: Log email class for troubleshooting
 		error_log( 'Hezarfen Email Debug - Email Class: ' . get_class( $email ) );
 
-		// Only include in specific customer emails based on settings
-		$settings = get_option( 'hezarfen_mss_settings', array() );
-		$contract_creation_type = isset( $settings['sozlesme_olusturma_tipi'] ) ? $settings['sozlesme_olusturma_tipi'] : 'yeni_siparis';
-
-		$should_include = false;
+		// Include contracts in processing order emails (since agreements are created when order becomes processing)
 		$email_class = get_class( $email );
+		$should_include = false;
 		
-		// More flexible email class matching
-		if ( 'isleniyor' === $contract_creation_type ) {
-			// Include in processing order emails
-			if ( strpos( $email_class, 'Processing' ) !== false || strpos( $email_class, 'processing' ) !== false ) {
-				$should_include = true;
-			}
-		} else {
-			// Include in new order emails (on-hold, new order, etc.)
-			if ( strpos( $email_class, 'On_Hold' ) !== false || 
-				 strpos( $email_class, 'New_Order' ) !== false ||
-				 strpos( $email_class, 'on_hold' ) !== false ||
-				 strpos( $email_class, 'new_order' ) !== false ) {
-				$should_include = true;
-			}
+		// Include in processing order emails
+		if ( strpos( $email_class, 'Processing' ) !== false || strpos( $email_class, 'processing' ) !== false ) {
+			$should_include = true;
 		}
 
 		error_log( 'Hezarfen Email Debug - Should Include: ' . ( $should_include ? 'YES' : 'NO' ) );

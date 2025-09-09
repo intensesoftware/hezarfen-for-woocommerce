@@ -64,8 +64,8 @@ class Contracts_Settings {
 
 			
 			array(
-				'title'    => __( 'Sözleşme Gösterim Tipi', 'hezarfen-for-woocommerce' ),
-				'desc'     => __( 'Sözleşmenin ödeme sayfasında nasıl gösterileceğini seçin.', 'hezarfen-for-woocommerce' ),
+				'title'    => __( 'Sözleşme Ayarları', 'hezarfen-for-woocommerce' ),
+				'desc'     => __( 'Sözleşmenin ödeme sayfasında nasıl gösterileceğini seçin. Sözleşmeler sipariş durumu "Hazırlanıyor" olduğunda otomatik olarak oluşturulur.', 'hezarfen-for-woocommerce' ),
 				'id'       => 'hezarfen_mss_settings[odeme_sayfasinda_sozlesme_gosterim_tipi]',
 				'type'     => 'select',
 				'options'  => array(
@@ -73,18 +73,6 @@ class Contracts_Settings {
 					'modal'  => __( 'Modal', 'hezarfen-for-woocommerce' ),
 				),
 				'default'  => 'inline',
-			),
-			
-			array(
-				'title'    => __( 'Sözleşme Oluşturma Tipi', 'hezarfen-for-woocommerce' ),
-				'desc'     => __( 'Sözleşmenin ne zaman oluşturulacağını seçin.', 'hezarfen-for-woocommerce' ),
-				'id'       => 'hezarfen_mss_settings[sozlesme_olusturma_tipi]',
-				'type'     => 'select',
-				'options'  => array(
-					'yeni_siparis' => __( 'Sipariş Alındığında', 'hezarfen-for-woocommerce' ),
-					'isleniyor'    => __( 'Sipariş Hazırlanıyor Durumuna Geldiğinde', 'hezarfen-for-woocommerce' ),
-				),
-				'default'  => 'yeni_siparis',
 			),
 			
 			array(
