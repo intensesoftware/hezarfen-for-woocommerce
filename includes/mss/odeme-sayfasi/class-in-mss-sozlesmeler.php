@@ -383,13 +383,9 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 				var modalContent = document.createElement('div');
 				modalContent.style.cssText = 'background: white; border-radius: 8px; max-width: 800px; width: 95%; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column;';
 				
-				// Header with close button
+				// Header with close button only
 				var modalHeader = document.createElement('div');
-				modalHeader.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #eee;';
-				
-				var modalTitle = document.createElement('h3');
-				modalTitle.style.cssText = 'margin: 0; color: #333;';
-				modalTitle.textContent = 'Sözleşmeler';
+				modalHeader.style.cssText = 'display: flex; justify-content: flex-end; align-items: center; padding: 15px 20px 0 20px;';
 				
 				var closeButton = document.createElement('button');
 				closeButton.style.cssText = 'background: none; border: none; font-size: 24px; cursor: pointer; color: #666;';
@@ -402,7 +398,7 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 				// Tab navigation
 				var tabNav = document.createElement('div');
 				tabNav.className = 'tab-navigation';
-				tabNav.style.cssText = 'display: flex; border-bottom: 1px solid #eee; background: #f9f9f9;';
+				tabNav.style.cssText = 'display: flex; border-bottom: 1px solid #eee; background: #f9f9f9; padding: 0 20px;';
 				
 				// Tab content container
 				var tabContent = document.createElement('div');
@@ -433,14 +429,9 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 					tabPane.className = 'tab-pane';
 					tabPane.dataset.contractId = contract.id;
 					tabPane.style.cssText = contract.id === activeContractId ? 'display: block;' : 'display: none;';
-					tabPane.innerHTML = `
-						<h4 style="margin-top: 0; color: #333;">${contract.name}</h4>
-						<div style="color: #666; line-height: 1.6;">
-							<p>Bu sözleşme içeriği burada görüntülenecek.</p>
-							<p>Contract ID: ${contract.id}</p>
-							<p>Sözleşme detayları yükleniyor...</p>
-						</div>
-					`;
+					
+					// Load actual contract content
+					loadContractContent(contract.id, tabPane);
 					
 					tabContent.appendChild(tabPane);
 				});
@@ -453,7 +444,6 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 					}
 				};
 				
-				modalHeader.appendChild(modalTitle);
 				modalHeader.appendChild(closeButton);
 				modalContent.appendChild(modalHeader);
 				modalContent.appendChild(tabNav);
@@ -462,6 +452,25 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 				
 				document.body.appendChild(modalOverlay);
 				document.body.style.overflow = 'hidden';
+			}
+			
+			function loadContractContent(contractId, tabPane) {
+				// Try to find the existing modal content for this contract
+				var existingModal = document.getElementById('hezarfen-modal-' + contractId);
+				if (existingModal) {
+					var modalContent = existingModal.querySelector('.hezarfen-modal-content');
+					if (modalContent) {
+						tabPane.innerHTML = modalContent.innerHTML;
+						return;
+					}
+				}
+				
+				// If no existing modal content found, show loading message
+				tabPane.innerHTML = `
+					<div style="color: #666; line-height: 1.6; text-align: center; padding: 40px;">
+						<p>Sözleşme içeriği yükleniyor...</p>
+					</div>
+				`;
 			}
 			
 			function switchToTab(contractId) {
