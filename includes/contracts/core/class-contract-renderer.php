@@ -254,6 +254,37 @@ class Contract_Renderer {
 	}
 
 	/**
+	 * Turkish grammar function to add appropriate suffix
+	 *
+	 * @param string $title The title to add suffix to.
+	 * @return string
+	 */
+	private static function get_ek( $title ) {
+		$back_vowels  = ['a', 'ı', 'o', 'u'];
+		$front_vowels = ['e', 'i', 'ö', 'ü'];
+
+		$lower = mb_strtolower($title, 'UTF-8');
+		$chars = preg_split('//u', $lower, -1, PREG_SPLIT_NO_EMPTY);
+		$last_vowel = null;
+		foreach (array_reverse($chars) as $ch) {
+			if (in_array($ch, $back_vowels) || in_array($ch, $front_vowels)) {
+				$last_vowel = $ch;
+				break;
+			}
+		}
+
+		$ek = "'ni"; // default
+		if ($last_vowel) {
+			if (in_array($last_vowel, ['a','ı'])) $ek = "'nı";
+			elseif (in_array($last_vowel, ['e','i'])) $ek = "'ni";
+			elseif (in_array($last_vowel, ['o','u'])) $ek = "'nu";
+			elseif (in_array($last_vowel, ['ö','ü'])) $ek = "'nü";
+		}
+
+		return $title . $ek;
+	}
+
+	/**
 	 * Render contract checkboxes
 	 *
 	 * @return void
@@ -261,7 +292,6 @@ class Contract_Renderer {
 	public static function render_contract_checkboxes() {
 		$settings = get_option( 'hezarfen_mss_settings', array() );
 		$contracts = isset( $settings['contracts'] ) ? $settings['contracts'] : array();
-		
 		
 		if ( empty( $contracts ) ) {
 			return;
@@ -275,23 +305,61 @@ class Contract_Renderer {
 			? (int) $settings['sozlesme_onay_checkbox_varsayilan_durum'] 
 			: 0;
 
+		// Filter active contracts
+		$active_contracts = array();
+		foreach ( $contracts as $contract ) {
+			// Skip disabled contracts
+			if ( empty( $contract['enabled'] ) ) {
+				continue;
+			}
+			
+			// Skip contracts without templates
+			if ( empty( $contract['template_id'] ) ) {
+				continue;
+			}
+			
+			// Skip validation for hidden contracts (by contract ID)
+			if ( in_array( $contract['id'], $hidden_contracts, true ) ) {
+				continue;
+			}
+			
+			$active_contracts[] = $contract;
+		}
+
+		if ( empty( $active_contracts ) ) {
+			return;
+		}
+
+		// Get current language - default to English (Turkish only if locale starts with 'tr')
+		$current_lang = get_locale();
+		$is_turkish = ( strpos( $current_lang, 'tr' ) === 0 );
+
 		?>
 		<div class="in-sozlesme-onay-checkboxes">
-			<?php foreach ( $contracts as $contract ) : ?>
-				<?php 
-				// Skip disabled contracts
-				if ( empty( $contract['enabled'] ) ) {
-					continue;
+		<?php if ( count( $active_contracts ) > 1 ) : ?>
+			<?php // Combined checkbox for multiple contracts (Turkish uses getEk, English uses regular names) ?>
+				<?php
+				// Create clickable contract names with proper grammar (Turkish uses getEk, English uses regular names)
+				$contract_links = array();
+				foreach ( $active_contracts as $contract ) {
+					$contract_name = $is_turkish ? self::get_ek( $contract['name'] ) : $contract['name'];
+					$contract_links[] = '<a href="#" class="contract-modal-link" data-contract-id="' . esc_attr( $contract['id'] ) . '">' . esc_html( $contract_name ) . '</a>';
 				}
 				
-				// Skip contracts without templates
-				if ( empty( $contract['template_id'] ) ) {
-					continue;
-				}
-				
-				// Skip validation for hidden contracts (by contract ID)
-				if ( in_array( $contract['id'], $hidden_contracts, true ) ) {
-					continue;
+				$combined_text = '';
+				if ( count( $contract_links ) === 2 ) {
+					$combined_text = sprintf( 
+						__( 'I have read and agree to %s and %s.', 'hezarfen-for-woocommerce' ),
+						$contract_links[0],
+						$contract_links[1]
+					);
+				} else {
+					$last_contract = array_pop( $contract_links );
+					$combined_text = sprintf( 
+						__( 'I have read and agree to %s and %s.', 'hezarfen-for-woocommerce' ),
+						implode( ', ', $contract_links ),
+						$last_contract
+					);
 				}
 				?>
 				<p class="form-row in-sozlesme-onay-checkbox validate-required">
@@ -299,19 +367,35 @@ class Contract_Renderer {
 						<input 
 							type="checkbox" 
 							class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox" 
-							name="contract_<?php echo esc_attr( $contract['id'] ); ?>_checkbox"
+							name="contract_combined_checkbox"
 							<?php checked( $default_checked, 1 ); ?>
 							required
 						/>
-						<span><?php 
-							printf( 
-								__( '%s sözleşmesini okudum ve kabul ediyorum.', 'hezarfen-for-woocommerce' ), 
-								'<a href="#" class="contract-modal-link" data-contract-id="' . esc_attr( $contract['id'] ) . '">' . esc_html( $contract['name'] ) . '</a>'
-							);
-						?></span>
+						<span><?php echo $combined_text; ?></span>
 					</label>
 				</p>
-			<?php endforeach; ?>
+			<?php else : ?>
+				<?php // Single contract - show individual checkbox ?>
+				<?php foreach ( $active_contracts as $contract ) : ?>
+					<p class="form-row in-sozlesme-onay-checkbox validate-required">
+						<label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
+							<input 
+								type="checkbox" 
+								class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox" 
+								name="contract_<?php echo esc_attr( $contract['id'] ); ?>_checkbox"
+								<?php checked( $default_checked, 1 ); ?>
+								required
+							/>
+							<span><?php 
+								printf( 
+									__( 'I have read and agree to the %s.', 'hezarfen-for-woocommerce' ), 
+									'<a href="#" class="contract-modal-link" data-contract-id="' . esc_attr( $contract['id'] ) . '">' . esc_html( $contract['name'] ) . '</a>'
+								);
+							?></span>
+						</label>
+					</p>
+				<?php endforeach; ?>
+			<?php endif; ?>
 		</div>
 		<?php
 	}
