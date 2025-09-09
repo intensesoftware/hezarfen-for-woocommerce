@@ -43,7 +43,16 @@ class Template_Processor {
 	 */
 	private static function process_basic_variables( $content ) {
 		$replacements = array(
+			// Old format (keep for backward compatibility)
 			'{GUNCEL_TARIH}' => date_i18n( 'd/m/Y' ),
+			
+			// New format - Site Variables
+			'{{site_adi}}' => get_bloginfo( 'name' ),
+			'{{site_url}}' => home_url(),
+			
+			// New format - Date Variables
+			'{{bugunun_tarihi}}' => date_i18n( 'd/m/Y' ),
+			'{{su_an}}' => date_i18n( 'd/m/Y H:i:s' ),
 		);
 
 		return str_replace( array_keys( $replacements ), array_values( $replacements ), $content );
@@ -71,18 +80,42 @@ class Template_Processor {
 		$total_without_shipping = $order->get_total() - $shipping_total;
 		
 		$replacements = array(
-			'{FATURA_TAM_AD_UNVANI}' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
-			'{FATURA_ADRESI}'        => $billing_address,
-			'{ALICI_ADRESI}'         => $shipping_address ?: $billing_address,
-			'{ALICI_TELEFONU}'       => $order->get_billing_phone(),
-			'{ALICI_EPOSTA}'         => $order->get_billing_email(),
-			'{ALICI_TAM_AD_UNVANI}'  => $order->get_shipping_first_name() . ' ' . $order->get_shipping_last_name(),
 			'{URUNLER}'              => self::get_order_items_summary( $order ),
 			'{ODEME_YONTEMI}'        => $order->get_payment_method_title(),
 			'{KARGO_BEDELI}'         => wc_price( $shipping_total ),
 			'{KARGO_HARIC_SIPARIS_TUTARI}' => wc_price( $total_without_shipping ),
 			'{KARGO_DAHIL_SIPARIS_TUTARI}' => wc_price( $order->get_total() ),
 			'{INDIRIM_TOPLAMI}'      => wc_price( $order->get_total_discount() ),
+			
+			// New format - Order Variables
+			'{{siparis_no}}' => $order->get_order_number(),
+			'{{siparis_tarihi}}' => $order->get_date_created()->date_i18n( 'd/m/Y' ),
+			'{{siparis_saati}}' => $order->get_date_created()->date_i18n( 'H:i:s' ),
+			'{{siparis_durumu}}' => wc_get_order_status_name( $order->get_status() ),
+			'{{siparis_toplam}}' => wc_price( $order->get_total() ),
+			'{{siparis_ara_toplam}}' => wc_price( $order->get_subtotal() ),
+			'{{siparis_kdv}}' => wc_price( $order->get_total_tax() ),
+			'{{kargo_ucreti}}' => wc_price( $shipping_total ),
+			
+			// New format - Billing Address Variables
+			'{{fatura_adi}}' => $order->get_billing_first_name(),
+			'{{fatura_soyadi}}' => $order->get_billing_last_name(),
+			'{{fatura_sirket}}' => $order->get_billing_company(),
+			'{{fatura_adres_1}}' => $order->get_billing_address_1(),
+			'{{fatura_adres_2}}' => $order->get_billing_address_2(),
+			'{{fatura_sehir}}' => $order->get_billing_city(),
+			'{{fatura_posta_kodu}}' => $order->get_billing_postcode(),
+			'{{fatura_ulke}}' => WC()->countries->countries[ $order->get_billing_country() ] ?? $order->get_billing_country(),
+			
+			// New format - Shipping Address Variables
+			'{{teslimat_adi}}' => $order->get_shipping_first_name() ?: $order->get_billing_first_name(),
+			'{{teslimat_soyadi}}' => $order->get_shipping_last_name() ?: $order->get_billing_last_name(),
+			'{{teslimat_sirket}}' => $order->get_shipping_company() ?: $order->get_billing_company(),
+			'{{teslimat_adres_1}}' => $order->get_shipping_address_1() ?: $order->get_billing_address_1(),
+			'{{teslimat_adres_2}}' => $order->get_shipping_address_2() ?: $order->get_billing_address_2(),
+			'{{teslimat_sehir}}' => $order->get_shipping_city() ?: $order->get_billing_city(),
+			'{{teslimat_posta_kodu}}' => $order->get_shipping_postcode() ?: $order->get_billing_postcode(),
+			'{{teslimat_ulke}}' => WC()->countries->countries[ $order->get_shipping_country() ?: $order->get_billing_country() ] ?? ($order->get_shipping_country() ?: $order->get_billing_country()),
 		);
 
 		return str_replace( array_keys( $replacements ), array_values( $replacements ), $content );
