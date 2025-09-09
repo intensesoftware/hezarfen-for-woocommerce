@@ -1,20 +1,20 @@
 <?php
 /**
- * MSS Settings integration with Hezarfen
+ * Contracts Settings integration with Hezarfen
  * 
- * @package Hezarfen\Inc\MSS
+ * @package Hezarfen\Inc\Contracts
  */
 
-namespace Hezarfen\Inc\MSS;
+namespace Hezarfen\Inc\Contracts;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
- * MSS Settings class
+ * Contracts Settings class
  */
-class MSS_Settings {
+class Contracts_Settings {
 	
-	const SECTION = 'mss_settings';
+	const SECTION = 'contracts_settings';
 	
 	/**
 	 * Constructor
@@ -33,7 +33,7 @@ class MSS_Settings {
 	 * Add MSS section to Hezarfen settings
 	 */
 	public function add_section( $sections ) {
-		$sections[ self::SECTION ] = __( 'Mesafeli Satış Sözleşmesi', 'hezarfen-for-woocommerce' );
+		$sections[ self::SECTION ] = __( 'Contracts & Agreements', 'hezarfen-for-woocommerce' );
 		return $sections;
 	}
 	
@@ -197,18 +197,18 @@ class MSS_Settings {
 		}
 		
 		wp_enqueue_script(
-			'hezarfen-mss-admin',
-			HEZARFEN_MSS_URL . 'js/admin.js',
+			'hezarfen-contracts-admin',
+			HEZARFEN_CONTRACTS_URL . 'js/admin.js',
 			array( 'jquery' ),
-			HEZARFEN_MSS_VERSION,
+			HEZARFEN_CONTRACTS_VERSION,
 			true
 		);
 		
 		wp_enqueue_style(
-			'hezarfen-mss-admin',
-			HEZARFEN_MSS_URL . 'css/admin.css',
+			'hezarfen-contracts-admin',
+			HEZARFEN_CONTRACTS_URL . 'css/admin.css',
 			array(),
-			HEZARFEN_MSS_VERSION
+			HEZARFEN_CONTRACTS_VERSION
 		);
 	}
 	
@@ -537,8 +537,6 @@ public function output_available_variables( $value ) {
 					<strong>💡 Kullanım:</strong><br>
 					Bu değişkenleri WordPress sayfa editöründe sözleşme metninizin içine yazın. 
 					Sipariş verildiğinde bu değişkenler otomatik olarak gerçek verilerle değiştirilecektir.
-					<br><br>
-					<strong>Örnek:</strong> "Sayın {{musteri_adi_soyadi}}, {{siparis_tarihi}} tarihinde vermiş olduğunuz {{siparis_no}} numaralı siparişiniz..."
 				</div>
 			</div>
 			

@@ -4,10 +4,10 @@
  * 
  * Handles contract processing after order completion
  * 
- * @package Hezarfen\Inc\MSS\Core
+ * @package Hezarfen\Inc\Contracts\Core
  */
 
-namespace Hezarfen\Inc\MSS\Core;
+namespace Hezarfen\Inc\Contracts\Core;
 
 defined( 'ABSPATH' ) || exit();
 

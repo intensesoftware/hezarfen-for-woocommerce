@@ -4,10 +4,10 @@
  * 
  * Handles agreement display on thank you page and my account order details
  * 
- * @package Hezarfen\Inc\MSS\Frontend
+ * @package Hezarfen\Inc\Contracts\Frontend
  */
 
-namespace Hezarfen\Inc\MSS\Frontend;
+namespace Hezarfen\Inc\Contracts\Frontend;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -275,9 +275,9 @@ class Customer_Agreements {
 		// Enqueue the CSS file
 		wp_enqueue_style(
 			'hezarfen-customer-agreements',
-			plugins_url( 'assets/mss/css/customer-agreements.css', WC_HEZARFEN_FILE ),
+			plugins_url( 'assets/contracts/css/customer-agreements.css', WC_HEZARFEN_FILE ),
 			array(),
-			HEZARFEN_MSS_VERSION
+			HEZARFEN_CONTRACTS_VERSION
 		);
 	}
 }

@@ -2,10 +2,10 @@
 /**
  * Order Agreements Display for Admin
  * 
- * @package Hezarfen\Inc\MSS
+ * @package Hezarfen\Inc\Contracts\Admin
  */
 
-namespace Hezarfen\Inc\MSS\Admin;
+namespace Hezarfen\Inc\Contracts\Admin;
 
 defined( 'ABSPATH' ) || exit();
 

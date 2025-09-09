@@ -5,7 +5,7 @@
  * @package Hezarfen\MSS
  */
 
-namespace Hezarfen\Inc\MSS\Core;
+namespace Hezarfen\Inc\Contracts\Core;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

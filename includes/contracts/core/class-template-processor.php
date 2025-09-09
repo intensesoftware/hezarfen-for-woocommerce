@@ -2,10 +2,10 @@
 /**
  * Template Variable Processor
  *
- * @package Hezarfen\MSS
+ * @package Hezarfen\Contracts
  */
 
-namespace Hezarfen\Inc\MSS\Core;
+namespace Hezarfen\Inc\Contracts\Core;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

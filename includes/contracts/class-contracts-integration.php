@@ -1,18 +1,18 @@
 <?php
 /**
- * MSS Integration for Hezarfen
+ * Contracts Integration for Hezarfen
  * 
- * @package Hezarfen\Inc\MSS
+ * @package Hezarfen\Inc\Contracts
  */
 
-namespace Hezarfen\Inc\MSS;
+namespace Hezarfen\Inc\Contracts;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
- * MSS Integration main class
+ * Contracts Integration main class
  */
-class MSS_Integration {
+class Contracts_Integration {
 	
 	/**
 	 * Constructor
@@ -28,16 +28,16 @@ class MSS_Integration {
 	 * Define MSS constants
 	 */
 	private function define_constants() {
-		if ( ! defined( 'HEZARFEN_MSS_PATH' ) ) {
-			define( 'HEZARFEN_MSS_PATH', WC_HEZARFEN_UYGULAMA_YOLU . 'includes/mss/' );
+		if ( ! defined( 'HEZARFEN_CONTRACTS_PATH' ) ) {
+			define( 'HEZARFEN_CONTRACTS_PATH', WC_HEZARFEN_UYGULAMA_YOLU . 'includes/contracts/' );
 		}
 		
-		if ( ! defined( 'HEZARFEN_MSS_URL' ) ) {
-			define( 'HEZARFEN_MSS_URL', WC_HEZARFEN_UYGULAMA_URL . 'assets/mss/' );
+		if ( ! defined( 'HEZARFEN_CONTRACTS_URL' ) ) {
+			define( 'HEZARFEN_CONTRACTS_URL', WC_HEZARFEN_UYGULAMA_URL . 'assets/contracts/' );
 		}
 		
-		if ( ! defined( 'HEZARFEN_MSS_VERSION' ) ) {
-			define( 'HEZARFEN_MSS_VERSION', '2.0.1' );
+		if ( ! defined( 'HEZARFEN_CONTRACTS_VERSION' ) ) {
+			define( 'HEZARFEN_CONTRACTS_VERSION', '2.0.1' );
 		}
 	}
 	
@@ -64,25 +64,25 @@ class MSS_Integration {
 	 */
 	private function load_dependencies() {
 		// Load core classes
-		require_once HEZARFEN_MSS_PATH . 'core/class-template-processor.php';
-		require_once HEZARFEN_MSS_PATH . 'core/class-contract-renderer.php';
-		require_once HEZARFEN_MSS_PATH . 'core/class-contract-validator.php';
-		require_once HEZARFEN_MSS_PATH . 'core/class-post-order-processor.php';
-		require_once HEZARFEN_MSS_PATH . 'frontend/class-customer-agreements.php';
+		require_once HEZARFEN_CONTRACTS_PATH . 'core/class-template-processor.php';
+		require_once HEZARFEN_CONTRACTS_PATH . 'core/class-contract-renderer.php';
+		require_once HEZARFEN_CONTRACTS_PATH . 'core/class-contract-validator.php';
+		require_once HEZARFEN_CONTRACTS_PATH . 'core/class-post-order-processor.php';
+		require_once HEZARFEN_CONTRACTS_PATH . 'frontend/class-customer-agreements.php';
 		
 		// Load settings integration
-		require_once HEZARFEN_MSS_PATH . 'admin/class-mss-settings.php';
-		require_once HEZARFEN_MSS_PATH . 'admin/class-order-agreements.php';
+		require_once HEZARFEN_CONTRACTS_PATH . 'admin/class-contracts-settings.php';
+		require_once HEZARFEN_CONTRACTS_PATH . 'admin/class-order-agreements.php';
 	}
 	
 	/**
 	 * Initialize MSS functionality
 	 */
 	public function init_mss() {
-		// Initialize MSS settings integration with Hezarfen
+		// Initialize Contracts settings integration with Hezarfen
 		if ( is_admin() ) {
-			new \Hezarfen\Inc\MSS\MSS_Settings();
-			new \Hezarfen\Inc\MSS\Admin\Order_Agreements();
+			new \Hezarfen\Inc\Contracts\Contracts_Settings();
+			new \Hezarfen\Inc\Contracts\Admin\Order_Agreements();
 		}
 		
 		// Check if MSS is properly configured and load frontend if needed
@@ -119,10 +119,10 @@ class MSS_Integration {
 	 * Load frontend functionality
 	 */
 	private function load_frontend_functionality() {
-		// Initialize core MSS functionality
-		\Hezarfen\Inc\MSS\Core\Contract_Renderer::init_checkout_hooks();
-		\Hezarfen\Inc\MSS\Core\Post_Order_Processor::init();
-		\Hezarfen\Inc\MSS\Frontend\Customer_Agreements::init();
+		// Initialize core Contracts functionality
+		\Hezarfen\Inc\Contracts\Core\Contract_Renderer::init_checkout_hooks();
+		\Hezarfen\Inc\Contracts\Core\Post_Order_Processor::init();
+		\Hezarfen\Inc\Contracts\Frontend\Customer_Agreements::init();
 		
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_assets' ) );
 	}
@@ -133,41 +133,41 @@ class MSS_Integration {
 	public function enqueue_frontend_assets() {
 		if ( is_checkout() || is_view_order_page() ) {
 			wp_enqueue_script(
-				'hezarfen-mss-modal',
-				HEZARFEN_MSS_URL . 'js/modal.js',
+				'hezarfen-contracts-modal',
+				HEZARFEN_CONTRACTS_URL . 'js/modal.js',
 				array( 'jquery' ),
-				HEZARFEN_MSS_VERSION,
+				HEZARFEN_CONTRACTS_VERSION,
 				true
 			);
 			
 			wp_enqueue_style(
-				'hezarfen-mss-modal',
-				HEZARFEN_MSS_URL . 'css/modal.css',
+				'hezarfen-contracts-modal',
+				HEZARFEN_CONTRACTS_URL . 'css/modal.css',
 				array(),
-				HEZARFEN_MSS_VERSION
+				HEZARFEN_CONTRACTS_VERSION
 			);
 		}
 		
 		if ( is_checkout() ) {
 			wp_enqueue_script(
-				'hezarfen-mss-general',
-				HEZARFEN_MSS_URL . 'js/general.js',
+				'hezarfen-contracts-general',
+				HEZARFEN_CONTRACTS_URL . 'js/general.js',
 				array( 'jquery' ),
-				HEZARFEN_MSS_VERSION,
+				HEZARFEN_CONTRACTS_VERSION,
 				true
 			);
 			
 			wp_localize_script(
-				'hezarfen-mss-general',
+				'hezarfen-contracts-general',
 				'ajax_object',
 				array( 'ajax_url' => admin_url( 'admin-ajax.php' ) )
 			);
 			
 			wp_enqueue_style(
-				'hezarfen-mss-style',
-				HEZARFEN_MSS_URL . 'css/style.css',
+				'hezarfen-contracts-style',
+				HEZARFEN_CONTRACTS_URL . 'css/style.css',
 				array(),
-				HEZARFEN_MSS_VERSION
+				HEZARFEN_CONTRACTS_VERSION
 			);
 		}
 	}

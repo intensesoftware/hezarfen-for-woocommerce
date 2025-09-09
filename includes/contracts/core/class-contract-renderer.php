@@ -2,10 +2,10 @@
 /**
  * Contract Renderer
  *
- * @package Hezarfen\MSS
+ * @package Hezarfen\Contracts
  */
 
-namespace Hezarfen\Inc\MSS\Core;
+namespace Hezarfen\Inc\Contracts\Core;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -27,7 +27,7 @@ class Contract_Renderer {
 	public static function init_checkout_hooks() {
 		add_action( 'woocommerce_checkout_before_terms_and_conditions', array( __CLASS__, 'render_checkout_contracts' ), 10 );
 		add_action( 'woocommerce_checkout_after_terms_and_conditions', array( __CLASS__, 'render_contract_checkboxes' ) );
-		add_action( 'woocommerce_checkout_process', array( '\Hezarfen\Inc\MSS\Core\Contract_Validator', 'validate_checkout_contracts' ) );
+		add_action( 'woocommerce_checkout_process', array( '\Hezarfen\Inc\Contracts\Core\Contract_Validator', 'validate_checkout_contracts' ) );
 		add_action( 'wp_footer', array( __CLASS__, 'add_contract_modal_script' ) );
 		add_filter( 'woocommerce_update_order_review_fragments', array( __CLASS__, 'get_contract_fragments' ) );
 	}

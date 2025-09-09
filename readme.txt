@@ -8,10 +8,10 @@ Requires PHP: 7.0
 License: GPL2
 Stable tag: 2.4.1
 
-TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ! Türkiye’nin Lider WooCommerce Kargo Takip Eklentisi: 23 kargo, SMS, ilçe/mahalle, TC kimlik & vergi desteği
+TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ! Türkiye'nin Lider WooCommerce Kargo Takip Eklentisi: 23 kargo, SMS, MSS sözleşmeleri, ilçe/mahalle, vergi alanlar
 == Description ==
 
-**Tamamen Ücretsiz!** Hezarfen, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo ve ödeme yönetim eklentisidir. Bu WooCommerce kargo entegrasyon eklentisi, 23 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel WooCommerce kargo takip deneyimi sunar ve Türkiye'ye özgü mahalle, fatura ve vergi alanlarıyla ödeme ekranınızı Türkiye'ye uyumlu hale getirir.
+**Tamamen Ücretsiz!** Hezarfen, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo, ödeme ve sözleşme yönetim eklentisidir. Bu WooCommerce kargo entegrasyon eklentisi, 23 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel WooCommerce kargo takip deneyimi sunar, Mesafeli Satış Sözleşmesi (MSS) desteği sağlar ve Türkiye'ye özgü mahalle, fatura ve vergi alanlarıyla ödeme ekranınızı Türkiye'ye uyumlu hale getirir.
 
 = 🚀 2000+ WooCommerce Sitesi tarafından kullanılıyor! =
 
@@ -41,6 +41,15 @@ TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ! Türkiye’nin Lider WooCommerce Karg
 • Otomatik e-posta bildirimleri ve iade süreç yönetimi
 • SMS entegrasyonu ile Kargoya Verildi ve tüm sipariş durumlarında özelleştirilebilir SMS bilgilendirme
 • Intense WooCommerce Mesafeli Satış Sözleşmesi Eklentisiyle tam uyumluluk (otomatik olarak kurumsal/bireysel vergi alanlarını çeker.)
+
+**📋 Mesafeli Satış Sözleşmesi (MSS) ve Ön Bilgilendirme Formu**
+• Dinamik sözleşme oluşturma ve yönetimi
+• WordPress sayfalarını sözleşme şablonu olarak kullanma
+• Ödeme sayfasında sözleşme gösterimi (sayfa içi veya modal)
+• Otomatik değişken değiştirme sistemi (müşteri adı, sipariş tarihi, ürün bilgileri vb.)
+• Sözleşme kabul zorunluluğu ve doğrulama
+• Sipariş bazında sözleşme arşivleme ve saklama
+• KVKK uyumlu güvenli veri saklama
 
 **🏠 Türkiye'ye Özel Çözümler**
 • İlçe/Mahalle seçim alanları
@@ -82,6 +91,7 @@ Hezarfen, KVKK’nın yurt dışına kişisel veri aktarımına ilişkin hüküm
 2. **Ödeme Sayfası**: İl/ilçe/mahalle alanlarını aktifleştirin
 3. **Güvenlik**: T.C. Kimlik no şifrelemeyi aktifleştirin
 4. **Bildirimler**: SMS servis bilgilerinizi girin
+5. **MSS Sözleşmeleri**: Mesafeli satış sözleşmesi özelliğini aktifleştirin ve sözleşme şablonlarınızı oluşturun
 
 == Frequently Asked Questions ==
 
@@ -120,6 +130,15 @@ Hezarfen ile uyumlu olmadığını düşündüğünüz bir eklentiyle karşıla�
 
 = Çoklu dil desteği var mı? =
 Bu Türkçe WooCommerce eklentisi, Türkçe ve İngilizce dillerini desteklemektedir. WPML ve Polylang gibi çoklu dil eklentileriyle uyumludur. Türkiye e-ticaret standartlarına göre optimize edilmiştir.
+
+= Mesafeli Satış Sözleşmesi (MSS) özelliği nasıl kullanılır? =
+WooCommerce > Ayarlar > Hezarfen > Mesafeli Satış Sözleşmesi menüsünden MSS özelliğini aktifleştirebilirsiniz. WordPress sayfalarınızı sözleşme şablonu olarak kullanabilir, dinamik değişkenlerle kişiselleştirilmiş sözleşmeler oluşturabilirsiniz. Sözleşmeler ödeme sayfasında sayfa içi veya modal olarak gösterilebilir.
+
+= Sözleşme şablonlarında hangi değişkenleri kullanabilirim? =
+MSS sözleşme şablonlarınızda {{musteri_adi_soyadi}}, {{siparis_tarihi}}, {{siparis_no}}, {{toplam_tutar}}, {{urun_listesi}} gibi dinamik değişkenleri kullanabilirsiniz. Bu değişkenler sipariş verildiğinde otomatik olarak gerçek verilerle değiştirilir.
+
+= Sözleşme verileri nasıl saklanır? =
+Müşteriler tarafından kabul edilen sözleşmeler, KVKV uyumlu şekilde veritabanında güvenli olarak saklanır. Her sipariş için ayrı sözleşme kaydı oluşturulur ve IP adresi, kullanıcı aracısı gibi teknik bilgiler de kaydedilir.
 
 = Hezarfen nedir? =
 
@@ -167,6 +186,8 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 10. Ödeme ekranında kurumsal vergi alanları (vergi dairesi ve vergi numarası)
 11. Ödeme ekranında kurumsal bireysel alanları (T.C. Kimlik Numarası)
 12. Sipariş liste ekranında kargo bilgilerinin görüntülenmesi
+13. Mesafeli Satış Sözleşmesi (MSS) ayarları ve sözleşme şablonu oluşturma
+14. Ödeme sayfasında sözleşme gösterimi ve kabul edilmesi gereken sözleşmeler
 
 == Changelog ==
 = 2.4.1 - 2015-08-18 =
