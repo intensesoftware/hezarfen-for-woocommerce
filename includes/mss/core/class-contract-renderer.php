@@ -16,6 +16,32 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Contract_Renderer {
 
+	// Constants for Hezarfen support
+	const HEZ_FAT_CONDITIONAL_DIV_WRAPPER_CLASS = 'in-mss-hez-fat-blok';
+	const HEZ_FAT_BIREYSEL_DIV_WRAPPER_CLASS = 'in-mss-hez-fat-bireysel';
+	const HEZ_FAT_KURUMSAL_DIV_WRAPPER_CLASS = 'in-mss-hez-fat-kurumsal';
+
+	/**
+	 * Initialize checkout integration hooks
+	 */
+	public static function init_checkout_hooks() {
+		add_action( 'woocommerce_checkout_before_terms_and_conditions', array( __CLASS__, 'render_checkout_contracts' ), 10 );
+		add_action( 'woocommerce_checkout_after_terms_and_conditions', array( __CLASS__, 'render_contract_checkboxes' ) );
+		add_action( 'woocommerce_checkout_process', array( '\Hezarfen\Inc\MSS\Core\Contract_Validator', 'validate_checkout_contracts' ) );
+		add_action( 'wp_footer', array( __CLASS__, 'add_contract_modal_script' ) );
+		add_filter( 'woocommerce_update_order_review_fragments', array( __CLASS__, 'get_contract_fragments' ) );
+	}
+
+	/**
+	 * Render contracts on checkout page
+	 */
+	public static function render_checkout_contracts() {
+		$settings = get_option( 'hezarfen_mss_settings', array() );
+		$display_type = isset($settings['odeme_sayfasinda_sozlesme_gosterim_tipi']) ? $settings['odeme_sayfasinda_sozlesme_gosterim_tipi'] : 'inline';
+		
+		self::render_contracts( $display_type );
+	}
+
 	/**
 	 * Render contracts on checkout page using dynamic contracts from settings
 	 *
@@ -73,11 +99,12 @@ class Contract_Renderer {
 	/**
 	 * Get contract content from WordPress page template ID
 	 *
-	 * @param int $template_id WordPress page ID.
-	 * @param int $order_id Optional order ID for order-specific variables.
+	 * @param int   $template_id WordPress page ID.
+	 * @param int   $order_id Optional order ID for order-specific variables.
+	 * @param array $form_data Optional form data for real-time processing.
 	 * @return string|false
 	 */
-	public static function get_contract_content_from_template( $template_id, $order_id = null ) {
+	public static function get_contract_content_from_template( $template_id, $order_id = null, $form_data = array() ) {
 		if ( empty( $template_id ) ) {
 			return false;
 		}
@@ -98,63 +125,12 @@ class Contract_Renderer {
 		$processed_content = wpautop( $raw_content );
 		
 		// Process template variables using the dedicated processor
-		$processed_content = Template_Processor::process_variables( $processed_content, $order_id );
-		
-		return $processed_content;
-	}
-
-	/**
-	 * Get contract content from settings-based template selection (legacy)
-	 *
-	 * @param string $contract_type Contract type (mss, obf, cayma, ozel1, ozel2).
-	 * @param int    $order_id Optional order ID for order-specific variables.
-	 * @return string|false
-	 */
-	public static function get_contract_content_by_type( $contract_type, $order_id = null ) {
-		$settings = get_option( 'hezarfen_mss_settings', array() );
-		$template_key = $contract_type . '_template_id';
-		
-		if ( empty( $settings[ $template_key ] ) ) {
-			return false;
-		}
-		
-		return self::get_contract_content_from_template( $settings[ $template_key ], $order_id );
-	}
-
-	/**
-	 * Get contract content by processing stored content or WordPress page content (legacy)
-	 *
-	 * @param array $contract Contract data.
-	 * @return string|false
-	 */
-	private static function get_contract_content( $contract ) {
-		$raw_content = '';
-		
-		// Check if content is stored directly
-		if ( ! empty( $contract['content'] ) ) {
-			$raw_content = $contract['content'];
-		}
-		// Check if content should be retrieved from a WordPress page
-		elseif ( ! empty( $contract['template_id'] ) ) {
-			$template_post = get_post( $contract['template_id'] );
-			if ( $template_post && $template_post->post_type === 'page' && $template_post->post_status === 'publish' ) {
-				$raw_content = $template_post->post_content;
-			}
-		}
-		
-		if ( empty( $raw_content ) ) {
-			return false;
-		}
-
-		$processed_content = wpautop( $raw_content );
-		
-		// Process template variables using the dedicated processor
-		// Use cart data if we're on checkout and no order ID is provided
 		$use_cart_data = is_checkout() && ! $order_id;
-		$processed_content = Template_Processor::process_variables( $processed_content, $order_id, $use_cart_data );
+		$processed_content = Template_Processor::process_variables( $processed_content, $order_id, $use_cart_data, $form_data );
 		
 		return $processed_content;
 	}
+
 
 
 
@@ -343,5 +319,398 @@ class Contract_Renderer {
 			<?php endforeach; ?>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Get contract fragments for WooCommerce's update_order_review response
+	 *
+	 * @param array $fragments Existing fragments array.
+	 * @return array
+	 */
+	public static function get_contract_fragments( $fragments ) {
+		// Parse form data from post_data parameter
+		$form_data = array();
+		if ( isset( $_POST['post_data'] ) ) {
+			parse_str( $_POST['post_data'], $form_data );
+		}
+		
+		// Get all contracts
+		$settings = get_option( 'hezarfen_mss_settings', array() );
+		$contracts = isset( $settings['contracts'] ) ? $settings['contracts'] : array();
+		
+		$contract_data = array();
+		
+		foreach ( $contracts as $contract ) {
+			if ( ! empty( $contract['template_id'] ) && ! empty( $contract['enabled'] ) ) {
+				$processed_content = self::get_contract_content_from_template( $contract['template_id'], null, $form_data );
+				if ( $processed_content ) {
+					$contract_data[ $contract['id'] ] = $processed_content;
+				}
+			}
+		}
+		
+		// Add contract data as a special fragment using data attributes
+		if ( ! empty( $contract_data ) ) {
+			$fragments['.hezarfen-contract-data'] = '<div class="hezarfen-contract-data" data-contracts="' . esc_attr( wp_json_encode( $contract_data ) ) . '" style="display:none;"></div>';
+			
+			// Also update inline contracts if they exist
+			ob_start();
+			?>
+			<div id="checkout-sozlesmeler" class="hezarfen-inline-contracts">
+				<h3><?php esc_html_e( 'Contracts and Forms', 'hezarfen-for-woocommerce' ); ?></h3>
+				
+				<?php foreach ( $contract_data as $contract_id => $content ) : ?>
+					<div class="sozlesme-container contract-<?php echo esc_attr( $contract_id ); ?>" data-contract-id="<?php echo esc_attr( $contract_id ); ?>">
+						<?php echo wp_kses_post( $content ); ?>
+					</div>
+				<?php endforeach; ?>
+			</div>
+			<?php
+			$fragments['#checkout-sozlesmeler'] = ob_get_clean();
+		}
+		
+		return $fragments;
+	}
+
+	/**
+	 * Add contract modal JavaScript to footer
+	 */
+	public static function add_contract_modal_script() {
+		// Only add on checkout page
+		if ( ! is_checkout() ) {
+			return;
+		}
+		?>
+		<script>
+		console.log('Checkout contract modal script loaded');
+		
+		function initCheckoutContractModals() {
+			// Add hidden element for contract data fragments
+			if (!document.querySelector('.hezarfen-contract-data')) {
+				var contractDataDiv = document.createElement('div');
+				contractDataDiv.className = 'hezarfen-contract-data';
+				contractDataDiv.style.display = 'none';
+				document.body.appendChild(contractDataDiv);
+			}
+			// Add modal styles to ensure visibility
+			var style = document.createElement('style');
+			style.textContent = `
+				.hezarfen-modal {
+					display: none !important;
+					position: fixed !important;
+					z-index: 999999 !important;
+					left: 0 !important;
+					top: 0 !important;
+					width: 100% !important;
+					height: 100% !important;
+					background-color: rgba(0,0,0,0.5) !important;
+				}
+				.hezarfen-modal-container {
+					position: relative !important;
+					background-color: #fff !important;
+					margin: 5% auto !important;
+					padding: 20px !important;
+					border: 1px solid #888 !important;
+					width: 80% !important;
+					max-width: 800px !important;
+					max-height: 80vh !important;
+					overflow-y: auto !important;
+					border-radius: 4px !important;
+					box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+				}
+				.hezarfen-modal-header {
+					display: flex !important;
+					justify-content: space-between !important;
+					align-items: center !important;
+					padding-bottom: 10px !important;
+					border-bottom: 1px solid #eee !important;
+					margin-bottom: 15px !important;
+				}
+				.hezarfen-modal-close {
+					background: none !important;
+					border: none !important;
+					font-size: 24px !important;
+					cursor: pointer !important;
+					color: #666 !important;
+				}
+			`;
+			document.head.appendChild(style);
+			
+			// Use event delegation for contract links (works even if elements are added dynamically)
+			document.addEventListener('click', function(e) {
+				if (e.target && e.target.classList.contains('contract-modal-link')) {
+					e.preventDefault();
+					e.stopPropagation();
+					
+					var clickedContractId = e.target.getAttribute('data-contract-id');
+					
+					// Check if modal already exists
+					var existingModal = document.querySelector('.hezarfen-unified-modal');
+					if (existingModal) {
+						// Modal exists, just switch to the clicked tab
+						switchToTab(clickedContractId);
+						return false;
+					}
+					
+					// Get all contracts from the page
+					var allContractLinks = document.querySelectorAll('.contract-modal-link');
+					var contracts = [];
+					allContractLinks.forEach(function(link) {
+						contracts.push({
+							id: link.getAttribute('data-contract-id'),
+							name: link.textContent.trim()
+						});
+					});
+					
+					// Create unified modal with tabs
+					createUnifiedModal(contracts, clickedContractId);
+					
+					return false;
+				}
+			});
+			
+			function createUnifiedModal(contracts, activeContractId) {
+				var modalOverlay = document.createElement('div');
+				modalOverlay.className = 'hezarfen-unified-modal';
+				modalOverlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999999; display: flex; align-items: center; justify-content: center;';
+				
+				var modalContent = document.createElement('div');
+				modalContent.style.cssText = 'background: white; border-radius: 8px; max-width: 800px; width: 95%; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column;';
+				
+				// Header with close button only
+				var modalHeader = document.createElement('div');
+				modalHeader.style.cssText = 'display: flex; justify-content: flex-end; align-items: center; padding: 15px 20px 0 20px;';
+				
+				var closeButton = document.createElement('button');
+				closeButton.style.cssText = 'background: none; border: none; font-size: 24px; cursor: pointer; color: #666;';
+				closeButton.innerHTML = '&times;';
+				closeButton.onclick = function() {
+					document.body.removeChild(modalOverlay);
+					document.body.style.overflow = '';
+				};
+				
+				// Tab navigation
+				var tabNav = document.createElement('div');
+				tabNav.className = 'tab-navigation';
+				tabNav.style.cssText = 'display: flex; border-bottom: 1px solid #eee; background: #f9f9f9; padding: 0 20px;';
+				
+				// Tab content container
+				var tabContent = document.createElement('div');
+				tabContent.className = 'tab-content';
+				tabContent.style.cssText = 'flex: 1; overflow-y: auto; padding: 20px;';
+				
+				// Create tabs and content
+				contracts.forEach(function(contract, index) {
+					// Create tab button
+					var tabButton = document.createElement('button');
+					tabButton.className = 'tab-button';
+					tabButton.dataset.contractId = contract.id;
+					tabButton.style.cssText = 'padding: 15px 20px; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; color: #666;';
+					tabButton.textContent = contract.name;
+					
+					if (contract.id === activeContractId) {
+						tabButton.style.cssText += 'border-bottom-color: #0073aa; color: #0073aa; font-weight: bold;';
+					}
+					
+					tabButton.onclick = function() {
+						switchToTab(contract.id);
+					};
+					
+					tabNav.appendChild(tabButton);
+					
+					// Create tab content
+					var tabPane = document.createElement('div');
+					tabPane.className = 'tab-pane';
+					tabPane.dataset.contractId = contract.id;
+					tabPane.style.cssText = contract.id === activeContractId ? 'display: block;' : 'display: none;';
+					
+					// Load actual contract content with real-time rendering
+					loadContractContent(contract.id, tabPane);
+					
+					tabContent.appendChild(tabPane);
+				});
+				
+				// Click overlay to close
+				modalOverlay.onclick = function(e) {
+					if (e.target === modalOverlay) {
+						document.body.removeChild(modalOverlay);
+						document.body.style.overflow = '';
+					}
+				};
+				
+				modalHeader.appendChild(closeButton);
+				modalContent.appendChild(modalHeader);
+				modalContent.appendChild(tabNav);
+				modalContent.appendChild(tabContent);
+				modalOverlay.appendChild(modalContent);
+				
+				document.body.appendChild(modalOverlay);
+				document.body.style.overflow = 'hidden';
+			}
+			
+			function loadContractContent(contractId, tabPane) {
+				// Add loading message first
+				tabPane.innerHTML = `
+					<div style="color: #666; line-height: 1.6; text-align: center; padding: 40px;">
+						<p>Sözleşme içeriği yükleniyor...</p>
+					</div>
+				`;
+				
+				// Load initial contract content
+				updateContractContent(contractId, tabPane);
+				
+				// Set up listener for WooCommerce checkout updates
+				setupCheckoutUpdateListener(contractId, tabPane);
+			}
+			
+			function updateContractContent(contractId, tabPane) {
+				console.log('Updating contract content for:', contractId);
+				
+				// Get contract data from fragment element
+				var contractDataElement = document.querySelector('.hezarfen-contract-data');
+				console.log('Contract data element found:', !!contractDataElement);
+				
+				if (contractDataElement && contractDataElement.dataset.contracts) {
+					console.log('Contract data available:', contractDataElement.dataset.contracts.substring(0, 100) + '...');
+					try {
+						var contractFragments = JSON.parse(contractDataElement.dataset.contracts);
+						console.log('Parsed contract fragments:', Object.keys(contractFragments));
+						if (contractFragments[contractId]) {
+							console.log('Updating tab content with new data');
+							tabPane.innerHTML = contractFragments[contractId];
+							return;
+						} else {
+							console.log('Contract ID not found in fragments:', contractId);
+						}
+					} catch (e) {
+						console.error('Error parsing contract data:', e);
+					}
+				} else {
+					console.log('No contract data element or dataset found');
+				}
+				
+				// Fallback to existing modal content if fragments not available
+				var existingModal = document.getElementById('hezarfen-modal-' + contractId);
+				if (existingModal) {
+					var modalContent = existingModal.querySelector('.hezarfen-modal-content');
+					if (modalContent) {
+						tabPane.innerHTML = modalContent.innerHTML;
+						return;
+					}
+				}
+				
+				// If no content found, show loading message
+				tabPane.innerHTML = `
+					<div style="color: #666; line-height: 1.6; text-align: center; padding: 40px;">
+						<p>Sözleşme içeriği yükleniyor...</p>
+					</div>
+				`;
+			}
+			
+			function setupCheckoutUpdateListener(contractId, tabPane) {
+				// Listen for WooCommerce's updated_checkout event
+				jQuery(document.body).on('updated_checkout', function() {
+					console.log('Checkout updated, refreshing contract content');
+					// Only update if this tab is currently visible
+					if (tabPane.style.display !== 'none') {
+						// Small delay to ensure fragments are processed
+						setTimeout(function() {
+							updateContractContent(contractId, tabPane);
+						}, 200);
+					}
+				});
+			}
+			
+			function switchToTab(contractId) {
+				// Update tab buttons
+				var tabButtons = document.querySelectorAll('.tab-button');
+				tabButtons.forEach(function(button) {
+					if (button.dataset.contractId === contractId) {
+						button.style.cssText = 'padding: 15px 20px; border: none; background: none; cursor: pointer; border-bottom: 3px solid #0073aa; white-space: nowrap; color: #0073aa; font-weight: bold;';
+					} else {
+						button.style.cssText = 'padding: 15px 20px; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; color: #666;';
+					}
+				});
+				
+				// Update tab content
+				var tabPanes = document.querySelectorAll('.tab-pane');
+				tabPanes.forEach(function(pane) {
+					if (pane.dataset.contractId === contractId) {
+						pane.style.display = 'block';
+					} else {
+						pane.style.display = 'none';
+					}
+				});
+			}
+
+			// Handle modal close buttons
+			document.addEventListener('click', function(e) {
+				if (e.target.classList.contains('hezarfen-modal-close') || 
+					e.target.classList.contains('hezarfen-modal-overlay')) {
+					var modal = e.target.closest('.hezarfen-modal');
+					if (modal) {
+						modal.style.display = 'none';
+						document.body.style.overflow = '';
+					}
+				}
+			});
+
+			// Handle ESC key to close modals
+			document.addEventListener('keydown', function(e) {
+				if (e.key === 'Escape') {
+					document.querySelectorAll('.hezarfen-modal').forEach(function(modal) {
+						modal.style.display = 'none';
+					});
+					document.body.style.overflow = '';
+				}
+			});
+		}
+		
+		// Try multiple ways to initialize
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', initCheckoutContractModals);
+		} else {
+			initCheckoutContractModals();
+		}
+		
+		// Also try with a small delay
+		setTimeout(initCheckoutContractModals, 500);
+		</script>
+		<?php
+	}
+
+	/**
+	 * Process Hezarfen invoice field support
+	 *
+	 * @param string $form_icerik Form content.
+	 * @return string
+	 */
+	public static function process_hezarfen_support( $form_icerik ) {
+		// Check if Hezarfen patterns exist (from siparis-sonrasi class)
+		if ( ! class_exists( 'IN_MSS_SiparisSonrasi' ) ) {
+			return $form_icerik;
+		}
+
+		$form_icerik = preg_replace_callback( IN_MSS_SiparisSonrasi::REGEX_PATTERN_HEZARFEN_FATURA_KURUMSAL, function($matches) {
+			return sprintf('<div class="%s %s">%s</div>', self::HEZ_FAT_CONDITIONAL_DIV_WRAPPER_CLASS, self::HEZ_FAT_KURUMSAL_DIV_WRAPPER_CLASS, $matches[1]);
+		}, $form_icerik );
+
+		$form_icerik = preg_replace_callback( IN_MSS_SiparisSonrasi::REGEX_PATTERN_HEZARFEN_FATURA_BIREYSEL, function($matches) {
+			return sprintf('<div class="%s %s">%s</div>', self::HEZ_FAT_CONDITIONAL_DIV_WRAPPER_CLASS, self::HEZ_FAT_BIREYSEL_DIV_WRAPPER_CLASS, $matches[1]);
+		}, $form_icerik );
+
+		$mapper = [
+			'/\{HEZARFEN_KURUMSAL_VERGI_DAIRE\}/'=>'billing_hez_tax_office',
+			'/\{HEZARFEN_KURUMSAL_VERGI_NO}/'=>'billing_hez_tax_number',
+			'/\{HEZARFEN_BIREYSEL_TC\}/'=>'billing_hez_TC_number',
+		];
+
+		foreach($mapper as $degisken_callback=>$input_name) {
+			$form_icerik = preg_replace_callback($degisken_callback, function($matches) use ($input_name){
+				return sprintf('<span data-mss-custom-field-id="%1$s" class="obf_mss_ozelalan obf_mss_ozelalan_%1$s"></span>', $input_name );
+			}, $form_icerik);
+		}
+
+		return $form_icerik;
 	}
 }

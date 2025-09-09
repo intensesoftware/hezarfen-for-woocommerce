@@ -117,8 +117,11 @@ class MSS_Integration {
 	 * Load frontend functionality
 	 */
 	private function load_frontend_functionality() {
-		require_once HEZARFEN_MSS_PATH . 'odeme-sayfasi/class-in-mss-sozlesmeler.php';
+		// Load remaining legacy classes
 		require_once HEZARFEN_MSS_PATH . 'siparis-sonrasi/class-in-mss-siparis-sonrasi.php';
+		
+		// Initialize Contract_Renderer checkout hooks
+		\Hezarfen\Inc\MSS\Core\Contract_Renderer::init_checkout_hooks();
 		
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_assets' ) );
 	}

@@ -22,9 +22,10 @@ class Template_Processor {
 	 * @param string $content Raw content.
 	 * @param int    $order_id Optional order ID for order-specific variables.
 	 * @param bool   $use_cart_data Whether to use cart data for checkout scenarios.
+	 * @param array  $form_data Optional form data for real-time processing.
 	 * @return string
 	 */
-	public static function process_variables( $content, $order_id = null, $use_cart_data = false ) {
+	public static function process_variables( $content, $order_id = null, $use_cart_data = false, $form_data = array() ) {
 		// Basic variable replacements that don't require order context
 		$content = self::process_basic_variables( $content );
 		
@@ -35,6 +36,11 @@ class Template_Processor {
 		// Cart-specific variables for checkout scenarios
 		elseif ( $use_cart_data && is_checkout() ) {
 			$content = self::process_cart_variables( $content );
+		}
+		
+		// Process form data variables if provided
+		if ( ! empty( $form_data ) ) {
+			$content = self::process_form_variables( $content, $form_data );
 		}
 		
 		return $content;
@@ -202,5 +208,48 @@ class Template_Processor {
 		}
 		
 		return implode( '<br>', $items );
+	}
+
+	/**
+	 * Process form data variables for real-time updates
+	 *
+	 * @param string $content Raw content.
+	 * @param array  $form_data Form data from checkout.
+	 * @return string
+	 */
+	private static function process_form_variables( $content, $form_data ) {
+		$replacements = array(
+			// Form data variables (from checkout form)
+			'{{fatura_adi}}' => isset( $form_data['billing_first_name'] ) ? sanitize_text_field( $form_data['billing_first_name'] ) : '',
+			'{{fatura_soyadi}}' => isset( $form_data['billing_last_name'] ) ? sanitize_text_field( $form_data['billing_last_name'] ) : '',
+			'{{fatura_sirket}}' => isset( $form_data['billing_company'] ) ? sanitize_text_field( $form_data['billing_company'] ) : '',
+			'{{fatura_adres_1}}' => isset( $form_data['billing_address_1'] ) ? sanitize_text_field( $form_data['billing_address_1'] ) : '',
+			'{{fatura_adres_2}}' => isset( $form_data['billing_address_2'] ) ? sanitize_text_field( $form_data['billing_address_2'] ) : '',
+			'{{fatura_sehir}}' => isset( $form_data['billing_city'] ) ? sanitize_text_field( $form_data['billing_city'] ) : '',
+			'{{fatura_posta_kodu}}' => isset( $form_data['billing_postcode'] ) ? sanitize_text_field( $form_data['billing_postcode'] ) : '',
+			'{{fatura_ulke}}' => isset( $form_data['billing_country'] ) ? self::get_country_name( sanitize_text_field( $form_data['billing_country'] ) ) : '',
+			
+			'{{teslimat_adi}}' => isset( $form_data['shipping_first_name'] ) ? sanitize_text_field( $form_data['shipping_first_name'] ) : ( isset( $form_data['billing_first_name'] ) ? sanitize_text_field( $form_data['billing_first_name'] ) : '' ),
+			'{{teslimat_soyadi}}' => isset( $form_data['shipping_last_name'] ) ? sanitize_text_field( $form_data['shipping_last_name'] ) : ( isset( $form_data['billing_last_name'] ) ? sanitize_text_field( $form_data['billing_last_name'] ) : '' ),
+			'{{teslimat_sirket}}' => isset( $form_data['shipping_company'] ) ? sanitize_text_field( $form_data['shipping_company'] ) : ( isset( $form_data['billing_company'] ) ? sanitize_text_field( $form_data['billing_company'] ) : '' ),
+			'{{teslimat_adres_1}}' => isset( $form_data['shipping_address_1'] ) ? sanitize_text_field( $form_data['shipping_address_1'] ) : ( isset( $form_data['billing_address_1'] ) ? sanitize_text_field( $form_data['billing_address_1'] ) : '' ),
+			'{{teslimat_adres_2}}' => isset( $form_data['shipping_address_2'] ) ? sanitize_text_field( $form_data['shipping_address_2'] ) : ( isset( $form_data['billing_address_2'] ) ? sanitize_text_field( $form_data['billing_address_2'] ) : '' ),
+			'{{teslimat_sehir}}' => isset( $form_data['shipping_city'] ) ? sanitize_text_field( $form_data['shipping_city'] ) : ( isset( $form_data['billing_city'] ) ? sanitize_text_field( $form_data['billing_city'] ) : '' ),
+			'{{teslimat_posta_kodu}}' => isset( $form_data['shipping_postcode'] ) ? sanitize_text_field( $form_data['shipping_postcode'] ) : ( isset( $form_data['billing_postcode'] ) ? sanitize_text_field( $form_data['billing_postcode'] ) : '' ),
+			'{{teslimat_ulke}}' => isset( $form_data['shipping_country'] ) ? self::get_country_name( sanitize_text_field( $form_data['shipping_country'] ) ) : ( isset( $form_data['billing_country'] ) ? self::get_country_name( sanitize_text_field( $form_data['billing_country'] ) ) : '' ),
+		);
+		
+		return str_replace( array_keys( $replacements ), array_values( $replacements ), $content );
+	}
+
+	/**
+	 * Get country name from country code
+	 *
+	 * @param string $country_code Country code.
+	 * @return string
+	 */
+	private static function get_country_name( $country_code ) {
+		$countries = WC()->countries->get_countries();
+		return isset( $countries[ $country_code ] ) ? $countries[ $country_code ] : $country_code;
 	}
 }
