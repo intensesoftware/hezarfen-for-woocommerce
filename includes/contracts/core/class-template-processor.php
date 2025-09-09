@@ -38,7 +38,7 @@ class Template_Processor {
 			$content = self::process_cart_variables( $content );
 		}
 		
-		// Process form data variables if provided
+		// Process form data variables if provided (this should override cart/order variables)
 		if ( ! empty( $form_data ) ) {
 			$content = self::process_form_variables( $content, $form_data );
 		}
@@ -171,6 +171,17 @@ class Template_Processor {
 		// Get cart items summary
 		$items_summary = self::get_cart_items_summary( $cart );
 
+		// Try to get the selected payment method from session/chosen method
+		$chosen_payment_method = WC()->session ? WC()->session->get( 'chosen_payment_method' ) : '';
+		$payment_method_title = '';
+		
+		if ( ! empty( $chosen_payment_method ) ) {
+			$payment_gateways = WC()->payment_gateways->get_available_payment_gateways();
+			if ( isset( $payment_gateways[ $chosen_payment_method ] ) ) {
+				$payment_method_title = $payment_gateways[ $chosen_payment_method ]->get_title();
+			}
+		}
+
 		$replacements = array(
 			// Order Variables (cart equivalents)
 			'{{siparis_no}}' => __( 'Will be assigned after order', 'hezarfen-for-woocommerce' ),
@@ -181,7 +192,7 @@ class Template_Processor {
 			'{{toplam_vergi_tutar}}' => wc_price( $cart_tax ),
 			'{{kargo_ucreti}}' => wc_price( $shipping_total ),
 			'{{urunler}}' => $items_summary,
-			'{{odeme_yontemi}}' => __( 'Will be determined at payment', 'hezarfen-for-woocommerce' ),
+			'{{odeme_yontemi}}' => ! empty( $payment_method_title ) ? $payment_method_title : __( 'Will be determined at payment', 'hezarfen-for-woocommerce' ),
 			'{{indirim_toplami}}' => wc_price( $discount_total ),
 		);
 
@@ -221,6 +232,16 @@ class Template_Processor {
 		// Check if "Ship to different address" is enabled
 		$ship_to_different = isset( $form_data['ship_to_different_address'] ) && ! empty( $form_data['ship_to_different_address'] );
 		
+		// Get payment method title if available
+		$payment_method_title = '';
+		if ( isset( $form_data['payment_method'] ) && ! empty( $form_data['payment_method'] ) ) {
+			$payment_gateways = WC()->payment_gateways->get_available_payment_gateways();
+			$payment_method = sanitize_text_field( $form_data['payment_method'] );
+			if ( isset( $payment_gateways[ $payment_method ] ) ) {
+				$payment_method_title = $payment_gateways[ $payment_method ]->get_title();
+			}
+		}
+		
 		$replacements = array(
 			// Form data variables (from checkout form)
 			'{{fatura_adi}}' => isset( $form_data['billing_first_name'] ) ? sanitize_text_field( $form_data['billing_first_name'] ) : '',
@@ -231,6 +252,9 @@ class Template_Processor {
 			'{{fatura_sehir}}' => isset( $form_data['billing_city'] ) ? sanitize_text_field( $form_data['billing_city'] ) : '',
 			'{{fatura_posta_kodu}}' => isset( $form_data['billing_postcode'] ) ? sanitize_text_field( $form_data['billing_postcode'] ) : '',
 			'{{fatura_ulke}}' => isset( $form_data['billing_country'] ) ? self::get_country_name( sanitize_text_field( $form_data['billing_country'] ) ) : '',
+			
+			// Payment method from form data
+			'{{odeme_yontemi}}' => ! empty( $payment_method_title ) ? $payment_method_title : __( 'Will be determined at payment', 'hezarfen-for-woocommerce' ),
 		);
 		
 		// Handle shipping address - use billing if not shipping to different address
