@@ -348,60 +348,143 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 					e.preventDefault();
 					e.stopPropagation();
 					
-					var contractId = e.target.getAttribute('data-contract-id');
-					var contractName = e.target.textContent;
+					var clickedContractId = e.target.getAttribute('data-contract-id');
 					
-					// Create a simple test modal instead of using the existing one
-					var modalOverlay = document.createElement('div');
-					modalOverlay.className = 'hezarfen-test-modal';
-					modalOverlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999999; display: flex; align-items: center; justify-content: center;';
+					// Check if modal already exists
+					var existingModal = document.querySelector('.hezarfen-unified-modal');
+					if (existingModal) {
+						// Modal exists, just switch to the clicked tab
+						switchToTab(clickedContractId);
+						return false;
+					}
 					
-					var modalContent = document.createElement('div');
-					modalContent.style.cssText = 'background: white; padding: 30px; border-radius: 8px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;';
+					// Get all contracts from the page
+					var allContractLinks = document.querySelectorAll('.contract-modal-link');
+					var contracts = [];
+					allContractLinks.forEach(function(link) {
+						contracts.push({
+							id: link.getAttribute('data-contract-id'),
+							name: link.textContent.trim()
+						});
+					});
 					
-					var modalHeader = document.createElement('div');
-					modalHeader.style.cssText = 'display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;';
-					
-					var modalTitle = document.createElement('h3');
-					modalTitle.style.cssText = 'margin: 0; color: #333;';
-					modalTitle.textContent = contractName;
-					
-					var closeButton = document.createElement('button');
-					closeButton.style.cssText = 'background: none; border: none; font-size: 24px; cursor: pointer; color: #666;';
-					closeButton.innerHTML = '&times;';
-					closeButton.onclick = function() {
-						document.body.removeChild(modalOverlay);
-						document.body.style.overflow = '';
-					};
-					
-					var modalBody = document.createElement('div');
-					modalBody.style.cssText = 'color: #666; line-height: 1.6;';
-					modalBody.innerHTML = `
-						<p>Bu sözleşme içeriği burada görüntülenecek.</p>
-						<p>Contract ID: ${contractId}</p>
-						<p>Sözleşme detayları yükleniyor...</p>
-					`;
-					
-					// Click overlay to close
-					modalOverlay.onclick = function(e) {
-						if (e.target === modalOverlay) {
-							document.body.removeChild(modalOverlay);
-							document.body.style.overflow = '';
-						}
-					};
-					
-					modalHeader.appendChild(modalTitle);
-					modalHeader.appendChild(closeButton);
-					modalContent.appendChild(modalHeader);
-					modalContent.appendChild(modalBody);
-					modalOverlay.appendChild(modalContent);
-					
-					document.body.appendChild(modalOverlay);
-					document.body.style.overflow = 'hidden';
+					// Create unified modal with tabs
+					createUnifiedModal(contracts, clickedContractId);
 					
 					return false;
 				}
 			});
+			
+			function createUnifiedModal(contracts, activeContractId) {
+				var modalOverlay = document.createElement('div');
+				modalOverlay.className = 'hezarfen-unified-modal';
+				modalOverlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999999; display: flex; align-items: center; justify-content: center;';
+				
+				var modalContent = document.createElement('div');
+				modalContent.style.cssText = 'background: white; border-radius: 8px; max-width: 800px; width: 95%; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column;';
+				
+				// Header with close button
+				var modalHeader = document.createElement('div');
+				modalHeader.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #eee;';
+				
+				var modalTitle = document.createElement('h3');
+				modalTitle.style.cssText = 'margin: 0; color: #333;';
+				modalTitle.textContent = 'Sözleşmeler';
+				
+				var closeButton = document.createElement('button');
+				closeButton.style.cssText = 'background: none; border: none; font-size: 24px; cursor: pointer; color: #666;';
+				closeButton.innerHTML = '&times;';
+				closeButton.onclick = function() {
+					document.body.removeChild(modalOverlay);
+					document.body.style.overflow = '';
+				};
+				
+				// Tab navigation
+				var tabNav = document.createElement('div');
+				tabNav.className = 'tab-navigation';
+				tabNav.style.cssText = 'display: flex; border-bottom: 1px solid #eee; background: #f9f9f9;';
+				
+				// Tab content container
+				var tabContent = document.createElement('div');
+				tabContent.className = 'tab-content';
+				tabContent.style.cssText = 'flex: 1; overflow-y: auto; padding: 20px;';
+				
+				// Create tabs and content
+				contracts.forEach(function(contract, index) {
+					// Create tab button
+					var tabButton = document.createElement('button');
+					tabButton.className = 'tab-button';
+					tabButton.dataset.contractId = contract.id;
+					tabButton.style.cssText = 'padding: 15px 20px; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; color: #666;';
+					tabButton.textContent = contract.name;
+					
+					if (contract.id === activeContractId) {
+						tabButton.style.cssText += 'border-bottom-color: #0073aa; color: #0073aa; font-weight: bold;';
+					}
+					
+					tabButton.onclick = function() {
+						switchToTab(contract.id);
+					};
+					
+					tabNav.appendChild(tabButton);
+					
+					// Create tab content
+					var tabPane = document.createElement('div');
+					tabPane.className = 'tab-pane';
+					tabPane.dataset.contractId = contract.id;
+					tabPane.style.cssText = contract.id === activeContractId ? 'display: block;' : 'display: none;';
+					tabPane.innerHTML = `
+						<h4 style="margin-top: 0; color: #333;">${contract.name}</h4>
+						<div style="color: #666; line-height: 1.6;">
+							<p>Bu sözleşme içeriği burada görüntülenecek.</p>
+							<p>Contract ID: ${contract.id}</p>
+							<p>Sözleşme detayları yükleniyor...</p>
+						</div>
+					`;
+					
+					tabContent.appendChild(tabPane);
+				});
+				
+				// Click overlay to close
+				modalOverlay.onclick = function(e) {
+					if (e.target === modalOverlay) {
+						document.body.removeChild(modalOverlay);
+						document.body.style.overflow = '';
+					}
+				};
+				
+				modalHeader.appendChild(modalTitle);
+				modalHeader.appendChild(closeButton);
+				modalContent.appendChild(modalHeader);
+				modalContent.appendChild(tabNav);
+				modalContent.appendChild(tabContent);
+				modalOverlay.appendChild(modalContent);
+				
+				document.body.appendChild(modalOverlay);
+				document.body.style.overflow = 'hidden';
+			}
+			
+			function switchToTab(contractId) {
+				// Update tab buttons
+				var tabButtons = document.querySelectorAll('.tab-button');
+				tabButtons.forEach(function(button) {
+					if (button.dataset.contractId === contractId) {
+						button.style.cssText = 'padding: 15px 20px; border: none; background: none; cursor: pointer; border-bottom: 3px solid #0073aa; white-space: nowrap; color: #0073aa; font-weight: bold;';
+					} else {
+						button.style.cssText = 'padding: 15px 20px; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; color: #666;';
+					}
+				});
+				
+				// Update tab content
+				var tabPanes = document.querySelectorAll('.tab-pane');
+				tabPanes.forEach(function(pane) {
+					if (pane.dataset.contractId === contractId) {
+						pane.style.display = 'block';
+					} else {
+						pane.style.display = 'none';
+					}
+				});
+			}
 
 			// Handle modal close buttons
 			document.addEventListener('click', function(e) {
