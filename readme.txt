@@ -196,7 +196,7 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 * readme.txt
 
 = 2.5.0 - 2025-09-09 =
-* **YENİ ÖZELLİK: Mesafeli Satış Sözleşmesi, Ön Bilgilendirme Formu ve Özel Sözleşmeler**
+* **YENİ ÖZELLİK: Mesafeli Satış Sözleşme, Ön Bilgilendirme Formu ve Özel Sözleşmeler**
 * **DÜZELTME**: Ödeme ekranında ilçe ve mahalle alanlarında görünen not found uyarısının Türkçeleştirilmesi
 * **DÜZELTME** Lokalizasyon kaynaklı PHP uyarısı giderildi.
 
