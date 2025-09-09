@@ -109,6 +109,24 @@ class MSS_Settings {
 				'type' => 'sectionend',
 				'id'   => 'hezarfen_mss_templates_title'
 			),
+			
+			array(
+				'title' => __( 'Kullanılabilir Değişkenler', 'hezarfen-for-woocommerce' ),
+				'type'  => 'title',
+				'desc'  => __( 'Sözleşme şablonlarınızda aşağıdaki değişkenleri kullanabilirsiniz. Bu değişkenler sipariş verildiğinde otomatik olarak gerçek verilerle değiştirilir.', 'hezarfen-for-woocommerce' ),
+				'id'    => 'hezarfen_mss_variables_title'
+			),
+			
+			array(
+				'title' => __( 'Mevcut Değişkenler', 'hezarfen-for-woocommerce' ),
+				'type'  => 'mss_available_variables',
+				'id'    => 'hezarfen_mss_available_variables',
+			),
+			
+			array(
+				'type' => 'sectionend',
+				'id'   => 'hezarfen_mss_variables_title'
+			),
 		);
 		
 		return $mss_settings;
@@ -200,6 +218,7 @@ class MSS_Settings {
 	private function init_mss_admin() {
 		// Add custom field type for dynamic contract management (WordPress pages only)
 		add_action( 'woocommerce_admin_field_mss_dynamic_contracts', array( $this, 'output_dynamic_contracts' ) );
+		add_action( 'woocommerce_admin_field_mss_available_variables', array( $this, 'output_available_variables' ) );
 	}
 
 	/**
@@ -387,11 +406,174 @@ class MSS_Settings {
 						}
 					});
 				});
-				</script>
-			</td>
-		</tr>
-		<?php
-	}
+		</script>
+		</td>
+	</tr>
+	<?php
+}
+
+/**
+ * Output available variables field
+ */
+public function output_available_variables( $value ) {
+	$variables = array(
+		// Order Variables
+		'Sipariş Bilgileri' => array(
+			'{{siparis_no}}' => 'Sipariş numarası',
+			'{{siparis_tarihi}}' => 'Sipariş tarihi',
+			'{{siparis_saati}}' => 'Sipariş saati',
+			'{{siparis_durumu}}' => 'Sipariş durumu',
+			'{{siparis_toplam}}' => 'Sipariş toplamı (KDV dahil)',
+			'{{siparis_ara_toplam}}' => 'Sipariş ara toplamı (KDV hariç)',
+			'{{siparis_kdv}}' => 'KDV tutarı',
+			'{{kargo_ucreti}}' => 'Kargo ücreti',
+		),
+		
+		
+		// Billing Address Variables
+		'Fatura Adresi' => array(
+			'{{fatura_adi}}' => 'Fatura adı',
+			'{{fatura_soyadi}}' => 'Fatura soyadı',
+			'{{fatura_sirket}}' => 'Fatura şirket adı',
+			'{{fatura_adres_1}}' => 'Fatura adresi satır 1',
+			'{{fatura_adres_2}}' => 'Fatura adresi satır 2',
+			'{{fatura_sehir}}' => 'Fatura şehir',
+			'{{fatura_posta_kodu}}' => 'Fatura posta kodu',
+			'{{fatura_ulke}}' => 'Fatura ülke',
+		),
+		
+		// Shipping Address Variables
+		'Teslimat Adresi' => array(
+			'{{teslimat_adi}}' => 'Teslimat adı',
+			'{{teslimat_soyadi}}' => 'Teslimat soyadı',
+			'{{teslimat_sirket}}' => 'Teslimat şirket adı',
+			'{{teslimat_adres_1}}' => 'Teslimat adresi satır 1',
+			'{{teslimat_adres_2}}' => 'Teslimat adresi satır 2',
+			'{{teslimat_sehir}}' => 'Teslimat şehir',
+			'{{teslimat_posta_kodu}}' => 'Teslimat posta kodu',
+			'{{teslimat_ulke}}' => 'Teslimat ülke',
+		),
+		
+		// Site Variables
+		'Site Bilgileri' => array(
+			'{{site_adi}}' => 'Site adı',
+			'{{site_url}}' => 'Site URL',
+		),
+		
+		// Date Variables
+		'Tarih Bilgileri' => array(
+			'{{bugunun_tarihi}}' => 'Bugünün tarihi',
+			'{{su_an}}' => 'Şu anki tarih ve saat',
+		),
+	);
+	
+	?>
+	<tr valign="top">
+		<th scope="row" class="titledesc">
+			<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+		</th>
+		<td class="forminp">
+			<div id="mss-available-variables">
+				<?php foreach ( $variables as $category => $vars ): ?>
+					<div class="variable-category">
+						<h4 style="margin-top: 20px; margin-bottom: 10px; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+							<?php echo esc_html( $category ); ?>
+						</h4>
+						<div class="variables-grid" style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin-bottom: 15px;">
+							<?php foreach ( $vars as $variable => $description ): ?>
+								<div style="background: #f9f9f9; padding: 8px 12px; border-radius: 3px; font-family: monospace; font-size: 13px; color: #d63384; cursor: pointer;" 
+									 onclick="copyToClipboard('<?php echo esc_js( $variable ); ?>')" 
+									 title="Kopyalamak için tıklayın">
+									<?php echo esc_html( $variable ); ?>
+								</div>
+								<div style="padding: 8px 12px; color: #666; font-size: 13px;">
+									<?php echo esc_html( $description ); ?>
+								</div>
+							<?php endforeach; ?>
+						</div>
+					</div>
+				<?php endforeach; ?>
+				
+				<div style="background: #e7f3ff; padding: 15px; border-radius: 5px; margin-top: 20px; border-left: 4px solid #0073aa;">
+					<strong>💡 Kullanım:</strong><br>
+					Bu değişkenleri WordPress sayfa editöründe sözleşme metninizin içine yazın. 
+					Sipariş verildiğinde bu değişkenler otomatik olarak gerçek verilerle değiştirilecektir.
+					<br><br>
+					<strong>Örnek:</strong> "Sayın {{musteri_adi_soyadi}}, {{siparis_tarihi}} tarihinde vermiş olduğunuz {{siparis_no}} numaralı siparişiniz..."
+				</div>
+			</div>
+			
+			<script>
+			function copyToClipboard(text) {
+				// Try modern clipboard API first
+				if (navigator.clipboard && navigator.clipboard.writeText) {
+					navigator.clipboard.writeText(text).then(function() {
+						showCopyNotification(text);
+					}).catch(function() {
+						// Fallback to older method
+						fallbackCopyToClipboard(text);
+					});
+				} else {
+					// Fallback for older browsers or HTTP
+					fallbackCopyToClipboard(text);
+				}
+			}
+			
+			function fallbackCopyToClipboard(text) {
+				// Create temporary textarea
+				var textArea = document.createElement('textarea');
+				textArea.value = text;
+				textArea.style.position = 'fixed';
+				textArea.style.left = '-999999px';
+				textArea.style.top = '-999999px';
+				document.body.appendChild(textArea);
+				textArea.focus();
+				textArea.select();
+				
+				try {
+					var successful = document.execCommand('copy');
+					if (successful) {
+						showCopyNotification(text);
+					} else {
+						showCopyError();
+					}
+				} catch (err) {
+					showCopyError();
+				}
+				
+				document.body.removeChild(textArea);
+			}
+			
+			function showCopyNotification(text) {
+				var notification = document.createElement('div');
+				notification.innerHTML = '✓ Kopyalandı: ' + text;
+				notification.style.cssText = 'position: fixed; top: 60px; right: 20px; background: #00a32a; color: white; padding: 10px 15px; border-radius: 3px; z-index: 9999; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);';
+				document.body.appendChild(notification);
+				
+				setTimeout(function() {
+					if (document.body.contains(notification)) {
+						document.body.removeChild(notification);
+					}
+				}, 2000);
+			}
+			
+			function showCopyError() {
+				var notification = document.createElement('div');
+				notification.innerHTML = '❌ Kopyalama başarısız. Lütfen manuel olarak seçip kopyalayın.';
+				notification.style.cssText = 'position: fixed; top: 60px; right: 20px; background: #dc3545; color: white; padding: 10px 15px; border-radius: 3px; z-index: 9999; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);';
+				document.body.appendChild(notification);
+				
+				setTimeout(function() {
+					if (document.body.contains(notification)) {
+						document.body.removeChild(notification);
+					}
+				}, 3000);
+			}
+			</script>
+		</td>
+	</tr>
+	<?php
+}
 }
 
 // Initialize MSS Settings
