@@ -161,7 +161,6 @@ class Contract_Renderer {
 	 * @return void
 	 */
 	private static function render_modal_view( $contract_contents ) {
-		echo '<script>console.log("Rendering modal view with ' . count($contract_contents) . ' contracts");</script>';
 		?>
 		<!-- Contract Modals -->
 		<?php foreach ( $contract_contents as $item ) : ?>
@@ -263,11 +262,8 @@ class Contract_Renderer {
 		$settings = get_option( 'hezarfen_mss_settings', array() );
 		$contracts = isset( $settings['contracts'] ) ? $settings['contracts'] : array();
 		
-		// Debug output
-		echo '<script>console.log("Checkout contracts found: ' . count($contracts) . '");</script>';
 		
 		if ( empty( $contracts ) ) {
-			echo '<script>console.log("No contracts configured in settings");</script>';
 			return;
 		}
 		
@@ -298,7 +294,6 @@ class Contract_Renderer {
 					continue;
 				}
 				?>
-				<script>console.log("Rendering contract checkbox for: <?php echo esc_js( $contract['name'] ); ?>");</script>
 				<p class="form-row in-sozlesme-onay-checkbox validate-required">
 					<label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
 						<input 
@@ -382,7 +377,6 @@ class Contract_Renderer {
 		}
 		?>
 		<script>
-		console.log('Checkout contract modal script loaded');
 		
 		function initCheckoutContractModals() {
 			// Add hidden element for contract data fragments
@@ -564,29 +558,22 @@ class Contract_Renderer {
 			}
 			
 			function updateContractContent(contractId, tabPane) {
-				console.log('Updating contract content for:', contractId);
 				
 				// Get contract data from fragment element
 				var contractDataElement = document.querySelector('.hezarfen-contract-data');
-				console.log('Contract data element found:', !!contractDataElement);
 				
 				if (contractDataElement && contractDataElement.dataset.contracts) {
-					console.log('Contract data available:', contractDataElement.dataset.contracts.substring(0, 100) + '...');
 					try {
 						var contractFragments = JSON.parse(contractDataElement.dataset.contracts);
-						console.log('Parsed contract fragments:', Object.keys(contractFragments));
 						if (contractFragments[contractId]) {
-							console.log('Updating tab content with new data');
 							tabPane.innerHTML = contractFragments[contractId];
 							return;
 						} else {
-							console.log('Contract ID not found in fragments:', contractId);
 						}
 					} catch (e) {
 						console.error('Error parsing contract data:', e);
 					}
 				} else {
-					console.log('No contract data element or dataset found');
 				}
 				
 				// Fallback to existing modal content if fragments not available
@@ -610,7 +597,6 @@ class Contract_Renderer {
 			function setupCheckoutUpdateListener(contractId, tabPane) {
 				// Listen for WooCommerce's updated_checkout event
 				jQuery(document.body).on('updated_checkout', function() {
-					console.log('Checkout updated, refreshing contract content');
 					// Only update if this tab is currently visible
 					if (tabPane.style.display !== 'none') {
 						// Small delay to ensure fragments are processed
@@ -661,8 +647,6 @@ class Contract_Renderer {
 		if (!window.hezarfenEscListenerAdded) {
 			document.addEventListener('keydown', function(e) {
 				if (e.key === 'Escape' || e.keyCode === 27) {
-					console.log('ESC key pressed, looking for Hezarfen modals');
-					
 					// Try multiple selectors to find visible modals
 					var allModals = document.querySelectorAll('.hezarfen-unified-modal, .hezarfen-modal');
 					var visibleModals = [];
@@ -673,18 +657,14 @@ class Contract_Renderer {
 						var visibility = style.visibility;
 						var opacity = style.opacity;
 						
-						console.log('Modal found:', modal, 'class:', modal.className, 'display:', display, 'visibility:', visibility, 'opacity:', opacity);
-						
 						// Check if modal is visible (not none, not hidden, opacity > 0)
 						if (display !== 'none' && visibility !== 'hidden' && opacity !== '0') {
 							visibleModals.push(modal);
 						}
 					});
 					
-					console.log('Found visible modals:', visibleModals.length);
 					if (visibleModals.length > 0) {
 						visibleModals.forEach(function(modal) {
-							console.log('Closing modal:', modal);
 							// Remove modal from DOM (same as close button)
 							if (modal.parentNode) {
 								modal.parentNode.removeChild(modal);
@@ -698,7 +678,6 @@ class Contract_Renderer {
 				}
 			});
 			window.hezarfenEscListenerAdded = true;
-			console.log('Hezarfen ESC key listener added');
 		}
 		
 		// Try multiple ways to initialize
