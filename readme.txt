@@ -135,7 +135,7 @@ Bu Türkçe WooCommerce eklentisi, Türkçe ve İngilizce dillerini desteklemekt
 WooCommerce > Ayarlar > Hezarfen > Mesafeli Satış Sözleşmesi menüsünden MSS özelliğini aktifleştirebilirsiniz. WordPress sayfalarınızı sözleşme şablonu olarak kullanabilir, dinamik değişkenlerle kişiselleştirilmiş sözleşmeler oluşturabilirsiniz. Sözleşmeler ödeme sayfasında sayfa içi veya modal olarak gösterilebilir.
 
 = Sözleşme şablonlarında hangi değişkenleri kullanabilirim? =
-MSS sözleşme şablonlarınızda {{musteri_adi_soyadi}}, {{siparis_tarihi}}, {{siparis_no}}, {{toplam_tutar}}, {{urun_listesi}} gibi dinamik değişkenleri kullanabilirsiniz. Bu değişkenler sipariş verildiğinde otomatik olarak gerçek verilerle değiştirilir.
+MSS sözleşme şablonlarınızda dinamik değişkenleri kullanabilirsiniz. Bu değişkenler sipariş verildiğinde otomatik olarak gerçek verilerle değiştirilir.
 
 = Sözleşme verileri nasıl saklanır? =
 Müşteriler tarafından kabul edilen sözleşmeler, KVKV uyumlu şekilde veritabanında güvenli olarak saklanır. Her sipariş için ayrı sözleşme kaydı oluşturulur ve IP adresi, kullanıcı aracısı gibi teknik bilgiler de kaydedilir.
