@@ -47,6 +47,9 @@ class Template_Processor {
 	 * @return string
 	 */
 	private static function process_basic_variables( $content ) {
+		// Use placeholder for su_an on checkout page
+		$su_an_value = is_checkout() ? __( 'Will be determined after order', 'hezarfen-for-woocommerce' ) : date_i18n( 'd/m/Y H:i:s' );
+		
 		$replacements = array(
 			// Site Variables
 			'{{site_adi}}' => get_bloginfo( 'name' ),
@@ -54,7 +57,7 @@ class Template_Processor {
 			
 			// New format - Date Variables
 			'{{bugunun_tarihi}}' => date_i18n( 'd/m/Y' ),
-			'{{su_an}}' => date_i18n( 'd/m/Y H:i:s' ),
+			'{{su_an}}' => $su_an_value,
 		);
 
 		return str_replace( array_keys( $replacements ), array_values( $replacements ), $content );
@@ -166,7 +169,7 @@ class Template_Processor {
 			// Order Variables (cart equivalents)
 			'{{siparis_no}}' => __( 'Will be assigned after order', 'hezarfen-for-woocommerce' ),
 			'{{siparis_tarihi}}' => date_i18n( 'd/m/Y' ),
-			'{{siparis_saati}}' => date_i18n( 'H:i:s' ),
+			'{{siparis_saati}}' => __( 'Will be determined after order', 'hezarfen-for-woocommerce' ),
 			'{{toplam_tutar}}' => wc_price( $cart_total ),
 			'{{ara_toplam}}' => wc_price( $cart_subtotal ),
 			'{{toplam_vergi_tutar}}' => wc_price( $cart_tax ),
