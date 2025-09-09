@@ -178,15 +178,16 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 3. SMS kuralları (kargoya verildiğinde veya sipariş durumuna göre SMS oluşturabilme)
 4. NetGSM ile Kargoya verildi SMS düzenleme ekranı
 5. Ödeme ekranında mahalle alanının gösterilmesi
-6. Müşteri hesabım sayfası sipariş detayında kargo bilgilerinin gösterilmesi
+6. Ödeme ekranında sözleşmelerin gösterimi (opsiyonel)
 7. Ödeme ekranının sıralanması
 8. Posta kodu kapatabilme, ödeme ekranı sıralayabilme özelliklerinin kontrolü
 9. Müşteriye gönderilen kargoya verildi e-postasının yönetimi
 10. Ödeme ekranında kurumsal vergi alanları (vergi dairesi ve vergi numarası)
 11. Ödeme ekranında kurumsal bireysel alanları (T.C. Kimlik Numarası)
 12. Sipariş liste ekranında kargo bilgilerinin görüntülenmesi
-13. Mesafeli Satış Sözleşmesi (MSS) ayarları ve sözleşme şablonu oluşturma
-14. Ödeme sayfasında sözleşme gösterimi ve kabul edilmesi gereken sözleşmeler
+13. Müşteri hesabım sayfası sipariş detayında kargo bilgilerinin gösterilmesi
+14. Ödeme ekranında sözleşmelerin modal içerisinde gösterilmesi
+15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
 = 2.5.0 - 2025-09-09 =
