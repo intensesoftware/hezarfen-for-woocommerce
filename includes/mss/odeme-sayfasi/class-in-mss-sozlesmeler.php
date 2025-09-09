@@ -43,6 +43,9 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 		add_action( 'wp_ajax_adres_bilgilerini_guncelle_callback', array( $this, 'adres_bilgilerini_guncelle_callback' ) );
 
 		add_action( 'wp_ajax_nopriv_adres_bilgilerini_guncelle_callback', array( $this, 'adres_bilgilerini_guncelle_callback' ) );
+		
+		// Hook into WooCommerce's fragments to add contract data
+		add_filter( 'woocommerce_update_order_review_fragments', array( $this, 'add_contract_fragments' ) );
 	}
 
 	/**
@@ -298,6 +301,13 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 		console.log('Checkout contract modal script loaded');
 		
 		function initCheckoutContractModals() {
+			// Add hidden element for contract data fragments
+			if (!document.querySelector('.hezarfen-contract-data')) {
+				var contractDataDiv = document.createElement('div');
+				contractDataDiv.className = 'hezarfen-contract-data';
+				contractDataDiv.style.display = 'none';
+				document.body.appendChild(contractDataDiv);
+			}
 			// Add modal styles to ensure visibility
 			var style = document.createElement('style');
 			style.textContent = `
@@ -430,7 +440,7 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 					tabPane.dataset.contractId = contract.id;
 					tabPane.style.cssText = contract.id === activeContractId ? 'display: block;' : 'display: none;';
 					
-					// Load actual contract content
+					// Load actual contract content with real-time rendering
 					loadContractContent(contract.id, tabPane);
 					
 					tabContent.appendChild(tabPane);
@@ -455,7 +465,47 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 			}
 			
 			function loadContractContent(contractId, tabPane) {
-				// Try to find the existing modal content for this contract
+				// Add loading message first
+				tabPane.innerHTML = `
+					<div style="color: #666; line-height: 1.6; text-align: center; padding: 40px;">
+						<p>Sözleşme içeriği yükleniyor...</p>
+					</div>
+				`;
+				
+				// Load initial contract content
+				updateContractContent(contractId, tabPane);
+				
+				// Set up listener for WooCommerce checkout updates
+				setupCheckoutUpdateListener(contractId, tabPane);
+			}
+			
+			function updateContractContent(contractId, tabPane) {
+				console.log('Updating contract content for:', contractId);
+				
+				// Get contract data from fragment element
+				var contractDataElement = document.querySelector('.hezarfen-contract-data');
+				console.log('Contract data element found:', !!contractDataElement);
+				
+				if (contractDataElement && contractDataElement.dataset.contracts) {
+					console.log('Contract data available:', contractDataElement.dataset.contracts.substring(0, 100) + '...');
+					try {
+						var contractFragments = JSON.parse(contractDataElement.dataset.contracts);
+						console.log('Parsed contract fragments:', Object.keys(contractFragments));
+						if (contractFragments[contractId]) {
+							console.log('Updating tab content with new data');
+							tabPane.innerHTML = contractFragments[contractId];
+							return;
+						} else {
+							console.log('Contract ID not found in fragments:', contractId);
+						}
+					} catch (e) {
+						console.error('Error parsing contract data:', e);
+					}
+				} else {
+					console.log('No contract data element or dataset found');
+				}
+				
+				// Fallback to existing modal content if fragments not available
 				var existingModal = document.getElementById('hezarfen-modal-' + contractId);
 				if (existingModal) {
 					var modalContent = existingModal.querySelector('.hezarfen-modal-content');
@@ -465,12 +515,26 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 					}
 				}
 				
-				// If no existing modal content found, show loading message
+				// If no content found, show loading message
 				tabPane.innerHTML = `
 					<div style="color: #666; line-height: 1.6; text-align: center; padding: 40px;">
 						<p>Sözleşme içeriği yükleniyor...</p>
 					</div>
 				`;
+			}
+			
+			function setupCheckoutUpdateListener(contractId, tabPane) {
+				// Listen for WooCommerce's updated_checkout event
+				jQuery(document.body).on('updated_checkout', function() {
+					console.log('Checkout updated, refreshing contract content');
+					// Only update if this tab is currently visible
+					if (tabPane.style.display !== 'none') {
+						// Small delay to ensure fragments are processed
+						setTimeout(function() {
+							updateContractContent(contractId, tabPane);
+						}, 200);
+					}
+				});
 			}
 			
 			function switchToTab(contractId) {
@@ -529,6 +593,106 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 		setTimeout(initCheckoutContractModals, 500);
 		</script>
 		<?php
+	}
+
+	/**
+	 * Add contract fragments to WooCommerce's update_order_review response
+	 */
+	public function add_contract_fragments( $fragments ) {
+		// Parse form data from post_data parameter
+		$form_data = array();
+		if ( isset( $_POST['post_data'] ) ) {
+			parse_str( $_POST['post_data'], $form_data );
+		}
+		
+		// Debug: Add form data to see what's available
+		error_log( 'Form data available: ' . print_r( array_keys( $form_data ), true ) );
+		error_log( 'Sample form values: billing_first_name=' . ( $form_data['billing_first_name'] ?? 'empty' ) . ', billing_city=' . ( $form_data['billing_city'] ?? 'empty' ) );
+		
+		// Get all contracts
+		$settings = get_option( 'hezarfen_mss_settings', array() );
+		$contracts = isset( $settings['contracts'] ) ? $settings['contracts'] : array();
+		
+		$contract_data = array();
+		
+		foreach ( $contracts as $contract ) {
+			if ( ! empty( $contract['template_id'] ) && ! empty( $contract['enabled'] ) ) {
+				$template_post = get_post( $contract['template_id'] );
+				if ( $template_post && $template_post->post_status === 'publish' ) {
+					$contract_content = wpautop( $template_post->post_content );
+					$processed_content = $this->process_realtime_variables( $contract_content, $form_data );
+					$contract_data[ $contract['id'] ] = $processed_content;
+				}
+			}
+		}
+		
+		// Add contract data as a special fragment using data attributes
+		if ( ! empty( $contract_data ) ) {
+			$fragments['.hezarfen-contract-data'] = '<div class="hezarfen-contract-data" data-contracts="' . esc_attr( wp_json_encode( $contract_data ) ) . '" style="display:none;"></div>';
+			
+			// Also update inline contracts if they exist
+			ob_start();
+			?>
+			<div id="checkout-sozlesmeler" class="hezarfen-inline-contracts">
+				<h3><?php esc_html_e( 'Contracts and Forms', 'hezarfen-for-woocommerce' ); ?></h3>
+				
+				<?php foreach ( $contract_data as $contract_id => $content ) : ?>
+					<div class="sozlesme-container contract-<?php echo esc_attr( $contract_id ); ?>" data-contract-id="<?php echo esc_attr( $contract_id ); ?>">
+						<?php echo wp_kses_post( $content ); ?>
+					</div>
+				<?php endforeach; ?>
+			</div>
+			<?php
+			$fragments['#checkout-sozlesmeler'] = ob_get_clean();
+		}
+		
+		return $fragments;
+	}
+	
+	/**
+	 * Process variables with real-time form data
+	 */
+	private function process_realtime_variables( $content, $form_data ) {
+		error_log( 'Processing variables with form data. Content length: ' . strlen( $content ) );
+		error_log( 'Form data keys: ' . print_r( array_keys( $form_data ), true ) );
+		$replacements = array(
+			// Site Variables
+			'{{site_adi}}' => get_bloginfo( 'name' ),
+			'{{site_url}}' => home_url(),
+			
+			// Date Variables
+			'{{bugunun_tarihi}}' => date_i18n( 'd/m/Y' ),
+			'{{su_an}}' => date_i18n( 'd/m/Y H:i:s' ),
+			
+			// Form data variables (from checkout form)
+			'{{fatura_adi}}' => isset( $form_data['billing_first_name'] ) ? sanitize_text_field( $form_data['billing_first_name'] ) : '',
+			'{{fatura_soyadi}}' => isset( $form_data['billing_last_name'] ) ? sanitize_text_field( $form_data['billing_last_name'] ) : '',
+			'{{fatura_sirket}}' => isset( $form_data['billing_company'] ) ? sanitize_text_field( $form_data['billing_company'] ) : '',
+			'{{fatura_adres_1}}' => isset( $form_data['billing_address_1'] ) ? sanitize_text_field( $form_data['billing_address_1'] ) : '',
+			'{{fatura_adres_2}}' => isset( $form_data['billing_address_2'] ) ? sanitize_text_field( $form_data['billing_address_2'] ) : '',
+			'{{fatura_sehir}}' => isset( $form_data['billing_city'] ) ? sanitize_text_field( $form_data['billing_city'] ) : '',
+			'{{fatura_posta_kodu}}' => isset( $form_data['billing_postcode'] ) ? sanitize_text_field( $form_data['billing_postcode'] ) : '',
+			'{{fatura_ulke}}' => isset( $form_data['billing_country'] ) ? $this->get_country_name( sanitize_text_field( $form_data['billing_country'] ) ) : '',
+			
+			'{{teslimat_adi}}' => isset( $form_data['shipping_first_name'] ) ? sanitize_text_field( $form_data['shipping_first_name'] ) : ( isset( $form_data['billing_first_name'] ) ? sanitize_text_field( $form_data['billing_first_name'] ) : '' ),
+			'{{teslimat_soyadi}}' => isset( $form_data['shipping_last_name'] ) ? sanitize_text_field( $form_data['shipping_last_name'] ) : ( isset( $form_data['billing_last_name'] ) ? sanitize_text_field( $form_data['billing_last_name'] ) : '' ),
+			'{{teslimat_sirket}}' => isset( $form_data['shipping_company'] ) ? sanitize_text_field( $form_data['shipping_company'] ) : ( isset( $form_data['billing_company'] ) ? sanitize_text_field( $form_data['billing_company'] ) : '' ),
+			'{{teslimat_adres_1}}' => isset( $form_data['shipping_address_1'] ) ? sanitize_text_field( $form_data['shipping_address_1'] ) : ( isset( $form_data['billing_address_1'] ) ? sanitize_text_field( $form_data['billing_address_1'] ) : '' ),
+			'{{teslimat_adres_2}}' => isset( $form_data['shipping_address_2'] ) ? sanitize_text_field( $form_data['shipping_address_2'] ) : ( isset( $form_data['billing_address_2'] ) ? sanitize_text_field( $form_data['billing_address_2'] ) : '' ),
+			'{{teslimat_sehir}}' => isset( $form_data['shipping_city'] ) ? sanitize_text_field( $form_data['shipping_city'] ) : ( isset( $form_data['billing_city'] ) ? sanitize_text_field( $form_data['billing_city'] ) : '' ),
+			'{{teslimat_posta_kodu}}' => isset( $form_data['shipping_postcode'] ) ? sanitize_text_field( $form_data['shipping_postcode'] ) : ( isset( $form_data['billing_postcode'] ) ? sanitize_text_field( $form_data['billing_postcode'] ) : '' ),
+			'{{teslimat_ulke}}' => isset( $form_data['shipping_country'] ) ? $this->get_country_name( sanitize_text_field( $form_data['shipping_country'] ) ) : ( isset( $form_data['billing_country'] ) ? $this->get_country_name( sanitize_text_field( $form_data['billing_country'] ) ) : '' ),
+		);
+		
+		return str_replace( array_keys( $replacements ), array_values( $replacements ), $content );
+	}
+	
+	/**
+	 * Get country name from country code
+	 */
+	private function get_country_name( $country_code ) {
+		$countries = WC()->countries->get_countries();
+		return isset( $countries[ $country_code ] ) ? $countries[ $country_code ] : $country_code;
 	}
 }
 

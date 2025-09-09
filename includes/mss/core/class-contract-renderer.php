@@ -164,7 +164,7 @@ class Contract_Renderer {
 	 */
 	private static function render_inline_view( $contract_contents ) {
 		?>
-		<div id="checkout-sozlesmeler">
+		<div id="checkout-sozlesmeler" class="hezarfen-inline-contracts">
 			<h3><?php esc_html_e( 'Contracts and Forms', 'hezarfen-for-woocommerce' ); ?></h3>
 			
 			<?php foreach ( $contract_contents as $item ) : ?>

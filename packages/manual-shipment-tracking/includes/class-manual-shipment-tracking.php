@@ -136,7 +136,8 @@ class Manual_Shipment_Tracking {
 	 * @return void
 	 */
 	private static function assign_callbacks_to_hooks() {
-		self::register_order_status();
+		// Defer order status registration until init hook to avoid translation loading issues
+		add_action( 'init', array( __CLASS__, 'register_order_status' ) );
 	}
 
 	/**
@@ -144,7 +145,7 @@ class Manual_Shipment_Tracking {
 	 * 
 	 * @return void
 	 */
-	private static function register_order_status() {
+	public static function register_order_status() {
 		$label       = _x( 'Shipped', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
 		$status_data = array(
 			'id'    => self::DB_SHIPPED_ORDER_STATUS,
