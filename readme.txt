@@ -1,12 +1,12 @@
 
 === Hezarfen - Türkiye Kargo Entegrasyonu - WooCommerce Kargo Takip ve Yönetim Eklentisi For Woocommerce ===
 Contributors: intenseyazilim, mucahitbal, mskapusuz
-Tags: kargo, kargo takip, hepsijet, mng, fatura
+Tags: kargo, sözleşme, hepsijet, mng, fatura
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.4.1
+Stable tag: 2.5.0
 
 TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ! Türkiye'nin Lider WooCommerce Kargo Takip Eklentisi: 23 kargo, SMS, MSS sözleşmeleri, ilçe/mahalle, vergi alanlar
 == Description ==
@@ -40,7 +40,6 @@ TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ! Türkiye'nin Lider WooCommerce Kargo 
 • Müşteri panelinde detaylı kargo görüntüleme ve sipariş takibi
 • Otomatik e-posta bildirimleri ve iade süreç yönetimi
 • SMS entegrasyonu ile Kargoya Verildi ve tüm sipariş durumlarında özelleştirilebilir SMS bilgilendirme
-• Intense WooCommerce Mesafeli Satış Sözleşmesi Eklentisiyle tam uyumluluk (otomatik olarak kurumsal/bireysel vergi alanlarını çeker.)
 
 **📋 Mesafeli Satış Sözleşmesi (MSS) ve Ön Bilgilendirme Formu**
 • Dinamik sözleşme oluşturma ve yönetimi
@@ -190,7 +189,12 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 14. Ödeme sayfasında sözleşme gösterimi ve kabul edilmesi gereken sözleşmeler
 
 == Changelog ==
-= 2.4.1 - 2015-08-18 =
+= 2.5.0 - 2025-09-09 =
+* **YENİ ÖZELLİK: Mesafeli Satış Sözleşmesi, Ön Bilgilendirme Formu ve Özel Sözleşmeler**
+* **DÜZELTME**: Ödeme ekranında ilçe ve mahalle alanlarında görünen not found uyarısının Türkçeleştirilmesi
+* **DÜZELTME** Lokalizasyon kaynaklı PHP uyarısı giderildi.
+
+= 2.4.1 - 2025-08-18 =
 * readme.txt update
 
 = 2.4.0 - 2025-08-18 =
