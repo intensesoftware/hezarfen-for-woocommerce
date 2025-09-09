@@ -138,7 +138,7 @@ WooCommerce > Ayarlar > Hezarfen > Mesafeli Satış Sözleşmesi menüsünden MS
 = Sözleşme şablonlarında hangi değişkenleri kullanabilirim? =
 MSS sözleşme şablonlarınızda dinamik değişkenleri kullanabilirsiniz. Bu değişkenler sipariş verildiğinde otomatik olarak gerçek verilerle değiştirilir.
 
-= Sözleşme verileri nasıl saklanır? =
+= Sözleşmeler nasıl saklanır? =
 Müşteriler tarafından kabul edilen sözleşmeler, KVKV uyumlu şekilde veritabanında güvenli olarak saklanır. Her sipariş için ayrı sözleşme kaydı oluşturulur ve IP adresi, kullanıcı aracısı gibi teknik bilgiler de kaydedilir.
 
 = Hezarfen nedir? =
