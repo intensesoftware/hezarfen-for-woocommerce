@@ -73,6 +73,7 @@ class MSS_Integration {
 		
 		// Load settings integration
 		require_once HEZARFEN_MSS_PATH . 'admin/class-mss-settings.php';
+		require_once HEZARFEN_MSS_PATH . 'admin/class-order-agreements.php';
 	}
 	
 	/**
@@ -82,6 +83,7 @@ class MSS_Integration {
 		// Initialize MSS settings integration with Hezarfen
 		if ( is_admin() ) {
 			new \Hezarfen\Inc\MSS\MSS_Settings();
+			new \Hezarfen\Inc\MSS\Admin\Order_Agreements();
 		}
 		
 		// Check if MSS is properly configured and load frontend if needed
