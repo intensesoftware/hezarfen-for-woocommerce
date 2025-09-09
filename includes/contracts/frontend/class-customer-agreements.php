@@ -51,25 +51,34 @@ class Customer_Agreements {
 		}
 		
 		?>
-		<section class="woocommerce-order-agreements">
-			<h2 class="woocommerce-order-agreements__title"><?php esc_html_e( 'Your Agreements', 'hezarfen-for-woocommerce' ); ?></h2>
-			<p><?php esc_html_e( 'You have accepted the following agreements for this order:', 'hezarfen-for-woocommerce' ); ?></p>
-			
-			<div class="hezarfen-agreements-summary">
-				<?php foreach ( $agreements as $agreement ) : ?>
-					<div class="agreement-summary-item" style="display: inline-block; margin: 5px 10px 5px 0;">
-						<span class="agreement-name" style="margin-right: 8px;"><?php echo esc_html( $agreement->contract_name ); ?></span>
-						<small style="color: #666;"><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $agreement->created_at ) ) ); ?></small>
-					</div>
-				<?php endforeach; ?>
-			</div>
-			
-			<p>
-				<button type="button" class="button hezarfen-view-agreements-btn" data-order-id="<?php echo esc_attr( $order_id ); ?>">
-					<?php esc_html_e( 'View Agreements', 'hezarfen-for-woocommerce' ); ?>
-				</button>
-			</p>
-		</section>
+		<div class="woocommerce-customer-details">
+			<section class="woocommerce-customer-agreements">
+				<h2 class="woocommerce-column__title"><?php esc_html_e( 'Your Agreements', 'hezarfen-for-woocommerce' ); ?></h2>
+				
+				<div class="hezarfen-agreements-summary">
+					<p><?php esc_html_e( 'You accepted the following agreements for this order:', 'hezarfen-for-woocommerce' ); ?></p>
+					
+					<ul class="agreements-list" style="list-style: none; padding: 0; margin: 15px 0;">
+						<?php foreach ( $agreements as $agreement ) : ?>
+							<li style="padding: 8px 0; border-bottom: 1px solid #eee;">
+								<div style="display: flex; justify-content: space-between; align-items: center;">
+									<span class="agreement-name" style="font-weight: 500;"><?php echo esc_html( $agreement->contract_name ); ?></span>
+									<small style="color: #666;">
+										<?php echo esc_html( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $agreement->created_at ) ) ); ?>
+									</small>
+								</div>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+					
+					<p>
+						<button type="button" class="button hezarfen-view-agreements-btn" data-order-id="<?php echo esc_attr( $order_id ); ?>">
+							<?php esc_html_e( 'View Agreements', 'hezarfen-for-woocommerce' ); ?>
+						</button>
+					</p>
+				</div>
+			</section>
+		</div>
 		<?php
 		
 		// Add the modal and scripts
