@@ -200,7 +200,7 @@ class Contracts_Settings {
 			'hezarfen-contracts-admin',
 			HEZARFEN_CONTRACTS_URL . 'js/admin.js',
 			array( 'jquery' ),
-			HEZARFEN_CONTRACTS_VERSION,
+			WC_HEZARFEN_VERSION,
 			true
 		);
 		
@@ -208,7 +208,7 @@ class Contracts_Settings {
 			'hezarfen-contracts-admin',
 			HEZARFEN_CONTRACTS_URL . 'css/admin.css',
 			array(),
-			HEZARFEN_CONTRACTS_VERSION
+			WC_HEZARFEN_VERSION
 		);
 	}
 	

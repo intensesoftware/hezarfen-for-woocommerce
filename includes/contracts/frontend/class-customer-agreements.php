@@ -286,7 +286,7 @@ class Customer_Agreements {
 			'hezarfen-customer-agreements',
 			plugins_url( 'assets/contracts/css/customer-agreements.css', WC_HEZARFEN_FILE ),
 			array(),
-			HEZARFEN_CONTRACTS_VERSION
+			WC_HEZARFEN_VERSION
 		);
 	}
 }

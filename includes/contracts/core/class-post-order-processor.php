@@ -24,18 +24,25 @@ class Post_Order_Processor {
 	 * Initialize post-order processing hooks
 	 */
 	public static function init() {
+		error_log( 'Hezarfen Post_Order_Processor::init() called' );
+		
 		$settings = get_option( 'hezarfen_mss_settings', array() );
 		$contract_creation_type = isset( $settings['sozlesme_olusturma_tipi'] ) ? $settings['sozlesme_olusturma_tipi'] : 'yeni_siparis';
+
+		error_log( 'Hezarfen Contract creation type: ' . $contract_creation_type );
 
 		// Hook based on when contracts should be created
 		if ( 'isleniyor' === $contract_creation_type ) {
 			add_action( 'woocommerce_order_status_processing', array( __CLASS__, 'process_order_contracts' ) );
+			error_log( 'Hezarfen Hooked to woocommerce_order_status_processing' );
 		} else {
 			add_action( 'woocommerce_thankyou', array( __CLASS__, 'process_order_contracts' ) );
+			error_log( 'Hezarfen Hooked to woocommerce_thankyou' );
 		}
 
 		// Hook for including contracts in customer emails
 		add_action( 'woocommerce_email_customer_details', array( __CLASS__, 'include_contracts_in_email' ), 100, 4 );
+		error_log( 'Hezarfen Hooked to woocommerce_email_customer_details' );
 	}
 	
 	/**
@@ -95,16 +102,33 @@ class Post_Order_Processor {
 			return;
 		}
 
+		// Debug: Log email class for troubleshooting
+		error_log( 'Hezarfen Email Debug - Email Class: ' . get_class( $email ) );
+
 		// Only include in specific customer emails based on settings
 		$settings = get_option( 'hezarfen_mss_settings', array() );
 		$contract_creation_type = isset( $settings['sozlesme_olusturma_tipi'] ) ? $settings['sozlesme_olusturma_tipi'] : 'yeni_siparis';
 
 		$should_include = false;
-		if ( 'isleniyor' === $contract_creation_type && 'WC_Email_Customer_Processing_Order' === get_class( $email ) ) {
-			$should_include = true;
-		} elseif ( 'yeni_siparis' === $contract_creation_type && 'WC_Email_Customer_On_Hold_Order' === get_class( $email ) ) {
-			$should_include = true;
+		$email_class = get_class( $email );
+		
+		// More flexible email class matching
+		if ( 'isleniyor' === $contract_creation_type ) {
+			// Include in processing order emails
+			if ( strpos( $email_class, 'Processing' ) !== false || strpos( $email_class, 'processing' ) !== false ) {
+				$should_include = true;
+			}
+		} else {
+			// Include in new order emails (on-hold, new order, etc.)
+			if ( strpos( $email_class, 'On_Hold' ) !== false || 
+				 strpos( $email_class, 'New_Order' ) !== false ||
+				 strpos( $email_class, 'on_hold' ) !== false ||
+				 strpos( $email_class, 'new_order' ) !== false ) {
+				$should_include = true;
+			}
 		}
+
+		error_log( 'Hezarfen Email Debug - Should Include: ' . ( $should_include ? 'YES' : 'NO' ) );
 
 		if ( $should_include ) {
 			self::render_contracts_in_email( $order );
@@ -284,40 +308,37 @@ class Post_Order_Processor {
 	 */
 	private static function render_contracts_in_email( $order ) {
 		$order_id = $order->get_id();
+		error_log( 'Hezarfen render_contracts_in_email called for order: ' . $order_id );
 
 		// Check if email was already sent for this order
-		$email_sent = $order->get_meta( '_hezarfen_mss_email_sent', true );
-		if ( '1' === $email_sent ) {
+		$email_sent = $order->get_meta( '_in_mss_eposta_gonderildi_mi', true );
+		if ( 1 === $email_sent ) {
+			error_log( 'Hezarfen Email already sent for order: ' . $order_id );
 			return;
 		}
 
 		// Mark email as sent
-		$order->update_meta_data( '_hezarfen_mss_email_sent', '1' );
+		$order->update_meta_data( '_in_mss_eposta_gonderildi_mi', 1 );
 		$order->save();
 
 		// Get saved contracts from database
 		$contracts = self::get_saved_contracts( $order_id );
+		error_log( 'Hezarfen Found ' . count( $contracts ) . ' contracts for order: ' . $order_id );
 		
 		if ( empty( $contracts ) ) {
+			error_log( 'Hezarfen No contracts found for order: ' . $order_id );
 			return;
 		}
 
-		// Render each contract
-		echo '<div style="margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;">';
-		echo '<h3 style="color: #333; margin-top: 0;">' . esc_html__( 'Your Agreements', 'hezarfen-for-woocommerce' ) . '</h3>';
-		
+		// Render each contract with original design
 		foreach ( $contracts as $contract ) {
-			echo '<div style="margin-bottom: 20px; background: #fff; border: 1px solid #ddd; border-radius: 4px; overflow: hidden;">';
-			echo '<div style="background: #0073aa; color: white; padding: 10px; font-weight: bold;">';
-			echo esc_html( $contract->contract_name );
-			echo '</div>';
-			echo '<div style="padding: 15px; max-height: 300px; overflow-y: auto;">';
-			echo wp_kses_post( $contract->contract_content );
-			echo '</div>';
-			echo '</div>';
+			?>
+			<h3><?php echo esc_html( $contract->contract_name ); ?></h3>
+			<div style="height:300px;overflow:scroll;margin-bottom:15px;border:1px solid #dddddd;padding:15px">
+				<?php echo wp_kses_post( $contract->contract_content ); ?>
+			</div>
+			<?php
 		}
-		
-		echo '</div>';
 	}
 	
 	/**

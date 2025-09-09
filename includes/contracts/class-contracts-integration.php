@@ -19,7 +19,6 @@ class Contracts_Integration {
 	 */
 	public function __construct() {
 		$this->define_constants();
-		$this->init_hooks();
 		$this->load_dependencies();
 		$this->init_mss();
 	}
@@ -35,17 +34,6 @@ class Contracts_Integration {
 		if ( ! defined( 'HEZARFEN_CONTRACTS_URL' ) ) {
 			define( 'HEZARFEN_CONTRACTS_URL', WC_HEZARFEN_UYGULAMA_URL . 'assets/contracts/' );
 		}
-		
-		if ( ! defined( 'HEZARFEN_CONTRACTS_VERSION' ) ) {
-			define( 'HEZARFEN_CONTRACTS_VERSION', '2.0.1' );
-		}
-	}
-	
-	/**
-	 * Initialize hooks
-	 */
-	private function init_hooks() {
-		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 	}
 	
 	/**
@@ -136,7 +124,7 @@ class Contracts_Integration {
 				'hezarfen-contracts-modal',
 				HEZARFEN_CONTRACTS_URL . 'js/modal.js',
 				array( 'jquery' ),
-				HEZARFEN_CONTRACTS_VERSION,
+				WC_HEZARFEN_VERSION,
 				true
 			);
 			
@@ -144,7 +132,7 @@ class Contracts_Integration {
 				'hezarfen-contracts-modal',
 				HEZARFEN_CONTRACTS_URL . 'css/modal.css',
 				array(),
-				HEZARFEN_CONTRACTS_VERSION
+				WC_HEZARFEN_VERSION
 			);
 		}
 		
@@ -153,7 +141,7 @@ class Contracts_Integration {
 				'hezarfen-contracts-general',
 				HEZARFEN_CONTRACTS_URL . 'js/general.js',
 				array( 'jquery' ),
-				HEZARFEN_CONTRACTS_VERSION,
+				WC_HEZARFEN_VERSION,
 				true
 			);
 			
@@ -167,7 +155,7 @@ class Contracts_Integration {
 				'hezarfen-contracts-style',
 				HEZARFEN_CONTRACTS_URL . 'css/style.css',
 				array(),
-				HEZARFEN_CONTRACTS_VERSION
+				WC_HEZARFEN_VERSION
 			);
 		}
 	}
