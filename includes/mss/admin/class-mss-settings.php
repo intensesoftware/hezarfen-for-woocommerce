@@ -575,6 +575,3 @@ public function output_available_variables( $value ) {
 	<?php
 }
 }
-
-// Initialize MSS Settings
-new MSS_Settings();
