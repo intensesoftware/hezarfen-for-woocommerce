@@ -6,7 +6,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2025-09-09 14:23+0000\n"
+"PO-Revision-Date: 2025-09-09 14:29+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -43,6 +43,21 @@ msgstr "Eylem Türü"
 #: includes/contracts/admin/class-order-agreements.php:84
 msgid "Actions"
 msgstr "Eylemler"
+
+#: includes/contracts/admin/class-contracts-settings.php:91
+msgid "Active Contracts"
+msgstr "Aktif Sözleşmeler"
+
+#: includes/contracts/admin/class-contracts-settings.php:52
+msgid ""
+"Add distance sales contract and pre-information form support to your website."
+msgstr ""
+"Web sitenize mesafeli satış sözleşmesi ve ön bilgilendirme formu desteği "
+"ekleyin."
+
+#: includes/contracts/admin/class-contracts-settings.php:303
+msgid "Add New Contract"
+msgstr "Yeni Sözleşme Ekle"
 
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:137
 msgid "Add new shipment"
@@ -82,6 +97,10 @@ msgstr "PandaSMS eklentisi yüklenip aktif edilirken bir hata oluştu."
 msgid "Aras Kargo"
 msgstr "Aras Kargo"
 
+#: includes/contracts/admin/class-contracts-settings.php:369
+msgid "Are you sure you want to delete this contract?"
+msgstr "Bu sözleşmeyi silmek istediğinizden emin misiniz?"
+
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:188
 msgid ""
 "Are you sure you want to remove this shipment data? This action cannot be "
@@ -97,6 +116,7 @@ msgid "Available sender names from your NetGSM account"
 msgstr "NetGSM hesabınızdaki kullanılabilir gönderici adları"
 
 #: includes/class-sms-automation.php:502
+#: includes/contracts/admin/class-contracts-settings.php:102
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:218
 msgid "Available Variables"
 msgstr "Kullanabileceğiniz Değişkenler"
@@ -140,21 +160,43 @@ msgstr ""
 "be/vFvAxlEIAKc</a> uygulayarak kolaylıkla eski ödeme sayfası sistemini aktif "
 "edebilirsiniz."
 
+#. Billing Address Variables
 #: includes/class-sms-automation.php:400 includes/class-sms-automation.php:425
+#: includes/contracts/admin/class-contracts-settings.php:493
 msgid "Billing Address"
 msgstr "Fatura Adresi"
+
+#: includes/contracts/admin/class-contracts-settings.php:497
+msgid "Billing address line 1"
+msgstr "Fatura adres satırı 1"
+
+#: includes/contracts/admin/class-contracts-settings.php:498
+msgid "Billing address line 2"
+msgstr "Fatura adres satırı 2"
 
 #: includes/class-sms-automation.php:401 includes/class-sms-automation.php:426
 msgid "Billing City"
 msgstr "Fatura İlçe"
 
+#: includes/contracts/admin/class-contracts-settings.php:499
+msgid "Billing city"
+msgstr "Fatura şehri"
+
 #: includes/class-sms-automation.php:399 includes/class-sms-automation.php:424
 msgid "Billing Company"
 msgstr "Fatura Firma Adı"
 
+#: includes/contracts/admin/class-contracts-settings.php:496
+msgid "Billing company name"
+msgstr "Fatura şirket adı"
+
 #: includes/class-sms-automation.php:402 includes/class-sms-automation.php:427
 msgid "Billing Country"
 msgstr "Fatura Ülke"
+
+#: includes/contracts/admin/class-contracts-settings.php:501
+msgid "Billing country"
+msgstr "Fatura ülkesi"
 
 #: includes/class-sms-automation.php:398 includes/class-sms-automation.php:423
 msgid "Billing Email"
@@ -164,9 +206,17 @@ msgstr "Fatura E-Posta"
 msgid "Billing First Name"
 msgstr "Fatura Adı"
 
+#: includes/contracts/admin/class-contracts-settings.php:494
+msgid "Billing first name"
+msgstr "Fatura adı"
+
 #: includes/class-sms-automation.php:396 includes/class-sms-automation.php:421
 msgid "Billing Last Name"
 msgstr "Fatura Soyadı"
+
+#: includes/contracts/admin/class-contracts-settings.php:495
+msgid "Billing last name"
+msgstr "Fatura soyadı"
 
 #: includes/class-sms-automation.php:397 includes/class-sms-automation.php:422
 #: includes/class-sms-automation.php:624
@@ -176,6 +226,10 @@ msgstr "Fatura Soyadı"
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:932
 msgid "Billing Phone"
 msgstr "Fatura Telefonu"
+
+#: includes/contracts/admin/class-contracts-settings.php:500
+msgid "Billing postal code"
+msgstr "Fatura posta kodu"
 
 #: includes/class-sms-automation.php:515 includes/class-sms-automation.php:649
 msgid "Billing Variables"
@@ -246,6 +300,14 @@ msgstr ""
 #| msgid "Please choose a courier company"
 msgid "Choose a courier company"
 msgstr "Kargo firmasını seçiniz"
+
+#: includes/contracts/admin/class-contracts-settings.php:68
+msgid ""
+"Choose how the contract will be displayed on the payment page. Contracts are "
+"automatically created when order status is \"Processing\"."
+msgstr ""
+"Sözleşmenin ödeme sayfasında nasıl görüntüleneceğini seçin. Sözleşmeler "
+"sipariş durumu \"İşleniyor\" olduğunda otomatik olarak oluşturulur."
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:523
 msgid "Choose when to send the SMS notification"
@@ -322,10 +384,36 @@ msgstr "NETGSM'i Bağla"
 msgid "Connecting..."
 msgstr "Bağlanıyor..."
 
+#: includes/contracts/admin/class-contracts-settings.php:252
+#: includes/contracts/admin/class-contracts-settings.php:362
+msgid "Contract Name:"
+msgstr "Sözleşme Adı:"
+
+#: includes/contracts/admin/class-contracts-settings.php:67
+msgid "Contract Settings"
+msgstr "Sözleşme Ayarları"
+
+#: includes/contracts/admin/class-contracts-settings.php:84
+msgid "Contract Templates"
+msgstr "Sözleşme Şablonları"
+
+# Contracts & Agreements Settings
+#: includes/contracts/admin/class-contracts-settings.php:36
+msgid "Contracts & Agreements"
+msgstr "Sözleşmeler ve Anlaşmalar"
+
 #: includes/contracts/core/class-contract-renderer.php:146
-#: includes/contracts/core/class-contract-renderer.php:439
+#: includes/contracts/core/class-contract-renderer.php:444
 msgid "Contracts and Forms"
 msgstr "Sözleşmeler ve Formlar"
+
+#: includes/contracts/admin/class-contracts-settings.php:531
+msgid "Corporate tax number"
+msgstr "Kurumsal vergi numarası"
+
+#: includes/contracts/admin/class-contracts-settings.php:530
+msgid "Corporate tax office"
+msgstr "Kurumsal vergi dairesi"
 
 #: includes/class-sms-automation.php:388 includes/class-sms-automation.php:439
 #: packages/manual-shipment-tracking/includes/class-my-account.php:119
@@ -338,6 +426,14 @@ msgstr "Kargo Firması"
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:163
 msgid "Courier company post meta key"
 msgstr "Kargo firması post meta keyi"
+
+#: includes/contracts/admin/class-contracts-settings.php:525
+msgid "Current date and time"
+msgstr "Mevcut tarih ve saat"
+
+#: includes/contracts/admin/class-contracts-settings.php:109
+msgid "Current Variables"
+msgstr "Mevcut Değişkenler"
 
 #: includes/contracts/admin/class-order-agreements.php:40
 #: includes/contracts/admin/class-order-agreements.php:114
@@ -376,6 +472,11 @@ msgstr "Müşteri:"
 msgid "Date Accepted"
 msgstr "Kabul Tarihi"
 
+#. Date Variables
+#: includes/contracts/admin/class-contracts-settings.php:523
+msgid "Date Information"
+msgstr "Tarih Bilgileri"
+
 #: includes/contracts/core/class-post-order-processor.php:251
 msgid "Date:"
 msgstr "Tarih:"
@@ -385,6 +486,11 @@ msgstr "Tarih:"
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:138
 msgid "Delete"
 msgstr "Sil"
+
+#: includes/contracts/admin/class-contracts-settings.php:294
+#: includes/contracts/admin/class-contracts-settings.php:367
+msgid "Delete Contract"
+msgstr "Sözleşmeyi Sil"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:892
 msgid "Delete Rule"
@@ -405,9 +511,25 @@ msgstr ""
 "Bu ayarı kullanabilmek için Checkout Field Editor for WooCommerce "
 "eklentisini devre dışı bırakınız."
 
+#: includes/contracts/admin/class-contracts-settings.php:488
+msgid "Discount amount"
+msgstr "İndirim tutarı"
+
+#: includes/contracts/admin/class-contracts-settings.php:224
+msgid "Distance Sales Contract"
+msgstr "Mesafeli Satış Sözleşmesi"
+
+#: includes/contracts/admin/class-contracts-settings.php:50
+msgid "Distance Sales Contract Settings"
+msgstr "Mesafeli Satış Sözleşmesi Ayarları"
+
 #: includes/class-sms-automation.php:599
 msgid "Draft"
 msgstr "Taslak"
+
+#: includes/contracts/admin/class-contracts-settings.php:57
+msgid "DSC Enabled"
+msgstr "MSS Etkin"
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:218
 msgid ""
@@ -428,6 +550,11 @@ msgstr "Düzenle"
 msgid "Edit NetGSM SMS Content"
 msgstr "NetGSM SMS içeriği"
 
+#: includes/contracts/admin/class-contracts-settings.php:271
+#: includes/contracts/admin/class-contracts-settings.php:364
+msgid "Edit Page"
+msgstr "Sayfayı Düzenle"
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:891
 msgid "Edit SMS Rule"
 msgstr "SMS Kuralını Düzenle"
@@ -443,6 +570,10 @@ msgstr ""
 "etkinleştirSipariş durumu değişiklikleri için otomatik SMS bildirimlerini "
 "etkinleştir"
 
+#: includes/contracts/admin/class-contracts-settings.php:58
+msgid "Enable Distance Sales Contract feature"
+msgstr "Mesafeli Satış Sözleşmesi özelliğini etkinleştir"
+
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:60
 msgid "Enable Manual Shipment Tracking feature"
 msgstr "Manuel Kargo Takip özelliğini aktif et"
@@ -450,6 +581,11 @@ msgstr "Manuel Kargo Takip özelliğini aktif et"
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:407
 msgid "Enable SMS Automation"
 msgstr "SMS Otomasyonunu Etkinleştir"
+
+#: includes/contracts/admin/class-contracts-settings.php:281
+#: includes/contracts/admin/class-contracts-settings.php:365
+msgid "Enabled"
+msgstr "Etkin"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:44
 msgid "Encryption"
@@ -479,6 +615,10 @@ msgstr "Şifreleme Anahtarı Kurtarma Ekranı"
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:139
 msgid "Encryption Settings"
 msgstr "Şifreleme Anahtarı (Encryption Key) Ayarları"
+
+#: includes/contracts/admin/class-contracts-settings.php:368
+msgid "Enter contract name"
+msgstr "Sözleşme adını girin"
 
 #: includes/Checkout.php:385
 msgid "Enter invoice title"
@@ -637,6 +777,11 @@ msgstr ""
 msgid "Hezarfen Cargo Tracking & SMS Notifications"
 msgstr "Hezarfen Kargo Takip & SMS Bildirimleri"
 
+#. Hezarfen Invoice Fields
+#: includes/contracts/admin/class-contracts-settings.php:529
+msgid "Hezarfen Invoice Fields"
+msgstr "Hezarfen Fatura Alanları"
+
 #: includes/class-hezarfen.php:246
 msgid "Hezarfen SMS Migration Complete!"
 msgstr "Hezarfen SMS taşıma/uyumluluk işlemi tamamlandı"
@@ -671,18 +816,18 @@ msgstr ""
 "no bilgilerinin okunamaz(decrypt edilemez) hale geleceğini anladım ve "
 "onaylıyorum. "
 
-#: includes/contracts/core/class-contract-renderer.php:352
-#: includes/contracts/core/class-contract-renderer.php:359
+#: includes/contracts/core/class-contract-renderer.php:357
+#: includes/contracts/core/class-contract-renderer.php:364
 #, php-format
 msgid "I have read and agree to %s and %s."
 msgstr "%s ve %s okudum ve kabul ediyorum."
 
-#: includes/contracts/core/class-contract-renderer.php:391
+#: includes/contracts/core/class-contract-renderer.php:396
 #, php-format
 msgid "I have read and agree to the %s."
 msgstr "%s okudum ve kabul ediyorum."
 
-#: includes/contracts/core/class-contract-validator.php:78
+#: includes/contracts/core/class-contract-validator.php:83
 #, php-format
 msgid "I must agree to the %s."
 msgstr "%s sözleşmesini kabul etmeliyim."
@@ -776,6 +921,10 @@ msgstr ""
 "numarası giriniz. Otomatik olarak e-posta ve SMS (ayarlanmışsa) "
 "gönderilecektir."
 
+#: includes/contracts/admin/class-contracts-settings.php:532
+msgid "Individual ID number"
+msgstr "Bireysel kimlik numarası"
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:651
 msgid "Information"
 msgstr "Bilgi (bilgilendirme, kargo vs.)"
@@ -783,6 +932,10 @@ msgstr "Bilgi (bilgilendirme, kargo vs.)"
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:936
 msgid "Information (0)"
 msgstr "Bilgilendirme (0)"
+
+#: includes/contracts/admin/class-contracts-settings.php:72
+msgid "Inline"
+msgstr "Satır İçi"
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:310
 msgid "Install & activate PandaSMS for Woocommerce plugin"
@@ -881,6 +1034,10 @@ msgstr "Kurye"
 msgid "Legacy Turkish Variables"
 msgstr "Eski Değişkenler"
 
+#: includes/contracts/admin/class-contracts-settings.php:486
+msgid "List of ordered products"
+msgstr "Sipariş edilen ürünlerin listesi"
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:911
 msgid "Loading senders automatically..."
 msgstr "Gönderici başlıkları yükleniyor..."
@@ -916,6 +1073,10 @@ msgstr "Mesaj Başlığı"
 #| msgid "Message Template:"
 msgid "Message Template"
 msgstr "Mesaj Şablonu:"
+
+#: includes/contracts/admin/class-contracts-settings.php:73
+msgid "Modal"
+msgstr "Modal"
 
 #: includes/class-hezarfen.php:82 includes/Checkout.php:536
 msgid "Neighborhood"
@@ -1028,13 +1189,23 @@ msgstr "Sipariş #%s - Müşteri Sözleşmeleri Kaydedildi"
 msgid "Order Date"
 msgstr "Sipariş Tarihi"
 
+#: includes/contracts/admin/class-contracts-settings.php:480
+msgid "Order date"
+msgstr "Sipariş tarihi"
+
+#. Order Variables
 #: includes/contracts/core/class-post-order-processor.php:247
+#: includes/contracts/admin/class-contracts-settings.php:478
 msgid "Order Information"
 msgstr "Sipariş Bilgileri"
 
 #: includes/class-sms-automation.php:380 includes/class-sms-automation.php:412
 msgid "Order Number"
 msgstr "Sipariş Numarası"
+
+#: includes/contracts/admin/class-contracts-settings.php:479
+msgid "Order number"
+msgstr "Sipariş numarası"
 
 #: includes/contracts/core/class-post-order-processor.php:248
 msgid "Order Number:"
@@ -1068,13 +1239,25 @@ msgstr "Sipariş Durumu Değişiklikleri"
 msgid "Order status ID (optional)"
 msgstr "Sipariş durumu ID'si (opsiyonel)"
 
+#: includes/contracts/admin/class-contracts-settings.php:483
+msgid "Order subtotal (excluding tax)"
+msgstr "Sipariş ara toplamı (vergi hariç)"
+
 #: includes/class-sms-automation.php:387 includes/class-sms-automation.php:417
 msgid "Order Time"
 msgstr "Sipariş Zamanı"
 
+#: includes/contracts/admin/class-contracts-settings.php:481
+msgid "Order time"
+msgstr "Sipariş saati"
+
 #: includes/class-sms-automation.php:394 includes/class-sms-automation.php:415
 msgid "Order Total"
 msgstr "Sipariş Toplamı"
+
+#: includes/contracts/admin/class-contracts-settings.php:482
+msgid "Order total (including tax)"
+msgstr "Sipariş toplamı (vergi dahil)"
 
 #: includes/class-sms-automation.php:509 includes/class-sms-automation.php:643
 msgid "Order Variables"
@@ -1111,6 +1294,10 @@ msgstr "PandaSMS eklentisi başarıyla yüklendi ve aktif edildi."
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:907
 msgid "Password must be at least 6 characters"
 msgstr "Şifre en az 6 karakter olmalı"
+
+#: includes/contracts/admin/class-contracts-settings.php:487
+msgid "Payment method"
+msgstr "Ödeme yöntemi"
 
 #: includes/class-sms-automation.php:592
 msgid "Pending payment"
@@ -1159,6 +1346,10 @@ msgstr "Lütfen gönderim başlığını seçiniz"
 msgid "Powered by"
 msgstr "Güçlendiren"
 
+#: includes/contracts/admin/class-contracts-settings.php:231
+msgid "Pre-Information Form"
+msgstr "Ön Bilgilendirme Formu"
+
 #: includes/class-sms-automation.php:593
 msgid "Processing"
 msgstr "Hazırlanıyor"
@@ -1200,6 +1391,11 @@ msgstr "Gönderi verisini sil?"
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:141
 msgid "Removing..."
 msgstr "Siliniyor..."
+
+#: includes/contracts/admin/class-contracts-settings.php:290
+#: includes/contracts/admin/class-contracts-settings.php:366
+msgid "Require User Agreement"
+msgstr "Kullanıcı Onayı Gerekli"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:452
 msgid "Rule"
@@ -1252,6 +1448,10 @@ msgstr "Eylem seçin..."
 #: includes/class-hezarfen.php:83
 msgid "Select an option"
 msgstr "Lütfen seçiniz"
+
+#: includes/contracts/admin/class-contracts-settings.php:127
+msgid "Select page..."
+msgstr "Sayfa seçin..."
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:575
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:631
@@ -1335,29 +1535,63 @@ msgid_plural "Shipped (Kargo Takip Turkiye Plugin) (%s)"
 msgstr[0] "Kargoya Verildi (Kargo Takip Turkiye Eklentisi) (%s)"
 msgstr[1] "Kargoya Verildi (Kargo Takip Turkiye Eklentisi) (%s)"
 
+#. Shipping Address Variables
 #: includes/class-sms-automation.php:407 includes/class-sms-automation.php:434
+#: includes/contracts/admin/class-contracts-settings.php:505
 msgid "Shipping Address"
 msgstr "Teslimat Adresi"
+
+#: includes/contracts/admin/class-contracts-settings.php:509
+msgid "Shipping address line 1"
+msgstr "Teslimat adres satırı 1"
+
+#: includes/contracts/admin/class-contracts-settings.php:510
+msgid "Shipping address line 2"
+msgstr "Teslimat adres satırı 2"
 
 #: includes/class-sms-automation.php:408 includes/class-sms-automation.php:435
 msgid "Shipping City"
 msgstr "Teslimat İlçe"
 
+#: includes/contracts/admin/class-contracts-settings.php:511
+msgid "Shipping city"
+msgstr "Teslimat şehri"
+
 #: includes/class-sms-automation.php:406 includes/class-sms-automation.php:433
 msgid "Shipping Company"
 msgstr "Teslimat Firma Adı"
+
+#: includes/contracts/admin/class-contracts-settings.php:508
+msgid "Shipping company name"
+msgstr "Teslimat şirket adı"
+
+#: includes/contracts/admin/class-contracts-settings.php:485
+msgid "Shipping cost"
+msgstr "Kargo ücreti"
 
 #: includes/class-sms-automation.php:409 includes/class-sms-automation.php:436
 msgid "Shipping Country"
 msgstr "Teslimat Ülke"
 
+#: includes/contracts/admin/class-contracts-settings.php:513
+msgid "Shipping country"
+msgstr "Teslimat ülkesi"
+
 #: includes/class-sms-automation.php:403 includes/class-sms-automation.php:430
 msgid "Shipping First Name"
 msgstr "Teslimat Ad"
 
+#: includes/contracts/admin/class-contracts-settings.php:506
+msgid "Shipping first name"
+msgstr "Teslimat adı"
+
 #: includes/class-sms-automation.php:404 includes/class-sms-automation.php:431
 msgid "Shipping Last Name"
 msgstr "Teslimat Soyad"
+
+#: includes/contracts/admin/class-contracts-settings.php:507
+msgid "Shipping last name"
+msgstr "Teslimat soyadı"
 
 #: includes/class-sms-automation.php:405 includes/class-sms-automation.php:432
 #: includes/class-sms-automation.php:625
@@ -1367,6 +1601,10 @@ msgstr "Teslimat Soyad"
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:933
 msgid "Shipping Phone"
 msgstr "Kargo Telefonu"
+
+#: includes/contracts/admin/class-contracts-settings.php:512
+msgid "Shipping postal code"
+msgstr "Teslimat posta kodu"
 
 #: includes/class-sms-automation.php:521 includes/class-sms-automation.php:655
 msgid "Shipping Variables"
@@ -1392,6 +1630,19 @@ msgstr "Hesabım > Siparişler sayfasında Kargo Takip sütununu göster"
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:269
 msgid "Show T.C. Identity Field on checkout page "
 msgstr "T.C. Kimlik Numarası Alanını Ödeme Sayfasında Göster"
+
+#. Site Variables
+#: includes/contracts/admin/class-contracts-settings.php:517
+msgid "Site Information"
+msgstr "Site Bilgileri"
+
+#: includes/contracts/admin/class-contracts-settings.php:518
+msgid "Site name"
+msgstr "Site adı"
+
+#: includes/contracts/admin/class-contracts-settings.php:519
+msgid "Site URL"
+msgstr "Site URL'si"
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:111
 msgid "SMS"
@@ -1479,6 +1730,10 @@ msgstr ""
 msgid "T.C. Identity Number"
 msgstr "T.C. Kimlik Numarası"
 
+#: includes/contracts/admin/class-contracts-settings.php:484
+msgid "Tax amount"
+msgstr "Vergi tutarı"
+
 #: includes/Checkout.php:395 includes/admin/order/OrderDetails.php:55
 msgid "Tax Number"
 msgstr "Vergi Numarası"
@@ -1551,6 +1806,10 @@ msgstr "Ünvan"
 msgid "TNT"
 msgstr "TNT"
 
+#: includes/contracts/admin/class-contracts-settings.php:524
+msgid "Today's date"
+msgstr "Bugünün tarihi"
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:755
 msgid "Toggle password visibility"
 msgstr "Şifre görünülürlüğü"
@@ -1621,6 +1880,18 @@ msgstr ""
 #: packages/manual-shipment-tracking/includes/courier-companies/class-ups.php:38
 msgid "UPS Kargo"
 msgstr "UPS Kargo"
+
+#: includes/contracts/admin/class-contracts-settings.php:564
+msgid "Usage:"
+msgstr "Kullanım:"
+
+#: includes/contracts/admin/class-contracts-settings.php:86
+msgid ""
+"Use WordPress pages as contract templates. You can add new contracts with "
+"the + button and delete them with the X button."
+msgstr ""
+"WordPress sayfalarını sözleşme şablonları olarak kullanın. + butonu ile yeni "
+"sözleşmeler ekleyebilir ve X butonu ile silebilirsiniz."
 
 #: includes/contracts/admin/class-order-agreements.php:142
 msgid "User Agent:"
@@ -1699,6 +1970,21 @@ msgctxt "WooCommerce Order status"
 msgid "Shipped (Kargo Takip Turkiye Plugin)"
 msgstr "Kargoya Verildi (Kargo Takip Turkiye Eklentisi)"
 
+#: includes/contracts/admin/class-contracts-settings.php:259
+#: includes/contracts/admin/class-contracts-settings.php:363
+msgid "WordPress Page:"
+msgstr "WordPress Sayfası:"
+
+#: includes/contracts/admin/class-contracts-settings.php:565
+msgid ""
+"Write these variables into your contract text in the WordPress page editor. "
+"When an order is placed, these variables will be automatically replaced with "
+"real data."
+msgstr ""
+"Bu değişkenleri WordPress sayfa düzenleyicisinde sözleşme metninize yazın. "
+"Sipariş verildiğinde bu değişkenler otomatik olarak gerçek verilerle "
+"değiştirilir."
+
 #: includes/admin/settings/views/encryption.php:47
 #: includes/admin/settings/views/encryption.php:80
 msgid "Yes"
@@ -1733,7 +2019,16 @@ msgstr ""
 "edilmesini gerektirir. Eğer şifreleme(encryption) özelliğini aktif "
 "etmediyseniz, T.C. kimlik numara alanı ödeme ekranında görünmeyecektir."
 
-#: includes/contracts/core/class-contract-validator.php:68
+#: includes/contracts/admin/class-contracts-settings.php:104
+msgid ""
+"You can use the following variables in your contract templates. These "
+"variables are automatically replaced with real data when an order is placed."
+msgstr ""
+"Sözleşme şablonlarınızda aşağıdaki değişkenleri kullanabilirsiniz. Bu "
+"değişkenler sipariş verildiğinde otomatik olarak gerçek verilerle "
+"değiştirilir."
+
+#: includes/contracts/core/class-contract-validator.php:73
 msgid "You must accept the agreements."
 msgstr "Sözleşmeleri kabul etmelisiniz."
 

@@ -323,6 +323,11 @@ class Contract_Renderer {
 				continue;
 			}
 			
+			// Skip contracts that are not set to show in checkbox
+			if ( empty( $contract['show_in_checkbox'] ) ) {
+				continue;
+			}
+			
 			$active_contracts[] = $contract;
 		}
 

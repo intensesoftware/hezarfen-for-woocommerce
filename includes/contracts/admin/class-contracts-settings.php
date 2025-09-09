@@ -33,7 +33,7 @@ class Contracts_Settings {
 	 * Add MSS section to Hezarfen settings
 	 */
 	public function add_section( $sections ) {
-		$sections[ self::SECTION ] = 'Contracts & Agreements';
+		$sections[ self::SECTION ] = __( 'Contracts & Agreements', 'hezarfen-for-woocommerce' );
 		return $sections;
 	}
 	
@@ -47,15 +47,15 @@ class Contracts_Settings {
 		
 		$mss_settings = array(
 			array(
-				'title' => 'Distance Sales Contract Settings',
+				'title' => __( 'Distance Sales Contract Settings', 'hezarfen-for-woocommerce' ),
 				'type'  => 'title',
-				'desc'  => 'Add distance sales contract and pre-information form support to your website.',
+				'desc'  => __( 'Add distance sales contract and pre-information form support to your website.', 'hezarfen-for-woocommerce' ),
 				'id'    => 'hezarfen_mss_title'
 			),
 			
 			array(
-				'title'   => 'DSC Enabled',
-				'desc'    => 'Enable Distance Sales Contract feature',
+				'title'   => __( 'DSC Enabled', 'hezarfen-for-woocommerce' ),
+				'desc'    => __( 'Enable Distance Sales Contract feature', 'hezarfen-for-woocommerce' ),
 				'id'      => 'hezarfen_contracts_enabled',
 				'default' => 'no',
 				'type'    => 'checkbox',
@@ -64,13 +64,13 @@ class Contracts_Settings {
 
 			
 			array(
-				'title'    => 'Contract Settings',
-				'desc'     => 'Choose how the contract will be displayed on the payment page. Contracts are automatically created when order status is "Processing".',
+				'title'    => __( 'Contract Settings', 'hezarfen-for-woocommerce' ),
+				'desc'     => __( 'Choose how the contract will be displayed on the payment page. Contracts are automatically created when order status is "Processing".', 'hezarfen-for-woocommerce' ),
 				'id'       => 'hezarfen_mss_settings[odeme_sayfasinda_sozlesme_gosterim_tipi]',
 				'type'     => 'select',
 				'options'  => array(
-					'inline' => 'Inline',
-					'modal'  => 'Modal',
+					'inline' => __( 'Inline', 'hezarfen-for-woocommerce' ),
+					'modal'  => __( 'Modal', 'hezarfen-for-woocommerce' ),
 				),
 				'default'  => 'inline',
 			),
@@ -81,14 +81,14 @@ class Contracts_Settings {
 			),
 			
 			array(
-				'title' => 'Contract Templates',
+				'title' => __( 'Contract Templates', 'hezarfen-for-woocommerce' ),
 				'type'  => 'title',
-				'desc'  => 'Use WordPress pages as contract templates. You can add new contracts with the + button and delete them with the X button.',
+				'desc'  => __( 'Use WordPress pages as contract templates. You can add new contracts with the + button and delete them with the X button.', 'hezarfen-for-woocommerce' ),
 				'id'    => 'hezarfen_mss_templates_title'
 			),
 			
 			array(
-				'title' => 'Active Contracts',
+				'title' => __( 'Active Contracts', 'hezarfen-for-woocommerce' ),
 				'type'  => 'mss_dynamic_contracts',
 				'id'    => 'hezarfen_mss_dynamic_contracts',
 			),
@@ -99,14 +99,14 @@ class Contracts_Settings {
 			),
 			
 			array(
-				'title' => 'Available Variables',
+				'title' => __( 'Available Variables', 'hezarfen-for-woocommerce' ),
 				'type'  => 'title',
-				'desc'  => 'You can use the following variables in your contract templates. These variables are automatically replaced with real data when an order is placed.',
+				'desc'  => __( 'You can use the following variables in your contract templates. These variables are automatically replaced with real data when an order is placed.', 'hezarfen-for-woocommerce' ),
 				'id'    => 'hezarfen_mss_variables_title'
 			),
 			
 			array(
-				'title' => 'Current Variables',
+				'title' => __( 'Current Variables', 'hezarfen-for-woocommerce' ),
 				'type'  => 'mss_available_variables',
 				'id'    => 'hezarfen_mss_available_variables',
 			),
@@ -124,7 +124,7 @@ class Contracts_Settings {
 	 * Get template options for dropdown (WordPress pages only)
 	 */
 	private function get_template_options() {
-		$templates = array( '' => 'Select page...' );
+		$templates = array( '' => __( 'Select page...', 'hezarfen-for-woocommerce' ) );
 		
 		// Get WordPress pages
 		$pages = get_posts( array(
@@ -221,15 +221,17 @@ class Contracts_Settings {
 			$contracts = array(
 				array(
 					'id' => 'mss',
-					'name' => 'Distance Sales Contract',
+					'name' => __( 'Distance Sales Contract', 'hezarfen-for-woocommerce' ),
 					'template_id' => '',
 					'enabled' => true,
+					'show_in_checkbox' => true,
 				),
 				array(
 					'id' => 'obf',
-					'name' => 'Pre-Information Form',
+					'name' => __( 'Pre-Information Form', 'hezarfen-for-woocommerce' ),
 					'template_id' => '',
 					'enabled' => true,
+					'show_in_checkbox' => true,
 				),
 			);
 		}
@@ -247,14 +249,14 @@ class Contracts_Settings {
 							<div class="contract-item" data-index="<?php echo esc_attr( $index ); ?>">
 								<div class="contract-fields">
 									<div class="contract-field">
-										<label>Contract Name:</label>
+										<label><?php esc_html_e( 'Contract Name:', 'hezarfen-for-woocommerce' ); ?></label>
 										<input type="text" 
 											   name="hezarfen_mss_settings[contracts][<?php echo esc_attr( $index ); ?>][name]" 
 											   value="<?php echo esc_attr( $contract['name'] ); ?>" 
 											   class="regular-text" />
 									</div>
 									<div class="contract-field">
-										<label>WordPress Page:</label>
+										<label><?php esc_html_e( 'WordPress Page:', 'hezarfen-for-woocommerce' ); ?></label>
 										<div class="page-selection-wrapper">
 											<select name="hezarfen_mss_settings[contracts][<?php echo esc_attr( $index ); ?>][template_id]" class="regular-text page-selector">
 												<?php foreach ( $template_options as $option_value => $option_label ): ?>
@@ -266,7 +268,7 @@ class Contracts_Settings {
 											</select>
 											<a href="#" class="page-link" style="display: none; margin-left: 10px; color: #0073aa; text-decoration: none;" target="_blank">
 												<span class="dashicons dashicons-edit" style="font-size: 16px; width: 16px; height: 16px; line-height: 1;"></span>
-												Edit Page
+												<?php esc_html_e( 'Edit Page', 'hezarfen-for-woocommerce' ); ?>
 											</a>
 										</div>
 									</div>
@@ -276,11 +278,20 @@ class Contracts_Settings {
 												   name="hezarfen_mss_settings[contracts][<?php echo esc_attr( $index ); ?>][enabled]" 
 												   value="1" 
 												   <?php checked( !empty( $contract['enabled'] ) ); ?> />
-											Enabled
+											<?php esc_html_e( 'Enabled', 'hezarfen-for-woocommerce' ); ?>
+										</label>
+									</div>
+									<div class="contract-field">
+										<label>
+											<input type="checkbox" 
+												   name="hezarfen_mss_settings[contracts][<?php echo esc_attr( $index ); ?>][show_in_checkbox]" 
+												   value="1" 
+												   <?php checked( !empty( $contract['show_in_checkbox'] ) ); ?> />
+											<?php esc_html_e( 'Require User Agreement', 'hezarfen-for-woocommerce' ); ?>
 										</label>
 									</div>
 									<div class="contract-actions">
-										<button type="button" class="button remove-contract" title="Delete Contract">×</button>
+										<button type="button" class="button remove-contract" title="<?php esc_attr_e( 'Delete Contract', 'hezarfen-for-woocommerce' ); ?>">×</button>
 									</div>
 								</div>
 								<input type="hidden" name="hezarfen_mss_settings[contracts][<?php echo esc_attr( $index ); ?>][id]" value="<?php echo esc_attr( $contract['id'] ); ?>" />
@@ -289,7 +300,7 @@ class Contracts_Settings {
 					</div>
 					<div class="add-contract-section">
 						<button type="button" id="add-new-contract" class="button button-secondary">
-							+ Add New Contract
+							+ <?php esc_html_e( 'Add New Contract', 'hezarfen-for-woocommerce' ); ?>
 						</button>
 					</div>
 				</div>
@@ -346,6 +357,18 @@ class Contracts_Settings {
 				jQuery(document).ready(function($) {
 					let contractIndex = <?php echo count( $contracts ); ?>;
 					
+					// Localized strings
+					const localizedStrings = {
+						contractName: '<?php echo esc_js( __( 'Contract Name:', 'hezarfen-for-woocommerce' ) ); ?>',
+						wordPressPage: '<?php echo esc_js( __( 'WordPress Page:', 'hezarfen-for-woocommerce' ) ); ?>',
+						editPage: '<?php echo esc_js( __( 'Edit Page', 'hezarfen-for-woocommerce' ) ); ?>',
+						enabled: '<?php echo esc_js( __( 'Enabled', 'hezarfen-for-woocommerce' ) ); ?>',
+						requireUserAgreement: '<?php echo esc_js( __( 'Require User Agreement', 'hezarfen-for-woocommerce' ) ); ?>',
+						deleteContract: '<?php echo esc_js( __( 'Delete Contract', 'hezarfen-for-woocommerce' ) ); ?>',
+						enterContractName: '<?php echo esc_js( __( 'Enter contract name', 'hezarfen-for-woocommerce' ) ); ?>',
+						confirmDelete: '<?php echo esc_js( __( 'Are you sure you want to delete this contract?', 'hezarfen-for-woocommerce' ) ); ?>'
+					};
+					
 					// Add new contract
 					$('#add-new-contract').on('click', function() {
 						const templateOptions = <?php echo json_encode( $template_options ); ?>;
@@ -359,22 +382,22 @@ class Contracts_Settings {
 							<div class="contract-item" data-index="${contractIndex}">
 								<div class="contract-fields">
 									<div class="contract-field">
-										<label>Contract Name:</label>
+										<label>${localizedStrings.contractName}</label>
 										<input type="text" 
 											   name="hezarfen_mss_settings[contracts][${contractIndex}][name]" 
 											   value="" 
 											   class="regular-text" 
-											   placeholder="Enter contract name" />
+											   placeholder="${localizedStrings.enterContractName}" />
 									</div>
 									<div class="contract-field">
-										<label>WordPress Page:</label>
+										<label>${localizedStrings.wordPressPage}</label>
 										<div class="page-selection-wrapper">
 											<select name="hezarfen_mss_settings[contracts][${contractIndex}][template_id]" class="regular-text page-selector">
 												${optionsHtml}
 											</select>
 											<a href="#" class="page-link" style="display: none; margin-left: 10px; color: #0073aa; text-decoration: none;" target="_blank">
 												<span class="dashicons dashicons-edit" style="font-size: 16px; width: 16px; height: 16px; line-height: 1;"></span>
-												Edit Page
+												${localizedStrings.editPage}
 											</a>
 										</div>
 									</div>
@@ -384,11 +407,20 @@ class Contracts_Settings {
 												   name="hezarfen_mss_settings[contracts][${contractIndex}][enabled]" 
 												   value="1" 
 												   checked />
-											Enabled
+											${localizedStrings.enabled}
+										</label>
+									</div>
+									<div class="contract-field">
+										<label>
+											<input type="checkbox" 
+												   name="hezarfen_mss_settings[contracts][${contractIndex}][show_in_checkbox]" 
+												   value="1" 
+												   checked />
+											${localizedStrings.requireUserAgreement}
 										</label>
 									</div>
 									<div class="contract-actions">
-										<button type="button" class="button remove-contract" title="Delete Contract">×</button>
+										<button type="button" class="button remove-contract" title="${localizedStrings.deleteContract}">×</button>
 									</div>
 								</div>
 								<input type="hidden" name="hezarfen_mss_settings[contracts][${contractIndex}][id]" value="contract_${contractIndex}" />
@@ -401,7 +433,7 @@ class Contracts_Settings {
 					
 					// Remove contract
 					$(document).on('click', '.remove-contract', function() {
-						if (confirm('Are you sure you want to delete this contract?')) {
+						if (confirm(localizedStrings.confirmDelete)) {
 							$(this).closest('.contract-item').remove();
 						}
 					});
@@ -443,61 +475,61 @@ class Contracts_Settings {
 public function output_available_variables( $value ) {
 	$variables = array(
 		// Order Variables
-		'Order Information' => array(
-			'{{siparis_no}}' => 'Order number',
-			'{{siparis_tarihi}}' => 'Order date',
-			'{{siparis_saati}}' => 'Order time',
-			'{{toplam_tutar}}' => 'Order total (including tax)',
-			'{{ara_toplam}}' => 'Order subtotal (excluding tax)',
-			'{{toplam_vergi_tutar}}' => 'Tax amount',
-			'{{kargo_ucreti}}' => 'Shipping cost',
-			'{{urunler}}' => 'List of ordered products',
-			'{{odeme_yontemi}}' => 'Payment method',
-			'{{indirim_toplami}}' => 'Discount amount',
+		__( 'Order Information', 'hezarfen-for-woocommerce' ) => array(
+			'{{siparis_no}}' => __( 'Order number', 'hezarfen-for-woocommerce' ),
+			'{{siparis_tarihi}}' => __( 'Order date', 'hezarfen-for-woocommerce' ),
+			'{{siparis_saati}}' => __( 'Order time', 'hezarfen-for-woocommerce' ),
+			'{{toplam_tutar}}' => __( 'Order total (including tax)', 'hezarfen-for-woocommerce' ),
+			'{{ara_toplam}}' => __( 'Order subtotal (excluding tax)', 'hezarfen-for-woocommerce' ),
+			'{{toplam_vergi_tutar}}' => __( 'Tax amount', 'hezarfen-for-woocommerce' ),
+			'{{kargo_ucreti}}' => __( 'Shipping cost', 'hezarfen-for-woocommerce' ),
+			'{{urunler}}' => __( 'List of ordered products', 'hezarfen-for-woocommerce' ),
+			'{{odeme_yontemi}}' => __( 'Payment method', 'hezarfen-for-woocommerce' ),
+			'{{indirim_toplami}}' => __( 'Discount amount', 'hezarfen-for-woocommerce' ),
 		),
 		
 		
 		// Billing Address Variables
-		'Billing Address' => array(
-			'{{fatura_adi}}' => 'Billing first name',
-			'{{fatura_soyadi}}' => 'Billing last name',
-			'{{fatura_sirket}}' => 'Billing company name',
-			'{{fatura_adres_1}}' => 'Billing address line 1',
-			'{{fatura_adres_2}}' => 'Billing address line 2',
-			'{{fatura_sehir}}' => 'Billing city',
-			'{{fatura_posta_kodu}}' => 'Billing postal code',
-			'{{fatura_ulke}}' => 'Billing country',
+		__( 'Billing Address', 'hezarfen-for-woocommerce' ) => array(
+			'{{fatura_adi}}' => __( 'Billing first name', 'hezarfen-for-woocommerce' ),
+			'{{fatura_soyadi}}' => __( 'Billing last name', 'hezarfen-for-woocommerce' ),
+			'{{fatura_sirket}}' => __( 'Billing company name', 'hezarfen-for-woocommerce' ),
+			'{{fatura_adres_1}}' => __( 'Billing address line 1', 'hezarfen-for-woocommerce' ),
+			'{{fatura_adres_2}}' => __( 'Billing address line 2', 'hezarfen-for-woocommerce' ),
+			'{{fatura_sehir}}' => __( 'Billing city', 'hezarfen-for-woocommerce' ),
+			'{{fatura_posta_kodu}}' => __( 'Billing postal code', 'hezarfen-for-woocommerce' ),
+			'{{fatura_ulke}}' => __( 'Billing country', 'hezarfen-for-woocommerce' ),
 		),
 		
 		// Shipping Address Variables
-		'Shipping Address' => array(
-			'{{teslimat_adi}}' => 'Shipping first name',
-			'{{teslimat_soyadi}}' => 'Shipping last name',
-			'{{teslimat_sirket}}' => 'Shipping company name',
-			'{{teslimat_adres_1}}' => 'Shipping address line 1',
-			'{{teslimat_adres_2}}' => 'Shipping address line 2',
-			'{{teslimat_sehir}}' => 'Shipping city',
-			'{{teslimat_posta_kodu}}' => 'Shipping postal code',
-			'{{teslimat_ulke}}' => 'Shipping country',
+		__( 'Shipping Address', 'hezarfen-for-woocommerce' ) => array(
+			'{{teslimat_adi}}' => __( 'Shipping first name', 'hezarfen-for-woocommerce' ),
+			'{{teslimat_soyadi}}' => __( 'Shipping last name', 'hezarfen-for-woocommerce' ),
+			'{{teslimat_sirket}}' => __( 'Shipping company name', 'hezarfen-for-woocommerce' ),
+			'{{teslimat_adres_1}}' => __( 'Shipping address line 1', 'hezarfen-for-woocommerce' ),
+			'{{teslimat_adres_2}}' => __( 'Shipping address line 2', 'hezarfen-for-woocommerce' ),
+			'{{teslimat_sehir}}' => __( 'Shipping city', 'hezarfen-for-woocommerce' ),
+			'{{teslimat_posta_kodu}}' => __( 'Shipping postal code', 'hezarfen-for-woocommerce' ),
+			'{{teslimat_ulke}}' => __( 'Shipping country', 'hezarfen-for-woocommerce' ),
 		),
 		
 		// Site Variables
-		'Site Information' => array(
-			'{{site_adi}}' => 'Site name',
-			'{{site_url}}' => 'Site URL',
+		__( 'Site Information', 'hezarfen-for-woocommerce' ) => array(
+			'{{site_adi}}' => __( 'Site name', 'hezarfen-for-woocommerce' ),
+			'{{site_url}}' => __( 'Site URL', 'hezarfen-for-woocommerce' ),
 		),
 		
 		// Date Variables
-		'Date Information' => array(
-			'{{bugunun_tarihi}}' => 'Today\'s date',
-			'{{su_an}}' => 'Current date and time',
+		__( 'Date Information', 'hezarfen-for-woocommerce' ) => array(
+			'{{bugunun_tarihi}}' => __( 'Today\'s date', 'hezarfen-for-woocommerce' ),
+			'{{su_an}}' => __( 'Current date and time', 'hezarfen-for-woocommerce' ),
 		),
 		
 		// Hezarfen Invoice Fields
-		'Hezarfen Invoice Fields' => array(
-			'{{hezarfen_kurumsal_vergi_daire}}' => 'Corporate tax office',
-			'{{hezarfen_kurumsal_vergi_no}}' => 'Corporate tax number',
-			'{{hezarfen_bireysel_tc}}' => 'Individual ID number',
+		__( 'Hezarfen Invoice Fields', 'hezarfen-for-woocommerce' ) => array(
+			'{{hezarfen_kurumsal_vergi_daire}}' => __( 'Corporate tax office', 'hezarfen-for-woocommerce' ),
+			'{{hezarfen_kurumsal_vergi_no}}' => __( 'Corporate tax number', 'hezarfen-for-woocommerce' ),
+			'{{hezarfen_bireysel_tc}}' => __( 'Individual ID number', 'hezarfen-for-woocommerce' ),
 		),
 	);
 	
@@ -529,9 +561,8 @@ public function output_available_variables( $value ) {
 				<?php endforeach; ?>
 				
 				<div style="background: #e7f3ff; padding: 15px; border-radius: 5px; margin-top: 20px; border-left: 4px solid #0073aa;">
-					<strong>💡 Usage:</strong><br>
-					Write these variables into your contract text in the WordPress page editor. 
-					When an order is placed, these variables will be automatically replaced with real data.
+					<strong>💡 <?php esc_html_e( 'Usage:', 'hezarfen-for-woocommerce' ); ?></strong><br>
+					<?php esc_html_e( 'Write these variables into your contract text in the WordPress page editor. When an order is placed, these variables will be automatically replaced with real data.', 'hezarfen-for-woocommerce' ); ?>
 				</div>
 			</div>
 			
