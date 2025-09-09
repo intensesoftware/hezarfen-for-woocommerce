@@ -21,15 +21,20 @@ class Template_Processor {
 	 *
 	 * @param string $content Raw content.
 	 * @param int    $order_id Optional order ID for order-specific variables.
+	 * @param bool   $use_cart_data Whether to use cart data for checkout scenarios.
 	 * @return string
 	 */
-	public static function process_variables( $content, $order_id = null ) {
+	public static function process_variables( $content, $order_id = null, $use_cart_data = false ) {
 		// Basic variable replacements that don't require order context
 		$content = self::process_basic_variables( $content );
 		
 		// Order-specific variables if order ID is provided
 		if ( $order_id ) {
 			$content = self::process_order_variables( $content, $order_id );
+		}
+		// Cart-specific variables for checkout scenarios
+		elseif ( $use_cart_data && is_checkout() ) {
+			$content = self::process_cart_variables( $content );
 		}
 		
 		return $content;
@@ -129,6 +134,67 @@ class Template_Processor {
 				$item->get_name(), 
 				$item->get_quantity(),
 				wc_price( $item->get_total() )
+			);
+		}
+		
+		return implode( '<br>', $items );
+	}
+
+	/**
+	 * Process cart variables for checkout scenarios
+	 *
+	 * @param string $content Raw content.
+	 * @return string
+	 */
+	private static function process_cart_variables( $content ) {
+		$cart = WC()->cart;
+		if ( ! $cart || $cart->is_empty() ) {
+			return $content;
+		}
+
+		// Get cart totals
+		$cart_total = $cart->get_total( 'edit' );
+		$cart_subtotal = $cart->get_subtotal();
+		$cart_tax = $cart->get_total_tax();
+		$shipping_total = $cart->get_shipping_total();
+		$discount_total = $cart->get_discount_total();
+
+		// Get cart items summary
+		$items_summary = self::get_cart_items_summary( $cart );
+
+		$replacements = array(
+			// Order Variables (cart equivalents)
+			'{{siparis_no}}' => __( 'Will be assigned after order', 'hezarfen-for-woocommerce' ),
+			'{{siparis_tarihi}}' => date_i18n( 'd/m/Y' ),
+			'{{siparis_saati}}' => date_i18n( 'H:i:s' ),
+			'{{toplam_tutar}}' => wc_price( $cart_total ),
+			'{{ara_toplam}}' => wc_price( $cart_subtotal ),
+			'{{toplam_vergi_tutar}}' => wc_price( $cart_tax ),
+			'{{kargo_ucreti}}' => wc_price( $shipping_total ),
+			'{{urunler}}' => $items_summary,
+			'{{odeme_yontemi}}' => __( 'Will be determined at payment', 'hezarfen-for-woocommerce' ),
+			'{{indirim_toplami}}' => wc_price( $discount_total ),
+		);
+
+		return str_replace( array_keys( $replacements ), array_values( $replacements ), $content );
+	}
+
+	/**
+	 * Get cart items summary
+	 *
+	 * @param \WC_Cart $cart WooCommerce cart object.
+	 * @return string
+	 */
+	private static function get_cart_items_summary( $cart ) {
+		$items = array();
+		
+		foreach ( $cart->get_cart() as $cart_item ) {
+			$product = $cart_item['data'];
+			$items[] = sprintf( 
+				'%s x %d - %s', 
+				$product->get_name(),
+				$cart_item['quantity'],
+				wc_price( $cart_item['line_total'] + $cart_item['line_tax'] )
 			);
 		}
 		

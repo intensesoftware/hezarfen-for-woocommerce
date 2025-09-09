@@ -149,7 +149,9 @@ class Contract_Renderer {
 		$processed_content = wpautop( $raw_content );
 		
 		// Process template variables using the dedicated processor
-		$processed_content = Template_Processor::process_variables( $processed_content );
+		// Use cart data if we're on checkout and no order ID is provided
+		$use_cart_data = is_checkout() && ! $order_id;
+		$processed_content = Template_Processor::process_variables( $processed_content, $order_id, $use_cart_data );
 		
 		return $processed_content;
 	}

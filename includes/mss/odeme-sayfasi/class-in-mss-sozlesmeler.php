@@ -170,6 +170,8 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 		\Hezarfen\Inc\MSS\Core\Contract_Renderer::render_contracts( $display_type );
 	}
 
+
+
 	/**
 	 * Ödeme ekranında sözleşme onay kutucukları ve sözleşmelerin modal veya inline olarak gösterilmesi
 	 *
@@ -620,7 +622,10 @@ class IN_MSS_OdemeSayfasi_Sozlesmeler {
 				$template_post = get_post( $contract['template_id'] );
 				if ( $template_post && $template_post->post_status === 'publish' ) {
 					$contract_content = wpautop( $template_post->post_content );
-					$processed_content = $this->process_realtime_variables( $contract_content, $form_data );
+					// First process with Template_Processor for cart data
+					$processed_content = \Hezarfen\Inc\MSS\Core\Template_Processor::process_variables( $contract_content, null, true );
+					// Then process real-time form variables
+					$processed_content = $this->process_realtime_variables( $processed_content, $form_data );
 					$contract_data[ $contract['id'] ] = $processed_content;
 				}
 			}
