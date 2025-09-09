@@ -67,6 +67,7 @@ class MSS_Integration {
 		require_once HEZARFEN_MSS_PATH . 'core/class-template-processor.php';
 		require_once HEZARFEN_MSS_PATH . 'core/class-contract-renderer.php';
 		require_once HEZARFEN_MSS_PATH . 'core/class-contract-validator.php';
+		require_once HEZARFEN_MSS_PATH . 'core/class-post-order-processor.php';
 		
 		// Load settings integration
 		require_once HEZARFEN_MSS_PATH . 'admin/class-mss-settings.php';
@@ -117,11 +118,9 @@ class MSS_Integration {
 	 * Load frontend functionality
 	 */
 	private function load_frontend_functionality() {
-		// Load remaining legacy classes
-		require_once HEZARFEN_MSS_PATH . 'siparis-sonrasi/class-in-mss-siparis-sonrasi.php';
-		
-		// Initialize Contract_Renderer checkout hooks
+		// Initialize core MSS functionality
 		\Hezarfen\Inc\MSS\Core\Contract_Renderer::init_checkout_hooks();
+		\Hezarfen\Inc\MSS\Core\Post_Order_Processor::init();
 		
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_assets' ) );
 	}
