@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.5.2
+Stable tag: 2.5.3
 
 TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ! Türkiye'nin Lider WooCommerce Kargo Takip Eklentisi: 23 kargo, SMS, MSS sözleşmeleri, ilçe/mahalle, vergi alanlar
 == Description ==
@@ -141,6 +141,30 @@ MSS sözleşme şablonlarınızda dinamik değişkenleri kullanabilirsiniz. Bu d
 = Sözleşmeler nasıl saklanır? =
 Müşteriler tarafından kabul edilen sözleşmeler, KVKV uyumlu şekilde veritabanında güvenli olarak saklanır. Her sipariş için ayrı sözleşme kaydı oluşturulur ve IP adresi, kullanıcı aracısı gibi teknik bilgiler de kaydedilir.
 
+= Sözleşmeler özelliğini nasıl aktifleştirebilirim? =
+WooCommerce > Ayarlar > Hezarfen > Mesafeli Satış Sözleşmesi menüsünden sözleşmeler özelliğini aktifleştirebilirsiniz. Bu bölümden hangi sözleşmelerin gösterileceğini, hangilerinin zorunlu olacağını ve nasıl gösterileceğini (sayfa içi veya modal) ayarlayabilirsiniz.
+
+= Sözleşmeleri ödeme sayfasında nasıl gösteririm? =
+Sözleşmelerinizi ödeme sayfasında iki farklı şekilde gösterebilirsiniz: Sayfa içi olarak doğrudan ödeme formunda veya modal (popup) pencerede. Bu ayarı WooCommerce > Ayarlar > Hezarfen > Mesafeli Satış Sözleşmesi bölümünden yapabilirsiniz.
+
+= Hangi sözleşmeleri oluşturabilirim? =
+Hezarfen ile mesafeli satış sözleşmesi, ön bilgilendirme formu, cayma hakkı sözleşmesi, gizlilik sözleşmesi ve dilediğiniz herhangi bir özel sözleşme türünü oluşturabilirsiniz. WordPress sayfalarınızı sözleşme şablonu olarak kullanabilirsiniz.
+
+= Sözleşmelerde hangi dinamik değişkenler kullanılabilir? =
+Sözleşme şablonlarınızda fatura/teslimat bilgileri ad soyad, sipariş numarası, sipariş tarihi, ürün bilgileri, toplam tutar, kargo bilgileri gibi birçok dinamik değişken kullanabilirsiniz. Bu değişkenler sipariş verildiğinde otomatik olarak gerçek verilerle değiştirilir.
+
+= Sözleşme kabul zorunluluğu nasıl ayarlanır? =
+WooCommerce > Ayarlar > Hezarfen > Mesafeli Satış Sözleşmesi bölümünden hangi sözleşmelerin onay gerektirdiğini belirleyebilirsiniz. Zorunlu sözleşmeler onaylanmadan sipariş tamamlanamaz.
+
+= Sözleşmeler müşteri hesabında nasıl görünür? =
+Müşteriler, hesabım sayfasındaki sipariş detaylarında o siparişe ait tüm sözleşmeleri görüntüleyebilir. Bu sözleşmeler sipariş verildiği andaki haliyle saklanır ve değiştirilemez.
+
+= Sözleşmeler e-posta bildirimlerinde nasıl yer alır? =
+Sipariş onay e-postasında sözleşmeler otomatik olarak eklenir. Bu sayede müşteriler sözleşmelerin bir kopyasını e-posta ile de alırlar.
+
+= Sözleşme şablonlarını nasıl düzenlerim? =
+Sözleşme şablonlarınızı WordPress sayfa editöründe normal bir sayfa gibi düzenleyebilirsiniz. Dinamik değişkenleri kullanarak kişiselleştirilmiş sözleşmeler oluşturabilirsiniz.
+
 = Hezarfen nedir? =
 
 "Hezarfen" kelimesi, Farsça kökenli olup "bin ilim sahibi" anlamına gelir.  
@@ -192,6 +216,10 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
+= 2.5.3 - 2025-09-10 =
+* Funnelkit için ilçe/mahalle uyumluluğu
+* Legacy order storage versiyonları için kargoya verildi durum desteğinde yaşanan sorun giderildi.
+
 = 2.5.2 - 2025-09-10 = 
 * "Kargoya verildi" durumundaki regresyon giderildi, tekrar durum aktif hale getirildi.
 * Debug fonksiyonları kaldırıldı.
