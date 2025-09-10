@@ -46,6 +46,48 @@ class Checkout {
 			add_action( 'wp', array( $this, 'hide_postcode_fields' ) );
 		}
 
+		add_filter( 'woocommerce_form_field_args', function( $args ) {
+			// Only run if FunnelKit checkout is enabled
+			if ( ! class_exists( 'WFACP_Core' ) || ! WFACP_Core()->public->is_checkout_override() ) {
+				return $args;
+			}
+
+			if( in_array( $args['id'], array( 'billing_city', 'shipping_city' ) ) ) {
+				global $woocommerce;
+
+				$type = $args['field_type'];
+
+				$get_country_function  = 'get_' . $type . '_country';
+				$get_city_function     = 'get_' . $type . '_state';
+				$get_district_function = 'get_' . $type . '_city';
+
+				$current_city_plate_number_prefixed = $woocommerce->customer->$get_city_function();
+
+				$args['type'] = 'select';
+				$args['options'] = Helper::select2_option_format( Mahalle_Local::get_districts( $current_city_plate_number_prefixed ) );
+				$args['priority'] = 100;
+			}
+
+			if( in_array( $args['id'], array( 'billing_address_1', 'shipping_address_1' ) ) ) {
+				global $woocommerce;
+
+				$type = $args['field_type'];
+
+				$get_country_function  = 'get_' . $type . '_country';
+				$get_city_function     = 'get_' . $type . '_state';
+				$get_district_function = 'get_' . $type . '_city';
+
+				$current_city_plate_number_prefixed = $woocommerce->customer->$get_city_function();
+				$current_district                   = $woocommerce->customer->$get_district_function();
+
+				$args['type'] = 'select';
+				$args['options'] = Helper::select2_option_format( Mahalle_Local::get_neighborhoods( $current_city_plate_number_prefixed, $current_district, false ) );
+				$args['priority'] = 100;
+			}
+
+			return $args;
+		} );
+
 		// TODO: review the logic, if it's possible; define all fields in a single function.
 
 		add_filter(
