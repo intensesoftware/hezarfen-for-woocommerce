@@ -738,7 +738,7 @@ class SMS_Automation {
 			
 			// Additional Turkish variables for new system
 			'{siparis_durumu}' => wc_get_order_status_name( $order->get_status() ),
-			'{siparis_toplami}' => $order->get_formatted_order_total(),
+			'{siparis_toplami}' => html_entity_decode( strip_tags( $order->get_formatted_order_total() ), ENT_QUOTES, 'UTF-8' ),
 			'{fatura_adi}' => $order->get_billing_first_name(),
 			'{fatura_soyadi}' => $order->get_billing_last_name(),
 			'{fatura_telefonu}' => $order->get_billing_phone(),
@@ -759,7 +759,7 @@ class SMS_Automation {
 			'{order_number}' => $order->get_order_number(),
 			'{customer_name}' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
 			'{order_status}' => wc_get_order_status_name( $order->get_status() ),
-			'{order_total}' => $order->get_formatted_order_total(),
+			'{order_total}' => html_entity_decode( strip_tags( $order->get_formatted_order_total() ), ENT_QUOTES, 'UTF-8' ),
 			'{order_date}' => $order_date ? $order_date->date_i18n( get_option( 'date_format' ) ) : '',
 			'{order_time}' => $order_date ? $order_date->date_i18n( 'H:i' ) : '',
 			
