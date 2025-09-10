@@ -233,6 +233,13 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 
 = 2.5.0 - 2025-09-09 =
 * **YENİ ÖZELLİK: Mesafeli Satış Sözleşme, Ön Bilgilendirme Formu ve Özel Sözleşmeler**
+* **YENİ ÖZELLİK: Sözleşmeler Yönetim Sistemi** - Dinamik sözleşme oluşturma, WordPress sayfalarını sözleşme şablonu olarak kullanma
+* **YENİ ÖZELLİK: Sözleşmeler Ödeme Sayfasında** - Ödeme sayfasında sözleşme gösterimi (sayfa içi veya modal)
+* **YENİ ÖZELLİK: Sözleşmeler Otomatik Değişken Sistemi** - Müşteri adı, sipariş tarihi, ürün bilgileri vb. otomatik değiştirme
+* **YENİ ÖZELLİK: Sözleşmeler Müşteri Paneli** - Oluşan sözleşmelerin müşteri hesabım sayfası sipariş detayında gösterilmesi
+* **YENİ ÖZELLİK: Sözleşmeler E-posta Entegrasyonu** - Sözleşmelerin otomatik olarak sipariş alındı mailinde yer alması
+* **YENİ ÖZELLİK: Sözleşmeler Kabul Zorunluluğu** - Hangi sözleşmelerin onay gerektirdiği kontrol edilebiliyor
+* **YENİ ÖZELLİK: Sözleşmeler Arşivleme** - Sipariş bazında sözleşme arşivleme ve saklama
 * **DÜZELTME**: Ödeme ekranında ilçe ve mahalle alanlarında görünen not found uyarısının Türkçeleştirilmesi
 * **DÜZELTME** Lokalizasyon kaynaklı PHP uyarısı giderildi.
 
