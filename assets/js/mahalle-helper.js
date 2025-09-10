@@ -133,6 +133,10 @@ class hezarfen_mahalle_helper {
 				element_name = element.attr('name'),
 				element_id = element.attr('id');
 
+			if (!element_id) {
+				continue;
+			}
+
 			if (element_type === 'input') {
 				parent_element.show().find('.select2-container').remove();
 				new_element = jQuery('<input type="text" />').addClass('input-text');
