@@ -57,7 +57,7 @@ class Manual_Shipment_Tracking {
 
 		if ( self::is_enabled() ) {
 			$this->initialize_classes();
-			self::assign_callbacks_to_hooks();
+			$this->assign_callbacks_to_hooks();
 		}
 	}
 
@@ -135,9 +135,10 @@ class Manual_Shipment_Tracking {
 	 * 
 	 * @return void
 	 */
-	private static function assign_callbacks_to_hooks() {
-		// Register order status immediately but delay translation loading
-		self::register_order_status();
+	private function assign_callbacks_to_hooks() {
+		add_action( 'init', array( $this, 'register_order_status' ), 20 );
+
+		add_filter( 'wc_order_statuses', array( $this, 'add_to_woocommerce_statuses' ), 20 );
 	}
 
 	/**
@@ -145,54 +146,43 @@ class Manual_Shipment_Tracking {
 	 * 
 	 * @return void
 	 */
-	public static function register_order_status() {
-		// Use static labels to avoid translation loading issues during early plugin loading
-		$label = 'Shipped';
-		$status_data = array(
-			'id'    => self::DB_SHIPPED_ORDER_STATUS,
-			'label' => $label,
-			'data'  => array(
-				'label'                     => $label,
-				'public'                    => false,
-				'exclude_from_search'       => false,
-				'show_in_admin_all_list'    => true,
-				'show_in_admin_status_list' => true,
-				'label_count'               => array(
-					'Shipped <span class="count">(%s)</span>',
-					'Shipped <span class="count">(%s)</span>'
-				),
-			),
-		);
-
-		Helper::register_new_order_status( $status_data );
-		
-		// Add translation support on init hook when translations are properly loaded
-		add_action( 'init', array( __CLASS__, 'add_translation_support' ), 20 );
+	public function register_order_status() {
+		// Re-register with proper translations
+		register_post_status( self::DB_SHIPPED_ORDER_STATUS, array(
+			'label'                     => _x( 'Shipped', 'WooCommerce Order status', 'hezarfen-for-woocommerce' ),
+			'public'                    => false,
+			'exclude_from_search'       => false,
+			'show_in_admin_all_list'    => true,
+			'show_in_admin_status_list' => true,
+			/* translators: %s: number of orders */
+			'label_count'               => _n_noop( 'Shipped (%s)', 'Shipped (%s)', 'hezarfen-for-woocommerce' ),
+		) );
 	}
 	
 	/**
-	 * Adds translation support for the order status after translations are loaded.
-	 * 
-	 * @return void
+	 * Adds the custom status to WooCommerce order statuses list
+	 * immediately after 'processing'.
+	 *
+	 * @param array $order_statuses Existing order statuses.
+	 * @return array Modified order statuses.
 	 */
-	public static function add_translation_support() {
-		// Re-register with proper translations
-		$label = _x( 'Shipped', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
-		$status_data = array(
-			'id'    => self::DB_SHIPPED_ORDER_STATUS,
-			'label' => $label,
-			'data'  => array(
-				'label'                     => $label,
-				'public'                    => false,
-				'exclude_from_search'       => false,
-				'show_in_admin_all_list'    => true,
-				'show_in_admin_status_list' => true,
-				/* translators: %s: number of orders */
-				'label_count'               => _n_noop( 'Shipped (%s)', 'Shipped (%s)', 'hezarfen-for-woocommerce' ),
-			),
-		);
+	public function add_to_woocommerce_statuses( $order_statuses ) {
+		$new_order_statuses = [];
 
-		Helper::register_new_order_status( $status_data );
+		foreach ( $order_statuses as $key => $label ) {
+			$new_order_statuses[ $key ] = $label;
+
+			// Insert our status right after 'processing'
+			if ( 'wc-processing' === $key ) {
+				$new_order_statuses[ self::DB_SHIPPED_ORDER_STATUS ] = _x(
+					'Shipped',
+					'WooCommerce Order status',
+					'hezarfen-for-woocommerce'
+				);
+			}
+		}
+
+		return $new_order_statuses;
 	}
 
 	/**
