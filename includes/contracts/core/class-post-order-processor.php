@@ -24,15 +24,11 @@ class Post_Order_Processor {
 	 * Initialize post-order processing hooks
 	 */
 	public static function init() {
-		error_log( 'Hezarfen Post_Order_Processor::init() called' );
-		
 		// Agreements will be created when order status becomes processing
 		add_action( 'woocommerce_order_status_processing', array( __CLASS__, 'process_order_contracts' ) );
-		error_log( 'Hezarfen Hooked to woocommerce_order_status_processing' );
 
 		// Hook for including contracts in customer emails
 		add_action( 'woocommerce_email_customer_details', array( __CLASS__, 'include_contracts_in_email' ), 100, 4 );
-		error_log( 'Hezarfen Hooked to woocommerce_email_customer_details' );
 	}
 	
 	/**

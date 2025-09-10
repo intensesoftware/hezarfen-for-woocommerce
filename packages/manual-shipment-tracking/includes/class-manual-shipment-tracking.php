@@ -136,6 +136,7 @@ class Manual_Shipment_Tracking {
 	 * @return void
 	 */
 	private static function assign_callbacks_to_hooks() {
+		// Register order status immediately but delay translation loading
 		self::register_order_status();
 	}
 
@@ -144,8 +145,39 @@ class Manual_Shipment_Tracking {
 	 * 
 	 * @return void
 	 */
-	private static function register_order_status() {
-		$label       = _x( 'Shipped', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
+	public static function register_order_status() {
+		// Use static labels to avoid translation loading issues during early plugin loading
+		$label = 'Shipped';
+		$status_data = array(
+			'id'    => self::DB_SHIPPED_ORDER_STATUS,
+			'label' => $label,
+			'data'  => array(
+				'label'                     => $label,
+				'public'                    => false,
+				'exclude_from_search'       => false,
+				'show_in_admin_all_list'    => true,
+				'show_in_admin_status_list' => true,
+				'label_count'               => array(
+					'Shipped <span class="count">(%s)</span>',
+					'Shipped <span class="count">(%s)</span>'
+				),
+			),
+		);
+
+		Helper::register_new_order_status( $status_data );
+		
+		// Add translation support on init hook when translations are properly loaded
+		add_action( 'init', array( __CLASS__, 'add_translation_support' ), 20 );
+	}
+	
+	/**
+	 * Adds translation support for the order status after translations are loaded.
+	 * 
+	 * @return void
+	 */
+	public static function add_translation_support() {
+		// Re-register with proper translations
+		$label = _x( 'Shipped', 'WooCommerce Order status', 'hezarfen-for-woocommerce' );
 		$status_data = array(
 			'id'    => self::DB_SHIPPED_ORDER_STATUS,
 			'label' => $label,
