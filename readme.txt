@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.5.1
+Stable tag: 2.5.2
 
 TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ! Türkiye'nin Lider WooCommerce Kargo Takip Eklentisi: 23 kargo, SMS, MSS sözleşmeleri, ilçe/mahalle, vergi alanlar
 == Description ==
@@ -192,6 +192,11 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
+= 2.5.2 - 2025-09-10 = 
+* "Kargoya verildi" durumundaki regresyon giderildi, tekrar durum aktif hale getirildi.
+* Debug fonksiyonları kaldırıldı.
+* SMS otomasyonundaki {siparis_toplami} ve {order_total} değişkenlerinde yaşanan karakter sorunu giderildi.
+
 = 2.5.1 - 2025-09-09 =
 * readme.txt
 
