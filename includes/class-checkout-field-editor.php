@@ -90,10 +90,10 @@ class Checkout_Field_Editor {
 		add_filter( 'woocommerce_checkout_fields', array( $this, 'customize_checkout_fields' ) );
 		add_action( 'woocommerce_checkout_process', array( $this, 'validate_custom_fields' ) );
 		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_custom_fields' ) );
-		
+
 		// Display custom fields in admin
-		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'display_custom_fields_in_admin' ) );
-		add_action( 'woocommerce_admin_order_data_after_shipping_address', array( $this, 'display_custom_fields_in_admin' ) );
+			add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'display_custom_fields_in_admin' ) );
+			add_action( 'woocommerce_admin_order_data_after_shipping_address', array( $this, 'display_custom_fields_in_admin' ) );
 	}
 
 	/**
@@ -174,8 +174,8 @@ class Checkout_Field_Editor {
 		<div id="hezarfen-checkout-field-editor-react-root">
 			<div class="loading" style="text-align: center; padding: 40px; font-size: 16px; color: #666;">
 				Loading React Checkout Field Editor...
-			</div>
-		</div>
+					</div>
+					</div>
 		<script>
 			document.addEventListener('DOMContentLoaded', function() {
 				if (typeof React !== 'undefined' && typeof ReactDOM !== 'undefined' && typeof CheckoutFieldEditor !== 'undefined') {
@@ -227,9 +227,9 @@ class Checkout_Field_Editor {
 		
 		// Add order fields
 		$fields['order_comments'] = array(
-			'label' => __( 'Order notes', 'woocommerce' ),
-			'type' => 'textarea',
-			'section' => 'order',
+				'label' => __( 'Order notes', 'woocommerce' ),
+				'type' => 'textarea',
+				'section' => 'order',
 			'enabled' => true,
 			'priority' => 10,
 			'column_width' => 'full',
@@ -454,43 +454,43 @@ class Checkout_Field_Editor {
 				$fields[ $section ] = array();
 			}
 
-			// Determine column width class
-			$column_width = $field_data['column_width'] ?? 'full';
+				// Determine column width class
+				$column_width = $field_data['column_width'] ?? 'full';
 			$width_classes = $column_width === 'half' ? array( 'form-row', 'form-row-first' ) : array( 'form-row-wide' );
+				
+				$field_config = array(
+					'label'       => $field_data['label'],
+					'type'        => $field_data['type'],
+					'required'    => $field_data['required'],
+					'priority'    => $field_data['priority'],
+					'class'       => $width_classes,
+				);
 
-			$field_config = array(
-				'label'       => $field_data['label'],
-				'type'        => $field_data['type'],
-				'required'    => $field_data['required'],
-				'priority'    => $field_data['priority'],
-				'class'       => $width_classes,
-			);
+				if ( ! empty( $field_data['placeholder'] ) ) {
+					$field_config['placeholder'] = $field_data['placeholder'];
+				}
 
-			if ( ! empty( $field_data['placeholder'] ) ) {
-				$field_config['placeholder'] = $field_data['placeholder'];
-			}
-
-			// Handle select and radio field options
-			if ( in_array( $field_data['type'], array( 'select', 'radio' ) ) && ! empty( $field_data['options'] ) ) {
-				$options = array( '' => __( 'Select an option', 'hezarfen-for-woocommerce' ) );
-				$lines = explode( "\n", $field_data['options'] );
-				foreach ( $lines as $line ) {
-					$line = trim( $line );
-					if ( ! empty( $line ) ) {
-						if ( strpos( $line, '|' ) !== false ) {
-							$parts = explode( '|', $line, 2 );
-							$key = trim( $parts[0] );
-							$value = trim( $parts[1] );
-							$options[ $key ] = $value;
-						} else {
-							$options[ $line ] = $line;
+				// Handle select and radio field options
+				if ( in_array( $field_data['type'], array( 'select', 'radio' ) ) && ! empty( $field_data['options'] ) ) {
+					$options = array( '' => __( 'Select an option', 'hezarfen-for-woocommerce' ) );
+					$lines = explode( "\n", $field_data['options'] );
+					foreach ( $lines as $line ) {
+						$line = trim( $line );
+						if ( ! empty( $line ) ) {
+							if ( strpos( $line, '|' ) !== false ) {
+								$parts = explode( '|', $line, 2 );
+								$key = trim( $parts[0] );
+								$value = trim( $parts[1] );
+								$options[ $key ] = $value;
+							} else {
+								$options[ $line ] = $line;
+							}
 						}
 					}
+					$field_config['options'] = $options;
 				}
-				$field_config['options'] = $options;
-			}
 
-			$fields[ $section ][ $field_id ] = $field_config;
+				$fields[ $section ][ $field_id ] = $field_config;
 		}
 
 		return $fields;
@@ -508,7 +508,7 @@ class Checkout_Field_Editor {
 			}
 
 			$value = isset( $_POST[ $field_id ] ) ? sanitize_text_field( $_POST[ $field_id ] ) : '';
-			
+
 			if ( empty( $value ) ) {
 				wc_add_notice( sprintf( __( '%s is a required field.', 'hezarfen-for-woocommerce' ), $field_data['label'] ), 'error' );
 			}
@@ -528,10 +528,10 @@ class Checkout_Field_Editor {
 
 			if ( isset( $_POST[ $field_id ] ) ) {
 				$value = sanitize_text_field( $_POST[ $field_id ] );
-				if ( ! empty( $value ) ) {
+			if ( ! empty( $value ) ) {
 					update_post_meta( $order_id, $field_id, $value );
-				}
 			}
+		}
 		}
 	}
 

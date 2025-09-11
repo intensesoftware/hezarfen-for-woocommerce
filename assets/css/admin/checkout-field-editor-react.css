@@ -521,6 +521,11 @@
   background: #e9ecef;
 }
 
+.btn-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .btn-save {
   background: #0073aa;
   color: white;
@@ -532,8 +537,58 @@
   font-weight: 500;
 }
 
-.btn-save:hover {
+.btn-save:hover:not(:disabled) {
   background: #005a87;
+}
+
+.btn-save:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Form Error States */
+.form-field input.error,
+.form-field select.error,
+.form-field textarea.error {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 1px #dc3545;
+}
+
+.field-error {
+  color: #dc3545;
+  font-size: 11px;
+  margin-top: 4px;
+  display: block;
+}
+
+/* Loading State */
+.btn-save:disabled {
+  position: relative;
+}
+
+.btn-save:disabled::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  margin: auto;
+  border: 2px solid transparent;
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: button-loading-spinner 1s ease infinite;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+@keyframes button-loading-spinner {
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(1turn);
+  }
 }
 
 /* Responsive */
