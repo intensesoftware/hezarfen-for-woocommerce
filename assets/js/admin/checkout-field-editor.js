@@ -34,6 +34,9 @@ jQuery(document).ready(function($) {
             // Field type change
             $('#field-type').on('change', this.handleFieldTypeChange);
 
+            // Column width change
+            $('#field-column-width').on('change', this.handleColumnWidthChange);
+
             // Section filters
             $('.hezarfen-section-filter').on('click', this.filterBySection);
             $('.hezarfen-type-filter').on('click', this.filterByType);
@@ -223,7 +226,8 @@ jQuery(document).ready(function($) {
             $('#is-default-field').val('0');
             $('#field-enabled').prop('checked', true);
             $('#field-priority').val('10');
-            $('#field-options-row').hide();
+            $('#field-column-width').val('full');
+            $('#field-options-section').hide();
             
             // Re-enable all fields (in case they were disabled for default field editing)
             $('#field-name').prop('disabled', false);
@@ -258,6 +262,7 @@ jQuery(document).ready(function($) {
                     required: fieldData.required || false,
                     enabled: fieldData.enabled !== false,
                     priority: fieldData.priority || 10,
+                    column_width: fieldData.column_width || 'full',
                     show_for_countries: fieldData.show_for_countries || [],
                     is_default: true
                 };
@@ -277,6 +282,7 @@ jQuery(document).ready(function($) {
                     required: fieldData.required || false,
                     enabled: fieldData.enabled !== false,
                     priority: fieldData.priority || 10,
+                    column_width: fieldData.column_width || 'full',
                     show_for_countries: fieldData.show_for_countries || [],
                     is_default: false
                 };
@@ -295,6 +301,7 @@ jQuery(document).ready(function($) {
             $('#field-required').prop('checked', fieldData.required || false);
             $('#field-enabled').prop('checked', fieldData.enabled !== false);
             $('#field-priority').val(fieldData.priority || '10');
+            $('#field-column-width').val(fieldData.column_width || 'full');
             $('#is-default-field').val(fieldData.is_default ? '1' : '0');
             
             // Handle countries selection
@@ -312,6 +319,7 @@ jQuery(document).ready(function($) {
             }
             
             CheckoutFieldEditor.handleFieldTypeChange();
+            CheckoutFieldEditor.handleColumnWidthChange();
         },
 
         handleFieldTypeChange: function() {
@@ -322,6 +330,20 @@ jQuery(document).ready(function($) {
                 $optionsSection.show();
             } else {
                 $optionsSection.hide();
+            }
+        },
+
+        handleColumnWidthChange: function() {
+            var columnWidth = $('#field-column-width').val();
+            var $fullPreview = $('#preview-full');
+            var $halfPreview = $('#preview-half');
+            
+            if (columnWidth === 'half') {
+                $fullPreview.hide();
+                $halfPreview.show();
+            } else {
+                $halfPreview.hide();
+                $fullPreview.show();
             }
         },
 
@@ -349,6 +371,7 @@ jQuery(document).ready(function($) {
                 field_required: $('#field-required').is(':checked') ? 1 : 0,
                 field_enabled: $('#field-enabled').is(':checked') ? 1 : 0,
                 field_priority: $('#field-priority').val(),
+                field_column_width: $('#field-column-width').val(),
                 field_show_for_countries: $('#field-show-for-countries').val() || [],
                 is_default: isDefault ? 1 : 0
             };

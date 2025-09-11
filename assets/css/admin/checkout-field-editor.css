@@ -575,6 +575,23 @@
     color: var(--hezarfen-gray-500);
 }
 
+.hezarfen-badge-width {
+    background: #f0f9ff;
+    color: #0369a1;
+    font-family: monospace;
+    font-weight: 700;
+}
+
+.hezarfen-badge-width-half {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.hezarfen-badge-width-full {
+    background: #f0f9ff;
+    color: #0369a1;
+}
+
 .hezarfen-field-meta {
     display: flex;
     flex-wrap: wrap;
@@ -1039,6 +1056,48 @@
 .hezarfen-checkbox-text small {
     color: var(--hezarfen-gray-500);
     font-size: 12px;
+}
+
+/* Column Width Preview */
+.hezarfen-column-preview {
+    margin-top: 12px;
+    padding: 12px;
+    background: var(--hezarfen-gray-50);
+    border-radius: 6px;
+    border: 1px solid var(--hezarfen-gray-200);
+}
+
+.hezarfen-preview-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hezarfen-preview-field {
+    display: flex;
+    gap: 8px;
+}
+
+.hezarfen-preview-full .hezarfen-preview-content {
+    flex: 1;
+    padding: 8px 12px;
+    background: white;
+    border: 1px solid var(--hezarfen-gray-300);
+    border-radius: 4px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--hezarfen-gray-600);
+}
+
+.hezarfen-preview-half .hezarfen-preview-content {
+    flex: 1;
+    padding: 8px 12px;
+    background: white;
+    border: 1px solid var(--hezarfen-gray-300);
+    border-radius: 4px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--hezarfen-gray-600);
 }
 
 /* Form Styles */

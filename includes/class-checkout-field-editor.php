@@ -29,6 +29,13 @@ class Checkout_Field_Editor {
 	private $field_sections = array();
 
 	/**
+	 * Column width options
+	 *
+	 * @var array
+	 */
+	private $column_widths = array();
+
+	/**
 	 * Track if AJAX handlers are registered
 	 *
 	 * @var bool
@@ -57,6 +64,12 @@ class Checkout_Field_Editor {
 			'billing'  => __( 'Billing', 'hezarfen-for-woocommerce' ),
 			'shipping' => __( 'Shipping', 'hezarfen-for-woocommerce' ),
 			'order'    => __( 'Order', 'hezarfen-for-woocommerce' ),
+		);
+
+		// Initialize column width options
+		$this->column_widths = array(
+			'full' => __( 'Full Width (1 column)', 'hezarfen-for-woocommerce' ),
+			'half' => __( 'Half Width (1/2 column)', 'hezarfen-for-woocommerce' ),
 		);
 
 		// Initialize immediately instead of waiting for init action
@@ -121,6 +134,7 @@ class Checkout_Field_Editor {
 				'nonce'          => wp_create_nonce( 'hezarfen_checkout_field_editor' ),
 				'field_types'    => $this->field_types,
 				'sections'       => $this->field_sections,
+				'column_widths'  => $this->column_widths,
 				'custom_fields_data' => $this->get_custom_fields(),
 				'default_fields_data' => $this->get_default_fields(),
 				'confirm_delete' => __( 'Are you sure you want to delete this field?', 'hezarfen-for-woocommerce' ),
@@ -431,6 +445,35 @@ class Checkout_Field_Editor {
 										<input type="number" id="field-priority" name="field_priority" value="10" min="1" max="100" class="hezarfen-form-input">
 										<span class="hezarfen-form-help"><?php esc_html_e( 'Display order (1 = first, 100 = last)', 'hezarfen-for-woocommerce' ); ?></span>
 									</div>
+
+									<div class="hezarfen-form-field">
+										<label for="field-column-width" class="hezarfen-form-label"><?php esc_html_e( 'Column Width', 'hezarfen-for-woocommerce' ); ?></label>
+										<select id="field-column-width" name="field_column_width" class="hezarfen-form-select">
+											<?php foreach ( $this->column_widths as $width => $label ) : ?>
+												<option value="<?php echo esc_attr( $width ); ?>"><?php echo esc_html( $label ); ?></option>
+											<?php endforeach; ?>
+										</select>
+										<span class="hezarfen-form-help"><?php esc_html_e( 'Controls how much space the field takes in the checkout form', 'hezarfen-for-woocommerce' ); ?></span>
+										
+										<!-- Visual Preview -->
+										<div class="hezarfen-column-preview" id="column-width-preview">
+											<div class="hezarfen-preview-container">
+												<div class="hezarfen-preview-field hezarfen-preview-full" id="preview-full">
+													<div class="hezarfen-preview-content">
+														<span><?php esc_html_e( 'Full Width Field', 'hezarfen-for-woocommerce' ); ?></span>
+													</div>
+												</div>
+												<div class="hezarfen-preview-field hezarfen-preview-half" id="preview-half" style="display: none;">
+													<div class="hezarfen-preview-content">
+														<span><?php esc_html_e( 'Half Width', 'hezarfen-for-woocommerce' ); ?></span>
+													</div>
+													<div class="hezarfen-preview-content">
+														<span><?php esc_html_e( 'Half Width', 'hezarfen-for-woocommerce' ); ?></span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
 
 								<div class="hezarfen-form-checkboxes">
@@ -709,6 +752,14 @@ class Checkout_Field_Editor {
 						<span class="hezarfen-meta-value"><?php echo esc_html( $field['priority'] ); ?></span>
 					</div>
 				<?php endif; ?>
+				<?php if ( isset( $field['column_width'] ) ) : ?>
+					<div class="hezarfen-field-meta-item">
+						<span class="hezarfen-meta-label"><?php esc_html_e( 'Width:', 'hezarfen-for-woocommerce' ); ?></span>
+						<span class="hezarfen-badge hezarfen-badge-width hezarfen-badge-width-<?php echo esc_attr( $field['column_width'] ); ?>">
+							<?php echo $field['column_width'] === 'half' ? '1/2' : '1/1'; ?>
+						</span>
+					</div>
+				<?php endif; ?>
 				<?php if ( isset( $field['required'] ) && $field['required'] ) : ?>
 					<div class="hezarfen-field-meta-item">
 						<span class="hezarfen-badge hezarfen-badge-required"><?php esc_html_e( 'Required', 'hezarfen-for-woocommerce' ); ?></span>
@@ -967,6 +1018,7 @@ class Checkout_Field_Editor {
 			'required'             => isset( $_POST['field_required'] ) ? true : false,
 			'enabled'              => isset( $_POST['field_enabled'] ) ? true : false,
 			'priority'             => $field_priority,
+			'column_width'         => sanitize_text_field( $_POST['field_column_width'] ?? 'full' ),
 			'show_for_countries'   => $show_for_countries,
 		);
 
@@ -1119,7 +1171,8 @@ class Checkout_Field_Editor {
 			}
 		}
 
-		// Add custom fields
+		// Sort custom fields by priority and section for proper half-width pairing
+		$sorted_custom_fields = array();
 		foreach ( $custom_fields as $field_id => $field_data ) {
 			if ( ! $field_data['enabled'] ) {
 				continue;
@@ -1133,50 +1186,88 @@ class Checkout_Field_Editor {
 			}
 
 			$section = $field_data['section'];
+			if ( ! isset( $sorted_custom_fields[ $section ] ) ) {
+				$sorted_custom_fields[ $section ] = array();
+			}
+			
+			$sorted_custom_fields[ $section ][ $field_id ] = $field_data;
+		}
+
+		// Process each section separately for proper half-width field pairing
+		foreach ( $sorted_custom_fields as $section => $section_fields ) {
 			if ( ! isset( $fields[ $section ] ) ) {
 				$fields[ $section ] = array();
 			}
 
-			$field_config = array(
-				'label'       => $field_data['label'],
-				'type'        => $field_data['type'],
-				'required'    => $field_data['required'],
-				'priority'    => $field_data['priority'],
-				'class'       => array( 'form-row-wide' ),
-			);
+			// Sort by priority
+			uasort( $section_fields, function( $a, $b ) {
+				return ( $a['priority'] ?? 10 ) <=> ( $b['priority'] ?? 10 );
+			});
 
-			if ( ! empty( $field_data['placeholder'] ) ) {
-				$field_config['placeholder'] = $field_data['placeholder'];
-			}
+			$half_width_counter = 0;
+			foreach ( $section_fields as $field_id => $field_data ) {
+				// Determine column width class
+				$column_width = $field_data['column_width'] ?? 'full';
+				$width_classes = array();
+				
+				if ( $column_width === 'half' ) {
+					$half_width_counter++;
+					if ( $half_width_counter % 2 === 1 ) {
+						// First field in the pair
+						$width_classes = array( 'form-row', 'form-row-first' );
+					} else {
+						// Second field in the pair
+						$width_classes = array( 'form-row', 'form-row-last' );
+					}
+				} else {
+					$width_classes = array( 'form-row-wide' );
+					// Reset counter when we encounter a full-width field
+					$half_width_counter = 0;
+				}
+				
+				$field_config = array(
+					'label'       => $field_data['label'],
+					'type'        => $field_data['type'],
+					'required'    => $field_data['required'],
+					'priority'    => $field_data['priority'],
+					'class'       => $width_classes,
+				);
 
-			// Handle select and radio field options
-			if ( in_array( $field_data['type'], array( 'select', 'radio' ) ) && ! empty( $field_data['options'] ) ) {
-				$options = array( '' => __( 'Select an option', 'hezarfen-for-woocommerce' ) );
-				$lines = explode( "\n", $field_data['options'] );
-				foreach ( $lines as $line ) {
-					$line = trim( $line );
-					if ( ! empty( $line ) ) {
-						// Support key|value format
-						if ( strpos( $line, '|' ) !== false ) {
-							$parts = explode( '|', $line, 2 );
-							$key = trim( $parts[0] );
-							$value = trim( $parts[1] );
-							$options[ $key ] = $value;
-						} else {
-							$options[ $line ] = $line;
+				if ( ! empty( $field_data['placeholder'] ) ) {
+					$field_config['placeholder'] = $field_data['placeholder'];
+				}
+
+				// Handle select and radio field options
+				if ( in_array( $field_data['type'], array( 'select', 'radio' ) ) && ! empty( $field_data['options'] ) ) {
+					$options = array( '' => __( 'Select an option', 'hezarfen-for-woocommerce' ) );
+					$lines = explode( "\n", $field_data['options'] );
+					foreach ( $lines as $line ) {
+						$line = trim( $line );
+						if ( ! empty( $line ) ) {
+							// Support key|value format
+							if ( strpos( $line, '|' ) !== false ) {
+								$parts = explode( '|', $line, 2 );
+								$key = trim( $parts[0] );
+								$value = trim( $parts[1] );
+								$options[ $key ] = $value;
+							} else {
+								$options[ $line ] = $line;
+							}
 						}
 					}
+					$field_config['options'] = $options;
 				}
-				$field_config['options'] = $options;
-			}
 
-			// Handle checkbox field
-			if ( $field_data['type'] === 'checkbox' ) {
-				$field_config['type'] = 'checkbox';
-				$field_config['class'] = array( 'form-row-wide', 'validate-required' );
-			}
+				// Handle checkbox field
+				if ( $field_data['type'] === 'checkbox' ) {
+					$field_config['type'] = 'checkbox';
+					if ( ! in_array( 'validate-required', $field_config['class'] ) ) {
+						$field_config['class'][] = 'validate-required';
+					}
+				}
 
-			$fields[ $section ][ $field_id ] = $field_config;
+				$fields[ $section ][ $field_id ] = $field_config;
+			}
 		}
 
 		return $fields;
