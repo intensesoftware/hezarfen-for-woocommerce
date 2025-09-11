@@ -5,8 +5,6 @@
  * @package Hezarfen_For_WooCommerce
  */
 
-namespace Hezarfen\Inc;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
