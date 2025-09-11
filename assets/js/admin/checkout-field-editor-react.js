@@ -79,18 +79,33 @@
                     }, [
                         React.createElement('button', {
                             key: 'btn-edit',
-                            onClick: () => onEdit(field),
-                            className: 'btn-edit'
+                            onClick: (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                onEdit(field);
+                            },
+                            className: 'btn-edit',
+                            type: 'button'
                         }, 'Edit'),
                         !field.is_default && React.createElement('button', {
                             key: 'btn-delete',
-                            onClick: () => onDelete(field.id),
-                            className: 'btn-delete'
+                            onClick: (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                onDelete(field.id);
+                            },
+                            className: 'btn-delete',
+                            type: 'button'
                         }, 'Delete'),
                         React.createElement('button', {
                             key: 'btn-toggle',
-                            onClick: () => onToggle(field.id),
-                            className: `btn-toggle ${field.enabled ? 'enabled' : 'disabled'}`
+                            onClick: (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                onToggle(field.id);
+                            },
+                            className: `btn-toggle ${field.enabled ? 'enabled' : 'disabled'}`,
+                            type: 'button'
                         }, field.enabled ? 'Disable' : 'Enable')
                     ])
                 ])
@@ -194,8 +209,13 @@
                         React.createElement('p', { key: 'text' }, 'No fields in this section'),
                         React.createElement('button', {
                             key: 'add-btn',
-                            onClick: () => onEdit({ section }),
-                            className: 'btn-add-field'
+                            onClick: (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                onEdit({ section });
+                            },
+                            className: 'btn-add-field',
+                            type: 'button'
                         }, 'Add First Field')
                     ])
                 ])
@@ -556,9 +576,35 @@
             order: 'Order'
         };
         
-        // Load fields on component mount
+        // Load fields on component mount and prevent unwanted form submissions
         useEffect(() => {
             loadFields();
+            
+            // Prevent any unwanted form submissions in the React component area
+            const preventFormSubmit = (e) => {
+                const target = e.target;
+                const reactRoot = document.getElementById('hezarfen-checkout-field-editor-react-root');
+                
+                // Only prevent if it's within our React component and NOT our modal form
+                if (reactRoot && reactRoot.contains(target)) {
+                    if (target.tagName === 'FORM' && !target.closest('.modal-content')) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    if (target.type === 'submit' && !target.closest('.modal-content')) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                }
+            };
+            
+            document.addEventListener('submit', preventFormSubmit, true);
+            document.addEventListener('click', preventFormSubmit, true);
+            
+            return () => {
+                document.removeEventListener('submit', preventFormSubmit, true);
+                document.removeEventListener('click', preventFormSubmit, true);
+            };
         }, []);
         
         const handleDragEnd = (result) => {
@@ -683,8 +729,13 @@
                 React.createElement('h1', { key: 'title' }, 'Checkout Fields'),
                 React.createElement('button', {
                     key: 'add-btn',
-                    onClick: () => handleEditField({ section: 'billing', is_default: false }),
-                    className: 'btn-add-field'
+                    onClick: (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleEditField({ section: 'billing', is_default: false });
+                    },
+                    className: 'btn-add-field',
+                    type: 'button'
                 }, 'Add New Field')
             ]),
             
