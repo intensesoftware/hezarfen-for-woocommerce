@@ -29,6 +29,9 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_and_styles' ) );
 		add_action( 'woocommerce_admin_field_sms_rules_button', array( $this, 'output_sms_rules_button' ) );
+		
+		// Add Advanced section at the end with higher priority
+		add_filter( 'woocommerce_get_sections_hezarfen', array( $this, 'add_advanced_section_at_end' ), 999 );
 
 		parent::__construct();
 	}
@@ -41,7 +44,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	protected function get_own_sections() {
 		$sections = array(
 			''              => __( 'General', 'hezarfen-for-woocommerce' ),
-			'encryption'    => __( 'Encryption', 'hezarfen-for-woocommerce' ),
 			'checkout_page' => __( 'Checkout Page Settings', 'hezarfen-for-woocommerce' ),
 			'sms_settings'  => __( 'SMS Settings', 'hezarfen-for-woocommerce' ),
 		);
@@ -54,9 +56,21 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		$post_meta_encryption = new PostMetaEncryption();
 
 		if ( $post_meta_encryption->is_encryption_key_generated() && ! $post_meta_encryption->health_check() ) {
-			$sections['encryption_recovery'] = __( 'Encryption Key Recovery', 'hezarfen-for-woocommerce' );
+			$sections['encryption_recovery'] = __( 'Advanced - Key Recovery', 'hezarfen-for-woocommerce' );
 		}
 
+		return $sections;
+	}
+
+	/**
+	 * Add Advanced section at the end with high priority
+	 *
+	 * @param array $sections Existing sections
+	 * @return array Modified sections with Advanced at the end
+	 */
+	public function add_advanced_section_at_end( $sections ) {
+		// Add Advanced section at the very end
+		$sections['advanced'] = __( 'Advanced', 'hezarfen-for-woocommerce' );
 		return $sections;
 	}
 
@@ -122,11 +136,11 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	}
 
 	/**
-	 * Get settings for the Encryption section.
+	 * Get settings for the Advanced section.
 	 *
 	 * @return array<array<string, string>>
 	 */
-	protected function get_settings_for_encryption_section() {
+	protected function get_settings_for_advanced_section() {
 		$fields = array();
 
 		// if encryption key not generated before, generate a new key.
@@ -137,7 +151,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			$fields = array(
 				array(
 					'title' => __(
-						'Encryption Settings',
+						'Advanced Settings - Encryption',
 						'hezarfen-for-woocommerce'
 					),
 					'type'  => 'title',
@@ -183,7 +197,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			);
 		}
 
-		return apply_filters( 'hezarfen_checkout_encryption_settings', $fields );
+		return apply_filters( 'hezarfen_advanced_settings', $fields );
 	}
 
 	/**
@@ -326,7 +340,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			$fields = array(
 				array(
 					'title' => __(
-						'Encryption Key Recovery Screen',
+						'Advanced Settings - Key Recovery',
 						'hezarfen-for-woocommerce'
 					),
 					'type'  => 'title',
@@ -347,7 +361,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			$fields = array(
 				array(
 					'title' => __(
-						'Encryption Key Recovery Screen',
+						'Advanced Settings - Key Recovery',
 						'hezarfen-for-woocommerce'
 					),
 					'type'  => 'title',
@@ -387,7 +401,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			);
 		}
 
-		return apply_filters( 'hezarfen_encryption_recovery_settings', $fields );
+		return apply_filters( 'hezarfen_advanced_recovery_settings', $fields );
 	}
 
 	/**
@@ -681,7 +695,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 
 		$post_meta_encryption = new PostMetaEncryption();
 
-		if ( 'encryption' == $current_section && $post_meta_encryption->is_encryption_key_generated() ) {
+		if ( 'advanced' == $current_section && $post_meta_encryption->is_encryption_key_generated() ) {
 			$hide_save_button = true;
 
 			// is key generated and placed to the wp-config.php?
@@ -810,7 +824,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 
 		// if encryption key generated before, do not continue.
 		if (
-			'encryption' == $current_section &&
+			'advanced' == $current_section &&
 			( ( new PostMetaEncryption() )->health_check() ||
 				( new PostMetaEncryption() )->test_the_encryption_key() )
 		) {
@@ -826,7 +840,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		$settings = $this->get_settings_for_section( $current_section );
 		WC_Admin_Settings::save_fields( $settings );
 
-		if ( 'encryption' == $current_section ) {
+		if ( 'advanced' == $current_section ) {
 			if (
 				get_option( 'hezarfen_checkout_encryption_key_confirmation', false ) ==
 				'yes'
