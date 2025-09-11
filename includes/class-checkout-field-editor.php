@@ -166,27 +166,16 @@ class Checkout_Field_Editor {
 		<div id="hezarfen-checkout-field-editor-react-root">
 			<div class="loading" style="text-align: center; padding: 40px; font-size: 16px; color: #666;">
 				Loading React Checkout Field Editor...
-			</div>
-		</div>
+					</div>
+					</div>
 		<script>
-			// Initialize React component safely
 			document.addEventListener('DOMContentLoaded', function() {
-				setTimeout(function() {
-					try {
-						if (typeof React !== 'undefined' && typeof ReactDOM !== 'undefined' && typeof CheckoutFieldEditor !== 'undefined') {
-							const container = document.getElementById('hezarfen-checkout-field-editor-react-root');
-							if (container) {
-								const root = ReactDOM.createRoot(container);
-								root.render(React.createElement(CheckoutFieldEditor));
-								console.log('React Checkout Field Editor loaded');
-							}
-						} else {
-							console.log('React dependencies not ready yet');
-						}
-					} catch (error) {
-						console.error('React initialization error:', error);
-					}
-				}, 200);
+				if (typeof React !== 'undefined' && typeof ReactDOM !== 'undefined' && typeof CheckoutFieldEditor !== 'undefined') {
+					const root = ReactDOM.createRoot(document.getElementById('hezarfen-checkout-field-editor-react-root'));
+					root.render(React.createElement(CheckoutFieldEditor));
+				} else {
+					console.error('React dependencies not loaded properly');
+				}
 			});
 		</script>
 		<?php

@@ -221,57 +221,8 @@
         ]);
     };
     
-    // Field Edit Modal
-    const Modal = ({ isOpen, onClose, field, onSave }) => {
-        const [formData, setFormData] = useState({
-            name: '',
-            label: '',
-            type: 'text',
-            section: 'billing',
-            placeholder: '',
-            required: false,
-            enabled: true,
-            column_width: 'full'
-        });
-        
-        const [saving, setSaving] = useState(false);
-        
-        // Update form when field changes
-        useEffect(() => {
-            if (field && isOpen) {
-                setFormData({
-                    name: field.name || '',
-                    label: field.label || '',
-                    type: field.type || 'text',
-                    section: field.section || 'billing',
-                    placeholder: field.placeholder || '',
-                    required: field.required || false,
-                    enabled: field.enabled !== false,
-                    column_width: field.column_width || 'full'
-                });
-            }
-        }, [field, isOpen]);
-        
-        const handleSave = async (e) => {
-            e.preventDefault();
-            
-            if (!formData.name || !formData.label) {
-                alert('Name and label are required');
-                return;
-            }
-            
-            setSaving(true);
-            
-            try {
-                await onSave(formData);
-                onClose();
-            } catch (error) {
-                alert('Error saving field: ' + error.message);
-            } finally {
-                setSaving(false);
-            }
-        };
-        
+    // Simple Modal
+    const Modal = ({ isOpen, onClose, field }) => {
         if (!isOpen) return null;
         
         return React.createElement('div', {
@@ -289,155 +240,20 @@
                 React.createElement('button', {
                     key: 'close',
                     onClick: onClose,
-                    className: 'modal-close',
                     type: 'button'
                 }, '×')
             ]),
-            
-            React.createElement('form', {
-                key: 'form',
-                onSubmit: handleSave,
+            React.createElement('div', {
+                key: 'body',
                 className: 'modal-body'
             }, [
-                React.createElement('div', {
-                    key: 'form-row-1',
-                    className: 'form-row'
-                }, [
-                    React.createElement('div', {
-                        key: 'name-field',
-                        className: 'form-field'
-                    }, [
-                        React.createElement('label', { key: 'label' }, 'Field Name'),
-                        React.createElement('input', {
-                            key: 'input',
-                            type: 'text',
-                            value: formData.name,
-                            onChange: (e) => setFormData({...formData, name: e.target.value}),
-                            disabled: field?.is_default,
-                            placeholder: 'e.g. custom_company'
-                        })
-                    ]),
-                    
-                    React.createElement('div', {
-                        key: 'label-field',
-                        className: 'form-field'
-                    }, [
-                        React.createElement('label', { key: 'label' }, 'Field Label'),
-                        React.createElement('input', {
-                            key: 'input',
-                            type: 'text',
-                            value: formData.label,
-                            onChange: (e) => setFormData({...formData, label: e.target.value}),
-                            placeholder: 'e.g. Company Name'
-                        })
-                    ])
-                ]),
-                
-                React.createElement('div', {
-                    key: 'form-row-2',
-                    className: 'form-row'
-                }, [
-                    React.createElement('div', {
-                        key: 'type-field',
-                        className: 'form-field'
-                    }, [
-                        React.createElement('label', { key: 'label' }, 'Type'),
-                        React.createElement('select', {
-                            key: 'select',
-                            value: formData.type,
-                            onChange: (e) => setFormData({...formData, type: e.target.value}),
-                            disabled: field?.is_default
-                        }, [
-                            React.createElement('option', { key: 'text', value: 'text' }, 'Text'),
-                            React.createElement('option', { key: 'email', value: 'email' }, 'Email'),
-                            React.createElement('option', { key: 'tel', value: 'tel' }, 'Phone'),
-                            React.createElement('option', { key: 'textarea', value: 'textarea' }, 'Textarea'),
-                            React.createElement('option', { key: 'select', value: 'select' }, 'Select'),
-                            React.createElement('option', { key: 'checkbox', value: 'checkbox' }, 'Checkbox')
-                        ])
-                    ]),
-                    
-                    React.createElement('div', {
-                        key: 'section-field',
-                        className: 'form-field'
-                    }, [
-                        React.createElement('label', { key: 'label' }, 'Section'),
-                        React.createElement('select', {
-                            key: 'select',
-                            value: formData.section,
-                            onChange: (e) => setFormData({...formData, section: e.target.value}),
-                            disabled: field?.is_default
-                        }, [
-                            React.createElement('option', { key: 'billing', value: 'billing' }, 'Billing'),
-                            React.createElement('option', { key: 'shipping', value: 'shipping' }, 'Shipping'),
-                            React.createElement('option', { key: 'order', value: 'order' }, 'Order')
-                        ])
-                    ])
-                ]),
-                
-                React.createElement('div', {
-                    key: 'placeholder-field',
-                    className: 'form-field'
-                }, [
-                    React.createElement('label', { key: 'label' }, 'Placeholder'),
-                    React.createElement('input', {
-                        key: 'input',
-                        type: 'text',
-                        value: formData.placeholder,
-                        onChange: (e) => setFormData({...formData, placeholder: e.target.value}),
-                        placeholder: 'Enter placeholder text...'
-                    })
-                ]),
-                
-                React.createElement('div', {
-                    key: 'checkboxes',
-                    className: 'form-checkboxes'
-                }, [
-                    React.createElement('label', {
-                        key: 'required',
-                        className: 'checkbox-field'
-                    }, [
-                        React.createElement('input', {
-                            key: 'input',
-                            type: 'checkbox',
-                            checked: formData.required,
-                            onChange: (e) => setFormData({...formData, required: e.target.checked})
-                        }),
-                        'Required'
-                    ]),
-                    
-                    React.createElement('label', {
-                        key: 'enabled',
-                        className: 'checkbox-field'
-                    }, [
-                        React.createElement('input', {
-                            key: 'input',
-                            type: 'checkbox',
-                            checked: formData.enabled,
-                            onChange: (e) => setFormData({...formData, enabled: e.target.checked})
-                        }),
-                        'Enabled'
-                    ])
-                ]),
-                
-                React.createElement('div', {
-                    key: 'footer',
-                    className: 'modal-footer'
-                }, [
-                    React.createElement('button', {
-                        key: 'cancel',
-                        type: 'button',
-                        onClick: onClose,
-                        className: 'btn-cancel'
-                    }, 'Cancel'),
-                    
-                    React.createElement('button', {
-                        key: 'save',
-                        type: 'submit',
-                        className: 'btn-save',
-                        disabled: saving
-                    }, saving ? 'Saving...' : 'Save Field')
-                ])
+                React.createElement('p', { key: 'info' }, `Field: ${field?.label || 'New Field'}`),
+                React.createElement('p', { key: 'section' }, `Section: ${field?.section || 'billing'}`),
+                React.createElement('button', {
+                    key: 'close-btn',
+                    onClick: onClose,
+                    type: 'button'
+                }, 'Close')
             ])
         ]));
     };
@@ -454,31 +270,9 @@
         const [isModalOpen, setIsModalOpen] = useState(false);
         const [loading, setLoading] = useState(true);
         
-        // Load actual fields from WordPress and ensure no interference with WP admin
+        // Load actual fields from WordPress
         useEffect(() => {
             loadFields();
-            
-            // Ensure our component doesn't interfere with WordPress admin forms
-            const preventInterference = (e) => {
-                // Only prevent events within our React component
-                const reactRoot = document.getElementById('hezarfen-checkout-field-editor-react-root');
-                if (reactRoot && reactRoot.contains(e.target)) {
-                    // Allow our modal forms to work
-                    if (e.target.closest('.modal-content form')) {
-                        return; // Let our forms work
-                    }
-                    // Prevent other form submissions within our component
-                    if (e.type === 'submit' && !e.target.closest('.modal-content')) {
-                        e.stopPropagation();
-                    }
-                }
-            };
-            
-            document.addEventListener('submit', preventInterference, true);
-            
-            return () => {
-                document.removeEventListener('submit', preventInterference, true);
-            };
         }, []);
         
         const loadFields = async () => {
@@ -632,61 +426,14 @@
             setIsModalOpen(true);
         };
         
-        const handleSave = async (formData) => {
-            try {
-                const response = await fetch(window.hezarfen_checkout_field_editor.ajax_url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: new URLSearchParams({
-                        action: 'hezarfen_save_checkout_field',
-                        nonce: window.hezarfen_checkout_field_editor.nonce,
-                        field_data: JSON.stringify(formData)
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    // Reload fields to get updated data
-                    await loadFields();
-                } else {
-                    throw new Error(result.data?.message || 'Failed to save field');
-                }
-            } catch (error) {
-                console.error('Error saving field:', error);
-                throw error;
-            }
-        };
-        
-        const handleDelete = async (fieldId) => {
+        const handleDelete = (fieldId) => {
             if (!confirm('Delete this field?')) return;
             
-            try {
-                const response = await fetch(window.hezarfen_checkout_field_editor.ajax_url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: new URLSearchParams({
-                        action: 'hezarfen_delete_checkout_field',
-                        nonce: window.hezarfen_checkout_field_editor.nonce,
-                        field_id: fieldId
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    await loadFields();
-                } else {
-                    throw new Error(result.data?.message || 'Failed to delete field');
-                }
-            } catch (error) {
-                console.error('Error deleting field:', error);
-                alert('Error deleting field: ' + error.message);
-            }
+            const newFields = { ...fields };
+            Object.keys(newFields).forEach(section => {
+                newFields[section] = newFields[section].filter(f => f.id !== fieldId);
+            });
+            setFields(newFields);
         };
         
         if (loading) {
@@ -729,12 +476,8 @@
             React.createElement(Modal, {
                 key: 'modal',
                 isOpen: isModalOpen,
-                onClose: () => {
-                    setIsModalOpen(false);
-                    setModalField(null);
-                },
-                field: modalField,
-                onSave: handleSave
+                onClose: () => setIsModalOpen(false),
+                field: modalField
             })
         ]);
     };
