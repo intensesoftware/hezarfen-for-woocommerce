@@ -48,11 +48,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			'sms_settings'  => __( 'SMS Settings', 'hezarfen-for-woocommerce' ),
 		);
 
-		// if checkout field is active, show the section.
-		if ( Helper::is_show_tax_fields() ) {
-			$sections['checkout_tax'] = __( 'Checkout Tax Fields', 'hezarfen-for-woocommerce' );
-		}
-
 		$post_meta_encryption = new PostMetaEncryption();
 
 		if ( $post_meta_encryption->is_encryption_key_generated() && ! $post_meta_encryption->health_check() ) {
@@ -92,16 +87,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					'hezarfen-for-woocommerce'
 				),
 				'id'    => 'hezarfen_general_settings_title',
-			),
-			array(
-				'title'   => __(
-					'Show hezarfen checkout tax fields?',
-					'hezarfen-for-woocommerce'
-				),
-				'type'    => 'checkbox',
-				'desc'    => '',
-				'id'      => 'hezarfen_show_hezarfen_checkout_tax_fields',
-				'default' => 'no',
 			),
 			array(
 				'title'   => __(
@@ -226,6 +211,16 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				'id'    => 'hezarfen_checkout_settings_title',
 			),
 			array(
+				'title'   => __(
+					'Show hezarfen checkout tax fields?',
+					'hezarfen-for-woocommerce'
+				),
+				'type'    => 'checkbox',
+				'desc'    => '',
+				'id'      => 'hezarfen_show_hezarfen_checkout_tax_fields',
+				'default' => 'no',
+			),
+			array(
 				'title'             => esc_html__(
 					'Hide postcode fields?',
 					'hezarfen-for-woocommerce'
@@ -253,77 +248,64 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			),
 		);
 
+		// Add tax fields if they should be shown
+		if ( Helper::is_show_tax_fields() ) {
+			$tax_fields = array(
+				array(
+					'title' => __(
+						'Checkout Tax Fields Settings',
+						'hezarfen-for-woocommerce'
+					),
+					'type'  => 'title',
+					'desc'  => __(
+						'You can update the checkout Tax fields. Note: T.C. number field requires encryption feature. If you do not activate the encryption feature, T.C. number field does not appear on the checkout.',
+						'hezarfen-for-woocommerce'
+					),
+					'id'    => 'hezarfen_checkout_tax_fields_title',
+				),
+
+				array(
+					'title'   => __(
+						'Show T.C. Identity Field on checkout page ',
+						'hezarfen-for-woocommerce'
+					),
+					'type'    => 'checkbox',
+					'desc'    => __(
+						'T.C. Identity Field optionally shows on checkout field when invoice type selected as person. (T.C. field requires encryption. If encryption is not enabled, this field is not displayed.)',
+						'hezarfen-for-woocommerce'
+					),
+					'id'      => 'hezarfen_checkout_show_TC_identity_field',
+					'default' => 'no',
+				),
+
+				array(
+					'title'   => __(
+						'Checkout T.C. Identity Number Fields Required Statuses',
+						'hezarfen-for-woocommerce'
+					),
+					'desc'    => __(
+						'Is T.C. Identity Number field required?',
+						'hezarfen-for-woocommerce'
+					),
+					'id'      =>
+						'hezarfen_checkout_is_TC_identity_number_field_required',
+					'default' => 'no',
+					'type'    => 'checkbox',
+				),
+
+				array(
+					'type' => 'sectionend',
+					'id'   => 'hezarfen_checkout_tax_fields_section_end',
+				),
+			);
+
+			// Merge tax fields with existing fields
+			$fields = array_merge( $fields, $tax_fields );
+		}
+
 		return apply_filters( 'hezarfen_checkout_settings', $fields );
 	}
 
-	/**
-	 * Get settings for the Tax Fields section.
-	 *
-	 * @return array<array<string, string>>
-	 */
-	protected function get_settings_for_checkout_tax_section() {
-		if ( Helper::is_show_tax_fields() ) {
-			$settings = apply_filters(
-				'hezarfen_checkout_tax_settings',
-				array(
-					array(
-						'title' => __(
-							'Checkout Tax Fields Settings',
-							'hezarfen-for-woocommerce'
-						),
-						'type'  => 'title',
-						'desc'  => __(
-							'You can update the checkout Tax fields. Note: T.C. number field requires encryption feature. If you do not activate the encryption feature, T.C. number field does not appear on the checkout.',
-							'hezarfen-for-woocommerce'
-						),
-						'id'    => 'hezarfen_checkout_tax_fields_title',
-					),
-	
-					array(
-						'title'   => __(
-							'Show T.C. Identity Field on checkout page ',
-							'hezarfen-for-woocommerce'
-						),
-						'type'    => 'checkbox',
-						'desc'    => __(
-							'T.C. Identity Field optionally shows on checkout field when invoice type selected as person. (T.C. field requires encryption. If encryption is not enabled, this field is not displayed.)',
-							'hezarfen-for-woocommerce'
-						),
-						'id'      => 'hezarfen_checkout_show_TC_identity_field',
-						'default' => 'no',
-					),
-	
-					array(
-						'title'   => __(
-							'Checkout T.C. Identity Number Fields Required Statuses',
-							'hezarfen-for-woocommerce'
-						),
-						'desc'    => __(
-							'Is T.C. Identity Number field required?',
-							'hezarfen-for-woocommerce'
-						),
-						'id'      =>
-							'hezarfen_checkout_is_TC_identity_number_field_required',
-						'default' => 'no',
-						'type'    => 'checkbox',
-					),
-	
-					array(
-						'type' => 'sectionend',
-						'id'   => 'hezarfen_checkout_tax_fields_section_end',
-					),
-				)
-			);
-		} else {
-			global $hide_save_button;
-
-			$hide_save_button = true;
-
-			$settings = apply_filters( 'hezarfen_checkout_tax_settings', array() );
-		}
-
-		return $settings;
-	}
 
 	/**
 	 * Get settings for the Encryption Key Recovery section.
