@@ -119,7 +119,6 @@ class Autoload {
 		require_once 'class-compatibility.php';
 		require_once 'class-notification-provider.php';
 		require_once 'class-sms-automation.php';
-
 		// Load Contracts Integration
 		require_once 'contracts/class-contracts-integration.php';
 

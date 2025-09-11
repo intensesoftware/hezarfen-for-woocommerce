@@ -51,6 +51,7 @@ class Hezarfen {
 
 		add_action( 'plugins_loaded', array( $this, 'check_addons_and_show_notices' ) );
 		add_action( 'plugins_loaded', array( $this, 'define_constants' ) );
+		add_action( 'init', array( $this, 'init_checkout_field_editor' ) );
 		add_action( 'admin_notices', array( $this, 'show_migration_notice' ) );
 		
 		// Trigger SMS migration on admin init to catch plugin updates
@@ -94,6 +95,21 @@ class Hezarfen {
 		if ( ! defined( 'WC_HEZARFEN_HPOS_ENABLED' ) ) {
 			define( 'WC_HEZARFEN_HPOS_ENABLED', OrderUtil::custom_orders_table_usage_is_enabled() );
 		}
+	}
+
+	/**
+	 * Initialize checkout field editor
+	 */
+	public function init_checkout_field_editor() {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
+		// Include the checkout field editor class
+		include_once WC_HEZARFEN_UYGULAMA_YOLU . 'includes/class-checkout-field-editor.php';
+		
+		// Initialize the checkout field editor
+		new \Hezarfen\Inc\Checkout_Field_Editor();
 	}
 
 	/**
@@ -160,6 +176,11 @@ class Hezarfen {
 	public function add_hezarfen_setting_page( $settings ) {
 		$settings[] = include_once WC_HEZARFEN_UYGULAMA_YOLU .
 			'includes/admin/settings/class-hezarfen-settings-hezarfen.php';
+		
+		// Include the checkout field editor classes
+		include_once WC_HEZARFEN_UYGULAMA_YOLU . 'includes/class-checkout-field-editor.php';
+		include_once WC_HEZARFEN_UYGULAMA_YOLU . 'includes/admin/settings/class-hezarfen-checkout-field-editor.php';
+		$settings[] = new \Hezarfen\Inc\Admin\Settings\Hezarfen_Checkout_Field_Editor();
 
 		return $settings;
 	}

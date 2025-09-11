@@ -1,0 +1,449 @@
+/* Hezarfen Checkout Field Editor Styles */
+
+#hezarfen-checkout-field-editor {
+    max-width: 100%;
+}
+
+.hezarfen-field-editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.hezarfen-field-editor-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #23282d;
+}
+
+.hezarfen-header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Tab Styles */
+.hezarfen-field-tabs {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
+    background: #f9f9f9;
+}
+
+.hezarfen-tab-button {
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    transition: all 0.3s ease;
+}
+
+.hezarfen-tab-button:hover {
+    color: #0073aa;
+    background: #fff;
+}
+
+.hezarfen-tab-button.active {
+    color: #0073aa;
+    border-bottom-color: #0073aa;
+    background: #fff;
+}
+
+.hezarfen-tab-content {
+    display: none;
+}
+
+.hezarfen-tab-content.active {
+    display: block;
+}
+
+/* Default Field Styles */
+.hezarfen-field-item.is-default {
+    background: #f8f9fa;
+    border-left: 4px solid #0073aa;
+}
+
+.hezarfen-field-item.is-default:hover {
+    background: #f1f3f4;
+}
+
+.hezarfen-field-badge {
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-left: 8px;
+}
+
+.hezarfen-field-badge.default {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.hezarfen-field-item.resetting {
+    opacity: 0.5;
+    background: #fff3cd;
+}
+
+.hezarfen-no-fields {
+    text-align: center;
+    padding: 40px 20px;
+    background: #f9f9f9;
+    border: 2px dashed #ddd;
+    border-radius: 4px;
+    color: #666;
+}
+
+.hezarfen-fields-list {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    min-height: 100px;
+}
+
+.hezarfen-field-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    background: #fff;
+    transition: background-color 0.2s ease;
+}
+
+.hezarfen-field-item:last-child {
+    border-bottom: none;
+}
+
+.hezarfen-field-item:hover {
+    background: #f9f9f9;
+}
+
+.hezarfen-field-item.deleting {
+    opacity: 0.5;
+    background: #ffebee;
+}
+
+.hezarfen-field-handle {
+    cursor: move;
+    margin-right: 15px;
+    color: #999;
+    font-size: 16px;
+}
+
+.hezarfen-field-handle:hover {
+    color: #666;
+}
+
+.hezarfen-field-info {
+    flex: 1;
+}
+
+.hezarfen-field-name {
+    font-weight: 600;
+    color: #23282d;
+    margin-bottom: 5px;
+}
+
+.hezarfen-field-name-id {
+    font-weight: normal;
+    color: #666;
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+.hezarfen-fields-header {
+    padding: 10px 15px;
+    background: #f9f9f9;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 0;
+}
+
+.hezarfen-fields-header .description {
+    margin: 0;
+    font-style: italic;
+    color: #666;
+}
+
+.hezarfen-field-details {
+    display: flex;
+    gap: 15px;
+    font-size: 12px;
+    color: #666;
+}
+
+.hezarfen-field-type,
+.hezarfen-field-section,
+.hezarfen-field-priority {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 2px 8px;
+    border-radius: 3px;
+}
+
+.hezarfen-field-required {
+    background: #ffebee;
+    color: #d32f2f;
+    padding: 2px 8px;
+    border-radius: 3px;
+}
+
+.hezarfen-field-disabled {
+    background: #f5f5f5;
+    color: #757575;
+    padding: 2px 8px;
+    border-radius: 3px;
+}
+
+.hezarfen-field-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.hezarfen-field-actions .button {
+    font-size: 12px;
+    padding: 4px 8px;
+    height: auto;
+    line-height: 1.4;
+}
+
+.hezarfen-field-placeholder {
+    background: #f0f0f0;
+    border: 2px dashed #ccc;
+    height: 50px;
+    margin: 5px 0;
+}
+
+/* Modal Styles */
+.hezarfen-modal {
+    position: fixed;
+    z-index: 100000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hezarfen-modal-content {
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.hezarfen-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+    background: #f9f9f9;
+    border-radius: 4px 4px 0 0;
+}
+
+.hezarfen-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #23282d;
+}
+
+.hezarfen-modal-close {
+    font-size: 24px;
+    font-weight: bold;
+    color: #999;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.hezarfen-modal-close:hover {
+    color: #666;
+}
+
+.hezarfen-modal-body {
+    padding: 20px;
+}
+
+.hezarfen-modal-footer {
+    padding: 20px;
+    border-top: 1px solid #ddd;
+    background: #f9f9f9;
+    border-radius: 0 0 4px 4px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* Form Styles */
+.hezarfen-form-row {
+    margin-bottom: 20px;
+}
+
+.hezarfen-form-row label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #23282d;
+}
+
+.hezarfen-form-row input[type="text"],
+.hezarfen-form-row input[type="number"],
+.hezarfen-form-row select,
+.hezarfen-form-row textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.hezarfen-form-row input[type="text"]:focus,
+.hezarfen-form-row input[type="number"]:focus,
+.hezarfen-form-row select:focus,
+.hezarfen-form-row textarea:focus {
+    border-color: #0073aa;
+    outline: none;
+    box-shadow: 0 0 0 1px #0073aa;
+}
+
+.hezarfen-form-row input[type="text"].error,
+.hezarfen-form-row input[type="number"].error,
+.hezarfen-form-row select.error,
+.hezarfen-form-row textarea.error {
+    border-color: #d32f2f;
+    box-shadow: 0 0 0 1px #d32f2f;
+}
+
+.hezarfen-form-row input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.hezarfen-form-row textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Notice Styles */
+.notice {
+    margin: 15px 0;
+    padding: 12px;
+    border-left: 4px solid;
+    background: #fff;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.notice-success {
+    border-left-color: #46b450;
+}
+
+.notice-error {
+    border-left-color: #dc3232;
+}
+
+.notice p {
+    margin: 0;
+    font-size: 13px;
+}
+
+/* Section Headers */
+.hezarfen-tab-content h4 {
+    margin: 20px 0 10px 0;
+    padding: 10px;
+    background: #f1f1f1;
+    border-left: 4px solid #0073aa;
+    font-size: 14px;
+    font-weight: 600;
+    color: #23282d;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hezarfen-modal-content {
+        width: 95%;
+        margin: 20px;
+    }
+    
+    .hezarfen-field-editor-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .hezarfen-field-tabs {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .hezarfen-tab-button {
+        flex: 1;
+        text-align: center;
+    }
+    
+    .hezarfen-field-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .hezarfen-field-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+    
+    .hezarfen-field-details {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}
+
+/* Loading States */
+.button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Sortable Styles */
+.ui-sortable-helper {
+    background: #fff !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+    transform: rotate(2deg);
+}
+
+.ui-sortable-placeholder {
+    background: #f0f0f0 !important;
+    border: 2px dashed #ccc !important;
+    visibility: visible !important;
+    height: 70px !important;
+}
+
+/* Animation */
+.hezarfen-field-item {
+    transition: all 0.3s ease;
+}
+
+.notice {
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
