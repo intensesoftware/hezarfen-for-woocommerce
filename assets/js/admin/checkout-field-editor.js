@@ -5,15 +5,13 @@ jQuery(document).ready(function($) {
         init: function() {
             this.bindEvents();
             this.initSortable();
+            this.initFilters();
+            this.initSearch();
         },
 
         bindEvents: function() {
-            
-            // Tab switching
-            $('.hezarfen-tab-button').on('click', this.switchTab);
-
-            // Add new field button
-            $('#add-new-field').on('click', this.openModal);
+            // Add new field buttons
+            $('#add-new-field, #add-first-field').on('click', this.openModal);
 
             // Edit field button
             $(document).on('click', '.edit-field', this.editField);
@@ -36,6 +34,22 @@ jQuery(document).ready(function($) {
             // Field type change
             $('#field-type').on('change', this.handleFieldTypeChange);
 
+            // Section filters
+            $('.hezarfen-section-filter').on('click', this.filterBySection);
+            $('.hezarfen-type-filter').on('click', this.filterByType);
+
+            // View toggle
+            $('.hezarfen-view-btn').on('click', this.toggleView);
+
+            // Section toggle
+            $(document).on('click', '.hezarfen-section-toggle', this.toggleSection);
+
+            // Advanced settings toggle
+            $(document).on('click', '.hezarfen-form-section-toggle', this.toggleFormSection);
+
+            // Search functionality
+            $('#hezarfen-field-search').on('input', this.handleSearch);
+
             // Close modal on outside click
             $(document).on('click', '.hezarfen-modal', function(e) {
                 if (e.target === this) {
@@ -45,21 +59,133 @@ jQuery(document).ready(function($) {
         },
 
         initSortable: function() {
-            // Only custom fields can be reordered
-            $('#sortable-custom-fields').sortable({
-                handle: '.hezarfen-field-handle',
-                placeholder: 'hezarfen-field-placeholder',
-                items: '.hezarfen-field-item.is-custom',
-                tolerance: 'pointer',
-                cursor: 'move',
-                opacity: 0.8,
-                update: function(event, ui) {
-                    CheckoutFieldEditor.reorderFields();
-                },
-                start: function(event, ui) {
-                    ui.placeholder.height(ui.item.outerHeight());
+            // Initialize sortable for each section
+            $('.hezarfen-section-fields').each(function() {
+                var $section = $(this);
+                $section.sortable({
+                    handle: '.hezarfen-field-drag-handle',
+                    placeholder: 'hezarfen-field-placeholder',
+                    items: '.hezarfen-field-card.is-custom',
+                    tolerance: 'pointer',
+                    cursor: 'move',
+                    opacity: 0.8,
+                    update: function(event, ui) {
+                        CheckoutFieldEditor.reorderFields();
+                    },
+                    start: function(event, ui) {
+                        ui.placeholder.height(ui.item.outerHeight());
+                        ui.item.addClass('dragging');
+                    },
+                    stop: function(event, ui) {
+                        ui.item.removeClass('dragging');
+                    }
+                });
+            });
+        },
+
+        initFilters: function() {
+            this.currentFilters = {
+                section: 'all',
+                type: 'all'
+            };
+        },
+
+        initSearch: function() {
+            this.searchTerm = '';
+        },
+
+        filterBySection: function(e) {
+            e.preventDefault();
+            var section = $(this).data('section');
+            
+            $('.hezarfen-section-filter').removeClass('active');
+            $(this).addClass('active');
+            
+            CheckoutFieldEditor.currentFilters.section = section;
+            CheckoutFieldEditor.applyFilters();
+        },
+
+        filterByType: function(e) {
+            e.preventDefault();
+            var type = $(this).data('type');
+            
+            $('.hezarfen-type-filter').removeClass('active');
+            $(this).addClass('active');
+            
+            CheckoutFieldEditor.currentFilters.type = type;
+            CheckoutFieldEditor.applyFilters();
+        },
+
+        applyFilters: function() {
+            var section = this.currentFilters.section;
+            var type = this.currentFilters.type;
+            var search = this.searchTerm.toLowerCase();
+
+            $('.hezarfen-section-group').each(function() {
+                var $group = $(this);
+                var groupSection = $group.data('section');
+                var hasVisibleCards = false;
+
+                $group.find('.hezarfen-field-card').each(function() {
+                    var $card = $(this);
+                    var cardSection = $card.data('section');
+                    var cardType = $card.data('type');
+                    var cardText = $card.text().toLowerCase();
+
+                    var sectionMatch = section === 'all' || cardSection === section;
+                    var typeMatch = type === 'all' || cardType === type;
+                    var searchMatch = search === '' || cardText.includes(search);
+
+                    if (sectionMatch && typeMatch && searchMatch) {
+                        $card.show();
+                        hasVisibleCards = true;
+                    } else {
+                        $card.hide();
+                    }
+                });
+
+                if (hasVisibleCards) {
+                    $group.show();
+                } else {
+                    $group.hide();
                 }
             });
+        },
+
+        handleSearch: function(e) {
+            CheckoutFieldEditor.searchTerm = $(this).val();
+            CheckoutFieldEditor.applyFilters();
+        },
+
+        toggleView: function(e) {
+            e.preventDefault();
+            var view = $(this).data('view');
+            
+            $('.hezarfen-view-btn').removeClass('active');
+            $(this).addClass('active');
+            
+            var $fieldsList = $('.hezarfen-fields-list');
+            $fieldsList.removeClass('hezarfen-grid-view hezarfen-list-view');
+            $fieldsList.addClass('hezarfen-' + view + '-view');
+        },
+
+        toggleSection: function(e) {
+            e.preventDefault();
+            var $button = $(this);
+            var $section = $button.closest('.hezarfen-section-group');
+            var $fields = $section.find('.hezarfen-section-fields');
+            
+            $fields.slideToggle(300);
+            $button.find('svg').toggleClass('rotated');
+        },
+
+        toggleFormSection: function(e) {
+            e.preventDefault();
+            var $section = $(this).closest('.hezarfen-form-section-collapsible');
+            var isCollapsed = $section.attr('data-collapsed') === 'true';
+            
+            $section.attr('data-collapsed', !isCollapsed);
+            $section.find('.hezarfen-form-section-content').slideToggle(200);
         },
 
         switchTab: function(e) {
@@ -190,12 +316,12 @@ jQuery(document).ready(function($) {
 
         handleFieldTypeChange: function() {
             var fieldType = $('#field-type').val();
-            var $optionsRow = $('#field-options-row');
+            var $optionsSection = $('#field-options-section');
             
             if (fieldType === 'select' || fieldType === 'radio') {
-                $optionsRow.show();
+                $optionsSection.show();
             } else {
-                $optionsRow.hide();
+                $optionsSection.hide();
             }
         },
 
@@ -207,8 +333,8 @@ jQuery(document).ready(function($) {
             }
 
             var fieldId = $('#field-id').val();
-            var $fieldItem = $('.hezarfen-field-item[data-field-id="' + fieldId + '"]');
-            var isDefault = $fieldItem.length ? $fieldItem.data('is-default') === 1 : false;
+            var $fieldCard = $('.hezarfen-field-card[data-field-id="' + fieldId + '"]');
+            var isDefault = $fieldCard.length ? $fieldCard.data('is-default') === 1 : false;
 
             var formData = {
                 action: 'hezarfen_save_checkout_field',
@@ -232,7 +358,10 @@ jQuery(document).ready(function($) {
                 type: 'POST',
                 data: formData,
                 beforeSend: function() {
-                    $('#save-field').prop('disabled', true).text('Saving...');
+                    var $saveBtn = $('#save-field');
+                    $saveBtn.prop('disabled', true).addClass('loading');
+                    $saveBtn.find('svg').hide();
+                    $saveBtn.append('<span class="loading-text">Saving...</span>');
                 },
                 success: function(response) {
                     if (response.success) {
@@ -243,11 +372,14 @@ jQuery(document).ready(function($) {
                         CheckoutFieldEditor.showNotice('error', response.data.message || 'An error occurred.');
                     }
                 },
-                error: function() {
+                error: function(xhr, status, error) {
                     CheckoutFieldEditor.showNotice('error', 'An error occurred while saving the field.');
                 },
                 complete: function() {
-                    $('#save-field').prop('disabled', false).text('Save Field');
+                    var $saveBtn = $('#save-field');
+                    $saveBtn.prop('disabled', false).removeClass('loading');
+                    $saveBtn.find('svg').show();
+                    $saveBtn.find('.loading-text').remove();
                 }
             });
         },
@@ -255,6 +387,10 @@ jQuery(document).ready(function($) {
         validateForm: function() {
             var isValid = true;
             var requiredFields = ['field-name', 'field-label', 'field-type', 'field-section'];
+            var firstErrorField = null;
+            
+            // Clear previous errors
+            $('.error').removeClass('error');
             
             requiredFields.forEach(function(fieldId) {
                 var $field = $('#' + fieldId);
@@ -266,14 +402,38 @@ jQuery(document).ready(function($) {
                 
                 if (!$field.val().trim()) {
                     $field.addClass('error');
+                    if (!firstErrorField) {
+                        firstErrorField = $field;
+                    }
                     isValid = false;
                 } else {
                     $field.removeClass('error');
                 }
             });
 
+            // Additional validation for field name format
+            var fieldName = $('#field-name').val().trim();
+            if (fieldName && !/^[a-zA-Z0-9_]+$/.test(fieldName)) {
+                $('#field-name').addClass('error');
+                CheckoutFieldEditor.showNotice('error', 'Field name can only contain letters, numbers, and underscores.');
+                if (!firstErrorField) {
+                    firstErrorField = $('#field-name');
+                }
+                isValid = false;
+            }
+
             if (!isValid) {
-                CheckoutFieldEditor.showNotice('error', 'Please fill in all required fields.');
+                if (firstErrorField) {
+                    // Scroll to first error and focus
+                    firstErrorField[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstErrorField.focus();
+                }
+                
+                if (!fieldName || !/^[a-zA-Z0-9_]+$/.test(fieldName)) {
+                    // Already showed specific message above
+                } else {
+                    CheckoutFieldEditor.showNotice('error', 'Please fill in all required fields.');
+                }
             }
 
             return isValid;
@@ -287,7 +447,7 @@ jQuery(document).ready(function($) {
             }
 
             var fieldId = $(this).data('field-id');
-            var $fieldItem = $('.hezarfen-field-item[data-field-id="' + fieldId + '"]');
+            var $fieldCard = $('.hezarfen-field-card[data-field-id="' + fieldId + '"]');
 
             $.ajax({
                 url: hezarfen_checkout_field_editor.ajax_url,
@@ -298,22 +458,22 @@ jQuery(document).ready(function($) {
                     field_id: fieldId
                 },
                 beforeSend: function() {
-                    $fieldItem.addClass('deleting');
+                    $fieldCard.addClass('deleting');
                 },
                 success: function(response) {
                     if (response.success) {
-                        $fieldItem.fadeOut(300, function() {
+                        $fieldCard.fadeOut(300, function() {
                             $(this).remove();
                         });
                         CheckoutFieldEditor.showNotice('success', response.data.message);
                     } else {
                         CheckoutFieldEditor.showNotice('error', response.data.message || 'An error occurred.');
-                        $fieldItem.removeClass('deleting');
+                        $fieldCard.removeClass('deleting');
                     }
                 },
                 error: function() {
                     CheckoutFieldEditor.showNotice('error', 'An error occurred while deleting the field.');
-                    $fieldItem.removeClass('deleting');
+                    $fieldCard.removeClass('deleting');
                 }
             });
         },
@@ -326,7 +486,7 @@ jQuery(document).ready(function($) {
             }
 
             var fieldId = $(this).data('field-id');
-            var $fieldItem = $('.hezarfen-field-item[data-field-id="' + fieldId + '"]');
+            var $fieldCard = $('.hezarfen-field-card[data-field-id="' + fieldId + '"]');
 
             $.ajax({
                 url: hezarfen_checkout_field_editor.ajax_url,
@@ -337,7 +497,7 @@ jQuery(document).ready(function($) {
                     field_id: fieldId
                 },
                 beforeSend: function() {
-                    $fieldItem.addClass('resetting');
+                    $fieldCard.addClass('resetting');
                 },
                 success: function(response) {
                     if (response.success) {
@@ -345,20 +505,20 @@ jQuery(document).ready(function($) {
                         location.reload(); // Reload to show reset field
                     } else {
                         CheckoutFieldEditor.showNotice('error', response.data.message || 'An error occurred.');
-                        $fieldItem.removeClass('resetting');
+                        $fieldCard.removeClass('resetting');
                     }
                 },
                 error: function() {
                     CheckoutFieldEditor.showNotice('error', 'An error occurred while resetting the field.');
-                    $fieldItem.removeClass('resetting');
+                    $fieldCard.removeClass('resetting');
                 }
             });
         },
 
         reorderFields: function() {
             var fieldOrder = [];
-            // Only reorder custom fields
-            $('#sortable-custom-fields .hezarfen-field-item.is-custom').each(function() {
+            // Only reorder custom fields across all sections
+            $('.hezarfen-field-card.is-custom').each(function() {
                 fieldOrder.push($(this).data('field-id'));
             });
 
@@ -379,16 +539,25 @@ jQuery(document).ready(function($) {
         },
 
         showNotice: function(type, message) {
-            var noticeClass = type === 'success' ? 'notice-success' : 'notice-error';
-            var $notice = $('<div class="notice ' + noticeClass + ' is-dismissible"><p>' + message + '</p></div>');
+            // Remove existing notifications
+            $('.hezarfen-notification').remove();
             
-            $('.hezarfen-field-editor-header').after($notice);
+            var noticeClass = type === 'success' ? '' : type;
+            var icon = type === 'success' ? 
+                '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' :
+                type === 'warning' ?
+                '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 9V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 17H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.29 3.86L1.82 18A2 2 0 0 0 3.68 21H20.32A2 2 0 0 0 22.18 18L13.71 3.86A2 2 0 0 0 10.29 3.86Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' :
+                '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+            
+            var $notification = $('<div class="hezarfen-notification ' + noticeClass + '" style="display: flex; align-items: center; gap: 12px;"><div style="color: currentColor;">' + icon + '</div><div style="flex: 1;">' + message + '</div></div>');
+            
+            $('body').append($notification);
             
             setTimeout(function() {
-                $notice.fadeOut(300, function() {
+                $notification.fadeOut(300, function() {
                     $(this).remove();
                 });
-            }, 3000);
+            }, 4000);
         },
 
         exportFields: function(e) {
