@@ -10,13 +10,9 @@
         
         return React.createElement('div', {
             className: `field-item ${isHalfWidth ? 'half-width' : 'full-width'} ${field.is_default ? 'default-field' : 'custom-field'}`,
-            draggable: field.is_default === false, // Explicitly check for false
+            draggable: true, // Make ALL fields draggable
             onDragStart: (e) => {
-                // Only custom fields can be dragged
-                if (field.is_default) {
-                    e.preventDefault();
-                    return false;
-                }
+                // All fields can now be dragged
                 
                 // Stop event bubbling
                 e.stopPropagation();
@@ -55,7 +51,7 @@
                 e.stopPropagation();
             }
         }, [
-            !field.is_default && React.createElement('div', {
+            React.createElement('div', {
                 key: 'drag-handle',
                 className: 'drag-handle'
             }, '⋮⋮'),

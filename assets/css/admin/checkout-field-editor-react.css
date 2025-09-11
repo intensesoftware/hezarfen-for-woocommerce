@@ -260,7 +260,7 @@
   pointer-events: none;
 }
 
-/* Drag Handle - Only for custom fields */
+/* Drag Handle - For ALL fields */
 .drag-handle {
   position: absolute;
   top: 6px;
@@ -278,13 +278,9 @@
   justify-content: center;
 }
 
-.field-item.custom-field:hover .drag-handle {
+.field-item:hover .drag-handle {
   opacity: 1;
   color: #0073aa;
-}
-
-.field-item.default-field .drag-handle {
-  display: none;
 }
 
 .drag-handle:hover {
@@ -325,24 +321,25 @@
   border-width: 2px !important;
 }
 
-/* Default fields are not draggable */
-.field-item.default-field[draggable="false"] {
-  cursor: default;
-}
-
-.field-item.default-field {
-  background: #f8f9fa;
-  border-color: #e9ecef;
-}
-
-/* Custom fields have drag cursor */
-.field-item.custom-field {
+/* All fields are now draggable and look the same */
+.field-item {
+  background: #fff;
+  border-color: #ddd;
   cursor: move;
 }
 
-.field-item.custom-field:hover {
+.field-item:hover {
   border-color: #0073aa;
   box-shadow: 0 0 0 1px rgba(0, 115, 170, 0.3);
+}
+
+/* Subtle distinction for default vs custom fields */
+.field-item.default-field {
+  background: #fafafa;
+}
+
+.field-item.custom-field {
+  background: #fff;
 }
 
 .field-row.drag-over {
