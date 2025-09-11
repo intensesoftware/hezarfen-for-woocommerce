@@ -273,6 +273,23 @@
         // Load actual fields from WordPress
         useEffect(() => {
             loadFields();
+            
+            // Ensure WordPress save button stays enabled
+            const enableSaveButton = () => {
+                const saveButton = document.querySelector('button[name="save"].woocommerce-save-button');
+                if (saveButton) {
+                    saveButton.disabled = false;
+                    saveButton.removeAttribute('disabled');
+                }
+            };
+            
+            // Enable save button immediately and on interval
+            enableSaveButton();
+            const interval = setInterval(enableSaveButton, 1000);
+            
+            return () => {
+                clearInterval(interval);
+            };
         }, []);
         
         const loadFields = async () => {
@@ -375,6 +392,9 @@
                     
                     setFields(newFields);
                     
+                    // Save to database
+                    saveFieldOrder(newFields);
+                    
                     console.log('Field moved successfully');
                 }
             };
@@ -403,6 +423,10 @@
                 });
                 
                 setFields(newFields);
+                
+                // Save width change to database
+                saveFieldOrder(newFields);
+                
                 console.log('Field width updated');
             };
             
@@ -410,6 +434,37 @@
                 window.updateFieldWidth = null;
             };
         }, [fields]);
+        
+        // Save field order to database
+        const saveFieldOrder = async (fieldsData) => {
+            try {
+                const response = await fetch(window.hezarfen_checkout_field_editor.ajax_url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        action: 'hezarfen_reorder_checkout_fields',
+                        nonce: window.hezarfen_checkout_field_editor.nonce,
+                        fields: JSON.stringify(fieldsData)
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    console.log('Fields saved to database successfully');
+                } else {
+                    console.error('Failed to save fields:', result.data?.message);
+                    // Reload on error to show correct state
+                    loadFields();
+                }
+            } catch (error) {
+                console.error('Error saving fields:', error);
+                // Reload on error to show correct state
+                loadFields();
+            }
+        };
         
         const autoAdjustWidths = (sectionFields) => {
             // DON'T auto-adjust widths - let user control this manually

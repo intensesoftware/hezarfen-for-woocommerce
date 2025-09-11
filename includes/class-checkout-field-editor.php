@@ -257,14 +257,28 @@ class Checkout_Field_Editor {
 			));
 		}
 
-		// Get default fields
+		// Get default fields with customizations
 		$default_fields = $this->get_default_fields();
+		$default_field_customizations = get_option( 'hezarfen_checkout_default_field_customizations', array() );
+		
 		foreach ( $default_fields as $field_id => $field_data ) {
+			// Apply customizations if they exist
+			if ( isset( $default_field_customizations[ $field_id ] ) ) {
+				$field_data = array_merge( $field_data, $default_field_customizations[ $field_id ] );
+			}
+			
 			$section = $field_data['section'] ?? 'billing';
 			$fields[ $section ][] = array_merge( $field_data, array(
 				'id' => $field_id,
 				'is_default' => true
 			));
+		}
+		
+		// Sort all fields by priority within each section
+		foreach ( $fields as $section => $section_fields ) {
+			usort( $fields[ $section ], function( $a, $b ) {
+				return ( $a['priority'] ?? 10 ) <=> ( $b['priority'] ?? 10 );
+			});
 		}
 
 		wp_send_json_success( $fields );
@@ -367,21 +381,36 @@ class Checkout_Field_Editor {
 			wp_send_json_error( array( 'message' => __( 'Invalid fields data.', 'hezarfen-for-woocommerce' ) ) );
 		}
 
-		// Update field priorities based on new order
+		// Update field priorities and properties based on new order
 		$custom_fields = $this->get_custom_fields();
+		$default_field_customizations = get_option( 'hezarfen_checkout_default_field_customizations', array() );
 		$priority = 10;
 		
 		foreach ( $fields_data as $section => $section_fields ) {
 			foreach ( $section_fields as $field ) {
-				if ( ! $field['is_default'] && isset( $custom_fields[ $field['id'] ] ) ) {
+				if ( ! empty( $field['is_default'] ) ) {
+					// Handle default field customizations
+					if ( ! isset( $default_field_customizations[ $field['id'] ] ) ) {
+						$default_field_customizations[ $field['id'] ] = array();
+					}
+					
+					$default_field_customizations[ $field['id'] ]['priority'] = $priority;
+					$default_field_customizations[ $field['id'] ]['section'] = $section;
+					$default_field_customizations[ $field['id'] ]['column_width'] = $field['column_width'] ?? 'full';
+					
+				} elseif ( isset( $custom_fields[ $field['id'] ] ) ) {
+					// Handle custom fields
 					$custom_fields[ $field['id'] ]['priority'] = $priority;
 					$custom_fields[ $field['id'] ]['section'] = $section;
-					$priority += 10;
+					$custom_fields[ $field['id'] ]['column_width'] = $field['column_width'] ?? 'full';
 				}
+				
+				$priority += 10;
 			}
 		}
 		
 		update_option( 'hezarfen_checkout_custom_fields', $custom_fields );
+		update_option( 'hezarfen_checkout_default_field_customizations', $default_field_customizations );
 
 		wp_send_json_success( array( 'message' => __( 'Fields reordered successfully.', 'hezarfen-for-woocommerce' ) ) );
 	}

@@ -3,12 +3,24 @@
 #hezarfen-checkout-field-editor-react-root {
   position: relative;
   z-index: 1;
+  /* Isolate our component from WordPress admin styles */
+  contain: layout style;
 }
 
-/* Minimal reset - only prevent WordPress admin interference */
-#hezarfen-checkout-field-editor-react-root button {
+/* Minimal reset - only for our component buttons */
+#hezarfen-checkout-field-editor-react-root .field-actions button,
+#hezarfen-checkout-field-editor-react-root .btn-add-field,
+#hezarfen-checkout-field-editor-react-root .modal-content button {
   box-shadow: none !important;
   text-shadow: none !important;
+}
+
+/* Ensure WordPress admin buttons are not affected */
+.woocommerce-save-button {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  background: #2271b1 !important;
+  color: white !important;
 }
 
 .checkout-field-editor {
