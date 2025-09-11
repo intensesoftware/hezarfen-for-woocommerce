@@ -141,6 +141,8 @@
   display: flex;
   gap: 12px;
   margin-bottom: 12px;
+  min-height: 60px;
+  align-items: stretch;
 }
 
 /* Field Item */
@@ -152,6 +154,7 @@
   position: relative;
   transition: all 0.2s ease;
   cursor: move;
+  flex: 1;
 }
 
 .field-item:hover {
@@ -166,13 +169,41 @@
   z-index: 1000;
 }
 
+/* Column width visual indicators */
 .field-item.half-width {
   flex: 1;
+  position: relative;
+}
+
+.field-item.half-width::after {
+  content: '1/2';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: #ffc107;
+  color: #000;
+  padding: 1px 4px;
+  border-radius: 2px;
+  font-size: 9px;
+  font-weight: 600;
 }
 
 .field-item.full-width {
-  width: 100%;
-  margin-bottom: 12px;
+  flex: 1;
+  position: relative;
+}
+
+.field-item.full-width::after {
+  content: '1/1';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: #0073aa;
+  color: white;
+  padding: 1px 4px;
+  border-radius: 2px;
+  font-size: 9px;
+  font-weight: 600;
 }
 
 .field-item.default-field {
@@ -185,29 +216,143 @@
   box-shadow: 0 0 0 1px #adb5bd;
 }
 
-/* Drag Handle */
+/* Drag feedback for sections */
+.section-fields.drag-over {
+  background: #e3f2fd;
+  border: 2px dashed #0073aa;
+  border-radius: 6px;
+  padding: 8px;
+}
+
+/* Drop zone indicators */
+.field-row.drag-over {
+  background: #fff3cd;
+  border: 2px dashed #ffc107;
+  border-radius: 4px;
+  min-height: 80px;
+  align-items: center;
+  justify-content: center;
+}
+
+.field-row.drag-over::before {
+  content: 'Drop here to create a row';
+  color: #856404;
+  font-size: 12px;
+  font-weight: 500;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Drag Handle - Only for custom fields */
 .drag-handle {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 6px;
+  right: 6px;
   width: 16px;
   height: 16px;
   color: #ccc;
   cursor: grab;
   opacity: 0;
   transition: opacity 0.2s ease;
+  z-index: 10;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.field-item:hover .drag-handle {
+.field-item.custom-field:hover .drag-handle {
   opacity: 1;
+  color: #0073aa;
+}
+
+.field-item.default-field .drag-handle {
+  display: none;
 }
 
 .drag-handle:hover {
-  color: #666;
+  color: #005a87;
+  background: rgba(0, 115, 170, 0.1);
+  border-radius: 2px;
 }
 
 .drag-handle:active {
   cursor: grabbing;
+}
+
+/* Drag & Drop Styles */
+.field-item[draggable="true"] {
+  cursor: move;
+  transition: all 0.2s ease;
+}
+
+.field-item.custom-field[draggable="true"]:hover {
+  border-color: #0073aa;
+  box-shadow: 0 0 0 1px #0073aa;
+  transform: translateY(-1px);
+}
+
+.field-item.dragging {
+  opacity: 0.6 !important;
+  transform: rotate(1deg) scale(1.02);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  border-color: #0073aa;
+}
+
+/* Drop zones */
+.field-item.drag-over {
+  border-color: #ffc107 !important;
+  background: #fff9e6 !important;
+  border-style: dashed !important;
+  border-width: 2px !important;
+}
+
+/* Default fields are not draggable */
+.field-item.default-field[draggable="false"] {
+  cursor: default;
+}
+
+.field-item.default-field {
+  background: #f8f9fa;
+  border-color: #e9ecef;
+}
+
+/* Custom fields have drag cursor */
+.field-item.custom-field {
+  cursor: move;
+}
+
+.field-item.custom-field:hover {
+  border-color: #0073aa;
+  box-shadow: 0 0 0 1px rgba(0, 115, 170, 0.3);
+}
+
+.field-row.drag-over {
+  background: #fff3cd;
+  border: 2px dashed #ffc107;
+  border-radius: 4px;
+  position: relative;
+}
+
+.field-row.drag-over::before {
+  content: 'Drop here to place in this row';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #856404;
+  font-size: 12px;
+  font-weight: 500;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4px 8px;
+  border-radius: 2px;
 }
 
 /* Field Content */
@@ -325,6 +470,52 @@
 
 .btn-toggle:hover {
   opacity: 0.8;
+}
+
+/* Move buttons */
+.btn-move {
+  background: #f8f9fa;
+  color: #495057;
+  border: 1px solid #ddd;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.btn-move:hover {
+  background: #e9ecef;
+  color: #495057;
+}
+
+/* Width toggle button */
+.btn-width {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 2px 6px;
+  font-size: 9px;
+  font-weight: 600;
+  border-radius: 2px;
+  margin-right: 4px;
+}
+
+.btn-width.half {
+  background: #ffc107;
+  color: #000;
+}
+
+.btn-width.full {
+  background: #0073aa;
+  color: white;
+}
+
+.btn-width:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
 }
 
 /* Modal */

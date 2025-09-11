@@ -133,19 +133,11 @@ class Checkout_Field_Editor {
 			true
 		);
 
-		wp_enqueue_script(
-			'react-beautiful-dnd',
-			'https://unpkg.com/react-beautiful-dnd@13.1.1/dist/react-beautiful-dnd.min.js',
-			array( 'react', 'react-dom' ),
-			'13.1.1',
-			true
-		);
-
-		// Enqueue React component
+		// Enqueue simple React component
 		wp_enqueue_script(
 			'hezarfen-checkout-field-editor-react',
-			WC_HEZARFEN_UYGULAMA_URL . 'assets/js/admin/checkout-field-editor-react.js',
-			array( 'react', 'react-dom', 'react-beautiful-dnd' ),
+			WC_HEZARFEN_UYGULAMA_URL . 'assets/js/admin/checkout-field-editor-final.js',
+			array( 'react', 'react-dom' ),
 			WC_HEZARFEN_VERSION,
 			true
 		);
@@ -174,16 +166,27 @@ class Checkout_Field_Editor {
 		<div id="hezarfen-checkout-field-editor-react-root">
 			<div class="loading" style="text-align: center; padding: 40px; font-size: 16px; color: #666;">
 				Loading React Checkout Field Editor...
-					</div>
-					</div>
+			</div>
+		</div>
 		<script>
+			// Initialize React component safely
 			document.addEventListener('DOMContentLoaded', function() {
-				if (typeof React !== 'undefined' && typeof ReactDOM !== 'undefined' && typeof CheckoutFieldEditor !== 'undefined') {
-					const root = ReactDOM.createRoot(document.getElementById('hezarfen-checkout-field-editor-react-root'));
-					root.render(React.createElement(CheckoutFieldEditor));
-				} else {
-					console.error('React dependencies not loaded properly');
-				}
+				setTimeout(function() {
+					try {
+						if (typeof React !== 'undefined' && typeof ReactDOM !== 'undefined' && typeof CheckoutFieldEditor !== 'undefined') {
+							const container = document.getElementById('hezarfen-checkout-field-editor-react-root');
+							if (container) {
+								const root = ReactDOM.createRoot(container);
+								root.render(React.createElement(CheckoutFieldEditor));
+								console.log('React Checkout Field Editor loaded');
+							}
+						} else {
+							console.log('React dependencies not ready yet');
+						}
+					} catch (error) {
+						console.error('React initialization error:', error);
+					}
+				}, 200);
 			});
 		</script>
 		<?php

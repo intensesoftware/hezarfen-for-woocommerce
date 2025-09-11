@@ -3,40 +3,57 @@
     'use strict';
     
     const { useState, useEffect, useRef } = React;
-    const { DragDropContext, Droppable, Draggable } = window.ReactBeautifulDnd;
     
-    // Field Component
-    const Field = ({ field, index, onEdit, onDelete, onToggle }) => {
+    // Field Component with native HTML5 drag and drop
+    const Field = ({ field, index, onEdit, onDelete, onToggle, onDragStart, onDragEnd, onDragOver, onDrop }) => {
         const isHalfWidth = field.column_width === 'half';
         
-        return React.createElement(Draggable, {
-            draggableId: field.id,
-            index: index,
-            isDragDisabled: field.is_default
-        }, (provided, snapshot) => 
-            React.createElement('div', {
-                ref: provided.innerRef,
-                ...provided.draggableProps,
-                className: `field-item ${isHalfWidth ? 'half-width' : 'full-width'} ${
-                    snapshot.isDragging ? 'dragging' : ''
-                } ${field.is_default ? 'default-field' : 'custom-field'}`
+        const handleDragStart = (e) => {
+            if (field.is_default) {
+                e.preventDefault();
+                return;
+            }
+            e.dataTransfer.setData('text/plain', field.id);
+            e.dataTransfer.effectAllowed = 'move';
+            onDragStart && onDragStart(field, index);
+        };
+        
+        const handleDragOver = (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            onDragOver && onDragOver(field, index);
+        };
+        
+        const handleDrop = (e) => {
+            e.preventDefault();
+            const draggedFieldId = e.dataTransfer.getData('text/plain');
+            onDrop && onDrop(draggedFieldId, field, index);
+        };
+        
+        return React.createElement('div', {
+            className: `field-item ${isHalfWidth ? 'half-width' : 'full-width'} ${field.is_default ? 'default-field' : 'custom-field'}`,
+            draggable: !field.is_default,
+            onDragStart: handleDragStart,
+            onDragOver: handleDragOver,
+            onDrop: handleDrop,
+            'data-field-id': field.id,
+            'data-index': index
+        }, [
+            !field.is_default && React.createElement('div', {
+                key: 'drag-handle',
+                className: 'drag-handle'
+            }, React.createElement('svg', {
+                width: 12,
+                height: 12,
+                viewBox: '0 0 24 24'
             }, [
-                !field.is_default && React.createElement('div', {
-                    key: 'drag-handle',
-                    ...provided.dragHandleProps,
-                    className: 'drag-handle'
-                }, React.createElement('svg', {
-                    width: 12,
-                    height: 12,
-                    viewBox: '0 0 24 24'
-                }, [
-                    React.createElement('circle', { key: 1, cx: 9, cy: 12, r: 1, fill: 'currentColor' }),
-                    React.createElement('circle', { key: 2, cx: 9, cy: 5, r: 1, fill: 'currentColor' }),
-                    React.createElement('circle', { key: 3, cx: 9, cy: 19, r: 1, fill: 'currentColor' }),
-                    React.createElement('circle', { key: 4, cx: 15, cy: 12, r: 1, fill: 'currentColor' }),
-                    React.createElement('circle', { key: 5, cx: 15, cy: 5, r: 1, fill: 'currentColor' }),
-                    React.createElement('circle', { key: 6, cx: 15, cy: 19, r: 1, fill: 'currentColor' })
-                ])),
+                React.createElement('circle', { key: 1, cx: 9, cy: 12, r: 1, fill: 'currentColor' }),
+                React.createElement('circle', { key: 2, cx: 9, cy: 5, r: 1, fill: 'currentColor' }),
+                React.createElement('circle', { key: 3, cx: 9, cy: 19, r: 1, fill: 'currentColor' }),
+                React.createElement('circle', { key: 4, cx: 15, cy: 12, r: 1, fill: 'currentColor' }),
+                React.createElement('circle', { key: 5, cx: 15, cy: 5, r: 1, fill: 'currentColor' }),
+                React.createElement('circle', { key: 6, cx: 15, cy: 19, r: 1, fill: 'currentColor' })
+            ])),
                 
                 React.createElement('div', {
                     key: 'field-content',
@@ -113,39 +130,99 @@
         );
     };
     
-    // Section Component
-    const Section = ({ section, fields, onEdit, onDelete, onToggle }) => {
+    // Section Component with native drag and drop
+    const Section = ({ section, fields, onEdit, onDelete, onToggle, onFieldReorder }) => {
+        const [draggedField, setDraggedField] = useState(null);
+        const [dragOverIndex, setDragOverIndex] = useState(null);
+        
+        const handleDragStart = (field, index) => {
+            setDraggedField(field);
+        };
+        
+        const handleDragOver = (targetField, targetIndex) => {
+            setDragOverIndex(targetIndex);
+        };
+        
+        const handleDrop = (draggedFieldId, targetField, targetIndex) => {
+            if (!draggedField || draggedField.id === targetField.id) return;
+            
+            // Find the dragged field in current section
+            const draggedIndex = fields.findIndex(f => f.id === draggedFieldId);
+            
+            if (draggedIndex === -1) return;
+            
+            // Create new field order
+            const newFields = [...fields];
+            const [movedField] = newFields.splice(draggedIndex, 1);
+            
+            // Insert at target position
+            const insertIndex = draggedIndex < targetIndex ? targetIndex - 1 : targetIndex;
+            newFields.splice(insertIndex, 0, movedField);
+            
+            // Auto-adjust column widths based on new positions
+            const adjustedFields = adjustColumnWidths(newFields);
+            
+            onFieldReorder(section, adjustedFields);
+            
+            setDraggedField(null);
+            setDragOverIndex(null);
+        };
+        
+        const handleDragEnd = () => {
+            setDraggedField(null);
+            setDragOverIndex(null);
+        };
+        
+        // Auto-adjust column widths based on position
+        const adjustColumnWidths = (sectionFields) => {
+            const adjustedFields = [];
+            
+            for (let i = 0; i < sectionFields.length; i++) {
+                const field = { ...sectionFields[i] };
+                const nextField = sectionFields[i + 1];
+                
+                // If this field and next field can be paired
+                if (nextField && !field.force_full_width && !nextField.force_full_width) {
+                    // Make both half-width
+                    field.column_width = 'half';
+                    nextField.column_width = 'half';
+                    
+                    adjustedFields.push(field);
+                    adjustedFields.push(nextField);
+                    i++; // Skip next field
+                } else {
+                    // Make this field full-width
+                    field.column_width = 'full';
+                    adjustedFields.push(field);
+                }
+            }
+            
+            return adjustedFields;
+        };
         // Organize fields into rows
         const organizeFieldsIntoRows = (fields) => {
             const rows = [];
-            let currentRow = [];
-            let fieldIndex = 0;
             
-            fields.forEach((field) => {
-                if (field.column_width === 'half') {
-                    currentRow.push({ ...field, originalIndex: fieldIndex });
-                    
-                    if (currentRow.length === 2) {
-                        rows.push({ type: 'row', fields: currentRow, startIndex: fieldIndex - 1 });
-                        currentRow = [];
-                    }
-                } else {
-                    if (currentRow.length > 0) {
-                        rows.push({ type: 'row', fields: currentRow, startIndex: fieldIndex - currentRow.length });
-                        currentRow = [];
-                    }
-                    
-                    rows.push({ 
-                        type: 'single', 
-                        field: { ...field, originalIndex: fieldIndex }, 
-                        index: fieldIndex 
+            for (let i = 0; i < fields.length; i++) {
+                const currentField = { ...fields[i], originalIndex: i };
+                const nextField = fields[i + 1] ? { ...fields[i + 1], originalIndex: i + 1 } : null;
+                
+                // If current field is full-width or it's the last field, create single row
+                if (currentField.column_width === 'full' || !nextField) {
+                    rows.push({
+                        type: 'row',
+                        fields: [currentField],
+                        startIndex: i
                     });
+                } else {
+                    // Create a row with two fields (current and next)
+                    rows.push({
+                        type: 'row', 
+                        fields: [currentField, nextField],
+                        startIndex: i
+                    });
+                    i++; // Skip next field since we processed it
                 }
-                fieldIndex++;
-            });
-            
-            if (currentRow.length > 0) {
-                rows.push({ type: 'row', fields: currentRow, startIndex: fieldIndex - currentRow.length });
             }
             
             return rows;
@@ -164,62 +241,59 @@
                 React.createElement('span', { key: 'count', className: 'field-count' }, fields.length)
             ]),
             
-            React.createElement(Droppable, {
-                key: 'droppable',
-                droppableId: section,
-                type: 'field'
-            }, (provided, snapshot) =>
-                React.createElement('div', {
-                    ref: provided.innerRef,
-                    ...provided.droppableProps,
-                    className: `section-fields ${snapshot.isDraggingOver ? 'drag-over' : ''}`
+            React.createElement('div', {
+                key: 'section-fields',
+                className: `section-fields ${draggedField ? 'drag-active' : ''}`,
+                onDragOver: (e) => e.preventDefault(),
+                onDrop: (e) => {
+                    e.preventDefault();
+                    const draggedFieldId = e.dataTransfer.getData('text/plain');
+                    if (draggedFieldId && draggedField) {
+                        // Add to end of section if dropped on empty area
+                        const newFields = [...fields, draggedField];
+                        const adjustedFields = adjustColumnWidths(newFields);
+                        onFieldReorder(section, adjustedFields);
+                    }
+                    handleDragEnd();
+                }
+            }, [
+                fieldRows.map((row, rowIndex) => 
+                    React.createElement('div', {
+                        key: `row-${rowIndex}`,
+                        className: `field-row ${dragOverIndex === rowIndex ? 'drag-over' : ''}`
+                    }, row.fields.map((field, fieldIndex) =>
+                        React.createElement(Field, {
+                            key: field.id,
+                            field: field,
+                            index: row.startIndex + fieldIndex,
+                            onEdit: onEdit,
+                            onDelete: onDelete,
+                            onToggle: onToggle,
+                            onDragStart: handleDragStart,
+                            onDragEnd: handleDragEnd,
+                            onDragOver: handleDragOver,
+                            onDrop: handleDrop
+                        })
+                    ))
+                ),
+                
+                fields.length === 0 && React.createElement('div', {
+                    key: 'empty-section',
+                    className: 'empty-section'
                 }, [
-                    fieldRows.map((row, rowIndex) => {
-                        if (row.type === 'row') {
-                            return React.createElement('div', {
-                                key: `row-${rowIndex}`,
-                                className: 'field-row'
-                            }, row.fields.map((field, fieldIndex) =>
-                                React.createElement(Field, {
-                                    key: field.id,
-                                    field: field,
-                                    index: row.startIndex + fieldIndex,
-                                    onEdit: onEdit,
-                                    onDelete: onDelete,
-                                    onToggle: onToggle
-                                })
-                            ));
-                        } else {
-                            return React.createElement(Field, {
-                                key: row.field.id,
-                                field: row.field,
-                                index: row.index,
-                                onEdit: onEdit,
-                                onDelete: onDelete,
-                                onToggle: onToggle
-                            });
-                        }
-                    }),
-                    provided.placeholder,
-                    
-                    fields.length === 0 && React.createElement('div', {
-                        key: 'empty-section',
-                        className: 'empty-section'
-                    }, [
-                        React.createElement('p', { key: 'text' }, 'No fields in this section'),
-                        React.createElement('button', {
-                            key: 'add-btn',
-                            onClick: (e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                onEdit({ section });
-                            },
-                            className: 'btn-add-field',
-                            type: 'button'
-                        }, 'Add First Field')
-                    ])
+                    React.createElement('p', { key: 'text' }, 'No fields in this section'),
+                    React.createElement('button', {
+                        key: 'add-btn',
+                        onClick: (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            onEdit({ section });
+                        },
+                        className: 'btn-add-field',
+                        type: 'button'
+                    }, 'Add First Field')
                 ])
-            )
+            ])
         ]);
     };
     
@@ -607,9 +681,46 @@
             };
         }, []);
         
-        const handleDragEnd = (result) => {
-            // Handle drag and drop logic here
-            console.log('Drag ended:', result);
+        
+        const saveFieldOrder = async (fieldsData) => {
+            try {
+                const response = await fetch(window.hezarfen_checkout_field_editor.ajax_url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        action: 'hezarfen_reorder_checkout_fields',
+                        nonce: window.hezarfen_checkout_field_editor.nonce,
+                        fields: JSON.stringify(fieldsData)
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (!result.success) {
+                    throw new Error(result.data?.message || 'Failed to save field order');
+                }
+            } catch (error) {
+                console.error('Error saving field order:', error);
+                throw error;
+            }
+        };
+        
+        const handleFieldReorder = async (section, newFields) => {
+            // Update the fields state
+            const updatedFields = { ...fields };
+            updatedFields[section] = newFields;
+            setFields(updatedFields);
+            
+            // Save to server
+            try {
+                await saveFieldOrder(updatedFields);
+            } catch (error) {
+                console.error('Error saving field order:', error);
+                // Revert on error
+                loadFields();
+            }
         };
         
         const handleEditField = (field) => {
@@ -739,23 +850,20 @@
                 }, 'Add New Field')
             ]),
             
-            React.createElement(DragDropContext, {
-                key: 'drag-context',
-                onDragEnd: handleDragEnd
-            }, 
-                React.createElement('div', {
-                    className: 'sections-container'
-                }, Object.entries(sections).map(([sectionKey, sectionLabel]) =>
-                    React.createElement(Section, {
-                        key: sectionKey,
-                        section: sectionKey,
-                        fields: fields[sectionKey] || [],
-                        onEdit: handleEditField,
-                        onDelete: handleDeleteField,
-                        onToggle: handleToggleField
-                    })
-                ))
-            ),
+            React.createElement('div', {
+                key: 'sections-container',
+                className: 'sections-container'
+            }, Object.entries(sections).map(([sectionKey, sectionLabel]) =>
+                React.createElement(Section, {
+                    key: sectionKey,
+                    section: sectionKey,
+                    fields: fields[sectionKey] || [],
+                    onEdit: handleEditField,
+                    onDelete: handleDeleteField,
+                    onToggle: handleToggleField,
+                    onFieldReorder: handleFieldReorder
+                })
+            )),
             
             React.createElement(FieldEditorModal, {
                 key: 'modal',
