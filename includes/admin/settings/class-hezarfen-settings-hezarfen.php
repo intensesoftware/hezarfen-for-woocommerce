@@ -43,8 +43,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 */
 	protected function get_own_sections() {
 		$sections = array(
-			''              => __( 'General', 'hezarfen-for-woocommerce' ),
-			'checkout_page' => __( 'Checkout Page Settings', 'hezarfen-for-woocommerce' ),
+			''              => __( 'Checkout Page Settings', 'hezarfen-for-woocommerce' ),
 			'sms_settings'  => __( 'SMS Settings', 'hezarfen-for-woocommerce' ),
 		);
 
@@ -70,54 +69,12 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	}
 
 	/**
-	 * Get settings for the default(General) section.
+	 * Get settings for the default(Checkout Page) section.
 	 *
 	 * @return array<array<string, string>>
 	 */
 	protected function get_settings_for_default_section() {
-		$fields = array(
-			array(
-				'title' => __(
-					'General Settings',
-					'hezarfen-for-woocommerce'
-				),
-				'type'  => 'title',
-				'desc'  => __(
-					'You can edit the general settings from this page.',
-					'hezarfen-for-woocommerce'
-				),
-				'id'    => 'hezarfen_general_settings_title',
-			),
-			array(
-				'title'   => __(
-					'Sort address fields in My Account > Address pages?',
-					'hezarfen-for-woocommerce'
-				),
-				'type'    => 'checkbox',
-				'desc'    => '',
-				'id'      => 'hezarfen_sort_my_account_fields',
-				'default' => 'no',
-			),
-			array(
-				'title'   => __(
-					'Hide postcode fields in My Account > Address pages?',
-					'hezarfen-for-woocommerce'
-				),
-				'type'    => 'checkbox',
-				'desc'    => '',
-				'id'      => 'hezarfen_hide_my_account_postcode_fields',
-				'default' => 'no',
-			),
-		);
-
-		$fields = apply_filters( 'hezarfen_general_settings', $fields );
-
-		$fields[] = array(
-			'type' => 'sectionend',
-			'id'   => 'hezarfen_general_settings_section_end',
-		);
-
-		return $fields;
+		return $this->get_settings_for_checkout_page_section();
 	}
 
 	/**

@@ -21,12 +21,12 @@ class My_Account {
 		add_action( 'woocommerce_after_save_address_validation', array( $this, 'save_customer_object' ), PHP_INT_MAX - 1, 4 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
-		if ( 'yes' === get_option( 'hezarfen_sort_my_account_fields', 'no' ) ) {
+		if ( 'yes' === get_option( 'hezarfen_checkout_fields_auto_sort', 'no' ) ) {
 			// we need to use an action that fires after the 'posts_selection' action to access the is_account_page() function. (https://woocommerce.com/document/conditional-tags/).
 			add_action( 'wp', array( $this, 'sort_address_fields' ) );
 		}
 
-		if ( 'yes' === get_option( 'hezarfen_hide_my_account_postcode_fields', 'no' ) ) {
+		if ( 'yes' === get_option( 'hezarfen_hide_checkout_postcode_fields', 'no' ) ) {
 			add_action( 'wp', array( $this, 'hide_postcode_field' ) );
 		}
 	}

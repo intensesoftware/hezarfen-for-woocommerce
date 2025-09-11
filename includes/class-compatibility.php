@@ -51,7 +51,7 @@ class Compatibility {
 	 * @return void
 	 */
 	public function checkout_field_editor_support() {
-		if ( Helper::is_edit_address_page() && 'yes' === get_option( 'hezarfen_sort_my_account_fields', 'no' ) ) {
+		if ( Helper::is_edit_address_page() && 'yes' === get_option( 'hezarfen_checkout_fields_auto_sort', 'no' ) ) {
 			add_filter( 'thwcfd_address_field_override_priority', '__return_false' );
 			add_filter( 'thwcfd_address_field_override_label', '__return_false' );
 			add_filter( 'thwcfd_address_field_override_placeholder', '__return_false' );
