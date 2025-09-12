@@ -688,16 +688,15 @@ class Courier_Hepsijet_Integration {
     }
 
     /**
-     * Get Hepsijet pricing information for a specific desi count
+     * Get Hepsijet pricing tiers information
      * 
-     * @param float $desi_count Desi count (default: 1)
-     * @return array|WP_Error Pricing information or error
+     * @return array|WP_Error Pricing tiers information or error
      */
-    public function get_pricing($desi_count = 1.0) {
-        $this->log('Hepsijet Relay Get Pricing Request', array('desi_count' => $desi_count));
+    public function get_pricing() {
+        $this->log('Hepsijet Relay Get Pricing Tiers Request', array());
         
         // Use direct WordPress HTTP request since pricing endpoint is public
-        $url = home_url('/wp-json/hepsijet-relay/v1/pricing?desi=' . floatval($desi_count));
+        $url = home_url('/wp-json/hepsijet-relay/v1/pricing');
         
         $response = wp_remote_get($url, array(
             'timeout' => self::REQUEST_TIMEOUT
@@ -711,7 +710,7 @@ class Courier_Hepsijet_Integration {
         $http_code = wp_remote_retrieve_response_code($response);
         $decoded = json_decode($body, true);
         
-        $this->log('Hepsijet Relay Get Pricing Raw Response', array(
+        $this->log('Hepsijet Relay Get Pricing Tiers Raw Response', array(
             'http_code' => $http_code,
             'body' => $body,
             'decoded' => $decoded
@@ -719,14 +718,48 @@ class Courier_Hepsijet_Integration {
         
         if ($http_code >= 400) {
             $error_message = $decoded['message'] ?? 'API Error: ' . $http_code;
-            $this->log('Hepsijet Relay Get Pricing HTTP Error', array('code' => $http_code, 'message' => $error_message));
+            $this->log('Hepsijet Relay Get Pricing Tiers HTTP Error', array('code' => $http_code, 'message' => $error_message));
             return new \WP_Error('pricing_api_error', $error_message);
         }
         
-        $this->log('Hepsijet Relay Get Pricing Response', $decoded);
+        $this->log('Hepsijet Relay Get Pricing Tiers Response', $decoded);
         
         return $decoded;
     }
+
+    /**
+     * Get price for specific desi count from pricing tiers
+     * 
+     * @param float $desi_count Desi count
+     * @return float|false Price for the desi count or false if not found
+     */
+    public function get_price_for_desi($desi_count) {
+        $pricing_data = $this->get_pricing();
+        
+        if (is_wp_error($pricing_data) || !isset($pricing_data['pricing_tiers'])) {
+            return false;
+        }
+        
+        $pricing_tiers = $pricing_data['pricing_tiers'];
+        
+        // Find the appropriate tier for the given desi count
+        foreach ($pricing_tiers as $tier) {
+            if ($desi_count >= $tier['min'] && $desi_count <= $tier['max']) {
+                return $tier['price'];
+            }
+        }
+        
+        // If no tier matches, return the last tier's price (for cases where desi > max tier)
+        if (!empty($pricing_tiers)) {
+            $last_tier = end($pricing_tiers);
+            if ($desi_count > $last_tier['max']) {
+                return $last_tier['price'];
+            }
+        }
+        
+        return false;
+    }
+
 
 
 
@@ -736,24 +769,14 @@ class Courier_Hepsijet_Integration {
      * @return array|false Array with price info or false on error
      */
     public function get_pricing_range_info() {
-        $price_1_desi_response = $this->get_pricing(1.0);
-        $price_4_desi_response = $this->get_pricing(4.0);
+        $pricing_data = $this->get_pricing();
         
-        if (is_wp_error($price_1_desi_response) || is_wp_error($price_4_desi_response)) {
+        if (is_wp_error($pricing_data) || !isset($pricing_data['pricing_tiers'])) {
             return false;
         }
         
-        // Extract price from 1 desi response
-        $price_1 = false;
-        if (isset($price_1_desi_response['calculation']['shipping_price'])) {
-            $price_1 = $price_1_desi_response['calculation']['shipping_price'];
-        }
-        
-        // Extract price from 4 desi response
-        $price_4 = false;
-        if (isset($price_4_desi_response['calculation']['shipping_price'])) {
-            $price_4 = $price_4_desi_response['calculation']['shipping_price'];
-        }
+        $price_1 = $this->get_price_for_desi(1.0);
+        $price_4 = $this->get_price_for_desi(4.0);
         
         if ($price_1 === false || $price_4 === false) {
             return false;
@@ -763,7 +786,12 @@ class Courier_Hepsijet_Integration {
             'price_1_desi' => $price_1,
             'price_4_desi' => $price_4,
             'same_price' => ($price_1 == $price_4),
-            'display_text' => ($price_1 == $price_4) ? '1-4 desi' : '1 desi'
+            'display_text' => ($price_1 == $price_4) ? '1-4 desi' : '1 desi',
+            'pricing_tiers' => $pricing_data['pricing_tiers'],
+            'currency' => $pricing_data['currency'] ?? 'TRY',
+            'notes' => $pricing_data['notes'] ?? [],
+            'last_updated' => $pricing_data['last_updated'] ?? '',
+            'source' => $pricing_data['source'] ?? 'Hepsijet API Relay'
         );
     }
 
