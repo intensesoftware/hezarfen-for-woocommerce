@@ -3,11 +3,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Hezarfen For Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"\n"
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2025-09-12 07:14+0000\n"
+"POT-Creation-Date: 2025-09-12 08:37+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #. %s plugin name
@@ -1029,7 +1028,7 @@ msgstr ""
 msgid "Intense Yazılım Ltd."
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:809
+#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:815
 msgid "Invalid balance response"
 msgstr ""
 
@@ -1278,7 +1277,7 @@ msgstr ""
 msgid "Order #%s - Customer Agreements Saved"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:1159
+#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:1165
 msgid "Order completed - shipment delivered"
 msgstr ""
 
@@ -1391,6 +1390,10 @@ msgstr ""
 
 #: includes/contracts/admin/class-contracts-settings.php:487
 msgid "Payment method"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:269
+msgid "Payment on delivery is not supported"
 msgstr ""
 
 #: includes/class-sms-automation.php:592
@@ -1590,7 +1593,7 @@ msgstr ""
 msgid "Shipment Barcode / Automated Shipment Tracking"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:357
+#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:363
 msgid "Shipment created successfully"
 msgstr ""
 

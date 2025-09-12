@@ -263,6 +263,12 @@ class Courier_Hepsijet_Integration {
             return new \WP_Error( 'hepsijet_error', 'Order not found' );
         }
 
+        // Check if payment method is COD (Cash on Delivery)
+        $payment_method = $order->get_payment_method();
+        if ( $payment_method === 'cod' ) {
+            return new \WP_Error( 'hepsijet_cod_not_supported', esc_html__( 'Payment on delivery is not supported', 'hezarfen-for-woocommerce' ) );
+        }
+
         $shipping_details = new Shipping_Details( $order_id );
 
         // Prepare receiver data for relay API

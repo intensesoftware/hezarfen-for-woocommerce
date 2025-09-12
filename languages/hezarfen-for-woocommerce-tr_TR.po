@@ -6,7 +6,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2025-09-12 08:00+0000\n"
+"PO-Revision-Date: 2025-09-12 08:38+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -1120,7 +1120,7 @@ msgstr "Intense KargoGate Bakiyesi:"
 msgid "Intense Yazılım Ltd."
 msgstr "Intense Software Ltd."
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:809
+#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:815
 msgid "Invalid balance response"
 msgstr "Geçersiz bakiye yanıtı"
 
@@ -1388,7 +1388,7 @@ msgstr "Beklemede"
 msgid "Order #%s - Customer Agreements Saved"
 msgstr "Sipariş #%s - Müşteri Sözleşmeleri Kaydedildi"
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:1159
+#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:1165
 msgid "Order completed - shipment delivered"
 msgstr "Sipariş tamamlandı - gönderi teslim edildi"
 
@@ -1505,6 +1505,10 @@ msgstr "Şifre en az 6 karakter olmalı"
 #: includes/contracts/admin/class-contracts-settings.php:487
 msgid "Payment method"
 msgstr "Ödeme yöntemi"
+
+#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:269
+msgid "Payment on delivery is not supported"
+msgstr "Kapıda ödeme desteklenmiyor."
 
 #: includes/class-sms-automation.php:592
 msgid "Pending payment"
@@ -1712,7 +1716,7 @@ msgstr "Gönderi"
 msgid "Shipment Barcode / Automated Shipment Tracking"
 msgstr "Gönderi Barkodu / Otomatik Gönderi Takibi"
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:357
+#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:363
 msgid "Shipment created successfully"
 msgstr "Gönderi başarıyla oluşturuldu"
 
