@@ -1,17 +1,17 @@
 
 === Hezarfen - Türkiye Kargo Entegrasyonu - WooCommerce Kargo Takip ve Yönetim Eklentisi For Woocommerce ===
 Contributors: intenseyazilim, mucahitbal, mskapusuz
-Tags: kargo, kargo takip, hepsijet, mng, fatura
+Tags: kargo, sözleşmeler, hepsijet, mng, fatura
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.4.1
+Stable tag: 2.5.4
 
-TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ! Türkiye’nin Lider WooCommerce Kargo Takip Eklentisi: 23 kargo, SMS, ilçe/mahalle, TC kimlik & vergi desteği
+TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ! Türkiye'nin Lider WooCommerce Kargo Takip Eklentisi: 23 kargo, SMS, MSS sözleşmeleri, ilçe/mahalle, vergi alanlar
 == Description ==
 
-**Tamamen Ücretsiz!** Hezarfen, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo ve ödeme yönetim eklentisidir. Bu WooCommerce kargo entegrasyon eklentisi, 23 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel WooCommerce kargo takip deneyimi sunar ve Türkiye'ye özgü mahalle, fatura ve vergi alanlarıyla ödeme ekranınızı Türkiye'ye uyumlu hale getirir.
+**Tamamen Ücretsiz!** Hezarfen, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo, ödeme ve sözleşme yönetim eklentisidir. Bu WooCommerce kargo entegrasyon eklentisi, 23 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel WooCommerce kargo takip deneyimi sunar, Mesafeli Satış Sözleşmesi (MSS) desteği sağlar ve Türkiye'ye özgü mahalle, fatura ve vergi alanlarıyla ödeme ekranınızı Türkiye'ye uyumlu hale getirir.
 
 = 🚀 2000+ WooCommerce Sitesi tarafından kullanılıyor! =
 
@@ -40,7 +40,17 @@ TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ! Türkiye’nin Lider WooCommerce Karg
 • Müşteri panelinde detaylı kargo görüntüleme ve sipariş takibi
 • Otomatik e-posta bildirimleri ve iade süreç yönetimi
 • SMS entegrasyonu ile Kargoya Verildi ve tüm sipariş durumlarında özelleştirilebilir SMS bilgilendirme
-• Intense WooCommerce Mesafeli Satış Sözleşmesi Eklentisiyle tam uyumluluk (otomatik olarak kurumsal/bireysel vergi alanlarını çeker.)
+
+**📋 Mesafeli Satış Sözleşmesi (MSS) ve Ön Bilgilendirme Formu**
+• Dinamik sözleşme oluşturma ve yönetimi (mesafeli satış s. ve ön bilgilendirme formu dışında cayma hakkı vs gibi dilediğiniz sözleşmeleri ekleyebilirsiniz.)
+• WordPress sayfalarını sözleşme şablonu olarak kullanma
+• Ödeme sayfasında sözleşme gösterimi (sayfa içi veya modal)
+• Otomatik değişken değiştirme sistemi (müşteri adı, sipariş tarihi, ürün bilgileri vb.)
+• Otomatik oluşan sözleşmelerin müşteri hesabım sayfası sipariş detayında gösterilmesi
+• Sözleşmelerin otomatik olarak sipariş alındı mailinde yer alması
+• Sözleşme kabul zorunluluğu ve doğrulama (hangi sözleşmelerin onay gerektirdiği kontrol edilebiliyor.)
+• Sipariş bazında sözleşme arşivleme ve saklama
+• KVKK uyumlu güvenli veri saklama
 
 **🏠 Türkiye'ye Özel Çözümler**
 • İlçe/Mahalle seçim alanları
@@ -82,6 +92,7 @@ Hezarfen, KVKK’nın yurt dışına kişisel veri aktarımına ilişkin hüküm
 2. **Ödeme Sayfası**: İl/ilçe/mahalle alanlarını aktifleştirin
 3. **Güvenlik**: T.C. Kimlik no şifrelemeyi aktifleştirin
 4. **Bildirimler**: SMS servis bilgilerinizi girin
+5. **MSS Sözleşmeleri**: Mesafeli satış sözleşmesi özelliğini aktifleştirin ve sözleşme şablonlarınızı oluşturun
 
 == Frequently Asked Questions ==
 
@@ -120,6 +131,39 @@ Hezarfen ile uyumlu olmadığını düşündüğünüz bir eklentiyle karşıla�
 
 = Çoklu dil desteği var mı? =
 Bu Türkçe WooCommerce eklentisi, Türkçe ve İngilizce dillerini desteklemektedir. WPML ve Polylang gibi çoklu dil eklentileriyle uyumludur. Türkiye e-ticaret standartlarına göre optimize edilmiştir.
+
+= Mesafeli Satış Sözleşmesi (MSS) özelliği nasıl kullanılır? =
+WooCommerce > Ayarlar > Hezarfen > Mesafeli Satış Sözleşmesi menüsünden MSS özelliğini aktifleştirebilirsiniz. WordPress sayfalarınızı sözleşme şablonu olarak kullanabilir, dinamik değişkenlerle kişiselleştirilmiş sözleşmeler oluşturabilirsiniz. Sözleşmeler ödeme sayfasında sayfa içi veya modal olarak gösterilebilir.
+
+= Sözleşme şablonlarında hangi değişkenleri kullanabilirim? =
+MSS sözleşme şablonlarınızda dinamik değişkenleri kullanabilirsiniz. Bu değişkenler sipariş verildiğinde otomatik olarak gerçek verilerle değiştirilir.
+
+= Sözleşmeler nasıl saklanır? =
+Müşteriler tarafından kabul edilen sözleşmeler, KVKV uyumlu şekilde veritabanında güvenli olarak saklanır. Her sipariş için ayrı sözleşme kaydı oluşturulur ve IP adresi, kullanıcı aracısı gibi teknik bilgiler de kaydedilir.
+
+= Sözleşmeler özelliğini nasıl aktifleştirebilirim? =
+WooCommerce > Ayarlar > Hezarfen > Mesafeli Satış Sözleşmesi menüsünden sözleşmeler özelliğini aktifleştirebilirsiniz. Bu bölümden hangi sözleşmelerin gösterileceğini, hangilerinin zorunlu olacağını ve nasıl gösterileceğini (sayfa içi veya modal) ayarlayabilirsiniz.
+
+= Sözleşmeleri ödeme sayfasında nasıl gösteririm? =
+Sözleşmelerinizi ödeme sayfasında iki farklı şekilde gösterebilirsiniz: Sayfa içi olarak doğrudan ödeme formunda veya modal (popup) pencerede. Bu ayarı WooCommerce > Ayarlar > Hezarfen > Mesafeli Satış Sözleşmesi bölümünden yapabilirsiniz.
+
+= Hangi sözleşmeleri oluşturabilirim? =
+Hezarfen ile mesafeli satış sözleşmesi, ön bilgilendirme formu, cayma hakkı sözleşmesi, gizlilik sözleşmesi ve dilediğiniz herhangi bir özel sözleşme türünü oluşturabilirsiniz. WordPress sayfalarınızı sözleşme şablonu olarak kullanabilirsiniz.
+
+= Sözleşmelerde hangi dinamik değişkenler kullanılabilir? =
+Sözleşme şablonlarınızda fatura/teslimat bilgileri ad soyad, sipariş numarası, sipariş tarihi, ürün bilgileri, toplam tutar, kargo bilgileri gibi birçok dinamik değişken kullanabilirsiniz. Bu değişkenler sipariş verildiğinde otomatik olarak gerçek verilerle değiştirilir.
+
+= Sözleşme kabul zorunluluğu nasıl ayarlanır? =
+WooCommerce > Ayarlar > Hezarfen > Mesafeli Satış Sözleşmesi bölümünden hangi sözleşmelerin onay gerektirdiğini belirleyebilirsiniz. Zorunlu sözleşmeler onaylanmadan sipariş tamamlanamaz.
+
+= Sözleşmeler müşteri hesabında nasıl görünür? =
+Müşteriler, hesabım sayfasındaki sipariş detaylarında o siparişe ait tüm sözleşmeleri görüntüleyebilir. Bu sözleşmeler sipariş verildiği andaki haliyle saklanır ve değiştirilemez.
+
+= Sözleşmeler e-posta bildirimlerinde nasıl yer alır? =
+Sipariş onay e-postasında sözleşmeler otomatik olarak eklenir. Bu sayede müşteriler sözleşmelerin bir kopyasını e-posta ile de alırlar.
+
+= Sözleşme şablonlarını nasıl düzenlerim? =
+Sözleşme şablonlarınızı WordPress sayfa editöründe normal bir sayfa gibi düzenleyebilirsiniz. Dinamik değişkenleri kullanarak kişiselleştirilmiş sözleşmeler oluşturabilirsiniz.
 
 = Hezarfen nedir? =
 
@@ -160,16 +204,46 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 3. SMS kuralları (kargoya verildiğinde veya sipariş durumuna göre SMS oluşturabilme)
 4. NetGSM ile Kargoya verildi SMS düzenleme ekranı
 5. Ödeme ekranında mahalle alanının gösterilmesi
-6. Müşteri hesabım sayfası sipariş detayında kargo bilgilerinin gösterilmesi
+6. Ödeme ekranında sözleşmelerin gösterimi (opsiyonel)
 7. Ödeme ekranının sıralanması
 8. Posta kodu kapatabilme, ödeme ekranı sıralayabilme özelliklerinin kontrolü
 9. Müşteriye gönderilen kargoya verildi e-postasının yönetimi
 10. Ödeme ekranında kurumsal vergi alanları (vergi dairesi ve vergi numarası)
 11. Ödeme ekranında kurumsal bireysel alanları (T.C. Kimlik Numarası)
 12. Sipariş liste ekranında kargo bilgilerinin görüntülenmesi
+13. Müşteri hesabım sayfası sipariş detayında kargo bilgilerinin gösterilmesi
+14. Ödeme ekranında sözleşmelerin modal içerisinde gösterilmesi
+15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
-= 2.4.1 - 2015-08-18 =
+= 2.5.4 - 2025-09-10 =
+* Gereksiz bir dosya eklentiden silindi.
+
+= 2.5.3 - 2025-09-10 =
+* Funnelkit için ilçe/mahalle uyumluluğu
+* Legacy order storage versiyonları için kargoya verildi durum desteğinde yaşanan sorun giderildi.
+
+= 2.5.2 - 2025-09-10 = 
+* "Kargoya verildi" durumundaki regresyon giderildi, tekrar durum aktif hale getirildi.
+* Debug fonksiyonları kaldırıldı.
+* SMS otomasyonundaki {siparis_toplami} ve {order_total} değişkenlerinde yaşanan karakter sorunu giderildi.
+
+= 2.5.1 - 2025-09-09 =
+* readme.txt
+
+= 2.5.0 - 2025-09-09 =
+* **YENİ ÖZELLİK: Mesafeli Satış Sözleşme, Ön Bilgilendirme Formu ve Özel Sözleşmeler**
+* **YENİ ÖZELLİK: Sözleşmeler Yönetim Sistemi** - Dinamik sözleşme oluşturma, WordPress sayfalarını sözleşme şablonu olarak kullanma
+* **YENİ ÖZELLİK: Sözleşmeler Ödeme Sayfasında** - Ödeme sayfasında sözleşme gösterimi (sayfa içi veya modal)
+* **YENİ ÖZELLİK: Sözleşmeler Otomatik Değişken Sistemi** - Müşteri adı, sipariş tarihi, ürün bilgileri vb. otomatik değiştirme
+* **YENİ ÖZELLİK: Sözleşmeler Müşteri Paneli** - Oluşan sözleşmelerin müşteri hesabım sayfası sipariş detayında gösterilmesi
+* **YENİ ÖZELLİK: Sözleşmeler E-posta Entegrasyonu** - Sözleşmelerin otomatik olarak sipariş alındı mailinde yer alması
+* **YENİ ÖZELLİK: Sözleşmeler Kabul Zorunluluğu** - Hangi sözleşmelerin onay gerektirdiği kontrol edilebiliyor
+* **YENİ ÖZELLİK: Sözleşmeler Arşivleme** - Sipariş bazında sözleşme arşivleme ve saklama
+* **DÜZELTME**: Ödeme ekranında ilçe ve mahalle alanlarında görünen not found uyarısının Türkçeleştirilmesi
+* **DÜZELTME** Lokalizasyon kaynaklı PHP uyarısı giderildi.
+
+= 2.4.1 - 2025-08-18 =
 * readme.txt update
 
 = 2.4.0 - 2025-08-18 =

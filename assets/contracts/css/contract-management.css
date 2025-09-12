@@ -1,0 +1,261 @@
+/**
+ * Contract Management Styles
+ */
+
+.hezarfen-contract-management {
+    margin: 20px 0;
+}
+
+.contract-management-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.contract-management-header h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.no-contracts {
+    text-align: center;
+    padding: 40px 20px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.no-contracts p {
+    margin: 0;
+    color: #666;
+    font-size: 16px;
+}
+
+/* Contract List Table */
+.contract-list table {
+    margin-top: 0;
+}
+
+.contract-list .status-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.status-badge.status-enabled {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.status-badge.status-disabled {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.row-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.row-actions .button {
+    padding: 4px 8px;
+    font-size: 12px;
+    line-height: 1.2;
+}
+
+/* Modal Styles */
+.hezarfen-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hezarfen-modal-content {
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    max-width: 800px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.hezarfen-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    border-bottom: 1px solid #ddd;
+    background: #f8f9fa;
+}
+
+.hezarfen-modal-header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.hezarfen-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hezarfen-modal-close:hover {
+    color: #000;
+}
+
+.hezarfen-modal-body {
+    padding: 25px;
+}
+
+.hezarfen-modal-footer {
+    padding: 20px 25px;
+    border-top: 1px solid #ddd;
+    background: #f8f9fa;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* Form Styles */
+#contract-form .form-table th {
+    width: 150px;
+    padding: 15px 10px 15px 0;
+}
+
+#contract-form .form-table td {
+    padding: 15px 0;
+}
+
+#contract-form .required {
+    color: #d63638;
+}
+
+#contract-form input.error,
+#contract-form select.error {
+    border-color: #d63638;
+    box-shadow: 0 0 2px rgba(214, 54, 56, 0.3);
+}
+
+#contract-form .description {
+    margin: 5px 0 0 0;
+    font-style: italic;
+    color: #666;
+}
+
+#contract-form label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+#contract-form label input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+/* Notice Styles */
+.hezarfen-notice {
+    margin: 0 0 20px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .contract-management-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+    
+    .hezarfen-modal-content {
+        width: 95%;
+        margin: 20px;
+    }
+    
+    .row-actions {
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .row-actions .button {
+        font-size: 11px;
+        padding: 3px 6px;
+    }
+    
+    #contract-form .form-table th,
+    #contract-form .form-table td {
+        display: block;
+        width: 100%;
+        padding: 10px 0;
+    }
+    
+    #contract-form .form-table th {
+        border-bottom: none;
+        padding-bottom: 5px;
+    }
+}
+
+/* Loading States */
+.button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Table Responsive */
+@media (max-width: 782px) {
+    .contract-list table,
+    .contract-list thead,
+    .contract-list tbody,
+    .contract-list th,
+    .contract-list td,
+    .contract-list tr {
+        display: block;
+    }
+    
+    .contract-list thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    
+    .contract-list tr {
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        padding: 10px;
+    }
+    
+    .contract-list td {
+        border: none;
+        position: relative;
+        padding: 8px 8px 8px 120px;
+    }
+    
+    .contract-list td:before {
+        content: attr(data-label) ": ";
+        position: absolute;
+        left: 8px;
+        width: 100px;
+        font-weight: bold;
+    }
+}

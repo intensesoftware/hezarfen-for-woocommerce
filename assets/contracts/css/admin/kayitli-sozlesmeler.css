@@ -1,0 +1,31 @@
+.wrap {
+	padding: 0 20px;
+}
+
+.intense-mss-page-selector-form {
+	float: left;
+}
+
+.intense-mss-search-form {
+	float: right;
+}
+
+.intense-mss-search-form .intense-mss-search-submit {
+    border-radius: 4px;
+}
+
+.intense-mss-agreements-table {
+	margin-top: 30px;
+	margin-bottom: 30px;
+	border-collapse: collapse;
+}
+
+.intense-mss-agreements-table th,
+.intense-mss-agreements-table td {
+	padding: 5px;
+}
+
+.intense-mss-page-selector-form .intense-mss-page-info {
+	margin-left: 10px;
+	vertical-align: middle;
+}

@@ -32,6 +32,9 @@ class Autoload {
 		$this->load_assets();
 
 		add_action( 'plugins_loaded', array( $this, 'load_packages' ) );
+		
+		// Initialize Contracts integration immediately
+		$this->init_contracts_integration();
 	}
 
 	/**
@@ -62,6 +65,7 @@ class Autoload {
 			array(
 				'api_url'            => WC_HEZARFEN_NEIGH_API_URL,
 				'select_option_text' => __( 'Select an option', 'hezarfen-for-woocommerce' ),
+				'no_results_text'    => __( 'No results found', 'hezarfen-for-woocommerce' ),
 			)
 		);
 
@@ -116,6 +120,9 @@ class Autoload {
 		require_once 'class-notification-provider.php';
 		require_once 'class-sms-automation.php';
 
+		// Load Contracts Integration
+		require_once 'contracts/class-contracts-integration.php';
+
 		if ( is_admin() ) {
 			require_once 'admin/order/OrderDetails.php';
 		}
@@ -130,6 +137,15 @@ class Autoload {
 		foreach ( $this->packages as $package_name ) {
 			require_once WC_HEZARFEN_UYGULAMA_YOLU . "packages/$package_name/$package_name.php";
 		}
+	}
+
+	/**
+	 * Initialize Contracts Integration
+	 * 
+	 * @return void
+	 */
+	public function init_contracts_integration() {
+		new \Hezarfen\Inc\Contracts\Contracts_Integration();
 	}
 }
 
