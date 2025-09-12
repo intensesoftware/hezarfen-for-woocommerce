@@ -51,7 +51,7 @@ class Shipping_Details {
     }
 
     public function get_neighborhood() {
-        return $this->order->get_meta('_shipping_neighborhood', true);
+        return $this->order->get_shipping_address_1();
     }
 
     public function get_address() {
