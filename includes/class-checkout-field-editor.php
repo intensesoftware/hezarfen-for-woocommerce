@@ -338,8 +338,8 @@ class Checkout_Field_Editor {
 		}
 
 		$field_id = sanitize_key( $_POST['field_id'] );
-		
-		if ( empty( $field_id ) ) {
+
+			if ( empty( $field_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Field ID is required.', 'hezarfen-for-woocommerce' ) ) );
 		}
 
@@ -445,10 +445,10 @@ class Checkout_Field_Editor {
 		}
 
 		$import_data = json_decode( stripslashes( $_POST['import_data'] ), true );
-		
+
 		if ( ! $import_data ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid import data.', 'hezarfen-for-woocommerce' ) ) );
-		}
+			}
 
 		// Import custom fields
 		if ( isset( $import_data['custom_fields'] ) ) {
@@ -472,15 +472,13 @@ class Checkout_Field_Editor {
 			'order' => array()
 		);
 		
-		// First, apply customizations to default fields
+		// Apply customizations to ALL default fields based on admin order
 		foreach ( $default_field_customizations as $field_id => $customizations ) {
 			$section = $customizations['section'] ?? 'billing';
 			
 			if ( isset( $fields[ $section ][ $field_id ] ) ) {
-				// Apply customizations to existing default field
-				$fields[ $section ][ $field_id ] = array_merge( $fields[ $section ][ $field_id ], array(
-					'priority' => $customizations['priority'] ?? $fields[ $section ][ $field_id ]['priority'],
-				));
+				// FORCE the priority from admin (this is the key fix)
+				$fields[ $section ][ $field_id ]['priority'] = $customizations['priority'];
 				
 				// Apply column width classes
 				$column_width = $customizations['column_width'] ?? 'full';
@@ -502,7 +500,7 @@ class Checkout_Field_Editor {
 				}
 			}
 		}
-		
+
 		// Add custom fields
 		foreach ( $custom_fields as $field_id => $field_data ) {
 			if ( ! $field_data['enabled'] ) {
@@ -514,43 +512,53 @@ class Checkout_Field_Editor {
 				$fields[ $section ] = array();
 			}
 
-			// Determine column width class
-			$column_width = $field_data['column_width'] ?? 'full';
+				// Determine column width class
+				$column_width = $field_data['column_width'] ?? 'full';
 			$width_classes = $this->get_width_classes( $column_width );
-			
-			$field_config = array(
-				'label'       => $field_data['label'],
-				'type'        => $field_data['type'],
-				'required'    => $field_data['required'],
-				'priority'    => $field_data['priority'],
-				'class'       => $width_classes,
-			);
+				
+				$field_config = array(
+					'label'       => $field_data['label'],
+					'type'        => $field_data['type'],
+					'required'    => $field_data['required'],
+					'priority'    => $field_data['priority'],
+					'class'       => $width_classes,
+				);
 
-			if ( ! empty( $field_data['placeholder'] ) ) {
-				$field_config['placeholder'] = $field_data['placeholder'];
-			}
+				if ( ! empty( $field_data['placeholder'] ) ) {
+					$field_config['placeholder'] = $field_data['placeholder'];
+				}
 
-			// Handle select and radio field options
-			if ( in_array( $field_data['type'], array( 'select', 'radio' ) ) && ! empty( $field_data['options'] ) ) {
-				$options = array( '' => __( 'Select an option', 'hezarfen-for-woocommerce' ) );
-				$lines = explode( "\n", $field_data['options'] );
-				foreach ( $lines as $line ) {
-					$line = trim( $line );
-					if ( ! empty( $line ) ) {
-						if ( strpos( $line, '|' ) !== false ) {
-							$parts = explode( '|', $line, 2 );
-							$key = trim( $parts[0] );
-							$value = trim( $parts[1] );
-							$options[ $key ] = $value;
-						} else {
-							$options[ $line ] = $line;
+				// Handle select and radio field options
+				if ( in_array( $field_data['type'], array( 'select', 'radio' ) ) && ! empty( $field_data['options'] ) ) {
+					$options = array( '' => __( 'Select an option', 'hezarfen-for-woocommerce' ) );
+					$lines = explode( "\n", $field_data['options'] );
+					foreach ( $lines as $line ) {
+						$line = trim( $line );
+						if ( ! empty( $line ) ) {
+							if ( strpos( $line, '|' ) !== false ) {
+								$parts = explode( '|', $line, 2 );
+								$key = trim( $parts[0] );
+								$value = trim( $parts[1] );
+								$options[ $key ] = $value;
+							} else {
+								$options[ $line ] = $line;
+							}
 						}
 					}
+					$field_config['options'] = $options;
 				}
-				$field_config['options'] = $options;
-			}
 
 			$fields[ $section ][ $field_id ] = $field_config;
+		}
+		
+		// Ensure all fields have proper priorities (for fields not in customizations)
+		foreach ( $fields as $section => $section_fields ) {
+			foreach ( $section_fields as $field_id => $field_data ) {
+				// If field doesn't have a custom priority, give it a high default priority
+				if ( ! isset( $field_data['priority'] ) ) {
+					$fields[ $section ][ $field_id ]['priority'] = 1000; // High priority = appears later
+				}
+			}
 		}
 		
 		// Apply proper row classes for half-width fields
