@@ -66,20 +66,9 @@ class Admin_Ajax {
 		add_action( 'wp_ajax_' . self::GET_HEPSIJET_BARCODE_PDF_ACTION, array( __CLASS__, 'get_hepsijet_barcode_pdf' ) );
 		add_action( 'wp_ajax_' . self::GET_KARGOGATE_BALANCE_ACTION, array( __CLASS__, 'get_kargogate_balance' ) );
 		
-		// Simple test endpoint for debugging
-		add_action( 'wp_ajax_hezarfen_mst_test_combined', array( __CLASS__, 'test_combined_endpoint' ) );
-		
-		// Test class loading endpoint
-		add_action( 'wp_ajax_hezarfen_mst_test_class_loading', array( __CLASS__, 'test_class_loading' ) );
-		
-		// Debug endpoint to test AJAX
-		add_action( 'wp_ajax_hezarfen_mst_debug_test', array( __CLASS__, 'debug_test' ) );
-		add_action( 'wp_ajax_hezarfen_mst_test_pdf_endpoint', array( __CLASS__, 'test_pdf_endpoint' ) );
 		add_action( 'wp_ajax_hezarfen_mst_get_return_dates', array( __CLASS__, 'get_return_dates' ) );
 			
-			error_log( 'Admin_Ajax::init() completed successfully' );
 		} catch ( Exception $e ) {
-			error_log( 'Admin_Ajax::init() error: ' . $e->getMessage() );
 		}
 	}
 
@@ -296,8 +285,6 @@ class Admin_Ajax {
 	 * @return void
 	 */
 	public static function get_hepsijet_barcode() {
-		// Debug log
-		error_log( 'Hepsijet barcode AJAX called' );
 		
 		check_ajax_referer( self::GET_HEPSIJET_BARCODE_NONCE );
 
@@ -312,8 +299,6 @@ class Admin_Ajax {
 
 		$delivery_no = sanitize_text_field( $_POST['delivery_no'] );
 		
-		// Debug log
-		error_log( 'Hepsijet barcode request for delivery: ' . $delivery_no );
 
 		// Create Hepsijet integration instance
 		$hepsijet_integration = new \Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration();
@@ -391,25 +376,6 @@ class Admin_Ajax {
 	}
 
 	/**
-	 * Debug test endpoint to verify AJAX is working.
-	 * 
-	 * @return void
-	 */
-	public static function debug_test() {
-		wp_send_json_success( array(
-			'message' => 'AJAX is working!',
-			'timestamp' => current_time( 'mysql' ),
-			'user_id' => get_current_user_id(),
-			'registered_actions' => array(
-				'hepsijet_barcode' => has_action( 'wp_ajax_' . self::GET_HEPSIJET_BARCODE_ACTION ),
-				'hepsijet_barcode_action' => self::GET_HEPSIJET_BARCODE_ACTION,
-				'generate_pdf' => has_action( 'wp_ajax_' . self::GENERATE_HEPSIJET_PDF_ACTION ),
-				'generate_pdf_action' => self::GENERATE_HEPSIJET_PDF_ACTION
-			)
-		) );
-	}
-
-	/**
 	 * Generate Hepsijet PDF with order info and barcode using TCPDF.
 	 * 
 	 * @return void
@@ -449,15 +415,12 @@ class Admin_Ajax {
 
 		// Generate PDF using TCPDF
 		try {
-			error_log( 'Starting PDF generation for order ' . $order_id . ' and delivery ' . $delivery_no );
 			$pdf_url = self::create_hepsijet_pdf( $order, $barcode_data, $delivery_no );
-			error_log( 'PDF generated successfully: ' . $pdf_url );
+
 			wp_send_json_success( array( 'pdf_url' => $pdf_url ) );
 		} catch ( Exception $e ) {
-			error_log( 'PDF generation failed: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine() );
 			wp_send_json_error( 'PDF generation failed: ' . $e->getMessage(), 500 );
 		} catch ( Error $e ) {
-			error_log( 'PDF generation error: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine() );
 			wp_send_json_error( 'PDF generation error: ' . $e->getMessage(), 500 );
 		}
 	}
@@ -472,47 +435,30 @@ class Admin_Ajax {
 	 * @throws Exception If PDF generation fails.
 	 */
 	private static function create_hepsijet_pdf( $order, $barcode_data, $delivery_no ) {
-		error_log( 'create_hepsijet_pdf called with order: ' . $order->get_id() . ', delivery: ' . $delivery_no );
-		
-		// Check if TCPDF is available (with Composer autoloader)
-		error_log( 'Checking for TCPDF class...' );
-		
 		// Try to load TCPDF manually if class doesn't exist
 		if ( ! class_exists( 'TCPDF' ) ) {
-			error_log( 'TCPDF class not found via Composer autoloader, trying manual load...' );
-			
 			// Check if vendor directory exists and try to include TCPDF directly
 			$tcpdf_path = WC_HEZARFEN_UYGULAMA_YOLU . 'vendor/tecnickcom/tcpdf/tcpdf.php';
 			if ( file_exists( $tcpdf_path ) ) {
-				error_log( 'TCPDF file found at: ' . $tcpdf_path );
 				require_once $tcpdf_path;
 				
 				if ( class_exists( 'TCPDF' ) ) {
-					error_log( 'TCPDF class loaded manually successfully!' );
 				} else {
-					error_log( 'TCPDF class still not available after manual load' );
-					error_log( 'Available classes: ' . print_r( get_declared_classes(), true ) );
 					throw new Exception( 'TCPDF not available. Please ensure TCPDF is installed via Composer.' );
 				}
 			} else {
-				error_log( 'TCPDF file not found at: ' . $tcpdf_path );
 				throw new Exception( 'TCPDF file not found. Please ensure TCPDF is installed via Composer.' );
 			}
 		} else {
-			error_log( 'TCPDF class found successfully via autoloader!' );
 		}
-
-		error_log( 'Creating TCPDF instance...' );
 		
 		// Create new PDF document with fallback constants
 		$orientation = defined( 'PDF_PAGE_ORIENTATION' ) ? PDF_PAGE_ORIENTATION : 'P';
 		$unit = defined( 'PDF_UNIT' ) ? PDF_UNIT : 'mm';
 		$format = defined( 'PDF_PAGE_FORMAT' ) ? PDF_PAGE_FORMAT : 'A4';
 		
-		error_log( 'TCPDF constants - orientation: ' . $orientation . ', unit: ' . $unit . ', format: ' . $format );
 		
 		$pdf = new \TCPDF( $orientation, $unit, $format, true, 'UTF-8', false );
-		error_log( 'TCPDF instance created successfully' );
 
 		// Set document information
 		$pdf->SetCreator( 'Hezarfen for WooCommerce' );
@@ -628,7 +574,6 @@ class Admin_Ajax {
 
 			if ( is_wp_error( $response ) ) {
 				// Log the WP_Error for debugging
-				error_log( 'Hepsijet return dates WP_Error: ' . $response->get_error_message() );
 				wp_send_json_success( array(
 					'dates' => array(),
 					'message' => 'Unable to fetch return dates at this time'
@@ -638,8 +583,6 @@ class Admin_Ajax {
 			// Response is already decoded from the integration method
 			$data = $response;
 
-			// Log the response for debugging
-			error_log( 'Hepsijet return dates API response: ' . print_r( $data, true ) );
 
 			// Check if we have dates array
 			if ( isset( $data['dates'] ) && is_array( $data['dates'] ) && ! empty( $data['dates'] ) ) {
@@ -666,170 +609,11 @@ class Admin_Ajax {
 			}
 
 		} catch ( Exception $e ) {
-			// Log the exception for debugging
-			error_log( 'Hepsijet return dates Exception: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine() );
 			wp_send_json_success( array(
 				'dates' => array(),
 				'message' => 'Unable to fetch return dates at this time'
 			) );
 		}
-	}
-
-	/**
-	 * Test class loading specifically.
-	 * 
-	 * @return void
-	 */
-	public static function test_class_loading() {
-		error_log( '=== test_class_loading START ===' );
-		
-		try {
-			// Check user capabilities
-			if ( ! current_user_can( 'manage_woocommerce' ) ) {
-				error_log( 'User capability check failed' );
-				wp_send_json_error( 'Insufficient permissions', 403 );
-			}
-			error_log( 'User capability check passed' );
-
-			// Check if HEZARFEN_MST_PATH is defined
-			if ( ! defined( 'HEZARFEN_MST_PATH' ) ) {
-				error_log( 'HEZARFEN_MST_PATH constant not defined' );
-				wp_send_json_error( 'HEZARFEN_MST_PATH not defined', 500 );
-			}
-			error_log( 'HEZARFEN_MST_PATH defined: ' . HEZARFEN_MST_PATH );
-
-			// Check if the class file exists
-			$class_file = HEZARFEN_MST_PATH . 'includes/courier-companies/class-hepsijet-integration.php';
-			error_log( 'Checking if class file exists: ' . $class_file );
-			error_log( 'File exists: ' . (file_exists($class_file) ? 'YES' : 'NO') );
-			
-			// Check if traits exist
-			$helper_trait_file = HEZARFEN_MST_PATH . 'includes/trait-helper.php';
-			error_log( 'Helper trait file exists: ' . (file_exists($helper_trait_file) ? 'YES' : 'NO') );
-
-			// Try to manually include the file
-			error_log( 'Attempting to manually include class file...' );
-			require_once $class_file;
-			error_log( 'Class file included successfully' );
-
-			// Check if class exists after include (with namespace)
-			if ( ! class_exists( 'Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration' ) ) {
-				error_log( 'Class still not found after manual include (with namespace)' );
-				
-				// Try without namespace as fallback
-				if ( ! class_exists( 'Courier_Hepsijet_Integration' ) ) {
-					error_log( 'Class not found with or without namespace' );
-					wp_send_json_error( 'Class not found after manual include', 500 );
-				} else {
-					error_log( 'Class found without namespace' );
-				}
-			} else {
-				error_log( 'Class found with namespace' );
-			}
-			error_log( 'Class found after manual include' );
-
-			// Try to instantiate the class (with namespace)
-			error_log( 'Attempting to instantiate class...' );
-			try {
-				$instance = new \Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration();
-				error_log( 'Class instantiated successfully with namespace' );
-			} catch ( Exception $e ) {
-				error_log( 'Failed to instantiate with namespace: ' . $e->getMessage() );
-				// Try without namespace as fallback
-				$instance = new Courier_Hepsijet_Integration();
-				error_log( 'Class instantiated successfully without namespace' );
-			}
-
-			wp_send_json_success( array(
-				'message' => 'Class loading test passed successfully',
-				'timestamp' => current_time( 'mysql' ),
-				'user_id' => get_current_user_id(),
-				'hezarfen_mst_path' => HEZARFEN_MST_PATH,
-				'class_file' => $class_file,
-				'class_exists' => class_exists( 'Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration' )
-			) );
-			
-		} catch ( Exception $e ) {
-			error_log( 'Class loading test failed with Exception: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine() );
-			wp_send_json_error( 'Class loading test failed: ' . $e->getMessage(), 500 );
-		} catch ( Error $e ) {
-			error_log( 'Class loading test failed with Error: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine() );
-			wp_send_json_error( 'Class loading test failed: ' . $e->getMessage(), 500 );
-		}
-		
-		error_log( '=== test_class_loading END ===' );
-	}
-
-	/**
-	 * Test combined endpoint without complex logic.
-	 * 
-	 * @return void
-	 */
-	public static function test_combined_endpoint() {
-		error_log( '=== test_combined_endpoint START ===' );
-		
-		try {
-			// Check user capabilities
-			if ( ! current_user_can( 'manage_woocommerce' ) ) {
-				error_log( 'User capability check failed' );
-				wp_send_json_error( 'Insufficient permissions', 403 );
-			}
-			error_log( 'User capability check passed' );
-
-			// Check if Courier_Hepsijet_Integration class exists (with namespace)
-			if ( ! class_exists( 'Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration' ) ) {
-				error_log( 'Courier_Hepsijet_Integration class not found with namespace' );
-				
-				// Try to check if the file exists
-				$class_file = HEZARFEN_MST_PATH . 'includes/courier-companies/class-hepsijet-integration.php';
-				error_log( 'Checking if class file exists: ' . $class_file );
-				error_log( 'File exists: ' . (file_exists($class_file) ? 'YES' : 'NO') );
-				
-				// Try to check if traits exist
-				$helper_trait_file = HEZARFEN_MST_PATH . 'includes/trait-helper.php';
-				error_log( 'Helper trait file exists: ' . (file_exists($helper_trait_file) ? 'YES' : 'NO') );
-				
-				wp_send_json_error( 'Hepsijet integration class not available', 500 );
-			}
-			error_log( 'Courier_Hepsijet_Integration class found with namespace' );
-
-			// Check if wc_get_order function exists
-			if ( ! function_exists( 'wc_get_order' ) ) {
-				error_log( 'wc_get_order function not found' );
-				wp_send_json_error( 'WooCommerce not available', 500 );
-			}
-			error_log( 'wc_get_order function found' );
-
-			wp_send_json_success( array(
-				'message' => 'Basic checks passed successfully',
-				'timestamp' => current_time( 'mysql' ),
-				'user_id' => get_current_user_id(),
-				'post_data' => $_POST
-			) );
-			
-		} catch ( Exception $e ) {
-			error_log( 'Test combined endpoint failed with Exception: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine() );
-			wp_send_json_error( 'Test failed: ' . $e->getMessage(), 500 );
-		} catch ( Error $e ) {
-			error_log( 'Test combined endpoint failed with Error: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine() );
-			wp_send_json_error( 'Test failed: ' . $e->getMessage(), 500 );
-		}
-		
-		error_log( '=== test_combined_endpoint END ===' );
-	}
-
-	/**
-	 * Test PDF endpoint without actual PDF generation.
-	 * 
-	 * @return void
-	 */
-	public static function test_pdf_endpoint() {
-		wp_send_json_success( array(
-			'message' => 'PDF endpoint is working!',
-			'timestamp' => current_time( 'mysql' ),
-			'user_id' => get_current_user_id(),
-			'post_data' => $_POST
-		) );
 	}
 
 	/**
@@ -839,64 +623,48 @@ class Admin_Ajax {
 	 * @return void
 	 */
 	public static function get_hepsijet_barcode_pdf() {
-		error_log( '=== get_hepsijet_barcode_pdf START ===' );
 		
 		try {
 			check_ajax_referer( self::GET_HEPSIJET_BARCODE_PDF_NONCE );
-			error_log( 'Nonce check passed' );
 
 			// Check user capabilities
 			if ( ! current_user_can( 'manage_woocommerce' ) ) {
-				error_log( 'User capability check failed' );
 				wp_send_json_error( 'Insufficient permissions', 403 );
 			}
-			error_log( 'User capability check passed' );
 
 			if ( empty( $_POST['delivery_no'] ) || empty( $_POST['order_id'] ) ) {
-				error_log( 'Missing parameters: delivery_no=' . (isset($_POST['delivery_no']) ? $_POST['delivery_no'] : 'NOT_SET') . ', order_id=' . (isset($_POST['order_id']) ? $_POST['order_id'] : 'NOT_SET') );
 				wp_send_json_error( 'Missing required parameters', 400 );
 			}
 
 			$delivery_no = sanitize_text_field( $_POST['delivery_no'] );
 			$order_id = absint( $_POST['order_id'] );
-			error_log( 'Parameters sanitized: delivery_no=' . $delivery_no . ', order_id=' . $order_id );
 
 			// Get order info
 			$order = wc_get_order( $order_id );
 			if ( ! $order ) {
-				error_log( 'Order not found for ID: ' . $order_id );
 				wp_send_json_error( 'Order not found', 404 );
 			}
-			error_log( 'Order found: ' . $order->get_order_number() );
 
 			// Check if Courier_Hepsijet_Integration class exists (with namespace)
 			if ( ! class_exists( 'Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration' ) ) {
-				error_log( 'Courier_Hepsijet_Integration class not found with namespace' );
 				wp_send_json_error( 'Hepsijet integration class not available', 500 );
 			}
-			error_log( 'Courier_Hepsijet_Integration class found with namespace' );
 
 			// Get barcode data
 			$hepsijet_integration = new \Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration();
-			error_log( 'Hepsijet integration instance created' );
 			
 			$barcode_data = $hepsijet_integration->get_barcode( $delivery_no );
-			error_log( 'Barcode data retrieved: ' . (is_wp_error($barcode_data) ? 'WP_ERROR: ' . $barcode_data->get_error_message() : (is_array($barcode_data) ? 'Array with ' . count($barcode_data) . ' items' : 'Type: ' . gettype($barcode_data))) );
 			
 			if ( is_wp_error( $barcode_data ) ) {
-				error_log( 'Barcode data is WP_Error: ' . $barcode_data->get_error_message() );
 				wp_send_json_error( $barcode_data->get_error_message(), 500 );
 			}
 
 			if ( $barcode_data === false ) {
-				error_log( 'Barcode data is false' );
 				wp_send_json_error( 'Barcode not found', 404 );
 			}
 
 			// Generate PDF using TCPDF
-			error_log( 'Starting combined barcode+PDF generation for order ' . $order_id . ' and delivery ' . $delivery_no );
 			$pdf_url = self::create_hepsijet_pdf( $order, $barcode_data, $delivery_no );
-			error_log( 'Combined barcode+PDF generated successfully: ' . $pdf_url );
 			
 			// Return both the PDF URL and the barcode data for immediate display
 			wp_send_json_success( array(
@@ -906,17 +674,12 @@ class Admin_Ajax {
 			) );
 			
 		} catch ( Exception $e ) {
-			error_log( 'Combined barcode+PDF generation failed with Exception: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine() );
 			wp_send_json_error( 'PDF generation failed: ' . $e->getMessage(), 500 );
 		} catch ( Error $e ) {
-			error_log( 'Combined barcode+PDF generation failed with Error: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine() );
 			wp_send_json_error( 'PDF generation error: ' . $e->getMessage(), 500 );
 		} catch ( Throwable $e ) {
-			error_log( 'Combined barcode+PDF generation failed with Throwable: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine() );
 			wp_send_json_error( 'PDF generation error: ' . $e->getMessage(), 500 );
 		}
-		
-		error_log( '=== get_hepsijet_barcode_pdf END ===' );
 	}
 
 	/**

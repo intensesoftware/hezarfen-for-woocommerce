@@ -88,8 +88,6 @@ class Post_Order_Processor {
 			return;
 		}
 
-		// Debug: Log email class for troubleshooting
-		error_log( 'Hezarfen Email Debug - Email Class: ' . get_class( $email ) );
 
 		// Include contracts in processing order emails (since agreements are created when order becomes processing)
 		$email_class = get_class( $email );
@@ -99,8 +97,6 @@ class Post_Order_Processor {
 		if ( strpos( $email_class, 'Processing' ) !== false || strpos( $email_class, 'processing' ) !== false ) {
 			$should_include = true;
 		}
-
-		error_log( 'Hezarfen Email Debug - Should Include: ' . ( $should_include ? 'YES' : 'NO' ) );
 
 		if ( $should_include ) {
 			self::render_contracts_in_email( $order );
@@ -183,10 +179,6 @@ class Post_Order_Processor {
 				array( '%d', '%s', '%s', '%s', '%s' )
 			);
 			
-			// Log any database errors
-			if ( false === $result ) {
-				error_log( 'Hezarfen MSS: Failed to save contract for order ' . $order_id . '. Error: ' . $wpdb->last_error );
-			}
 		}
 	}
 	
@@ -218,10 +210,6 @@ class Post_Order_Processor {
 		$sent = wp_mail( $admin_email, $subject, $message );
 		remove_filter( 'wp_mail_content_type', array( __CLASS__, 'set_html_content_type' ) );
 		
-		// Log email sending result
-		if ( ! $sent ) {
-			error_log( 'Hezarfen MSS: Failed to send admin notification email for order ' . $order_id );
-		}
 	}
 	
 	/**
@@ -280,12 +268,10 @@ class Post_Order_Processor {
 	 */
 	private static function render_contracts_in_email( $order ) {
 		$order_id = $order->get_id();
-		error_log( 'Hezarfen render_contracts_in_email called for order: ' . $order_id );
 
 		// Check if email was already sent for this order
 		$email_sent = $order->get_meta( '_in_mss_eposta_gonderildi_mi', true );
 		if ( 1 === $email_sent ) {
-			error_log( 'Hezarfen Email already sent for order: ' . $order_id );
 			return;
 		}
 
@@ -295,10 +281,8 @@ class Post_Order_Processor {
 
 		// Get saved contracts from database
 		$contracts = self::get_saved_contracts( $order_id );
-		error_log( 'Hezarfen Found ' . count( $contracts ) . ' contracts for order: ' . $order_id );
 		
 		if ( empty( $contracts ) ) {
-			error_log( 'Hezarfen No contracts found for order: ' . $order_id );
 			return;
 		}
 

@@ -94,8 +94,6 @@ class Hezarfen_Install {
 				$existing_rules[] = $new_rule;
 				$migration_performed = true;
 				
-				// Log the migration
-				error_log( 'Hezarfen: Migrated legacy NetGSM SMS settings to new automation system' );
 			}
 		}
 		
@@ -124,8 +122,6 @@ class Hezarfen_Install {
 				$existing_rules[] = $new_rule;
 				$migration_performed = true;
 				
-				// Log the migration
-				error_log( 'Hezarfen: Migrated legacy PandaSMS SMS settings to new automation system' );
 			}
 		}
 		
