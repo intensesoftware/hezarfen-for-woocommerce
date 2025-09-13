@@ -83,7 +83,6 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                                         echo '</span><p class="text-xs text-gray-600;" style="line-height: normal !important;"> ' . esc_html__('Free integration, automatic tracking number entry, order status update', 'hezarfen-for-woocommerce') . '</p>';
                                                     }
                                                 } catch (Exception $e) {
-                                                    error_log('Hepsijet pricing exception: ' . $e->getMessage());
                                                 }
                                                 ?>
                                             </span>
