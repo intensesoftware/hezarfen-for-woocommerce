@@ -237,7 +237,7 @@ jQuery(document).ready(($)=>{
   // Load available return dates from API
   function loadReturnDates() {
     const returnDateSelect = $('#hepsijet-return-date');
-    returnDateSelect.html('<option value="">Loading available dates...</option>');
+        returnDateSelect.html(`<option value="">${hezarfen_mst_backend.loading_available_dates}</option>`);
     
     // Get order shipping city and district
     const orderId = $('#create-hepsijet-shipment').data('order_id');
@@ -304,11 +304,11 @@ jQuery(document).ready(($)=>{
         }
       } else {
         console.log('Response not successful or missing data:', response);
-        returnDateSelect.html('<option value="">Error loading dates</option>');
+        returnDateSelect.html(`<option value="">${hezarfen_mst_backend.error_loading_dates}</option>`);
       }
     }).fail(function(xhr, status, error) {
       console.error('Failed to load return dates:', {xhr, status, error});
-      returnDateSelect.html('<option value="">Error loading dates</option>');
+      returnDateSelect.html(`<option value="">${hezarfen_mst_backend.error_loading_dates}</option>`);
     });
   }
 
@@ -366,7 +366,7 @@ jQuery(document).ready(($)=>{
     }
 
     // Disable button and show loading state
-    $button.prop('disabled', true).text('Gönderi oluşturuluyor...');
+    $button.prop('disabled', true).text(hezarfen_mst_backend.creating_shipment_text);
 
     const data = {
       action: hezarfen_mst_backend.create_hepsijet_shipment_action,
@@ -421,7 +421,7 @@ jQuery(document).ready(($)=>{
     }, 10);
 
     // Set loading state
-    content.html('<p class="text-sm text-gray-600">Loading shipment details...</p>');
+    content.html(`<p class="text-sm text-gray-600">${hezarfen_mst_backend.loading_shipment_details}</p>`);
 
     // Make AJAX request
     const data = {
@@ -462,7 +462,7 @@ jQuery(document).ready(($)=>{
     }
 
     // Set loading state
-    $button.prop('disabled', true).text('Loading...');
+    $button.prop('disabled', true).text(hezarfen_mst_backend.loading_text);
 
     // Show barcode modal
     showBarcodeModal(deliveryNo, orderId, function() {
@@ -484,7 +484,7 @@ jQuery(document).ready(($)=>{
     const originalText = $button.text();
 
     // Set loading state
-    $button.prop('disabled', true).text('İptal ediliyor...');
+    $button.prop('disabled', true).text(hezarfen_mst_backend.cancelling_shipment_text);
 
     const orderId = $button.data('order_id');
 
@@ -677,7 +677,7 @@ jQuery(document).ready(($)=>{
     }, 10);
 
     // Show loading state
-    pdfFrame.parent().html('<p class="text-sm text-gray-600">Preparing barcode label...</p>');
+    pdfFrame.parent().html(`<p class="text-sm text-gray-600">${hezarfen_mst_backend.preparing_barcode_text}</p>`);
 
     // Single AJAX call to get everything
     const data = {
@@ -912,7 +912,7 @@ jQuery(document).ready(($)=>{
     // Show loading state
     const downloadBtn = $('#download-barcode-pdf');
     const originalText = downloadBtn.text();
-    downloadBtn.prop('disabled', true).text('Generating PDF...');
+    downloadBtn.prop('disabled', true).text(hezarfen_mst_backend.generating_pdf_text);
 
     // Make AJAX request to generate PDF
     const data = {
@@ -972,7 +972,7 @@ jQuery(document).ready(($)=>{
   // Format Hepsijet details response
   function formatHepsijetDetails(data) {
     if (!data || !data.data || !Array.isArray(data.data) || data.data.length === 0) {
-      return '<div class="bg-yellow-50 border border-yellow-200 rounded p-3"><p class="text-sm text-yellow-600">No tracking information available</p></div>';
+      return `<div class="bg-yellow-50 border border-yellow-200 rounded p-3"><p class="text-sm text-yellow-600">${hezarfen_mst_backend.no_tracking_information}</p></div>`;
     }
 
     const shipmentData = data.data[0];
@@ -1182,7 +1182,7 @@ jQuery(document).ready(($)=>{
     const balanceElement = $('#kargogate-balance');
     
     // Set loading state
-    balanceElement.text('Loading...');
+    balanceElement.text(hezarfen_mst_backend.loading_text);
     
     const data = {
       action: hezarfen_mst_backend.get_kargogate_balance_action,
@@ -1194,11 +1194,11 @@ jQuery(document).ready(($)=>{
         // Use HTML content since the formatted balance includes HTML
         balanceElement.html(response.data.balance.formatted);
       } else {
-        balanceElement.text('Error loading balance');
+        balanceElement.text(hezarfen_mst_backend.error_loading_balance);
         console.error('Balance error:', response.data);
       }
     }).fail(function(xhr, status, error) {
-      balanceElement.text('Connection error');
+      balanceElement.text(hezarfen_mst_backend.connection_error);
       console.error('Balance AJAX error:', error);
     });
   }
