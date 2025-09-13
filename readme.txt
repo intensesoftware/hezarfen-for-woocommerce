@@ -11,7 +11,7 @@ Stable tag: 2.6.0
 TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ! Türkiye'nin Lider WooCommerce Kargo Takip Eklentisi: 23 kargo, SMS, MSS sözleşmeleri, ilçe/mahalle, vergi alanlar
 == Description ==
 
-**Tamamen Ücretsiz!** Hezarfen, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo, ödeme ve sözleşme yönetim eklentisidir. Bu WooCommerce kargo entegrasyon eklentisi, 23 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel WooCommerce kargo takip deneyimi sunar, Mesafeli Satış Sözleşmesi (MSS) desteği sağlar ve Türkiye'ye özgü mahalle, fatura ve vergi alanlarıyla ödeme ekranınızı Türkiye'ye uyumlu hale getirir.
+**Tamamen Ücretsiz!** Intense&Hepsijet İşbirliğiyle; Hezarfen kullanıcılarına Hepsijet 1-4 Desi 69,99TL+KDV - Hezarfen, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo, ödeme ve sözleşme yönetim eklentisidir. Bu WooCommerce kargo entegrasyon eklentisi, 23 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel WooCommerce kargo takip deneyimi sunar, Mesafeli Satış Sözleşmesi (MSS) desteği sağlar ve Türkiye'ye özgü mahalle, fatura ve vergi alanlarıyla ödeme ekranınızı Türkiye'ye uyumlu hale getirir.
 
 = 🚀 2000+ WooCommerce Sitesi tarafından kullanılıyor! =
 
