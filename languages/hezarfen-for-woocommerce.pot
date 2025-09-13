@@ -26,7 +26,7 @@ msgid "Accepted:"
 msgstr ""
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:165
-msgid "Access KargoGate"
+msgid "Access Hepsijet ile Avantajlı Kargo Fiyatları"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:927
@@ -838,7 +838,7 @@ msgid "Go to intense.com.tr"
 msgstr ""
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:166
-msgid "Go to My Account → Click KargoGate"
+msgid "Go to My Account → Click Hepsijet ile Avantajlı Kargo Fiyatları"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet.php:38
@@ -1021,7 +1021,7 @@ msgid "Integration Shipments"
 msgstr ""
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:230
-msgid "Intense KargoGate Balance:"
+msgid "Intense Hepsijet ile Avantajlı Kargo Fiyatları Balance:"
 msgstr ""
 
 #. Author of the plugin

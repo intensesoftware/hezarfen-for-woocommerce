@@ -965,7 +965,7 @@ class Admin_Ajax {
 	}
 
 	/**
-	 * Gets KargoGate wallet balance.
+	 * Gets Hepsijet ile Avantajlı Kargo Fiyatları wallet balance.
 	 * 
 	 * @return void
 	 */

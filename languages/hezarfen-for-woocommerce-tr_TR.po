@@ -6,7 +6,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2025-09-13 07:16+0000\n"
+"PO-Revision-Date: 2025-09-13 07:23+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -33,8 +33,8 @@ msgid "Accepted:"
 msgstr "Kabul Edildi:"
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:165
-msgid "Access KargoGate"
-msgstr "KargoGate'e Erişim"
+msgid "Access Hepsijet ile Avantajlı Kargo Fiyatları"
+msgstr "Hepsijet ile Avantajlı Kargo Fiyatları'na Erişim"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:927
 msgid "Action"
@@ -883,8 +883,8 @@ msgid "Go to intense.com.tr"
 msgstr "intense.com.tr'ye git"
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:166
-msgid "Go to My Account → Click KargoGate"
-msgstr "Hesabım → KargoGate'e tıklayın"
+msgid "Go to My Account → Click Hepsijet ile Avantajlı Kargo Fiyatları"
+msgstr "Hesabım → Hepsijet ile Avantajlı Kargo Fiyatları'na tıklayın"
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet.php:38
 #: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-entegrasyon.php:38
@@ -1113,8 +1113,8 @@ msgid "Integration Shipments"
 msgstr "Entegrasyon Gönderileri"
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:230
-msgid "Intense KargoGate Balance:"
-msgstr "Intense KargoGate Bakiyesi:"
+msgid "Intense Hepsijet ile Avantajlı Kargo Fiyatları Balance:"
+msgstr "Intense Hepsijet ile Avantajlı Kargo Fiyatları Bakiyesi:"
 
 #. Author of the plugin
 msgid "Intense Yazılım Ltd."

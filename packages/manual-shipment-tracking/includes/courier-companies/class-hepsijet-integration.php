@@ -846,12 +846,12 @@ class Courier_Hepsijet_Integration {
     }
 
     /**
-     * Get KargoGate wallet balance
+     * Get Hepsijet ile Avantajlı Kargo Fiyatları wallet balance
      *
      * @return array|WP_Error
      */
     public function get_kargogate_balance() {
-        // Use KargoGate namespace for wallet balance
+        // Use Hepsijet ile Avantajlı Kargo Fiyatları namespace for wallet balance
         $kargogate_url = home_url('/wp-json/kargogate/v1/wallet/balance?format=formatted');
         
         $headers = array(
@@ -865,7 +865,7 @@ class Courier_Hepsijet_Integration {
         ));
 
         if ( is_wp_error( $response ) ) {
-            $this->log( 'KargoGate Balance Request Error', $response->get_error_message() );
+            $this->log( 'Hepsijet ile Avantajlı Kargo Fiyatları Balance Request Error', $response->get_error_message() );
             return $response;
         }
 
@@ -873,7 +873,7 @@ class Courier_Hepsijet_Integration {
         $status_code = wp_remote_retrieve_response_code( $response );
 
         if ( $status_code !== 200 ) {
-            $this->log( 'KargoGate Balance Request Failed', array(
+            $this->log( 'Hepsijet ile Avantajlı Kargo Fiyatları Balance Request Failed', array(
                 'status_code' => $status_code,
                 'body' => $body
             ));
@@ -883,11 +883,11 @@ class Courier_Hepsijet_Integration {
         $data = json_decode( $body, true );
 
         if ( json_last_error() !== JSON_ERROR_NONE ) {
-            $this->log( 'KargoGate Balance JSON Decode Error', json_last_error_msg() );
+            $this->log( 'Hepsijet ile Avantajlı Kargo Fiyatları Balance JSON Decode Error', json_last_error_msg() );
             return new \WP_Error( 'json_error', 'Invalid JSON response' );
         }
 
-        $this->log( 'KargoGate Balance Response', $data );
+        $this->log( 'Hepsijet ile Avantajlı Kargo Fiyatları Balance Response', $data );
 
         if ( ! isset( $data['balance'] ) ) {
             return new \WP_Error( 'invalid_response', __( 'Invalid balance response', 'hezarfen-for-woocommerce' ) );

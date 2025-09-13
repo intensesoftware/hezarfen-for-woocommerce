@@ -162,8 +162,8 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                             <div class="flex items-start gap-3">
                                                 <span class="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">2</span>
                                                 <div>
-                                                    <p class="text-sm font-medium text-gray-800"><?php esc_html_e('Access KargoGate', 'hezarfen-for-woocommerce'); ?></p>
-                                                    <p class="text-xs text-gray-600"><?php esc_html_e('Go to My Account → Click KargoGate', 'hezarfen-for-woocommerce'); ?></p>
+                                                    <p class="text-sm font-medium text-gray-800"><?php esc_html_e('Access Hepsijet ile Avantajlı Kargo Fiyatları', 'hezarfen-for-woocommerce'); ?></p>
+                                                    <p class="text-xs text-gray-600"><?php esc_html_e('Go to My Account → Click Hepsijet ile Avantajlı Kargo Fiyatları', 'hezarfen-for-woocommerce'); ?></p>
                                                 </div>
                                             </div>
                                             <div class="flex items-start gap-3">
@@ -227,7 +227,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                             <!-- Wallet Balance Display -->
                             <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                                 <div class="flex items-center justify-between">
-                                    <span class="text-sm font-medium text-blue-800"><?php esc_html_e('Intense KargoGate Balance:', 'hezarfen-for-woocommerce'); ?></span>
+                                    <span class="text-sm font-medium text-blue-800"><?php esc_html_e('Intense Hepsijet ile Avantajlı Kargo Fiyatları Balance:', 'hezarfen-for-woocommerce'); ?></span>
                                     <div class="flex items-center gap-2">
                                         <span id="kargogate-balance" class="text-sm font-bold text-blue-600">
                                             <?php echo esc_html__('Click to check', 'hezarfen-for-woocommerce'); ?>

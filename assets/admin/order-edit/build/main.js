@@ -498,7 +498,7 @@ jQuery(document).ready($ => {
     });
   });
 
-  // Handle KargoGate balance check button
+  // Handle Hepsijet ile Avantajlı Kargo Fiyatları balance check button
   $(document).on('click', '#check-kargogate-balance', function (e) {
     e.preventDefault();
     const $button = $(this);
@@ -1098,7 +1098,7 @@ jQuery(document).ready($ => {
     }
   }
 
-  // Load KargoGate wallet balance
+  // Load Hepsijet ile Avantajlı Kargo Fiyatları wallet balance
   function loadKargoGateBalance() {
     const balanceElement = $('#kargogate-balance');
 
