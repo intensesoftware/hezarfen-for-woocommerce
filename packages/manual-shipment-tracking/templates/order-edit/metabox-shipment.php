@@ -334,7 +334,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                     $order = wc_get_order($order_id);
                     $all_meta = $order->get_meta_data();
                     $integration_shipments = array();
-                    $manual_shipments = array();
+                    $manual_shipments = Helper::get_all_shipment_data($order_id);
 
                     // Find Hepsijet shipments in meta data
                     foreach ($all_meta as $meta) {
@@ -355,7 +355,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                     }
 
                     $has_integration_shipments = count($integration_shipments) > 0;
-                    $has_manual_shipments = false; // No manual shipments for now
+                    $has_manual_shipments = count($manual_shipments) > 0;
 
                     if (!$has_integration_shipments && !$has_manual_shipments) :
                     ?>
