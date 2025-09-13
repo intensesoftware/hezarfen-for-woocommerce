@@ -147,7 +147,39 @@ class Admin_Orders {
 				'new_shipment_data_action' => Admin_Ajax::NEW_SHIPMENT_DATA_ACTION,
 				'new_shipment_data_nonce'  => wp_create_nonce( Admin_Ajax::NEW_SHIPMENT_DATA_NONCE ),
 				'new_shipment_courier_html_name' => Admin_Ajax::COURIER_HTML_NAME,
-				'new_shipment_tracking_num_html_name' => Admin_Ajax::TRACKING_NUM_HTML_NAME
+				'new_shipment_tracking_num_html_name' => Admin_Ajax::TRACKING_NUM_HTML_NAME,
+				'create_hepsijet_shipment_action' => Admin_Ajax::CREATE_HEPSIJET_SHIPMENT_ACTION,
+				'create_hepsijet_shipment_nonce'  => wp_create_nonce( Admin_Ajax::CREATE_HEPSIJET_SHIPMENT_NONCE ),
+				'track_hepsijet_shipment_action' => Admin_Ajax::TRACK_HEPSIJET_SHIPMENT_ACTION,
+				'track_hepsijet_shipment_nonce'  => wp_create_nonce( Admin_Ajax::TRACK_HEPSIJET_SHIPMENT_NONCE ),
+				'cancel_hepsijet_shipment_action' => Admin_Ajax::CANCEL_HEPSIJET_SHIPMENT_ACTION,
+				'cancel_hepsijet_shipment_nonce'  => wp_create_nonce( Admin_Ajax::CANCEL_HEPSIJET_SHIPMENT_NONCE ),
+				'get_hepsijet_barcode_action' => Admin_Ajax::GET_HEPSIJET_BARCODE_ACTION,
+				'get_hepsijet_barcode_nonce'  => wp_create_nonce( Admin_Ajax::GET_HEPSIJET_BARCODE_NONCE ),
+				'get_order_info_action' => Admin_Ajax::GET_ORDER_INFO_ACTION,
+				'get_order_info_nonce'  => wp_create_nonce( Admin_Ajax::GET_ORDER_INFO_NONCE ),
+				'generate_hepsijet_pdf_action' => Admin_Ajax::GENERATE_HEPSIJET_PDF_ACTION,
+				'generate_hepsijet_pdf_nonce'  => wp_create_nonce( Admin_Ajax::GENERATE_HEPSIJET_PDF_ACTION ),
+				'get_hepsijet_barcode_pdf_action' => Admin_Ajax::GET_HEPSIJET_BARCODE_PDF_ACTION,
+				'get_hepsijet_barcode_pdf_nonce'  => wp_create_nonce( Admin_Ajax::GET_HEPSIJET_BARCODE_PDF_NONCE ),
+				'get_return_dates_action' => 'hezarfen_mst_get_return_dates',
+				'get_return_dates_nonce'  => wp_create_nonce( 'hezarfen_mst_get_return_dates' ),
+				'get_kargogate_balance_action' => Admin_Ajax::GET_KARGOGATE_BALANCE_ACTION,
+				'get_kargogate_balance_nonce'  => wp_create_nonce( Admin_Ajax::GET_KARGOGATE_BALANCE_NONCE ),
+				'checking_balance_text' => __( 'Checking...', 'hezarfen-for-woocommerce' ),
+				// Loading and status messages
+				'loading_shipment_details' => __( 'Loading shipment details...', 'hezarfen-for-woocommerce' ),
+				'loading_available_dates' => __( 'Loading available dates...', 'hezarfen-for-woocommerce' ),
+				'loading_text' => __( 'Loading...', 'hezarfen-for-woocommerce' ),
+				'creating_shipment_text' => __( 'Gönderi oluşturuluyor...', 'hezarfen-for-woocommerce' ),
+				'cancelling_shipment_text' => __( 'İptal ediliyor...', 'hezarfen-for-woocommerce' ),
+				'preparing_barcode_text' => __( 'Preparing barcode label...', 'hezarfen-for-woocommerce' ),
+				'generating_pdf_text' => __( 'Generating PDF...', 'hezarfen-for-woocommerce' ),
+				// Error messages
+				'error_loading_dates' => __( 'Error loading dates', 'hezarfen-for-woocommerce' ),
+				'error_loading_balance' => __( 'Error loading balance', 'hezarfen-for-woocommerce' ),
+				'connection_error' => __( 'Connection error', 'hezarfen-for-woocommerce' ),
+				'no_tracking_information' => __( 'No tracking information available', 'hezarfen-for-woocommerce' )
 			)
 		);
 		wp_enqueue_style( 'hezarfen-order-edit', WC_HEZARFEN_UYGULAMA_URL . 'assets/admin/order-edit/build/style-main.css', array(), WC_HEZARFEN_VERSION );
