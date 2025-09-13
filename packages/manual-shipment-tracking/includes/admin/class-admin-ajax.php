@@ -80,6 +80,11 @@ class Admin_Ajax {
 	public static function get_shipment_data() {
 		check_ajax_referer( self::GET_SHIPMENT_DATA_NONCE );
 
+		// Check user capabilities
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_send_json_error( 'Insufficient permissions', 403 );
+		}
+
 		if ( empty( $_GET['order_id'] ) ) {
 			wp_send_json_error( null, 400 );
 		}
