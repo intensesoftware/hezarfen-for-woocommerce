@@ -6,7 +6,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2025-09-12 08:38+0000\n"
+"PO-Revision-Date: 2025-09-13 07:16+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -515,7 +515,7 @@ msgstr "İlk barkodunuzu burada oluşturun!"
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:156
 #, php-format
 msgid "Create or sign in to your %s account"
-msgstr "%s hesabınıza giriş yapın veya hesap oluşturun"
+msgstr "%s hesabınıza giriş yapın veya hesap oluşturun, evrakları yükleyin"
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:297
 msgid "Create Shipment"
