@@ -727,7 +727,7 @@ class Courier_Hepsijet_Integration {
         $this->log('Hepsijet Relay Get Pricing Tiers Request', array('cache_status' => 'miss'));
         
         // Use direct WordPress HTTP request since pricing endpoint is public
-        $url = home_url('/wp-json/hepsijet-relay/v1/pricing');
+        $url = 'https://intense.com.tr/wp-json/hepsijet-relay/v1/pricing';
         
         $response = wp_remote_get($url, array(
             'timeout' => self::REQUEST_TIMEOUT
