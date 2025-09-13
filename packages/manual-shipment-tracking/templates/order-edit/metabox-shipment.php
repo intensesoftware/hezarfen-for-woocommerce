@@ -187,29 +187,6 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- YouTube Video Area -->
-                                        <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                                            <div class="flex items-center gap-2 mb-2">
-                                                <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                                                </svg>
-                                                <span class="text-sm font-medium text-red-800"><?php esc_html_e('Watch Setup Tutorial', 'hezarfen-for-woocommerce'); ?></span>
-                                            </div>
-                                            <div class="aspect-video bg-gray-100 rounded-lg mb-2 overflow-hidden">
-                                                <iframe 
-                                                    width="100%" 
-                                                    height="100%" 
-                                                    src="https://www.youtube.com/embed/YOUR_VIDEO_ID" 
-                                                    title="<?php esc_attr_e('Hepsijet Integration Setup Tutorial', 'hezarfen-for-woocommerce'); ?>"
-                                                    frameborder="0" 
-                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                                    allowfullscreen>
-                                                </iframe>
-                                            </div>
-                                            <p class="text-xs text-red-600 text-center">
-                                                <?php esc_html_e('Step-by-step visual guide for quick setup', 'hezarfen-for-woocommerce'); ?>
-                                            </p>
-                                        </div>
                                         
                                         <div class="flex gap-2">
                                             <a href="https://intense.com.tr" target="_blank" class="flex-1 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">

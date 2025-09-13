@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.5.4
+Stable tag: 2.6.0
 
 TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ! Türkiye'nin Lider WooCommerce Kargo Takip Eklentisi: 23 kargo, SMS, MSS sözleşmeleri, ilçe/mahalle, vergi alanlar
 == Description ==
@@ -15,6 +15,7 @@ TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ! Türkiye'nin Lider WooCommerce Kargo 
 
 = 🚀 2000+ WooCommerce Sitesi tarafından kullanılıyor! =
 
+✅ **Ücretsiz Hepsijet Kargo Entegrasyonu, ayrıca 23 diğer kargo firmasında kargo takip özelliği**:
 ✅ **Zaman Tasarrufu**: Manuel kargo işlemlerinizi otomatikleştirin, sipariş takibi kolaylaştırın
 ✅ **Müşteri Memnuniyeti**: WooCommerce SMS eklentisi ile SMS bilgilendirme ve e-posta bildirimleriyle müşterilerinizi bilgilendirin
 ✅ **Türkiye'ye Özel**: İl/ilçe/mahalle seçimi, TC No doğrulama, vergi ekleme ve vergi bilgileri
@@ -34,7 +35,12 @@ TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ! Türkiye'nin Lider WooCommerce Kargo 
 
 = ⭐ TAMAMEN ÜCRETSİZ =
 
+**🚚 Hepsijet Ücretsiz WooCommerce Kargo Entegrasyonu**
+• 1-4 Desi 69.99TL - Anlaşma yapmaınza gerek yok, intense.com.tr'den kayıt olun, bakiye yükleyin ve gönderime başlayın. Alt limit yok!
+• Ücretsiz entegrasyon (otomatik kargo takip no girişi, otomatik siparişin kargoya verildi durumuna geçmesi, otomatik siparişin tamamlandı durumuna geçmesi, otomatik müşteriye e-posta bildirimi)
+
 **🚚 Kargo Yönetimi ve WooCommerce Kargo Takip Modülü**
+• 23 farklı kargo firması (Yurtiçi, DHL E-Commerce, Aras, Sürat, UPS, PTT vs.)
 • Kargo takip numarası girişi ve sipariş yönetimi
 • "Kargoya Verildi" sipariş durumu ve gönderi takibi
 • Müşteri panelinde detaylı kargo görüntüleme ve sipariş takibi
@@ -242,6 +248,10 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
+= 2.6.0 - 2025-09-13 =
+* Ücretsiz Hepsijet WooCommerce Kargo Entegrasyonu
+* Hata gidermeler
+
 = 2.5.4 - 2025-09-10 =
 * Gereksiz bir dosya eklentiden silindi.
 
