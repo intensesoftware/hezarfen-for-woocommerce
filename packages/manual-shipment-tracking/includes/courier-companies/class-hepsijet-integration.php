@@ -29,7 +29,7 @@ class Courier_Hepsijet_Integration {
     private $consumer_secret;
 
     public function __construct() {
-        $this->relay_base_url = home_url('/wp-json/hepsijet-relay/v1');
+        $this->relay_base_url = 'https://intense.com.tr/wp-json/hepsijet-relay/v1';
         $this->consumer_key = $this->get_setting( 'consumer_key', '' );
         $this->consumer_secret = $this->get_setting( 'consumer_secret', '' );
     }
