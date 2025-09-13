@@ -9,14 +9,13 @@ namespace Hezarfen\ManualShipmentTracking;
 
 defined( 'ABSPATH' ) || exit;
 
-require_once HEZARFEN_MST_PATH . 'includes/trait-log.php';
 require_once HEZARFEN_MST_PATH . 'includes/trait-helper.php';
 
 /**
  * Courier_Hepsijet_Integration class for API integration.
  */
 class Courier_Hepsijet_Integration {
-    use Helper_Trait, Log;
+    use Helper_Trait;
 
     const REQUEST_TIMEOUT = 30;
     const ADVANCED_TRACKING_SHIPPED_STATUS = 'COLLECTED';
@@ -311,11 +310,7 @@ class Courier_Hepsijet_Integration {
             'domain' => home_url()
         );
 
-        $this->log( 'Hepsijet Relay Create Barcode Request', $params );
-
         $response = $this->make_relay_request( '/barcode/create', $params );
-
-        $this->log( 'Hepsijet Relay Create Barcode Response', $response );
 
         if ( is_wp_error( $response ) ) {
             return $response;
@@ -344,13 +339,6 @@ class Courier_Hepsijet_Integration {
         
         $order->update_meta_data( '_hezarfen_hepsijet_shipment_' . $delivery_no, $shipment_details );
 
-        // Log the response data
-        $this->log( 'Hepsijet relay response data', array(
-            'order_id' => $order_id,
-            'delivery_no' => $delivery_no,
-            'print_date' => $print_date,
-            'has_zpl' => !empty( $zpl_data )
-        ));
         
         // Save order meta data
         $order->save_meta_data();
@@ -372,11 +360,7 @@ class Courier_Hepsijet_Integration {
      * Get shipping details for tracking via Relay API
      */
     public function api_get_shipping_details($delivery_no) {
-        $this->log( 'Hepsijet Relay Get Shipping Details Request', array( 'delivery_no' => $delivery_no ) );
-
         $response = $this->make_relay_request( '/tracking/' . $delivery_no, null, 'GET' );
-
-        $this->log( 'Hepsijet Relay Get Shipping Details Response', $response );
 
         return $response;
     }
@@ -385,11 +369,7 @@ class Courier_Hepsijet_Integration {
      * Cancel shipment via Relay API
      */
     public function api_cancel_shipment($delivery_no) {
-        $this->log( 'Hepsijet Relay Cancel Shipment Request', array( 'delivery_no' => $delivery_no ) );
-
         $response = $this->make_relay_request( '/shipment/' . $delivery_no, null, 'DELETE' );
-
-        $this->log( 'Hepsijet Relay Cancel Shipment Response', $response );
 
         if ( is_wp_error( $response ) ) {
             return $response;
@@ -411,32 +391,15 @@ class Courier_Hepsijet_Integration {
      * @return string[]|false
      */
     public function get_barcode( $delivery_barcode_no ) {
-        $this->log( 'Hepsijet Relay Get Barcode Request', array( 'delivery_no' => $delivery_barcode_no ) );
-
         $response = $this->make_relay_request( '/barcode/' . $delivery_barcode_no . '/label', null, 'GET' );
-
-        $this->log( 'Hepsijet Relay Get Barcode Response', $response );
 
         if ( is_wp_error( $response ) ) {
             return $response;
         }
 
-        // Debug: Log the full response structure
-        $this->log( 'Hepsijet Relay Get Barcode Response Debug', array(
-            'response_keys' => array_keys( $response ),
-            'has_body' => isset( $response['body'] ),
-            'body_type' => isset( $response['body'] ) ? gettype( $response['body'] ) : 'not_set',
-            'body_length' => isset( $response['body'] ) ? strlen( $response['body'] ) : 0,
-            'body_preview' => isset( $response['body'] ) ? substr( $response['body'], 0, 100 ) : 'not_set'
-        ) );
 
         // The relay API returns the barcode data directly as an array
         if ( is_array( $response ) ) {
-            $this->log( 'Hepsijet Relay Get Barcode Direct Array', array(
-                'response_type' => gettype( $response ),
-                'response_keys' => array_keys( $response ),
-                'response_count' => count( $response )
-            ) );
             return $response;
         }
 
@@ -446,12 +409,6 @@ class Courier_Hepsijet_Integration {
             $barcode_data = json_decode( $response['body'], true );
             $json_error = json_last_error();
             
-            $this->log( 'Hepsijet Relay Get Barcode JSON Decode', array(
-                'json_error' => $json_error,
-                'json_error_msg' => json_last_error_msg(),
-                'decoded_type' => gettype( $barcode_data ),
-                'is_array' => is_array( $barcode_data )
-            ) );
             
             if ( $json_error === JSON_ERROR_NONE && is_array( $barcode_data ) ) {
                 return $barcode_data;
@@ -657,10 +614,6 @@ class Courier_Hepsijet_Integration {
             return $mysql_format;
 
         } catch ( Exception $e ) {
-            $this->log( 'Date conversion error', array(
-                'input' => $turkish_date,
-                'error' => $e->getMessage()
-            ));
             return $turkish_date; // Return original on error
         }
     }
@@ -709,22 +662,12 @@ class Courier_Hepsijet_Integration {
                 $current_gmt = gmdate('Y-m-d H:i:s');
                 
                 if ($current_gmt < $cache_data['expires_gmt']) {
-                    $this->log('Hepsijet Relay Get Pricing Tiers Cache Hit', array(
-                        'expires_gmt' => $cache_data['expires_gmt'],
-                        'current_gmt' => $current_gmt,
-                        'pricing_data' => $cache_data['pricing_data']
-                    ));
                     return $cache_data['pricing_data'];
                 } else {
-                    $this->log('Hepsijet Relay Get Pricing Tiers Cache Expired', array(
-                        'expires_gmt' => $cache_data['expires_gmt'],
-                        'current_gmt' => $current_gmt
-                    ));
                 }
             }
         }
         
-        $this->log('Hepsijet Relay Get Pricing Tiers Request', array('cache_status' => 'miss'));
         
         // Use direct WordPress HTTP request since pricing endpoint is public
         $url = 'https://intense.com.tr/wp-json/hepsijet-relay/v1/pricing';
@@ -741,19 +684,12 @@ class Courier_Hepsijet_Integration {
         $http_code = wp_remote_retrieve_response_code($response);
         $decoded = json_decode($body, true);
         
-        $this->log('Hepsijet Relay Get Pricing Tiers Raw Response', array(
-            'http_code' => $http_code,
-            'body' => $body,
-            'decoded' => $decoded
-        ));
         
         if ($http_code >= 400) {
             $error_message = $decoded['message'] ?? 'API Error: ' . $http_code;
-            $this->log('Hepsijet Relay Get Pricing Tiers HTTP Error', array('code' => $http_code, 'message' => $error_message));
             return new \WP_Error('pricing_api_error', $error_message);
         }
         
-        $this->log('Hepsijet Relay Get Pricing Tiers Response', $decoded);
         
         // Calculate expiration time in GMT
         $expires_gmt = gmdate('Y-m-d H:i:s', time() + self::PRICING_CACHE_DURATION);
@@ -767,12 +703,6 @@ class Courier_Hepsijet_Integration {
         
         update_option($cache_option_key, wp_json_encode($cache_structure));
         
-        $this->log('Hepsijet Relay Pricing Cached', array(
-            'cache_option_key' => $cache_option_key,
-            'duration_seconds' => self::PRICING_CACHE_DURATION,
-            'expires_gmt' => $expires_gmt,
-            'cached_at_gmt' => $cache_structure['cached_at_gmt']
-        ));
         
         return $decoded;
     }
@@ -865,7 +795,6 @@ class Courier_Hepsijet_Integration {
         ));
 
         if ( is_wp_error( $response ) ) {
-            $this->log( 'Hepsijet ile Avantajlı Kargo Fiyatları Balance Request Error', $response->get_error_message() );
             return $response;
         }
 
@@ -873,21 +802,14 @@ class Courier_Hepsijet_Integration {
         $status_code = wp_remote_retrieve_response_code( $response );
 
         if ( $status_code !== 200 ) {
-            $this->log( 'Hepsijet ile Avantajlı Kargo Fiyatları Balance Request Failed', array(
-                'status_code' => $status_code,
-                'body' => $body
-            ));
             return new \WP_Error( 'api_error', sprintf( 'API request failed with status %d', $status_code ) );
         }
 
         $data = json_decode( $body, true );
 
         if ( json_last_error() !== JSON_ERROR_NONE ) {
-            $this->log( 'Hepsijet ile Avantajlı Kargo Fiyatları Balance JSON Decode Error', json_last_error_msg() );
             return new \WP_Error( 'json_error', 'Invalid JSON response' );
         }
-
-        $this->log( 'Hepsijet ile Avantajlı Kargo Fiyatları Balance Response', $data );
 
         if ( ! isset( $data['balance'] ) ) {
             return new \WP_Error( 'invalid_response', __( 'Invalid balance response', 'hezarfen-for-woocommerce' ) );
@@ -906,10 +828,6 @@ class Courier_Hepsijet_Integration {
     private function schedule_shipment_monitoring( $order_id, $delivery_no ) {
         // Check if ActionScheduler is available
         if ( ! function_exists( 'as_schedule_recurring_action' ) ) {
-            $this->log( 'ActionScheduler not available for monitoring', array(
-                'order_id' => $order_id,
-                'delivery_no' => $delivery_no
-            ));
             return;
         }
 
@@ -923,10 +841,6 @@ class Courier_Hepsijet_Integration {
         
         // Check if ActionScheduler is available before scheduling
         if ( ! function_exists( 'as_schedule_recurring_action' ) ) {
-            $this->log( 'ActionScheduler function not available', array(
-                'order_id' => $order_id,
-                'delivery_no' => $delivery_no
-            ));
             return;
         }
         
@@ -940,15 +854,6 @@ class Courier_Hepsijet_Integration {
 
         // Store the action ID in shipment meta for later reference
         $this->store_monitoring_action_id( $order_id, $delivery_no, $action_id );
-
-        $this->log( 'Scheduled shipment monitoring', array(
-            'order_id' => $order_id,
-            'delivery_no' => $delivery_no,
-            'action_id' => $action_id,
-            'hook' => $hook,
-            'args' => $args,
-            'group' => $group
-        ));
     }
 
     /**
@@ -965,26 +870,11 @@ class Courier_Hepsijet_Integration {
         if ( $action_id ) {
             // Unschedule specific action by ID
             $result = as_unschedule_action( $action_id );
-            $this->log( 'Unscheduled specific monitoring action', array(
-                'order_id' => $order_id,
-                'delivery_no' => $delivery_no,
-                'action_id' => $action_id,
-                'unschedule_result' => $result
-            ));
         } else {
-            $this->log( 'No action ID found for unscheduling', array(
-                'order_id' => $order_id,
-                'delivery_no' => $delivery_no
-            ));
         }
         
         // Also try to unschedule by args as fallback (but only for this specific shipment)
         $fallback_result = as_unschedule_all_actions( 'hezarfen_monitor_hepsijet_shipment', array( $order_id, $delivery_no ), 'hezarfen-shipment-monitoring' );
-        $this->log( 'Fallback unschedule result', array(
-            'order_id' => $order_id,
-            'delivery_no' => $delivery_no,
-            'fallback_result' => $fallback_result
-        ));
     }
 
     /**
@@ -1044,19 +934,11 @@ class Courier_Hepsijet_Integration {
     public static function monitor_shipment_status( $order_id, $delivery_no ) {
         $instance = new self();
         
-        $instance->log( 'Monitoring shipment status', array(
-            'order_id' => $order_id,
-            'delivery_no' => $delivery_no
-        ));
 
         // Get shipment details
         $shipment_details = $instance->get_shipment_details_by_delivery_no( $order_id, $delivery_no );
         
         if ( ! $shipment_details ) {
-            $instance->log( 'Shipment details not found, stopping monitoring', array(
-                'order_id' => $order_id,
-                'delivery_no' => $delivery_no
-            ));
             
             // Stop monitoring if shipment not found
             $instance->unschedule_shipment_monitoring( $order_id, $delivery_no );
@@ -1067,11 +949,6 @@ class Courier_Hepsijet_Integration {
         
         // If shipment is cancelled, stop monitoring
         if ( $current_status === 'cancelled' ) {
-            $instance->log( 'Shipment is cancelled, stopping monitoring', array(
-                'order_id' => $order_id,
-                'delivery_no' => $delivery_no
-            ));
-            
             $instance->unschedule_shipment_monitoring( $order_id, $delivery_no );
             return;
         }
@@ -1080,11 +957,6 @@ class Courier_Hepsijet_Integration {
         $tracking_details = $instance->api_get_shipping_details( $delivery_no );
         
         if ( is_wp_error( $tracking_details ) ) {
-            $instance->log( 'Error getting tracking details', array(
-                'order_id' => $order_id,
-                'delivery_no' => $delivery_no,
-                'error' => $tracking_details->get_error_message()
-            ));
             return;
         }
 
@@ -1093,10 +965,6 @@ class Courier_Hepsijet_Integration {
             $is_shipped = $instance->is_shipped( $tracking_details );
             
             if ( $is_shipped ) {
-                $instance->log( 'Shipment is now shipped, updating status', array(
-                    'order_id' => $order_id,
-                    'delivery_no' => $delivery_no
-                ));
                 
                 // Update shipment status to shipped
                 $instance->update_shipment_status( $order_id, $delivery_no, 'shipped' );
@@ -1116,10 +984,6 @@ class Courier_Hepsijet_Integration {
             $is_delivered = $instance->is_delivered( $tracking_details );
             
             if ( $is_delivered ) {
-                $instance->log( 'Shipment is now delivered, updating status', array(
-                    'order_id' => $order_id,
-                    'delivery_no' => $delivery_no
-                ));
                 
                 // Update shipment status to delivered
                 $instance->update_shipment_status( $order_id, $delivery_no, 'delivered' );
@@ -1163,12 +1027,6 @@ class Courier_Hepsijet_Integration {
 
         // Update the stored action ID
         $this->store_monitoring_action_id( $order_id, $delivery_no, $action_id );
-
-        $this->log( 'Rescheduled shipment monitoring', array(
-            'order_id' => $order_id,
-            'delivery_no' => $delivery_no,
-            'action_id' => $action_id
-        ));
     }
 
     /**
@@ -1219,11 +1077,6 @@ class Courier_Hepsijet_Integration {
         
         // Use the ship_order method to save tracking data
         \Hezarfen\ManualShipmentTracking\Manual_Shipment_Tracking::ship_order( $order, $shipment_data );
-        
-        $this->log( 'Processed shipment as shipped', array(
-            'order_id' => $order_id,
-            'delivery_no' => $delivery_no
-        ));
     }
 
     /**
@@ -1241,11 +1094,6 @@ class Courier_Hepsijet_Integration {
 
         // Update order status to completed
         $order->update_status( 'completed', __( 'Order completed - shipment delivered', 'hezarfen-for-woocommerce' ) );
-        
-        $this->log( 'Processed shipment as delivered', array(
-            'order_id' => $order_id,
-            'delivery_no' => $delivery_no
-        ));
     }
 
     /**
@@ -1258,11 +1106,6 @@ class Courier_Hepsijet_Integration {
         $cache_option_key = 'hepsijet_pricing_cache';
         $result = delete_option($cache_option_key);
         
-        $this->log('Hepsijet Pricing Cache Cleared', array(
-            'cache_option_key' => $cache_option_key,
-            'success' => $result,
-            'timestamp_gmt' => gmdate('Y-m-d H:i:s')
-        ));
         
         return $result;
     }

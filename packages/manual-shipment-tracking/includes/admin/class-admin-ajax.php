@@ -705,9 +705,7 @@ class Admin_Ajax {
 			
 			// Check if traits exist
 			$helper_trait_file = HEZARFEN_MST_PATH . 'includes/trait-helper.php';
-			$log_trait_file = HEZARFEN_MST_PATH . 'includes/trait-log.php';
 			error_log( 'Helper trait file exists: ' . (file_exists($helper_trait_file) ? 'YES' : 'NO') );
-			error_log( 'Log trait file exists: ' . (file_exists($log_trait_file) ? 'YES' : 'NO') );
 
 			// Try to manually include the file
 			error_log( 'Attempting to manually include class file...' );
@@ -789,9 +787,7 @@ class Admin_Ajax {
 				
 				// Try to check if traits exist
 				$helper_trait_file = HEZARFEN_MST_PATH . 'includes/trait-helper.php';
-				$log_trait_file = HEZARFEN_MST_PATH . 'includes/trait-log.php';
 				error_log( 'Helper trait file exists: ' . (file_exists($helper_trait_file) ? 'YES' : 'NO') );
-				error_log( 'Log trait file exists: ' . (file_exists($log_trait_file) ? 'YES' : 'NO') );
 				
 				wp_send_json_error( 'Hepsijet integration class not available', 500 );
 			}

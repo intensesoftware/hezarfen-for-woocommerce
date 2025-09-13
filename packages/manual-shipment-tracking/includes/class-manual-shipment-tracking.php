@@ -13,7 +13,6 @@ require_once HEZARFEN_MST_PATH . 'models/class-shipment-data.php';
 require_once 'class-courier-company.php';
 require_once 'class-helper.php';
 require_once 'class-shipping-details.php';
-require_once 'trait-log.php';
 require_once 'trait-helper.php';
 require_once 'admin/class-settings.php';
 require_once 'email/class-email.php';

@@ -325,13 +325,6 @@ class Settings {
 				'desc' => __( 'Consumer Secret from Hepsijet API Relay plugin', 'hezarfen-for-woocommerce' )
 			),
 			array(
-				'title' => __( 'Enable Debug Mode', 'hezarfen-for-woocommerce' ),
-				'type' => 'checkbox',
-				'id' => 'hezarfen_hepsijet_enable_debug_mode',
-				'default' => 'no',
-				'desc' => __( 'Enable debug logging for API requests and responses', 'hezarfen-for-woocommerce' )
-			),
-			array(
 				'type' => 'sectionend',
 				'id' => 'hezarfen_hepsijet_relay_settings'
 			),
