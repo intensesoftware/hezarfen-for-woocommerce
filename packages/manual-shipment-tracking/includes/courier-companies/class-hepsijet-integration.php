@@ -852,7 +852,7 @@ class Courier_Hepsijet_Integration {
      */
     public function get_kargogate_balance() {
         // Use Hepsijet ile Avantajlı Kargo Fiyatları namespace for wallet balance
-        $kargogate_url = home_url('/wp-json/kargogate/v1/wallet/balance?format=formatted');
+        $kargogate_url = 'https://intense.com.tr/wp-json/kargogate/v1/wallet/balance?format=formatted';
         
         $headers = array(
             'Authorization' => 'Basic ' . base64_encode( $this->consumer_key . ':' . $this->consumer_secret ),

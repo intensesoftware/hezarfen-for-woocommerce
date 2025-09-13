@@ -294,7 +294,9 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                             <button data-order_id="<?php echo esc_attr($order_id); ?>" id="add-to-tracking-list" type="button" class="w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-normal rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"><?php esc_html_e('Add to Tracking List', 'hezarfen-for-woocommerce'); ?></button>
                             
                             <!-- Hepsijet integration button -->
+                            <?php if ( ! $credentials_missing ): ?>
                             <button data-order_id="<?php echo esc_attr($order_id); ?>" id="create-hepsijet-shipment" type="button" class="w-full text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-4 focus:ring-orange-300 font-normal rounded-lg text-sm px-5 py-2.5 me-2 mb-2 hidden"><?php esc_html_e('Create Shipment', 'hezarfen-for-woocommerce'); ?></button>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

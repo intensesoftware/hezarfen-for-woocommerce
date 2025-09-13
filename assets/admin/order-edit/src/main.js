@@ -125,7 +125,10 @@ jQuery(document).ready(($)=>{
       standardFields.addClass('hidden');
       hepsijetFields.removeClass('hidden');
       standardButton.addClass('hidden');
-      hepsijetButton.removeClass('hidden');
+      // Only show hepsijet button if it exists (not during onboarding)
+      if (hepsijetButton.length > 0) {
+        hepsijetButton.removeClass('hidden');
+      }
       
       // Reset conditional fields when showing Hepsijet fields
       $('#hepsijet-delivery-slot-container').addClass('hidden');
@@ -135,7 +138,10 @@ jQuery(document).ready(($)=>{
       standardFields.removeClass('hidden');
       hepsijetFields.addClass('hidden');
       standardButton.removeClass('hidden');
-      hepsijetButton.addClass('hidden');
+      // Only hide hepsijet button if it exists
+      if (hepsijetButton.length > 0) {
+        hepsijetButton.addClass('hidden');
+      }
     }
   });
   
@@ -150,7 +156,10 @@ jQuery(document).ready(($)=>{
     standardFields.addClass('hidden');
     hepsijetFields.removeClass('hidden');
     standardButton.addClass('hidden');
-    hepsijetButton.removeClass('hidden');
+    // Only show hepsijet button if it exists (not during onboarding)
+    if (hepsijetButton.length > 0) {
+      hepsijetButton.removeClass('hidden');
+    }
   }
   
   // Handle delivery type selection
