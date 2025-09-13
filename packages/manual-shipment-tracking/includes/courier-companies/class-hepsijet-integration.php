@@ -22,6 +22,7 @@ class Courier_Hepsijet_Integration {
     const ADVANCED_TRACKING_SHIPPED_STATUS = 'COLLECTED';
     const ADVANCED_TRACKING_DELIVERED_STATUS = 'DELIVERED';
     const UNSUPPORTED_WC_GATEWAYS = ['cod'];
+    const PRICING_CACHE_DURATION = 3600; // 1 hour in seconds
 
     private $relay_base_url;
     private $consumer_key;
@@ -693,7 +694,37 @@ class Courier_Hepsijet_Integration {
      * @return array|WP_Error Pricing tiers information or error
      */
     public function get_pricing() {
-        $this->log('Hepsijet Relay Get Pricing Tiers Request', array());
+        $cache_option_key = 'hepsijet_pricing_cache';
+        $cached_data = get_option($cache_option_key, null);
+        
+        // Check if we have valid cached data
+        if ($cached_data !== null) {
+            $cache_data = json_decode($cached_data, true);
+            
+            // Validate cache structure and check expiration
+            if ($cache_data && 
+                isset($cache_data['expires_gmt']) && 
+                isset($cache_data['pricing_data'])) {
+                
+                $current_gmt = gmdate('Y-m-d H:i:s');
+                
+                if ($current_gmt < $cache_data['expires_gmt']) {
+                    $this->log('Hepsijet Relay Get Pricing Tiers Cache Hit', array(
+                        'expires_gmt' => $cache_data['expires_gmt'],
+                        'current_gmt' => $current_gmt,
+                        'pricing_data' => $cache_data['pricing_data']
+                    ));
+                    return $cache_data['pricing_data'];
+                } else {
+                    $this->log('Hepsijet Relay Get Pricing Tiers Cache Expired', array(
+                        'expires_gmt' => $cache_data['expires_gmt'],
+                        'current_gmt' => $current_gmt
+                    ));
+                }
+            }
+        }
+        
+        $this->log('Hepsijet Relay Get Pricing Tiers Request', array('cache_status' => 'miss'));
         
         // Use direct WordPress HTTP request since pricing endpoint is public
         $url = home_url('/wp-json/hepsijet-relay/v1/pricing');
@@ -723,6 +754,25 @@ class Courier_Hepsijet_Integration {
         }
         
         $this->log('Hepsijet Relay Get Pricing Tiers Response', $decoded);
+        
+        // Calculate expiration time in GMT
+        $expires_gmt = gmdate('Y-m-d H:i:s', time() + self::PRICING_CACHE_DURATION);
+        
+        // Store pricing data and expiration in single JSON structure
+        $cache_structure = array(
+            'expires_gmt' => $expires_gmt,
+            'pricing_data' => $decoded,
+            'cached_at_gmt' => gmdate('Y-m-d H:i:s')
+        );
+        
+        update_option($cache_option_key, wp_json_encode($cache_structure));
+        
+        $this->log('Hepsijet Relay Pricing Cached', array(
+            'cache_option_key' => $cache_option_key,
+            'duration_seconds' => self::PRICING_CACHE_DURATION,
+            'expires_gmt' => $expires_gmt,
+            'cached_at_gmt' => $cache_structure['cached_at_gmt']
+        ));
         
         return $decoded;
     }
@@ -1196,5 +1246,24 @@ class Courier_Hepsijet_Integration {
             'order_id' => $order_id,
             'delivery_no' => $delivery_no
         ));
+    }
+
+    /**
+     * Clear pricing cache manually
+     * This method can be called to force refresh pricing data
+     * 
+     * @return bool True if cache was cleared, false otherwise
+     */
+    public function clear_pricing_cache() {
+        $cache_option_key = 'hepsijet_pricing_cache';
+        $result = delete_option($cache_option_key);
+        
+        $this->log('Hepsijet Pricing Cache Cleared', array(
+            'cache_option_key' => $cache_option_key,
+            'success' => $result,
+            'timestamp_gmt' => gmdate('Y-m-d H:i:s')
+        ));
+        
+        return $result;
     }
 }
