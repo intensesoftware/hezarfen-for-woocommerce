@@ -1069,14 +1069,13 @@ class Courier_Hepsijet_Integration {
             return;
         }
 
-        // Create Shipment_Data object for ship_order
-        $shipment_data = new \Hezarfen\ManualShipmentTracking\Shipment_Data();
-        $shipment_data->tracking_num = $delivery_no;
-        $shipment_data->courier_id = 'hepsijet';
-        $shipment_data->courier_title = 'Hepsijet';
-        
-        // Use the ship_order method to save tracking data
-        \Hezarfen\ManualShipmentTracking\Manual_Shipment_Tracking::ship_order( $order, $shipment_data );
+        // Use new_order_shipment_data for standardized shipment data creation
+        Helper::new_order_shipment_data(
+            $order,
+            null,
+            'hepsijet',
+            $delivery_no
+        );
     }
 
     /**
