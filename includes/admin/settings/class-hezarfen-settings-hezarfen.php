@@ -425,6 +425,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		return $fields;
 	}
 
+
 	/**
 	 * Output SMS rules button field
 	 *

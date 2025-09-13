@@ -74,6 +74,32 @@ Hezarfen, yetkin bir ekip tarafından geliştirilmiştir. Ekibimiz, dünyanın e
 = 🛡️ KVKK Uyumluluğu =
 Hezarfen, KVKK’nın yurt dışına kişisel veri aktarımına ilişkin hükümleriyle uyumludur. Bilinen bazı kargo SaaS çözümleri kargo müşteri verilerini yurtdışına taşıyabilirken (sunucularının yurtdışında olması sebebiyle), Hezarfen verilerinizi kargo takip işlemleri için verilerinizi yurt dışına çıkarmaz.
 
+== Privacy ==
+
+Bu eklenti, Intense Yazılım İnternet Teknolojileri Sanayi ve Ticaret Limited Şirketi (“Intense”) tarafından sağlanan harici API servislerine dayanır.  
+Kargo fiyatlarını gösterebilmek için Intense API’larına HTTP istekleri yapılır. Bu istekler sırasında HTTP protokolü gereği teknik bilgiler (ör. alan adı, IP adresi) otomatik olarak iletilebilir; ancak müşteri veya sipariş verileri gönderilmez.  
+
+Mağazanızı bağladıktan sonra, kargo aracılık hizmetlerinin sağlanabilmesi için aşağıdaki veriler işlenebilir ve Intense sunucularına ve/veya anlaşmalı kargo şirketlerine aktarılabilir:  
+- Müşteri ve sipariş bilgileri (ad-soyad, adres, telefon, e-posta, sipariş ürünleri, gönderi detayları)  
+- Teknik veriler (mağaza alan adı, IP adresi, log kayıtları)  
+
+Bu veriler, kargo etiketlerinin oluşturulması, fiyatların hesaplanması, gönderilerin anlaşmalı kargo şirketlerine aktarılması ile sınırlı kalmaksızın; ayrıca sistem güvenliği, hata tespiti, log kayıtlarının saklanması ve teknik destek süreçlerinin yürütülmesi amacıyla da kullanılabilmektedir.  
+
+Detaylı bilgi için Gizlilik Politikamız: https://intense.com.tr/yasal/gizlilik-politikasi/
+
+---
+
+This plugin relies on external API services provided by Intense Yazılım İnternet Teknolojileri Sanayi ve Ticaret Limited Şirketi (“Intense”).  
+In order to display shipping prices, the plugin makes HTTP requests to Intense APIs. During these requests, technical information (such as domain name or IP address) may be transmitted automatically as part of the HTTP protocol; however, no customer or order data is sent.  
+
+Once you connect your store, the following data may be processed and transferred to Intense servers and/or contracted cargo companies to provide shipping relay services:  
+- Customer and order information (name, address, phone, email, order items, shipment details)  
+- Technical data (store domain, IP address, log data)  
+
+This data is primarily used to generate shipping labels, calculate pricing, and transfer shipments to contracted cargo companies. In addition, certain technical and log data may also be retained and processed for purposes such as system security, error detection, log storage, and providing technical support.  
+
+For more details, please see our Privacy Policy: https://intense.com.tr/yasal/gizlilik-politikasi/
+
 == Installation ==
 
 = Otomatik Kurulum =

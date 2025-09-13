@@ -34,6 +34,9 @@ define( 'WC_HEZARFEN_NEIGH_API_URL', plugin_dir_url( __FILE__ ) . 'api/get-mahal
 
 add_action( 'plugins_loaded', 'hezarfen_load_plugin_textdomain' );
 
+// Load privacy policy integration
+require_once WC_HEZARFEN_UYGULAMA_YOLU . 'includes/class-privacy-policy.php';
+
 /**
  * Load plugin textdomain
  * 
@@ -62,6 +65,7 @@ function hezarfen_add_settings_link( $links ) {
 // Add settings link to plugins page
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'hezarfen_add_settings_link' );
 
+
 // Declare our plugin compatible with the Woocommerce HPOS feature.
 add_action(
 	'before_woocommerce_init',
@@ -71,5 +75,10 @@ add_action(
 		}
 	} 
 );
+
+// Load Composer autoloader for dependencies like TCPDF
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor/autoload.php';
+}
 
 require_once 'includes/Autoload.php';
