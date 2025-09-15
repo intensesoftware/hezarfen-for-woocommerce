@@ -8,7 +8,7 @@ Requires PHP: 7.0
 License: GPL2
 Stable tag: 2.6.1
 
-TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ!  Intense&Hepsijet İşbirliğiyle; Hezarfen için Hepsijet 1 ila 4 Desi 69,99TL+KDV Türkiye'nin Lider WooCommerce Kargo Takip Eklentisi
+TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ!  Intense&Hepsijet İşbirliğiyle; Hezarfen için Hepsijet 1 ila 4 Desi 69,99TL+KDV WooCommerce Kargo Takip Eklentisi
 == Description ==
 
 **Tamamen Ücretsiz!** Intense&Hepsijet İşbirliğiyle; Hezarfen kullanıcılarına Hepsijet 1-4 Desi 69,99TL+KDV - Hezarfen, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo, ödeme ve sözleşme yönetim eklentisidir. Bu WooCommerce kargo entegrasyon eklentisi, 23 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel WooCommerce kargo takip deneyimi sunar, Mesafeli Satış Sözleşmesi (MSS) desteği sağlar ve Türkiye'ye özgü mahalle, fatura ve vergi alanlarıyla ödeme ekranınızı Türkiye'ye uyumlu hale getirir.
@@ -82,7 +82,9 @@ Hezarfen, KVKK’nın yurt dışına kişisel veri aktarımına ilişkin hüküm
 
 == Privacy ==
 
-Bu eklenti, Intense Yazılım İnternet Teknolojileri Sanayi ve Ticaret Limited Şirketi (“Intense”) tarafından sağlanan harici API servislerine dayanır.  
+=== Harici Servisler (External Services) ===
+
+Bu eklentinin Hepsijet Entegrasyon Özelliği, Intense Yazılım İnternet Teknolojileri Sanayi ve Ticaret Limited Şirketi (“Intense”) tarafından sağlanan harici API servislerine dayanır.  
 Kargo fiyatlarını gösterebilmek için Intense API’larına HTTP istekleri yapılır. Bu istekler sırasında HTTP protokolü gereği teknik bilgiler (ör. alan adı, IP adresi) otomatik olarak iletilebilir; ancak müşteri veya sipariş verileri gönderilmez.  
 
 Mağazanızı bağladıktan sonra, kargo aracılık hizmetlerinin sağlanabilmesi için aşağıdaki veriler işlenebilir ve Intense sunucularına ve/veya anlaşmalı kargo şirketlerine aktarılabilir:  
@@ -91,7 +93,7 @@ Mağazanızı bağladıktan sonra, kargo aracılık hizmetlerinin sağlanabilmes
 
 Bu veriler, kargo etiketlerinin oluşturulması, fiyatların hesaplanması, gönderilerin anlaşmalı kargo şirketlerine aktarılması ile sınırlı kalmaksızın; ayrıca sistem güvenliği, hata tespiti, log kayıtlarının saklanması ve teknik destek süreçlerinin yürütülmesi amacıyla da kullanılabilmektedir.  
 
-Detaylı bilgi için Gizlilik Politikamız: https://intense.com.tr/yasal/gizlilik-politikasi/
+Detaylı bilgi için [Gizlilik Politikamız](https://intense.com.tr/yasal/gizlilik-politikasi/)
 
 ---
 
@@ -104,7 +106,7 @@ Once you connect your store, the following data may be processed and transferred
 
 This data is primarily used to generate shipping labels, calculate pricing, and transfer shipments to contracted cargo companies. In addition, certain technical and log data may also be retained and processed for purposes such as system security, error detection, log storage, and providing technical support.  
 
-For more details, please see our Privacy Policy: https://intense.com.tr/yasal/gizlilik-politikasi/
+For more details, please see our [Privacy Policy](https://intense.com.tr/yasal/gizlilik-politikasi/).
 
 == Installation ==
 
