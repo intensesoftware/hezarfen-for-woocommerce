@@ -46,21 +46,16 @@ td.column-hezarfen_mst_shipment_info p {
 }
 
 .hezarfen-marquee-text span {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	margin: 0;
-	line-height: 1.2em;
-	text-align: left;
-	transform: translateX(100%);
-	animation: scroll-left 10s linear infinite;
+	display: inline-block;
+	padding-left: 100%;
+	animation: marquee-endless 15s linear infinite;
 }
 
-@keyframes scroll-left {
+@keyframes marquee-endless {
 	0% {
-		transform: translateX(100%);
+		transform: translate3d(0, 0, 0);
 	}
 	100% {
-		transform: translateX(-100%);
+		transform: translate3d(-100%, 0, 0);
 	}
 }

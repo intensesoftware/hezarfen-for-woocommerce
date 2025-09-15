@@ -43,26 +43,26 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                 <li class="flex justify-center col-span-2 xl:col-span-2 2xl:col-span-3">
                                     <input type="radio" id="courier-company-select-hepsijet-entegrasyon"
                                             name="courier-company-select" value="hepsijet-entegrasyon"
-                                            class="hidden peer" checked>
+                                            class="hidden peer">
 
                                     <label for="courier-company-select-hepsijet-entegrasyon"
                                             class="relative flex items-center justify-between w-full p-1 h-12
-                                                    bg-gradient-to-r from-orange-50 to-orange-100 border border-orange-300
+                                                    bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-300
                                                     rounded-xl cursor-pointer shadow-sm
-                                                    peer-checked:border-2 peer-checked:border-orange-500 peer-checked:shadow-lg
+                                                    peer-checked:border-2 peer-checked:border-blue-500 peer-checked:shadow-lg
                                                     hover:shadow-md">
 
                                         <!-- Sol: Logo ve metin -->
                                         <div class="flex items-center gap-2 w-full">
-                                            <div class="relative flex-shrink-0">
+                                            <div class="flex flex-col items-center flex-shrink-0">
                                             <img class="max-h-6 w-auto"
                                                 src="<?php echo esc_url(HEZARFEN_MST_COURIER_LOGO_URL . Helper::get_courier_class('hepsijet')::$logo); ?>" 
                                                 loading="lazy"
                                                 alt="HepsiJet">
 
                                             <!-- Etiket Rozet -->
-                                            <span class="absolute -top-1 -right-2 text-[8px] bg-orange-500 text-white px-1.5 py-0.5 rounded-full shadow-sm font-medium">
-                                                Ücretsiz
+                                            <span class="text-[7px] bg-blue-500 text-white px-1 py-0.5 rounded-full shadow-sm font-medium mt-0.5">
+                                                Ücretsiz Entegrasyon
                                             </span>
                                             </div>
 
@@ -85,7 +85,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                                 ?>
                                             </div>
                                             <div class="hezarfen-marquee-text text-xs text-gray-600">
-                                                <span><?php echo esc_html__('Free integration, automatic tracking number entry, order status update', 'hezarfen-for-woocommerce'); ?></span>
+                                                <span><?php echo esc_html__('Free integration with barcode creation, instant tracking updates, and complimentary SMS/email notifications. Orders are marked as shipped automatically, and once delivered, status is set to completed.', 'hezarfen-for-woocommerce'); ?></span>
                                             </div>
                                             </div>
                                         </div>
