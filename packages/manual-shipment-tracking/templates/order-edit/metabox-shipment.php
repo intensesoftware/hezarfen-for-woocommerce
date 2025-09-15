@@ -77,7 +77,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                                     if ($pricing_info !== false) {
                                                         $price = $pricing_info['price_1_desi'];
                                                         $desi_range = $pricing_info['display_text'];
-                                                        echo '<span style="font-weight: bold !important; font-size: 1.125rem !important; color: #2563eb !important; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;">' . esc_html(number_format($price, 2)) . '₺+KDV</span>';
+                                                        echo '<span style="font-weight: bold !important; font-size: 1.125rem !important; color: #2563eb !important; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;">' . esc_html(number_format($price, 2, ',', '')) . '₺+KDV</span>';
                                                         echo ' <span class="text-gray-700 font-medium">(' . esc_html($desi_range) . ')</span>';
                                                     }
                                                 } catch (Exception $e) {
