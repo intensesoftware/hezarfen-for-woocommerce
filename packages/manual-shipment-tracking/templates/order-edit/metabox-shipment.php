@@ -464,7 +464,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
 
                     if (!$has_integration_shipments && !$has_manual_shipments) :
                     ?>
-                        <div class="border-dashed border-2 border-gray-2 p-4 flex justify-center h-full">
+                        <div class="border-dashed border-2 border-gray-2 p-4 flex justify-center min-h-48">
                             <div id="no-shipments" class="w-9/12 flex justify-center flex-col font-medium items-center">
                                 <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 20">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m13 19-6-5-6 5V2a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17Z" />
