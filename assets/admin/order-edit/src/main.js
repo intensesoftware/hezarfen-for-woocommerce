@@ -125,7 +125,7 @@ jQuery(document).ready(($)=>{
       standardFields.addClass('hidden');
       hepsijetFields.removeClass('hidden');
       standardButton.addClass('hidden');
-      // Only show hepsijet button if it exists (not during onboarding)
+      // Always show hepsijet button when HepsiJet is selected
       if (hepsijetButton.length > 0) {
         hepsijetButton.removeClass('hidden');
       }
@@ -167,6 +167,20 @@ jQuery(document).ready(($)=>{
     hepsijetButton.addClass('hidden');
   }
   
+  // Handle help button toggle
+  metabox_wrapper.find('#hepsijet-help-toggle').on('click', function() {
+    const helpContent = $('#hepsijet-help-content');
+    const button = $(this);
+    
+    if (helpContent.hasClass('hidden')) {
+      helpContent.removeClass('hidden');
+      button.html('<svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>Close');
+    } else {
+      helpContent.addClass('hidden');
+      button.html('<svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>Help');
+    }
+  });
+
   // Handle delivery type selection
   metabox_wrapper.find('#hepsijet-delivery-type').on('change', function() {
     const selectedType = $(this).val();
