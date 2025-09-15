@@ -241,19 +241,6 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                 </div>
                             </div>
                             
-                            <!-- Always show the form, regardless of credentials status -->
-                            <?php if ( $credentials_missing ): ?>
-                                <!-- Show a notice that credentials are needed for actual shipment creation -->
-                                <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                                    <p class="text-sm text-yellow-800">
-                                        <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                                        </svg>
-                                        <?php esc_html_e('Configure credentials in settings to enable shipment creation.', 'hezarfen-for-woocommerce'); ?>
-                                        <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=hepsijet_integration' ) ); ?>" target="_blank" class="underline font-medium"><?php esc_html_e('Go to Settings', 'hezarfen-for-woocommerce'); ?></a>
-                                    </p>
-                                </div>
-                            <?php endif; ?>
                             
                             <!-- Show balance display only if credentials are configured -->
 
@@ -302,12 +289,18 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                 <div class="flex items-center justify-between">
                                     <span class="text-sm font-medium text-blue-800"><?php esc_html_e('Intense Hepsijet ile Avantajlı Kargo Fiyatları Balance:', 'hezarfen-for-woocommerce'); ?></span>
                                     <div class="flex items-center gap-2">
-                                        <span id="kargogate-balance" class="text-sm font-bold text-blue-600">
-                                            <?php echo esc_html__('Click to check', 'hezarfen-for-woocommerce'); ?>
-                                        </span>
-                                        <button type="button" id="check-kargogate-balance" class="px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                            <?php esc_html_e('Check', 'hezarfen-for-woocommerce'); ?>
-                                        </button>
+                                        <?php if ( $credentials_missing ): ?>
+                                            <span id="kargogate-balance" class="text-sm font-bold text-blue-600">
+                                                0,00TL
+                                            </span>
+                                        <?php else: ?>
+                                            <span id="kargogate-balance" class="text-sm font-bold text-blue-600">
+                                                <?php echo esc_html__('Click to check', 'hezarfen-for-woocommerce'); ?>
+                                            </span>
+                                            <button type="button" id="check-kargogate-balance" class="px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                <?php esc_html_e('Check', 'hezarfen-for-woocommerce'); ?>
+                                            </button>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
@@ -322,6 +315,21 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                     <input type="number" id="hepsijet-desi" step="0.01" min="0.01" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-3 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" />
                                 </div>
                             </div>
+
+                            <!-- Always show the form, regardless of credentials status -->
+                            <?php if ( $credentials_missing ): ?>
+                                <!-- Show a notice that credentials are needed for actual shipment creation -->
+                                <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                    <p class="text-sm text-yellow-800">
+                                        <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                        </svg>
+                                        <?php esc_html_e('Configure credentials in settings to enable shipment creation.', 'hezarfen-for-woocommerce'); ?>
+                                        <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=hepsijet_integration' ) ); ?>" target="_blank" class="underline font-medium"><?php esc_html_e('Go to Settings', 'hezarfen-for-woocommerce'); ?></a>
+                                    </p>
+                                </div>
+                            <?php endif; ?>
+                            
                             
                             <!-- Delivery Type - Feature Flag: Hidden for now, hard-coded to 'standard' -->
                             <?php 
@@ -365,7 +373,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                             <button data-order_id="<?php echo esc_attr($order_id); ?>" id="add-to-tracking-list" type="button" class="hidden w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-normal rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"><?php esc_html_e('Add to Tracking List', 'hezarfen-for-woocommerce'); ?></button>
                             
                              <!-- Hepsijet integration button -->
-                             <button data-order_id="<?php echo esc_attr($order_id); ?>" id="create-hepsijet-shipment" type="button" class="w-full text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-4 focus:ring-orange-300 font-normal rounded-lg text-sm px-5 py-2.5 me-2 mb-2"><?php esc_html_e('Create Shipment', 'hezarfen-for-woocommerce'); ?></button>
+                             <button data-order_id="<?php echo esc_attr($order_id); ?>" id="create-hepsijet-shipment" type="button" class="w-full text-white <?php echo $credentials_missing ? 'bg-gray-400 cursor-not-allowed' : 'bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-4 focus:ring-orange-300'; ?> font-normal rounded-lg text-sm px-5 py-2.5 me-2 mb-2" <?php echo $credentials_missing ? 'disabled' : ''; ?>><?php esc_html_e('Create Shipment', 'hezarfen-for-woocommerce'); ?></button>
                         </div>
                     </div>
                 </div>
