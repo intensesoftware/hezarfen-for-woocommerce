@@ -53,20 +53,20 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                                     hover:shadow-md">
 
                                         <!-- Sol: Logo ve metin -->
-                                        <div class="flex items-center gap-3">
-                                            <div class="relative">
-                                            <img class="max-h-4"
+                                        <div class="flex items-center gap-2 w-full">
+                                            <div class="relative flex-shrink-0">
+                                            <img class="max-h-6 w-auto"
                                                 src="<?php echo esc_url(HEZARFEN_MST_COURIER_LOGO_URL . Helper::get_courier_class('hepsijet')::$logo); ?>" 
                                                 loading="lazy"
                                                 alt="HepsiJet">
 
                                             <!-- Etiket Rozet -->
-                                            <span class="absolute -top-2 -right-3 text-[10px] bg-orange-500 text-white px-2 py-0.5 rounded-full shadow">
-                                                Ücretsiz Entegrasyon
+                                            <span class="absolute -top-1 -right-2 text-[8px] bg-orange-500 text-white px-1.5 py-0.5 rounded-full shadow-sm font-medium">
+                                                Ücretsiz
                                             </span>
                                             </div>
 
-                                            <div class="flex flex-col leading-tight overflow-hidden">
+                                            <div class="flex flex-col leading-tight overflow-hidden flex-1 min-w-0">
                                             <div class="text-xs text-gray-600">
                                                 <?php
                                                 // Get actual pricing for 1 and 4 desi to determine price range
