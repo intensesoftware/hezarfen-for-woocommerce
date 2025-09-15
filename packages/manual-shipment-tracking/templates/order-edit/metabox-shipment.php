@@ -152,7 +152,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                     </div>
                                     <h3 class="text-lg font-semibold text-gray-800 mb-2">
                                         <?php if ( $credentials_missing ): ?>
-                                            <?php esc_html_e('🚀 Start Shipping in Minutes!', 'hezarfen-for-woocommerce'); ?>
+                                            <?php esc_html_e('🚀 Start Shipping Without a Shipping Agreement', 'hezarfen-for-woocommerce'); ?>
                                         <?php else: ?>
                                             <?php esc_html_e('🚀 HepsiJet Integration Guide', 'hezarfen-for-woocommerce'); ?>
                                         <?php endif; ?>
@@ -253,32 +253,60 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                         </svg>
                                     </div>
                                     <h3 class="text-lg font-semibold text-gray-800 mb-2">
-                                        <?php esc_html_e('🚀 HepsiJet Integration Guide', 'hezarfen-for-woocommerce'); ?>
+                                        <?php esc_html_e('🚀 Start Shipping Without a Shipping Agreement', 'hezarfen-for-woocommerce'); ?>
                                     </h3>
                                     <p class="text-sm text-gray-600 mb-4">
-                                        <?php esc_html_e('How to use HepsiJet integration effectively', 'hezarfen-for-woocommerce'); ?>
+                                        <?php esc_html_e('Quick setup to unlock Hepsijet free integration', 'hezarfen-for-woocommerce'); ?>
                                     </p>
                                     <div class="text-left space-y-3 mb-6">
                                         <div class="flex items-start gap-3">
                                             <span class="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">1</span>
                                             <div>
-                                                <p class="text-sm font-medium text-gray-800"><?php esc_html_e('Fill Form Details', 'hezarfen-for-woocommerce'); ?></p>
-                                                <p class="text-xs text-gray-600"><?php esc_html_e('Enter package weight, dimensions, and delivery preferences', 'hezarfen-for-woocommerce'); ?></p>
+                                                <p class="text-sm font-medium text-gray-800"><?php esc_html_e('Create Account', 'hezarfen-for-woocommerce'); ?></p>
+                                                <p class="text-xs text-gray-600">
+                                                    <?php printf( 
+                                                        esc_html__('Create or sign in to your %s account', 'hezarfen-for-woocommerce'), 
+                                                        '<strong>intense.com.tr</strong>' 
+                                                    ); ?>
+                                                </p>
                                             </div>
                                         </div>
                                         <div class="flex items-start gap-3">
                                             <span class="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">2</span>
                                             <div>
-                                                <p class="text-sm font-medium text-gray-800"><?php esc_html_e('Create Shipment', 'hezarfen-for-woocommerce'); ?></p>
-                                                <p class="text-xs text-gray-600"><?php esc_html_e('Click Create Shipment to generate barcode and tracking', 'hezarfen-for-woocommerce'); ?></p>
+                                                <p class="text-sm font-medium text-gray-800"><?php esc_html_e('Access Hepsijet ile Avantajlı Kargo Fiyatları', 'hezarfen-for-woocommerce'); ?></p>
+                                                <p class="text-xs text-gray-600"><?php esc_html_e('Go to My Account → Click Hepsijet ile Avantajlı Kargo Fiyatları', 'hezarfen-for-woocommerce'); ?></p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <span class="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">3</span>
+                                            <div>
+                                                <p class="text-sm font-medium text-gray-800"><?php esc_html_e('Configure Integration', 'hezarfen-for-woocommerce'); ?></p>
+                                                <p class="text-xs text-gray-600"><?php esc_html_e('Complete the form and copy credentials to Hezarfen settings', 'hezarfen-for-woocommerce'); ?></p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <span class="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">4</span>
+                                            <div>
+                                                <p class="text-sm font-medium text-gray-800"><?php esc_html_e('Add Balance', 'hezarfen-for-woocommerce'); ?></p>
+                                                <p class="text-xs text-gray-600"><?php esc_html_e('Upload balance to your Intense Wallet', 'hezarfen-for-woocommerce'); ?></p>
                                             </div>
                                         </div>
                                         <div class="flex items-start gap-3">
                                             <span class="flex-shrink-0 w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-bold">✓</span>
                                             <div>
-                                                <p class="text-sm font-medium text-green-800"><?php esc_html_e('Automatic Updates', 'hezarfen-for-woocommerce'); ?></p>
-                                                <p class="text-xs text-green-600"><?php esc_html_e('Order status and customer notifications handled automatically', 'hezarfen-for-woocommerce'); ?></p>
+                                                <p class="text-sm font-medium text-green-800"><?php esc_html_e('Create first barcode here!', 'hezarfen-for-woocommerce'); ?></p>
+                                                <p class="text-xs text-green-600"><?php esc_html_e('Start creating shipments with automatic tracking', 'hezarfen-for-woocommerce'); ?></p>
                                             </div>
+                                        </div>
+                                        
+                                        <div class="flex gap-2 mt-6">
+                                            <a href="https://intense.com.tr" target="_blank" class="flex-1 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
+                                                <?php esc_html_e('Go to intense.com.tr', 'hezarfen-for-woocommerce'); ?>
+                                            </a>
+                                            <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=hepsijet_integration' ) ); ?>" target="_blank" class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 text-center">
+                                                <?php esc_html_e('Settings', 'hezarfen-for-woocommerce'); ?>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
