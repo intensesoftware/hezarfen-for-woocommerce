@@ -46,7 +46,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                             class="hidden peer" checked>
 
                                     <label for="courier-company-select-hepsijet-entegrasyon"
-                                            class="relative flex items-center justify-between w-full p-1
+                                            class="relative flex items-center justify-between w-full p-1 h-12
                                                     bg-gradient-to-r from-orange-50 to-orange-100 border border-orange-300
                                                     rounded-xl cursor-pointer shadow-sm
                                                     peer-checked:border-2 peer-checked:border-orange-500 peer-checked:shadow-lg
@@ -54,20 +54,20 @@ use \Hezarfen\ManualShipmentTracking\Helper;
 
                                         <!-- Sol: Logo ve metin -->
                                         <div class="flex items-center gap-3">
-                                            <div class="">
-                                            <img class="max-h-8"
+                                            <div class="relative">
+                                            <img class="max-h-4"
                                                 src="<?php echo esc_url(HEZARFEN_MST_COURIER_LOGO_URL . Helper::get_courier_class('hepsijet')::$logo); ?>" 
                                                 loading="lazy"
                                                 alt="HepsiJet">
 
                                             <!-- Etiket Rozet -->
-                                            <span class="-top-2 -right-3 text-[10px] bg-orange-500 text-white px-2 py-0.5 rounded-full shadow">
-                                                Entegrasyon
+                                            <span class="absolute -top-2 -right-3 text-[10px] bg-orange-500 text-white px-2 py-0.5 rounded-full shadow">
+                                                Ücretsiz Entegrasyon
                                             </span>
                                             </div>
 
-                                            <div class="flex flex-col leading-tight">
-                                            <span class="text-xs text-gray-600">
+                                            <div class="flex flex-col leading-tight overflow-hidden">
+                                            <div class="text-xs text-gray-600">
                                                 <?php
                                                 // Get actual pricing for 1 and 4 desi to determine price range
                                                 try {
@@ -77,15 +77,16 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                                     if ($pricing_info !== false) {
                                                         $price = $pricing_info['price_1_desi'];
                                                         $desi_range = $pricing_info['display_text'];
-                                                        echo '<span class="inline-flex items-center gap-1">';
                                                         echo '<span style="font-weight: bold !important; font-size: 1.125rem !important; color: #2563eb !important; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;">' . esc_html(number_format($price, 2)) . '₺+KDV</span>';
-                                                        echo '<span class="text-gray-700 font-medium">(' . esc_html($desi_range) . ')</span>';
-                                                        echo '</span><p class="text-xs text-gray-600;" style="line-height: normal !important;"> ' . esc_html__('Free integration, automatic tracking number entry, order status update', 'hezarfen-for-woocommerce') . '</p>';
+                                                        echo ' <span class="text-gray-700 font-medium">(' . esc_html($desi_range) . ')</span>';
                                                     }
                                                 } catch (Exception $e) {
                                                 }
                                                 ?>
-                                            </span>
+                                            </div>
+                                            <div class="hezarfen-marquee-text text-xs text-gray-600">
+                                                <span><?php echo esc_html__('Free integration, automatic tracking number entry, order status update', 'hezarfen-for-woocommerce'); ?></span>
+                                            </div>
                                             </div>
                                         </div>
                                     </label>

@@ -1,3 +1,6 @@
+/*!*******************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./assets/admin/order-edit/src/style.css ***!
+  \*******************************************************************************************************************************************************************************************/
 .tooltip-arrow,.tooltip-arrow:before {
   position: absolute;
   width: 8px;
@@ -1165,9 +1168,6 @@ video:where(.hez-ui,.hez-ui *) {
 .hidden {
   display: none !important;
 }
-.aspect-video {
-  aspect-ratio: 16 / 9 !important;
-}
 .h-10 {
   height: 2.5rem !important;
 }
@@ -1206,6 +1206,9 @@ video:where(.hez-ui,.hez-ui *) {
 }
 .max-h-8 {
   max-height: 2rem !important;
+}
+.max-h-4 {
+  max-height: 1rem !important;
 }
 .w-1\/2 {
   width: 50% !important;
@@ -1484,10 +1487,6 @@ video:where(.hez-ui,.hez-ui *) {
   --tw-border-opacity: 1 !important;
   border-color: rgb(253 186 140 / var(--tw-border-opacity)) !important;
 }
-.border-red-200 {
-  --tw-border-opacity: 1 !important;
-  border-color: rgb(251 213 213 / var(--tw-border-opacity)) !important;
-}
 .border-transparent {
   border-color: transparent !important;
 }
@@ -1569,10 +1568,6 @@ video:where(.hez-ui,.hez-ui *) {
 .bg-red-100 {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(253 232 232 / var(--tw-bg-opacity)) !important;
-}
-.bg-red-50 {
-  --tw-bg-opacity: 1 !important;
-  background-color: rgb(253 242 242 / var(--tw-bg-opacity)) !important;
 }
 .bg-red-600 {
   --tw-bg-opacity: 1 !important;
@@ -2599,3 +2594,5 @@ video:where(.hez-ui,.hez-ui *) {
 .rtl\:text-right:where([dir="rtl"], [dir="rtl"] *) {
   text-align: right !important;
 }
+
+/*# sourceMappingURL=style-main.css.map*/

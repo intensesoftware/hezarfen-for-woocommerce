@@ -35,3 +35,32 @@ td.column-hezarfen_mst_shipment_info p {
 #tiptip_holder #tiptip_content {
 	max-width: 200px;
 }
+
+/* Marquee animation for Hezarfen integration long text */
+.hezarfen-marquee-text {
+	overflow: hidden;
+	white-space: nowrap;
+	width: 100%;
+	position: relative;
+	height: 1.2em;
+}
+
+.hezarfen-marquee-text span {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	line-height: 1.2em;
+	text-align: left;
+	transform: translateX(100%);
+	animation: scroll-left 10s linear infinite;
+}
+
+@keyframes scroll-left {
+	0% {
+		transform: translateX(100%);
+	}
+	100% {
+		transform: translateX(-100%);
+	}
+}
