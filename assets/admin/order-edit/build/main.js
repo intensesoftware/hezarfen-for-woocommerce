@@ -132,8 +132,8 @@ jQuery(document).ready($ => {
       // Reset conditional fields when showing Hepsijet fields
       $('#hepsijet-delivery-slot-container').addClass('hidden');
       $('#hepsijet-return-date-container').addClass('hidden');
-    } else {
-      // Show standard tracking fields
+    } else if (selectedCourier) {
+      // Show standard tracking fields for any other selected courier
       standardFields.removeClass('hidden');
       hepsijetFields.addClass('hidden');
       standardButton.removeClass('hidden');
@@ -141,24 +141,29 @@ jQuery(document).ready($ => {
       if (hepsijetButton.length > 0) {
         hepsijetButton.addClass('hidden');
       }
+    } else {
+      // No courier selected - hide all tracking fields
+      standardFields.addClass('hidden');
+      hepsijetFields.addClass('hidden');
+      standardButton.addClass('hidden');
+      if (hepsijetButton.length > 0) {
+        hepsijetButton.addClass('hidden');
+      }
     }
   });
 
-  // Show Hepsijet fields by default if Hepsijet option is selected
-  if ($('#courier-company-select-hepsijet-entegrasyon').is(':checked')) {
-    const standardFields = $('#standard-tracking-fields');
-    const hepsijetFields = $('#hepsijet-integration-fields');
-    const standardButton = $('#add-to-tracking-list');
-    const hepsijetButton = $('#create-hepsijet-shipment');
+  // Initialize: hide all tracking fields since no courier is selected by default
+  const standardFields = $('#standard-tracking-fields');
+  const hepsijetFields = $('#hepsijet-integration-fields');
+  const standardButton = $('#add-to-tracking-list');
+  const hepsijetButton = $('#create-hepsijet-shipment');
 
-    // Show Hepsijet integration fields
-    standardFields.addClass('hidden');
-    hepsijetFields.removeClass('hidden');
-    standardButton.addClass('hidden');
-    // Only show hepsijet button if it exists (not during onboarding)
-    if (hepsijetButton.length > 0) {
-      hepsijetButton.removeClass('hidden');
-    }
+  // Hide all fields and buttons by default
+  standardFields.addClass('hidden');
+  hepsijetFields.addClass('hidden');
+  standardButton.addClass('hidden');
+  if (hepsijetButton.length > 0) {
+    hepsijetButton.addClass('hidden');
   }
 
   // Handle delivery type selection
