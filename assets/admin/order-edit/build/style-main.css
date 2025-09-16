@@ -1496,6 +1496,10 @@ video:where(.hez-ui,.hez-ui *) {
   --tw-border-opacity: 1 !important;
   border-color: rgb(209 213 219 / var(--tw-border-opacity)) !important;
 }
+.border-red-200 {
+  --tw-border-opacity: 1 !important;
+  border-color: rgb(251 213 213 / var(--tw-border-opacity)) !important;
+}
 .border-transparent {
   border-color: transparent !important;
 }
@@ -1581,6 +1585,10 @@ video:where(.hez-ui,.hez-ui *) {
 .bg-red-100 {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(253 232 232 / var(--tw-bg-opacity)) !important;
+}
+.bg-red-50 {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(253 242 242 / var(--tw-bg-opacity)) !important;
 }
 .bg-red-600 {
   --tw-bg-opacity: 1 !important;
@@ -2247,6 +2255,10 @@ video:where(.hez-ui,.hez-ui *) {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(180 52 3 / var(--tw-bg-opacity)) !important;
 }
+.hover\:bg-red-100:hover {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(253 232 232 / var(--tw-bg-opacity)) !important;
+}
 .hover\:bg-red-700:hover {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(200 30 30 / var(--tw-bg-opacity)) !important;
@@ -2270,6 +2282,10 @@ video:where(.hez-ui,.hez-ui *) {
 .hover\:text-gray-900:hover {
   --tw-text-opacity: 1 !important;
   color: rgb(17 24 39 / var(--tw-text-opacity)) !important;
+}
+.hover\:text-red-700:hover {
+  --tw-text-opacity: 1 !important;
+  color: rgb(200 30 30 / var(--tw-text-opacity)) !important;
 }
 .hover\:opacity-80:hover {
   opacity: 0.8 !important;

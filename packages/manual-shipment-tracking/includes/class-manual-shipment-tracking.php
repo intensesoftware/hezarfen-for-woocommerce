@@ -28,7 +28,7 @@ require_once 'class-third-party-data-support.php';
  * Manual Shipment Tracking package main class.
  */
 class Manual_Shipment_Tracking {
-	const ENABLE_DISABLE_OPTION = 'hezarfen_enable_manual_shipment_tracking';
+	const ENABLE_DISABLE_OPTION = 'hezarfen_enable_shipment_tracking';
 
 	const DB_SHIPPED_ORDER_STATUS = 'wc-hezarfen-shipped';
 	const SHIPPED_ORDER_STATUS    = 'hezarfen-shipped';
