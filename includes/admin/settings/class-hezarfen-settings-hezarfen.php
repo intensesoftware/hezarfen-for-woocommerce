@@ -1092,6 +1092,10 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 
 		if ( 'woocommerce_page_wc-settings' === $hook_suffix && '' === $current_section ) {
 			wp_enqueue_style( 'wc_hezarfen_settings_css', plugins_url( 'assets/admin/css/settings.css', WC_HEZARFEN_FILE ), array(), WC_HEZARFEN_VERSION );
+		}
+
+		// Load swimming card script on all WooCommerce settings pages to check URL parameters
+		if ( 'woocommerce_page_wc-settings' === $hook_suffix ) {
 			wp_enqueue_script( 'wc_hezarfen_training_js', plugins_url( 'assets/admin/js/training.js', WC_HEZARFEN_FILE ), array( 'jquery' ), WC_HEZARFEN_VERSION, true );
 		}
 

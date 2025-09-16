@@ -1,4 +1,13 @@
 jQuery(document).ready(function($) {
+    // Only show on Hezarfen settings page
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = urlParams.get('page');
+    const tab = urlParams.get('tab');
+    
+    if (page !== 'wc-settings' || tab !== 'hezarfen') {
+        return; // Not on Hezarfen settings page
+    }
+    
     // Check if user previously closed the card
     if (localStorage.getItem('hezarfen_swimming_card_closed') === 'true') {
         return; // Don't show the card
