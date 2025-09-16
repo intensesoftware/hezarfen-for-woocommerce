@@ -755,7 +755,10 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 							</h3>
 							<p class="hezarfen-video-description"><?php echo esc_html( $video['description'] ); ?></p>
 							<div class="hezarfen-video-meta">
-								<span class="hezarfen-video-duration"><?php echo esc_html( $video['duration'] ); ?></span>
+								<div class="hezarfen-meta-left">
+									<span class="hezarfen-video-duration"><?php echo esc_html( $video['duration'] ); ?></span>
+									<span class="hezarfen-video-date"><?php echo esc_html( $this->format_video_date( $video['published'] ?? '' ) ); ?></span>
+								</div>
 								<span class="hezarfen-comment-cta"><?php esc_html_e( 'Comment to reach out us!', 'hezarfen-for-woocommerce' ); ?></span>
 							</div>
 						</div>
@@ -763,44 +766,98 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				<?php endforeach; ?>
 			</div>
 			
-			<!-- YouTube Channel Footer Promotion -->
-			<div class="hezarfen-channel-footer">
-				<div class="hezarfen-channel-footer-content">
-					<div class="hezarfen-footer-icon">
-						<svg width="32" height="23" viewBox="0 0 24 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path d="M23.498 2.64C23.217 1.64 22.438 0.861 21.438 0.58C19.578 0.061 12 0.061 12 0.061C12 0.061 4.422 0.061 2.562 0.58C1.562 0.861 0.783 1.64 0.502 2.64C-0.017 4.5 -0.017 8.371 -0.017 8.371C-0.017 8.371 -0.017 12.242 0.502 14.102C0.783 15.102 1.562 15.881 2.562 16.162C4.422 16.681 12 16.681 12 16.681C12 16.681 19.578 16.681 21.438 16.162C22.438 15.881 23.217 15.102 23.498 14.102C24.017 12.242 24.017 8.371 24.017 8.371C24.017 8.371 24.017 4.5 23.498 2.64Z" fill="#FF0000"/>
-							<path d="M9.545 12.011L15.818 8.371L9.545 4.731V12.011Z" fill="white"/>
-						</svg>
-					</div>
-					<div class="hezarfen-footer-text">
-						<h3><?php esc_html_e( 'Stay Updated with Hezarfen', 'hezarfen-for-woocommerce' ); ?></h3>
-						<p><?php esc_html_e( 'Subscribe to our YouTube channel for tutorials, tips, and new features. Your feedback helps us create better content!', 'hezarfen-for-woocommerce' ); ?></p>
-					</div>
-					<div class="hezarfen-footer-actions">
-						<a href="https://www.youtube.com/@hezarfenforwoocommerce" target="_blank" rel="noopener noreferrer" class="hezarfen-footer-subscribe-btn">
-							<svg width="18" height="13" viewBox="0 0 24 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path d="M23.498 2.64C23.217 1.64 22.438 0.861 21.438 0.58C19.578 0.061 12 0.061 12 0.061C12 0.061 4.422 0.061 2.562 0.58C1.562 0.861 0.783 1.64 0.502 2.64C-0.017 4.5 -0.017 8.371 -0.017 8.371C-0.017 8.371 -0.017 12.242 0.502 14.102C0.783 15.102 1.562 15.881 2.562 16.162C4.422 16.681 12 16.681 12 16.681C12 16.681 19.578 16.681 21.438 16.162C22.438 15.881 23.217 15.102 23.498 14.102C24.017 12.242 24.017 8.371 24.017 8.371C24.017 8.371 24.017 4.5 23.498 2.64Z" fill="currentColor"/>
-								<path d="M9.545 12.011L15.818 8.371L9.545 4.731V12.011Z" fill="white"/>
-							</svg>
-							<?php esc_html_e( 'Subscribe Now', 'hezarfen-for-woocommerce' ); ?>
-						</a>
-						<div class="hezarfen-footer-comment-hint">
-							<span class="hezarfen-comment-icon">💬</span>
-							<span><?php esc_html_e( 'Comment on videos to request new topics', 'hezarfen-for-woocommerce' ); ?></span>
-						</div>
-					</div>
-				</div>
-			</div>
 		</div>
 		<?php
 	}
 
 	/**
-	 * Get training videos data
+	 * Get training videos data from YouTube RSS feed
 	 *
 	 * @return array
 	 */
 	private function get_training_videos() {
+		// Check for cached videos first
+		$cached_videos = get_transient( 'hezarfen_youtube_videos' );
+		if ( false !== $cached_videos ) {
+			return $cached_videos;
+		}
+
+		$videos = array();
+		$feed_url = 'https://www.youtube.com/feeds/videos.xml?channel_id=UCMciljrlqN1u0uBdL8mbyUQ';
+
+		// Fetch the RSS feed
+		$response = wp_remote_get( $feed_url, array(
+			'timeout' => 15
+		) );
+
+		if ( is_wp_error( $response ) ) {
+			// Return fallback video if feed fails
+			return $this->get_fallback_videos();
+		}
+
+		$body = wp_remote_retrieve_body( $response );
+		if ( empty( $body ) ) {
+			return $this->get_fallback_videos();
+		}
+
+		// Parse XML
+		$xml = simplexml_load_string( $body );
+		if ( false === $xml ) {
+			return $this->get_fallback_videos();
+		}
+
+		// Register namespaces
+		$xml->registerXPathNamespace( 'atom', 'http://www.w3.org/2005/Atom' );
+		$xml->registerXPathNamespace( 'yt', 'http://www.youtube.com/xml/schemas/2015' );
+		$xml->registerXPathNamespace( 'media', 'http://search.yahoo.com/mrss/' );
+
+		// Get video entries
+		$entries = $xml->xpath( '//atom:entry' );
+
+		if ( empty( $entries ) ) {
+			return $this->get_fallback_videos();
+		}
+
+		foreach ( $entries as $entry ) {
+			$entry->registerXPathNamespace( 'atom', 'http://www.w3.org/2005/Atom' );
+			$entry->registerXPathNamespace( 'yt', 'http://www.youtube.com/xml/schemas/2015' );
+			$entry->registerXPathNamespace( 'media', 'http://search.yahoo.com/mrss/' );
+
+			$video_id = (string) $entry->xpath( 'yt:videoId' )[0];
+			$title = (string) $entry->xpath( 'atom:title' )[0];
+			$description = (string) $entry->xpath( 'media:group/media:description' )[0];
+			$published = (string) $entry->xpath( 'atom:published' )[0];
+
+			if ( empty( $video_id ) || empty( $title ) ) {
+				continue;
+			}
+
+			// Get video duration from YouTube API (optional, fallback to default)
+			$duration = $this->get_video_duration( $video_id );
+
+			$videos[] = array(
+				'id'          => $video_id,
+				'title'       => $title,
+				'description' => $this->truncate_description( $description ),
+				'url'         => 'https://www.youtube.com/watch?v=' . $video_id,
+				'thumbnail'   => 'https://img.youtube.com/vi/' . $video_id . '/maxresdefault.jpg',
+				'duration'    => $duration,
+				'published'   => $published
+			);
+		}
+
+		// Cache for 1 hour
+		set_transient( 'hezarfen_youtube_videos', $videos, HOUR_IN_SECONDS );
+
+		return empty( $videos ) ? $this->get_fallback_videos() : $videos;
+	}
+
+	/**
+	 * Get fallback videos when RSS feed fails
+	 *
+	 * @return array
+	 */
+	private function get_fallback_videos() {
 		return array(
 			array(
 				'id'          => 'jatKJipEdpU',
@@ -808,9 +865,62 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				'description' => __( 'Learn how to integrate Hepsijet with Hezarfen and get advantageous shipping rates.', 'hezarfen-for-woocommerce' ),
 				'url'         => 'https://www.youtube.com/watch?v=jatKJipEdpU',
 				'thumbnail'   => 'https://img.youtube.com/vi/jatKJipEdpU/maxresdefault.jpg',
-				'duration'    => '5:27'
+				'duration'    => '5:27',
+				'published'   => '2025-09-16T15:28:39+00:00'
 			),
 		);
+	}
+
+	/**
+	 * Get video duration (fallback method)
+	 *
+	 * @param string $video_id YouTube video ID
+	 * @return string Duration in MM:SS format
+	 */
+	private function get_video_duration( $video_id ) {
+		// For now, return a default duration
+		// In the future, this could use YouTube Data API v3 for accurate durations
+		return '5:27';
+	}
+
+	/**
+	 * Truncate video description
+	 *
+	 * @param string $description Video description
+	 * @return string Truncated description
+	 */
+	private function truncate_description( $description ) {
+		if ( empty( $description ) ) {
+			return __( 'Learn how to use Hezarfen with this helpful tutorial.', 'hezarfen-for-woocommerce' );
+		}
+
+		// Truncate to 150 characters
+		if ( strlen( $description ) > 150 ) {
+			$description = substr( $description, 0, 150 ) . '...';
+		}
+
+		return $description;
+	}
+
+	/**
+	 * Format video publication date for display
+	 *
+	 * @param string $published_date ISO 8601 date string
+	 * @return string Formatted date in Turkish format
+	 */
+	private function format_video_date( $published_date ) {
+		if ( empty( $published_date ) ) {
+			return '';
+		}
+
+		try {
+			$date = new DateTime( $published_date );
+			// Turkish date format: DD.MM.YYYY
+			return $date->format( 'd.m.Y' );
+		} catch ( Exception $e ) {
+			// Fallback if date parsing fails
+			return '';
+		}
 	}
 
 	/**
@@ -982,6 +1092,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 
 		if ( 'woocommerce_page_wc-settings' === $hook_suffix && '' === $current_section ) {
 			wp_enqueue_style( 'wc_hezarfen_settings_css', plugins_url( 'assets/admin/css/settings.css', WC_HEZARFEN_FILE ), array(), WC_HEZARFEN_VERSION );
+			wp_enqueue_script( 'wc_hezarfen_training_js', plugins_url( 'assets/admin/js/training.js', WC_HEZARFEN_FILE ), array( 'jquery' ), WC_HEZARFEN_VERSION, true );
 		}
 
 		if ( 'woocommerce_page_wc-settings' === $hook_suffix && 'sms_settings' === $current_section ) {
