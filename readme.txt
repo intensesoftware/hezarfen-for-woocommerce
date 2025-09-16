@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.6.2
+Stable tag: 2.6.3
 
 TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ!  Intense&Hepsijet İşbirliğiyle; Hezarfen için Hepsijet 1 ila 4 Desi 69,99TL+KDV WooCommerce Kargo Takip Eklentisi
 == Description ==
@@ -36,7 +36,7 @@ TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ!  Intense&Hepsijet İşbirliğiyle; He
 = ⭐ TAMAMEN ÜCRETSİZ =
 
 **🚚 Hepsijet Ücretsiz WooCommerce Kargo Entegrasyonu**
-• 1-4 Desi 69.99TL - Anlaşma yapmaınza gerek yok, intense.com.tr'den kayıt olun, bakiye yükleyin ve gönderime başlayın. Kargo gönderim için minimum limit yok! İster ayda 1 tane, ister 10000 tane!
+• 1-4 Desi 69,99TL+KDV - Anlaşma yapmaınza gerek yok, intense.com.tr'den kayıt olun, bakiye yükleyin ve gönderime başlayın. Kargo gönderim için minimum limit yok! İster ayda 1 tane, ister 10000 tane!
 • Ücretsiz entegrasyon (otomatik kargo takip no girişi, otomatik siparişin kargoya verildi durumuna geçmesi, otomatik siparişin tamamlandı durumuna geçmesi, otomatik müşteriye e-posta bildirimi)
 
 **🚚 Kargo Yönetimi ve WooCommerce Kargo Takip Modülü**
@@ -129,6 +129,9 @@ For more details, please see our [Privacy Policy](https://intense.com.tr/yasal/g
 5. **MSS Sözleşmeleri**: Mesafeli satış sözleşmesi özelliğini aktifleştirin ve sözleşme şablonlarınızı oluşturun
 
 == Frequently Asked Questions ==
+
+= Eğitim içeriklerine nasıl ulaşabilirim? =
+Eğitim videoları ve rehberler için [Hezarfen YouTube resmi kanalımızı](https://www.youtube.com/@hezarfenforwoocommerce) ziyaret edebilir ve abone olabilirsiniz.
 
 = Bu WooCommerce eklentisi tamamen ücretsiz mi? =
 Evet, yukarıda listelenen özellikler tamamen ücretsizdir. 23 kargo firması için manuel takip, WooCommerce kargo takip modülü, il/ilçe/mahalle seçimi, TC kimlik no alanı gibi özellikler ücretsiz sunulmaktadır.Ayrıca, Hezarfen'in intense.com.tr üzerinde satılan Pro versiyonu mevcuttur. Pro versiyonda otomatik woocommerce kargo entegrasyonu, Paraşüt e-arşiv/e-fatura entegrasyonu özellikleri bulunmaktadır.
@@ -250,6 +253,9 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
+= 2.6.3 - 2025-09-16 =
+* Eğitim alanı iyileştirildi.
+
 = 2.6.2 - 2025-09-16 =
 * Ayarlar bölümüne eğitim alanı eklendi.
 
