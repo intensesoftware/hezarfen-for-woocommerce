@@ -15,8 +15,8 @@ jQuery(document).ready(function($) {
                     </svg>
                 </div>
                 <div class="hezarfen-card-text">
-                    <strong>Subscribe</strong>
-                    <span>for tutorials!</span>
+                    <strong>Abone olun</strong>
+                    <span>eğitimler için!</span>
                 </div>
             </div>
             <a href="https://www.youtube.com/@hezarfenforwoocommerce" target="_blank" rel="noopener noreferrer" class="hezarfen-card-link" aria-label="Subscribe to Hezarfen YouTube Channel"></a>
