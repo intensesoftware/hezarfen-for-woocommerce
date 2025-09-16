@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.6.1
+Stable tag: 2.6.2
 
 TAMAMEN ÜCRETSİZ 🚀 2000+ WEBSİTESİ!  Intense&Hepsijet İşbirliğiyle; Hezarfen için Hepsijet 1 ila 4 Desi 69,99TL+KDV WooCommerce Kargo Takip Eklentisi
 == Description ==
@@ -250,6 +250,9 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
+= 2.6.2 - 2025-09-16 =
+* Ayarlar bölümüne eğitim alanı eklendi.
+
 = 2.6.1 - 2025-09-15 =
 * Hepsijet kargo arayüzü iyileştirildi.
 * SMS otomasyonunda sipariş toplamı değişkeninde yaşanan TL simge hatası giderildi.
