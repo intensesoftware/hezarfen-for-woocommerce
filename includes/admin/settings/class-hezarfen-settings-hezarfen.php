@@ -40,7 +40,8 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 */
 	protected function get_own_sections() {
 		$sections = array(
-			''              => __( 'General', 'hezarfen-for-woocommerce' ),
+			''              => __( 'Training', 'hezarfen-for-woocommerce' ),
+			'general'       => __( 'General', 'hezarfen-for-woocommerce' ),
 			'encryption'    => __( 'Encryption', 'hezarfen-for-woocommerce' ),
 			'checkout_page' => __( 'Checkout Page Settings', 'hezarfen-for-woocommerce' ),
 			'sms_settings'  => __( 'SMS Settings', 'hezarfen-for-woocommerce' ),
@@ -61,11 +62,22 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	}
 
 	/**
-	 * Get settings for the default(General) section.
+	 * Get settings for the default section (Training).
 	 *
 	 * @return array<array<string, string>>
 	 */
 	protected function get_settings_for_default_section() {
+		// Default section is now Training, which doesn't need form fields
+		// since it's handled by output_training_section()
+		return array();
+	}
+
+	/**
+	 * Get settings for the General section.
+	 *
+	 * @return array<array<string, string>>
+	 */
+	protected function get_settings_for_general_section() {
 		$fields = array(
 			array(
 				'title' => __(
@@ -692,6 +704,10 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			$test_the_key = $post_meta_encryption->test_the_encryption_key();
 
 			require 'views/encryption.php';
+		} elseif ( '' === $current_section ) {
+			// Default section is now Training
+			$hide_save_button = true;
+			$this->output_training_section();
 		} else {
 			$settings = $this->get_settings_for_section( $current_section );
 			WC_Admin_Settings::output_fields( $settings );
@@ -701,6 +717,100 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				$this->output_netgsm_credentials_modal();
 			}
 		}
+	}
+
+	/**
+	 * Output training section with YouTube videos grid
+	 *
+	 * @return void
+	 */
+	private function output_training_section() {
+		$training_videos = $this->get_training_videos();
+		?>
+		<div class="hezarfen-training-section">
+			<div class="hezarfen-training-header">
+				<h2><?php esc_html_e( 'Training Videos', 'hezarfen-for-woocommerce' ); ?></h2>
+				<p><?php esc_html_e( 'Learn how to use Hezarfen with these helpful video tutorials.', 'hezarfen-for-woocommerce' ); ?></p>
+			</div>
+			
+			<div class="hezarfen-videos-grid">
+				<?php foreach ( $training_videos as $video ) : ?>
+					<div class="hezarfen-video-card">
+						<div class="hezarfen-video-thumbnail">
+							<a href="<?php echo esc_url( $video['url'] ); ?>" target="_blank" rel="noopener noreferrer">
+								<img src="<?php echo esc_url( $video['thumbnail'] ); ?>" alt="<?php echo esc_attr( $video['title'] ); ?>" loading="lazy">
+								<div class="hezarfen-play-button">
+									<svg width="68" height="48" viewBox="0 0 68 48" xmlns="http://www.w3.org/2000/svg">
+										<path d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z" fill="#f00"></path>
+										<path d="M45,24L27,14v20" fill="#fff"></path>
+									</svg>
+								</div>
+							</a>
+						</div>
+						<div class="hezarfen-video-info">
+							<h3 class="hezarfen-video-title">
+								<a href="<?php echo esc_url( $video['url'] ); ?>" target="_blank" rel="noopener noreferrer">
+									<?php echo esc_html( $video['title'] ); ?>
+								</a>
+							</h3>
+							<p class="hezarfen-video-description"><?php echo esc_html( $video['description'] ); ?></p>
+							<div class="hezarfen-video-meta">
+								<span class="hezarfen-video-duration"><?php echo esc_html( $video['duration'] ); ?></span>
+								<span class="hezarfen-comment-cta"><?php esc_html_e( 'Comment to reach out us!', 'hezarfen-for-woocommerce' ); ?></span>
+							</div>
+						</div>
+					</div>
+				<?php endforeach; ?>
+			</div>
+			
+			<!-- YouTube Channel Footer Promotion -->
+			<div class="hezarfen-channel-footer">
+				<div class="hezarfen-channel-footer-content">
+					<div class="hezarfen-footer-icon">
+						<svg width="32" height="23" viewBox="0 0 24 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M23.498 2.64C23.217 1.64 22.438 0.861 21.438 0.58C19.578 0.061 12 0.061 12 0.061C12 0.061 4.422 0.061 2.562 0.58C1.562 0.861 0.783 1.64 0.502 2.64C-0.017 4.5 -0.017 8.371 -0.017 8.371C-0.017 8.371 -0.017 12.242 0.502 14.102C0.783 15.102 1.562 15.881 2.562 16.162C4.422 16.681 12 16.681 12 16.681C12 16.681 19.578 16.681 21.438 16.162C22.438 15.881 23.217 15.102 23.498 14.102C24.017 12.242 24.017 8.371 24.017 8.371C24.017 8.371 24.017 4.5 23.498 2.64Z" fill="#FF0000"/>
+							<path d="M9.545 12.011L15.818 8.371L9.545 4.731V12.011Z" fill="white"/>
+						</svg>
+					</div>
+					<div class="hezarfen-footer-text">
+						<h3><?php esc_html_e( 'Stay Updated with Hezarfen', 'hezarfen-for-woocommerce' ); ?></h3>
+						<p><?php esc_html_e( 'Subscribe to our YouTube channel for tutorials, tips, and new features. Your feedback helps us create better content!', 'hezarfen-for-woocommerce' ); ?></p>
+					</div>
+					<div class="hezarfen-footer-actions">
+						<a href="https://www.youtube.com/@hezarfenforwoocommerce" target="_blank" rel="noopener noreferrer" class="hezarfen-footer-subscribe-btn">
+							<svg width="18" height="13" viewBox="0 0 24 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M23.498 2.64C23.217 1.64 22.438 0.861 21.438 0.58C19.578 0.061 12 0.061 12 0.061C12 0.061 4.422 0.061 2.562 0.58C1.562 0.861 0.783 1.64 0.502 2.64C-0.017 4.5 -0.017 8.371 -0.017 8.371C-0.017 8.371 -0.017 12.242 0.502 14.102C0.783 15.102 1.562 15.881 2.562 16.162C4.422 16.681 12 16.681 12 16.681C12 16.681 19.578 16.681 21.438 16.162C22.438 15.881 23.217 15.102 23.498 14.102C24.017 12.242 24.017 8.371 24.017 8.371C24.017 8.371 24.017 4.5 23.498 2.64Z" fill="currentColor"/>
+								<path d="M9.545 12.011L15.818 8.371L9.545 4.731V12.011Z" fill="white"/>
+							</svg>
+							<?php esc_html_e( 'Subscribe Now', 'hezarfen-for-woocommerce' ); ?>
+						</a>
+						<div class="hezarfen-footer-comment-hint">
+							<span class="hezarfen-comment-icon">💬</span>
+							<span><?php esc_html_e( 'Comment on videos to request new topics', 'hezarfen-for-woocommerce' ); ?></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Get training videos data
+	 *
+	 * @return array
+	 */
+	private function get_training_videos() {
+		return array(
+			array(
+				'id'          => 'jatKJipEdpU',
+				'title'       => __( 'Hezarfen Ücretsiz Hepsijet Entegrasyonu ve Avantajlı Kargo Fiyatları', 'hezarfen-for-woocommerce' ),
+				'description' => __( 'Learn how to integrate Hepsijet with Hezarfen and get advantageous shipping rates.', 'hezarfen-for-woocommerce' ),
+				'url'         => 'https://www.youtube.com/watch?v=jatKJipEdpU',
+				'thumbnail'   => 'https://img.youtube.com/vi/jatKJipEdpU/maxresdefault.jpg',
+				'duration'    => '5:27'
+			),
+		);
 	}
 
 	/**
@@ -867,6 +977,10 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 
 		if ( 'woocommerce_page_wc-settings' === $hook_suffix && 'encryption_recovery' === $current_section ) {
 			wp_enqueue_script( 'wc_hezarfen_settings_js', plugins_url( 'assets/admin/js/settings.js', WC_HEZARFEN_FILE ), array( 'jquery' ), WC_HEZARFEN_VERSION, true );
+			wp_enqueue_style( 'wc_hezarfen_settings_css', plugins_url( 'assets/admin/css/settings.css', WC_HEZARFEN_FILE ), array(), WC_HEZARFEN_VERSION );
+		}
+
+		if ( 'woocommerce_page_wc-settings' === $hook_suffix && '' === $current_section ) {
 			wp_enqueue_style( 'wc_hezarfen_settings_css', plugins_url( 'assets/admin/css/settings.css', WC_HEZARFEN_FILE ), array(), WC_HEZARFEN_VERSION );
 		}
 
