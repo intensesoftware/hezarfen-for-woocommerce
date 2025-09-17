@@ -24,8 +24,18 @@ class Post_Order_Processor {
 	 * Initialize post-order processing hooks
 	 */
 	public static function init() {
-		// Agreements will be created when order status becomes processing
-		add_action( 'woocommerce_order_status_processing', array( __CLASS__, 'process_order_contracts' ) );
+		// Get agreement creation timing setting
+		$settings = get_option( 'hezarfen_mss_settings', array() );
+		$timing = isset( $settings['agreement_creation_timing'] ) ? $settings['agreement_creation_timing'] : 'processing';
+		
+		// Add hooks based on timing setting
+		if ( 'new_order' === $timing ) {
+			// Agreements will be created when new order is placed
+			add_action( 'woocommerce_checkout_order_processed', array( __CLASS__, 'process_order_contracts' ), 20, 1 );
+		} else {
+			// Default: Agreements will be created when order status becomes processing
+			add_action( 'woocommerce_order_status_processing', array( __CLASS__, 'process_order_contracts' ) );
+		}
 
 		// Hook for including contracts in customer emails
 		add_action( 'woocommerce_email_customer_details', array( __CLASS__, 'include_contracts_in_email' ), 100, 4 );
@@ -88,14 +98,25 @@ class Post_Order_Processor {
 			return;
 		}
 
+		// Get agreement creation timing setting
+		$settings = get_option( 'hezarfen_mss_settings', array() );
+		$timing = isset( $settings['agreement_creation_timing'] ) ? $settings['agreement_creation_timing'] : 'processing';
 
-		// Include contracts in processing order emails (since agreements are created when order becomes processing)
 		$email_class = get_class( $email );
 		$should_include = false;
 		
-		// Include in processing order emails
-		if ( strpos( $email_class, 'Processing' ) !== false || strpos( $email_class, 'processing' ) !== false ) {
-			$should_include = true;
+		if ( 'new_order' === $timing ) {
+			// Include in new order confirmation emails when agreements are created on new order
+			if ( strpos( $email_class, 'Customer_Processing_Order' ) !== false || 
+				 strpos( $email_class, 'Customer_On_Hold_Order' ) !== false ||
+				 strpos( $email_class, 'Customer_Completed_Order' ) !== false ) {
+				$should_include = true;
+			}
+		} else {
+			// Default: Include in processing order emails when agreements are created on processing status
+			if ( strpos( $email_class, 'Processing' ) !== false || strpos( $email_class, 'processing' ) !== false ) {
+				$should_include = true;
+			}
 		}
 
 		if ( $should_include ) {

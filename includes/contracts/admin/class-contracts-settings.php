@@ -64,8 +64,20 @@ class Contracts_Settings {
 
 			
 			array(
-				'title'    => __( 'Contract Settings', 'hezarfen-for-woocommerce' ),
-				'desc'     => __( 'Choose how the contract will be displayed on the payment page. Contracts are automatically created when order status is "Processing".', 'hezarfen-for-woocommerce' ),
+				'title'    => __( 'Agreement Creation Timing', 'hezarfen-for-woocommerce' ),
+				'desc'     => __( 'Choose when agreements should be created for orders. Default is when order status becomes Processing.', 'hezarfen-for-woocommerce' ),
+				'id'       => 'hezarfen_mss_settings[agreement_creation_timing]',
+				'type'     => 'select',
+				'options'  => array(
+					'processing' => __( 'When order status becomes Processing', 'hezarfen-for-woocommerce' ),
+					'new_order'  => __( 'When new order is placed', 'hezarfen-for-woocommerce' ),
+				),
+				'default'  => 'processing',
+			),
+
+			array(
+				'title'    => __( 'Contract Display Settings', 'hezarfen-for-woocommerce' ),
+				'desc'     => __( 'Choose how the contract will be displayed on the payment page.', 'hezarfen-for-woocommerce' ),
 				'id'       => 'hezarfen_mss_settings[odeme_sayfasinda_sozlesme_gosterim_tipi]',
 				'type'     => 'select',
 				'options'  => array(
