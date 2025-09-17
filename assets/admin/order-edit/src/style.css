@@ -288,3 +288,32 @@
         padding: 1.25rem;
     }
 }
+
+/* Hepsijet Rotating Info Animation */
+#hepsijet-rotating-info {
+    position: relative;
+    overflow: hidden;
+}
+
+#hepsijet-rotating-info .rotating-item {
+    display: none;
+    width: 100%;
+    transition: all 0.5s ease-in-out;
+    align-items: center;
+}
+
+#hepsijet-rotating-info .rotating-item.active {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#hepsijet-rotating-info .rotating-item.fade-out {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+#hepsijet-rotating-info .rotating-item.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+}

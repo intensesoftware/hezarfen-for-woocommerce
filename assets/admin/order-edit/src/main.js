@@ -125,6 +125,7 @@ jQuery(document).ready(($)=>{
       standardFields.addClass('hidden');
       hepsijetFields.removeClass('hidden');
       standardButton.addClass('hidden');
+      // Hepsijet rotation continues automatically
       // Always show hepsijet button when HepsiJet is selected
       if (hepsijetButton.length > 0) {
         hepsijetButton.removeClass('hidden');
@@ -138,6 +139,7 @@ jQuery(document).ready(($)=>{
       standardFields.removeClass('hidden');
       hepsijetFields.addClass('hidden');
       standardButton.removeClass('hidden');
+      // Hepsijet rotation continues automatically
       // Only hide hepsijet button if it exists
       if (hepsijetButton.length > 0) {
         hepsijetButton.addClass('hidden');
@@ -147,6 +149,7 @@ jQuery(document).ready(($)=>{
       standardFields.addClass('hidden');
       hepsijetFields.addClass('hidden');
       standardButton.addClass('hidden');
+      // Hepsijet rotation continues automatically
       if (hepsijetButton.length > 0) {
         hepsijetButton.addClass('hidden');
       }
@@ -166,6 +169,55 @@ jQuery(document).ready(($)=>{
   if (hepsijetButton.length > 0) {
     hepsijetButton.addClass('hidden');
   }
+  
+  // Hepsijet Rotating Info Functions
+  let hepsijetRotationInterval = null;
+
+  function startHepsijetRotation() {
+    const rotatingContainer = $('#hepsijet-rotating-info');
+    if (rotatingContainer.length === 0) return;
+
+    const items = rotatingContainer.find('.rotating-item');
+    if (items.length === 0) return;
+
+    let currentIndex = 0;
+    
+    // Clear any existing interval
+    if (hepsijetRotationInterval) {
+      clearInterval(hepsijetRotationInterval);
+    }
+
+    // Start rotation
+    hepsijetRotationInterval = setInterval(function() {
+      const currentItem = items.eq(currentIndex);
+      const nextIndex = (currentIndex + 1) % items.length;
+      const nextItem = items.eq(nextIndex);
+
+      // Hide current item and show next
+      currentItem.removeClass('active');
+      nextItem.addClass('active');
+      currentIndex = nextIndex;
+      
+    }, 3000); // Change every 3 seconds
+  }
+
+  function stopHepsijetRotation() {
+    if (hepsijetRotationInterval) {
+      clearInterval(hepsijetRotationInterval);
+      hepsijetRotationInterval = null;
+    }
+    
+    // Reset to first item
+    const rotatingContainer = $('#hepsijet-rotating-info');
+    if (rotatingContainer.length > 0) {
+      const items = rotatingContainer.find('.rotating-item');
+      items.removeClass('active');
+      items.eq(0).addClass('active');
+    }
+  }
+
+  // Start Hepsijet rotation automatically on page load
+  startHepsijetRotation();
   
   // Handle help button toggle
   metabox_wrapper.find('#hepsijet-help-toggle').on('click', function() {
@@ -1149,4 +1201,5 @@ jQuery(document).ready(($)=>{
       console.error('Balance AJAX error:', error);
     });
   }
+
 });

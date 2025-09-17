@@ -39,6 +39,8 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                     <div class="mt-4">
                         <div class="mb-2">
                             <label class="font-light text-gray-1 block mb-2 text-sm dark:text-white"><?php esc_html_e('Select a Courier Company', 'hezarfen-for-woocommerce'); ?></label>
+                            
+                            
                             <ul id="shipping-companies" class="max-h-24 grid w-full gap-2 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 5xl:grid-cols-7 6xl:grid-cols-8 overflow-hidden">
                                 <li class="flex justify-center col-span-2 xl:col-span-2 2xl:col-span-3">
                                     <input type="radio" id="courier-company-select-hepsijet-entegrasyon"
@@ -64,25 +66,44 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                             <span class="text-[7px] bg-blue-500 text-white px-1 py-0.5 rounded-full shadow-sm font-medium mt-0.5">
                                                 Ücretsiz Entegrasyon
                                             </span>
+                                            
                                             </div>
 
                                             <div class="flex flex-col leading-tight overflow-hidden flex-1 min-w-0">
-                                            <div class="text-xs text-gray-600">
-                                                <?php
-                                                // Get actual pricing for 1 and 4 desi to determine price range
-                                                try {
-                                                    $hepsijet_integration = new \Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration();
-                                                    $pricing_info = $hepsijet_integration->get_pricing_range_info();
-                                                    
-                                                    if ($pricing_info !== false) {
-                                                        $price = $pricing_info['price_1_desi'];
-                                                        $desi_range = $pricing_info['display_text'];
-                                                        echo '<span style="font-weight: bold !important; font-size: 1.125rem !important; color: #2563eb !important; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;">' . esc_html(number_format($price, 2, ',', '')) . '₺+KDV</span>';
-                                                        echo ' <span class="text-gray-700 font-medium">(' . esc_html($desi_range) . ')</span>';
+                                            <!-- Döngü halinde gösterilen bilgiler -->
+                                            <div id="hepsijet-rotating-info" class="text-xs text-gray-600 min-h-[1.5rem] flex items-center">
+                                                <!-- Fiyat bilgisi -->
+                                                <div class="rotating-item active">
+                                                    <?php
+                                                    // Get actual pricing for 1 and 4 desi to determine price range
+                                                    try {
+                                                        $hepsijet_integration = new \Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration();
+                                                        $pricing_info = $hepsijet_integration->get_pricing_range_info();
+                                                        
+                                                        if ($pricing_info !== false) {
+                                                            $price = $pricing_info['price_1_desi'];
+                                                            $desi_range = $pricing_info['display_text'];
+                                                            echo '<span style="font-weight: bold !important; font-size: 1.125rem !important; color: #2563eb !important;">' . esc_html(number_format($price, 2, ',', '')) . '₺+KDV</span>';
+                                                            echo ' <span class="text-gray-700 font-medium">(' . esc_html($desi_range) . ')</span>';
+                                                        }
+                                                    } catch (Exception $e) {
                                                     }
-                                                } catch (Exception $e) {
-                                                }
-                                                ?>
+                                                    ?>
+                                                </div>
+                                                
+                                                <!-- Avantaj 1 -->
+                                                <div class="rotating-item">
+                                                    <span class="text-xs bg-green-500 text-white px-2 py-1 rounded-full shadow-sm font-medium">
+                                                        <?php esc_html_e('Kargo anlaşması gerekmez', 'hezarfen-for-woocommerce'); ?>
+                                                    </span>
+                                                </div>
+                                                
+                                                <!-- Avantaj 2 -->
+                                                <div class="rotating-item">
+                                                    <span class="text-xs bg-orange-500 text-white px-2 py-1 rounded-full shadow-sm font-medium">
+                                                        <?php esc_html_e('Aylık alt gönderim limiti yoktur', 'hezarfen-for-woocommerce'); ?>
+                                                    </span>
+                                                </div>
                                             </div>
                                             <div class="hezarfen-marquee-text text-xs text-gray-600">
                                                 <span><?php echo esc_html__('Free integration with barcode creation, instant tracking updates, and complimentary SMS/email notifications. Orders are marked as shipped automatically, and once delivered, status is set to completed.', 'hezarfen-for-woocommerce'); ?></span>
