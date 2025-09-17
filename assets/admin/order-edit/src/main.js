@@ -198,7 +198,7 @@ jQuery(document).ready(($)=>{
       nextItem.addClass('active');
       currentIndex = nextIndex;
       
-    }, 3000); // Change every 3 seconds
+    }, 1250); // Change every 2 seconds
   }
 
   function stopHepsijetRotation() {
