@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2025-09-16 17:07+0000\n"
+"POT-Creation-Date: 2025-09-17 12:22+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #. %s plugin name
@@ -30,7 +30,7 @@ msgstr ""
 msgid "Access Hepsijet ile Avantajlı Kargo Fiyatları"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1153
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1157
 msgid "Action"
 msgstr ""
 
@@ -39,11 +39,11 @@ msgid "Action Type"
 msgstr ""
 
 #: includes/contracts/admin/class-order-agreements.php:84
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:493
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:505
 msgid "Actions"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:91
+#: includes/contracts/admin/class-contracts-settings.php:103
 msgid "Active Contracts"
 msgstr ""
 
@@ -57,7 +57,7 @@ msgid ""
 "Add distance sales contract and pre-information form support to your website."
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:303
+#: includes/contracts/admin/class-contracts-settings.php:315
 msgid "Add New Contract"
 msgstr ""
 
@@ -67,7 +67,7 @@ msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:456
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:512
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1116
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1120
 msgid "Add SMS Rule"
 msgstr ""
 
@@ -81,6 +81,10 @@ msgstr ""
 
 #: includes/contracts/frontend/class-customer-agreements.php:185
 msgid "Agreement Accepted:"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:67
+msgid "Agreement Creation Timing"
 msgstr ""
 
 #: includes/contracts/admin/class-order-agreements.php:81
@@ -99,11 +103,11 @@ msgstr ""
 msgid "Aras Kargo"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:369
+#: includes/contracts/admin/class-contracts-settings.php:381
 msgid "Are you sure you want to delete this contract?"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:685
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:697
 msgid ""
 "Are you sure you want to remove this shipment data? This action cannot be "
 "undone and the tracking information will be permanently deleted."
@@ -128,7 +132,7 @@ msgid "Available sender names from your NetGSM account"
 msgstr ""
 
 #: includes/class-sms-automation.php:502
-#: includes/contracts/admin/class-contracts-settings.php:102
+#: includes/contracts/admin/class-contracts-settings.php:114
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:222
 msgid "Available Variables"
 msgstr ""
@@ -137,7 +141,7 @@ msgstr ""
 msgid "Available Variables (click to copy):"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1164
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1168
 msgid ""
 "Available Variables: {order_number}, {customer_name}, {order_status}, "
 "{order_total}"
@@ -150,10 +154,10 @@ msgid ""
 "file."
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:544
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:556
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:568
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:580
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:592
 msgid "Barcode"
 msgstr ""
 
@@ -172,15 +176,15 @@ msgstr ""
 
 #. Billing Address Variables
 #: includes/class-sms-automation.php:400 includes/class-sms-automation.php:425
-#: includes/contracts/admin/class-contracts-settings.php:493
+#: includes/contracts/admin/class-contracts-settings.php:505
 msgid "Billing Address"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:497
+#: includes/contracts/admin/class-contracts-settings.php:509
 msgid "Billing address line 1"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:498
+#: includes/contracts/admin/class-contracts-settings.php:510
 msgid "Billing address line 2"
 msgstr ""
 
@@ -188,7 +192,7 @@ msgstr ""
 msgid "Billing City"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:499
+#: includes/contracts/admin/class-contracts-settings.php:511
 msgid "Billing city"
 msgstr ""
 
@@ -196,7 +200,7 @@ msgstr ""
 msgid "Billing Company"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:496
+#: includes/contracts/admin/class-contracts-settings.php:508
 msgid "Billing company name"
 msgstr ""
 
@@ -204,7 +208,7 @@ msgstr ""
 msgid "Billing Country"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:501
+#: includes/contracts/admin/class-contracts-settings.php:513
 msgid "Billing country"
 msgstr ""
 
@@ -216,7 +220,7 @@ msgstr ""
 msgid "Billing First Name"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:494
+#: includes/contracts/admin/class-contracts-settings.php:506
 msgid "Billing first name"
 msgstr ""
 
@@ -224,7 +228,7 @@ msgstr ""
 msgid "Billing Last Name"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:495
+#: includes/contracts/admin/class-contracts-settings.php:507
 msgid "Billing last name"
 msgstr ""
 
@@ -233,11 +237,11 @@ msgstr ""
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:483
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:589
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:645
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1158
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1162
 msgid "Billing Phone"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:500
+#: includes/contracts/admin/class-contracts-settings.php:512
 msgid "Billing postal code"
 msgstr ""
 
@@ -259,20 +263,20 @@ msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:676
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1012
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1121
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1125
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:139
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:586
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:692
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:598
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:704
 msgid "Cancel"
 msgstr ""
 
 #: includes/class-sms-automation.php:596
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:519
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:550
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:531
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:562
 msgid "Cancelled"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:531
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:543
 msgid "Cancelled:"
 msgstr ""
 
@@ -323,10 +327,14 @@ msgstr ""
 msgid "Choose a courier company"
 msgstr ""
 
+#: includes/contracts/admin/class-contracts-settings.php:80
+msgid "Choose how the contract will be displayed on the payment page."
+msgstr ""
+
 #: includes/contracts/admin/class-contracts-settings.php:68
 msgid ""
-"Choose how the contract will be displayed on the payment page. Contracts are "
-"automatically created when order status is \"Processing\"."
+"Choose when agreements should be created for orders. Default is when order "
+"status becomes Processing."
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:536
@@ -350,12 +358,12 @@ msgid "Click to copy"
 msgstr ""
 
 #: includes/contracts/core/class-contract-renderer.php:178
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:728
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:740
 msgid "Close"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:949
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:675
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:687
 msgid "Close modal"
 msgstr ""
 
@@ -363,7 +371,7 @@ msgstr ""
 msgid "Comment to reach out us!"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1163
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1167
 msgid "Commercial (11)"
 msgstr ""
 
@@ -388,7 +396,7 @@ msgstr ""
 msgid "Completed"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1152
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1156
 msgid "Condition"
 msgstr ""
 
@@ -425,7 +433,7 @@ msgstr ""
 msgid "Connect to NetGSM"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1142
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1146
 msgid "Connecting..."
 msgstr ""
 
@@ -449,16 +457,16 @@ msgstr ""
 msgid "Consumer Secret from Hepsijet API Relay plugin"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:252
-#: includes/contracts/admin/class-contracts-settings.php:362
+#: includes/contracts/admin/class-contracts-settings.php:79
+msgid "Contract Display Settings"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:264
+#: includes/contracts/admin/class-contracts-settings.php:374
 msgid "Contract Name:"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:67
-msgid "Contract Settings"
-msgstr ""
-
-#: includes/contracts/admin/class-contracts-settings.php:84
+#: includes/contracts/admin/class-contracts-settings.php:96
 msgid "Contract Templates"
 msgstr ""
 
@@ -471,15 +479,15 @@ msgstr ""
 msgid "Contracts and Forms"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:531
+#: includes/contracts/admin/class-contracts-settings.php:543
 msgid "Corporate tax number"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:530
+#: includes/contracts/admin/class-contracts-settings.php:542
 msgid "Corporate tax office"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:491
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:503
 msgid "Courier"
 msgstr ""
 
@@ -487,7 +495,7 @@ msgstr ""
 #: packages/manual-shipment-tracking/includes/class-my-account.php:119
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:245
 #: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:33
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:607
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:619
 msgid "Courier Company"
 msgstr ""
 
@@ -516,11 +524,11 @@ msgstr ""
 msgid "Create Shipment"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:525
+#: includes/contracts/admin/class-contracts-settings.php:537
 msgid "Current date and time"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:109
+#: includes/contracts/admin/class-contracts-settings.php:121
 msgid "Current Variables"
 msgstr ""
 
@@ -529,7 +537,7 @@ msgstr ""
 msgid "Customer Agreements"
 msgstr ""
 
-#: includes/contracts/core/class-post-order-processor.php:227
+#: includes/contracts/core/class-post-order-processor.php:248
 msgid "Customer Agreements Saved"
 msgstr ""
 
@@ -553,7 +561,7 @@ msgstr ""
 msgid "Customer Phone"
 msgstr ""
 
-#: includes/contracts/core/class-post-order-processor.php:233
+#: includes/contracts/core/class-post-order-processor.php:254
 msgid "Customer:"
 msgstr ""
 
@@ -562,31 +570,31 @@ msgid "Date Accepted"
 msgstr ""
 
 #. Date Variables
-#: includes/contracts/admin/class-contracts-settings.php:523
+#: includes/contracts/admin/class-contracts-settings.php:535
 msgid "Date Information"
 msgstr ""
 
-#: includes/contracts/core/class-post-order-processor.php:235
+#: includes/contracts/core/class-post-order-processor.php:256
 msgid "Date:"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:500
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1146
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1150
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:138
 msgid "Delete"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:294
-#: includes/contracts/admin/class-contracts-settings.php:367
+#: includes/contracts/admin/class-contracts-settings.php:306
+#: includes/contracts/admin/class-contracts-settings.php:379
 msgid "Delete Contract"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1118
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1122
 msgid "Delete Rule"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:521
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:562
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:533
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:574
 msgid "Delivered"
 msgstr ""
 
@@ -602,15 +610,15 @@ msgstr ""
 msgid "Desi"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:530
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:536
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:542
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:548
 msgid "Desi:"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:547
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:559
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:571
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:583
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:595
 msgid "Details"
 msgstr ""
 
@@ -627,11 +635,11 @@ msgid ""
 "Disable the Checkout Field Editor for WooCommerce plugin to use this setting."
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:488
+#: includes/contracts/admin/class-contracts-settings.php:500
 msgid "Discount amount"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:224
+#: includes/contracts/admin/class-contracts-settings.php:236
 msgid "Distance Sales Contract"
 msgstr ""
 
@@ -647,14 +655,14 @@ msgstr ""
 msgid "DSC Enabled"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:775
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:787
 msgid ""
 "Easy Data Recognition - We've detected that you're using the Intense Kargo "
 "Takip Plugin or Kargo Takip Türkiye plugin."
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:497
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1145
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1149
 msgid "Edit"
 msgstr ""
 
@@ -662,16 +670,16 @@ msgstr ""
 msgid "Edit NetGSM SMS Content"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:271
-#: includes/contracts/admin/class-contracts-settings.php:364
+#: includes/contracts/admin/class-contracts-settings.php:283
+#: includes/contracts/admin/class-contracts-settings.php:376
 msgid "Edit Page"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1117
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1121
 msgid "Edit SMS Rule"
 msgstr ""
 
-#: includes/contracts/core/class-post-order-processor.php:234
+#: includes/contracts/core/class-post-order-processor.php:255
 msgid "Email:"
 msgstr ""
 
@@ -691,8 +699,8 @@ msgstr ""
 msgid "Enable SMS Automation"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:281
-#: includes/contracts/admin/class-contracts-settings.php:365
+#: includes/contracts/admin/class-contracts-settings.php:293
+#: includes/contracts/admin/class-contracts-settings.php:377
 msgid "Enabled"
 msgstr ""
 
@@ -725,7 +733,7 @@ msgstr ""
 msgid "Encryption Settings"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:368
+#: includes/contracts/admin/class-contracts-settings.php:380
 msgid "Enter contract name"
 msgstr ""
 
@@ -741,7 +749,7 @@ msgstr ""
 msgid "Enter package weight, dimensions, and delivery preferences"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1134
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1138
 msgid "Enter password (min 6 characters)"
 msgstr ""
 
@@ -769,7 +777,7 @@ msgstr ""
 msgid "Enter Tracking Information"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1135
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1139
 msgid "Enter username"
 msgstr ""
 
@@ -796,7 +804,7 @@ msgstr ""
 msgid "Error loading dates"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1140
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1144
 msgid "Error loading senders"
 msgstr ""
 
@@ -812,11 +820,11 @@ msgstr ""
 msgid "Failed"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1125
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1129
 msgid "Failed to load senders"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1131
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1135
 msgid "Failed to save credentials"
 msgstr ""
 
@@ -840,11 +848,11 @@ msgstr ""
 msgid "for Order Shipped trigger"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1127
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1131
 msgid "Found %d senders available"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1126
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1130
 #, php-format
 msgid "Found 1 sender: %s"
 msgstr ""
@@ -856,7 +864,7 @@ msgid ""
 "automatically, and once delivered, status is set to completed."
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:781
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:793
 msgid "Free Support on wordpress.org"
 msgstr ""
 
@@ -938,7 +946,7 @@ msgid ""
 "İlçe/Mahalle, Sözleşmeler For Woocommerce"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:777
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:789
 msgid ""
 "Hezarfen can automatically recognize the shipment data of your previous "
 "orders with just one click. Moreover, this data remains accessible in "
@@ -954,7 +962,7 @@ msgid "Hezarfen Cargo Tracking & SMS Notifications"
 msgstr ""
 
 #. Hezarfen Invoice Fields
-#: includes/contracts/admin/class-contracts-settings.php:529
+#: includes/contracts/admin/class-contracts-settings.php:541
 msgid "Hezarfen Invoice Fields"
 msgstr ""
 
@@ -1070,7 +1078,7 @@ msgid ""
 "select courier from below and add it to your tracking list."
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:532
+#: includes/contracts/admin/class-contracts-settings.php:544
 msgid "Individual ID number"
 msgstr ""
 
@@ -1078,11 +1086,11 @@ msgstr ""
 msgid "Information"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1162
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1166
 msgid "Information (0)"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:72
+#: includes/contracts/admin/class-contracts-settings.php:84
 msgid "Inline"
 msgstr ""
 
@@ -1094,7 +1102,7 @@ msgstr ""
 msgid "Installing.."
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:486
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:498
 msgid "Integration Shipments"
 msgstr ""
 
@@ -1143,7 +1151,7 @@ msgstr ""
 msgid "IP Address"
 msgstr ""
 
-#: includes/contracts/core/class-post-order-processor.php:236
+#: includes/contracts/core/class-post-order-processor.php:257
 #: includes/contracts/frontend/class-customer-agreements.php:189
 #: includes/contracts/admin/class-order-agreements.php:136
 msgid "IP Address:"
@@ -1162,7 +1170,7 @@ msgid "It checks encryption key whetever placed to the wp-config.php"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:661
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1161
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1165
 msgid "IYS Status"
 msgstr ""
 
@@ -1194,12 +1202,12 @@ msgstr ""
 msgid "Koli Adedi"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:492
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:504
 msgid "Koli/Desi"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:529
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:535
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:541
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:547
 msgid "Koli:"
 msgstr ""
 
@@ -1225,7 +1233,7 @@ msgstr ""
 msgid "Legacy Turkish Variables"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:486
+#: includes/contracts/admin/class-contracts-settings.php:498
 msgid "List of ordered products"
 msgstr ""
 
@@ -1234,21 +1242,21 @@ msgstr ""
 msgid "Loading available dates..."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1137
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1141
 msgid "Loading senders automatically..."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1138
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1142
 #, php-format
 msgid "Loading senders in %ss..."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1139
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1143
 msgid "Loading senders..."
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:171
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:721
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:733
 msgid "Loading shipment details..."
 msgstr ""
 
@@ -1268,7 +1276,7 @@ msgstr ""
 msgid "Manual Tracking"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:602
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:614
 msgid "Manual Tracking Numbers"
 msgstr ""
 
@@ -1277,11 +1285,11 @@ msgid "Message Header"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:652
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1160
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1164
 msgid "Message Template"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:73
+#: includes/contracts/admin/class-contracts-settings.php:85
 msgid "Modal"
 msgstr ""
 
@@ -1291,7 +1299,7 @@ msgstr ""
 
 #: includes/class-sms-automation.php:611
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:476
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1147
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1151
 msgid "NetGSM"
 msgstr ""
 
@@ -1304,7 +1312,7 @@ msgstr ""
 msgid "NetGSM Configuration"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1130
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1134
 msgid "NetGSM credentials saved successfully!"
 msgstr ""
 
@@ -1314,7 +1322,7 @@ msgstr ""
 
 #: includes/class-sms-automation.php:612
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:478
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1148
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1152
 msgid "NetGSM Official Plugin (Legacy)"
 msgstr ""
 
@@ -1331,11 +1339,11 @@ msgstr ""
 msgid "NetGSM Username"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1124
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1128
 msgid "Network error occurred while loading senders"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1132
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1136
 msgid "Network error occurred while saving credentials"
 msgstr ""
 
@@ -1343,7 +1351,7 @@ msgstr ""
 msgid "New Encryption Key"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1155
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1159
 msgid "New Status"
 msgstr ""
 
@@ -1381,7 +1389,7 @@ msgstr ""
 msgid "No tracking information available"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:472
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:484
 msgid "Nothing to Track Yet"
 msgstr ""
 
@@ -1389,7 +1397,7 @@ msgstr ""
 msgid "On hold"
 msgstr ""
 
-#: includes/contracts/core/class-post-order-processor.php:202
+#: includes/contracts/core/class-post-order-processor.php:223
 #, php-format
 msgid "Order #%s - Customer Agreements Saved"
 msgstr ""
@@ -1402,13 +1410,13 @@ msgstr ""
 msgid "Order Date"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:480
+#: includes/contracts/admin/class-contracts-settings.php:492
 msgid "Order date"
 msgstr ""
 
 #. Order Variables
-#: includes/contracts/core/class-post-order-processor.php:231
-#: includes/contracts/admin/class-contracts-settings.php:478
+#: includes/contracts/core/class-post-order-processor.php:252
+#: includes/contracts/admin/class-contracts-settings.php:490
 msgid "Order Information"
 msgstr ""
 
@@ -1416,18 +1424,18 @@ msgstr ""
 msgid "Order Number"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:479
+#: includes/contracts/admin/class-contracts-settings.php:491
 msgid "Order number"
 msgstr ""
 
-#: includes/contracts/core/class-post-order-processor.php:232
+#: includes/contracts/core/class-post-order-processor.php:253
 msgid "Order Number:"
 msgstr ""
 
 #: includes/class-sms-automation.php:600
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:469
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:533
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1150
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1154
 #: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:23
 msgid "Order Shipped"
 msgstr ""
@@ -1444,7 +1452,7 @@ msgstr ""
 msgid "Order status and customer notifications handled automatically"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1154
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1158
 msgid "Order Status Changed"
 msgstr ""
 
@@ -1456,7 +1464,7 @@ msgstr ""
 msgid "Order status ID (optional)"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:483
+#: includes/contracts/admin/class-contracts-settings.php:495
 msgid "Order subtotal (excluding tax)"
 msgstr ""
 
@@ -1464,7 +1472,7 @@ msgstr ""
 msgid "Order Time"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:481
+#: includes/contracts/admin/class-contracts-settings.php:493
 msgid "Order time"
 msgstr ""
 
@@ -1472,7 +1480,7 @@ msgstr ""
 msgid "Order Total"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:482
+#: includes/contracts/admin/class-contracts-settings.php:494
 msgid "Order total (including tax)"
 msgstr ""
 
@@ -1497,7 +1505,7 @@ msgstr ""
 
 #: includes/class-sms-automation.php:613
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:480
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1149
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1153
 msgid "PandaSMS Official Plugin (Legacy)"
 msgstr ""
 
@@ -1505,11 +1513,11 @@ msgstr ""
 msgid "PandaSMS plugin is successfully installed and activated."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1133
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1137
 msgid "Password must be at least 6 characters"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:487
+#: includes/contracts/admin/class-contracts-settings.php:499
 msgid "Payment method"
 msgstr ""
 
@@ -1527,11 +1535,11 @@ msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:584
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:640
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1157
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1161
 msgid "Phone Number"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1123
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1127
 msgid "Please enter username and password first"
 msgstr ""
 
@@ -1549,7 +1557,7 @@ msgstr ""
 msgid "Please place the encryption key in the wp-config.php file."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1129
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1133
 msgid "Please select a message header"
 msgstr ""
 
@@ -1558,7 +1566,7 @@ msgstr ""
 msgid "Powered by"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:231
+#: includes/contracts/admin/class-contracts-settings.php:243
 msgid "Pre-Information Form"
 msgstr ""
 
@@ -1605,11 +1613,11 @@ msgstr ""
 msgid "Refunded"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:695
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:707
 msgid "Remove"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:672
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:684
 msgid "Remove shipment data?"
 msgstr ""
 
@@ -1617,8 +1625,8 @@ msgstr ""
 msgid "Removing..."
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:290
-#: includes/contracts/admin/class-contracts-settings.php:366
+#: includes/contracts/admin/class-contracts-settings.php:302
+#: includes/contracts/admin/class-contracts-settings.php:378
 msgid "Require User Agreement"
 msgstr ""
 
@@ -1634,20 +1642,20 @@ msgstr ""
 msgid "Rule"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1143
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1147
 msgid "Rule #%d:"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:675
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1119
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1123
 msgid "Save Rule"
 msgstr ""
 
-#: includes/contracts/core/class-post-order-processor.php:240
+#: includes/contracts/core/class-post-order-processor.php:261
 msgid "Saved Agreements:"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1120
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1124
 msgid "Saving rule..."
 msgstr ""
 
@@ -1666,7 +1674,7 @@ msgstr ""
 msgid "Select a Courier Company"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1141
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1145
 msgid "Select a sender"
 msgstr ""
 
@@ -1679,7 +1687,7 @@ msgstr ""
 msgid "Select an option"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:127
+#: includes/contracts/admin/class-contracts-settings.php:139
 msgid "Select page..."
 msgstr ""
 
@@ -1693,7 +1701,7 @@ msgid "Select trigger..."
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:546
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1156
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1160
 msgid "Send SMS via NetGSM"
 msgstr ""
 
@@ -1728,7 +1736,7 @@ msgstr ""
 msgid "Shipment created successfully"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:709
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:721
 msgid "Shipment Details"
 msgstr ""
 
@@ -1740,7 +1748,7 @@ msgstr ""
 msgid "Shipment in pieces"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:742
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:754
 msgid "Shipment Label PDF"
 msgstr ""
 
@@ -1748,8 +1756,8 @@ msgstr ""
 msgid "Shipment Variables"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:523
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:574
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:535
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:586
 msgid "Shipped"
 msgstr ""
 
@@ -1787,15 +1795,15 @@ msgstr[1] ""
 
 #. Shipping Address Variables
 #: includes/class-sms-automation.php:407 includes/class-sms-automation.php:434
-#: includes/contracts/admin/class-contracts-settings.php:505
+#: includes/contracts/admin/class-contracts-settings.php:517
 msgid "Shipping Address"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:509
+#: includes/contracts/admin/class-contracts-settings.php:521
 msgid "Shipping address line 1"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:510
+#: includes/contracts/admin/class-contracts-settings.php:522
 msgid "Shipping address line 2"
 msgstr ""
 
@@ -1803,7 +1811,7 @@ msgstr ""
 msgid "Shipping City"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:511
+#: includes/contracts/admin/class-contracts-settings.php:523
 msgid "Shipping city"
 msgstr ""
 
@@ -1811,11 +1819,11 @@ msgstr ""
 msgid "Shipping Company"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:508
+#: includes/contracts/admin/class-contracts-settings.php:520
 msgid "Shipping company name"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:485
+#: includes/contracts/admin/class-contracts-settings.php:497
 msgid "Shipping cost"
 msgstr ""
 
@@ -1823,7 +1831,7 @@ msgstr ""
 msgid "Shipping Country"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:513
+#: includes/contracts/admin/class-contracts-settings.php:525
 msgid "Shipping country"
 msgstr ""
 
@@ -1831,7 +1839,7 @@ msgstr ""
 msgid "Shipping First Name"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:506
+#: includes/contracts/admin/class-contracts-settings.php:518
 msgid "Shipping first name"
 msgstr ""
 
@@ -1839,7 +1847,7 @@ msgstr ""
 msgid "Shipping Last Name"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:507
+#: includes/contracts/admin/class-contracts-settings.php:519
 msgid "Shipping last name"
 msgstr ""
 
@@ -1848,11 +1856,11 @@ msgstr ""
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:483
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:590
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:646
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1159
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1163
 msgid "Shipping Phone"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:512
+#: includes/contracts/admin/class-contracts-settings.php:524
 msgid "Shipping postal code"
 msgstr ""
 
@@ -1882,19 +1890,19 @@ msgid "Show T.C. Identity Field on checkout page "
 msgstr ""
 
 #. Site Variables
-#: includes/contracts/admin/class-contracts-settings.php:517
+#: includes/contracts/admin/class-contracts-settings.php:529
 msgid "Site Information"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:518
+#: includes/contracts/admin/class-contracts-settings.php:530
 msgid "Site name"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:519
+#: includes/contracts/admin/class-contracts-settings.php:531
 msgid "Site URL"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:609
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:621
 msgid "SMS"
 msgstr ""
 
@@ -1971,7 +1979,7 @@ msgstr ""
 msgid "T.C. Identity Number"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:484
+#: includes/contracts/admin/class-contracts-settings.php:496
 msgid "Tax amount"
 msgstr ""
 
@@ -1995,7 +2003,7 @@ msgstr ""
 msgid "Thank you for supporting Hezarfen! 🌟"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:474
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:486
 msgid "There are no tracking numbers added to the tracking list."
 msgstr ""
 
@@ -2006,7 +2014,7 @@ msgid ""
 "Shipment Tracking."
 msgstr ""
 
-#: includes/contracts/core/class-post-order-processor.php:255
+#: includes/contracts/core/class-post-order-processor.php:276
 msgid "This email was automatically generated by Hezarfen for WooCommerce."
 msgstr ""
 
@@ -2033,7 +2041,7 @@ msgstr ""
 msgid "TNT"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:524
+#: includes/contracts/admin/class-contracts-settings.php:536
 msgid "Today's date"
 msgstr ""
 
@@ -2072,7 +2080,7 @@ msgstr ""
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:246
 #: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:38
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:122
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:608
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:620
 msgid "Tracking Number"
 msgstr ""
 
@@ -2089,6 +2097,7 @@ msgid "Training"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:732
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:443
 msgid "Training Videos"
 msgstr ""
 
@@ -2096,7 +2105,7 @@ msgstr ""
 msgid "Trendyol Express"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1151
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1155
 msgid "Trigger"
 msgstr ""
 
@@ -2119,11 +2128,11 @@ msgstr ""
 msgid "UPS Kargo"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:564
+#: includes/contracts/admin/class-contracts-settings.php:576
 msgid "Usage:"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:86
+#: includes/contracts/admin/class-contracts-settings.php:98
 msgid ""
 "Use WordPress pages as contract templates. You can add new contracts with "
 "the + button and delete them with the X button."
@@ -2133,7 +2142,7 @@ msgstr ""
 msgid "User Agent:"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1128
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1132
 msgid "Username and password are required"
 msgstr ""
 
@@ -2146,11 +2155,11 @@ msgstr ""
 msgid "View Agreements"
 msgstr ""
 
-#: includes/contracts/core/class-post-order-processor.php:256
+#: includes/contracts/core/class-post-order-processor.php:277
 msgid "View Order in Admin"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:780
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:792
 msgid "Visit Hezarfen Shipment Settings"
 msgstr ""
 
@@ -2162,8 +2171,20 @@ msgstr ""
 msgid "Warning: PandaSMS plugin is not active!"
 msgstr ""
 
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:439
+msgid "Watch training videos to learn how to use Hezarfen"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:73
+msgid "When new order is placed"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:72
+msgid "When order status becomes Processing"
+msgstr ""
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:487
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1144
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1148
 #, php-format
 msgid "When order status changes to %1$s, send SMS via %2$s to %3$s"
 msgstr ""
@@ -2182,7 +2203,7 @@ msgstr ""
 msgid "Will be determined at payment"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1136
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1140
 msgid "Will load senders in 1.5 seconds..."
 msgstr ""
 
@@ -2207,12 +2228,12 @@ msgctxt "WooCommerce Order status"
 msgid "Shipped (Kargo Takip Turkiye Plugin)"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:259
-#: includes/contracts/admin/class-contracts-settings.php:363
+#: includes/contracts/admin/class-contracts-settings.php:271
+#: includes/contracts/admin/class-contracts-settings.php:375
 msgid "WordPress Page:"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:565
+#: includes/contracts/admin/class-contracts-settings.php:577
 msgid ""
 "Write these variables into your contract text in the WordPress page editor. "
 "When an order is placed, these variables will be automatically replaced with "
@@ -2244,7 +2265,7 @@ msgid ""
 "number field does not appear on the checkout."
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:104
+#: includes/contracts/admin/class-contracts-settings.php:116
 msgid ""
 "You can use the following variables in your contract templates. These "
 "variables are automatically replaced with real data when an order is placed."
