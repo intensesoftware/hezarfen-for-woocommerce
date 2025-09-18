@@ -8,7 +8,7 @@ Requires PHP: 7.0
 License: GPL2
 Stable tag: 2.6.6
 
-ÜCRETSİZ🚀 2000+ KULLANICI! Kargo takip, ücretsiz Hepsijet Entegrasyon(1-4desi: 69,99TL+KDV), Mesafeli S. Sözleşmeleri, NetGSM sipariş ve kargo SMSi
+🚀 2000+ KULLANICI! Kargo takip, ücretsiz Hepsijet Entegrasyonu (1-4 desi: 69,99TL+KDV), Mesafeli Satış Sözleşmeleri, NetGSM sipariş ve kargo SMS'i
 == Description ==
 
 **Tamamen Ücretsiz!** Intense&Hepsijet İşbirliğiyle; Hezarfen kullanıcılarına Hepsijet 1-4 Desi 69,99TL+KDV - Hezarfen, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo, ödeme ve sözleşme yönetim eklentisidir. Bu WooCommerce kargo entegrasyon eklentisi, 23 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel WooCommerce kargo takip deneyimi sunar, Mesafeli Satış Sözleşmesi (MSS) desteği sağlar ve Türkiye'ye özgü mahalle, fatura ve vergi alanlarıyla ödeme ekranınızı Türkiye'ye uyumlu hale getirir.
