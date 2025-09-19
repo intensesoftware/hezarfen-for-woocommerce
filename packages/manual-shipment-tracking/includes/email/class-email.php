@@ -32,7 +32,8 @@ class Email {
 	 * @return array<string, \WC_Email>
 	 */
 	public static function add_order_shipped_email( $emails ) {
-		$emails['Hezarfen_MST_Email_Order_Shipped'] = include HEZARFEN_MST_PATH . 'includes/email/class-email-order-shipped.php';
+		include_once HEZARFEN_MST_PATH . 'includes/email/class-email-order-shipped.php';
+		$emails['Hezarfen_MST_Email_Order_Shipped'] = new Email_Order_Shipped();
 		return $emails;
 	}
 
