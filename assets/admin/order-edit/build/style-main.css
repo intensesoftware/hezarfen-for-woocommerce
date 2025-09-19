@@ -1204,8 +1204,8 @@ video:where(.hez-ui,.hez-ui *) {
 .max-h-24 {
   max-height: 6rem !important;
 }
-.max-h-6 {
-  max-height: 1.5rem !important;
+.max-h-5 {
+  max-height: 1.25rem !important;
 }
 .max-h-8 {
   max-height: 2rem !important;
@@ -2238,6 +2238,7 @@ video:where(.hez-ui,.hez-ui *) {
     width: 100%;
     transition: all 0.5s ease-in-out;
     align-items: center;
+    font-size: 0.85em;
 }
 
 #hepsijet-rotating-info .rotating-item.active {

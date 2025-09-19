@@ -57,7 +57,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                         <!-- Sol: Logo ve metin -->
                                         <div class="flex items-center gap-2 w-full">
                                             <div class="flex flex-col items-center flex-shrink-0">
-                                            <img class="max-h-6 w-auto"
+                                            <img class="max-h-5 w-auto"
                                                 src="<?php echo esc_url(HEZARFEN_MST_COURIER_LOGO_URL . Helper::get_courier_class('hepsijet')::$logo); ?>" 
                                                 loading="lazy"
                                                 alt="HepsiJet">
@@ -84,7 +84,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                                             $price = $pricing_info['price_1_desi'];
                                                             $desi_range = $pricing_info['display_text'];
                                                             echo '<span style="font-weight: bold !important; font-size: 1.125rem !important; color: #2563eb !important;">' . esc_html(number_format($price, 2, ',', '')) . '₺+KDV</span>';
-                                                            echo ' <span class="text-gray-700 font-medium">(' . esc_html($desi_range) . ')</span>';
+                                                            echo ' <span style="font-size: 16px;" class="text-gray-700 font-medium">(' . esc_html($desi_range) . ')</span>';
                                                         }
                                                     } catch (Exception $e) {
                                                     }

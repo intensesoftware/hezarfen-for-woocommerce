@@ -300,6 +300,7 @@
     width: 100%;
     transition: all 0.5s ease-in-out;
     align-items: center;
+    font-size: 0.85em;
 }
 
 #hepsijet-rotating-info .rotating-item.active {
