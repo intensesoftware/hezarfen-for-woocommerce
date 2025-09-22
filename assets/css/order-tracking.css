@@ -692,19 +692,6 @@
 		0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.hezarfen-order-card::before {
-	content: '';
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	height: 2px;
-	background: linear-gradient(90deg, var(--hezarfen-primary) 0%, var(--hezarfen-accent) 100%);
-	transform: scaleX(0);
-	transform-origin: left;
-	transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
 .hezarfen-order-card:hover {
 	border-color: rgba(0, 82, 204, 0.4);
 	box-shadow: 
@@ -745,7 +732,6 @@
 	box-shadow: 
 		0 1px 3px rgba(0, 0, 0, 0.05),
 		0 4px 12px rgba(0, 0, 0, 0.08);
-	border-left: 4px solid var(--hezarfen-primary);
 }
 
 /* Order Card Columns */
