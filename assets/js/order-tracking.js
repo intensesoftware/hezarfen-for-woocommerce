@@ -37,6 +37,15 @@
                 const $card = $(e.currentTarget);
                 const orderId = $card.data('order-id');
                 
+                // Store reference to clicked card
+                this.lastClickedCard = $card;
+                
+                // Remove active state from other cards
+                $('.hezarfen-order-card').removeClass('active');
+                
+                // Add active state to clicked card
+                $card.addClass('active');
+                
                 // Add loading state to card
                 this.setCardLoadingState($card, true);
                 
@@ -265,14 +274,31 @@
             // Hide any existing errors
             this.hideError();
             
-            // Show results with animation
-            this.results.html(html).slideDown(400, () => {
-                // Scroll to results
-                this.scrollToResults();
+            // For logged-in users, insert results after the clicked order card
+            if (this.isLoggedIn && this.lastClickedCard) {
+                // Remove any existing expanded details
+                $('.hezarfen-order-details-expanded').remove();
                 
-                // Focus on first interactive element in results
-                this.results.find('button, a').first().focus();
-            });
+                // Create expanded details container
+                const $expandedDetails = $('<div class="hezarfen-order-details-expanded">' + html + '</div>');
+                
+                // Insert after the clicked card
+                this.lastClickedCard.after($expandedDetails);
+                
+                // Animate the expansion
+                $expandedDetails.slideDown(400, () => {
+                    // Scroll to expanded details
+                    $('html, body').animate({
+                        scrollTop: $expandedDetails.offset().top - 20
+                    }, 300);
+                });
+            } else {
+                // For guest users, show in the results container
+                this.results.html(html).slideDown(400, () => {
+                    this.scrollToResults();
+                    this.results.find('button, a').first().focus();
+                });
+            }
         }
 
         showError(message) {
@@ -337,8 +363,12 @@
             $('.hezarfen-form-input').each((index, element) => {
                 this.clearFieldError($(element));
             });
-            // Remove any card loading states
-            $('.hezarfen-order-card').removeClass('loading');
+            // Remove any card loading states and expanded details
+            $('.hezarfen-order-card').removeClass('loading active');
+            $('.hezarfen-order-details-expanded').slideUp(300, function() {
+                $(this).remove();
+            });
+            this.lastClickedCard = null;
         }
     }
 

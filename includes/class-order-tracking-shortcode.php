@@ -548,53 +548,7 @@ class Order_Tracking_Shortcode {
 	private function render_tracking_results( $order, $tracking_data ) {
 		ob_start();
 		?>
-		<div class="hezarfen-tracking-success">
-			<div class="hezarfen-success-icon">
-				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<path d="m9 12 2 2 4-4"/>
-					<circle cx="12" cy="12" r="9"/>
-				</svg>
-			</div>
-			
-			<div class="hezarfen-order-info">
-				<h3 class="hezarfen-order-title">
-					<?php printf( __( 'Order #%s', 'hezarfen-for-woocommerce' ), $order->get_order_number() ); ?>
-				</h3>
-				
-				<div class="hezarfen-order-meta">
-					<div class="hezarfen-meta-item">
-						<span class="hezarfen-meta-label"><?php esc_html_e( 'Status:', 'hezarfen-for-woocommerce' ); ?></span>
-						<span class="hezarfen-meta-value hezarfen-status-<?php echo esc_attr( $order->get_status() ); ?>">
-							<?php echo esc_html( wc_get_order_status_name( $order->get_status() ) ); ?>
-						</span>
-					</div>
-					
-					<?php if ( get_option( 'hezarfen_tracking_page_show_date', 'yes' ) === 'yes' ) : ?>
-					<div class="hezarfen-meta-item">
-						<span class="hezarfen-meta-label"><?php esc_html_e( 'Date:', 'hezarfen-for-woocommerce' ); ?></span>
-						<span class="hezarfen-meta-value">
-							<?php echo esc_html( wc_format_datetime( $order->get_date_created() ) ); ?>
-						</span>
-					</div>
-					<?php endif; ?>
-					
-					<?php if ( get_option( 'hezarfen_tracking_page_show_total', 'yes' ) === 'yes' ) : ?>
-					<div class="hezarfen-meta-item">
-						<span class="hezarfen-meta-label"><?php esc_html_e( 'Total:', 'hezarfen-for-woocommerce' ); ?></span>
-						<span class="hezarfen-meta-value">
-							<?php 
-							// Format the order total with proper Turkish Lira handling
-							$formatted_total = $order->get_formatted_order_total();
-							// Convert ₺ to TL for better display compatibility (like in SMS automation)
-							$formatted_total = str_replace( '₺', 'TL', $formatted_total );
-							echo wp_kses_post( $formatted_total );
-							?>
-						</span>
-					</div>
-					<?php endif; ?>
-				</div>
-			</div>
-
+		<div class="hezarfen-tracking-details-panel">
 			<?php if ( ! empty( $tracking_data ) ) : ?>
 				<div class="hezarfen-tracking-info">
 					<h4 class="hezarfen-tracking-subtitle">
@@ -634,23 +588,7 @@ class Order_Tracking_Shortcode {
 
 			<!-- Order Progress Steps -->
 			<div class="hezarfen-order-progress">
-				<h4 class="hezarfen-progress-subtitle">
-					<?php esc_html_e( 'Order Progress', 'hezarfen-for-woocommerce' ); ?>
-				</h4>
-				
 				<?php echo $this->render_order_progress_steps( $order ); ?>
-			</div>
-
-			<div class="hezarfen-order-actions">
-				<button type="button" class="hezarfen-secondary-button" onclick="resetHezarfenTracking()">
-					<?php esc_html_e( 'Track Another Order', 'hezarfen-for-woocommerce' ); ?>
-				</button>
-				
-				<?php if ( is_user_logged_in() ) : ?>
-					<a href="<?php echo esc_url( wc_get_account_endpoint_url( 'orders' ) ); ?>" class="hezarfen-secondary-button">
-						<?php esc_html_e( 'View All Orders', 'hezarfen-for-woocommerce' ); ?>
-					</a>
-				<?php endif; ?>
 			</div>
 		</div>
 		<?php

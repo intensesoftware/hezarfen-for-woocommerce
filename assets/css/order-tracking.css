@@ -670,9 +670,6 @@
 .hezarfen-orders-list {
 	display: grid;
 	gap: 1.25rem;
-	max-height: 520px;
-	overflow-y: auto;
-	padding-right: 0.75rem;
 }
 
 .hezarfen-order-card {
@@ -723,6 +720,32 @@
 .hezarfen-order-card.loading {
 	opacity: 0.8;
 	pointer-events: none;
+}
+
+.hezarfen-order-card.active {
+	border-color: var(--hezarfen-primary);
+	box-shadow: 
+		0 0 0 2px rgba(0, 82, 204, 0.1),
+		0 2px 8px rgba(0, 0, 0, 0.08),
+		0 8px 24px var(--hezarfen-shadow-primary);
+}
+
+.hezarfen-order-card.active::before {
+	transform: scaleX(1);
+}
+
+/* Expanded Order Details */
+.hezarfen-order-details-expanded {
+	background: rgba(248, 250, 252, 0.9);
+	backdrop-filter: blur(12px);
+	border: 1px solid rgba(223, 225, 230, 0.6);
+	border-radius: 12px;
+	margin: 8px 0 16px 0;
+	padding: 24px;
+	box-shadow: 
+		0 1px 3px rgba(0, 0, 0, 0.05),
+		0 4px 12px rgba(0, 0, 0, 0.08);
+	border-left: 4px solid var(--hezarfen-primary);
 }
 
 /* Order Card Columns */
@@ -875,64 +898,18 @@
 	margin: 0;
 }
 
-/* Order Progress Steps - Revolutionary Design */
+/* Order Progress Steps - Compact Design */
 .hezarfen-order-progress {
-	margin-bottom: 3rem;
-}
-
-.hezarfen-progress-subtitle {
-	font-size: 1.25rem;
-	font-weight: 700;
-	color: var(--hezarfen-text);
-	margin: 0 0 2.5rem 0;
-	letter-spacing: -0.03em;
-	text-align: center;
-	position: relative;
-}
-
-.hezarfen-progress-subtitle::before {
-	content: '';
-	position: absolute;
-	top: -12px;
-	left: 50%;
-	transform: translateX(-50%);
-	width: 40px;
-	height: 2px;
-	background: linear-gradient(90deg, var(--hezarfen-primary), var(--hezarfen-accent));
-	border-radius: 1px;
+	margin-bottom: 1rem;
 }
 
 .hezarfen-progress-steps {
 	position: relative;
-	background: 
-		linear-gradient(135deg, rgba(250, 251, 252, 0.8) 0%, rgba(248, 250, 252, 0.9) 100%);
-	backdrop-filter: blur(16px);
-	border: 1px solid rgba(223, 225, 230, 0.4);
-	border-radius: 20px;
-	padding: 3rem 2.5rem;
-	overflow: hidden;
-	box-shadow: 
-		0 0 0 1px rgba(255, 255, 255, 0.5) inset,
-		0 2px 8px rgba(0, 0, 0, 0.03),
-		0 8px 32px rgba(0, 0, 0, 0.06);
-}
-
-.hezarfen-progress-steps::before {
-	content: '';
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	height: 3px;
-	background: linear-gradient(
-		90deg, 
-		var(--hezarfen-primary) 0%, 
-		var(--hezarfen-accent) 33%, 
-		var(--hezarfen-primary-light) 66%,
-		var(--hezarfen-accent) 100%
-	);
-	background-size: 300% 100%;
-	animation: progressFlow 6s ease-in-out infinite;
+	background: white;
+	border: 1px solid rgba(223, 225, 230, 0.6);
+	border-radius: 12px;
+	padding: 20px;
+	margin-top: 16px;
 }
 
 .hezarfen-progress-track {
@@ -1142,9 +1119,6 @@
 		display: none;
 	}
 	
-	.hezarfen-orders-list {
-		max-height: 300px;
-	}
 	
 	/* Progress steps mobile adjustments */
 	.hezarfen-progress-steps {
