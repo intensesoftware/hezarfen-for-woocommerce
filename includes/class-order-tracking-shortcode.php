@@ -644,11 +644,16 @@ class Order_Tracking_Shortcode {
 						<?php endforeach; ?>
 					</div>
 				</div>
-			<?php else : ?>
-				<div class="hezarfen-no-tracking">
-					<p><?php esc_html_e( 'No tracking information available yet. We\'ll update you once your order ships.', 'hezarfen-for-woocommerce' ); ?></p>
-				</div>
 			<?php endif; ?>
+
+			<!-- Order Progress Steps -->
+			<div class="hezarfen-order-progress">
+				<h4 class="hezarfen-progress-subtitle">
+					<?php esc_html_e( 'Order Progress', 'hezarfen-for-woocommerce' ); ?>
+				</h4>
+				
+				<?php echo $this->render_order_progress_steps( $order ); ?>
+			</div>
 
 			<div class="hezarfen-order-actions">
 				<button type="button" class="hezarfen-secondary-button" onclick="resetHezarfenTracking()">
@@ -664,6 +669,251 @@ class Order_Tracking_Shortcode {
 		</div>
 		<?php
 		return ob_get_clean();
+	}
+
+	/**
+	 * Render order progress steps
+	 * 
+	 * @param WC_Order $order Order object
+	 * @return string HTML output
+	 */
+	private function render_order_progress_steps( $order ) {
+		$current_status = $order->get_status();
+		$order_date = $order->get_date_created();
+		$completed_date = $order->get_date_completed();
+		$shipped_date = $this->get_shipped_date( $order );
+		
+		// Define the order progress steps
+		$steps = $this->get_order_progress_steps();
+		
+		ob_start();
+		?>
+		<div class="hezarfen-progress-steps">
+			<?php foreach ( $steps as $step_key => $step ) : ?>
+				<?php 
+				$is_completed = $this->is_step_completed( $step_key, $current_status );
+				$is_current = $this->is_current_step( $step_key, $current_status );
+				$step_date = $this->get_step_date( $step_key, $order, $order_date, $shipped_date, $completed_date );
+				?>
+				<div class="hezarfen-progress-step <?php echo $is_completed ? 'completed' : ''; ?> <?php echo $is_current ? 'current' : ''; ?>">
+					<div class="hezarfen-step-indicator">
+						<div class="hezarfen-step-icon">
+							<?php if ( $is_completed ) : ?>
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<path d="m9 12 2 2 4-4"/>
+								</svg>
+							<?php elseif ( $is_current ) : ?>
+								<div class="hezarfen-current-dot"></div>
+							<?php else : ?>
+								<div class="hezarfen-pending-dot"></div>
+							<?php endif; ?>
+						</div>
+						<?php if ( ! $this->is_last_step( $step_key, $steps ) ) : ?>
+							<div class="hezarfen-step-line <?php echo $this->is_next_step_completed( $step_key, $current_status ) ? 'completed' : ''; ?>"></div>
+						<?php endif; ?>
+					</div>
+					
+					<div class="hezarfen-step-content">
+						<div class="hezarfen-step-title"><?php echo esc_html( $step['title'] ); ?></div>
+						<div class="hezarfen-step-description"><?php echo esc_html( $step['description'] ); ?></div>
+						<?php if ( $step_date ) : ?>
+							<div class="hezarfen-step-date"><?php echo esc_html( wc_format_datetime( $step_date ) ); ?></div>
+						<?php endif; ?>
+					</div>
+				</div>
+			<?php endforeach; ?>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Get order progress steps
+	 * 
+	 * @return array Progress steps
+	 */
+	private function get_order_progress_steps() {
+		return array(
+			'pending' => array(
+				'title' => __( 'Order Received', 'hezarfen-for-woocommerce' ),
+				'description' => __( 'We have received your order and are processing it', 'hezarfen-for-woocommerce' ),
+			),
+			'processing' => array(
+				'title' => __( 'Order Processing', 'hezarfen-for-woocommerce' ),
+				'description' => __( 'Your order is being prepared for shipment', 'hezarfen-for-woocommerce' ),
+			),
+			'shipped' => array(
+				'title' => __( 'Order Shipped', 'hezarfen-for-woocommerce' ),
+				'description' => __( 'Your order has been shipped and is on its way', 'hezarfen-for-woocommerce' ),
+			),
+			'delivered' => array(
+				'title' => __( 'Order Delivered', 'hezarfen-for-woocommerce' ),
+				'description' => __( 'Your order has been successfully delivered', 'hezarfen-for-woocommerce' ),
+			),
+		);
+	}
+
+	/**
+	 * Check if a step is completed
+	 * 
+	 * @param string $step_key Step key
+	 * @param string $current_status Current order status
+	 * @return bool
+	 */
+	private function is_step_completed( $step_key, $current_status ) {
+		$status_hierarchy = array(
+			'pending' => array( 'processing', 'hezarfen-shipped', 'completed' ),
+			'processing' => array( 'hezarfen-shipped', 'completed' ),
+			'shipped' => array( 'completed' ),
+			'delivered' => array(),
+		);
+
+		if ( $step_key === 'shipped' && ( $current_status === 'hezarfen-shipped' || $current_status === 'completed' ) ) {
+			return true;
+		}
+
+		if ( $step_key === 'delivered' && $current_status === 'completed' ) {
+			return true;
+		}
+
+		return in_array( $current_status, $status_hierarchy[ $step_key ] ?? array() );
+	}
+
+	/**
+	 * Check if a step is the current step
+	 * 
+	 * @param string $step_key Step key
+	 * @param string $current_status Current order status
+	 * @return bool
+	 */
+	private function is_current_step( $step_key, $current_status ) {
+		$status_mapping = array(
+			'pending' => 'pending',
+			'processing' => 'processing',
+			'shipped' => 'hezarfen-shipped',
+			'delivered' => 'completed',
+		);
+
+		// Handle special cases
+		if ( $step_key === 'pending' && in_array( $current_status, array( 'pending', 'on-hold' ) ) ) {
+			return true;
+		}
+
+		return ( $status_mapping[ $step_key ] ?? '' ) === $current_status;
+	}
+
+	/**
+	 * Check if this is the last step
+	 * 
+	 * @param string $step_key Current step key
+	 * @param array $steps All steps
+	 * @return bool
+	 */
+	private function is_last_step( $step_key, $steps ) {
+		$step_keys = array_keys( $steps );
+		return $step_key === end( $step_keys );
+	}
+
+	/**
+	 * Check if the next step is completed (for line styling)
+	 * 
+	 * @param string $current_step_key Current step key
+	 * @param string $current_status Current order status
+	 * @return bool
+	 */
+	private function is_next_step_completed( $current_step_key, $current_status ) {
+		$step_keys = array( 'pending', 'processing', 'shipped', 'delivered' );
+		$current_index = array_search( $current_step_key, $step_keys );
+		
+		if ( $current_index === false || $current_index >= count( $step_keys ) - 1 ) {
+			return false;
+		}
+
+		$next_step = $step_keys[ $current_index + 1 ];
+		return $this->is_step_completed( $next_step, $current_status );
+	}
+
+	/**
+	 * Get the date for a specific step
+	 * 
+	 * @param string $step_key Step key
+	 * @param WC_Order $order Order object
+	 * @param WC_DateTime $order_date Order date
+	 * @param WC_DateTime|null $shipped_date Shipped date
+	 * @param WC_DateTime|null $completed_date Completed date
+	 * @return WC_DateTime|null
+	 */
+	private function get_step_date( $step_key, $order, $order_date, $shipped_date, $completed_date ) {
+		switch ( $step_key ) {
+			case 'pending':
+				return $order_date;
+			
+			case 'processing':
+				// Try to get the date when order status changed to processing
+				$processing_date = $this->get_status_change_date( $order, 'processing' );
+				return $processing_date ?: ( $order->get_status() !== 'pending' ? $order_date : null );
+			
+			case 'shipped':
+				return $shipped_date;
+			
+			case 'delivered':
+				return $completed_date;
+			
+			default:
+				return null;
+		}
+	}
+
+	/**
+	 * Get the shipped date from order meta or status changes
+	 * 
+	 * @param WC_Order $order Order object
+	 * @return WC_DateTime|null
+	 */
+	private function get_shipped_date( $order ) {
+		// Try to get from status change
+		$shipped_date = $this->get_status_change_date( $order, 'hezarfen-shipped' );
+		if ( $shipped_date ) {
+			return $shipped_date;
+		}
+
+		// If currently shipped, use modified date as fallback
+		if ( $order->get_status() === 'hezarfen-shipped' ) {
+			return $order->get_date_modified();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get the date when order status changed to a specific status
+	 * 
+	 * @param WC_Order $order Order object
+	 * @param string $target_status Target status
+	 * @return WC_DateTime|null
+	 */
+	private function get_status_change_date( $order, $target_status ) {
+		// Get order notes to find status change
+		$notes = wc_get_order_notes( array(
+			'order_id' => $order->get_id(),
+			'order_by' => 'date_created',
+			'order' => 'ASC',
+		) );
+
+		foreach ( $notes as $note ) {
+			if ( $note->type === 'system' ) {
+				$content = $note->content;
+				$status_name = wc_get_order_status_name( $target_status );
+				
+				// Check if this note is about status change to our target status
+				if ( strpos( $content, $status_name ) !== false || 
+					 strpos( $content, $target_status ) !== false ) {
+					return $note->date_created;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	/**
