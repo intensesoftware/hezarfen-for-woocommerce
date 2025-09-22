@@ -361,8 +361,8 @@
 
     // Initialize when document is ready
     $(document).ready(() => {
-        // Only initialize if the tracking form exists
-        if ($('#hezarfen-tracking-form').length) {
+        // Initialize if tracking form exists OR if order cards exist
+        if ($('#hezarfen-tracking-form').length || $('.hezarfen-order-card').length) {
             window.hezarfenOrderTracking = new HezarfenOrderTracking();
         }
     });
@@ -392,8 +392,9 @@
 
     // Function to track user order by ID (called from order cards)
     window.hezarfenTrackUserOrder = function(orderId) {
-        // This will be handled by the click event listener in the main class
-        // The onclick attribute just triggers the click event
+        if (window.hezarfenOrderTracking) {
+            window.hezarfenOrderTracking.handleUserOrderClick(orderId);
+        }
     };
 
 })(jQuery);

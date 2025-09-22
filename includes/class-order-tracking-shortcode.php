@@ -210,14 +210,6 @@ class Order_Tracking_Shortcode {
 					</div>
 				</div>
 
-				<div class="hezarfen-guest-option">
-					<p class="hezarfen-guest-text">
-						<?php esc_html_e( 'Looking for an order from a different account?', 'hezarfen-for-woocommerce' ); ?>
-						<button type="button" class="hezarfen-guest-toggle" onclick="hezarfenToggleGuestMode()">
-							<?php esc_html_e( 'Track as guest', 'hezarfen-for-woocommerce' ); ?>
-						</button>
-					</p>
-				</div>
 
 			<?php else : ?>
 				<div class="hezarfen-no-orders">
@@ -235,15 +227,6 @@ class Order_Tracking_Shortcode {
 				</div>
 			<?php endif; ?>
 
-			<!-- Hidden guest form for toggle functionality -->
-			<div class="hezarfen-guest-form" id="hezarfen-guest-form" style="display: none;">
-				<?php echo $this->render_guest_user_interface(); ?>
-				<div class="hezarfen-back-to-user">
-					<button type="button" class="hezarfen-secondary-button" onclick="hezarfenToggleGuestMode(false)">
-						<?php esc_html_e( 'Back to My Orders', 'hezarfen-for-woocommerce' ); ?>
-					</button>
-				</div>
-			</div>
 		</div>
 		<?php
 		return ob_get_clean();
