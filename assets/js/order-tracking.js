@@ -70,6 +70,11 @@
                     this.handleGuestSubmit();
                 }
             });
+
+            // Order filter dropdown handling
+            $(document).on('change', '#hezarfen-order-period-filter', (e) => {
+                this.handleOrderFilter($(e.target).val());
+            });
         }
 
         setupFormValidation() {
@@ -369,6 +374,40 @@
                 $(this).remove();
             });
             this.lastClickedCard = null;
+        }
+
+        async handleOrderFilter(period) {
+            // Show loading state for the orders list
+            const $ordersList = $('#hezarfen-orders-list');
+            $ordersList.addClass('loading');
+
+            const formData = {
+                action: 'hezarfen_filter_user_orders',
+                nonce: hezarfen_tracking_ajax.nonce,
+                period: period
+            };
+
+            try {
+                const response = await this.makeRequest(formData);
+                
+                if (response.success) {
+                    // Update orders list with filtered results
+                    $ordersList.html(response.data.html);
+                    
+                    // Remove any expanded details
+                    $('.hezarfen-order-details-expanded').slideUp(300, function() {
+                        $(this).remove();
+                    });
+                    $('.hezarfen-order-card').removeClass('active');
+                } else {
+                    this.showError(response.data.message || 'Error filtering orders');
+                }
+            } catch (error) {
+                console.error('Order filter error:', error);
+                this.showError('Error filtering orders');
+            } finally {
+                $ordersList.removeClass('loading');
+            }
         }
     }
 

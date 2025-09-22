@@ -25,6 +25,10 @@ class Order_Tracking_Shortcode {
 		add_action( 'wp_ajax_hezarfen_track_order', array( $this, 'ajax_track_order' ) );
 		add_action( 'wp_ajax_nopriv_hezarfen_track_order', array( $this, 'ajax_track_order' ) );
 		add_action( 'wp_ajax_hezarfen_track_user_order', array( $this, 'ajax_track_user_order' ) );
+		add_action( 'wp_ajax_hezarfen_filter_user_orders', array( $this, 'ajax_filter_user_orders' ) );
+		
+		// Initialize oldest order year on plugin load
+		add_action( 'init', array( $this, 'init_oldest_order_year' ) );
 	}
 
 	/**
@@ -152,67 +156,25 @@ class Order_Tracking_Shortcode {
 		<div class="hezarfen-logged-in-interface">
 			<?php if ( ! empty( $user_orders ) ) : ?>
 				<div class="hezarfen-user-orders-grid">
+					<!-- Order Filter Dropdown -->
+					<div class="hezarfen-order-filter">
+						<select id="hezarfen-order-period-filter" class="hezarfen-filter-select">
+							<option value="30_days"><?php esc_html_e( 'Last 30 days', 'hezarfen-for-woocommerce' ); ?></option>
+							<option value="3_months"><?php esc_html_e( 'Last 3 months', 'hezarfen-for-woocommerce' ); ?></option>
+							<?php 
+							$current_year = date( 'Y' );
+							$oldest_year = $this->get_oldest_order_year();
+							
+							for ( $year = $current_year; $year >= $oldest_year; $year-- ) {
+								echo '<option value="' . esc_attr( $year ) . '">' . esc_html( $year ) . '</option>';
+							}
+							?>
+						</select>
 					</div>
 					
-					<div class="hezarfen-orders-list">
+					<div class="hezarfen-orders-list" id="hezarfen-orders-list">
 						<?php foreach ( $user_orders as $order ) : ?>
-							<div class="hezarfen-order-card" data-order-id="<?php echo esc_attr( $order->get_id() ); ?>" onclick="hezarfenTrackUserOrder(<?php echo esc_attr( $order->get_id() ); ?>)">
-								<!-- Product Images Column -->
-								<div class="hezarfen-order-images">
-									<?php 
-									$items = $order->get_items();
-									$image_count = 0;
-									foreach ( $items as $item ) {
-										if ( $image_count >= 3 ) break; // Max 3 images
-										$product = $item->get_product();
-										if ( $product ) {
-											$image_id = $product->get_image_id();
-											if ( $image_id ) {
-												$image_url = wp_get_attachment_image_url( $image_id, 'thumbnail' );
-												if ( $image_url ) {
-													echo '<img src="' . esc_url( $image_url ) . '" alt="' . esc_attr( $product->get_name() ) . '" class="hezarfen-product-image">';
-													$image_count++;
-												}
-											}
-										}
-									}
-									if ( count( $items ) > 3 ) {
-										echo '<div class="hezarfen-more-items">+' . ( count( $items ) - 3 ) . '</div>';
-									}
-									?>
-								</div>
-								
-								<!-- Order Number Column -->
-								<div class="hezarfen-order-number">
-									<strong>#<?php echo esc_html( $order->get_order_number() ); ?></strong>
-								</div>
-								
-								<!-- Status Column -->
-								<div class="hezarfen-order-status-col">
-									<span class="hezarfen-order-status hezarfen-status-<?php echo esc_attr( $order->get_status() ); ?>">
-										<?php echo esc_html( wc_get_order_status_name( $order->get_status() ) ); ?>
-									</span>
-								</div>
-								
-								<!-- Amount & Date Column -->
-								<div class="hezarfen-order-amount-date">
-									<?php if ( get_option( 'hezarfen_tracking_page_show_total', 'yes' ) === 'yes' ) : ?>
-									<div class="hezarfen-order-amount">
-										<?php 
-										$formatted_total = $order->get_formatted_order_total();
-										$formatted_total = str_replace( '₺', 'TL', $formatted_total );
-										echo wp_kses_post( $formatted_total );
-										?>
-									</div>
-									<?php endif; ?>
-									
-									<?php if ( get_option( 'hezarfen_tracking_page_show_date', 'yes' ) === 'yes' ) : ?>
-									<div class="hezarfen-order-date">
-										<?php echo esc_html( $order->get_date_created()->format( 'M d, Y' ) ); ?>
-									</div>
-									<?php endif; ?>
-								</div>
-							</div>
+							<?php $this->render_single_order_card( $order ); ?>
 						<?php endforeach; ?>
 					</div>
 				</div>
@@ -1006,6 +968,221 @@ class Order_Tracking_Shortcode {
 		return '#' . str_pad( dechex( $r ), 2, '0', STR_PAD_LEFT ) . 
 				str_pad( dechex( $g ), 2, '0', STR_PAD_LEFT ) . 
 				str_pad( dechex( $b ), 2, '0', STR_PAD_LEFT );
+	}
+
+	/**
+	 * Initialize oldest order year in wp_options
+	 */
+	public function init_oldest_order_year() {
+		// Only run once per day to avoid performance issues
+		$last_check = get_option( 'hezarfen_oldest_order_last_check', 0 );
+		if ( time() - $last_check < DAY_IN_SECONDS ) {
+			return;
+		}
+
+		$oldest_year = $this->find_oldest_order_year();
+		if ( $oldest_year ) {
+			update_option( 'hezarfen_oldest_order_year', $oldest_year );
+			update_option( 'hezarfen_oldest_order_last_check', time() );
+		}
+	}
+
+	/**
+	 * Find the oldest order year in the system
+	 * 
+	 * @return int Oldest order year
+	 */
+	private function find_oldest_order_year() {
+		global $wpdb;
+
+		// Query the oldest order
+		$oldest_order = $wpdb->get_var( "
+			SELECT MIN(post_date) 
+			FROM {$wpdb->posts} 
+			WHERE post_type = 'shop_order' 
+			AND post_status IN ('wc-completed', 'wc-processing', 'wc-on-hold', 'wc-pending', 'wc-hezarfen-shipped')
+		" );
+
+		if ( $oldest_order ) {
+			return (int) date( 'Y', strtotime( $oldest_order ) );
+		}
+
+		return (int) date( 'Y' ); // Default to current year
+	}
+
+	/**
+	 * Get oldest order year from wp_options
+	 * 
+	 * @return int Oldest order year
+	 */
+	private function get_oldest_order_year() {
+		$oldest_year = get_option( 'hezarfen_oldest_order_year' );
+		
+		if ( ! $oldest_year ) {
+			$oldest_year = $this->find_oldest_order_year();
+			update_option( 'hezarfen_oldest_order_year', $oldest_year );
+		}
+
+		return (int) $oldest_year;
+	}
+
+	/**
+	 * Get filtered user orders based on period
+	 * 
+	 * @param int $user_id User ID
+	 * @param string $period Filter period
+	 * @return WC_Order[] Array of filtered orders
+	 */
+	private function get_filtered_user_orders( $user_id, $period = '30_days' ) {
+		$date_query = array();
+
+		switch ( $period ) {
+			case '30_days':
+				$date_query = array(
+					'after' => '30 days ago',
+				);
+				break;
+			
+			case '3_months':
+				$date_query = array(
+					'after' => '3 months ago',
+				);
+				break;
+			
+			default:
+				// Year filter
+				if ( is_numeric( $period ) ) {
+					$date_query = array(
+						'after'  => $period . '-01-01',
+						'before' => $period . '-12-31',
+					);
+				}
+				break;
+		}
+
+		$orders = wc_get_orders( array(
+			'customer'   => $user_id,
+			'limit'      => 50,
+			'orderby'    => 'date',
+			'order'      => 'DESC',
+			'status'     => array_keys( wc_get_order_statuses() ),
+			'date_query' => $date_query,
+		) );
+
+		return $orders;
+	}
+
+	/**
+	 * AJAX handler for filtering user orders
+	 */
+	public function ajax_filter_user_orders() {
+		try {
+			// Verify user is logged in
+			if ( ! is_user_logged_in() ) {
+				wp_send_json_error( array( 'message' => __( 'You must be logged in to use this feature.', 'hezarfen-for-woocommerce' ) ) );
+			}
+
+			// Verify nonce
+			if ( ! wp_verify_nonce( $_POST['nonce'] ?? '', 'hezarfen_track_order' ) ) {
+				wp_send_json_error( array( 'message' => __( 'Security check failed.', 'hezarfen-for-woocommerce' ) ) );
+			}
+
+			$period = sanitize_text_field( $_POST['period'] ?? '30_days' );
+			$current_user_id = get_current_user_id();
+
+			// Get filtered orders
+			$filtered_orders = $this->get_filtered_user_orders( $current_user_id, $period );
+
+			// Render filtered orders HTML
+			ob_start();
+			foreach ( $filtered_orders as $order ) :
+				$this->render_single_order_card( $order );
+			endforeach;
+			$orders_html = ob_get_clean();
+
+			wp_send_json_success( array(
+				'html' => $orders_html,
+				'count' => count( $filtered_orders )
+			) );
+
+		} catch ( \Exception $e ) {
+			error_log( 'Hezarfen Order Filter Error: ' . $e->getMessage() );
+			wp_send_json_error( array( 
+				'message' => __( 'An error occurred while filtering orders. Please try again.', 'hezarfen-for-woocommerce' )
+			) );
+		}
+	}
+
+	/**
+	 * Render a single order card
+	 * 
+	 * @param WC_Order $order Order object
+	 */
+	private function render_single_order_card( $order ) {
+		?>
+		<div class="hezarfen-order-card" data-order-id="<?php echo esc_attr( $order->get_id() ); ?>" onclick="hezarfenTrackUserOrder(<?php echo esc_attr( $order->get_id() ); ?>)">
+			<!-- Product Images Column -->
+			<div class="hezarfen-order-images">
+				<?php 
+				$items = $order->get_items();
+				$total_items = count( $items );
+				$image_count = 0;
+				$max_images = 2; // Show only 2 images
+				
+				// Show + icon first if there are more than 2 items
+				if ( $total_items > $max_images ) {
+					echo '<div class="hezarfen-more-items-bg">+</div>';
+				}
+				
+				foreach ( $items as $item ) {
+					if ( $image_count >= $max_images ) break;
+					$product = $item->get_product();
+					if ( $product ) {
+						$image_id = $product->get_image_id();
+						if ( $image_id ) {
+							$image_url = wp_get_attachment_image_url( $image_id, 'thumbnail' );
+							if ( $image_url ) {
+								echo '<img src="' . esc_url( $image_url ) . '" alt="' . esc_attr( $product->get_name() ) . '" class="hezarfen-product-image">';
+								$image_count++;
+							}
+						}
+					}
+				}
+				?>
+			</div>
+			
+			<!-- Order Number Column -->
+			<div class="hezarfen-order-number">
+				<strong>#<?php echo esc_html( $order->get_order_number() ); ?></strong>
+			</div>
+			
+			<!-- Status Column -->
+			<div class="hezarfen-order-status-col">
+				<span class="hezarfen-order-status hezarfen-status-<?php echo esc_attr( $order->get_status() ); ?>">
+					<?php echo esc_html( wc_get_order_status_name( $order->get_status() ) ); ?>
+				</span>
+			</div>
+			
+			<!-- Amount & Date Column -->
+			<div class="hezarfen-order-amount-date">
+				<?php if ( get_option( 'hezarfen_tracking_page_show_total', 'yes' ) === 'yes' ) : ?>
+				<div class="hezarfen-order-amount">
+					<?php 
+					$formatted_total = $order->get_formatted_order_total();
+					$formatted_total = str_replace( '₺', 'TL', $formatted_total );
+					echo wp_kses_post( $formatted_total );
+					?>
+				</div>
+				<?php endif; ?>
+				
+				<?php if ( get_option( 'hezarfen_tracking_page_show_date', 'yes' ) === 'yes' ) : ?>
+				<div class="hezarfen-order-date">
+					<?php echo esc_html( $order->get_date_created()->format( 'M d, Y' ) ); ?>
+				</div>
+				<?php endif; ?>
+			</div>
+		</div>
+		<?php
 	}
 }
 
