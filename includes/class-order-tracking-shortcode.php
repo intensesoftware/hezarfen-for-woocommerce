@@ -93,10 +93,9 @@ class Order_Tracking_Shortcode {
 			
 			if ( ! empty( $user_orders ) ) {
 				$default_title = sprintf( 
-					__( 'Welcome back, %s!', 'hezarfen-for-woocommerce' ), 
-					$current_user->display_name 
+					__( 'Shipment Tracking', 'hezarfen-for-woocommerce' ), 
 				);
-				$default_description = __( 'Select any of your orders below to view detailed tracking information and delivery status.', 'hezarfen-for-woocommerce' );
+				$default_description = '';
 			} else {
 				$default_title = sprintf( 
 					__( 'Hello, %s!', 'hezarfen-for-woocommerce' ), 
@@ -153,33 +152,6 @@ class Order_Tracking_Shortcode {
 		<div class="hezarfen-logged-in-interface">
 			<?php if ( ! empty( $user_orders ) ) : ?>
 				<div class="hezarfen-user-orders-grid">
-					<div class="hezarfen-orders-label">
-						<?php 
-						$order_count = count( $user_orders );
-						if ( $order_count > 0 ) {
-							printf(
-								'<h3>%s</h3>',
-								sprintf( 
-									_n( 
-										'Your Order (%d)', 
-										'Your Orders (%d)', 
-										$order_count, 
-										'hezarfen-for-woocommerce' 
-									), 
-									$order_count 
-								)
-							);
-						}
-						?>
-						<p class="hezarfen-orders-subtitle">
-							<?php 
-							if ( $order_count > 5 ) {
-								esc_html_e( 'Showing your recent orders. Click any order to view detailed tracking and delivery progress.', 'hezarfen-for-woocommerce' );
-							} else {
-								esc_html_e( 'Click any order to view detailed tracking and delivery progress.', 'hezarfen-for-woocommerce' );
-							}
-							?>
-						</p>
 					</div>
 					
 					<div class="hezarfen-orders-list">
