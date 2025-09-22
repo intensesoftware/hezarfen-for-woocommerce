@@ -24,6 +24,7 @@ class Order_Tracking_Shortcode {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_action( 'wp_ajax_hezarfen_track_order', array( $this, 'ajax_track_order' ) );
 		add_action( 'wp_ajax_nopriv_hezarfen_track_order', array( $this, 'ajax_track_order' ) );
+		add_action( 'wp_ajax_hezarfen_track_user_order', array( $this, 'ajax_track_user_order' ) );
 	}
 
 	/**
@@ -103,47 +104,11 @@ class Order_Tracking_Shortcode {
 					<p class="hezarfen-tracking-description"><?php echo esc_html( $atts['description'] ); ?></p>
 				</div>
 
-				<form class="hezarfen-tracking-form" id="hezarfen-tracking-form">
-					<div class="hezarfen-form-group">
-						<label for="order_number" class="hezarfen-form-label">
-							<?php esc_html_e( 'Order Number', 'hezarfen-for-woocommerce' ); ?>
-						</label>
-						<input 
-							type="text" 
-							id="order_number" 
-							name="order_number" 
-							class="hezarfen-form-input" 
-							placeholder="<?php esc_attr_e( 'e.g., #12345', 'hezarfen-for-woocommerce' ); ?>"
-							required
-						>
-					</div>
-
-					<div class="hezarfen-form-group">
-						<label for="billing_email" class="hezarfen-form-label">
-							<?php esc_html_e( 'Email Address', 'hezarfen-for-woocommerce' ); ?>
-						</label>
-						<input 
-							type="email" 
-							id="billing_email" 
-							name="billing_email" 
-							class="hezarfen-form-input" 
-							placeholder="<?php esc_attr_e( 'your@email.com', 'hezarfen-for-woocommerce' ); ?>"
-							required
-						>
-					</div>
-
-					<button type="submit" class="hezarfen-tracking-button">
-						<span class="hezarfen-button-text"><?php esc_html_e( 'Track Order', 'hezarfen-for-woocommerce' ); ?></span>
-						<span class="hezarfen-button-spinner" style="display: none;">
-							<svg class="hezarfen-spinner" viewBox="0 0 24 24">
-								<circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="32" stroke-dashoffset="32">
-									<animate attributeName="stroke-dasharray" dur="2s" values="0 32;16 16;0 32;0 32" repeatCount="indefinite"/>
-									<animate attributeName="stroke-dashoffset" dur="2s" values="0;-16;-32;-32" repeatCount="indefinite"/>
-								</circle>
-							</svg>
-						</span>
-					</button>
-				</form>
+				<?php if ( is_user_logged_in() ) : ?>
+					<?php echo $this->render_logged_in_user_interface(); ?>
+				<?php else : ?>
+					<?php echo $this->render_guest_user_interface(); ?>
+				<?php endif; ?>
 
 				<div class="hezarfen-tracking-results" id="hezarfen-tracking-results" style="display: none;">
 					<!-- Results will be loaded here via AJAX -->
@@ -152,6 +117,262 @@ class Order_Tracking_Shortcode {
 		</div>
 		<?php
 		return ob_get_clean();
+	}
+
+	/**
+	 * Render interface for logged-in users
+	 * 
+	 * @return string HTML output
+	 */
+	private function render_logged_in_user_interface() {
+		$current_user = wp_get_current_user();
+		$user_orders = $this->get_user_orders( $current_user->ID );
+
+		ob_start();
+		?>
+		<div class="hezarfen-logged-in-interface">
+			<?php if ( ! empty( $user_orders ) ) : ?>
+				<div class="hezarfen-user-welcome">
+					<p class="hezarfen-welcome-text">
+						<?php printf( 
+							__( 'Welcome back, %s! Select an order to track:', 'hezarfen-for-woocommerce' ), 
+							esc_html( $current_user->display_name ) 
+						); ?>
+					</p>
+				</div>
+
+				<div class="hezarfen-user-orders-grid">
+					<div class="hezarfen-orders-label">
+						<h3><?php esc_html_e( 'Your Orders', 'hezarfen-for-woocommerce' ); ?></h3>
+						<p class="hezarfen-orders-subtitle"><?php esc_html_e( 'Click on any order to track its shipment status', 'hezarfen-for-woocommerce' ); ?></p>
+					</div>
+					
+					<div class="hezarfen-orders-list">
+						<?php foreach ( $user_orders as $order ) : ?>
+							<div class="hezarfen-order-card" data-order-id="<?php echo esc_attr( $order->get_id() ); ?>" onclick="hezarfenTrackUserOrder(<?php echo esc_attr( $order->get_id() ); ?>)">
+								<div class="hezarfen-order-card-header">
+									<div class="hezarfen-order-number">
+										<strong>#<?php echo esc_html( $order->get_order_number() ); ?></strong>
+									</div>
+									<div class="hezarfen-order-status hezarfen-status-<?php echo esc_attr( $order->get_status() ); ?>">
+										<?php echo esc_html( wc_get_order_status_name( $order->get_status() ) ); ?>
+									</div>
+								</div>
+								
+								<div class="hezarfen-order-card-body">
+									<div class="hezarfen-order-meta-grid">
+										<div class="hezarfen-order-date">
+											<span class="hezarfen-meta-icon">📅</span>
+											<?php echo esc_html( wc_format_datetime( $order->get_date_created() ) ); ?>
+										</div>
+										
+										<?php if ( get_option( 'hezarfen_tracking_page_show_total', 'yes' ) === 'yes' ) : ?>
+										<div class="hezarfen-order-total">
+											<span class="hezarfen-meta-icon">💰</span>
+											<?php 
+											$formatted_total = $order->get_formatted_order_total();
+											$formatted_total = str_replace( '₺', 'TL', $formatted_total );
+											echo wp_kses_post( $formatted_total );
+											?>
+										</div>
+										<?php endif; ?>
+									</div>
+									
+									<?php 
+									$item_count = $order->get_item_count();
+									if ( $item_count > 0 ) :
+									?>
+									<div class="hezarfen-order-items">
+										<span class="hezarfen-meta-icon">📦</span>
+										<?php 
+										printf( 
+											_n( '%d item', '%d items', $item_count, 'hezarfen-for-woocommerce' ), 
+											$item_count 
+										);
+										?>
+									</div>
+									<?php endif; ?>
+								</div>
+								
+								<div class="hezarfen-order-card-footer">
+									<div class="hezarfen-track-action">
+										<span class="hezarfen-track-text"><?php esc_html_e( 'Click to track', 'hezarfen-for-woocommerce' ); ?></span>
+										<svg class="hezarfen-track-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+											<path d="m9 18 6-6-6-6"/>
+										</svg>
+									</div>
+								</div>
+							</div>
+						<?php endforeach; ?>
+					</div>
+				</div>
+
+				<div class="hezarfen-guest-option">
+					<p class="hezarfen-guest-text">
+						<?php esc_html_e( 'Looking for an order from a different account?', 'hezarfen-for-woocommerce' ); ?>
+						<button type="button" class="hezarfen-guest-toggle" onclick="hezarfenToggleGuestMode()">
+							<?php esc_html_e( 'Track as guest', 'hezarfen-for-woocommerce' ); ?>
+						</button>
+					</p>
+				</div>
+
+			<?php else : ?>
+				<div class="hezarfen-no-orders">
+					<div class="hezarfen-no-orders-icon">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<circle cx="12" cy="12" r="10"/>
+							<path d="m9 12 2 2 4-4"/>
+						</svg>
+					</div>
+					<h3><?php esc_html_e( 'No Orders Found', 'hezarfen-for-woocommerce' ); ?></h3>
+					<p><?php esc_html_e( 'You haven\'t placed any orders yet. Start shopping to see your orders here!', 'hezarfen-for-woocommerce' ); ?></p>
+					<a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="hezarfen-secondary-button">
+						<?php esc_html_e( 'Start Shopping', 'hezarfen-for-woocommerce' ); ?>
+					</a>
+				</div>
+			<?php endif; ?>
+
+			<!-- Hidden guest form for toggle functionality -->
+			<div class="hezarfen-guest-form" id="hezarfen-guest-form" style="display: none;">
+				<?php echo $this->render_guest_user_interface(); ?>
+				<div class="hezarfen-back-to-user">
+					<button type="button" class="hezarfen-secondary-button" onclick="hezarfenToggleGuestMode(false)">
+						<?php esc_html_e( 'Back to My Orders', 'hezarfen-for-woocommerce' ); ?>
+					</button>
+				</div>
+			</div>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Render interface for guest users
+	 * 
+	 * @return string HTML output
+	 */
+	private function render_guest_user_interface() {
+		ob_start();
+		?>
+		<form class="hezarfen-tracking-form" id="hezarfen-tracking-form">
+			<div class="hezarfen-form-group">
+				<label for="order_number" class="hezarfen-form-label">
+					<?php esc_html_e( 'Order Number', 'hezarfen-for-woocommerce' ); ?>
+				</label>
+				<input 
+					type="text" 
+					id="order_number" 
+					name="order_number" 
+					class="hezarfen-form-input" 
+					placeholder="<?php esc_attr_e( 'e.g., #12345', 'hezarfen-for-woocommerce' ); ?>"
+					required
+				>
+			</div>
+
+			<div class="hezarfen-form-group">
+				<label for="billing_email" class="hezarfen-form-label">
+					<?php esc_html_e( 'Email Address', 'hezarfen-for-woocommerce' ); ?>
+				</label>
+				<input 
+					type="email" 
+					id="billing_email" 
+					name="billing_email" 
+					class="hezarfen-form-input" 
+					placeholder="<?php esc_attr_e( 'your@email.com', 'hezarfen-for-woocommerce' ); ?>"
+					required
+				>
+			</div>
+
+			<button type="submit" class="hezarfen-tracking-button">
+				<span class="hezarfen-button-text"><?php esc_html_e( 'Track Order', 'hezarfen-for-woocommerce' ); ?></span>
+				<span class="hezarfen-button-spinner" style="display: none;">
+					<svg class="hezarfen-spinner" viewBox="0 0 24 24">
+						<circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="32" stroke-dashoffset="32">
+							<animate attributeName="stroke-dasharray" dur="2s" values="0 32;16 16;0 32;0 32" repeatCount="indefinite"/>
+							<animate attributeName="stroke-dashoffset" dur="2s" values="0;-16;-32;-32" repeatCount="indefinite"/>
+						</circle>
+					</svg>
+				</span>
+			</button>
+		</form>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Get user orders for dropdown
+	 * 
+	 * @param int $user_id User ID
+	 * @return WC_Order[] Array of user orders
+	 */
+	private function get_user_orders( $user_id ) {
+		$orders = wc_get_orders( array(
+			'customer' => $user_id,
+			'limit'    => 50, // Limit to last 50 orders
+			'orderby'  => 'date',
+			'order'    => 'DESC',
+			'status'   => array_keys( wc_get_order_statuses() ), // All statuses
+		) );
+
+		return $orders;
+	}
+
+	/**
+	 * AJAX handler for logged-in user order tracking
+	 */
+	public function ajax_track_user_order() {
+		try {
+			// Verify user is logged in
+			if ( ! is_user_logged_in() ) {
+				wp_send_json_error( array( 'message' => __( 'You must be logged in to use this feature.', 'hezarfen-for-woocommerce' ) ) );
+			}
+
+			// Verify nonce
+			if ( ! wp_verify_nonce( $_POST['nonce'] ?? '', 'hezarfen_track_order' ) ) {
+				wp_send_json_error( array( 'message' => __( 'Security check failed.', 'hezarfen-for-woocommerce' ) ) );
+			}
+
+			// Validate required fields
+			if ( empty( $_POST['order_id'] ) ) {
+				wp_send_json_error( array( 
+					'message' => __( 'Please select an order to track.', 'hezarfen-for-woocommerce' )
+				) );
+			}
+
+			$order_id = intval( $_POST['order_id'] );
+			$current_user_id = get_current_user_id();
+
+			// Get the order
+			$order = wc_get_order( $order_id );
+
+			if ( ! $order ) {
+				wp_send_json_error( array( 
+					'message' => __( 'Order not found.', 'hezarfen-for-woocommerce' )
+				) );
+			}
+
+			// Verify the order belongs to the current user
+			if ( $order->get_customer_id() !== $current_user_id ) {
+				wp_send_json_error( array( 
+					'message' => __( 'You are not authorized to view this order.', 'hezarfen-for-woocommerce' )
+				) );
+			}
+
+			// Get tracking information
+			$tracking_data = $this->get_order_tracking_data( $order );
+
+			wp_send_json_success( array(
+				'html' => $this->render_tracking_results( $order, $tracking_data )
+			) );
+
+		} catch ( \Exception $e ) {
+			// Log the error
+			error_log( 'Hezarfen User Order Tracking AJAX Error: ' . $e->getMessage() );
+			
+			wp_send_json_error( array( 
+				'message' => __( 'An error occurred while processing your request. Please try again.', 'hezarfen-for-woocommerce' )
+			) );
+		}
 	}
 
 	/**

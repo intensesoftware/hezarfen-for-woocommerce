@@ -10,6 +10,9 @@
         constructor() {
             this.form = $('#hezarfen-tracking-form');
             this.results = $('#hezarfen-tracking-results');
+            this.isLoggedIn = $('.hezarfen-order-card').length > 0;
+            
+            // Set up button references for guest form
             this.button = this.form.find('.hezarfen-tracking-button');
             this.buttonText = this.button.find('.hezarfen-button-text');
             this.buttonSpinner = this.button.find('.hezarfen-button-spinner');
@@ -23,27 +26,39 @@
         }
 
         bindEvents() {
-            // Form submission
+            // Guest form submission
             this.form.on('submit', (e) => {
                 e.preventDefault();
-                this.handleSubmit();
+                this.handleGuestSubmit();
+            });
+
+            // Order card click handling
+            $(document).on('click', '.hezarfen-order-card', (e) => {
+                const $card = $(e.currentTarget);
+                const orderId = $card.data('order-id');
+                
+                // Add loading state to card
+                this.setCardLoadingState($card, true);
+                
+                // Track the order
+                this.handleUserOrderClick(orderId);
             });
 
             // Input validation on blur
-            this.form.find('input').on('blur', (e) => {
+            $(document).on('blur', '.hezarfen-form-input', (e) => {
                 this.validateField($(e.target));
             });
 
             // Real-time validation
-            this.form.find('input').on('input', (e) => {
+            $(document).on('input', '.hezarfen-form-input', (e) => {
                 this.clearFieldError($(e.target));
             });
 
             // Enter key handling
-            this.form.find('input').on('keypress', (e) => {
+            $(document).on('keypress', '.hezarfen-form-input', (e) => {
                 if (e.which === 13) {
                     e.preventDefault();
-                    this.handleSubmit();
+                    this.handleGuestSubmit();
                 }
             });
         }
@@ -65,6 +80,7 @@
             const value = $field.val().trim();
             const fieldType = $field.attr('type');
             const fieldName = $field.attr('name');
+            const fieldTag = $field.prop('tagName').toLowerCase();
             let isValid = true;
             let errorMessage = '';
 
@@ -72,6 +88,12 @@
             if ($field.prop('required') && !value) {
                 isValid = false;
                 errorMessage = 'This field is required.';
+            }
+
+            // Select field validation
+            if (fieldTag === 'select' && fieldName === 'order_id' && !value) {
+                isValid = false;
+                errorMessage = 'Please select an order to track.';
             }
 
             // Email validation
@@ -131,10 +153,10 @@
             $group.find('.field-error').remove();
         }
 
-        validateForm() {
+        validateForm($form) {
             let isValid = true;
             
-            this.form.find('input[required]').each((index, element) => {
+            $form.find('input[required], select[required]').each((index, element) => {
                 if (!this.validateField($(element))) {
                     isValid = false;
                 }
@@ -143,10 +165,10 @@
             return isValid;
         }
 
-        async handleSubmit() {
+        async handleGuestSubmit() {
             // Validate form
-            if (!this.validateForm()) {
-                this.shakeForm();
+            if (!this.validateForm(this.form)) {
+                this.shakeForm(this.form);
                 return;
             }
 
@@ -174,6 +196,31 @@
                 this.showError(hezarfen_tracking_ajax.strings.error);
             } finally {
                 this.setLoadingState(false);
+            }
+        }
+
+        async handleUserOrderClick(orderId) {
+            // Collect form data
+            const formData = {
+                action: 'hezarfen_track_user_order',
+                nonce: hezarfen_tracking_ajax.nonce,
+                order_id: orderId
+            };
+
+            try {
+                const response = await this.makeRequest(formData);
+                
+                if (response.success) {
+                    this.showResults(response.data.html);
+                } else {
+                    this.showError(response.data.message || hezarfen_tracking_ajax.strings.error);
+                }
+            } catch (error) {
+                console.error('User order tracking error:', error);
+                this.showError(hezarfen_tracking_ajax.strings.error);
+            } finally {
+                // Remove loading state from all cards
+                $('.hezarfen-order-card').removeClass('loading');
             }
         }
 
@@ -252,13 +299,14 @@
             this.form.find('.hezarfen-tracking-error').slideUp(200);
         }
 
-        shakeForm() {
+        shakeForm($form) {
             // Add shake animation to form
-            this.form.addClass('shake');
+            $form = $form || this.form;
+            $form.addClass('shake');
             
             // Remove shake class after animation
             setTimeout(() => {
-                this.form.removeClass('shake');
+                $form.removeClass('shake');
             }, 600);
         }
 
@@ -269,14 +317,28 @@
             }, 500);
         }
 
+        setCardLoadingState($card, loading) {
+            if (loading) {
+                $card.addClass('loading');
+                $card.find('.hezarfen-track-text').text(hezarfen_tracking_ajax.strings.searching);
+                $card.find('.hezarfen-track-icon').addClass('spinning');
+            } else {
+                $card.removeClass('loading');
+                $card.find('.hezarfen-track-text').text('Click to track');
+                $card.find('.hezarfen-track-icon').removeClass('spinning');
+            }
+        }
+
         // Public method to reset form
         reset() {
             this.form[0].reset();
             this.results.slideUp(200);
             this.hideError();
-            this.form.find('input').each((index, element) => {
+            $('.hezarfen-form-input').each((index, element) => {
                 this.clearFieldError($(element));
             });
+            // Remove any card loading states
+            $('.hezarfen-order-card').removeClass('loading');
         }
     }
 
@@ -310,6 +372,28 @@
         if (window.hezarfenOrderTracking) {
             window.hezarfenOrderTracking.reset();
         }
+    };
+
+    // Function to toggle between user orders and guest tracking
+    window.hezarfenToggleGuestMode = function(showGuest = true) {
+        const $userInterface = $('.hezarfen-logged-in-interface > div:not(.hezarfen-guest-form)');
+        const $guestForm = $('#hezarfen-guest-form');
+        
+        if (showGuest) {
+            // Show guest form, hide user interface
+            $userInterface.slideUp(300);
+            $guestForm.slideDown(300);
+        } else {
+            // Show user interface, hide guest form
+            $guestForm.slideUp(300);
+            $userInterface.slideDown(300);
+        }
+    };
+
+    // Function to track user order by ID (called from order cards)
+    window.hezarfenTrackUserOrder = function(orderId) {
+        // This will be handled by the click event listener in the main class
+        // The onclick attribute just triggers the click event
     };
 
 })(jQuery);

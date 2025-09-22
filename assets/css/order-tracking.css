@@ -457,6 +457,238 @@
 	pointer-events: none;
 }
 
+/* Order Cards for Logged-in Users */
+.hezarfen-user-orders-grid {
+	margin-bottom: 2rem;
+}
+
+.hezarfen-orders-label {
+	margin-bottom: 1.5rem;
+	text-align: center;
+}
+
+.hezarfen-orders-label h3 {
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: #111827;
+	margin: 0 0 0.5rem 0;
+}
+
+.hezarfen-orders-subtitle {
+	color: #6b7280;
+	font-size: 0.875rem;
+	margin: 0;
+}
+
+.hezarfen-orders-list {
+	display: grid;
+	gap: 0.75rem;
+	max-height: 400px;
+	overflow-y: auto;
+	padding-right: 0.25rem;
+}
+
+.hezarfen-order-card {
+	background: #ffffff;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	padding: 1rem;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	position: relative;
+	min-height: 80px;
+}
+
+.hezarfen-order-card:hover {
+	border-color: #3b82f6;
+	box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.1);
+	transform: translateY(-1px);
+}
+
+.hezarfen-order-card.loading {
+	opacity: 0.7;
+	pointer-events: none;
+}
+
+.hezarfen-order-card-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 0.75rem;
+}
+
+.hezarfen-order-number {
+	font-size: 1rem;
+	color: #111827;
+}
+
+.hezarfen-order-status {
+	font-size: 0.75rem;
+	font-weight: 500;
+	padding: 0.25rem 0.5rem;
+	border-radius: 4px;
+	background: #f3f4f6;
+	color: #6b7280;
+}
+
+.hezarfen-order-card-body {
+	margin-bottom: 0.75rem;
+}
+
+.hezarfen-order-meta-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0.75rem;
+	margin-bottom: 0.5rem;
+}
+
+.hezarfen-order-date,
+.hezarfen-order-total,
+.hezarfen-order-items {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 0.875rem;
+	color: #6b7280;
+}
+
+.hezarfen-meta-icon {
+	font-size: 1rem;
+}
+
+.hezarfen-order-card-footer {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.hezarfen-track-action {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: #3b82f6;
+	font-size: 0.875rem;
+	font-weight: 500;
+}
+
+.hezarfen-track-icon {
+	width: 1rem;
+	height: 1rem;
+	transition: transform 0.2s ease;
+}
+
+.hezarfen-track-icon.spinning {
+	animation: spin 1s linear infinite;
+}
+
+.hezarfen-order-card:hover .hezarfen-track-icon {
+	transform: translateX(2px);
+}
+
+/* Guest Toggle */
+.hezarfen-guest-option {
+	text-align: center;
+	margin-top: 1.5rem;
+	padding-top: 1.5rem;
+	border-top: 1px solid #e5e7eb;
+}
+
+.hezarfen-guest-text {
+	color: #6b7280;
+	font-size: 0.875rem;
+	margin: 0;
+}
+
+.hezarfen-guest-toggle {
+	background: none;
+	border: none;
+	color: #3b82f6;
+	font-weight: 500;
+	cursor: pointer;
+	text-decoration: underline;
+	font-size: 0.875rem;
+	margin-left: 0.5rem;
+}
+
+.hezarfen-guest-toggle:hover {
+	color: #1d4ed8;
+}
+
+/* No Orders State */
+.hezarfen-no-orders {
+	text-align: center;
+	padding: 2rem;
+}
+
+.hezarfen-no-orders-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 3rem;
+	height: 3rem;
+	background: #f3f4f6;
+	border-radius: 50%;
+	color: #6b7280;
+	margin-bottom: 1rem;
+}
+
+.hezarfen-no-orders-icon svg {
+	width: 1.5rem;
+	height: 1.5rem;
+}
+
+.hezarfen-no-orders h3 {
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: #111827;
+	margin: 0 0 0.5rem 0;
+}
+
+.hezarfen-no-orders p {
+	color: #6b7280;
+	margin: 0 0 1.5rem 0;
+}
+
+/* User Welcome */
+.hezarfen-user-welcome {
+	text-align: center;
+	margin-bottom: 2rem;
+}
+
+.hezarfen-welcome-text {
+	font-size: 1rem;
+	color: #374151;
+	margin: 0;
+}
+
+/* Spinning animation */
+@keyframes spin {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+	.hezarfen-order-card {
+		padding: 0.75rem;
+		min-height: 70px;
+	}
+	
+	.hezarfen-order-meta-grid {
+		grid-template-columns: 1fr;
+		gap: 0.5rem;
+	}
+	
+	.hezarfen-order-card-header {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.5rem;
+	}
+	
+	.hezarfen-orders-list {
+		max-height: 300px;
+	}
+}
+
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
 	.hezarfen-tracking-card {
@@ -513,5 +745,60 @@
 		background: #4b5563;
 		border-color: #6b7280;
 		color: #f9fafb;
+	}
+	
+	/* Dark mode for order cards */
+	.hezarfen-order-card {
+		background: #374151;
+		border-color: #4b5563;
+	}
+	
+	.hezarfen-order-card:hover {
+		border-color: #3b82f6;
+		background: #4b5563;
+	}
+	
+	.hezarfen-orders-label h3 {
+		color: #f9fafb;
+	}
+	
+	.hezarfen-orders-subtitle {
+		color: #d1d5db;
+	}
+	
+	.hezarfen-order-number {
+		color: #f9fafb;
+	}
+	
+	.hezarfen-order-status {
+		background: #4b5563;
+		color: #d1d5db;
+	}
+	
+	.hezarfen-order-date,
+	.hezarfen-order-total,
+	.hezarfen-order-items {
+		color: #d1d5db;
+	}
+	
+	.hezarfen-guest-text {
+		color: #d1d5db;
+	}
+	
+	.hezarfen-welcome-text {
+		color: #e5e7eb;
+	}
+	
+	.hezarfen-no-orders-icon {
+		background: #4b5563;
+		color: #9ca3af;
+	}
+	
+	.hezarfen-no-orders h3 {
+		color: #f9fafb;
+	}
+	
+	.hezarfen-no-orders p {
+		color: #d1d5db;
 	}
 }
