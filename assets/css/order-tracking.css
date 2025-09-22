@@ -783,6 +783,65 @@
 	transform: scale(1.01);
 }
 
+/* Skeleton Loading States */
+.hezarfen-skeleton-container {
+	animation: fadeIn 0.3s ease;
+}
+
+.hezarfen-skeleton-header {
+	margin-bottom: 24px;
+}
+
+.hezarfen-skeleton-line {
+	background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+	background-size: 200% 100%;
+	animation: shimmer 1.5s infinite;
+	border-radius: 4px;
+}
+
+.hezarfen-skeleton-line.skeleton-title {
+	height: 20px;
+	width: 60%;
+	margin-bottom: 8px;
+}
+
+.hezarfen-skeleton-line.skeleton-text {
+	height: 16px;
+	width: 80%;
+}
+
+.hezarfen-skeleton-steps {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.hezarfen-skeleton-step {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.hezarfen-skeleton-dot {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+	background-size: 200% 100%;
+	animation: shimmer 1.5s infinite;
+	flex-shrink: 0;
+}
+
+@keyframes shimmer {
+	0% { background-position: -200% 0; }
+	100% { background-position: 200% 0; }
+}
+
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
 /* Order Card Columns */
 .hezarfen-order-images {
 	display: flex;

@@ -40,11 +40,15 @@
                 // Store reference to clicked card
                 this.lastClickedCard = $card;
                 
-                // Remove active state from other cards
+                // Remove active state from other cards and existing details
                 $('.hezarfen-order-card').removeClass('active');
+                $('.hezarfen-order-details-expanded').remove();
                 
                 // Add active state to clicked card
                 $card.addClass('active');
+                
+                // Immediately show skeleton loading state
+                this.showSkeletonDetails($card);
                 
                 // Add loading state to card
                 this.setCardLoadingState($card, true);
@@ -279,24 +283,26 @@
             // Hide any existing errors
             this.hideError();
             
-            // For logged-in users, insert results after the clicked order card
+            // For logged-in users, replace skeleton with actual content
             if (this.isLoggedIn && this.lastClickedCard) {
-                // Remove any existing expanded details
-                $('.hezarfen-order-details-expanded').remove();
+                const $existingDetails = $('.hezarfen-order-details-expanded');
                 
-                // Create expanded details container
-                const $expandedDetails = $('<div class="hezarfen-order-details-expanded">' + html + '</div>');
-                
-                // Insert after the clicked card
-                this.lastClickedCard.after($expandedDetails);
-                
-                // Animate the expansion
-                $expandedDetails.slideDown(400, () => {
-                    // Scroll to expanded details
-                    $('html, body').animate({
-                        scrollTop: $expandedDetails.offset().top - 20
-                    }, 300);
-                });
+                if ($existingDetails.length) {
+                    // Replace skeleton content with actual content
+                    $existingDetails.html(html);
+                    
+                    // Ensure the selected card is still visible after content loads
+                    setTimeout(() => {
+                        this.ensureCardVisibility(this.lastClickedCard, $existingDetails);
+                    }, 100);
+                } else {
+                    // Fallback: create new details container
+                    const $expandedDetails = $('<div class="hezarfen-order-details-expanded">' + html + '</div>');
+                    this.lastClickedCard.after($expandedDetails);
+                    $expandedDetails.slideDown(400, () => {
+                        this.ensureCardVisibility(this.lastClickedCard, $expandedDetails);
+                    });
+                }
             } else {
                 // For guest users, show in the results container
                 this.results.html(html).slideDown(400, () => {
@@ -304,6 +310,67 @@
                     this.results.find('button, a').first().focus();
                 });
             }
+        }
+
+        showSkeletonDetails($card) {
+            // Create skeleton loading content
+            const skeletonHtml = `
+                <div class="hezarfen-tracking-details-panel">
+                    <div class="hezarfen-skeleton-container">
+                        <div class="hezarfen-skeleton-header">
+                            <div class="hezarfen-skeleton-line skeleton-title"></div>
+                        </div>
+                        <div class="hezarfen-skeleton-progress">
+                            <div class="hezarfen-skeleton-steps">
+                                <div class="hezarfen-skeleton-step">
+                                    <div class="hezarfen-skeleton-dot"></div>
+                                    <div class="hezarfen-skeleton-line skeleton-text"></div>
+                                </div>
+                                <div class="hezarfen-skeleton-step">
+                                    <div class="hezarfen-skeleton-dot"></div>
+                                    <div class="hezarfen-skeleton-line skeleton-text"></div>
+                                </div>
+                                <div class="hezarfen-skeleton-step">
+                                    <div class="hezarfen-skeleton-dot"></div>
+                                    <div class="hezarfen-skeleton-line skeleton-text"></div>
+                                </div>
+                                <div class="hezarfen-skeleton-step">
+                                    <div class="hezarfen-skeleton-dot"></div>
+                                    <div class="hezarfen-skeleton-line skeleton-text"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Create expanded details container with skeleton
+            const $expandedDetails = $('<div class="hezarfen-order-details-expanded">' + skeletonHtml + '</div>');
+            
+            // Insert after the clicked card
+            $card.after($expandedDetails);
+            
+            // Animate the expansion
+            $expandedDetails.slideDown(300, () => {
+                // Calculate scroll position to show both card and details
+                const cardTop = $card.offset().top;
+                const detailsBottom = $expandedDetails.offset().top + $expandedDetails.outerHeight();
+                const viewportHeight = $(window).height();
+                const headerOffset = 80; // Account for any fixed headers
+                
+                // If details extend beyond viewport, scroll to show the card at top
+                if (detailsBottom - cardTop > viewportHeight - headerOffset) {
+                    $('html, body').animate({
+                        scrollTop: cardTop - headerOffset
+                    }, 400);
+                } else {
+                    // Otherwise, center the content nicely
+                    const idealScrollTop = cardTop - (viewportHeight - (detailsBottom - cardTop)) / 2;
+                    $('html, body').animate({
+                        scrollTop: Math.max(0, idealScrollTop)
+                    }, 400);
+                }
+            });
         }
 
         showError(message) {
@@ -374,6 +441,27 @@
                 $(this).remove();
             });
             this.lastClickedCard = null;
+        }
+
+        ensureCardVisibility($card, $details) {
+            if (!$card || !$card.length) return;
+            
+            const cardTop = $card.offset().top;
+            const cardBottom = cardTop + $card.outerHeight();
+            const detailsBottom = $details ? $details.offset().top + $details.outerHeight() : cardBottom;
+            const viewportTop = $(window).scrollTop();
+            const viewportBottom = viewportTop + $(window).height();
+            const headerOffset = 80;
+            
+            // Check if the selected card is visible
+            const cardVisible = cardTop >= viewportTop + headerOffset && cardBottom <= viewportBottom;
+            
+            if (!cardVisible) {
+                // If card is not visible, scroll to show it at the top
+                $('html, body').animate({
+                    scrollTop: cardTop - headerOffset
+                }, 300);
+            }
         }
 
         async handleOrderFilter(period) {
