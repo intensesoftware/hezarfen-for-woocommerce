@@ -86,6 +86,26 @@ class Order_Tracking_Shortcode {
 		$default_title = get_option( 'hezarfen_tracking_page_title', __( 'Track Your Order', 'hezarfen-for-woocommerce' ) );
 		$default_description = get_option( 'hezarfen_tracking_page_description', __( 'Enter your order number and email address to track your shipment.', 'hezarfen-for-woocommerce' ) );
 		
+		// Customize title and description based on login status
+		if ( is_user_logged_in() ) {
+			$current_user = wp_get_current_user();
+			$user_orders = $this->get_user_orders( $current_user->ID );
+			
+			if ( ! empty( $user_orders ) ) {
+				$default_title = sprintf( 
+					__( 'Welcome back, %s!', 'hezarfen-for-woocommerce' ), 
+					$current_user->display_name 
+				);
+				$default_description = __( 'Select any of your orders below to view detailed tracking information and delivery status.', 'hezarfen-for-woocommerce' );
+			} else {
+				$default_title = sprintf( 
+					__( 'Hello, %s!', 'hezarfen-for-woocommerce' ), 
+					$current_user->display_name 
+				);
+				$default_description = __( 'You haven\'t placed any orders yet. Start shopping to see your orders here!', 'hezarfen-for-woocommerce' );
+			}
+		}
+		
 		$atts = shortcode_atts(
 			array(
 				'title'       => $default_title,
@@ -132,19 +152,34 @@ class Order_Tracking_Shortcode {
 		?>
 		<div class="hezarfen-logged-in-interface">
 			<?php if ( ! empty( $user_orders ) ) : ?>
-				<div class="hezarfen-user-welcome">
-					<p class="hezarfen-welcome-text">
-						<?php printf( 
-							__( 'Welcome back, %s! Select an order to track:', 'hezarfen-for-woocommerce' ), 
-							esc_html( $current_user->display_name ) 
-						); ?>
-					</p>
-				</div>
-
 				<div class="hezarfen-user-orders-grid">
 					<div class="hezarfen-orders-label">
-						<h3><?php esc_html_e( 'Your Orders', 'hezarfen-for-woocommerce' ); ?></h3>
-						<p class="hezarfen-orders-subtitle"><?php esc_html_e( 'Click on any order to track its shipment status', 'hezarfen-for-woocommerce' ); ?></p>
+						<?php 
+						$order_count = count( $user_orders );
+						if ( $order_count > 0 ) {
+							printf(
+								'<h3>%s</h3>',
+								sprintf( 
+									_n( 
+										'Your Order (%d)', 
+										'Your Orders (%d)', 
+										$order_count, 
+										'hezarfen-for-woocommerce' 
+									), 
+									$order_count 
+								)
+							);
+						}
+						?>
+						<p class="hezarfen-orders-subtitle">
+							<?php 
+							if ( $order_count > 5 ) {
+								esc_html_e( 'Showing your recent orders. Click any order to view detailed tracking and delivery progress.', 'hezarfen-for-woocommerce' );
+							} else {
+								esc_html_e( 'Click any order to view detailed tracking and delivery progress.', 'hezarfen-for-woocommerce' );
+							}
+							?>
+						</p>
 					</div>
 					
 					<div class="hezarfen-orders-list">
@@ -219,10 +254,10 @@ class Order_Tracking_Shortcode {
 							<path d="m9 12 2 2 4-4"/>
 						</svg>
 					</div>
-					<h3><?php esc_html_e( 'No Orders Found', 'hezarfen-for-woocommerce' ); ?></h3>
-					<p><?php esc_html_e( 'You haven\'t placed any orders yet. Start shopping to see your orders here!', 'hezarfen-for-woocommerce' ); ?></p>
+					<h3><?php esc_html_e( 'Ready to Start Shopping?', 'hezarfen-for-woocommerce' ); ?></h3>
+					<p><?php esc_html_e( 'Once you place your first order, you\'ll be able to track its progress right here with real-time updates.', 'hezarfen-for-woocommerce' ); ?></p>
 					<a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="hezarfen-secondary-button">
-						<?php esc_html_e( 'Start Shopping', 'hezarfen-for-woocommerce' ); ?>
+						<?php esc_html_e( 'Browse Products', 'hezarfen-for-woocommerce' ); ?>
 					</a>
 				</div>
 			<?php endif; ?>
