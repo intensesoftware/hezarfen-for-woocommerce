@@ -676,22 +676,23 @@
 }
 
 .hezarfen-order-card {
-	background: 
-		linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 251, 252, 0.9) 100%);
-	backdrop-filter: blur(16px) saturate(120%);
-	border: 1px solid rgba(223, 225, 230, 0.5);
-	border-radius: 20px;
-	padding: 2rem;
+	display: grid;
+	grid-template-columns: 80px 1fr auto auto;
+	gap: 16px;
+	align-items: center;
+	background: rgba(255, 255, 255, 0.95);
+	backdrop-filter: blur(12px);
+	border: 1px solid rgba(223, 225, 230, 0.6);
+	border-radius: 12px;
+	padding: 16px;
 	cursor: pointer;
-	transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+	transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 	position: relative;
-	min-height: 100px;
+	height: 70px;
 	overflow: hidden;
 	box-shadow: 
-		0 0 0 1px rgba(255, 255, 255, 0.6) inset,
-		0 1px 3px rgba(0, 0, 0, 0.03),
-		0 4px 16px rgba(0, 0, 0, 0.04),
-		0 16px 68px rgba(0, 0, 0, 0.06);
+		0 1px 3px rgba(0, 0, 0, 0.05),
+		0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .hezarfen-order-card::before {
@@ -700,121 +701,102 @@
 	top: 0;
 	left: 0;
 	right: 0;
-	height: 3px;
+	height: 2px;
 	background: linear-gradient(90deg, var(--hezarfen-primary) 0%, var(--hezarfen-accent) 100%);
 	transform: scaleX(0);
 	transform-origin: left;
-	transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.hezarfen-order-card::after {
-	content: '';
-	position: absolute;
-	inset: 1px;
-	border-radius: 19px;
-	background: linear-gradient(135deg, rgba(255, 255, 255, 0.6), transparent 50%, rgba(255, 255, 255, 0.2));
-	pointer-events: none;
-	opacity: 0;
-	transition: opacity 0.4s ease;
+	transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hezarfen-order-card:hover {
-	border-color: rgba(0, 82, 204, 0.3);
+	border-color: rgba(0, 82, 204, 0.4);
 	box-shadow: 
-		0 0 0 1px rgba(255, 255, 255, 0.8) inset,
-		0 2px 8px rgba(0, 0, 0, 0.06),
-		0 8px 32px var(--hezarfen-shadow-primary),
-		0 24px 96px rgba(0, 82, 204, 0.15);
-	transform: translateY(-4px) scale(1.01);
+		0 2px 6px rgba(0, 0, 0, 0.08),
+		0 8px 24px var(--hezarfen-shadow-primary);
+	transform: translateY(-2px);
 }
 
 .hezarfen-order-card:hover::before {
 	transform: scaleX(1);
 }
 
-.hezarfen-order-card:hover::after {
-	opacity: 1;
-}
-
 .hezarfen-order-card.loading {
-	opacity: 0.7;
+	opacity: 0.8;
 	pointer-events: none;
-	transform: translateY(-2px);
-	animation: float 2s ease-in-out infinite;
 }
 
-.hezarfen-order-card-header {
+/* Order Card Columns */
+.hezarfen-order-images {
 	display: flex;
-	justify-content: space-between;
+	gap: 4px;
 	align-items: center;
-	margin-bottom: 0.75rem;
+	justify-content: flex-start;
+}
+
+.hezarfen-product-image {
+	width: 32px;
+	height: 32px;
+	border-radius: 6px;
+	object-fit: cover;
+	border: 1px solid rgba(223, 225, 230, 0.8);
+}
+
+.hezarfen-more-items {
+	width: 32px;
+	height: 32px;
+	border-radius: 6px;
+	background: #f8fafc;
+	border: 1px solid rgba(223, 225, 230, 0.8);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 11px;
+	font-weight: 600;
+	color: var(--hezarfen-text-subtle);
 }
 
 .hezarfen-order-number {
-	font-size: 1rem;
-	color: #111827;
+	font-size: 15px;
+	font-weight: 600;
+	color: var(--hezarfen-text);
+	display: flex;
+	align-items: center;
+}
+
+.hezarfen-order-status-col {
+	display: flex;
+	justify-content: center;
 }
 
 .hezarfen-order-status {
-	font-size: 0.75rem;
+	font-size: 12px;
 	font-weight: 500;
-	padding: 0.25rem 0.5rem;
-	border-radius: 4px;
-	background: #f3f4f6;
-	color: #6b7280;
+	padding: 4px 8px;
+	border-radius: 6px;
+	background: #f1f5f9;
+	color: var(--hezarfen-text-subtle);
+	text-align: center;
+	white-space: nowrap;
 }
 
-.hezarfen-order-card-body {
-	margin-bottom: 0.75rem;
-}
-
-.hezarfen-order-meta-grid {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 0.75rem;
-	margin-bottom: 0.5rem;
-}
-
-.hezarfen-order-date,
-.hezarfen-order-total,
-.hezarfen-order-items {
+.hezarfen-order-amount-date {
+	text-align: right;
 	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	font-size: 0.875rem;
-	color: #6b7280;
+	flex-direction: column;
+	gap: 2px;
+	justify-content: center;
 }
 
-.hezarfen-meta-icon {
-	font-size: 1rem;
+.hezarfen-order-amount {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--hezarfen-text);
 }
 
-.hezarfen-order-card-footer {
-	display: flex;
-	justify-content: flex-end;
-}
-
-.hezarfen-track-action {
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	color: #3b82f6;
-	font-size: 0.875rem;
-	font-weight: 500;
-}
-
-.hezarfen-track-icon {
-	width: 1rem;
-	height: 1rem;
-	transition: transform 0.2s ease;
-}
-
-.hezarfen-track-icon.spinning {
-	animation: spin 1s linear infinite;
-}
-
-.hezarfen-order-card:hover .hezarfen-track-icon {
-	transform: translateX(2px);
+.hezarfen-order-date {
+	font-size: 12px;
+	color: var(--hezarfen-text-subtle);
+	font-weight: 400;
 }
 
 /* Guest Toggle */
@@ -1131,19 +1113,33 @@
 /* Responsive adjustments */
 @media (max-width: 640px) {
 	.hezarfen-order-card {
-		padding: 0.75rem;
-		min-height: 70px;
+		grid-template-columns: 60px 1fr auto;
+		gap: 12px;
+		padding: 12px;
+		height: 60px;
 	}
 	
-	.hezarfen-order-meta-grid {
-		grid-template-columns: 1fr;
-		gap: 0.5rem;
+	.hezarfen-order-images {
+		gap: 2px;
 	}
 	
-	.hezarfen-order-card-header {
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 0.5rem;
+	.hezarfen-product-image,
+	.hezarfen-more-items {
+		width: 24px;
+		height: 24px;
+		border-radius: 4px;
+	}
+	
+	.hezarfen-more-items {
+		font-size: 9px;
+	}
+	
+	.hezarfen-order-number {
+		font-size: 14px;
+	}
+	
+	.hezarfen-order-amount-date {
+		display: none;
 	}
 	
 	.hezarfen-orders-list {
@@ -1255,13 +1251,12 @@
 	
 	/* Dark mode for order cards */
 	.hezarfen-order-card {
-		background: #374151;
-		border-color: #4b5563;
+		background: rgba(30, 41, 59, 0.95);
+		border-color: #475569;
 	}
 	
 	.hezarfen-order-card:hover {
-		border-color: #3b82f6;
-		background: #4b5563;
+		border-color: #60a5fa;
 	}
 	
 	.hezarfen-orders-label h3 {
@@ -1277,14 +1272,26 @@
 	}
 	
 	.hezarfen-order-status {
-		background: #4b5563;
-		color: #d1d5db;
+		background: #334155;
+		color: #e2e8f0;
 	}
 	
-	.hezarfen-order-date,
-	.hezarfen-order-total,
-	.hezarfen-order-items {
-		color: #d1d5db;
+	.hezarfen-order-amount {
+		color: #f9fafb;
+	}
+	
+	.hezarfen-order-date {
+		color: #94a3b8;
+	}
+	
+	.hezarfen-product-image,
+	.hezarfen-more-items {
+		border-color: #475569;
+	}
+	
+	.hezarfen-more-items {
+		background: #334155;
+		color: #94a3b8;
 	}
 	
 	.hezarfen-guest-text {

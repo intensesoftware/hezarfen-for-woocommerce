@@ -150,57 +150,60 @@ class Order_Tracking_Shortcode {
 					<div class="hezarfen-orders-list">
 						<?php foreach ( $user_orders as $order ) : ?>
 							<div class="hezarfen-order-card" data-order-id="<?php echo esc_attr( $order->get_id() ); ?>" onclick="hezarfenTrackUserOrder(<?php echo esc_attr( $order->get_id() ); ?>)">
-								<div class="hezarfen-order-card-header">
-									<div class="hezarfen-order-number">
-										<strong>#<?php echo esc_html( $order->get_order_number() ); ?></strong>
-									</div>
-									<div class="hezarfen-order-status hezarfen-status-<?php echo esc_attr( $order->get_status() ); ?>">
-										<?php echo esc_html( wc_get_order_status_name( $order->get_status() ) ); ?>
-									</div>
+								<!-- Product Images Column -->
+								<div class="hezarfen-order-images">
+									<?php 
+									$items = $order->get_items();
+									$image_count = 0;
+									foreach ( $items as $item ) {
+										if ( $image_count >= 3 ) break; // Max 3 images
+										$product = $item->get_product();
+										if ( $product ) {
+											$image_id = $product->get_image_id();
+											if ( $image_id ) {
+												$image_url = wp_get_attachment_image_url( $image_id, 'thumbnail' );
+												if ( $image_url ) {
+													echo '<img src="' . esc_url( $image_url ) . '" alt="' . esc_attr( $product->get_name() ) . '" class="hezarfen-product-image">';
+													$image_count++;
+												}
+											}
+										}
+									}
+									if ( count( $items ) > 3 ) {
+										echo '<div class="hezarfen-more-items">+' . ( count( $items ) - 3 ) . '</div>';
+									}
+									?>
 								</div>
 								
-								<div class="hezarfen-order-card-body">
-									<div class="hezarfen-order-meta-grid">
-										<div class="hezarfen-order-date">
-											<span class="hezarfen-meta-icon">📅</span>
-											<?php echo esc_html( wc_format_datetime( $order->get_date_created() ) ); ?>
-										</div>
-										
-										<?php if ( get_option( 'hezarfen_tracking_page_show_total', 'yes' ) === 'yes' ) : ?>
-										<div class="hezarfen-order-total">
-											<span class="hezarfen-meta-icon">💰</span>
-											<?php 
-											$formatted_total = $order->get_formatted_order_total();
-											$formatted_total = str_replace( '₺', 'TL', $formatted_total );
-											echo wp_kses_post( $formatted_total );
-											?>
-										</div>
-										<?php endif; ?>
-									</div>
-									
-									<?php 
-									$item_count = $order->get_item_count();
-									if ( $item_count > 0 ) :
-									?>
-									<div class="hezarfen-order-items">
-										<span class="hezarfen-meta-icon">📦</span>
+								<!-- Order Number Column -->
+								<div class="hezarfen-order-number">
+									<strong>#<?php echo esc_html( $order->get_order_number() ); ?></strong>
+								</div>
+								
+								<!-- Status Column -->
+								<div class="hezarfen-order-status-col">
+									<span class="hezarfen-order-status hezarfen-status-<?php echo esc_attr( $order->get_status() ); ?>">
+										<?php echo esc_html( wc_get_order_status_name( $order->get_status() ) ); ?>
+									</span>
+								</div>
+								
+								<!-- Amount & Date Column -->
+								<div class="hezarfen-order-amount-date">
+									<?php if ( get_option( 'hezarfen_tracking_page_show_total', 'yes' ) === 'yes' ) : ?>
+									<div class="hezarfen-order-amount">
 										<?php 
-										printf( 
-											_n( '%d item', '%d items', $item_count, 'hezarfen-for-woocommerce' ), 
-											$item_count 
-										);
+										$formatted_total = $order->get_formatted_order_total();
+										$formatted_total = str_replace( '₺', 'TL', $formatted_total );
+										echo wp_kses_post( $formatted_total );
 										?>
 									</div>
 									<?php endif; ?>
-								</div>
-								
-								<div class="hezarfen-order-card-footer">
-									<div class="hezarfen-track-action">
-										<span class="hezarfen-track-text"><?php esc_html_e( 'Click to track', 'hezarfen-for-woocommerce' ); ?></span>
-										<svg class="hezarfen-track-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-											<path d="m9 18 6-6-6-6"/>
-										</svg>
+									
+									<?php if ( get_option( 'hezarfen_tracking_page_show_date', 'yes' ) === 'yes' ) : ?>
+									<div class="hezarfen-order-date">
+										<?php echo esc_html( $order->get_date_created()->format( 'M d, Y' ) ); ?>
 									</div>
+									<?php endif; ?>
 								</div>
 							</div>
 						<?php endforeach; ?>
