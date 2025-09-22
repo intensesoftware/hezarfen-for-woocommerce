@@ -689,39 +689,58 @@ class Order_Tracking_Shortcode {
 		ob_start();
 		?>
 		<div class="hezarfen-progress-steps">
-			<?php foreach ( $steps as $step_key => $step ) : ?>
-				<?php 
-				$is_completed = $this->is_step_completed( $step_key, $current_status );
-				$is_current = $this->is_current_step( $step_key, $current_status );
-				$step_date = $this->get_step_date( $step_key, $order, $order_date, $shipped_date, $completed_date );
-				?>
-				<div class="hezarfen-progress-step <?php echo $is_completed ? 'completed' : ''; ?> <?php echo $is_current ? 'current' : ''; ?>">
-					<div class="hezarfen-step-indicator">
-						<div class="hezarfen-step-icon">
+			<!-- Progress Track -->
+			<div class="hezarfen-progress-track">
+				<?php foreach ( $steps as $step_key => $step ) : ?>
+					<?php 
+					$is_completed = $this->is_step_completed( $step_key, $current_status );
+					$is_current = $this->is_current_step( $step_key, $current_status );
+					$step_class = $is_completed ? 'completed' : ( $is_current ? 'current' : 'pending' );
+					?>
+					<div class="hezarfen-progress-step <?php echo esc_attr( $step_class ); ?>">
+						<div class="hezarfen-step-node">
 							<?php if ( $is_completed ) : ?>
-								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
 									<path d="m9 12 2 2 4-4"/>
 								</svg>
 							<?php elseif ( $is_current ) : ?>
-								<div class="hezarfen-current-dot"></div>
+								<div class="hezarfen-current-indicator"></div>
 							<?php else : ?>
 								<div class="hezarfen-pending-dot"></div>
 							<?php endif; ?>
 						</div>
-						<?php if ( ! $this->is_last_step( $step_key, $steps ) ) : ?>
-							<div class="hezarfen-step-line <?php echo $this->is_next_step_completed( $step_key, $current_status ) ? 'completed' : ''; ?>"></div>
-						<?php endif; ?>
+						<div class="hezarfen-step-label"><?php echo esc_html( $step['title'] ); ?></div>
 					</div>
-					
-					<div class="hezarfen-step-content">
-						<div class="hezarfen-step-title"><?php echo esc_html( $step['title'] ); ?></div>
-						<div class="hezarfen-step-description"><?php echo esc_html( $step['description'] ); ?></div>
-						<?php if ( $step_date ) : ?>
-							<div class="hezarfen-step-date"><?php echo esc_html( wc_format_datetime( $step_date ) ); ?></div>
-						<?php endif; ?>
-					</div>
+				<?php endforeach; ?>
+			</div>
+
+			<!-- Current Step Details -->
+			<?php 
+			$current_step = $this->get_current_step_details( $steps, $current_status );
+			$current_step_date = $this->get_step_date( $current_step['key'], $order, $order_date, $shipped_date, $completed_date );
+			?>
+			<div class="hezarfen-step-details">
+				<div class="hezarfen-current-step-info">
+					<svg class="hezarfen-current-step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<?php echo $this->get_step_icon( $current_step['key'] ); ?>
+					</svg>
+					<div class="hezarfen-current-step-title"><?php echo esc_html( $current_step['title'] ); ?></div>
 				</div>
-			<?php endforeach; ?>
+				
+				<div class="hezarfen-current-step-description">
+					<?php echo esc_html( $current_step['description'] ); ?>
+				</div>
+
+				<?php if ( $current_step_date ) : ?>
+					<div class="hezarfen-step-timestamp">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<circle cx="12" cy="12" r="10"/>
+							<polyline points="12,6 12,12 16,14"/>
+						</svg>
+						<?php echo esc_html( wc_format_datetime( $current_step_date ) ); ?>
+					</div>
+				<?php endif; ?>
+			</div>
 		</div>
 		<?php
 		return ob_get_clean();
@@ -914,6 +933,42 @@ class Order_Tracking_Shortcode {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get current step details for display
+	 * 
+	 * @param array $steps All steps
+	 * @param string $current_status Current order status
+	 * @return array Current step details
+	 */
+	private function get_current_step_details( $steps, $current_status ) {
+		foreach ( $steps as $step_key => $step ) {
+			if ( $this->is_current_step( $step_key, $current_status ) ) {
+				return array_merge( $step, array( 'key' => $step_key ) );
+			}
+		}
+
+		// Fallback to first step if no current step found
+		$first_step_key = array_key_first( $steps );
+		return array_merge( $steps[ $first_step_key ], array( 'key' => $first_step_key ) );
+	}
+
+	/**
+	 * Get SVG icon path for a step
+	 * 
+	 * @param string $step_key Step key
+	 * @return string SVG path
+	 */
+	private function get_step_icon( $step_key ) {
+		$icons = array(
+			'pending' => '<path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.66 0 3.22.45 4.56 1.25"/>',
+			'processing' => '<circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>',
+			'shipped' => '<path d="M16 3h5v5M21 3l-7 7M4 20h16M4 20v-6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6"/>',
+			'delivered' => '<path d="M20 6L9 17l-5-5"/>',
+		);
+
+		return $icons[ $step_key ] ?? $icons['pending'];
 	}
 
 	/**
