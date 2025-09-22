@@ -713,7 +713,19 @@ class Order_Tracking_Shortcode {
 								<?php endif; ?>
 							</div>
 							<?php if ( ! $is_last ) : ?>
-								<div class="hezarfen-step-connector <?php echo $this->is_next_step_completed( $step_key, $current_status ) ? 'completed' : ''; ?>"></div>
+								<?php 
+								$connector_class = '';
+								// Line should be green only if current step is completed
+								if ( $is_completed ) {
+									$connector_class = 'completed';
+								}
+								// Line should be 50% green if current step is active (current)
+								elseif ( $is_current ) {
+									$connector_class = 'half-complete';
+								}
+								// Otherwise line is gray (no class)
+								?>
+								<div class="hezarfen-step-connector <?php echo esc_attr( $connector_class ); ?>"></div>
 							<?php endif; ?>
 						</div>
 						

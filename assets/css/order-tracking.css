@@ -964,9 +964,9 @@
 .hezarfen-progress-step {
 	display: flex;
 	align-items: center;
-	gap: 18px;
+	gap: 20px;
 	position: relative;
-	padding: 12px 0;
+	padding: 18px 0;
 }
 
 .hezarfen-step-indicator {
@@ -993,8 +993,8 @@
 
 .hezarfen-step-connector {
 	width: 4px;
-	height: 36px;
-	background: var(--hezarfen-accent);
+	height: 44px;
+	background: #ddd;
 	position: absolute;
 	top: 24px;
 	left: 50%;
@@ -1002,18 +1002,26 @@
 	border-radius: 2px;
 }
 
+.hezarfen-step-connector.completed {
+	background: var(--hezarfen-accent);
+}
+
+.hezarfen-step-connector.half-complete {
+	background: linear-gradient(to bottom, var(--hezarfen-accent) 50%, #ddd 50%);
+}
+
 .hezarfen-step-content {
 	flex: 1;
-	line-height: 24px;
+	line-height: 26px;
 }
 
 /* Step Title */
 .hezarfen-step-title {
-	font-size: 16px;
+	font-size: 18px;
 	font-weight: 500;
 	color: var(--hezarfen-text);
 	margin: 0;
-	line-height: 24px;
+	line-height: 26px;
 }
 
 /* Completed step */
@@ -1149,8 +1157,8 @@
 	}
 	
 	.hezarfen-progress-step {
-		padding: 10px 0;
-		gap: 14px;
+		padding: 14px 0;
+		gap: 16px;
 	}
 	
 	.hezarfen-step-node {
@@ -1159,18 +1167,18 @@
 	}
 	
 	.hezarfen-step-connector {
-		height: 30px;
+		height: 36px;
 		width: 3px;
 		top: 20px;
 	}
 	
 	.hezarfen-step-content {
-		line-height: 20px;
+		line-height: 22px;
 	}
 	
 	.hezarfen-step-title {
-		font-size: 15px;
-		line-height: 20px;
+		font-size: 16px;
+		line-height: 22px;
 	}
 	
 	.hezarfen-step-title {
@@ -1325,6 +1333,10 @@
 	
 	.hezarfen-step-connector.completed {
 		background: #22d3ee;
+	}
+	
+	.hezarfen-step-connector.half-complete {
+		background: linear-gradient(to bottom, #22d3ee 50%, #475569 50%);
 	}
 	
 	.hezarfen-step-title {
