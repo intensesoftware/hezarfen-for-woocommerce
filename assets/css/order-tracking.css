@@ -1,38 +1,57 @@
-/* Hezarfen Order Tracking - Unique Stripe-inspired Design */
+/* Hezarfen Order Tracking - Ultra-Premium Design */
+
+:root {
+	--hezarfen-primary: #0052cc;
+	--hezarfen-primary-light: #0066ff;
+	--hezarfen-accent: #00c896;
+	--hezarfen-surface: #fafbfc;
+	--hezarfen-text: #091e42;
+	--hezarfen-text-subtle: #5e6c84;
+	--hezarfen-border: #dfe1e6;
+	--hezarfen-shadow-primary: rgba(0, 82, 204, 0.15);
+	--hezarfen-shadow-accent: rgba(0, 200, 150, 0.15);
+}
 
 .hezarfen-tracking-container {
-	max-width: 700px;
-	margin: 3rem auto;
-	padding: 0 1.5rem;
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'SF Pro Display', Roboto, sans-serif;
+	max-width: 680px;
+	margin: 4rem auto;
+	padding: 0 2rem;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
 	position: relative;
+	min-height: 60vh;
 }
 
 .hezarfen-tracking-container::before {
 	content: '';
 	position: absolute;
-	top: -100px;
+	top: -120px;
 	left: 50%;
 	transform: translateX(-50%);
-	width: 200px;
-	height: 200px;
-	background: radial-gradient(circle, rgba(99, 91, 255, 0.15) 0%, transparent 70%);
+	width: 300px;
+	height: 300px;
+	background: 
+		radial-gradient(circle at 30% 30%, var(--hezarfen-shadow-primary) 0%, transparent 50%),
+		radial-gradient(circle at 70% 70%, var(--hezarfen-shadow-accent) 0%, transparent 50%);
 	border-radius: 50%;
 	z-index: -1;
+	opacity: 0.6;
+	animation: ambientGlow 8s ease-in-out infinite alternate;
 }
 
 .hezarfen-tracking-card {
-	background: rgba(255, 255, 255, 0.95);
-	backdrop-filter: blur(20px);
-	border-radius: 20px;
+	background: 
+		linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(250, 251, 252, 0.95) 100%);
+	backdrop-filter: blur(24px) saturate(180%);
+	border-radius: 24px;
 	box-shadow: 
-		0 0 0 1px rgba(255, 255, 255, 0.05),
-		0 1px 3px rgba(0, 0, 0, 0.05),
-		0 4px 16px rgba(0, 0, 0, 0.08),
-		0 16px 68px rgba(0, 0, 0, 0.12);
-	padding: 3rem;
-	border: 1px solid rgba(226, 232, 240, 0.8);
-	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+		0 0 0 1px rgba(255, 255, 255, 0.8),
+		0 2px 4px rgba(0, 0, 0, 0.02),
+		0 8px 24px rgba(0, 0, 0, 0.04),
+		0 16px 64px rgba(0, 0, 0, 0.06),
+		0 32px 128px rgba(0, 0, 0, 0.08);
+	padding: 3.5rem;
+	border: 1px solid rgba(223, 225, 230, 0.6);
+	transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 	position: relative;
 	overflow: hidden;
 }
@@ -43,148 +62,207 @@
 	top: 0;
 	left: 0;
 	right: 0;
-	height: 1px;
-	background: linear-gradient(90deg, transparent, rgba(99, 91, 255, 0.3), transparent);
+	height: 3px;
+	background: linear-gradient(
+		90deg, 
+		var(--hezarfen-primary) 0%, 
+		var(--hezarfen-accent) 50%, 
+		var(--hezarfen-primary-light) 100%
+	);
+	background-size: 200% 100%;
+	animation: gradientShift 4s ease-in-out infinite;
 }
 
-.hezarfen-tracking-card:hover {
-	transform: translateY(-2px);
-	box-shadow: 
-		0 0 0 1px rgba(255, 255, 255, 0.1),
-		0 2px 6px rgba(0, 0, 0, 0.06),
-		0 8px 32px rgba(0, 0, 0, 0.12),
-		0 32px 120px rgba(0, 0, 0, 0.16);
+.hezarfen-tracking-card::after {
+	content: '';
+	position: absolute;
+	inset: 1px;
+	border-radius: 23px;
+	background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.4) 100%);
+	pointer-events: none;
 }
 
 /* Header */
 .hezarfen-tracking-header {
 	text-align: center;
-	margin-bottom: 3rem;
+	margin-bottom: 3.5rem;
 	position: relative;
 }
 
 .hezarfen-tracking-title {
-	font-size: 2.25rem;
-	font-weight: 700;
-	background: linear-gradient(135deg, #0a2540 0%, #425a72 100%);
+	font-size: 2.5rem;
+	font-weight: 800;
+	background: linear-gradient(
+		135deg, 
+		var(--hezarfen-text) 0%, 
+		var(--hezarfen-primary) 50%,
+		var(--hezarfen-accent) 100%
+	);
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	background-clip: text;
-	margin: 0 0 1rem 0;
-	line-height: 1.1;
-	letter-spacing: -0.04em;
+	margin: 0 0 1.25rem 0;
+	line-height: 1.05;
+	letter-spacing: -0.06em;
+	position: relative;
+}
+
+.hezarfen-tracking-title::after {
+	content: '';
+	position: absolute;
+	bottom: -8px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 60px;
+	height: 2px;
+	background: linear-gradient(90deg, var(--hezarfen-primary), var(--hezarfen-accent));
+	border-radius: 1px;
+	opacity: 0.7;
 }
 
 .hezarfen-tracking-description {
-	font-size: 1.125rem;
-	color: #64748b;
+	font-size: 1.1875rem;
+	color: var(--hezarfen-text-subtle);
 	margin: 0;
-	line-height: 1.6;
+	line-height: 1.7;
 	font-weight: 400;
-	letter-spacing: -0.01em;
+	letter-spacing: -0.015em;
+	max-width: 520px;
+	margin-left: auto;
+	margin-right: auto;
 }
 
-/* Form Styles - Stripe-inspired */
+/* Form Styles - Ultra Premium */
 .hezarfen-tracking-form {
-	margin-bottom: 2.5rem;
+	margin-bottom: 3rem;
+	position: relative;
 }
 
 .hezarfen-form-group {
-	margin-bottom: 1.75rem;
+	margin-bottom: 2rem;
 	position: relative;
 }
 
 .hezarfen-form-label {
 	display: block;
-	font-size: 0.8125rem;
-	font-weight: 600;
-	color: #0a2540;
-	margin-bottom: 0.75rem;
-	letter-spacing: -0.01em;
+	font-size: 0.75rem;
+	font-weight: 700;
+	color: var(--hezarfen-text);
+	margin-bottom: 0.875rem;
+	letter-spacing: 0.05em;
 	text-transform: uppercase;
+	opacity: 0.8;
 }
 
 .hezarfen-form-input {
 	width: 100%;
-	padding: 1rem 1.25rem;
-	border: 1px solid #d1d9e0;
-	border-radius: 12px;
-	font-size: 1rem;
-	font-weight: 400;
-	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-	background: rgba(255, 255, 255, 0.9);
-	color: #0a2540;
+	padding: 1.25rem 1.5rem;
+	border: 2px solid transparent;
+	border-radius: 16px;
+	font-size: 1.0625rem;
+	font-weight: 500;
+	transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+	background: 
+		linear-gradient(white, white) padding-box,
+		linear-gradient(135deg, var(--hezarfen-border), rgba(223, 225, 230, 0.3)) border-box;
+	color: var(--hezarfen-text);
 	box-sizing: border-box;
 	position: relative;
+	letter-spacing: -0.01em;
 }
 
 .hezarfen-form-input:focus {
 	outline: none;
-	border-color: #635bff;
+	background: 
+		linear-gradient(white, white) padding-box,
+		linear-gradient(135deg, var(--hezarfen-primary), var(--hezarfen-accent)) border-box;
 	box-shadow: 
-		0 0 0 3px rgba(99, 91, 255, 0.08),
-		0 1px 3px rgba(0, 0, 0, 0.1);
-	background: #ffffff;
-	transform: translateY(-1px);
+		0 0 0 4px rgba(0, 82, 204, 0.08),
+		0 2px 8px rgba(0, 0, 0, 0.08),
+		0 8px 32px rgba(0, 82, 204, 0.12);
+	transform: translateY(-2px) scale(1.005);
 }
 
 .hezarfen-form-input::placeholder {
-	color: #8b9aab;
+	color: var(--hezarfen-text-subtle);
 	font-weight: 400;
+	opacity: 0.7;
 }
 
-/* Button Styles - Stripe-inspired */
+/* Ultra Premium Button */
 .hezarfen-tracking-button {
 	width: 100%;
-	background: linear-gradient(135deg, #635bff 0%, #4338ca 100%);
+	background: linear-gradient(135deg, var(--hezarfen-primary) 0%, var(--hezarfen-primary-light) 100%);
 	color: white;
 	border: none;
-	border-radius: 12px;
-	padding: 1.125rem 1.5rem;
-	font-size: 1rem;
-	font-weight: 600;
+	border-radius: 16px;
+	padding: 1.375rem 2rem;
+	font-size: 1.0625rem;
+	font-weight: 700;
 	cursor: pointer;
-	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	gap: 0.5rem;
+	gap: 0.75rem;
 	position: relative;
 	overflow: hidden;
-	letter-spacing: -0.01em;
+	letter-spacing: -0.015em;
+	text-transform: none;
 	box-shadow: 
-		0 1px 3px rgba(0, 0, 0, 0.12),
-		0 4px 16px rgba(99, 91, 255, 0.24);
+		0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+		0 1px 3px rgba(0, 0, 0, 0.1),
+		0 4px 16px var(--hezarfen-shadow-primary),
+		0 16px 64px rgba(0, 82, 204, 0.2);
 }
 
 .hezarfen-tracking-button::before {
 	content: '';
 	position: absolute;
-	top: 0;
-	left: -100%;
-	width: 100%;
-	height: 100%;
-	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-	transition: left 0.6s ease;
+	inset: 0;
+	border-radius: inherit;
+	background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent 50%, rgba(255, 255, 255, 0.1));
+	opacity: 0;
+	transition: opacity 0.4s ease;
+}
+
+.hezarfen-tracking-button::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 0;
+	height: 0;
+	background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+	border-radius: 50%;
+	transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hezarfen-tracking-button:hover:not(:disabled) {
-	transform: translateY(-2px);
+	transform: translateY(-3px) scale(1.02);
 	box-shadow: 
-		0 2px 6px rgba(0, 0, 0, 0.15),
-		0 8px 32px rgba(99, 91, 255, 0.32);
+		0 0 0 1px rgba(255, 255, 255, 0.15) inset,
+		0 2px 8px rgba(0, 0, 0, 0.12),
+		0 8px 32px var(--hezarfen-shadow-primary),
+		0 24px 96px rgba(0, 82, 204, 0.25);
 }
 
 .hezarfen-tracking-button:hover:not(:disabled)::before {
-	left: 100%;
+	opacity: 1;
+}
+
+.hezarfen-tracking-button:hover:not(:disabled)::after {
+	width: 300px;
+	height: 300px;
 }
 
 .hezarfen-tracking-button:active {
-	transform: translateY(-1px);
+	transform: translateY(-1px) scale(1.01);
 }
 
 .hezarfen-tracking-button:disabled {
-	opacity: 0.6;
+	opacity: 0.5;
 	cursor: not-allowed;
 	transform: none;
 }
@@ -196,8 +274,8 @@
 }
 
 .hezarfen-spinner {
-	width: 18px;
-	height: 18px;
+	width: 20px;
+	height: 20px;
 	color: currentColor;
 }
 
@@ -546,54 +624,74 @@
 	pointer-events: none;
 }
 
-/* Order Cards for Logged-in Users - Stripe-inspired */
+/* Order Cards - Ultra Premium Design */
 .hezarfen-user-orders-grid {
-	margin-bottom: 2.5rem;
+	margin-bottom: 3rem;
 }
 
 .hezarfen-orders-label {
-	margin-bottom: 2rem;
+	margin-bottom: 2.5rem;
 	text-align: center;
 }
 
 .hezarfen-orders-label h3 {
-	font-size: 1.375rem;
-	font-weight: 600;
-	background: linear-gradient(135deg, #0a2540 0%, #425a72 100%);
+	font-size: 1.5rem;
+	font-weight: 800;
+	background: linear-gradient(135deg, var(--hezarfen-text) 0%, var(--hezarfen-primary) 100%);
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	background-clip: text;
-	margin: 0 0 0.75rem 0;
-	letter-spacing: -0.025em;
+	margin: 0 0 1rem 0;
+	letter-spacing: -0.035em;
+	position: relative;
+}
+
+.hezarfen-orders-label h3::after {
+	content: '';
+	position: absolute;
+	bottom: -8px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 50px;
+	height: 2px;
+	background: linear-gradient(90deg, var(--hezarfen-primary), var(--hezarfen-accent));
+	border-radius: 1px;
 }
 
 .hezarfen-orders-subtitle {
-	color: #64748b;
-	font-size: 1rem;
+	color: var(--hezarfen-text-subtle);
+	font-size: 1.0625rem;
 	margin: 0;
 	font-weight: 400;
-	letter-spacing: -0.01em;
+	letter-spacing: -0.015em;
+	opacity: 0.9;
 }
 
 .hezarfen-orders-list {
 	display: grid;
-	gap: 1rem;
-	max-height: 500px;
+	gap: 1.25rem;
+	max-height: 520px;
 	overflow-y: auto;
-	padding-right: 0.5rem;
+	padding-right: 0.75rem;
 }
 
 .hezarfen-order-card {
-	background: rgba(255, 255, 255, 0.9);
-	backdrop-filter: blur(10px);
-	border: 1px solid rgba(226, 232, 240, 0.6);
-	border-radius: 16px;
-	padding: 1.5rem;
+	background: 
+		linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 251, 252, 0.9) 100%);
+	backdrop-filter: blur(16px) saturate(120%);
+	border: 1px solid rgba(223, 225, 230, 0.5);
+	border-radius: 20px;
+	padding: 2rem;
 	cursor: pointer;
-	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 	position: relative;
-	min-height: 90px;
+	min-height: 100px;
 	overflow: hidden;
+	box-shadow: 
+		0 0 0 1px rgba(255, 255, 255, 0.6) inset,
+		0 1px 3px rgba(0, 0, 0, 0.03),
+		0 4px 16px rgba(0, 0, 0, 0.04),
+		0 16px 68px rgba(0, 0, 0, 0.06);
 }
 
 .hezarfen-order-card::before {
@@ -602,30 +700,47 @@
 	top: 0;
 	left: 0;
 	right: 0;
-	height: 2px;
-	background: linear-gradient(90deg, #635bff 0%, #00d4aa 100%);
+	height: 3px;
+	background: linear-gradient(90deg, var(--hezarfen-primary) 0%, var(--hezarfen-accent) 100%);
 	transform: scaleX(0);
 	transform-origin: left;
-	transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hezarfen-order-card::after {
+	content: '';
+	position: absolute;
+	inset: 1px;
+	border-radius: 19px;
+	background: linear-gradient(135deg, rgba(255, 255, 255, 0.6), transparent 50%, rgba(255, 255, 255, 0.2));
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.4s ease;
 }
 
 .hezarfen-order-card:hover {
-	border-color: rgba(99, 91, 255, 0.3);
+	border-color: rgba(0, 82, 204, 0.3);
 	box-shadow: 
-		0 0 0 1px rgba(99, 91, 255, 0.1),
-		0 4px 16px rgba(99, 91, 255, 0.15),
-		0 16px 64px rgba(0, 0, 0, 0.1);
-	transform: translateY(-3px);
+		0 0 0 1px rgba(255, 255, 255, 0.8) inset,
+		0 2px 8px rgba(0, 0, 0, 0.06),
+		0 8px 32px var(--hezarfen-shadow-primary),
+		0 24px 96px rgba(0, 82, 204, 0.15);
+	transform: translateY(-4px) scale(1.01);
 }
 
 .hezarfen-order-card:hover::before {
 	transform: scaleX(1);
 }
 
+.hezarfen-order-card:hover::after {
+	opacity: 1;
+}
+
 .hezarfen-order-card.loading {
-	opacity: 0.6;
+	opacity: 0.7;
 	pointer-events: none;
-	transform: translateY(-1px);
+	transform: translateY(-2px);
+	animation: float 2s ease-in-out infinite;
 }
 
 .hezarfen-order-card-header {
@@ -778,26 +893,46 @@
 	margin: 0;
 }
 
-/* Order Progress Steps - Stripe-inspired Design */
+/* Order Progress Steps - Revolutionary Design */
 .hezarfen-order-progress {
-	margin-bottom: 2rem;
+	margin-bottom: 3rem;
 }
 
 .hezarfen-progress-subtitle {
-	font-size: 1.125rem;
-	font-weight: 500;
-	color: #0a2540;
-	margin: 0 0 2rem 0;
-	letter-spacing: -0.025em;
+	font-size: 1.25rem;
+	font-weight: 700;
+	color: var(--hezarfen-text);
+	margin: 0 0 2.5rem 0;
+	letter-spacing: -0.03em;
+	text-align: center;
+	position: relative;
+}
+
+.hezarfen-progress-subtitle::before {
+	content: '';
+	position: absolute;
+	top: -12px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 40px;
+	height: 2px;
+	background: linear-gradient(90deg, var(--hezarfen-primary), var(--hezarfen-accent));
+	border-radius: 1px;
 }
 
 .hezarfen-progress-steps {
 	position: relative;
-	background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-	border: 1px solid #e2e8f0;
-	border-radius: 16px;
-	padding: 2rem;
+	background: 
+		linear-gradient(135deg, rgba(250, 251, 252, 0.8) 0%, rgba(248, 250, 252, 0.9) 100%);
+	backdrop-filter: blur(16px);
+	border: 1px solid rgba(223, 225, 230, 0.4);
+	border-radius: 20px;
+	padding: 3rem 2.5rem;
 	overflow: hidden;
+	box-shadow: 
+		0 0 0 1px rgba(255, 255, 255, 0.5) inset,
+		0 2px 8px rgba(0, 0, 0, 0.03),
+		0 8px 32px rgba(0, 0, 0, 0.06);
 }
 
 .hezarfen-progress-steps::before {
@@ -806,206 +941,172 @@
 	top: 0;
 	left: 0;
 	right: 0;
-	height: 4px;
-	background: linear-gradient(90deg, #635bff 0%, #00d4aa 50%, #ff5722 100%);
-	background-size: 200% 100%;
-	animation: progressGlow 3s ease-in-out infinite;
+	height: 3px;
+	background: linear-gradient(
+		90deg, 
+		var(--hezarfen-primary) 0%, 
+		var(--hezarfen-accent) 33%, 
+		var(--hezarfen-primary-light) 66%,
+		var(--hezarfen-accent) 100%
+	);
+	background-size: 300% 100%;
+	animation: progressFlow 6s ease-in-out infinite;
 }
 
 .hezarfen-progress-track {
-	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0;
 	position: relative;
-	margin-bottom: 2rem;
-}
-
-.hezarfen-progress-track::after {
-	content: '';
-	position: absolute;
-	top: 1rem;
-	left: 2rem;
-	right: 2rem;
-	height: 2px;
-	background: linear-gradient(90deg, transparent 0%, #e2e8f0 25%, #e2e8f0 75%, transparent 100%);
-	z-index: 0;
+	align-items: flex-start;
 }
 
 .hezarfen-progress-step {
 	display: flex;
+	align-items: center;
+	gap: 18px;
+	position: relative;
+	padding: 12px 0;
+}
+
+.hezarfen-step-indicator {
+	display: flex;
 	flex-direction: column;
 	align-items: center;
-	text-align: center;
+	flex-shrink: 0;
 	position: relative;
-	z-index: 1;
 }
 
 .hezarfen-step-node {
-	width: 2rem;
-	height: 2rem;
+	width: 24px;
+	height: 24px;
 	border-radius: 50%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	background: white;
+	border: 2px solid #ddd;
 	position: relative;
-	margin-bottom: 1rem;
-	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-	background: #ffffff;
-	border: 3px solid #e2e8f0;
+	z-index: 2;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.hezarfen-step-node::before {
-	content: '';
+.hezarfen-step-connector {
+	width: 4px;
+	height: 36px;
+	background: var(--hezarfen-accent);
 	position: absolute;
-	inset: -6px;
-	border-radius: 50%;
-	background: transparent;
-	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+	top: 24px;
+	left: 50%;
+	transform: translateX(-50%);
+	border-radius: 2px;
+}
+
+.hezarfen-step-content {
+	flex: 1;
+	line-height: 24px;
+}
+
+/* Step Title */
+.hezarfen-step-title {
+	font-size: 16px;
+	font-weight: 500;
+	color: var(--hezarfen-text);
+	margin: 0;
+	line-height: 24px;
 }
 
 /* Completed step */
 .hezarfen-progress-step.completed .hezarfen-step-node {
-	background: #00d4aa;
-	border-color: #00d4aa;
-	transform: scale(1.1);
-}
-
-.hezarfen-progress-step.completed .hezarfen-step-node::before {
-	background: rgba(0, 212, 170, 0.15);
-	transform: scale(1.3);
+	background: var(--hezarfen-accent);
+	border-color: var(--hezarfen-accent);
 }
 
 .hezarfen-progress-step.completed .hezarfen-step-node svg {
-	width: 0.875rem;
-	height: 0.875rem;
+	width: 12px;
+	height: 12px;
 	color: white;
-	stroke-width: 3;
+	stroke-width: 2.5;
+}
+
+.hezarfen-progress-step.completed .hezarfen-step-title {
+	color: var(--hezarfen-accent);
+	font-weight: 600;
 }
 
 /* Current step */
 .hezarfen-progress-step.current .hezarfen-step-node {
-	background: #635bff;
-	border-color: #635bff;
-	transform: scale(1.15);
-	box-shadow: 0 0 0 4px rgba(99, 91, 255, 0.2);
-}
-
-.hezarfen-progress-step.current .hezarfen-step-node::before {
-	background: rgba(99, 91, 255, 0.1);
-	transform: scale(1.4);
-	animation: currentStepPulse 2s ease-in-out infinite;
+	background: var(--hezarfen-primary);
+	border-color: var(--hezarfen-primary);
+	box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.2);
 }
 
 .hezarfen-current-indicator {
-	width: 0.5rem;
-	height: 0.5rem;
+	width: 8px;
+	height: 8px;
 	background: white;
 	border-radius: 50%;
-	animation: spin 2s linear infinite;
+	animation: pulse 2s ease-in-out infinite;
+}
+
+.hezarfen-progress-step.current .hezarfen-step-title {
+	color: var(--hezarfen-primary);
+	font-weight: 600;
 }
 
 /* Pending step */
 .hezarfen-progress-step.pending .hezarfen-step-node {
-	background: #f8fafc;
-	border-color: #cbd5e1;
+	background: white;
+	border-color: #ddd;
 }
 
 .hezarfen-pending-dot {
-	width: 0.375rem;
-	height: 0.375rem;
-	background: #94a3b8;
+	width: 6px;
+	height: 6px;
+	background: #999;
 	border-radius: 50%;
 }
 
-/* Step labels */
-.hezarfen-step-label {
-	font-size: 0.8125rem;
-	font-weight: 500;
-	color: #64748b;
-	letter-spacing: -0.01em;
-	line-height: 1.3;
-	transition: all 0.3s ease;
+/* Revolutionary Animations */
+@keyframes ambientGlow {
+	0% { 
+		opacity: 0.4;
+		transform: translateX(-50%) scale(1);
+	}
+	100% { 
+		opacity: 0.8;
+		transform: translateX(-50%) scale(1.1);
+	}
 }
 
-.hezarfen-progress-step.completed .hezarfen-step-label {
-	color: #00d4aa;
-	font-weight: 600;
-}
-
-.hezarfen-progress-step.current .hezarfen-step-label {
-	color: #635bff;
-	font-weight: 600;
-}
-
-/* Step details section */
-.hezarfen-step-details {
-	margin-top: 2rem;
-	padding: 1.5rem;
-	background: rgba(255, 255, 255, 0.7);
-	border-radius: 12px;
-	border: 1px solid rgba(226, 232, 240, 0.8);
-	backdrop-filter: blur(10px);
-}
-
-.hezarfen-current-step-info {
-	display: flex;
-	align-items: center;
-	gap: 0.75rem;
-	margin-bottom: 1rem;
-}
-
-.hezarfen-current-step-icon {
-	width: 1.5rem;
-	height: 1.5rem;
-	color: #635bff;
-	flex-shrink: 0;
-}
-
-.hezarfen-current-step-title {
-	font-size: 1rem;
-	font-weight: 600;
-	color: #0a2540;
-	letter-spacing: -0.02em;
-}
-
-.hezarfen-current-step-description {
-	font-size: 0.875rem;
-	color: #64748b;
-	line-height: 1.5;
-	margin-bottom: 1rem;
-}
-
-.hezarfen-step-timestamp {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.5rem;
-	font-size: 0.75rem;
-	color: #94a3b8;
-	background: #f1f5f9;
-	padding: 0.375rem 0.75rem;
-	border-radius: 6px;
-	font-weight: 500;
-}
-
-.hezarfen-step-timestamp svg {
-	width: 0.875rem;
-	height: 0.875rem;
-}
-
-/* Animations */
-@keyframes progressGlow {
+@keyframes gradientShift {
 	0%, 100% { background-position: 0% 50%; }
 	50% { background-position: 100% 50%; }
 }
 
-@keyframes currentStepPulse {
+@keyframes progressFlow {
+	0% { background-position: 0% 50%; }
+	50% { background-position: 100% 50%; }
+	100% { background-position: 200% 50%; }
+}
+
+@keyframes pulse {
 	0%, 100% { 
 		opacity: 1;
-		transform: scale(1.4);
+		transform: scale(1);
 	}
 	50% { 
 		opacity: 0.7;
-		transform: scale(1.6);
+		transform: scale(1.1);
+	}
+}
+
+@keyframes nodeGlow {
+	0%, 100% {
+		box-shadow: 0 0 20px var(--hezarfen-shadow-primary);
+	}
+	50% {
+		box-shadow: 0 0 40px var(--hezarfen-shadow-accent);
 	}
 }
 
@@ -1014,10 +1115,9 @@
 	to { transform: rotate(360deg); }
 }
 
-/* Spinning animation */
-@keyframes spin {
-	from { transform: rotate(0deg); }
-	to { transform: rotate(360deg); }
+@keyframes float {
+	0%, 100% { transform: translateY(0px); }
+	50% { transform: translateY(-6px); }
 }
 
 /* Responsive adjustments */
@@ -1044,41 +1144,46 @@
 	
 	/* Progress steps mobile adjustments */
 	.hezarfen-progress-steps {
-		padding: 1.5rem;
-		border-radius: 12px;
+		padding: 2rem 1.5rem;
+		border-radius: 16px;
 	}
 	
-	.hezarfen-progress-track {
-		grid-template-columns: repeat(2, 1fr);
-		gap: 1.5rem;
-		margin-bottom: 1.5rem;
-	}
-	
-	.hezarfen-progress-track::after {
-		display: none;
+	.hezarfen-progress-step {
+		padding: 10px 0;
+		gap: 14px;
 	}
 	
 	.hezarfen-step-node {
-		width: 1.75rem;
-		height: 1.75rem;
-		margin-bottom: 0.75rem;
+		width: 20px;
+		height: 20px;
 	}
 	
-	.hezarfen-step-label {
+	.hezarfen-step-connector {
+		height: 30px;
+		width: 3px;
+		top: 20px;
+	}
+	
+	.hezarfen-step-content {
+		line-height: 20px;
+	}
+	
+	.hezarfen-step-title {
+		font-size: 15px;
+		line-height: 20px;
+	}
+	
+	.hezarfen-step-title {
+		font-size: 1rem;
+	}
+	
+	.hezarfen-step-description {
+		font-size: 0.875rem;
+	}
+	
+	.hezarfen-step-timestamp {
 		font-size: 0.75rem;
-	}
-	
-	.hezarfen-step-details {
-		padding: 1.25rem;
-		margin-top: 1.5rem;
-	}
-	
-	.hezarfen-current-step-title {
-		font-size: 0.9375rem;
-	}
-	
-	.hezarfen-current-step-description {
-		font-size: 0.8125rem;
+		padding: 0.375rem 0.75rem;
 	}
 }
 
@@ -1195,7 +1300,7 @@
 		color: #d1d5db;
 	}
 	
-	/* Dark mode for progress steps */
+	/* Dark mode for vertical progress steps */
 	.hezarfen-progress-subtitle {
 		color: #f1f5f9;
 	}
@@ -1209,55 +1314,81 @@
 		background: linear-gradient(90deg, #8b5cf6 0%, #06b6d4 50%, #f59e0b 100%);
 	}
 	
-	.hezarfen-progress-track::after {
-		background: linear-gradient(90deg, transparent 0%, #475569 25%, #475569 75%, transparent 100%);
-	}
-	
 	.hezarfen-step-node {
 		background: #1e293b;
 		border-color: #475569;
 	}
 	
-	.hezarfen-step-label {
+	.hezarfen-step-connector {
+		background: #475569;
+	}
+	
+	.hezarfen-step-connector.completed {
+		background: #22d3ee;
+	}
+	
+	.hezarfen-step-title {
+		color: #f1f5f9;
+	}
+	
+	.hezarfen-step-description {
 		color: #94a3b8;
 	}
 	
 	.hezarfen-progress-step.pending .hezarfen-step-node {
-		background: #0f172a;
-		border-color: #334155;
+		background: #1e293b;
+		border-color: #475569;
 	}
 	
 	.hezarfen-pending-dot {
-		background: #64748b;
+		background: #a78bfa;
 	}
-	
-	.hezarfen-progress-step.completed .hezarfen-step-label {
-		color: #22d3ee;
-	}
-	
-	.hezarfen-progress-step.current .hezarfen-step-label {
-		color: #a78bfa;
-	}
-	
-	.hezarfen-step-details {
-		background: rgba(30, 41, 59, 0.8);
-		border-color: rgba(51, 65, 85, 0.8);
-	}
-	
-	.hezarfen-current-step-icon {
-		color: #a78bfa;
-	}
-	
-	.hezarfen-current-step-title {
+
+	.hezarfen-progress-step.pending .hezarfen-step-title {
 		color: #f1f5f9;
 	}
+
+	.hezarfen-progress-step.pending .hezarfen-step-description {
+		color: #e2e8f0;
+	}
 	
-	.hezarfen-current-step-description {
-		color: #94a3b8;
+	.hezarfen-progress-step.completed .hezarfen-step-node {
+		background: #22d3ee;
+		border-color: #22d3ee;
+	}
+
+	.hezarfen-progress-step.completed .hezarfen-step-node svg {
+		color: white;
+	}
+
+	.hezarfen-progress-step.completed .hezarfen-step-title {
+		color: #22d3ee;
+	}
+
+	.hezarfen-progress-step.completed .hezarfen-step-description {
+		color: #e2e8f0;
+		font-weight: 500;
+	}
+
+	.hezarfen-progress-step.completed .hezarfen-step-timestamp {
+		background: rgba(34, 211, 238, 0.15);
+		color: #22d3ee;
+		border-color: rgba(34, 211, 238, 0.3);
+	}
+	
+	.hezarfen-progress-step.current .hezarfen-step-title {
+		color: #a78bfa;
 	}
 	
 	.hezarfen-step-timestamp {
-		background: #0f172a;
+		background: rgba(15, 23, 42, 0.8);
 		color: #64748b;
+		border-color: rgba(51, 65, 85, 0.5);
+	}
+	
+	.hezarfen-progress-step.completed .hezarfen-step-timestamp {
+		background: rgba(34, 211, 238, 0.1);
+		color: #22d3ee;
+		border-color: rgba(34, 211, 238, 0.2);
 	}
 }
