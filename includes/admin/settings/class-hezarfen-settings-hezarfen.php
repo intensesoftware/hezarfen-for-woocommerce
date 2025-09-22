@@ -40,11 +40,12 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 */
 	protected function get_own_sections() {
 		$sections = array(
-			''              => __( 'Training', 'hezarfen-for-woocommerce' ),
-			'general'       => __( 'General', 'hezarfen-for-woocommerce' ),
-			'encryption'    => __( 'Encryption', 'hezarfen-for-woocommerce' ),
-			'checkout_page' => __( 'Checkout Page Settings', 'hezarfen-for-woocommerce' ),
-			'sms_settings'  => __( 'SMS Settings', 'hezarfen-for-woocommerce' ),
+			''                      => __( 'Training', 'hezarfen-for-woocommerce' ),
+			'general'               => __( 'General', 'hezarfen-for-woocommerce' ),
+			'encryption'            => __( 'Encryption', 'hezarfen-for-woocommerce' ),
+			'checkout_page'         => __( 'Checkout Page Settings', 'hezarfen-for-woocommerce' ),
+			'shipment_tracking_page' => __( 'Shipment Tracking Page', 'hezarfen-for-woocommerce' ),
+			'sms_settings'          => __( 'SMS Settings', 'hezarfen-for-woocommerce' ),
 		);
 
 		// if checkout field is active, show the section.
@@ -435,6 +436,121 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		);
 
 		return $fields;
+	}
+
+	/**
+	 * Get settings for the shipment_tracking_page section.
+	 *
+	 * @return array<array<string, string>>
+	 */
+	protected function get_settings_for_shipment_tracking_page_section() {
+		$fields = array(
+			array(
+				'title' => __( 'Shipment Tracking Page Settings', 'hezarfen-for-woocommerce' ),
+				'type'  => 'title',
+				'desc'  => __( 'Customize the appearance and behavior of the order tracking page created with the [hezarfen_order_tracking] shortcode.', 'hezarfen-for-woocommerce' ),
+				'id'    => 'hezarfen_tracking_page_settings_title',
+			),
+			array(
+				'title'   => __( 'Page Title', 'hezarfen-for-woocommerce' ),
+				'type'    => 'text',
+				'desc'    => __( 'The main title displayed on the tracking page', 'hezarfen-for-woocommerce' ),
+				'id'      => 'hezarfen_tracking_page_title',
+				'default' => __( 'Track Your Order', 'hezarfen-for-woocommerce' ),
+				'css'     => 'width: 400px;',
+			),
+			array(
+				'title'   => __( 'Page Description', 'hezarfen-for-woocommerce' ),
+				'type'    => 'textarea',
+				'desc'    => __( 'Description text shown below the title', 'hezarfen-for-woocommerce' ),
+				'id'      => 'hezarfen_tracking_page_description',
+				'default' => __( 'Enter your order number and email address to track your shipment.', 'hezarfen-for-woocommerce' ),
+				'css'     => 'width: 400px; height: 80px;',
+			),
+			array(
+				'title'   => __( 'Primary Color', 'hezarfen-for-woocommerce' ),
+				'type'    => 'color',
+				'desc'    => __( 'Primary color for buttons and accents (default: #3b82f6)', 'hezarfen-for-woocommerce' ),
+				'id'      => 'hezarfen_tracking_page_primary_color',
+				'default' => '#3b82f6',
+			),
+			array(
+				'title'   => __( 'Secondary Color', 'hezarfen-for-woocommerce' ),
+				'type'    => 'color',
+				'desc'    => __( 'Secondary color for tracking buttons (default: #8b5cf6)', 'hezarfen-for-woocommerce' ),
+				'id'      => 'hezarfen_tracking_page_secondary_color',
+				'default' => '#8b5cf6',
+			),
+			array(
+				'title'   => __( 'Success Color', 'hezarfen-for-woocommerce' ),
+				'type'    => 'color',
+				'desc'    => __( 'Color for success states and completed orders (default: #10b981)', 'hezarfen-for-woocommerce' ),
+				'id'      => 'hezarfen_tracking_page_success_color',
+				'default' => '#10b981',
+			),
+			array(
+				'title'   => __( 'Border Radius', 'hezarfen-for-woocommerce' ),
+				'type'    => 'number',
+				'desc'    => __( 'Border radius for cards and buttons in pixels (default: 12)', 'hezarfen-for-woocommerce' ),
+				'id'      => 'hezarfen_tracking_page_border_radius',
+				'default' => '12',
+				'custom_attributes' => array(
+					'min'  => '0',
+					'max'  => '50',
+					'step' => '1',
+				),
+			),
+			array(
+				'title'   => __( 'Container Max Width', 'hezarfen-for-woocommerce' ),
+				'type'    => 'number',
+				'desc'    => __( 'Maximum width of the tracking container in pixels (default: 600)', 'hezarfen-for-woocommerce' ),
+				'id'      => 'hezarfen_tracking_page_max_width',
+				'default' => '600',
+				'custom_attributes' => array(
+					'min'  => '300',
+					'max'  => '1200',
+					'step' => '10',
+				),
+			),
+			array(
+				'title'   => __( 'Show Order Date', 'hezarfen-for-woocommerce' ),
+				'type'    => 'checkbox',
+				'desc'    => __( 'Display the order date in tracking results', 'hezarfen-for-woocommerce' ),
+				'id'      => 'hezarfen_tracking_page_show_date',
+				'default' => 'yes',
+			),
+			array(
+				'title'   => __( 'Show Order Total', 'hezarfen-for-woocommerce' ),
+				'type'    => 'checkbox',
+				'desc'    => __( 'Display the order total in tracking results', 'hezarfen-for-woocommerce' ),
+				'id'      => 'hezarfen_tracking_page_show_total',
+				'default' => 'yes',
+			),
+			array(
+				'title'   => __( 'Enable Dark Mode Support', 'hezarfen-for-woocommerce' ),
+				'type'    => 'checkbox',
+				'desc'    => __( 'Enable automatic dark mode based on user preference', 'hezarfen-for-woocommerce' ),
+				'id'      => 'hezarfen_tracking_page_dark_mode',
+				'default' => 'yes',
+			),
+			array(
+				'title'   => __( 'Custom CSS', 'hezarfen-for-woocommerce' ),
+				'type'    => 'textarea',
+				'desc'    => __( 'Add custom CSS to further customize the tracking page appearance', 'hezarfen-for-woocommerce' ),
+				'id'      => 'hezarfen_tracking_page_custom_css',
+				'default' => '',
+				'css'     => 'width: 100%; height: 200px; font-family: monospace;',
+				'placeholder' => '.hezarfen-tracking-container {
+    /* Your custom styles here */
+}',
+			),
+			array(
+				'type' => 'sectionend',
+				'id'   => 'hezarfen_tracking_page_settings_section_end',
+			),
+		);
+
+		return apply_filters( 'hezarfen_tracking_page_settings', $fields );
 	}
 
 

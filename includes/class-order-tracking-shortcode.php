@@ -39,6 +39,9 @@ class Order_Tracking_Shortcode {
 				WC_HEZARFEN_VERSION
 			);
 
+			// Add custom CSS from settings
+			$this->add_custom_css();
+
 			wp_enqueue_script(
 				'hezarfen-order-tracking',
 				plugins_url( 'assets/js/order-tracking.js', WC_HEZARFEN_FILE ),
@@ -78,10 +81,14 @@ class Order_Tracking_Shortcode {
 	 * @return string HTML output
 	 */
 	public function render_tracking_page( $atts = array() ) {
+		// Get settings from admin panel, with shortcode attributes as fallback
+		$default_title = get_option( 'hezarfen_tracking_page_title', __( 'Track Your Order', 'hezarfen-for-woocommerce' ) );
+		$default_description = get_option( 'hezarfen_tracking_page_description', __( 'Enter your order number and email address to track your shipment.', 'hezarfen-for-woocommerce' ) );
+		
 		$atts = shortcode_atts(
 			array(
-				'title'       => __( 'Track Your Order', 'hezarfen-for-woocommerce' ),
-				'description' => __( 'Enter your order number and email address to track your shipment.', 'hezarfen-for-woocommerce' ),
+				'title'       => $default_title,
+				'description' => $default_description,
 			),
 			$atts,
 			'hezarfen_order_tracking'
@@ -355,13 +362,16 @@ class Order_Tracking_Shortcode {
 						</span>
 					</div>
 					
+					<?php if ( get_option( 'hezarfen_tracking_page_show_date', 'yes' ) === 'yes' ) : ?>
 					<div class="hezarfen-meta-item">
 						<span class="hezarfen-meta-label"><?php esc_html_e( 'Date:', 'hezarfen-for-woocommerce' ); ?></span>
 						<span class="hezarfen-meta-value">
 							<?php echo esc_html( wc_format_datetime( $order->get_date_created() ) ); ?>
 						</span>
 					</div>
+					<?php endif; ?>
 					
+					<?php if ( get_option( 'hezarfen_tracking_page_show_total', 'yes' ) === 'yes' ) : ?>
 					<div class="hezarfen-meta-item">
 						<span class="hezarfen-meta-label"><?php esc_html_e( 'Total:', 'hezarfen-for-woocommerce' ); ?></span>
 						<span class="hezarfen-meta-value">
@@ -374,6 +384,7 @@ class Order_Tracking_Shortcode {
 							?>
 						</span>
 					</div>
+					<?php endif; ?>
 				</div>
 			</div>
 
@@ -432,6 +443,105 @@ class Order_Tracking_Shortcode {
 		</div>
 		<?php
 		return ob_get_clean();
+	}
+
+	/**
+	 * Add custom CSS based on settings
+	 */
+	private function add_custom_css() {
+		// Get customization settings
+		$primary_color = get_option( 'hezarfen_tracking_page_primary_color', '#3b82f6' );
+		$secondary_color = get_option( 'hezarfen_tracking_page_secondary_color', '#8b5cf6' );
+		$success_color = get_option( 'hezarfen_tracking_page_success_color', '#10b981' );
+		$border_radius = get_option( 'hezarfen_tracking_page_border_radius', '12' );
+		$max_width = get_option( 'hezarfen_tracking_page_max_width', '600' );
+		$dark_mode = get_option( 'hezarfen_tracking_page_dark_mode', 'yes' );
+		$custom_css = get_option( 'hezarfen_tracking_page_custom_css', '' );
+
+		// Generate CSS variables and customizations
+		$css = '<style id="hezarfen-tracking-custom-css">';
+		
+		// CSS Custom Properties
+		$css .= ':root {';
+		$css .= '--hezarfen-primary-color: ' . esc_attr( $primary_color ) . ';';
+		$css .= '--hezarfen-secondary-color: ' . esc_attr( $secondary_color ) . ';';
+		$css .= '--hezarfen-success-color: ' . esc_attr( $success_color ) . ';';
+		$css .= '--hezarfen-border-radius: ' . intval( $border_radius ) . 'px;';
+		$css .= '--hezarfen-max-width: ' . intval( $max_width ) . 'px;';
+		$css .= '}';
+
+		// Apply customizations
+		$css .= '.hezarfen-tracking-container {';
+		$css .= 'max-width: var(--hezarfen-max-width);';
+		$css .= '}';
+
+		$css .= '.hezarfen-tracking-card {';
+		$css .= 'border-radius: var(--hezarfen-border-radius);';
+		$css .= '}';
+
+		$css .= '.hezarfen-tracking-button {';
+		$css .= 'background: linear-gradient(135deg, var(--hezarfen-primary-color) 0%, ' . $this->darken_color( $primary_color, 20 ) . ' 100%);';
+		$css .= 'border-radius: calc(var(--hezarfen-border-radius) - 4px);';
+		$css .= '}';
+
+		$css .= '.hezarfen-track-button {';
+		$css .= 'background: linear-gradient(135deg, var(--hezarfen-secondary-color) 0%, ' . $this->darken_color( $secondary_color, 20 ) . ' 100%);';
+		$css .= 'border-radius: calc(var(--hezarfen-border-radius) - 6px);';
+		$css .= '}';
+
+		$css .= '.hezarfen-success-icon {';
+		$css .= 'background: linear-gradient(135deg, var(--hezarfen-success-color) 0%, ' . $this->darken_color( $success_color, 20 ) . ' 100%);';
+		$css .= '}';
+
+		$css .= '.hezarfen-form-input, .hezarfen-tracking-item, .hezarfen-secondary-button {';
+		$css .= 'border-radius: calc(var(--hezarfen-border-radius) - 4px);';
+		$css .= '}';
+
+		// Disable dark mode if setting is off
+		if ( $dark_mode !== 'yes' ) {
+			$css .= '@media (prefers-color-scheme: dark) {';
+			$css .= '.hezarfen-tracking-card, .hezarfen-tracking-item, .hezarfen-secondary-button { background: #ffffff !important; border-color: #e5e7eb !important; }';
+			$css .= '.hezarfen-tracking-title, .hezarfen-meta-value, .hezarfen-courier-name { color: #111827 !important; }';
+			$css .= '.hezarfen-tracking-description, .hezarfen-form-label, .hezarfen-meta-label { color: #6b7280 !important; }';
+			$css .= '.hezarfen-form-input { background: #ffffff !important; border-color: #e5e7eb !important; color: #111827 !important; }';
+			$css .= '}';
+		}
+
+		// Add custom CSS from settings
+		if ( ! empty( $custom_css ) ) {
+			$css .= wp_strip_all_tags( $custom_css );
+		}
+
+		$css .= '</style>';
+
+		echo $css;
+	}
+
+	/**
+	 * Darken a hex color by a percentage
+	 * 
+	 * @param string $hex_color Hex color code
+	 * @param int $percent Percentage to darken (0-100)
+	 * @return string Darkened hex color
+	 */
+	private function darken_color( $hex_color, $percent ) {
+		// Remove # if present
+		$hex_color = ltrim( $hex_color, '#' );
+		
+		// Convert to RGB
+		$r = hexdec( substr( $hex_color, 0, 2 ) );
+		$g = hexdec( substr( $hex_color, 2, 2 ) );
+		$b = hexdec( substr( $hex_color, 4, 2 ) );
+		
+		// Darken
+		$r = max( 0, $r - ( $r * $percent / 100 ) );
+		$g = max( 0, $g - ( $g * $percent / 100 ) );
+		$b = max( 0, $b - ( $b * $percent / 100 ) );
+		
+		// Convert back to hex
+		return '#' . str_pad( dechex( $r ), 2, '0', STR_PAD_LEFT ) . 
+				str_pad( dechex( $g ), 2, '0', STR_PAD_LEFT ) . 
+				str_pad( dechex( $b ), 2, '0', STR_PAD_LEFT );
 	}
 }
 
