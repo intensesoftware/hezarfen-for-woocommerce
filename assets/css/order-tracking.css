@@ -41,7 +41,6 @@
 .hezarfen-tracking-card {
 	background: 
 		linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(250, 251, 252, 0.95) 100%);
-	backdrop-filter: blur(24px) saturate(180%);
 	border-radius: 24px;
 	box-shadow: 
 		0 0 0 1px rgba(255, 255, 255, 0.8),
@@ -63,13 +62,6 @@
 	left: 0;
 	right: 0;
 	height: 3px;
-	background: linear-gradient(
-		90deg, 
-		var(--hezarfen-primary) 0%, 
-		var(--hezarfen-accent) 50%, 
-		var(--hezarfen-primary-light) 100%
-	);
-	background-size: 200% 100%;
 	animation: gradientShift 4s ease-in-out infinite;
 }
 
@@ -78,7 +70,6 @@
 	position: absolute;
 	inset: 1px;
 	border-radius: 23px;
-	background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.4) 100%);
 	pointer-events: none;
 }
 
