@@ -501,25 +501,20 @@ class Admin_Ajax {
 		$pdf = new \TCPDF( $orientation, $unit, $format, true, 'UTF-8', false );
 
 		// Set document information
-		$pdf->SetCreator( 'Hezarfen for WooCommerce' );
-		$pdf->SetAuthor( 'Hezarfen' );
-		$pdf->SetTitle( 'Hepsijet Shipment Label - ' . $delivery_no );
+		$pdf->SetCreator( 'WooCommerce' );
+		$pdf->SetAuthor( get_bloginfo( 'name' ) );
+		$pdf->SetTitle( 'Shipment Label - ' . $delivery_no );
 		$pdf->SetSubject( 'Shipment Label' );
 
-		// Set default header data (no header text)
-		$pdf->SetHeaderData( '', 0, '', '' );
-
-		// Set header and footer fonts - use DejaVu fonts for Turkish character support
-		$pdf->setHeaderFont( array( 'dejavusans', '', 12 ) );
-		$pdf->setFooterFont( array( 'dejavusans', '', 8 ) );
+		// Disable header and footer completely
+		$pdf->setPrintHeader( false );
+		$pdf->setPrintFooter( false );
 
 		// Set default monospaced font
 		$pdf->SetDefaultMonospacedFont( 'dejavusansmono' );
 
-		// Set margins
+		// Set margins (no header/footer margins needed)
 		$pdf->SetMargins( 15, 15, 15 );
-		$pdf->SetHeaderMargin( 5 );
-		$pdf->SetFooterMargin( 10 );
 
 		// Set auto page breaks
 		$pdf->SetAutoPageBreak( TRUE, 25 );
@@ -532,13 +527,6 @@ class Admin_Ajax {
 
 		// Set font - use DejaVu Sans for Turkish character support
 		$pdf->SetFont( 'dejavusans', '', 10 );
-
-		// === ORDER DETAILS SECTION ===
-		
-		// Header - Company/Store Name
-		$pdf->SetFont( 'dejavusans', 'B', 14 );
-		$pdf->Cell( 0, 8, self::ensure_utf8( get_bloginfo( 'name' ) ), 0, 1, 'C' );
-		$pdf->Ln( 3 );
 		
 		// Order Information Section - More compact
 		$pdf->SetFont( 'dejavusans', 'B', 10 );
