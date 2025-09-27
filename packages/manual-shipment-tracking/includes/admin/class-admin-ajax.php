@@ -431,6 +431,41 @@ class Admin_Ajax {
 	}
 
 	/**
+	 * Ensure proper UTF-8 encoding for Turkish characters.
+	 * 
+	 * @param string $text Text to encode.
+	 * @return string UTF-8 encoded text.
+	 */
+	private static function ensure_utf8( $text ) {
+		if ( ! is_string( $text ) ) {
+			return $text;
+		}
+		
+		// Convert to UTF-8 if not already
+		if ( ! mb_check_encoding( $text, 'UTF-8' ) ) {
+			$text = mb_convert_encoding( $text, 'UTF-8', 'auto' );
+		}
+		
+		return $text;
+	}
+
+	/**
+	 * Format price with proper Turkish Lira symbol for PDF.
+	 * 
+	 * @param float $amount Price amount.
+	 * @return string Formatted price with proper TRY symbol.
+	 */
+	private static function format_price_for_pdf( $amount ) {
+		$formatted_price = wc_price( $amount );
+		$clean_price = strip_tags( $formatted_price );
+		
+		// Fix Turkish Lira symbol - ensure proper UTF-8 encoding
+		$clean_price = str_replace( array( '₺', 'TL', 'TRY' ), '₺', $clean_price );
+		
+		return self::ensure_utf8( $clean_price );
+	}
+
+	/**
 	 * Create Hepsijet PDF using TCPDF.
 	 * 
 	 * @param WC_Order $order Order object.
@@ -474,12 +509,12 @@ class Admin_Ajax {
 		// Set default header data (no header text)
 		$pdf->SetHeaderData( '', 0, '', '' );
 
-		// Set header and footer fonts
-		$pdf->setHeaderFont( array( 'helvetica', '', 12 ) );
-		$pdf->setFooterFont( array( 'helvetica', '', 8 ) );
+		// Set header and footer fonts - use DejaVu fonts for Turkish character support
+		$pdf->setHeaderFont( array( 'dejavusans', '', 12 ) );
+		$pdf->setFooterFont( array( 'dejavusans', '', 8 ) );
 
 		// Set default monospaced font
-		$pdf->SetDefaultMonospacedFont( 'courier' );
+		$pdf->SetDefaultMonospacedFont( 'dejavusansmono' );
 
 		// Set margins
 		$pdf->SetMargins( 15, 15, 15 );
@@ -495,12 +530,118 @@ class Admin_Ajax {
 		// Add a page
 		$pdf->AddPage();
 
-		// Set font
-		$pdf->SetFont( 'helvetica', '', 10 );
+		// Set font - use DejaVu Sans for Turkish character support
+		$pdf->SetFont( 'dejavusans', '', 10 );
 
+		// === ORDER DETAILS SECTION ===
+		
+		// Header - Company/Store Name
+		$pdf->SetFont( 'dejavusans', 'B', 14 );
+		$pdf->Cell( 0, 8, self::ensure_utf8( get_bloginfo( 'name' ) ), 0, 1, 'C' );
+		$pdf->Ln( 3 );
+		
+		// Order Information Section - More compact
+		$pdf->SetFont( 'dejavusans', 'B', 10 );
+		$pdf->Cell( 0, 5, self::ensure_utf8( __( 'Order Information', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
+		$pdf->Line( 15, $pdf->GetY(), 195, $pdf->GetY() );
+		$pdf->Ln( 2 );
+		
+		$pdf->SetFont( 'dejavusans', '', 9 );
+		
+		// Order details in two columns - more compact
+		$col1_x = 15;
+		$col2_x = 105;
+		$line_height = 4;
+		$current_y = $pdf->GetY();
+		
+		// Left column - Order Info
+		$pdf->SetXY( $col1_x, $current_y );
+		$pdf->Cell( 35, $line_height, self::ensure_utf8( __( 'Order #:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
+		$pdf->SetFont( 'dejavusans', 'B', 9 );
+		$pdf->Cell( 0, $line_height, self::ensure_utf8( $order->get_order_number() ), 0, 1, 'L' );
+		
+		$pdf->SetFont( 'dejavusans', '', 9 );
+		$pdf->SetX( $col1_x );
+		$pdf->Cell( 35, $line_height, self::ensure_utf8( __( 'Date:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
+		$pdf->SetFont( 'dejavusans', 'B', 9 );
+		$pdf->Cell( 0, $line_height, self::ensure_utf8( $order->get_date_created()->date( 'd/m/Y' ) ), 0, 1, 'L' );
+		
+		$pdf->SetFont( 'dejavusans', '', 9 );
+		$pdf->SetX( $col1_x );
+		$pdf->Cell( 35, $line_height, self::ensure_utf8( __( 'Delivery:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
+		$pdf->SetFont( 'dejavusans', 'B', 9 );
+		$pdf->Cell( 0, $line_height, self::ensure_utf8( $delivery_no ), 0, 1, 'L' );
+		
+		// Right column - Customer Info
+		$pdf->SetXY( $col2_x, $current_y );
+		$pdf->SetFont( 'dejavusans', '', 9 );
+		$pdf->Cell( 35, $line_height, self::ensure_utf8( __( 'Customer:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
+		$pdf->SetFont( 'dejavusans', 'B', 9 );
+		$customer_name = trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() );
+		$pdf->Cell( 0, $line_height, self::ensure_utf8( $customer_name ), 0, 1, 'L' );
+		
+		$pdf->SetXY( $col2_x, $pdf->GetY() );
+		$pdf->SetFont( 'dejavusans', '', 9 );
+		$pdf->Cell( 35, $line_height, self::ensure_utf8( __( 'Phone:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
+		$pdf->SetFont( 'dejavusans', 'B', 9 );
+		$phone = $order->get_billing_phone() ? $order->get_billing_phone() : __( 'N/A', 'hezarfen-for-woocommerce' );
+		$pdf->Cell( 0, $line_height, self::ensure_utf8( $phone ), 0, 1, 'L' );
+		
+		$pdf->SetXY( $col2_x, $pdf->GetY() );
+		$pdf->SetFont( 'dejavusans', '', 9 );
+		$pdf->Cell( 35, $line_height, self::ensure_utf8( __( 'Payment:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
+		$pdf->SetFont( 'dejavusans', 'B', 9 );
+		$payment_method = $order->get_payment_method_title() ? $order->get_payment_method_title() : __( 'N/A', 'hezarfen-for-woocommerce' );
+		$pdf->Cell( 0, $line_height, self::ensure_utf8( $payment_method ), 0, 1, 'L' );
+		
+		$pdf->Ln( 3 );
+		
+		// Shipping Address Section - Compact
+		$pdf->SetFont( 'dejavusans', 'B', 10 );
+		$pdf->Cell( 0, 5, self::ensure_utf8( __( 'Shipping Address', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
+		$pdf->Line( 15, $pdf->GetY(), 195, $pdf->GetY() );
+		$pdf->Ln( 2 );
+		
+		$pdf->SetFont( 'dejavusans', '', 9 );
+		$shipping_address = $order->get_formatted_shipping_address();
+		if ( empty( $shipping_address ) ) {
+			$shipping_address = $order->get_formatted_billing_address();
+		}
+		
+		// Clean up the address formatting for PDF
+		$shipping_address = str_replace( '<br/>', "\n", $shipping_address );
+		$shipping_address = strip_tags( $shipping_address );
+		
+		$pdf->MultiCell( 0, 4, self::ensure_utf8( $shipping_address ), 0, 'L' );
+		$pdf->Ln( 2 );
+		
+		// Order Summary - Very compact
+		$pdf->SetFont( 'dejavusans', 'B', 10 );
+		$pdf->Cell( 0, 5, self::ensure_utf8( __( 'Order Summary', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
+		$pdf->Line( 15, $pdf->GetY(), 195, $pdf->GetY() );
+		$pdf->Ln( 2 );
+		
+		// Compact order items - just show count and total
+		$item_count = count( $order->get_items() );
+		$pdf->SetFont( 'dejavusans', '', 9 );
+		$pdf->Cell( 50, 4, self::ensure_utf8( __( 'Items:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
+		$pdf->SetFont( 'dejavusans', 'B', 9 );
+		$pdf->Cell( 50, 4, self::ensure_utf8( $item_count . ' ' . __( 'item(s)', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
+		
+		$pdf->SetFont( 'dejavusans', '', 9 );
+		$pdf->Cell( 30, 4, self::ensure_utf8( __( 'Total:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'R' );
+		$pdf->SetFont( 'dejavusans', 'B', 10 );
+		$pdf->Cell( 30, 4, self::format_price_for_pdf( $order->get_total() ), 1, 1, 'R' );
+		
+		$pdf->Ln( 3 );
 
-
-		// Barcode Section - Start immediately after page creation
+		// === BARCODE SECTION ===
+		
+		// Barcode Section Header - Compact
+		$pdf->SetFont( 'dejavusans', 'B', 10 );
+		$pdf->Cell( 0, 5, self::ensure_utf8( __( 'Shipping Barcode', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
+		$pdf->Line( 15, $pdf->GetY(), 195, $pdf->GetY() );
+		$pdf->Ln( 3 );
 
 		// Add barcode image
 		if ( is_array( $barcode_data ) && ! empty( $barcode_data ) ) {
@@ -519,14 +660,40 @@ class Admin_Ajax {
 				$temp_file = wp_tempnam( 'hepsijet_barcode_' . $delivery_no . '.jpg' );
 				file_put_contents( $temp_file, $image_data );
 				
-				// Add image to PDF (100% width, rotated 90 degrees)
+				// Add image to PDF - maintain aspect ratio while fitting on page
 				$page_width = $pdf->GetPageWidth();
+				$page_height = $pdf->GetPageHeight();
 				$margins = $pdf->getMargins();
 				$available_width = $page_width - $margins['left'] - $margins['right'];
+				$current_y = $pdf->GetY();
+				$remaining_height = $page_height - $current_y - $margins['bottom'] - 10; // Leave some margin at bottom
 				
-				// Position image to center it horizontally and use full available width
-				$x_position = $margins['left'];
-				$pdf->Image( $temp_file, $x_position, $pdf->GetY(), $available_width, 0, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
+				// Get image dimensions to calculate aspect ratio
+				$image_info = getimagesizefromstring( $image_data );
+				if ( $image_info ) {
+					$img_width = $image_info[0];
+					$img_height = $image_info[1];
+					$aspect_ratio = $img_width / $img_height;
+					
+					// Calculate dimensions maintaining aspect ratio
+					$display_width = $available_width;
+					$display_height = $display_width / $aspect_ratio;
+					
+					// If calculated height exceeds remaining space, scale down
+					if ( $display_height > $remaining_height ) {
+						$display_height = $remaining_height;
+						$display_width = $display_height * $aspect_ratio;
+					}
+					
+					// Center the image horizontally if it's smaller than available width
+					$x_position = $margins['left'] + ( $available_width - $display_width ) / 2;
+					
+					$pdf->Image( $temp_file, $x_position, $current_y, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
+				} else {
+					// Fallback to original method if we can't get image dimensions
+					$x_position = $margins['left'];
+					$pdf->Image( $temp_file, $x_position, $current_y, $available_width, 0, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
+				}
 				
 				// Clean up temporary file
 				unlink( $temp_file );
