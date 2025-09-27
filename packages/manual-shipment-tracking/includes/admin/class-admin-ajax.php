@@ -456,11 +456,49 @@ class Admin_Ajax {
 	 * @return string Formatted price with proper TRY symbol.
 	 */
 	private static function format_price_for_pdf( $amount ) {
+		// Get WooCommerce formatted price
 		$formatted_price = wc_price( $amount );
 		$clean_price = strip_tags( $formatted_price );
 		
-		// Fix Turkish Lira symbol - ensure proper UTF-8 encoding
-		$clean_price = str_replace( array( '₺', 'TL', 'TRY' ), '₺', $clean_price );
+		// Remove any HTML entities and decode
+		$clean_price = html_entity_decode( $clean_price, ENT_QUOTES, 'UTF-8' );
+		
+		// Fix Turkish Lira symbol - normalize various formats to proper ₺
+		$clean_price = str_replace( array( '&lira;', '&#8378;', 'TL', 'TRY', 'tl', 'try' ), '₺', $clean_price );
+		
+		// If no currency symbol found, add Turkish Lira manually
+		if ( ! preg_match( '/₺/', $clean_price ) ) {
+			// Get currency settings
+			$currency = get_woocommerce_currency();
+			$currency_pos = get_option( 'woocommerce_currency_pos' );
+			
+			// Format number
+			$decimals = wc_get_price_decimals();
+			$decimal_sep = wc_get_price_decimal_separator();
+			$thousand_sep = wc_get_price_thousand_separator();
+			$formatted_number = number_format( $amount, $decimals, $decimal_sep, $thousand_sep );
+			
+			// Add currency symbol based on position
+			switch ( $currency_pos ) {
+				case 'left':
+					$clean_price = '₺' . $formatted_number;
+					break;
+				case 'right':
+					$clean_price = $formatted_number . '₺';
+					break;
+				case 'left_space':
+					$clean_price = '₺ ' . $formatted_number;
+					break;
+				case 'right_space':
+				default:
+					$clean_price = $formatted_number . ' ₺';
+					break;
+			}
+		} else {
+			// Ensure proper spacing around existing currency symbol
+			$clean_price = preg_replace( '/\s*₺\s*/', ' ₺', $clean_price );
+			$clean_price = trim( $clean_price );
+		}
 		
 		return self::ensure_utf8( $clean_price );
 	}
