@@ -768,7 +768,17 @@ class Admin_Ajax {
 					$display_key = $label_mappings[ $display_key ];
 				}
 				
-				$variants[] = $display_key . ': ' . $value;
+				// Clean up the value - decode HTML entities and fix currency symbols
+				$clean_value = html_entity_decode( $value, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+				
+				// Replace common HTML entities that might not be decoded
+				$clean_value = str_replace( 
+					array( '&#8378;', '&#8364;', '&#36;', '&euro;', '&pound;' ), 
+					array( '₺', '€', '$', '€', '£' ), 
+					$clean_value 
+				);
+				
+				$variants[] = $display_key . ': ' . $clean_value;
 			}
 			
 			// Build complete product text with variants on new lines
