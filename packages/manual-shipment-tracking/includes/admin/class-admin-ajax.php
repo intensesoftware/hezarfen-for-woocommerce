@@ -593,59 +593,63 @@ class Admin_Ajax {
 				// Get image dimensions to calculate aspect ratio
 				$image_info = getimagesizefromstring( $image_data );
 				if ( $image_info ) {
-					$img_width = $image_info[0];
-					$img_height = $image_info[1];
+					// Fixed dimensions: 200x300 where X-axis after rotation should be 300
+					// Before rotation: width=200, height=300
+					// After 90° counterclockwise rotation: width becomes 300, height becomes 200
+					$display_width = 200;  // This will become height after rotation
+					$display_height = 300; // This will become width after rotation
 					
-					// When rotating 90 degrees left, width becomes height and height becomes width
-					$rotated_aspect_ratio = $img_height / $img_width; // Swapped for 90° rotation
+					// After rotation, the actual space occupied
+					$actual_width_after_rotation = 300;  // X-axis as requested
+					$actual_height_after_rotation = 200; // Y-axis
 					
-					// Use 100% of page width (ignoring margins)
-					$display_width = $page_width;
-					$display_height = $display_width / $rotated_aspect_ratio;
-					$x_position = 0;
+					// For 90-degree counterclockwise rotation, position at left edge
+					// After rotation, the image will extend from left edge
+					$x_position = 0; // Start from left edge of page
+					$y_position = $current_y + $display_width; // Move down by original width (200)
 					
 					// Save the current graphic state
 					$pdf->StartTransform();
 					
-					// Calculate the center point for rotation
-					$center_x = $x_position + ($display_width / 2);
-					$center_y = $current_y + ($display_height / 2);
-					
-					// Apply rotation around center point
-					$pdf->Rotate(-90, $center_x, $center_y);
+					// Apply rotation around the top-left corner of where the image should appear
+					$pdf->Rotate(-90, $x_position, $y_position);
 					
 					// Add the image
-					$pdf->Image( $temp_file, $x_position, $current_y, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
+					$pdf->Image( $temp_file, $x_position, $y_position, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
 					
 					// Restore the graphic state
 					$pdf->StopTransform();
 					
-					// Move Y position to after the barcode
-					$pdf->SetY( $current_y + $display_height );
+					// Move Y position to after the barcode (use the actual height after rotation)
+					$pdf->SetY( $current_y + $actual_height_after_rotation );
 				} else {
-					// Fallback - use TCPDF's automatic aspect ratio preservation with rotation
-					$display_width = $page_width;
-					$x_position = 0;
-					$estimated_height = 60;
+					// Fallback - use same fixed dimensions as main case
+					// Fixed dimensions: 200x300 where X-axis after rotation should be 300
+					$display_width = 200;  // This will become height after rotation
+					$display_height = 300; // This will become width after rotation
+					
+					// After rotation, the actual space occupied
+					$actual_width_after_rotation = 300;  // X-axis as requested
+					$actual_height_after_rotation = 200; // Y-axis
+					
+					// For 90-degree counterclockwise rotation, adjust the starting position
+					$x_position = $display_height; // Move right by the original height (300)
+					$y_position = $current_y; // Keep original Y position
 					
 					// Save the current graphic state
 					$pdf->StartTransform();
 					
-					// Calculate the center point for rotation
-					$center_x = $x_position + ($display_width / 2);
-					$center_y = $current_y + ($estimated_height / 2);
+					// Apply rotation around the top-left corner of where the image should appear
+					$pdf->Rotate(-90, $x_position, $y_position);
 					
-					// Apply rotation around center point
-					$pdf->Rotate(-90, $center_x, $center_y);
-					
-					// Let TCPDF calculate height automatically (0 = auto height)
-					$pdf->Image( $temp_file, $x_position, $current_y, $display_width, 0, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
+					// Use the fixed height dimension
+					$pdf->Image( $temp_file, $x_position, $y_position, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
 					
 					// Restore the graphic state
 					$pdf->StopTransform();
 					
-					// Move Y position - estimate height since we don't know exact value
-					$pdf->SetY( $current_y + $estimated_height );
+					// Move Y position using the actual height after rotation
+					$pdf->SetY( $current_y + $actual_height_after_rotation );
 				}
 				
 				// Clean up temporary file
