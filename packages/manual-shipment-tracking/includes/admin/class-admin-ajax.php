@@ -588,7 +588,6 @@ class Admin_Ajax {
 				// Add image to PDF at top with proper sizing
 				$page_width = $pdf->GetPageWidth();
 				$margins = $pdf->getMargins();
-				$available_width = $page_width - $margins['left'] - $margins['right'];
 				$current_y = $pdf->GetY();
 				
 				// Get image dimensions to calculate aspect ratio
@@ -600,49 +599,49 @@ class Admin_Ajax {
 					// When rotating 90 degrees left, width becomes height and height becomes width
 					$rotated_aspect_ratio = $img_height / $img_width; // Swapped for 90° rotation
 					
-					// Use full width and preserve aspect ratio (accounting for rotation)
-					$display_width = $available_width;
+					// Use 100% of page width (ignoring margins)
+					$display_width = $page_width;
 					$display_height = $display_width / $rotated_aspect_ratio;
-					$x_position = $margins['left'];
+					$x_position = 0;
 					
-					// Save current transformation matrix
+					// Save the current graphic state
 					$pdf->StartTransform();
 					
-					// Calculate rotation center (center of the image)
+					// Calculate the center point for rotation
 					$center_x = $x_position + ($display_width / 2);
 					$center_y = $current_y + ($display_height / 2);
 					
-					// Rotate 90 degrees counterclockwise around the center
+					// Apply rotation around center point
 					$pdf->Rotate(-90, $center_x, $center_y);
 					
 					// Add the image
 					$pdf->Image( $temp_file, $x_position, $current_y, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
 					
-					// Restore transformation matrix
+					// Restore the graphic state
 					$pdf->StopTransform();
 					
 					// Move Y position to after the barcode
 					$pdf->SetY( $current_y + $display_height );
 				} else {
-					// Fallback - use TCPDF's automatic aspect ratio preservation
-					$display_width = $available_width;
-					$x_position = $margins['left'];
+					// Fallback - use TCPDF's automatic aspect ratio preservation with rotation
+					$display_width = $page_width;
+					$x_position = 0;
+					$estimated_height = 60;
 					
-					// Save current transformation matrix
+					// Save the current graphic state
 					$pdf->StartTransform();
 					
-					// Estimate height for center calculation
-					$estimated_height = 60;
+					// Calculate the center point for rotation
 					$center_x = $x_position + ($display_width / 2);
 					$center_y = $current_y + ($estimated_height / 2);
 					
-					// Rotate 90 degrees counterclockwise around the center
+					// Apply rotation around center point
 					$pdf->Rotate(-90, $center_x, $center_y);
 					
 					// Let TCPDF calculate height automatically (0 = auto height)
 					$pdf->Image( $temp_file, $x_position, $current_y, $display_width, 0, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
 					
-					// Restore transformation matrix
+					// Restore the graphic state
 					$pdf->StopTransform();
 					
 					// Move Y position - estimate height since we don't know exact value
