@@ -719,7 +719,6 @@ class Admin_Ajax {
 			$quantity = $item->get_quantity();
 			
 			// Get product variants/attributes
-			$variant_info = '';
 			$meta_data = $item->get_meta_data();
 			$variants = array();
 			
@@ -739,34 +738,31 @@ class Admin_Ajax {
 				$variants[] = $display_key . ': ' . $value;
 			}
 			
+			// Build complete product text with variants on new lines
+			$product_text = $product_name . ' x ' . $quantity;
 			if ( ! empty( $variants ) ) {
-				$variant_info = ' (' . implode( ', ', $variants ) . ')';
-			}
-			
-			// Add quantity to product name with variants
-			$product_with_qty = $product_name . $variant_info . ' x ' . $quantity;
-			
-			// Truncate long product names with quantity and variants
-			// Calculate character limit based on column width (approximately 1.5 chars per unit)
-			$char_limit = intval( $product_col_width * 1.5 );
-			if ( strlen( $product_with_qty ) > $char_limit ) {
-				// Calculate available space for product name
-				$variant_and_qty_length = strlen( $variant_info . ' x ' . $quantity );
-				$available_length = $char_limit - $variant_and_qty_length;
-				
-				if ( $available_length > 15 ) {
-					$product_name = substr( $product_name, 0, $available_length - 3 ) . '...';
-				} else {
-					// If variants are too long, truncate them too
-					$product_name = substr( $product_name, 0, 25 ) . '...';
-					$variant_info = substr( $variant_info, 0, 20 ) . '...)';
+				foreach ( $variants as $variant ) {
+					$product_text .= "\n  " . $variant;
 				}
-				$product_with_qty = $product_name . $variant_info . ' x ' . $quantity;
 			}
 			
-			$pdf->SetX( $right_col_x );
-			$pdf->Cell( $product_col_width, 4, self::ensure_utf8( $product_with_qty ), 1, 0, 'L' );
-			$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( $item->get_total() ), 1, 1, 'R' );
+			// Calculate cell height based on number of lines
+			$line_count = 1 + count( $variants );
+			$cell_height = 4 * $line_count;
+			
+			// Save current position
+			$start_x = $right_col_x;
+			$start_y = $pdf->GetY();
+			
+			// Draw product cell with border
+			$pdf->SetXY( $start_x, $start_y );
+			$pdf->MultiCell( $product_col_width, 4, self::ensure_utf8( $product_text ), 1, 'L' );
+			
+			// Draw total cell with border (aligned to the right of product cell)
+			$pdf->SetXY( $start_x + $product_col_width, $start_y );
+			$pdf->Cell( $total_col_width, $cell_height, self::format_price_for_pdf( $item->get_total() ), 1, 1, 'R' );
+			
+			// Move to next row (MultiCell already moved Y position)
 		}
 		
 		// Payment method on separate line
