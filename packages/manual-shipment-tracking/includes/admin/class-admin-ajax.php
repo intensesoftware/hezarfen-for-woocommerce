@@ -566,6 +566,97 @@ class Admin_Ajax {
 		// Set font - use DejaVu Sans for Turkish character support
 		$pdf->SetFont( 'dejavusans', '', 10 );
 		
+		// === BARCODE AT TOP ===
+		
+		// Add barcode image at the top
+		if ( is_array( $barcode_data ) && ! empty( $barcode_data ) ) {
+			// Get the first barcode image (base64 data)
+			$barcode_image_data = $barcode_data[0];
+			
+			// Remove data:image/jpeg;base64, prefix if present
+			if ( strpos( $barcode_image_data, 'data:image/jpeg;base64,' ) === 0 ) {
+				$barcode_image_data = substr( $barcode_image_data, 23 );
+			}
+			
+			// Decode base64 and create temporary file
+			$image_data = base64_decode( $barcode_image_data );
+			if ( $image_data !== false ) {
+				// Create temporary file
+				$temp_file = wp_tempnam( 'hepsijet_barcode_' . $delivery_no . '.jpg' );
+				file_put_contents( $temp_file, $image_data );
+				
+				// Add image to PDF at top with proper sizing
+				$page_width = $pdf->GetPageWidth();
+				$margins = $pdf->getMargins();
+				$available_width = $page_width - $margins['left'] - $margins['right'];
+				$current_y = $pdf->GetY();
+				
+				// Get image dimensions to calculate aspect ratio
+				$image_info = getimagesizefromstring( $image_data );
+				if ( $image_info ) {
+					$img_width = $image_info[0];
+					$img_height = $image_info[1];
+					
+					// When rotating 90 degrees left, width becomes height and height becomes width
+					$rotated_aspect_ratio = $img_height / $img_width; // Swapped for 90° rotation
+					
+					// Use full width and preserve aspect ratio (accounting for rotation)
+					$display_width = $available_width;
+					$display_height = $display_width / $rotated_aspect_ratio;
+					$x_position = $margins['left'];
+					
+					// Save current transformation matrix
+					$pdf->StartTransform();
+					
+					// Calculate rotation center (center of the image)
+					$center_x = $x_position + ($display_width / 2);
+					$center_y = $current_y + ($display_height / 2);
+					
+					// Rotate 90 degrees counterclockwise around the center
+					$pdf->Rotate(-90, $center_x, $center_y);
+					
+					// Add the image
+					$pdf->Image( $temp_file, $x_position, $current_y, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
+					
+					// Restore transformation matrix
+					$pdf->StopTransform();
+					
+					// Move Y position to after the barcode
+					$pdf->SetY( $current_y + $display_height );
+				} else {
+					// Fallback - use TCPDF's automatic aspect ratio preservation
+					$display_width = $available_width;
+					$x_position = $margins['left'];
+					
+					// Save current transformation matrix
+					$pdf->StartTransform();
+					
+					// Estimate height for center calculation
+					$estimated_height = 60;
+					$center_x = $x_position + ($display_width / 2);
+					$center_y = $current_y + ($estimated_height / 2);
+					
+					// Rotate 90 degrees counterclockwise around the center
+					$pdf->Rotate(-90, $center_x, $center_y);
+					
+					// Let TCPDF calculate height automatically (0 = auto height)
+					$pdf->Image( $temp_file, $x_position, $current_y, $display_width, 0, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
+					
+					// Restore transformation matrix
+					$pdf->StopTransform();
+					
+					// Move Y position - estimate height since we don't know exact value
+					$pdf->SetY( $current_y + $estimated_height );
+				}
+				
+				// Clean up temporary file
+				unlink( $temp_file );
+				
+				// Add proper spacing after barcode
+				$pdf->Ln( 10 );
+			}
+		}
+		
 		// === 2-COLUMN LAYOUT ===
 		
 		// Define column positions and widths
@@ -689,70 +780,6 @@ class Admin_Ajax {
 		
 		$pdf->Ln( 3 );
 
-		// === BARCODE SECTION ===
-		
-		// Barcode Section Header - Compact
-		$pdf->SetFont( 'dejavusans', 'B', 10 );
-		$pdf->Cell( 0, 5, self::ensure_utf8( __( 'Shipping Barcode', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
-		$pdf->Line( 15, $pdf->GetY(), 195, $pdf->GetY() );
-		$pdf->Ln( 3 );
-
-		// Add barcode image
-		if ( is_array( $barcode_data ) && ! empty( $barcode_data ) ) {
-			// Get the first barcode image (base64 data)
-			$barcode_image_data = $barcode_data[0];
-			
-			// Remove data:image/jpeg;base64, prefix if present
-			if ( strpos( $barcode_image_data, 'data:image/jpeg;base64,' ) === 0 ) {
-				$barcode_image_data = substr( $barcode_image_data, 23 );
-			}
-			
-			// Decode base64 and create temporary file
-			$image_data = base64_decode( $barcode_image_data );
-			if ( $image_data !== false ) {
-				// Create temporary file
-				$temp_file = wp_tempnam( 'hepsijet_barcode_' . $delivery_no . '.jpg' );
-				file_put_contents( $temp_file, $image_data );
-				
-				// Add image to PDF - maintain aspect ratio while fitting on page
-				$page_width = $pdf->GetPageWidth();
-				$page_height = $pdf->GetPageHeight();
-				$margins = $pdf->getMargins();
-				$available_width = $page_width - $margins['left'] - $margins['right'];
-				$current_y = $pdf->GetY();
-				$remaining_height = $page_height - $current_y - $margins['bottom'] - 10; // Leave some margin at bottom
-				
-				// Get image dimensions to calculate aspect ratio
-				$image_info = getimagesizefromstring( $image_data );
-				if ( $image_info ) {
-					$img_width = $image_info[0];
-					$img_height = $image_info[1];
-					$aspect_ratio = $img_width / $img_height;
-					
-					// Calculate dimensions maintaining aspect ratio
-					$display_width = $available_width;
-					$display_height = $display_width / $aspect_ratio;
-					
-					// If calculated height exceeds remaining space, scale down
-					if ( $display_height > $remaining_height ) {
-						$display_height = $remaining_height;
-						$display_width = $display_height * $aspect_ratio;
-					}
-					
-					// Center the image horizontally if it's smaller than available width
-					$x_position = $margins['left'] + ( $available_width - $display_width ) / 2;
-					
-					$pdf->Image( $temp_file, $x_position, $current_y, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
-				} else {
-					// Fallback to original method if we can't get image dimensions
-					$x_position = $margins['left'];
-					$pdf->Image( $temp_file, $x_position, $current_y, $available_width, 0, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
-				}
-				
-				// Clean up temporary file
-				unlink( $temp_file );
-			}
-		}
 
 
 
