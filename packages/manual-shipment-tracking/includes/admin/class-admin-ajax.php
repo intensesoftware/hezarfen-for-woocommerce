@@ -597,7 +597,7 @@ class Admin_Ajax {
 					// Before rotation: width=200, height=300
 					// After 90° counterclockwise rotation: width becomes 300, height becomes 200
 					$display_width = 130;  // This will become height after rotation
-					$display_height = 180; // This will become width after rotation
+					$display_height = 163; // This will become width after rotation
 					
 					// Simple positioning for 90-degree counterclockwise rotation
 					// Position the image so it appears at left edge after rotation
