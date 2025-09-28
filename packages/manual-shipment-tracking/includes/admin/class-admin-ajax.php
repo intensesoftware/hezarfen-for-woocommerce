@@ -612,7 +612,7 @@ class Admin_Ajax {
 					$pdf->Rotate(-90); // Rotate 90 degrees counterclockwise
 					
 					// Add the image at origin (it will be positioned correctly due to transformations)
-					$pdf->Image( $temp_file, 0, -40, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
+					$pdf->Image( $temp_file, 0, -18, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
 					
 					// Restore the graphic state
 					$pdf->StopTransform();
