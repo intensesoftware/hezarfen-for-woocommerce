@@ -731,9 +731,42 @@ class Admin_Ajax {
 					continue;
 				}
 				
-				// Format attribute name (remove pa_ prefix if present)
-				$display_key = str_replace( 'pa_', '', $key );
-				$display_key = ucfirst( str_replace( '-', ' ', $display_key ) );
+				// Format attribute name to be human readable
+				$display_key = $key;
+				
+				// Remove common prefixes
+				$display_key = str_replace( array( 'pa_', 'attribute_pa_', 'attribute_' ), '', $display_key );
+				
+				// Convert underscores and dashes to spaces
+				$display_key = str_replace( array( '_', '-' ), ' ', $display_key );
+				
+				// Convert to title case (capitalize each word)
+				$display_key = ucwords( strtolower( $display_key ) );
+				
+				// Handle common attribute names with better labels
+				$label_mappings = array(
+					'Size' => 'Size',
+					'Color' => 'Color',
+					'Colour' => 'Color',
+					'Material' => 'Material',
+					'Style' => 'Style',
+					'Weight' => 'Weight',
+					'Length' => 'Length',
+					'Width' => 'Width',
+					'Height' => 'Height',
+					'Brand' => 'Brand',
+					'Model' => 'Model',
+					'Type' => 'Type',
+					'Variant' => 'Variant',
+					'Option' => 'Option',
+					'Any Text Input' => 'Custom Text',
+					'Text Options' => 'Options'
+				);
+				
+				// Apply label mapping if exists
+				if ( isset( $label_mappings[ $display_key ] ) ) {
+					$display_key = $label_mappings[ $display_key ];
+				}
 				
 				$variants[] = $display_key . ': ' . $value;
 			}
