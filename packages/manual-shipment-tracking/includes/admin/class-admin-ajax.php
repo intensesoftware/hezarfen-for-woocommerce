@@ -663,14 +663,10 @@ class Admin_Ajax {
 		// Customer and Phone on same row
 		$pdf->SetFont( 'dejavusans', '', 8 );
 		$pdf->SetX( $left_col_x );
-		$pdf->Cell( 15, $line_height, self::ensure_utf8( __( 'Müşteri:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
-		$pdf->SetFont( 'dejavusans', 'B', 8 );
-		$customer_name = trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() );
-		$pdf->Cell( 30, $line_height, self::ensure_utf8( $customer_name ), 0, 0, 'L' );
 		$pdf->SetFont( 'dejavusans', '', 8 );
 		$pdf->Cell( 12, $line_height, self::ensure_utf8( __( 'Phone:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
 		$pdf->SetFont( 'dejavusans', 'B', 8 );
-		$phone = $order->get_billing_phone() ? $order->get_billing_phone() : __( 'N/A', 'hezarfen-for-woocommerce' );
+		$phone = $order->get_shipping_phone() ? $order->get_shipping_phone() : $order->get_billing_phone();
 		$pdf->Cell( 0, $line_height, self::ensure_utf8( $phone ), 0, 1, 'L' );
 		
 		$pdf->Ln( 2 );

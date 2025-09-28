@@ -28,7 +28,7 @@ class Courier_Hepsijet_Integration {
     private $consumer_secret;
 
     public function __construct() {
-        $this->relay_base_url = 'https://intense.com.tr/wp-json/hepsijet-relay/v1';
+        $this->relay_base_url = 'http://hezarfen.local/wp-json/hepsijet-relay/v1';
         $this->consumer_key = $this->get_setting( 'consumer_key', '' );
         $this->consumer_secret = $this->get_setting( 'consumer_secret', '' );
     }
@@ -670,7 +670,7 @@ class Courier_Hepsijet_Integration {
         
         
         // Use direct WordPress HTTP request since pricing endpoint is public
-        $url = 'https://intense.com.tr/wp-json/hepsijet-relay/v1/pricing';
+        $url = 'http://hezarfen.local/wp-json/hepsijet-relay/v1/pricing';
         
         $response = wp_remote_get($url, array(
             'timeout' => self::REQUEST_TIMEOUT
@@ -782,7 +782,7 @@ class Courier_Hepsijet_Integration {
      */
     public function get_kargogate_balance() {
         // Use Hepsijet ile Avantajlı Kargo Fiyatları namespace for wallet balance
-        $kargogate_url = 'https://intense.com.tr/wp-json/kargogate/v1/wallet/balance?format=formatted';
+        $kargogate_url = 'http://hezarfen.local/wp-json/kargogate/v1/wallet/balance?format=formatted';
         
         $headers = array(
             'Authorization' => 'Basic ' . base64_encode( $this->consumer_key . ':' . $this->consumer_secret ),
