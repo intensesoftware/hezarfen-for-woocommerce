@@ -750,6 +750,22 @@ class Admin_Ajax {
 		// Move to the end of the longer column
 		$pdf->SetY( max( $left_col_end_y, $right_col_end_y ) + 3 );
 		
+		// === ORDER NOTE SECTION ===
+		$order_note = $order->get_customer_note();
+		$pdf->Ln( 5 );
+		
+		// Order Note Header
+		$pdf->SetFont( 'dejavusans', 'B', 10 );
+		$pdf->Cell( 0, 5, self::ensure_utf8( __( 'Order Note', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
+		$pdf->Line( $pdf->GetX(), $pdf->GetY(), $pdf->GetX() + 170, $pdf->GetY() );
+		$pdf->Ln( 3 );
+		
+		// Order Note Content (show dash if empty)
+		$pdf->SetFont( 'dejavusans', '', 9 );
+		$note_content = ! empty( $order_note ) ? $order_note : '-';
+		$pdf->MultiCell( 0, 5, self::ensure_utf8( $note_content ), 0, 'L' );
+		$pdf->Ln( 3 );
+		
 		$pdf->Ln( 3 );
 
 

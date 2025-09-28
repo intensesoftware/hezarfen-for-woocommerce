@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2025-09-17 15:32+0000\n"
+"POT-Creation-Date: 2025-09-28 18:12+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #. %s plugin name
@@ -1305,6 +1305,15 @@ msgstr ""
 msgid "Modal"
 msgstr ""
 
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:666
+msgid "Müşteri:"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:673
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:734
+msgid "N/A"
+msgstr ""
+
 #: includes/class-hezarfen.php:82 includes/Checkout.php:536
 msgid "Neighborhood"
 msgstr ""
@@ -1414,6 +1423,10 @@ msgstr ""
 msgid "Order #%s - Customer Agreements Saved"
 msgstr ""
 
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:655
+msgid "Order #:"
+msgstr ""
+
 #: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:1095
 msgid "Order completed - shipment delivered"
 msgstr ""
@@ -1429,7 +1442,16 @@ msgstr ""
 #. Order Variables
 #: includes/contracts/core/class-post-order-processor.php:252
 #: includes/contracts/admin/class-contracts-settings.php:490
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:647
 msgid "Order Information"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:701
+msgid "Order Items"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:759
+msgid "Order Note"
 msgstr ""
 
 #: includes/class-sms-automation.php:380 includes/class-sms-automation.php:412
@@ -1537,6 +1559,10 @@ msgstr ""
 msgid "Payment on delivery is not supported"
 msgstr ""
 
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:738
+msgid "Payment:"
+msgstr ""
+
 #: includes/class-sms-automation.php:592
 msgid "Pending payment"
 msgstr ""
@@ -1549,6 +1575,10 @@ msgstr ""
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:640
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1161
 msgid "Phone Number"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:671
+msgid "Phone:"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1127
@@ -1588,6 +1618,10 @@ msgstr ""
 
 #: includes/class-sms-automation.php:593
 msgid "Processing"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:709
+msgid "Product"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-ptt.php:38
@@ -1995,6 +2029,10 @@ msgstr ""
 msgid "T.C. Identity Number"
 msgstr ""
 
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:659
+msgid "Tarih:"
+msgstr ""
+
 #: includes/contracts/admin/class-contracts-settings.php:496
 msgid "Tax amount"
 msgstr ""
@@ -2065,6 +2103,14 @@ msgstr ""
 msgid "Toggle password visibility"
 msgstr ""
 
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:710
+msgid "Total"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:744
+msgid "Total:"
+msgstr ""
+
 #: includes/class-hezarfen.php:75 includes/Checkout.php:519
 msgid "Town / City"
 msgstr ""
@@ -2080,7 +2126,7 @@ msgid "Tracking Information"
 msgstr ""
 
 #. %s billing email
-#: packages/manual-shipment-tracking/includes/email/class-email.php:58
+#: packages/manual-shipment-tracking/includes/email/class-email.php:59
 #, php-format
 msgid "Tracking information sent to %s"
 msgstr ""

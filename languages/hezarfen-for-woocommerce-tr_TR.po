@@ -6,7 +6,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2025-09-17 15:32+0000\n"
+"PO-Revision-Date: 2025-09-28 18:13+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -165,8 +165,9 @@ msgstr ""
 "{order_total}"
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:104
+#, fuzzy
 msgid "Aylık alt gönderim limiti yoktur"
-msgstr ""
+msgstr "Aylık alt gönderim limiti yoktur"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:173
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:383
@@ -1256,8 +1257,9 @@ msgstr ""
 "sayfamızdan ulaşabilirsiniz:"
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:118
+#, fuzzy
 msgid "Intense&Hepsijet İşbirliği"
-msgstr ""
+msgstr "Intense&Hepsijet İşbirliği"
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:815
 msgid "Invalid balance response"
@@ -1328,12 +1330,14 @@ msgid "Jetizz"
 msgstr "Jetizz"
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:111
+#, fuzzy
 msgid "Kargo adresinizden alınır"
-msgstr ""
+msgstr "Kargo adresinizden alınır"
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:97
+#, fuzzy
 msgid "Kargo anlaşması gerekmez"
-msgstr ""
+msgstr "Kargo anlaşması gerekmez"
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-kargo-turk.php:38
 msgid "Kargo Türk"
@@ -1460,6 +1464,17 @@ msgstr "Mesaj Şablonu:"
 msgid "Modal"
 msgstr "Modal"
 
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:666
+#, fuzzy
+msgid "Müşteri:"
+msgstr "Müşteri:"
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:673
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:734
+#, fuzzy
+msgid "N/A"
+msgstr "N/A"
+
 #: includes/class-hezarfen.php:82 includes/Checkout.php:536
 msgid "Neighborhood"
 msgstr "Mahalle"
@@ -1572,6 +1587,11 @@ msgstr "Beklemede"
 msgid "Order #%s - Customer Agreements Saved"
 msgstr "Sipariş #%s - Müşteri Sözleşmeleri Kaydedildi"
 
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:655
+#, fuzzy
+msgid "Order #:"
+msgstr "Sipariş numarası:"
+
 #: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:1095
 msgid "Order completed - shipment delivered"
 msgstr "Sipariş tamamlandı - gönderi teslim edildi"
@@ -1587,8 +1607,19 @@ msgstr "Sipariş tarihi"
 #. Order Variables
 #: includes/contracts/core/class-post-order-processor.php:252
 #: includes/contracts/admin/class-contracts-settings.php:490
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:647
 msgid "Order Information"
 msgstr "Sipariş Bilgileri"
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:701
+#, fuzzy
+msgid "Order Items"
+msgstr "Sipariş Kalemleri"
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:759
+#, fuzzy
+msgid "Order Note"
+msgstr "Sipariş Notu"
 
 #: includes/class-sms-automation.php:380 includes/class-sms-automation.php:412
 msgid "Order Number"
@@ -1699,6 +1730,11 @@ msgstr "Ödeme yöntemi"
 msgid "Payment on delivery is not supported"
 msgstr "Kapıda ödeme desteklenmiyor."
 
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:738
+#, fuzzy
+msgid "Payment:"
+msgstr "Ödeme:"
+
 #: includes/class-sms-automation.php:592
 msgid "Pending payment"
 msgstr "ödeme bekliyor"
@@ -1714,6 +1750,11 @@ msgstr "Bireysel"
 #| msgid "Phone Number:"
 msgid "Phone Number"
 msgstr "Telefon Numarası:"
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:671
+#, fuzzy
+msgid "Phone:"
+msgstr "Telefon:"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1127
 msgid "Please enter username and password first"
@@ -1758,6 +1799,11 @@ msgstr "Barkod etiketi hazırlama..."
 #: includes/class-sms-automation.php:593
 msgid "Processing"
 msgstr "Hazırlanıyor"
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:709
+#, fuzzy
+msgid "Product"
+msgstr "Ürün"
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-ptt.php:38
 msgid "PTT Kargo"
@@ -2183,6 +2229,11 @@ msgstr ""
 msgid "T.C. Identity Number"
 msgstr "T.C. Kimlik Numarası"
 
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:659
+#, fuzzy
+msgid "Tarih:"
+msgstr "Tarih:"
+
 #: includes/contracts/admin/class-contracts-settings.php:496
 msgid "Tax amount"
 msgstr "Vergi tutarı"
@@ -2268,6 +2319,16 @@ msgstr "Bugünün tarihi"
 msgid "Toggle password visibility"
 msgstr "Şifre görünülürlüğü"
 
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:710
+#, fuzzy
+msgid "Total"
+msgstr "Toplam"
+
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:744
+#, fuzzy
+msgid "Total:"
+msgstr "Toplam:"
+
 #: includes/class-hezarfen.php:75 includes/Checkout.php:519
 msgid "Town / City"
 msgstr "İlçe"
@@ -2283,7 +2344,7 @@ msgid "Tracking Information"
 msgstr "Kargo Takip Bilgileri"
 
 #. %s billing email
-#: packages/manual-shipment-tracking/includes/email/class-email.php:58
+#: packages/manual-shipment-tracking/includes/email/class-email.php:59
 #, php-format
 msgid "Tracking information sent to %s"
 msgstr "Müşterinin %s e-posta adresine kargo takip bilgileri gönderilmiştir."
