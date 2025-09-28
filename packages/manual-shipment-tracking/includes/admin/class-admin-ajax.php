@@ -632,10 +632,12 @@ class Admin_Ajax {
 		// === 2-COLUMN LAYOUT ===
 		
 		// Define column positions and widths
+		// Total available width is approximately 170 units (page width minus margins)
+		$total_width = 170;
 		$left_col_x = 15;
-		$left_col_width = 85;
-		$right_col_x = 105;
-		$right_col_width = 85;
+		$left_col_width = $total_width * 0.30; // 30% for Order Details
+		$right_col_x = $left_col_x + $left_col_width + 5; // 5 units gap between columns
+		$right_col_width = $total_width * 0.70; // 70% for Order Items
 		$line_height = 4;
 		$section_start_y = $pdf->GetY();
 		
@@ -649,13 +651,16 @@ class Admin_Ajax {
 		$pdf->Line( $left_col_x, $pdf->GetY(), $left_col_x + $left_col_width, $pdf->GetY() );
 		$pdf->Ln( 2 );
 		
-		// Order details - Order # and Date on same row
+		// Order details - Order # on first row
 		$pdf->SetFont( 'dejavusans', '', 8 );
 		$pdf->SetX( $left_col_x );
 		$pdf->Cell( 15, $line_height, self::ensure_utf8( __( 'Order #:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
 		$pdf->SetFont( 'dejavusans', 'B', 8 );
-		$pdf->Cell( 20, $line_height, self::ensure_utf8( $order->get_order_number() ), 0, 0, 'L' );
+		$pdf->Cell( 0, $line_height, self::ensure_utf8( $order->get_order_number() ), 0, 1, 'L' );
+		
+		// Date on second row
 		$pdf->SetFont( 'dejavusans', '', 8 );
+		$pdf->SetX( $left_col_x );
 		$pdf->Cell( 12, $line_height, self::ensure_utf8( __( 'Tarih:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
 		$pdf->SetFont( 'dejavusans', 'B', 8 );
 		$pdf->Cell( 0, $line_height, self::ensure_utf8( $order->get_date_created()->date( 'd/m/Y' ) ), 0, 1, 'L' );
@@ -702,8 +707,10 @@ class Admin_Ajax {
 		// Items table headers (no Qty column)
 		$pdf->SetFont( 'dejavusans', 'B', 8 );
 		$pdf->SetX( $right_col_x );
-		$pdf->Cell( 55, 4, self::ensure_utf8( __( 'Product', 'hezarfen-for-woocommerce' ) ), 1, 0, 'L' );
-		$pdf->Cell( 30, 4, self::ensure_utf8( __( 'Total', 'hezarfen-for-woocommerce' ) ), 1, 1, 'R' );
+		$product_col_width = $right_col_width - 35; // Product column takes most space
+		$total_col_width = 35; // Fixed width for total column
+		$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Product', 'hezarfen-for-woocommerce' ) ), 1, 0, 'L' );
+		$pdf->Cell( $total_col_width, 4, self::ensure_utf8( __( 'Total', 'hezarfen-for-woocommerce' ) ), 1, 1, 'R' );
 		
 		// Order items
 		$pdf->SetFont( 'dejavusans', '', 7 );
@@ -711,19 +718,55 @@ class Admin_Ajax {
 			$product_name = $item->get_name();
 			$quantity = $item->get_quantity();
 			
-			// Add quantity to product name
-			$product_with_qty = $product_name . ' x ' . $quantity;
+			// Get product variants/attributes
+			$variant_info = '';
+			$meta_data = $item->get_meta_data();
+			$variants = array();
 			
-			// Truncate long product names with quantity
-			if ( strlen( $product_with_qty ) > 35 ) {
-				$base_length = 35 - strlen( ' x ' . $quantity );
-				$product_name = substr( $product_name, 0, $base_length - 3 ) . '...';
-				$product_with_qty = $product_name . ' x ' . $quantity;
+			foreach ( $meta_data as $meta ) {
+				$key = $meta->get_data()['key'];
+				$value = $meta->get_data()['value'];
+				
+				// Skip internal WooCommerce meta keys
+				if ( strpos( $key, '_' ) === 0 ) {
+					continue;
+				}
+				
+				// Format attribute name (remove pa_ prefix if present)
+				$display_key = str_replace( 'pa_', '', $key );
+				$display_key = ucfirst( str_replace( '-', ' ', $display_key ) );
+				
+				$variants[] = $display_key . ': ' . $value;
+			}
+			
+			if ( ! empty( $variants ) ) {
+				$variant_info = ' (' . implode( ', ', $variants ) . ')';
+			}
+			
+			// Add quantity to product name with variants
+			$product_with_qty = $product_name . $variant_info . ' x ' . $quantity;
+			
+			// Truncate long product names with quantity and variants
+			// Calculate character limit based on column width (approximately 1.5 chars per unit)
+			$char_limit = intval( $product_col_width * 1.5 );
+			if ( strlen( $product_with_qty ) > $char_limit ) {
+				// Calculate available space for product name
+				$variant_and_qty_length = strlen( $variant_info . ' x ' . $quantity );
+				$available_length = $char_limit - $variant_and_qty_length;
+				
+				if ( $available_length > 15 ) {
+					$product_name = substr( $product_name, 0, $available_length - 3 ) . '...';
+				} else {
+					// If variants are too long, truncate them too
+					$product_name = substr( $product_name, 0, 25 ) . '...';
+					$variant_info = substr( $variant_info, 0, 20 ) . '...)';
+				}
+				$product_with_qty = $product_name . $variant_info . ' x ' . $quantity;
 			}
 			
 			$pdf->SetX( $right_col_x );
-			$pdf->Cell( 55, 4, self::ensure_utf8( $product_with_qty ), 1, 0, 'L' );
-			$pdf->Cell( 30, 4, self::format_price_for_pdf( $item->get_total() ), 1, 1, 'R' );
+			$pdf->Cell( $product_col_width, 4, self::ensure_utf8( $product_with_qty ), 1, 0, 'L' );
+			$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( $item->get_total() ), 1, 1, 'R' );
 		}
 		
 		// Payment method on separate line
@@ -731,14 +774,14 @@ class Admin_Ajax {
 		
 		$pdf->SetFont( 'dejavusans', '', 7 );
 		$pdf->SetX( $right_col_x );
-		$pdf->Cell( 55, 4, self::ensure_utf8( __( 'Payment:', 'hezarfen-for-woocommerce' ) ), 1, 0, 'R' );
-		$pdf->Cell( 30, 4, self::ensure_utf8( $payment_method ), 1, 1, 'R' );
+		$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Payment:', 'hezarfen-for-woocommerce' ) ), 1, 0, 'R' );
+		$pdf->Cell( $total_col_width, 4, self::ensure_utf8( $payment_method ), 1, 1, 'R' );
 		
 		// Order total
 		$pdf->SetFont( 'dejavusans', 'B', 8 );
 		$pdf->SetX( $right_col_x );
-		$pdf->Cell( 55, 5, self::ensure_utf8( __( 'Total:', 'hezarfen-for-woocommerce' ) ), 1, 0, 'R' );
-		$pdf->Cell( 30, 5, self::format_price_for_pdf( $order->get_total() ), 1, 1, 'R' );
+		$pdf->Cell( $product_col_width, 5, self::ensure_utf8( __( 'Total:', 'hezarfen-for-woocommerce' ) ), 1, 0, 'R' );
+		$pdf->Cell( $total_col_width, 5, self::format_price_for_pdf( $order->get_total() ), 1, 1, 'R' );
 		
 		// Store right column end position
 		$right_col_end_y = $pdf->GetY();
