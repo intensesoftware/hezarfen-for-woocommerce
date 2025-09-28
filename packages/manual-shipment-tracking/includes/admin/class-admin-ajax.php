@@ -596,60 +596,29 @@ class Admin_Ajax {
 					// Fixed dimensions: 200x300 where X-axis after rotation should be 300
 					// Before rotation: width=200, height=300
 					// After 90° counterclockwise rotation: width becomes 300, height becomes 200
-					$display_width = 200;  // This will become height after rotation
-					$display_height = 300; // This will become width after rotation
+					$display_width = 130;  // This will become height after rotation
+					$display_height = 195; // This will become width after rotation
 					
-					// After rotation, the actual space occupied
-					$actual_width_after_rotation = 300;  // X-axis as requested
-					$actual_height_after_rotation = 200; // Y-axis
-					
-					// For 90-degree counterclockwise rotation, position at left edge
-					// After rotation, the image will extend from left edge
-					$x_position = 0; // Start from left edge of page
-					$y_position = $current_y + $display_width; // Move down by original width (200)
+					// Simple positioning for 90-degree counterclockwise rotation
+					// Position the image so it appears at left edge after rotation
+					$x_position = 0;
+					$y_position = $current_y;
 					
 					// Save the current graphic state
 					$pdf->StartTransform();
 					
-					// Apply rotation around the top-left corner of where the image should appear
-					$pdf->Rotate(-90, $x_position, $y_position);
+					// Translate to the desired position, rotate, then place the image
+					$pdf->Translate($display_width, $current_y); // Move right by width (200) and down to current Y
+					$pdf->Rotate(-90); // Rotate 90 degrees counterclockwise
 					
-					// Add the image
-					$pdf->Image( $temp_file, $x_position, $y_position, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
+					// Add the image at origin (it will be positioned correctly due to transformations)
+					$pdf->Image( $temp_file, 0, -40, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
 					
 					// Restore the graphic state
 					$pdf->StopTransform();
 					
 					// Move Y position to after the barcode (use the actual height after rotation)
-					$pdf->SetY( $current_y + $actual_height_after_rotation );
-				} else {
-					// Fallback - use same fixed dimensions as main case
-					// Fixed dimensions: 200x300 where X-axis after rotation should be 300
-					$display_width = 200;  // This will become height after rotation
-					$display_height = 300; // This will become width after rotation
-					
-					// After rotation, the actual space occupied
-					$actual_width_after_rotation = 300;  // X-axis as requested
-					$actual_height_after_rotation = 200; // Y-axis
-					
-					// For 90-degree counterclockwise rotation, adjust the starting position
-					$x_position = $display_height; // Move right by the original height (300)
-					$y_position = $current_y; // Keep original Y position
-					
-					// Save the current graphic state
-					$pdf->StartTransform();
-					
-					// Apply rotation around the top-left corner of where the image should appear
-					$pdf->Rotate(-90, $x_position, $y_position);
-					
-					// Use the fixed height dimension
-					$pdf->Image( $temp_file, $x_position, $y_position, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
-					
-					// Restore the graphic state
-					$pdf->StopTransform();
-					
-					// Move Y position using the actual height after rotation
-					$pdf->SetY( $current_y + $actual_height_after_rotation );
+					$pdf->SetY( $current_y + $display_width );
 				}
 				
 				// Clean up temporary file
