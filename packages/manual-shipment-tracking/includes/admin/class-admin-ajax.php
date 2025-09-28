@@ -808,6 +808,12 @@ class Admin_Ajax {
 			// Move to next row (MultiCell already moved Y position)
 		}
 		
+		// Subtotal
+		$pdf->SetFont( 'dejavusans', '', 7 );
+		$pdf->SetX( $right_col_x );
+		$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Subtotal:', 'hezarfen-for-woocommerce' ) ), 1, 0, 'R' );
+		$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( $order->get_subtotal() ), 1, 1, 'R' );
+		
 		// Payment method on separate line
 		$payment_method = $order->get_payment_method_title() ? $order->get_payment_method_title() : __( 'N/A', 'hezarfen-for-woocommerce' );
 		
@@ -815,6 +821,18 @@ class Admin_Ajax {
 		$pdf->SetX( $right_col_x );
 		$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Payment:', 'hezarfen-for-woocommerce' ) ), 1, 0, 'R' );
 		$pdf->Cell( $total_col_width, 4, self::ensure_utf8( $payment_method ), 1, 1, 'R' );
+		
+		// Order fees (if any)
+		$fees = $order->get_fees();
+		if ( ! empty( $fees ) ) {
+			foreach ( $fees as $fee ) {
+				$pdf->SetFont( 'dejavusans', '', 7 );
+				$pdf->SetX( $right_col_x );
+				$fee_name = $fee->get_name() ? $fee->get_name() : __( 'Fee', 'hezarfen-for-woocommerce' );
+				$pdf->Cell( $product_col_width, 4, self::ensure_utf8( $fee_name . ':', 'hezarfen-for-woocommerce' ), 1, 0, 'R' );
+				$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( $fee->get_total() ), 1, 1, 'R' );
+			}
+		}
 		
 		// Order total
 		$pdf->SetFont( 'dejavusans', 'B', 8 );

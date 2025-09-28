@@ -6,7 +6,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2025-09-28 18:22+0000\n"
+"PO-Revision-Date: 2025-09-28 19:12+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -895,6 +895,10 @@ msgstr "Bilgiler kaydedilemedi"
 msgid "FedEx"
 msgstr "FedEx"
 
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:831
+msgid "Fee"
+msgstr "Ücret"
+
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:244
 msgid "Fetching data.."
 msgstr "Veri çekiliyor.."
@@ -1464,13 +1468,7 @@ msgstr "Mesaj Şablonu:"
 msgid "Modal"
 msgstr "Modal"
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:666
-#, fuzzy
-msgid "Müşteri:"
-msgstr "Müşteri:"
-
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:673
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:734
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:818
 #, fuzzy
 msgid "N/A"
 msgstr "N/A"
@@ -1587,7 +1585,7 @@ msgstr "Beklemede"
 msgid "Order #%s - Customer Agreements Saved"
 msgstr "Sipariş #%s - Müşteri Sözleşmeleri Kaydedildi"
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:655
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:657
 msgid "Order #:"
 msgstr "Sipariş no:"
 
@@ -1606,16 +1604,16 @@ msgstr "Sipariş tarihi"
 #. Order Variables
 #: includes/contracts/core/class-post-order-processor.php:252
 #: includes/contracts/admin/class-contracts-settings.php:490
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:647
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:649
 msgid "Order Information"
 msgstr "Sipariş Bilgileri"
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:701
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:702
 #, fuzzy
 msgid "Order Items"
 msgstr "Sipariş Kalemleri"
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:759
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:855
 #, fuzzy
 msgid "Order Note"
 msgstr "Sipariş Notu"
@@ -1729,7 +1727,7 @@ msgstr "Ödeme yöntemi"
 msgid "Payment on delivery is not supported"
 msgstr "Kapıda ödeme desteklenmiyor."
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:738
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:822
 #, fuzzy
 msgid "Payment:"
 msgstr "Ödeme:"
@@ -1750,7 +1748,7 @@ msgstr "Bireysel"
 msgid "Phone Number"
 msgstr "Telefon Numarası:"
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:671
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:672
 #, fuzzy
 msgid "Phone:"
 msgstr "Telefon:"
@@ -1799,7 +1797,7 @@ msgstr "Barkod etiketi hazırlama..."
 msgid "Processing"
 msgstr "Hazırlanıyor"
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:709
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:712
 #, fuzzy
 msgid "Product"
 msgstr "Ürün"
@@ -2208,6 +2206,10 @@ msgstr "Hesabım > Adres Düzenleme sayfalarındaki adres alanlarını sırala?"
 msgid "Start creating shipments with automatic tracking"
 msgstr "Otomatik takip ile gönderi oluşturmaya başlayın"
 
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:814
+msgid "Subtotal:"
+msgstr "Ara toplam:"
+
 #: packages/manual-shipment-tracking/includes/courier-companies/class-surat.php:38
 msgid "Sürat Kargo"
 msgstr "Sürat Kargo"
@@ -2228,7 +2230,7 @@ msgstr ""
 msgid "T.C. Identity Number"
 msgstr "T.C. Kimlik Numarası"
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:659
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:664
 #, fuzzy
 msgid "Tarih:"
 msgstr "Tarih:"
@@ -2318,12 +2320,12 @@ msgstr "Bugünün tarihi"
 msgid "Toggle password visibility"
 msgstr "Şifre görünülürlüğü"
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:710
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:713
 #, fuzzy
 msgid "Total"
 msgstr "Toplam"
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:744
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:840
 #, fuzzy
 msgid "Total:"
 msgstr "Toplam:"
