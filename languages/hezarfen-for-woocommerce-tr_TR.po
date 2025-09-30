@@ -6,7 +6,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2025-09-30 21:34+0000\n"
+"PO-Revision-Date: 2025-09-30 21:42+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr ""
 msgid "850xxxxxxx, 312XXXXXXX etc."
 msgstr "850xxxxxxx, 312XXXXXXX vb."
 
-#: includes/contracts/admin/class-order-agreements.php:132
+#: includes/contracts/admin/class-order-agreements.php:188
 msgid "Accepted:"
 msgstr "Kabul Edildi:"
 
@@ -45,7 +45,7 @@ msgstr "Eylem"
 msgid "Action Type"
 msgstr "Eylem Türü"
 
-#: includes/contracts/admin/class-order-agreements.php:84
+#: includes/contracts/admin/class-order-agreements.php:140
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:540
 msgid "Actions"
 msgstr "İşlemler"
@@ -97,13 +97,22 @@ msgstr "Sözleşme Kabul Edildi:"
 msgid "Agreement Creation Timing"
 msgstr "Sözleşme Oluşturma Zamanlaması"
 
-#: includes/contracts/admin/class-order-agreements.php:81
+#: includes/contracts/admin/class-order-agreements.php:137
 msgid "Agreement Name"
 msgstr "Sözleşme Adı"
 
 #: includes/contracts/frontend/class-customer-agreements.php:106
 msgid "Agreements"
 msgstr "Sözleşmeler"
+
+#: includes/contracts/admin/class-order-agreements.php:115
+msgid "Agreements are created immediately when a new order is placed."
+msgstr "Sözleşmeler, yeni bir sipariş verildiğinde hemen oluşturulur."
+
+#: includes/contracts/admin/class-order-agreements.php:113
+msgid "Agreements will be created when the order status changes to Processing."
+msgstr ""
+"Sipariş durumu Hazırlanıyor olarak değiştiğinde sözleşmeler oluşturulacaktır."
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:371
 msgid "An error occured when installing and activating the PandaSMS plugin."
@@ -317,6 +326,10 @@ msgstr "CC"
 msgid "CDEK"
 msgstr "CDEK"
 
+#: includes/contracts/admin/class-order-agreements.php:121
+msgid "Change Agreement Settings"
+msgstr "Sözleşme Ayarlarını Değiştirme"
+
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:364
 msgid "Check"
 msgstr "Kontrol Et"
@@ -505,6 +518,10 @@ msgstr "Consumer Secret"
 msgid "Consumer Secret from Hepsijet API Relay plugin"
 msgstr "Hepsijet API Relay eklentisinden Tüketici Gizli Anahtarı"
 
+#: includes/contracts/admin/class-order-agreements.php:80
+msgid "Contact Intense Support"
+msgstr "Intense Yazılım - Destek ile İletişime Geçin"
+
 #: includes/contracts/admin/class-contracts-settings.php:79
 #, fuzzy
 msgid "Contract Display Settings"
@@ -528,6 +545,10 @@ msgstr "Sözleşmeler ve Anlaşmalar"
 #: includes/contracts/core/class-contract-renderer.php:445
 msgid "Contracts and Forms"
 msgstr "Sözleşmeler ve Formlar"
+
+#: includes/contracts/admin/class-order-agreements.php:72
+msgid "Contracts table not found in database!"
+msgstr "Sözleşmeler tablosu veritabanında bulunamadı!"
 
 #: includes/contracts/admin/class-contracts-settings.php:543
 msgid "Corporate tax number"
@@ -583,7 +604,7 @@ msgid "Current Variables"
 msgstr "Mevcut Değişkenler"
 
 #: includes/contracts/admin/class-order-agreements.php:40
-#: includes/contracts/admin/class-order-agreements.php:114
+#: includes/contracts/admin/class-order-agreements.php:170
 msgid "Customer Agreements"
 msgstr "Müşteri Sözleşmeleri"
 
@@ -615,7 +636,7 @@ msgstr "Müşteri Telefon"
 msgid "Customer:"
 msgstr "Müşteri:"
 
-#: includes/contracts/admin/class-order-agreements.php:82
+#: includes/contracts/admin/class-order-agreements.php:138
 msgid "Date Accepted"
 msgstr "Kabul Tarihi"
 
@@ -1288,13 +1309,13 @@ msgstr "Fatura tipi"
 msgid "Invoice type"
 msgstr "Fatura tipi"
 
-#: includes/contracts/admin/class-order-agreements.php:83
+#: includes/contracts/admin/class-order-agreements.php:139
 msgid "IP Address"
 msgstr "IP Adresi"
 
 #: includes/contracts/core/class-post-order-processor.php:257
 #: includes/contracts/frontend/class-customer-agreements.php:189
-#: includes/contracts/admin/class-order-agreements.php:136
+#: includes/contracts/admin/class-order-agreements.php:192
 msgid "IP Address:"
 msgstr "IP Adresi:"
 
@@ -1537,7 +1558,7 @@ msgstr "Hayır"
 msgid "No agreements were saved for this order."
 msgstr "Bu sipariş için hiçbir sözleşme kaydedilmedi."
 
-#: includes/contracts/admin/class-order-agreements.php:67
+#: includes/contracts/admin/class-order-agreements.php:109
 msgid "No customer agreements found for this order."
 msgstr "Bu sipariş için müşteri sözleşmesi bulunamadı."
 
@@ -1765,8 +1786,9 @@ msgstr "Lütfen şifreleme anahtarını wp-config.php dosyasına yerleştirin."
 msgid "Please select a message header"
 msgstr "Lütfen gönderim başlığını seçiniz"
 
-#: includes/contracts/admin/class-order-agreements.php:69
-#: includes/contracts/admin/class-order-agreements.php:104
+#: includes/contracts/admin/class-order-agreements.php:84
+#: includes/contracts/admin/class-order-agreements.php:125
+#: includes/contracts/admin/class-order-agreements.php:160
 msgid "Powered by"
 msgstr "Powered by"
 
@@ -2253,6 +2275,16 @@ msgstr "TC Kimlik No hatalı"
 msgid "Thank you for supporting Hezarfen! 🌟"
 msgstr "Hezarfen'i desteklediğiniz için teşekkürler! 🌟"
 
+#: includes/contracts/admin/class-order-agreements.php:75
+msgid ""
+"The customer agreements database table has not been created. This may happen "
+"if the plugin was not activated correctly or if there was an issue during "
+"installation."
+msgstr ""
+"Müşteri sözleşmeleri veritabanı tablosu bulunamadı. Bu durum, eklenti doğru "
+"şekilde etkinleştirilmemişse veya kurulum sırasında bir sorun yaşanmışsa "
+"meydana gelebilir."
+
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:521
 msgid "There are no tracking numbers added to the tracking list."
 msgstr "Gönderi listesine herhangi bir gönderi detayı eklenmedi"
@@ -2414,7 +2446,7 @@ msgstr ""
 "WordPress sayfalarını sözleşme şablonları olarak kullanın. + butonu ile yeni "
 "sözleşmeler ekleyebilir ve X butonu ile silebilirsiniz."
 
-#: includes/contracts/admin/class-order-agreements.php:142
+#: includes/contracts/admin/class-order-agreements.php:198
 msgid "User Agent:"
 msgstr "Kullanıcı Aracısı:"
 
@@ -2422,7 +2454,7 @@ msgstr "Kullanıcı Aracısı:"
 msgid "Username and password are required"
 msgstr "Kullanıcı adı ve şifre gereklidir"
 
-#: includes/contracts/admin/class-order-agreements.php:95
+#: includes/contracts/admin/class-order-agreements.php:151
 msgid "View"
 msgstr "Görüntüle"
 
@@ -2454,11 +2486,13 @@ msgstr ""
 "Hezarfen'in nasıl kullanılacağını öğrenmek için eğitim videolarını izleyin"
 
 #: includes/contracts/admin/class-contracts-settings.php:73
+#: includes/contracts/admin/class-order-agreements.php:102
 #, fuzzy
 msgid "When new order is placed"
 msgstr "Yeni sipariş verildiğinde"
 
 #: includes/contracts/admin/class-contracts-settings.php:72
+#: includes/contracts/admin/class-order-agreements.php:101
 msgid "When order status becomes Processing"
 msgstr "Sipariş durumu Hazırlanıyor olduğunda"
 

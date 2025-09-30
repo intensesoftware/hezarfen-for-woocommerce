@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2025-09-30 20:58+0000\n"
+"POT-Creation-Date: 2025-09-30 21:40+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #. %s plugin name
@@ -21,7 +21,7 @@ msgstr ""
 msgid "850xxxxxxx, 312XXXXXXX etc."
 msgstr ""
 
-#: includes/contracts/admin/class-order-agreements.php:132
+#: includes/contracts/admin/class-order-agreements.php:188
 msgid "Accepted:"
 msgstr ""
 
@@ -38,7 +38,7 @@ msgstr ""
 msgid "Action Type"
 msgstr ""
 
-#: includes/contracts/admin/class-order-agreements.php:84
+#: includes/contracts/admin/class-order-agreements.php:140
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:540
 msgid "Actions"
 msgstr ""
@@ -87,12 +87,20 @@ msgstr ""
 msgid "Agreement Creation Timing"
 msgstr ""
 
-#: includes/contracts/admin/class-order-agreements.php:81
+#: includes/contracts/admin/class-order-agreements.php:137
 msgid "Agreement Name"
 msgstr ""
 
 #: includes/contracts/frontend/class-customer-agreements.php:106
 msgid "Agreements"
+msgstr ""
+
+#: includes/contracts/admin/class-order-agreements.php:115
+msgid "Agreements are created immediately when a new order is placed."
+msgstr ""
+
+#: includes/contracts/admin/class-order-agreements.php:113
+msgid "Agreements will be created when the order status changes to Processing."
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:371
@@ -292,6 +300,10 @@ msgstr ""
 msgid "CDEK"
 msgstr ""
 
+#: includes/contracts/admin/class-order-agreements.php:121
+msgid "Change Agreement Settings"
+msgstr ""
+
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:364
 msgid "Check"
 msgstr ""
@@ -461,6 +473,10 @@ msgstr ""
 msgid "Consumer Secret from Hepsijet API Relay plugin"
 msgstr ""
 
+#: includes/contracts/admin/class-order-agreements.php:80
+msgid "Contact Intense Support"
+msgstr ""
+
 #: includes/contracts/admin/class-contracts-settings.php:79
 msgid "Contract Display Settings"
 msgstr ""
@@ -481,6 +497,10 @@ msgstr ""
 #: includes/contracts/core/class-contract-renderer.php:146
 #: includes/contracts/core/class-contract-renderer.php:445
 msgid "Contracts and Forms"
+msgstr ""
+
+#: includes/contracts/admin/class-order-agreements.php:72
+msgid "Contracts table not found in database!"
 msgstr ""
 
 #: includes/contracts/admin/class-contracts-settings.php:543
@@ -537,7 +557,7 @@ msgid "Current Variables"
 msgstr ""
 
 #: includes/contracts/admin/class-order-agreements.php:40
-#: includes/contracts/admin/class-order-agreements.php:114
+#: includes/contracts/admin/class-order-agreements.php:170
 msgid "Customer Agreements"
 msgstr ""
 
@@ -569,7 +589,7 @@ msgstr ""
 msgid "Customer:"
 msgstr ""
 
-#: includes/contracts/admin/class-order-agreements.php:82
+#: includes/contracts/admin/class-order-agreements.php:138
 msgid "Date Accepted"
 msgstr ""
 
@@ -1151,13 +1171,13 @@ msgstr ""
 msgid "Invoice type"
 msgstr ""
 
-#: includes/contracts/admin/class-order-agreements.php:83
+#: includes/contracts/admin/class-order-agreements.php:139
 msgid "IP Address"
 msgstr ""
 
 #: includes/contracts/core/class-post-order-processor.php:257
 #: includes/contracts/frontend/class-customer-agreements.php:189
-#: includes/contracts/admin/class-order-agreements.php:136
+#: includes/contracts/admin/class-order-agreements.php:192
 msgid "IP Address:"
 msgstr ""
 
@@ -1376,7 +1396,7 @@ msgstr ""
 msgid "No agreements were saved for this order."
 msgstr ""
 
-#: includes/contracts/admin/class-order-agreements.php:67
+#: includes/contracts/admin/class-order-agreements.php:109
 msgid "No customer agreements found for this order."
 msgstr ""
 
@@ -1590,8 +1610,9 @@ msgstr ""
 msgid "Please select a message header"
 msgstr ""
 
-#: includes/contracts/admin/class-order-agreements.php:69
-#: includes/contracts/admin/class-order-agreements.php:104
+#: includes/contracts/admin/class-order-agreements.php:84
+#: includes/contracts/admin/class-order-agreements.php:125
+#: includes/contracts/admin/class-order-agreements.php:160
 msgid "Powered by"
 msgstr ""
 
@@ -2056,6 +2077,13 @@ msgstr ""
 msgid "Thank you for supporting Hezarfen! 🌟"
 msgstr ""
 
+#: includes/contracts/admin/class-order-agreements.php:75
+msgid ""
+"The customer agreements database table has not been created. This may happen "
+"if the plugin was not activated correctly or if there was an issue during "
+"installation."
+msgstr ""
+
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:521
 msgid "There are no tracking numbers added to the tracking list."
 msgstr ""
@@ -2195,7 +2223,7 @@ msgid ""
 "the + button and delete them with the X button."
 msgstr ""
 
-#: includes/contracts/admin/class-order-agreements.php:142
+#: includes/contracts/admin/class-order-agreements.php:198
 msgid "User Agent:"
 msgstr ""
 
@@ -2203,7 +2231,7 @@ msgstr ""
 msgid "Username and password are required"
 msgstr ""
 
-#: includes/contracts/admin/class-order-agreements.php:95
+#: includes/contracts/admin/class-order-agreements.php:151
 msgid "View"
 msgstr ""
 
@@ -2233,10 +2261,12 @@ msgid "Watch training videos to learn how to use Hezarfen"
 msgstr ""
 
 #: includes/contracts/admin/class-contracts-settings.php:73
+#: includes/contracts/admin/class-order-agreements.php:102
 msgid "When new order is placed"
 msgstr ""
 
 #: includes/contracts/admin/class-contracts-settings.php:72
+#: includes/contracts/admin/class-order-agreements.php:101
 msgid "When order status becomes Processing"
 msgstr ""
 
