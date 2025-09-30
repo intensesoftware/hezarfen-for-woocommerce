@@ -813,45 +813,52 @@ class Admin_Ajax {
 			// Move to next row (MultiCell already moved Y position)
 		}
 		
-		// Subtotal
+		// === ORDER TOTALS (matching WooCommerce native format exactly) ===
+		
+		// Items Subtotal
 		$pdf->SetFont( 'dejavusans', '', 11 );
 		$pdf->SetX( $right_col_x );
-		$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Subtotal:', 'hezarfen-for-woocommerce' ) ), 1, 0, 'R' );
+		$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Items Subtotal:', 'woocommerce' ) ), 1, 0, 'R' );
 		$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( $order->get_subtotal() ), 1, 1, 'R' );
 		
-		// Payment method on separate line
-		$payment_method = $order->get_payment_method_title() ? $order->get_payment_method_title() : __( 'N/A', 'hezarfen-for-woocommerce' );
+		// Coupon(s) - if discount > 0
+		if ( $order->get_total_discount() > 0 ) {
+			$pdf->SetFont( 'dejavusans', '', 11 );
+			$pdf->SetX( $right_col_x );
+			$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Coupon(s):', 'woocommerce' ) ), 1, 0, 'R' );
+			$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( -$order->get_total_discount() ), 1, 1, 'R' );
+		}
 		
-		$pdf->SetFont( 'dejavusans', '', 11 );
-		$pdf->SetX( $right_col_x );
-		$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Payment:', 'hezarfen-for-woocommerce' ) ), 1, 0, 'R' );
-		$pdf->Cell( $total_col_width, 4, self::ensure_utf8( $payment_method ), 1, 1, 'R' );
+		// Fees - if total fees > 0
+		if ( $order->get_total_fees() > 0 ) {
+			$pdf->SetFont( 'dejavusans', '', 11 );
+			$pdf->SetX( $right_col_x );
+			$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Fees:', 'woocommerce' ) ), 1, 0, 'R' );
+			$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( $order->get_total_fees() ), 1, 1, 'R' );
+		}
 		
-		// Order fees (if any)
-		$fees = $order->get_fees();
-		if ( ! empty( $fees ) ) {
-			foreach ( $fees as $fee ) {
+		// Shipping - if shipping methods exist
+		if ( $order->get_shipping_methods() ) {
+			$pdf->SetFont( 'dejavusans', '', 11 );
+			$pdf->SetX( $right_col_x );
+			$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Shipping:', 'woocommerce' ) ), 1, 0, 'R' );
+			$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( $order->get_shipping_total() ), 1, 1, 'R' );
+		}
+		
+		// Tax - if tax enabled
+		if ( wc_tax_enabled() ) {
+			foreach ( $order->get_tax_totals() as $code => $tax_total ) {
 				$pdf->SetFont( 'dejavusans', '', 11 );
 				$pdf->SetX( $right_col_x );
-				$fee_name = $fee->get_name() ? $fee->get_name() : __( 'Fee', 'hezarfen-for-woocommerce' );
-				
-				// Clean fee name - decode HTML entities and fix currency symbols
-				$fee_name = str_replace( 
-					array( '&#8378;', '&lira;', '&#36;', '&#8364;', '&euro;', '&pound;' ), 
-					array( '₺', '₺', '$', '€', '€', '£' ), 
-					$fee_name 
-				);
-				$fee_name = html_entity_decode( $fee_name, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
-				
-				$pdf->Cell( $product_col_width, 4, self::ensure_utf8( $fee_name . ':', 'hezarfen-for-woocommerce' ), 1, 0, 'R' );
-				$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( $fee->get_total() ), 1, 1, 'R' );
+				$pdf->Cell( $product_col_width, 4, self::ensure_utf8( $tax_total->label . ':' ), 1, 0, 'R' );
+				$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( wc_round_tax_total( $tax_total->amount ) ), 1, 1, 'R' );
 			}
 		}
 		
-		// Order total
+		// Order Total
 		$pdf->SetFont( 'dejavusans', 'B', 14 );
 		$pdf->SetX( $right_col_x );
-		$pdf->Cell( $product_col_width, 5, self::ensure_utf8( __( 'Total:', 'hezarfen-for-woocommerce' ) ), 1, 0, 'R' );
+		$pdf->Cell( $product_col_width, 5, self::ensure_utf8( __( 'Order Total', 'woocommerce' ) . ':' ), 1, 0, 'R' );
 		$pdf->Cell( $total_col_width, 5, self::format_price_for_pdf( $order->get_total() ), 1, 1, 'R' );
 		
 		// Store right column end position
