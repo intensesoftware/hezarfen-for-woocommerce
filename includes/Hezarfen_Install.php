@@ -20,13 +20,21 @@ class Hezarfen_Install {
 	 * @return void
 	 */
 	public static function install() {
+		// Get current stored versions
+		$stored_db_version = get_option( 'hezarfen_db_version', '0.0' );
+		
+		if ( 
+		    version_compare( $stored_db_version, WC_HEZARFEN_VERSION, '>=' ) ) {
+			return;
+		}
+		
 		self::update_version();
-
-		self::update_db_version();
 		
 		self::migrate_legacy_sms_settings();
 		
 		self::setup_mss_database();
+		
+		self::update_db_version();
 	}
 	
 	/**
@@ -151,7 +159,7 @@ class Hezarfen_Install {
 		$current_db_version = get_option( 'hezarfen_db_version', '0.0' );
 		
 		// Only create MSS table if we're upgrading to v2.5.0 or later
-		if ( version_compare( $current_db_version, '2.5.0', '<' ) ) {
+		if ( version_compare( $current_db_version, '2.7.0', '<' ) ) {
 			$table_name = $wpdb->prefix . 'hezarfen_contracts';
 			
 			// Create dynamic contracts table (v2.5.0 - fully dynamic agreements)

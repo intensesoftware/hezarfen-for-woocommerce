@@ -49,12 +49,10 @@ class Hezarfen {
 
 		register_activation_hook( WC_HEZARFEN_FILE, array( 'Hezarfen_Install', 'install' ) );
 
+		add_action( 'init', array( 'Hezarfen_Install', 'install' ) );
 		add_action( 'plugins_loaded', array( $this, 'check_addons_and_show_notices' ) );
 		add_action( 'plugins_loaded', array( $this, 'define_constants' ) );
 		add_action( 'admin_notices', array( $this, 'show_migration_notice' ) );
-		
-		// Trigger SMS migration on admin init to catch plugin updates
-		add_action( 'admin_init', array( 'Hezarfen_Install', 'migrate_legacy_sms_settings' ) );
 		add_action( 'plugins_loaded', array( $this, 'force_enable_address2_field' ) );
 		add_filter( 'woocommerce_get_settings_pages', array( $this, 'add_hezarfen_setting_page' ) );
 		add_filter( 'woocommerce_get_country_locale', array( $this, 'modify_tr_locale' ), PHP_INT_MAX - 2 );
