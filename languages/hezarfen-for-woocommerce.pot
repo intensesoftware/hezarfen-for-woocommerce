@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2025-09-28 19:12+0000\n"
+"POT-Creation-Date: 2025-09-30 20:58+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #. %s plugin name
@@ -169,7 +169,7 @@ msgstr ""
 msgid "BCC"
 msgstr ""
 
-#: includes/class-hezarfen.php:142
+#: includes/class-hezarfen.php:140
 msgid ""
 "Because the Woocommerce Checkout Blocks feature is active on your website, "
 "<strong>Hezarfen for Woocommerce</strong> plugin doesn't work on the "
@@ -836,10 +836,6 @@ msgstr ""
 msgid "FedEx"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:831
-msgid "Fee"
-msgstr ""
-
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:244
 msgid "Fetching data.."
 msgstr ""
@@ -974,7 +970,7 @@ msgstr ""
 msgid "Hezarfen Invoice Fields"
 msgstr ""
 
-#: includes/class-hezarfen.php:246
+#: includes/class-hezarfen.php:244
 msgid "Hezarfen SMS Migration Complete!"
 msgstr ""
 
@@ -1065,7 +1061,7 @@ msgstr ""
 msgid "In order to %1$s integration work, the %2$s plugin must be activated."
 msgstr ""
 
-#: includes/class-hezarfen.php:126
+#: includes/class-hezarfen.php:124
 msgid ""
 "In order to <strong>Hezarfen for WooCommerce</strong> plugin work, please "
 "remove the <strong>Intense Türkiye İl İlçe Eklentisi For WooCommerce</strong>"
@@ -1309,11 +1305,7 @@ msgstr ""
 msgid "Modal"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:818
-msgid "N/A"
-msgstr ""
-
-#: includes/class-hezarfen.php:82 includes/Checkout.php:536
+#: includes/class-hezarfen.php:80 includes/Checkout.php:536
 msgid "Neighborhood"
 msgstr ""
 
@@ -1422,7 +1414,7 @@ msgstr ""
 msgid "Order #%s - Customer Agreements Saved"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:657
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:662
 msgid "Order #:"
 msgstr ""
 
@@ -1441,15 +1433,15 @@ msgstr ""
 #. Order Variables
 #: includes/contracts/core/class-post-order-processor.php:252
 #: includes/contracts/admin/class-contracts-settings.php:490
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:649
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:654
 msgid "Order Information"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:702
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:707
 msgid "Order Items"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:855
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:876
 msgid "Order Note"
 msgstr ""
 
@@ -1558,10 +1550,6 @@ msgstr ""
 msgid "Payment on delivery is not supported"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:822
-msgid "Payment:"
-msgstr ""
-
 #: includes/class-sms-automation.php:592
 msgid "Pending payment"
 msgstr ""
@@ -1576,7 +1564,7 @@ msgstr ""
 msgid "Phone Number"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:672
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:677
 msgid "Phone:"
 msgstr ""
 
@@ -1615,16 +1603,28 @@ msgstr ""
 msgid "Preparing barcode label..."
 msgstr ""
 
+#: includes/contracts/core/class-template-processor.php:191
+#: includes/contracts/core/class-template-processor.php:287
+msgid "Price (incl. tax)"
+msgstr ""
+
 #: includes/class-sms-automation.php:593
 msgid "Processing"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:712
+#: includes/contracts/core/class-template-processor.php:189
+#: includes/contracts/core/class-template-processor.php:285
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:717
 msgid "Product"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-ptt.php:38
 msgid "PTT Kargo"
+msgstr ""
+
+#: includes/contracts/core/class-template-processor.php:190
+#: includes/contracts/core/class-template-processor.php:286
+msgid "Quantity"
 msgstr ""
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:197
@@ -1728,7 +1728,7 @@ msgid "Select action..."
 msgstr ""
 
 #: includes/Autoload.php:67 includes/class-hezarfen-wc-helper.php:24
-#: includes/class-hezarfen.php:83
+#: includes/class-hezarfen.php:81
 msgid "Select an option"
 msgstr ""
 
@@ -2013,10 +2013,6 @@ msgstr ""
 msgid "Start creating shipments with automatic tracking"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:814
-msgid "Subtotal:"
-msgstr ""
-
 #: packages/manual-shipment-tracking/includes/courier-companies/class-surat.php:38
 msgid "Sürat Kargo"
 msgstr ""
@@ -2032,7 +2028,7 @@ msgstr ""
 msgid "T.C. Identity Number"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:664
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:669
 msgid "Tarih:"
 msgstr ""
 
@@ -2106,15 +2102,11 @@ msgstr ""
 msgid "Toggle password visibility"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:713
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:718
 msgid "Total"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:840
-msgid "Total:"
-msgstr ""
-
-#: includes/class-hezarfen.php:75 includes/Checkout.php:519
+#: includes/class-hezarfen.php:73 includes/Checkout.php:519
 msgid "Town / City"
 msgstr ""
 
@@ -2254,17 +2246,17 @@ msgstr ""
 msgid "When order status changes to %1$s, send SMS via %2$s to %3$s"
 msgstr ""
 
-#: includes/contracts/core/class-template-processor.php:236
+#: includes/contracts/core/class-template-processor.php:260
 msgid "Will be assigned after order"
 msgstr ""
 
 #: includes/contracts/core/class-template-processor.php:106
-#: includes/contracts/core/class-template-processor.php:238
+#: includes/contracts/core/class-template-processor.php:262
 msgid "Will be determined after order"
 msgstr ""
 
-#: includes/contracts/core/class-template-processor.php:244
-#: includes/contracts/core/class-template-processor.php:306
+#: includes/contracts/core/class-template-processor.php:268
+#: includes/contracts/core/class-template-processor.php:351
 msgid "Will be determined at payment"
 msgstr ""
 
@@ -2355,7 +2347,7 @@ msgstr ""
 msgid "Your API password"
 msgstr ""
 
-#: includes/class-hezarfen.php:249
+#: includes/class-hezarfen.php:247
 #, php-format
 msgid ""
 "Your legacy SMS settings have been automatically migrated to the new SMS "
