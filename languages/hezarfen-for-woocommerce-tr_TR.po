@@ -6,7 +6,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2025-09-30 21:42+0000\n"
+"PO-Revision-Date: 2025-09-30 21:52+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -328,7 +328,7 @@ msgstr "CDEK"
 
 #: includes/contracts/admin/class-order-agreements.php:121
 msgid "Change Agreement Settings"
-msgstr "Sözleşme Ayarlarını Değiştirme"
+msgstr "Sözleşme Ayarlarını Değiştir"
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:364
 msgid "Check"
