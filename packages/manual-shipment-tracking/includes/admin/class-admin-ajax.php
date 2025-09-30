@@ -460,11 +460,18 @@ class Admin_Ajax {
 		$formatted_price = wc_price( $amount );
 		$clean_price = strip_tags( $formatted_price );
 		
-		// Remove any HTML entities and decode
-		$clean_price = html_entity_decode( $clean_price, ENT_QUOTES, 'UTF-8' );
+		// Fix Turkish Lira symbol BEFORE decoding - replace HTML entities
+		$clean_price = str_replace( 
+			array( '&#8378;', '&lira;', '&#36;', '&#8364;', '&euro;', '&pound;' ), 
+			array( '₺', '₺', '$', '€', '€', '£' ), 
+			$clean_price 
+		);
 		
-		// Fix Turkish Lira symbol - normalize various formats to proper ₺
-		$clean_price = str_replace( array( '&lira;', '&#8378;', 'TL', 'TRY', 'tl', 'try' ), '₺', $clean_price );
+		// Remove any remaining HTML entities and decode
+		$clean_price = html_entity_decode( $clean_price, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		
+		// Normalize various text formats to proper symbol
+		$clean_price = str_replace( array( 'TL', 'TRY', 'tl', 'try' ), '₺', $clean_price );
 		
 		// If no currency symbol found, add Turkish Lira manually
 		if ( ! preg_match( '/₺/', $clean_price ) ) {
@@ -829,6 +836,15 @@ class Admin_Ajax {
 				$pdf->SetFont( 'dejavusans', '', 9 );
 				$pdf->SetX( $right_col_x );
 				$fee_name = $fee->get_name() ? $fee->get_name() : __( 'Fee', 'hezarfen-for-woocommerce' );
+				
+				// Clean fee name - decode HTML entities and fix currency symbols
+				$fee_name = str_replace( 
+					array( '&#8378;', '&lira;', '&#36;', '&#8364;', '&euro;', '&pound;' ), 
+					array( '₺', '₺', '$', '€', '€', '£' ), 
+					$fee_name 
+				);
+				$fee_name = html_entity_decode( $fee_name, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+				
 				$pdf->Cell( $product_col_width, 4, self::ensure_utf8( $fee_name . ':', 'hezarfen-for-woocommerce' ), 1, 0, 'R' );
 				$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( $fee->get_total() ), 1, 1, 'R' );
 			}
