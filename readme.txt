@@ -139,7 +139,7 @@ For more details, please see our [Privacy Policy](https://intense.com.tr/yasal/g
 Eğitim videoları ve rehberler için [Hezarfen YouTube resmi kanalımızı](https://www.youtube.com/@hezarfenforwoocommerce) ziyaret edebilir ve abone olabilirsiniz.
 
 = Bu WooCommerce eklentisi tamamen ücretsiz mi? =
-Evet, yukarıda listelenen özellikler tamamen ücretsizdir. 23 kargo firması için manuel takip, WooCommerce kargo takip modülü, il/ilçe/mahalle seçimi, TC kimlik no alanı gibi özellikler ücretsiz sunulmaktadır.Ayrıca, Hezarfen'in intense.com.tr üzerinde satılan Pro versiyonu mevcuttur. Pro versiyonda otomatik woocommerce kargo entegrasyonu, Paraşüt e-arşiv/e-fatura entegrasyonu özellikleri bulunmaktadır.
+Evet, yukarıda listelenen özellikler tamamen ücretsizdir. Intense Anlaşmalı Hepsijet Kargo Entegrasyonu (otomatik takip no girişi, otomatik sipariş durumunun kargoya verildi veya tamamlandı olması, bildirimler), 23 kargo firması için manuel takip, WooCommerce kargo takip modülü, il/ilçe/mahalle seçimi, TC kimlik no alanı gibi özellikler ücretsiz sunulmaktadır. Ayrıca, Hezarfen'in intense.com.tr üzerinde satılan Pro versiyonu mevcuttur. Pro versiyonda otomatik woocommerce kargo entegrasyonu (kendi kargo anlaşmalarınızla), Paraşüt e-arşiv/e-fatura entegrasyonu özellikleri bulunmaktadır.
 
 = Hangi WooCommerce sürümleriyle uyumlu? =
 WooCommerce 5.0 ve üzeri tüm sürümlerle uyumludur. HPOS (High Performance Order Storage) desteği mevcuttur.
