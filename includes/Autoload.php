@@ -125,6 +125,7 @@ class Autoload {
 
 		if ( is_admin() ) {
 			require_once 'admin/order/OrderDetails.php';
+			require_once 'admin/order/OrderListColumns.php';
 		}
 	}
 

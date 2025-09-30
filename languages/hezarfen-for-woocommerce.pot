@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2025-09-30 21:40+0000\n"
+"POT-Creation-Date: 2025-09-30 21:58+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #. %s plugin name
@@ -1163,7 +1163,7 @@ msgid ""
 "credentials and API permissions."
 msgstr ""
 
-#: includes/Checkout.php:356
+#: includes/Checkout.php:356 includes/admin/order/OrderListColumns.php:44
 msgid "Invoice Type"
 msgstr ""
 
