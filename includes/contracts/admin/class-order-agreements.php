@@ -62,9 +62,35 @@ class Order_Agreements {
 		$agreements = $this->get_saved_agreements( $order_id );
 		
 		if ( empty( $agreements ) ) {
+			// Get current setting
+			$settings = get_option( 'hezarfen_mss_settings', array() );
+			$timing = isset( $settings['agreement_creation_timing'] ) ? $settings['agreement_creation_timing'] : 'processing';
+			
+			// Define timing labels
+			$timing_labels = array(
+				'processing' => __( 'When order status becomes Processing', 'hezarfen-for-woocommerce' ),
+				'new_order'  => __( 'When new order is placed', 'hezarfen-for-woocommerce' ),
+			);
+			
+			$current_timing_label = isset( $timing_labels[ $timing ] ) ? $timing_labels[ $timing ] : $timing_labels['processing'];
+			$settings_url = admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=contracts_settings' );
 			?>
 			<div style="text-align: center; padding: 20px; color: #666;">
 				<p><?php esc_html_e( 'No customer agreements found for this order.', 'hezarfen-for-woocommerce' ); ?></p>
+				<p style="font-size: 12px; margin-top: 10px;">
+					<?php
+					if ( $timing === 'processing' ) {
+						esc_html_e( 'Agreements will be created when the order status changes to Processing.', 'hezarfen-for-woocommerce' );
+					} else {
+						esc_html_e( 'Agreements are created immediately when a new order is placed.', 'hezarfen-for-woocommerce' );
+					}
+					?>
+				</p>
+				<p style="font-size: 12px; margin-top: 5px;">
+					<a href="<?php echo esc_url( $settings_url ); ?>" target="_blank">
+						<?php esc_html_e( 'Change Agreement Settings', 'hezarfen-for-woocommerce' ); ?> →
+					</a>
+				</p>
 				<p style="font-size: 11px; margin-top: 15px;">
 					<em><?php esc_html_e( 'Powered by', 'hezarfen-for-woocommerce' ); ?> <strong>Hezarfen for WooCommerce</strong></em>
 				</p>
