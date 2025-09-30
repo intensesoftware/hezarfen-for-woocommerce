@@ -6,7 +6,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2025-09-28 19:12+0000\n"
+"PO-Revision-Date: 2025-09-30 20:46+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -1782,7 +1782,7 @@ msgstr "Lütfen gönderim başlığını seçiniz"
 #: includes/contracts/admin/class-order-agreements.php:69
 #: includes/contracts/admin/class-order-agreements.php:104
 msgid "Powered by"
-msgstr "Güçlendiren"
+msgstr "Powered by"
 
 #: includes/contracts/admin/class-contracts-settings.php:243
 msgid "Pre-Information Form"
