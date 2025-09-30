@@ -389,21 +389,49 @@ class Template_Processor {
 	 */
 	private static function get_formatted_item_meta( $item ) {
 		$meta_data = array();
+		$product = $item->get_product();
 		
 		// Get item meta data
 		$item_meta = $item->get_meta_data();
 		
 		foreach ( $item_meta as $meta ) {
 			$meta_data_array = $meta->get_data();
+			$key = $meta_data_array['key'];
 			
 			// Skip hidden meta (starts with _)
-			if ( isset( $meta_data_array['key'] ) && strpos( $meta_data_array['key'], '_' ) === 0 ) {
+			if ( strpos( $key, '_' ) === 0 ) {
 				continue;
 			}
 			
-			// Get display key and value
-			$display_key = isset( $meta_data_array['display_key'] ) ? $meta_data_array['display_key'] : $meta_data_array['key'];
+			// Get human-readable label
+			$display_key = $key;
+			
+			// Check if it's an attribute
+			if ( strpos( $key, 'pa_' ) === 0 || strpos( $key, 'attribute_' ) === 0 ) {
+				// It's a product attribute - get the proper label
+				$attribute_name = str_replace( 'attribute_', '', $key );
+				$display_key = wc_attribute_label( $attribute_name, $product );
+			} else {
+				// Check if there's a display_key available
+				if ( isset( $meta_data_array['display_key'] ) && ! empty( $meta_data_array['display_key'] ) ) {
+					$display_key = $meta_data_array['display_key'];
+				} else {
+					// Convert snake_case or kebab-case to Title Case
+					$display_key = ucwords( str_replace( array( '_', '-' ), ' ', $key ) );
+				}
+			}
+			
+			// Get display value
 			$display_value = isset( $meta_data_array['display_value'] ) ? $meta_data_array['display_value'] : $meta_data_array['value'];
+			
+			// For attribute values, try to get the human-readable term name
+			if ( ( strpos( $key, 'pa_' ) === 0 || strpos( $key, 'attribute_' ) === 0 ) && ! is_array( $display_value ) ) {
+				$attribute_name = str_replace( 'attribute_', '', $key );
+				$term = get_term_by( 'slug', $display_value, $attribute_name );
+				if ( $term && ! is_wp_error( $term ) ) {
+					$display_value = $term->name;
+				}
+			}
 			
 			// Format value if it's an array
 			if ( is_array( $display_value ) ) {
@@ -426,55 +454,31 @@ class Template_Processor {
 	 * @return string
 	 */
 	private static function get_formatted_cart_item_meta( $cart_item ) {
-		$meta_data = array();
-		$product = $cart_item['data'];
+		// Use WooCommerce's built-in function to get formatted cart item data
+		$item_data_html = wc_get_formatted_cart_item_data( $cart_item, true );
 		
-		// Get variation data if it's a variation product
-		if ( $product->is_type( 'variation' ) ) {
-			$variation_attributes = $product->get_variation_attributes();
+		// If we got formatted data, clean it up and return
+		if ( ! empty( $item_data_html ) ) {
+			// Remove the dl/dt/dd tags and convert to our format
+			// wc_get_formatted_cart_item_data returns HTML with <dt> and <dd> tags
+			// We want to convert it to our <strong>Label:</strong> Value format
 			
-			foreach ( $variation_attributes as $attribute_name => $attribute_value ) {
-				// Get human-readable attribute name
-				$attribute_label = wc_attribute_label( $attribute_name, $product );
-				
-				// Get human-readable attribute value
-				$term = get_term_by( 'slug', $attribute_value, $attribute_name );
-				$display_value = $term && ! is_wp_error( $term ) ? $term->name : $attribute_value;
-				
-				if ( ! empty( $display_value ) ) {
-					$meta_data[] = '<strong>' . esc_html( $attribute_label ) . ':</strong> ' . esc_html( $display_value );
-				}
-			}
+			// Strip the outer dl tags
+			$item_data_html = preg_replace( '/<\/?dl[^>]*>/', '', $item_data_html );
+			
+			// Convert <dt>Label</dt><dd>Value</dd> to <strong>Label:</strong> Value<br>
+			$item_data_html = preg_replace( '/<dt[^>]*>(.*?)<\/dt>\s*<dd[^>]*>(.*?)<\/dd>/', '<strong>$1:</strong> $2<br>', $item_data_html );
+			
+			// Remove any remaining HTML tags except strong and br
+			$item_data_html = strip_tags( $item_data_html, '<strong><br>' );
+			
+			// Remove trailing <br> tags
+			$item_data_html = rtrim( $item_data_html, '<br>' );
+			
+			return $item_data_html;
 		}
 		
-		// Get cart item data (add-ons, custom fields, etc.)
-		if ( isset( $cart_item['variation'] ) && is_array( $cart_item['variation'] ) ) {
-			foreach ( $cart_item['variation'] as $key => $value ) {
-				// Skip if already processed or empty
-				if ( empty( $value ) || strpos( $key, 'attribute_' ) === 0 ) {
-					continue;
-				}
-				
-				// Get human-readable key
-				$display_key = wc_attribute_label( str_replace( 'attribute_', '', $key ) );
-				
-				if ( ! empty( $display_key ) && ! empty( $value ) ) {
-					$meta_data[] = '<strong>' . esc_html( $display_key ) . ':</strong> ' . esc_html( $value );
-				}
-			}
-		}
-		
-		// Get other cart item meta (product add-ons, custom data)
-		$item_data = apply_filters( 'woocommerce_get_item_data', array(), $cart_item );
-		
-		foreach ( $item_data as $data ) {
-			if ( isset( $data['key'] ) && isset( $data['value'] ) ) {
-				$display_value = is_array( $data['value'] ) ? implode( ', ', $data['value'] ) : $data['value'];
-				$meta_data[] = '<strong>' . esc_html( $data['key'] ) . ':</strong> ' . esc_html( $display_value );
-			}
-		}
-		
-		return ! empty( $meta_data ) ? implode( '<br>', $meta_data ) : '';
+		return '';
 	}
 
 	/**
