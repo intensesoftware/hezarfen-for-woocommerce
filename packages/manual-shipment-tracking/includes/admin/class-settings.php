@@ -99,7 +99,7 @@ class Settings {
 	 * 
 	 * @return array<array<string, string>>
 	 */
-	public static function add_settings_to_section( $settings, $current_section ) {
+	public static function add_settings_to_section( $settings, $current_section = '' ) {
 		if ( self::SECTION === $current_section ) {
 			add_action( 'woocommerce_admin_field_hezarfen_mst_netgsm_sms_content_textarea', array( __CLASS__, 'render_netgsm_sms_content_setting' ) );
 
@@ -296,7 +296,7 @@ class Settings {
 	 * 
 	 * @return array<array<string, string>>
 	 */
-	public static function add_hepsijet_settings( $settings, $current_section ) {
+	public static function add_hepsijet_settings( $settings, $current_section = '' ) {
 		if ( 'hepsijet_integration' !== $current_section ) {
 			return $settings;
 		}

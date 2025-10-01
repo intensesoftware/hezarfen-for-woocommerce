@@ -40,7 +40,7 @@ class Contracts_Settings {
 	/**
 	 * Add MSS settings to the section
 	 */
-	public function add_settings( $settings, $current_section ) {
+	public function add_settings( $settings, $current_section = '' ) {
 		if ( self::SECTION !== $current_section ) {
 			return $settings;
 		}
