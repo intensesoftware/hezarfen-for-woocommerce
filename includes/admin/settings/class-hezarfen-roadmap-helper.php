@@ -37,7 +37,9 @@ class Hezarfen_Roadmap_Helper {
 			__( 'Banka sanal pos Akbank (tek çekim)', 'hezarfen-for-woocommerce' ),
 			__( 'Banka sanal pos Vakıf Katılım (tek çekim)', 'hezarfen-for-woocommerce' ),
 			__( 'Banka sanal pos Albaraka (tek çekim)', 'hezarfen-for-woocommerce' ),
-			__( 'Hepsijet dışında farklı kargolarla da indirimli kargo anlaşması (şu anda Hepsijet&Intense işbirliğiyle 0-4 desi 69,99TL\'ye gönderim yapabiliyorsunuz, alt gönderim limiti olmadan ve kargoyla anlaşma yapmadan. Takip bilgileri ve sipariş durumu da otomatik güncelleniyor. Diğer kargolarla anlaşma yapılmasını istiyor musunuz?)', 'hezarfen-for-woocommerce' ),
+			( current_time( 'timestamp' ) < strtotime( '2025-10-20' ) )
+				? __( 'Hepsijet dışında farklı kargolarla da indirimli kargo anlaşması (şu anda Hepsijet&Intense işbirliğiyle 0-4 desi 69,99TL\'ye gönderim yapabiliyorsunuz, alt gönderim limiti olmadan ve kargoyla anlaşma yapmadan. Takip bilgileri ve sipariş durumu da otomatik güncelleniyor. Pro sürüm gerekmiyor. Diğer kargolarla da anlaşma yapılmasını istiyor musunuz?)', 'hezarfen-for-woocommerce' )
+				: __( 'Hepsijet dışında farklı kargolarla da indirimli kargo anlaşması (şu anda Hepsijet&Intense işbirliğiyle gönderim yapabiliyorsunuz, alt gönderim limiti olmadan ve kargoyla anlaşma yapmadan. Takip bilgileri ve sipariş durumu da otomatik güncelleniyor. Pro sürüm gerekmiyor. Diğer kargolarla da anlaşma yapılmasını istiyor musunuz?)', 'hezarfen-for-woocommerce' ),
 			__( 'Özel sipariş durumları tanımlayabilme', 'hezarfen-for-woocommerce' ),
 			__( 'Kapıda ödemeye ek tutar tanımlayabilme', 'hezarfen-for-woocommerce' ),
 			__( 'Dönüşüm odaklı ve kullanıcı dostu ödeme ekranı tasarımı', 'hezarfen-for-woocommerce' ),

@@ -2074,7 +2074,7 @@ msgstr "İade Tarihi"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:49
 msgid "Roadmap"
-msgstr "3.0 Yol Haritası"
+msgstr "v3.0 Yol Haritası"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:499
 msgid "Rule"
