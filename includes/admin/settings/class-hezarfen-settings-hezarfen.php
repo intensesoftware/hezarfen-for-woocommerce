@@ -824,7 +824,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 
 				<!-- Pro Features -->
 				<div class="hezarfen-roadmap-section">
-					<h3 style="margin-bottom: 15px; color: #d63638;">
+					<h3 style="margin-bottom: 15px; color: #16a34a;">
 						<?php esc_html_e( 'Ücretli Sürüm Özellikleri', 'hezarfen-for-woocommerce' ); ?>
 						<span id="pro-counter" style="font-size: 13px; color: #666; font-weight: normal;">(0/5 <?php esc_html_e( 'seçildi', 'hezarfen-for-woocommerce' ); ?>)</span>
 					</h3>

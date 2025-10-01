@@ -58,10 +58,10 @@
 			// Visual feedback for selected items
 			if ($(this).is(':checked')) {
 				$item.css({
-					'background-color': type === 'free' ? '#e7f5ff' : '#fff0f0',
-					'border-color': type === 'free' ? '#2271b1' : '#d63638',
+					'background-color': type === 'free' ? '#e7f5ff' : '#ecfdf5',
+					'border-color': type === 'free' ? '#2271b1' : '#16a34a',
 					'border-width': '2px',
-					'box-shadow': type === 'free' ? '0 0 0 1px #2271b1' : '0 0 0 1px #d63638'
+					'box-shadow': type === 'free' ? '0 0 0 1px #2271b1' : '0 0 0 1px #16a34a'
 				});
 			} else {
 				$item.css({
@@ -163,7 +163,7 @@
 			if ($checkbox.is(':checked')) {
 				// Brighten the selected color
 				$(this).css({
-					'background-color': type === 'free' ? '#d4ebff' : '#ffe0e0',
+					'background-color': type === 'free' ? '#d4ebff' : '#d1fae5',
 					'transform': 'translateX(2px)'
 				});
 			} else {
@@ -184,7 +184,7 @@
 			
 			if ($checkbox.is(':checked')) {
 				$(this).css({
-					'background-color': type === 'free' ? '#e7f5ff' : '#fff0f0',
+					'background-color': type === 'free' ? '#e7f5ff' : '#ecfdf5',
 					'transform': 'translateX(0)'
 				});
 			} else {
