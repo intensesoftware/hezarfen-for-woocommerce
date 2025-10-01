@@ -6,7 +6,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2025-10-01 08:28+0000\n"
+"PO-Revision-Date: 2025-10-01 10:28+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -491,18 +491,11 @@ msgstr "Ticari (11)"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:700
 msgid "Commercial - Campaign, promotion, celebration etc. - Business"
-msgstr ""
-"Ticari - Kampanya, promosyon, kutlama vb. - İşletmeTicari - Kampanya, "
-"promosyon, kutlama vs. - İYS'de ticari kayıtlı alıcınıza gönderilirTicari - "
-"Kampanya, promosyon, kutlama vs. - İYS'de ticari kayıtlı alıcınıza gönderilir"
+msgstr "Ticari - Kampanya, promosyon, kutlama vb. - İşletme"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:699
 msgid "Commercial - Campaign, promotion, celebration etc. - Individual"
-msgstr ""
-"Ticari - Kampanya, promosyon, kutlama vb. - BireyselTicari - Kampanya, "
-"promosyon, kutlama vs. - İYS'de bireysel kayıtlı alıcınıza gönderilirTicari -"
-" Kampanya, promosyon, kutlama vs. - İYS'de bireysel kayıtlı alıcınıza "
-"gönderilir"
+msgstr "Ticari - Kampanya, promosyon, kutlama vb. - Bireysel"
 
 #: includes/Checkout.php:362 includes/admin/order/OrderDetails.php:49
 msgid "Company"
@@ -1471,18 +1464,13 @@ msgstr "T.C. Kimlik Numarası alanı zorunlu yapılsın mı?"
 #: includes/admin/settings/views/encryption.php:24
 msgid "Is the encryption key genereated and placed the wp-config.php?"
 msgstr ""
-"Şifreleme anahtarı oluşturulmuş ve wp-config.php'ye yerleştirilmiş mi?"
 "Şifreleme Anahtarı (Encryption Key) oluşturulmuş ve wp-config.php dosyasına "
-"yerleştirilmiş mi?Şifreleme Anahtarı (Encryption Key) oluşturulmuş ve wp-"
-"config.php dosyasına yerleştirilmiş mi?"
+"yerleştirilmiş mi?"
 
 #: includes/admin/settings/views/encryption.php:32
 msgid "It checks encryption key whetever placed to the wp-config.php"
 msgstr ""
-"Şifreleme anahtarının wp-config.php'de bulunup bulunmadığını kontrol "
-"ederŞifreleme Anahtarının (Encryption Key) wp-config dosyasın'da bulunup "
-"bulunmadığını kontrol eder.Şifreleme Anahtarının (Encryption Key) wp-config "
-"dosyasın'da bulunup bulunmadığını kontrol eder."
+"Şifreleme anahtarının wp-config.php'de bulunup bulunmadığını kontrol eder"
 
 #: includes/admin/settings/class-hezarfen-roadmap-helper.php:70
 msgid "IYS destekli toplu e-posta gönderimi (Euromessage Express Entegrasyonu)"

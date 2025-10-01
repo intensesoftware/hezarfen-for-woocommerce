@@ -840,7 +840,11 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 						<?php esc_html_e( 'Pro Paket (Ücretli Sürüm) Özellikleri', 'hezarfen-for-woocommerce' ); ?>
 						<span id="pro-counter" style="font-size: 13px; color: #666; font-weight: normal;">(0/5 <?php esc_html_e( 'seçildi', 'hezarfen-for-woocommerce' ); ?>)</span>
 					</h3>
-					<p style="color: #3194ed">Pro kullanmasanız bile görüşleriniz önemlidir.</p>
+					<?php if( ! defined( 'HEZARFEN_PRO_VERSION' ) ): ?>
+						<p style="color: #3194ed">
+						Pro sürümünü kullanmasanız bile geri bildiriminiz bizim için çok kıymetli. Paylaştığınız görüşler yalnızca Hezarfen’i geliştirmemize yardımcı olur; Pro sürümünü satın alma gibi bir zorunluluk bulunmaz. Pro sürümün fiyat/özellik dengesini iyileştirmek için görüş topluyoruz.
+						</p>
+					<?php endif; ?>
 					<div class="hezarfen-features-list" data-type="pro" data-max="5">
 						<?php foreach ( $pro_features as $index => $feature ) : ?>
 							<label class="hezarfen-feature-item" data-feature-type="pro" style="display: flex; align-items: flex-start; padding: 12px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s ease; background: #fff;">
