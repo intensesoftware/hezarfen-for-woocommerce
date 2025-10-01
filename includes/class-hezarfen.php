@@ -293,31 +293,22 @@ class Hezarfen {
 			return;
 		}
 		
-		// CRITICAL: Log that we reached this function
-		error_log( '=== ROADMAP VOTE: Function called ===' );
-		error_log( 'ROADMAP VOTE: POST data exists: ' . ( ! empty( $_POST ) ? 'YES' : 'NO' ) );
-		
 		// Test response to verify function is called
 		if ( ! isset( $_POST['nonce'] ) ) {
-			error_log( 'ROADMAP VOTE: No nonce in POST' );
 			wp_send_json_error( array( 'message' => 'TEST: No nonce provided' ) );
 			return;
 		}
 		
-		error_log( 'ROADMAP VOTE: Nonce value: ' . sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) );
-		
+
 		// Verify nonce
 		$nonce_check = wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'hezarfen_roadmap_vote' );
-		error_log( 'ROADMAP VOTE: Nonce check result: ' . ( $nonce_check ? 'PASS' : 'FAIL' ) );
-		
+
 		if ( ! $nonce_check ) {
-			error_log( 'ROADMAP VOTE: Nonce verification FAILED' );
 			wp_send_json_error( array( 'message' => __( 'Güvenlik doğrulaması başarısız. Lütfen sayfayı yenileyin.', 'hezarfen-for-woocommerce' ) ) );
 			return;
 		}
 
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			error_log( 'ROADMAP VOTE: Permission check failed' );
 			wp_send_json_error( array( 'message' => __( 'Yetkisiz erişim.', 'hezarfen-for-woocommerce' ) ) );
 			return;
 		}
@@ -326,10 +317,6 @@ class Hezarfen {
 		$pro_features = isset( $_POST['pro_features'] ) ? array_map( 'intval', (array) $_POST['pro_features'] ) : array();
 		$details = isset( $_POST['details'] ) ? sanitize_textarea_field( wp_unslash( $_POST['details'] ) ) : '';
 		
-		error_log( 'ROADMAP VOTE: Free features: ' . print_r( $free_features, true ) );
-		error_log( 'ROADMAP VOTE: Pro features: ' . print_r( $pro_features, true ) );
-		error_log( 'ROADMAP VOTE: Details: ' . $details );
-
 		// Validate limits
 		if ( count( $free_features ) > 5 ) {
 			wp_send_json_error( array( 'message' => __( 'En fazla 5 ücretsiz özellik seçebilirsiniz.', 'hezarfen-for-woocommerce' ) ) );
