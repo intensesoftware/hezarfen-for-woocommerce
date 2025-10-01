@@ -813,7 +813,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					<?php esc_html_e( 'Hezarfen, bugün 2bin+ site tarafından kullanılıyor ve her geçen gün büyüyor. Hezarfen’in gelecek büyük versiyonu olan 3.0 için özellik geliştirme planlarımızı yaparken sizin de geri bildiriminizi almak istedik. Hezarfen’e birden fazla dikeyde geliştirerek, bazı özellikler için farklı eklenti kullanma ihtiyaçlarını ortadan kaldırmayı ve bu sayede WooCommerce altyapılarının stabilitesini arttırmayı amaçlıyoruz.', 'hezarfen-for-woocommerce' ); ?>
 				</p>
 				<p style="font-size: 14px; color: #666; margin-top: 10px;">
-					<?php esc_html_e( 'Hangi özelliklerin geliştirilmesini istersiniz? Her kategoriden en fazla 5 özellik seçebilirsiniz.', 'hezarfen-for-woocommerce' ); ?>
+					<?php esc_html_e( 'Hangi özelliklerin geliştirilmesini istersiniz? Her kategoriden en fazla 5 özellik seçebilirsiniz. Toplanan veriler geliştirme planlamamıza ışık tutacaktır, nihai karar ekibimiz tarafından değerlendirilecektir. Şimdiden teşekkür ederiz!', 'hezarfen-for-woocommerce' ); ?>
 				</p>
 			</div>
 
