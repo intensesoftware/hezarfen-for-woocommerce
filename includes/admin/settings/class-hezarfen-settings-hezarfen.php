@@ -781,7 +781,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				<!-- Pro Features -->
 				<div class="hezarfen-roadmap-section">
 					<h3 style="margin-bottom: 15px; color: #16a34a;">
-						<?php esc_html_e( 'Ücretli Sürüm Özellikleri', 'hezarfen-for-woocommerce' ); ?>
+						<?php esc_html_e( 'Pro Paket (Ücretli Sürüm) Özellikleri', 'hezarfen-for-woocommerce' ); ?>
 						<span id="pro-counter" style="font-size: 13px; color: #666; font-weight: normal;">(0/5 <?php esc_html_e( 'seçildi', 'hezarfen-for-woocommerce' ); ?>)</span>
 					</h3>
 					<div class="hezarfen-features-list" data-type="pro" data-max="5">
@@ -791,6 +791,27 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 								<span style="flex: 1; font-size: 13px; line-height: 1.5;"><?php echo esc_html( $feature ); ?></span>
 							</label>
 						<?php endforeach; ?>
+					</div>
+					
+					<!-- Current Features Info -->
+					<div style="margin-top: 25px; padding: 15px; background: #f9f9f9; border-radius: 4px; border: 1px solid #e0e0e0;">
+						<h4 style="margin: 0 0 10px 0; font-size: 13px; color: #16a34a; font-weight: 600;">
+							<?php esc_html_e( 'Mevcut Pro Paket Özellikleri:', 'hezarfen-for-woocommerce' ); ?>
+						</h4>
+						<p style="margin: 0; font-size: 12px; color: #555; line-height: 1.6;">
+							<?php esc_html_e( 'Yurtiçi, DHL, Hepsijet, KolayGelsin, Aras, Sürat kargo entegrasyonları tek pakette', 'hezarfen-for-woocommerce' ); ?>
+							<?php
+							// Show pricing only if before November 1, 2025
+							$cutoff_date = strtotime( '2025-11-01' );
+							$current_date = current_time( 'timestamp' );
+							
+							if ( $current_date < $cutoff_date ) :
+							?>
+								<a target="_blank" rel="noopener noreferrer" href="https://intense.com.tr/woocommerce-kargo-entegrasyonu/"><span style="display: inline-block; margin-top: 6px; padding: 4px 10px; background: #16a34a; color: white; border-radius: 3px; font-size: 12px; font-weight: 600;">
+									5943TL+KDV (1 site için 1 yıllık destek ve güncelleştirme)
+								</span></a>
+							<?php endif; ?>
+						</p>
 					</div>
 				</div>
 			</div>
