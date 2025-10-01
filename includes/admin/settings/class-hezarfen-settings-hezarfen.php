@@ -42,14 +42,27 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 * @return array<string, string>
 	 */
 	protected function get_own_sections() {
-		$sections = array(
-			''              => __( 'Roadmap', 'hezarfen-for-woocommerce' ),
-			'training'      => __( 'Training', 'hezarfen-for-woocommerce' ),
-			'general'       => __( 'General', 'hezarfen-for-woocommerce' ),
-			'encryption'    => __( 'Encryption', 'hezarfen-for-woocommerce' ),
-			'checkout_page' => __( 'Checkout Page Settings', 'hezarfen-for-woocommerce' ),
-			'sms_settings'  => __( 'SMS Settings', 'hezarfen-for-woocommerce' ),
-		);
+		// Build base sections
+		if ( version_compare( WC_HEZARFEN_VERSION, '2.7.30', '<=' ) ) {
+			// Version <= 2.7.30: Roadmap is default, Training is separate
+			$sections = array(
+				''              => __( 'Roadmap', 'hezarfen-for-woocommerce' ),
+				'training'      => __( 'Training', 'hezarfen-for-woocommerce' ),
+				'general'       => __( 'General', 'hezarfen-for-woocommerce' ),
+				'encryption'    => __( 'Encryption', 'hezarfen-for-woocommerce' ),
+				'checkout_page' => __( 'Checkout Page Settings', 'hezarfen-for-woocommerce' ),
+				'sms_settings'  => __( 'SMS Settings', 'hezarfen-for-woocommerce' ),
+			);
+		} else {
+			// Version > 2.7.30: Training is default, no Roadmap
+			$sections = array(
+				''              => __( 'Training', 'hezarfen-for-woocommerce' ),
+				'general'       => __( 'General', 'hezarfen-for-woocommerce' ),
+				'encryption'    => __( 'Encryption', 'hezarfen-for-woocommerce' ),
+				'checkout_page' => __( 'Checkout Page Settings', 'hezarfen-for-woocommerce' ),
+				'sms_settings'  => __( 'SMS Settings', 'hezarfen-for-woocommerce' ),
+			);
+		}
 
 		// if checkout field is active, show the section.
 		if ( Helper::is_show_tax_fields() ) {
@@ -66,11 +79,17 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	}
 
 	/**
-	 * Get settings for the default section (Roadmap).
+	 * Get settings for the default section (Roadmap or Training).
 	 *
 	 * @return array<array<string, string>>
 	 */
 	protected function get_settings_for_default_section() {
+		// If version > 2.7.30, default is Training (no fields needed)
+		if ( version_compare( WC_HEZARFEN_VERSION, '2.7.30', '>' ) ) {
+			return array();
+		}
+		
+		// Otherwise, default is Roadmap
 		return array(
 			array(
 				'type' => 'roadmap_voting',
@@ -722,10 +741,17 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 
 			require 'views/encryption.php';
 		} elseif ( '' === $current_section ) {
-			// Default section is now Roadmap
+			// Default section - Roadmap (if version <= 2.7.30) or Training (if version > 2.7.30)
 			$hide_save_button = true;
-			$settings = $this->get_settings_for_section( $current_section );
-			WC_Admin_Settings::output_fields( $settings );
+			
+			if ( version_compare( WC_HEZARFEN_VERSION, '2.7.30', '<=' ) ) {
+				// Show Roadmap
+				$settings = $this->get_settings_for_section( $current_section );
+				WC_Admin_Settings::output_fields( $settings );
+			} else {
+				// Show Training
+				$this->output_training_section();
+			}
 		} elseif ( 'training' === $current_section ) {
 			$hide_save_button = true;
 			$this->output_training_section();
@@ -1231,18 +1257,24 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			wp_enqueue_style( 'wc_hezarfen_settings_css', plugins_url( 'assets/admin/css/settings.css', WC_HEZARFEN_FILE ), array(), WC_HEZARFEN_VERSION );
 		}
 
-		if ( '' === $current_section ) {
-			// Roadmap section
+		if ( '' === $current_section && version_compare( WC_HEZARFEN_VERSION, '2.7.30', '<=' ) ) {
+			// Roadmap section (only for version <= 2.7.30)
 			wp_enqueue_script( 'wc_hezarfen_roadmap_js', plugins_url( 'assets/admin/js/roadmap.js', WC_HEZARFEN_FILE ), array( 'jquery' ), WC_HEZARFEN_VERSION, true );
 			wp_localize_script( 'wc_hezarfen_roadmap_js', 'hezarfenRoadmap', array(
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
 				'nonce' => wp_create_nonce( 'hezarfen_roadmap_vote' ),
 			) );
+		}
+
+		// Load CSS for Training and Roadmap sections
+		if ( '' === $current_section || 'training' === $current_section ) {
 			wp_enqueue_style( 'wc_hezarfen_settings_css', plugins_url( 'assets/admin/css/settings.css', WC_HEZARFEN_FILE ), array(), WC_HEZARFEN_VERSION );
 		}
 
-		// Load training script
-		wp_enqueue_script( 'wc_hezarfen_training_js', plugins_url( 'assets/admin/js/training.js', WC_HEZARFEN_FILE ), array( 'jquery' ), WC_HEZARFEN_VERSION, true );
+		// Load training script for training section and default section (when training is default)
+		if ( 'training' === $current_section || ( '' === $current_section && version_compare( WC_HEZARFEN_VERSION, '2.7.30', '>' ) ) ) {
+			wp_enqueue_script( 'wc_hezarfen_training_js', plugins_url( 'assets/admin/js/training.js', WC_HEZARFEN_FILE ), array( 'jquery' ), WC_HEZARFEN_VERSION, true );
+		}
 
 		if ( 'woocommerce_page_wc-settings' === $hook_suffix && 'sms_settings' === $current_section ) {
 			wp_enqueue_script( 'wc_hezarfen_sms_settings_js', plugins_url( 'assets/admin/js/sms-settings.js', WC_HEZARFEN_FILE ), array( 'jquery' ), WC_HEZARFEN_VERSION . '-' . filemtime( plugin_dir_path( WC_HEZARFEN_FILE ) . 'assets/admin/js/sms-settings.js' ), true );

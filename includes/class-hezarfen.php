@@ -287,6 +287,12 @@ class Hezarfen {
 	 * @return void
 	 */
 	public function handle_roadmap_vote_submission_proxy() {
+		// Check if roadmap voting is available for this version
+		if ( version_compare( WC_HEZARFEN_VERSION, '2.7.30', '>' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Roadmap oylaması bu sürümde artık mevcut değil.', 'hezarfen-for-woocommerce' ) ) );
+			return;
+		}
+		
 		// CRITICAL: Log that we reached this function
 		error_log( '=== ROADMAP VOTE: Function called ===' );
 		error_log( 'ROADMAP VOTE: POST data exists: ' . ( ! empty( $_POST ) ? 'YES' : 'NO' ) );
