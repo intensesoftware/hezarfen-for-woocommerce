@@ -95,7 +95,15 @@ class Hezarfen {
 	 */
 	public function define_constants() {
 		if ( ! defined( 'WC_HEZARFEN_HPOS_ENABLED' ) ) {
-			define( 'WC_HEZARFEN_HPOS_ENABLED', OrderUtil::custom_orders_table_usage_is_enabled() );
+			$wc_version = defined( 'WC_VERSION' ) ? WC_VERSION : null;
+
+			if( version_compare( $wc_version, '8.2.0', '<' ) ) {
+				$hpos_enabled = false;
+			}else{
+				$hpos_enabled = OrderUtil::custom_orders_table_usage_is_enabled();
+			}
+
+			define( 'WC_HEZARFEN_HPOS_ENABLED', $hpos_enabled );
 		}
 	}
 

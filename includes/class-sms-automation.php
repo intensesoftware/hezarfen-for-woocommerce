@@ -749,7 +749,6 @@ class SMS_Automation {
 			'{fatura_ulke}' => $order->get_billing_country(),
 			'{kargo_adi}' => $order->get_shipping_first_name(),
 			'{kargo_soyadi}' => $order->get_shipping_last_name(),
-			'{kargo_telefonu}' => $order->get_shipping_phone(),
 			'{kargo_sirket}' => $order->get_shipping_company(),
 			'{kargo_adresi}' => $order->get_shipping_address_1() . ( $order->get_shipping_address_2() ? ' ' . $order->get_shipping_address_2() : '' ),
 			'{kargo_sehir}' => $order->get_shipping_city(),
@@ -776,7 +775,6 @@ class SMS_Automation {
 			// Shipping variables
 			'{shipping_first_name}' => $order->get_shipping_first_name(),
 			'{shipping_last_name}' => $order->get_shipping_last_name(),
-			'{shipping_phone}' => $order->get_shipping_phone(),
 			'{shipping_company}' => $order->get_shipping_company(),
 			'{shipping_address}' => $order->get_shipping_address_1() . ( $order->get_shipping_address_2() ? ' ' . $order->get_shipping_address_2() : '' ),
 			'{shipping_city}' => $order->get_shipping_city(),
@@ -800,6 +798,11 @@ class SMS_Automation {
 			'[hezarfen_kargo_takip_kodu]' => $tracking_number,
 			'[hezarfen_kargo_takip_linki]' => $tracking_url,
 		);
+
+		if( WC_HEZARFEN_HPOS_ENABLED ) {
+			$variables['{shipping_phone}'] = $order->get_shipping_phone();
+			$variables['{kargo_telefonu}'] = $order->get_shipping_phone();
+		}
 
 		return str_replace( array_keys( $variables ), array_values( $variables ), $template );
 	}

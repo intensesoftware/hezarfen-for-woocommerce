@@ -30,9 +30,13 @@ class Order_Agreements {
 	 * @param mixed  $post_or_order Post or order object.
 	 */
 	public function add_agreements_meta_box( $post_type, $post_or_order ) {
-		$screen = wc_get_container()->get( \Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled()
+		if( ! WC_HEZARFEN_HPOS_ENABLED ) {
+			$screen = 'shop_order';
+		}else{
+			$screen = wc_get_container()->get( \Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled()
 			? wc_get_page_screen_id( 'shop-order' )
 			: 'shop_order';
+		}
 			
 		if ( $post_type === 'shop_order' || ( is_object( $post_or_order ) && is_a( $post_or_order, 'WC_Order' ) ) ) {
 			add_meta_box(
