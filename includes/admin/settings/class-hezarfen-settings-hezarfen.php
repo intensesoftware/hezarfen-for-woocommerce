@@ -9,7 +9,6 @@ defined( 'ABSPATH' ) || exit();
 
 use Hezarfen\Inc\Data\PostMetaEncryption;
 use Hezarfen\Inc\Helper;
-use Hezarfen_Roadmap_Helper;
 
 if ( class_exists( 'Hezarfen_Settings_Hezarfen', false ) ) {
 	return new Hezarfen_Settings_Hezarfen();
