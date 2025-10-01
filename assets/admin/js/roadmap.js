@@ -91,6 +91,9 @@
 			$('input[name="pro_features[]"]:checked').each(function() {
 				proFeatures.push($(this).val());
 			});
+			
+			// Get additional details
+			const details = $('#roadmap-details').val().trim();
 
 			// Validate
 			if (freeFeatures.length === 0 && proFeatures.length === 0) {
@@ -121,14 +124,16 @@
 					action: 'hezarfen_submit_roadmap_votes',
 					nonce: hezarfenRoadmap.nonce,
 					free_features: freeFeatures,
-					pro_features: proFeatures
+					pro_features: proFeatures,
+					details: details
 				},
 				success: function(response) {
 					if (response.success) {
 						$message.css('color', '#00a32a').html('✓ ' + response.data.message).show();
 						
-						// Disable all checkboxes after successful submission
+						// Disable all checkboxes and textarea after successful submission
 						$('.hezarfen-features-list input[type="checkbox"]').prop('disabled', true);
+						$('#roadmap-details').prop('disabled', true).css('background-color', '#f5f5f5');
 						$button.text('Gönderildi').css('background-color', '#00a32a');
 					} else {
 						var errorMsg = response.data && response.data.message ? response.data.message : 'Bir hata oluştu.';

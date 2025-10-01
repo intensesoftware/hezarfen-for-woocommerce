@@ -318,9 +318,11 @@ class Hezarfen {
 
 		$free_features = isset( $_POST['free_features'] ) ? array_map( 'intval', (array) $_POST['free_features'] ) : array();
 		$pro_features = isset( $_POST['pro_features'] ) ? array_map( 'intval', (array) $_POST['pro_features'] ) : array();
+		$details = isset( $_POST['details'] ) ? sanitize_textarea_field( wp_unslash( $_POST['details'] ) ) : '';
 		
 		error_log( 'ROADMAP VOTE: Free features: ' . print_r( $free_features, true ) );
 		error_log( 'ROADMAP VOTE: Pro features: ' . print_r( $pro_features, true ) );
+		error_log( 'ROADMAP VOTE: Details: ' . $details );
 
 		// Validate limits
 		if ( count( $free_features ) > 5 ) {
@@ -382,6 +384,12 @@ class Hezarfen {
 		} else {
 			$email_body .= "Seçim yapılmadı\n";
 		}
+		
+		// Add details if provided
+		if ( ! empty( $details ) ) {
+			$email_body .= "\n=== EK BİLGİ VE ÖNERİLER ===\n\n";
+			$email_body .= $details . "\n";
+		}
 
 		// Send email
 		$headers = array( 'Content-Type: text/plain; charset=UTF-8' );
@@ -399,6 +407,7 @@ class Hezarfen {
 			'domain' => $domain,
 			'free_features' => $free_features,
 			'pro_features' => $pro_features,
+			'details' => $details,
 			'timestamp' => $timestamp,
 		);
 		

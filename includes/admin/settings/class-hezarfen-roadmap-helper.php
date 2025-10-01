@@ -41,6 +41,7 @@ class Hezarfen_Roadmap_Helper {
 			__( 'Kapıda ödemeye ek tutar tanımlayabilme', 'hezarfen-for-woocommerce' ),
 			__( 'Dönüşüm odaklı ve kullanıcı dostu ödeme ekranı tasarımı', 'hezarfen-for-woocommerce' ),
 			__( 'Verimor SMS entegrasyonu', 'hezarfen-for-woocommerce' ),
+			__( 'İade Özelliği (Hesabım sayfasından müşterinin iade talebi oluşturabileceği alan)', 'hezarfen-for-woocommerce' ),
 			__( 'Iletimerkezi SMS entegrasyonu', 'hezarfen-for-woocommerce' ),
 			__( 'Diğer SMS entegrasyonu (detay kısmında istediğiniz SMS firmasını belirtiniz)', 'hezarfen-for-woocommerce' ),
 		);

@@ -816,14 +816,33 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				</div>
 			</div>
 
-			<div class="hezarfen-roadmap-actions" style="margin-top: 30px; text-align: center;">
+			<!-- Additional Details -->
+			<div class="hezarfen-roadmap-details" style="margin-top: 30px;">
+				<label for="roadmap-details" style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: #333;">
+					<?php esc_html_e( 'Eklemek istediğiniz ek bilgi veya önerileriniz:', 'hezarfen-for-woocommerce' ); ?>
+					<span style="font-weight: normal; color: #666; font-size: 12px;"><?php esc_html_e( '(opsiyonel)', 'hezarfen-for-woocommerce' ); ?></span>
+				</label>
+				<textarea 
+					id="roadmap-details" 
+					name="roadmap_details" 
+					rows="4" 
+					placeholder="<?php esc_attr_e( 'Seçtiğiniz özellikler hakkında ek açıklamalar, özel istekleriniz veya diğer önerilerinizi buraya yazabilirsiniz...', 'hezarfen-for-woocommerce' ); ?>"
+					style="width: 100%; max-width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif; resize: vertical; min-height: 100px; transition: border-color 0.2s ease;"
+					onfocus="this.style.borderColor='#2271b1'"
+					onblur="this.style.borderColor='#ddd'"
+				></textarea>
+			</div>
+
+			<div class="hezarfen-roadmap-actions" style="margin-top: 25px; text-align: center;">
 				<p style="font-size: 12px; color: #666; margin: 0 0 15px 0; opacity: 0.85;">
 					<?php esc_html_e( 'Seçimleriniz info@intense.com.tr adresine e-posta ile gönderilecektir. Paylaşılacak veriler: oylamanız, alan adınız, SMTP gönderimi yapan e-posta adresiniz (gönderici olarak). Verileriniz üçüncü taraflarla paylaşılmaz veya SPAM gönderim yapılmaz.', 'hezarfen-for-woocommerce' ); ?>
 				</p>
-				<button type="button" id="hezarfen-submit-votes" class="button button-primary button-large" style="padding: 8px 40px; font-size: 14px;">
-					<?php esc_html_e( 'Oylarımı Gönder', 'hezarfen-for-woocommerce' ); ?>
-				</button>
-				<span class="hezarfen-vote-message" style="margin-left: 15px; display: none;"></span>
+				<div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+					<button type="button" id="hezarfen-submit-votes" class="button button-primary button-large" style="padding: 8px 40px; font-size: 14px;">
+						<?php esc_html_e( 'Oylarımı Gönder', 'hezarfen-for-woocommerce' ); ?>
+					</button>
+					<span class="hezarfen-vote-message" style="margin-left: 15px; display: none;"></span>
+				</div>
 			</div>
 		</div>
 		<?php
