@@ -773,6 +773,32 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 * @return void
 	 */
 	public function output_roadmap_voting( $value ) {
+		// Check if user has already voted
+		$has_voted = get_option( 'hezarfen_v3_roadmap_last_vote', false );
+		
+		if ( $has_voted ) {
+			// Show minimal thank you message
+			$vote_data = get_option( 'hezarfen_roadmap_votes', array() );
+			$vote_date = isset( $vote_data['timestamp'] ) ? $vote_data['timestamp'] : '';
+			?>
+			<div class="hezarfen-roadmap-container" style="max-width: 600px; margin: 80px auto; text-align: center;">
+				<div style="font-size: 48px; margin-bottom: 20px; opacity: 0.9;">✓</div>
+				<h2 style="color: #2c3e50; font-size: 24px; margin: 0 0 12px 0; font-weight: 500;">
+					<?php esc_html_e( 'Teşekkür Ederiz', 'hezarfen-for-woocommerce' ); ?>
+				</h2>
+				<p style="color: #7f8c8d; font-size: 15px; margin: 0;">
+					<?php esc_html_e( 'Oylarınız e-posta ile info@intense.com.tr adresine gönderildi.', 'hezarfen-for-woocommerce' ); ?>
+				</p>
+				<?php if ( $vote_date ) : ?>
+					<p style="color: #bdc3c7; font-size: 13px; margin: 15px 0 0 0;">
+						<?php echo esc_html( date( 'd.m.Y H:i:s', strtotime( $vote_date ) ) ); ?>
+					</p>
+				<?php endif; ?>
+			</div>
+			<?php
+			return;
+		}
+		
 		// Load helper class
 		require_once WC_HEZARFEN_UYGULAMA_YOLU . 'includes/admin/settings/class-hezarfen-roadmap-helper.php';
 		

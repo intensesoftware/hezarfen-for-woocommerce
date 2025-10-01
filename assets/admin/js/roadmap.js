@@ -129,12 +129,17 @@
 				},
 				success: function(response) {
 					if (response.success) {
+						// Show success message briefly then reload
 						$message.css('color', '#00a32a').html('✓ ' + response.data.message).show();
+						$button.text('Başarılı! Yenileniyor...').css('background-color', '#00a32a');
 						
-						// Disable all checkboxes and textarea after successful submission
-						$('.hezarfen-features-list input[type="checkbox"]').prop('disabled', true);
-						$('#roadmap-details').prop('disabled', true).css('background-color', '#f5f5f5');
-						$button.text('Gönderildi').css('background-color', '#00a32a');
+						// Disable "unsaved changes" warning
+						window.onbeforeunload = null;
+						
+						// Reload page after 2 seconds to show thank you message
+						setTimeout(function() {
+							window.location.reload();
+						}, 2000);
 					} else {
 						var errorMsg = response.data && response.data.message ? response.data.message : 'Bir hata oluştu.';
 						$message.css('color', '#d63638').html('✗ ' + errorMsg).show();

@@ -22,6 +22,7 @@ class Hezarfen_Roadmap_Helper {
 			__( 'Yorum hatırlatma e-postası', 'hezarfen-for-woocommerce' ),
 			__( 'Ürün tekrar stokta bildirimi', 'hezarfen-for-woocommerce' ),
 			__( 'Cüzdan özelliği', 'hezarfen-for-woocommerce' ),
+			__( 'Sözleşmelerin maillerde PDF olarak da gönderilmesi (şu anda e-postalarda yazı olarak gönderiliyor)', 'hezarfen-for-woocommerce' ),
 			__( 'Giriş yaparken e-posta yerine e-posta veya telefon yazılabilmesi (yine şifreyle giriş yapılacak)', 'hezarfen-for-woocommerce' ),
 			__( 'SMTP ayarlarını düzenleyebilme (harici eklenti kurmadan)', 'hezarfen-for-woocommerce' ),
 			__( 'Checkout field editör özelliği (ödeme ekranında sürükle bırak ile yeni alanlar ekleme, mevcut alanların sırasını düzenleme, mahalle veya ilçe alanlarındaki Hezarfen özelliklerini kapatabilme)', 'hezarfen-for-woocommerce' ),
@@ -44,6 +45,7 @@ class Hezarfen_Roadmap_Helper {
 			__( 'İade Özelliği (Hesabım sayfasından müşterinin iade talebi oluşturabileceği alan)', 'hezarfen-for-woocommerce' ),
 			__( 'Iletimerkezi SMS entegrasyonu', 'hezarfen-for-woocommerce' ),
 			__( 'Diğer SMS entegrasyonu (detay kısmında istediğiniz SMS firmasını belirtiniz)', 'hezarfen-for-woocommerce' ),
+			__( 'Kullanıcı dostu kargo takip ekranı', 'hezarfen-for-woocommerce' ),
 		);
 	}
 

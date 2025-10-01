@@ -418,7 +418,7 @@ class Hezarfen {
 		);
 		
 		update_option( 'hezarfen_roadmap_votes', $data );
-		update_option( 'hezarfen_roadmap_last_vote', current_time( 'timestamp' ) );
+		update_option( 'hezarfen_v3_roadmap_last_vote', current_time( 'timestamp' ) );
 
 		wp_send_json_success( array(
 			'message' => __( 'Oylarınız info@intense.com.tr adresine e-posta ile gönderildi. Teşekkür ederiz!', 'hezarfen-for-woocommerce' )
