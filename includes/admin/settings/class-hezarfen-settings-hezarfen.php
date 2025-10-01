@@ -9,6 +9,7 @@ defined( 'ABSPATH' ) || exit();
 
 use Hezarfen\Inc\Data\PostMetaEncryption;
 use Hezarfen\Inc\Helper;
+use Hezarfen_Roadmap_Helper;
 
 if ( class_exists( 'Hezarfen_Settings_Hezarfen', false ) ) {
 	return new Hezarfen_Settings_Hezarfen();
@@ -30,7 +31,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_and_styles' ) );
 		add_action( 'woocommerce_admin_field_sms_rules_button', array( $this, 'output_sms_rules_button' ) );
 		add_action( 'woocommerce_admin_field_roadmap_voting', array( $this, 'output_roadmap_voting' ) );
-		add_action( 'wp_ajax_hezarfen_submit_roadmap_votes', array( $this, 'handle_roadmap_vote_submission' ) );
+		// Note: AJAX action is registered in main Hezarfen class to ensure it's always available
 
 		parent::__construct();
 	}
@@ -740,74 +741,17 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	}
 
 	/**
-	 * Get survey free features list
-	 *
-	 * @return array
-	 */
-	private function get_survey_free_features() {
-		return array(
-			__( 'Yorum hatırlatma e-postası', 'hezarfen-for-woocommerce' ),
-			__( 'Ürün tekrar stokta bildirimi', 'hezarfen-for-woocommerce' ),
-			__( 'Cüzdan özelliği', 'hezarfen-for-woocommerce' ),
-			__( 'Giriş yaparken e-posta yerine e-posta veya telefon yazılabilmesi (yine şifreyle giriş yapılacak)', 'hezarfen-for-woocommerce' ),
-			__( 'SMTP ayarlarını düzenleyebilme (harici eklenti kurmadan)', 'hezarfen-for-woocommerce' ),
-			__( 'Checkout field editör özelliği (ödeme ekranında sürükle bırak ile yeni alanlar ekleme, mevcut alanların sırasını düzenleme, mahalle veya ilçe alanlarındaki Hezarfen özelliklerini kapatabilme)', 'hezarfen-for-woocommerce' ),
-			__( 'banka sanal posları tek çekim destekli (TEB, İşbank, Şekerbank, Halkbank, Finansbank, Ziraat)', 'hezarfen-for-woocommerce' ),
-			__( 'Garanti sanal pos', 'hezarfen-for-woocommerce' ),
-			__( 'ParamPos', 'hezarfen-for-woocommerce' ),
-			__( 'Tosla', 'hezarfen-for-woocommerce' ),
-			__( 'Tami', 'hezarfen-for-woocommerce' ),
-			__( 'PayTR', 'hezarfen-for-woocommerce' ),
-			__( 'Iyzico', 'hezarfen-for-woocommerce' ),
-			__( 'banka sanal pos - Kuveyt POS (tek çekim)', 'hezarfen-for-woocommerce' ),
-			__( 'banka sanal pos Akbank (tek çekim)', 'hezarfen-for-woocommerce' ),
-			__( 'banka sanal pos Vakıf Katılım (tek çekim)', 'hezarfen-for-woocommerce' ),
-			__( 'banka sanal pos Albaraka (tek çekim)', 'hezarfen-for-woocommerce' ),
-			__( 'Hepsijet dışında farklı kargolarla da indirimli kargo anlaşması (şu anda Hepsijet&Intense işbirliğiyle 0-4 desi 69,99TL\'ye gönderim yapabiliyorsunuz, alt gönderim limiti olmadan ve kargoyla anlaşma yapmadan. Takip bilgileri ve sipariş durumu da otomatik güncelleniyor. Diğer kargolarla anlaşma yapılmasını istiyor musunuz?)', 'hezarfen-for-woocommerce' ),
-			__( 'Özel sipariş durumları tanımlayabilme', 'hezarfen-for-woocommerce' ),
-			__( 'Kapıda ödemeye ek tutar tanımlayabilme', 'hezarfen-for-woocommerce' ),
-			__( 'Dönüşüm odaklı ve kullanıcı dostu ödeme ekranı tasarımı', 'hezarfen-for-woocommerce' ),
-			__( 'Verimor SMS entegrasyonu', 'hezarfen-for-woocommerce' ),
-			__( 'Iletimerkezi SMS entegrasyonu', 'hezarfen-for-woocommerce' ),
-			__( 'Diğer SMS entegrasyonu (detay kısmında istediğiniz SMS firmasını belirtiniz)', 'hezarfen-for-woocommerce' ),
-		);
-	}
-
-	/**
-	 * Get survey pro features list
-	 *
-	 * @return array
-	 */
-	private function get_survey_pro_features() {
-		return array(
-			__( 'Yorum hatırlatma e-postası için zamanlama (kargo teslim edildikten sonra istenilen saat sonra otomatik)', 'hezarfen-for-woocommerce' ),
-			__( 'Yorum hatırlam bildiriminin SMS olarak da gönderilmesi', 'hezarfen-for-woocommerce' ),
-			__( 'Yorum hatırlatma bildiriminde kupon verebilme', 'hezarfen-for-woocommerce' ),
-			__( 'Sipariş sonrası cüzdana puan yüklenmesi', 'hezarfen-for-woocommerce' ),
-			__( 'banka sanal posları taksit özelliği (Akbank, TEB, İşbank, Şekerbank, Halkbank, Finansbank, Ziraat)', 'hezarfen-for-woocommerce' ),
-			__( 'Garanti sanal pos taksit özelliği', 'hezarfen-for-woocommerce' ),
-			__( 'banka sanal pos taksit özelliği - Kuveyt POS', 'hezarfen-for-woocommerce' ),
-			__( 'banka sanal pos taksit özelliği Akbank', 'hezarfen-for-woocommerce' ),
-			__( 'banka sanal pos taksit özelliği Vakıf Katılım', 'hezarfen-for-woocommerce' ),
-			__( 'banka sanal pos taksit özelliği Albaraka', 'hezarfen-for-woocommerce' ),
-			__( 'banka sanal pos akıllı pos yönlendirme (belirli işlemlerin belirli poslardan geçmesi için kural tanımlayabilme ve bir pos başarısız olduğunda diğerinden deneme yapılması)', 'hezarfen-for-woocommerce' ),
-			__( 'Hesabım sayfasının düzenlenmesi (Hesabım sayfasının daha kullanıcı dostu hale gelebilmesi)', 'hezarfen-for-woocommerce' ),
-			__( 'Google ile giriş yap özelliği', 'hezarfen-for-woocommerce' ),
-			__( 'IYS destekli toplu e-posta gönderimi (Euromessage Express Entegrasyonu)', 'hezarfen-for-woocommerce' ),
-			__( 'Telefon ve SMS ile giriş yap özelliği (şifre istemeden)', 'hezarfen-for-woocommerce' ),
-			__( 'Müşteri alışveriş yaptıktan sonra mevcut siparişine ek yapabilsin (eğer sipariş belirli durumlardaysa)', 'hezarfen-for-woocommerce' ),
-		);
-	}
-
-	/**
 	 * Output roadmap voting interface
 	 *
 	 * @param array $value Field data
 	 * @return void
 	 */
 	public function output_roadmap_voting( $value ) {
-		$free_features = $this->get_survey_free_features();
-		$pro_features = $this->get_survey_pro_features();
+		// Load helper class
+		require_once WC_HEZARFEN_UYGULAMA_YOLU . 'includes/admin/settings/class-hezarfen-roadmap-helper.php';
+		
+		$free_features = Hezarfen_Roadmap_Helper::get_free_features();
+		$pro_features = Hezarfen_Roadmap_Helper::get_pro_features();
 		?>
 		<div class="hezarfen-roadmap-container" style="max-width: 1200px; margin: 20px 0;">
 			<div class="hezarfen-roadmap-header" style="margin-bottom: 30px;">
@@ -815,12 +759,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				<p style="font-size: 14px; color: #666; margin-top: 10px;">
 					<?php esc_html_e( 'Hangi özelliklerin geliştirilmesini istersiniz? Her kategoriden en fazla 5 özellik seçebilirsiniz.', 'hezarfen-for-woocommerce' ); ?>
 				</p>
-				<div style="background: #e7f3ff; border-left: 4px solid #2271b1; padding: 12px 15px; margin-top: 15px;">
-					<p style="margin: 0; font-size: 13px; color: #2271b1;">
-						<strong>ℹ️ <?php esc_html_e( 'Bilgilendirme:', 'hezarfen-for-woocommerce' ); ?></strong>
-						<?php esc_html_e( 'Seçimleriniz info@intense.com.tr adresine e-posta ile gönderilecek ve teknik nedenlerden dolayı alan adınız paylaşılacaktır.', 'hezarfen-for-woocommerce' ); ?>
-					</p>
-				</div>
 			</div>
 
 			<div class="hezarfen-roadmap-sections" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 20px;">
@@ -857,117 +795,17 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				</div>
 			</div>
 
-			<div class="hezarfen-roadmap-actions" style="margin-top: 20px;">
-				<button type="button" id="hezarfen-submit-votes" class="button button-primary button-large">
+			<div class="hezarfen-roadmap-actions" style="margin-top: 30px; text-align: center;">
+				<p style="font-size: 12px; color: #666; margin: 0 0 15px 0; opacity: 0.85;">
+					<?php esc_html_e( 'Seçimleriniz info@intense.com.tr adresine e-posta ile gönderilecektir. Paylaşılacak veriler: oylamanız, alan adınız, SMTP gönderimi yapan e-posta adresiniz (gönderici olarak). Verileriniz üçüncü taraflarla paylaşılmaz veya SPAM gönderim yapılmaz.', 'hezarfen-for-woocommerce' ); ?>
+				</p>
+				<button type="button" id="hezarfen-submit-votes" class="button button-primary button-large" style="padding: 8px 40px; font-size: 14px;">
 					<?php esc_html_e( 'Oylarımı Gönder', 'hezarfen-for-woocommerce' ); ?>
 				</button>
 				<span class="hezarfen-vote-message" style="margin-left: 15px; display: none;"></span>
 			</div>
 		</div>
 		<?php
-	}
-
-	/**
-	 * Handle roadmap vote submission via AJAX
-	 *
-	 * @return void
-	 */
-	public function handle_roadmap_vote_submission() {
-		// Verify nonce
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'hezarfen_roadmap_vote' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Güvenlik doğrulaması başarısız.', 'hezarfen-for-woocommerce' ) ) );
-			return;
-		}
-
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Yetkisiz erişim.', 'hezarfen-for-woocommerce' ) ) );
-			return;
-		}
-
-		$free_features = isset( $_POST['free_features'] ) ? array_map( 'intval', (array) $_POST['free_features'] ) : array();
-		$pro_features = isset( $_POST['pro_features'] ) ? array_map( 'intval', (array) $_POST['pro_features'] ) : array();
-
-		// Validate limits
-		if ( count( $free_features ) > 5 ) {
-			wp_send_json_error( array( 'message' => __( 'En fazla 5 ücretsiz özellik seçebilirsiniz.', 'hezarfen-for-woocommerce' ) ) );
-		}
-
-		if ( count( $pro_features ) > 5 ) {
-			wp_send_json_error( array( 'message' => __( 'En fazla 5 ücretli özellik seçebilirsiniz.', 'hezarfen-for-woocommerce' ) ) );
-		}
-
-		// Get feature lists
-		$all_free_features = $this->get_survey_free_features();
-		$all_pro_features = $this->get_survey_pro_features();
-
-		// Prepare data
-		$domain = parse_url( home_url(), PHP_URL_HOST );
-		$timestamp = current_time( 'mysql' );
-
-		// Build email content
-		$selected_free_features = array();
-		foreach ( $free_features as $index ) {
-			if ( isset( $all_free_features[ $index ] ) ) {
-				$selected_free_features[] = $all_free_features[ $index ];
-			}
-		}
-
-		$selected_pro_features = array();
-		foreach ( $pro_features as $index ) {
-			if ( isset( $all_pro_features[ $index ] ) ) {
-				$selected_pro_features[] = $all_pro_features[ $index ];
-			}
-		}
-
-		// Create email body
-		$email_subject = sprintf( 'Hezarfen v3.0 Roadmap Oyları - %s', $domain );
-		
-		$email_body = "Hezarfen v3.0 Geliştirme Yol Haritası Oyları\n\n";
-		$email_body .= "Alan Adı: " . $domain . "\n";
-		$email_body .= "Tarih: " . $timestamp . "\n\n";
-		
-		$email_body .= "=== ÜCRETSİZ SÜRÜM ÖZELLİKLERİ (" . count( $selected_free_features ) . "/5) ===\n\n";
-		if ( ! empty( $selected_free_features ) ) {
-			foreach ( $selected_free_features as $i => $feature ) {
-				$email_body .= ( $i + 1 ) . ". " . $feature . "\n";
-			}
-		} else {
-			$email_body .= "Seçim yapılmadı\n";
-		}
-		
-		$email_body .= "\n=== ÜCRETLİ SÜRÜM ÖZELLİKLERİ (" . count( $selected_pro_features ) . "/5) ===\n\n";
-		if ( ! empty( $selected_pro_features ) ) {
-			foreach ( $selected_pro_features as $i => $feature ) {
-				$email_body .= ( $i + 1 ) . ". " . $feature . "\n";
-			}
-		} else {
-			$email_body .= "Seçim yapılmadı\n";
-		}
-
-		// Send email
-		$headers = array( 'Content-Type: text/plain; charset=UTF-8' );
-		$email_sent = wp_mail( 'info@intense.com.tr', $email_subject, $email_body, $headers );
-
-		if ( ! $email_sent ) {
-			wp_send_json_error( array( 
-				'message' => __( 'E-posta gönderimi başarısız oldu. Lütfen daha sonra tekrar deneyin.', 'hezarfen-for-woocommerce' )
-			) );
-		}
-
-		// Save locally for reference
-		$data = array(
-			'domain' => $domain,
-			'free_features' => $free_features,
-			'pro_features' => $pro_features,
-			'timestamp' => $timestamp,
-		);
-		
-		update_option( 'hezarfen_roadmap_votes', $data );
-		update_option( 'hezarfen_roadmap_last_vote', current_time( 'timestamp' ) );
-
-		wp_send_json_success( array(
-			'message' => __( 'Oylarınız info@intense.com.tr adresine e-posta ile gönderildi. Teşekkür ederiz!', 'hezarfen-for-woocommerce' )
-		) );
 	}
 
 	/**
