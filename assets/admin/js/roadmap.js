@@ -10,6 +10,21 @@
 			return;
 		}
 
+		// Update counter display
+		function updateCounter(type) {
+			const count = $('.hezarfen-features-list[data-type="' + type + '"] input[type="checkbox"]:checked').length;
+			const max = 5;
+			const $counter = $('#' + type + '-counter');
+			
+			$counter.text('(' + count + '/' + max + ' seçildi)');
+			
+			if (count >= max) {
+				$counter.css('color', '#d63638').css('font-weight', 'bold');
+			} else {
+				$counter.css('color', '#666').css('font-weight', 'normal');
+			}
+		}
+
 		// Handle checkbox limit enforcement
 		$('.hezarfen-features-list input[type="checkbox"]').on('change', function() {
 			const $list = $(this).closest('.hezarfen-features-list');
@@ -17,24 +32,43 @@
 			const type = $list.data('type');
 			const $checkboxes = $list.find('input[type="checkbox"]');
 			const checkedCount = $checkboxes.filter(':checked').length;
+			const $item = $(this).closest('.hezarfen-feature-item');
+
+			// Update counter
+			updateCounter(type);
 
 			// Disable unchecked checkboxes if limit reached
 			if (checkedCount >= max) {
-				$checkboxes.not(':checked').prop('disabled', true).closest('.hezarfen-feature-item').css('opacity', '0.5');
+				$checkboxes.not(':checked').prop('disabled', true).closest('.hezarfen-feature-item')
+					.css({
+						'opacity': '0.4',
+						'cursor': 'not-allowed',
+						'background-color': '#f5f5f5'
+					})
+					.find('input').css('cursor', 'not-allowed');
 			} else {
-				$checkboxes.prop('disabled', false).closest('.hezarfen-feature-item').css('opacity', '1');
+				$checkboxes.prop('disabled', false).closest('.hezarfen-feature-item')
+					.css({
+						'opacity': '1',
+						'cursor': 'pointer'
+					})
+					.find('input').css('cursor', 'pointer');
 			}
 
 			// Visual feedback for selected items
 			if ($(this).is(':checked')) {
-				$(this).closest('.hezarfen-feature-item').css({
-					'background-color': type === 'free' ? '#e7f3ff' : '#ffe7e7',
-					'border-color': type === 'free' ? '#2271b1' : '#d63638'
+				$item.css({
+					'background-color': type === 'free' ? '#e7f5ff' : '#fff0f0',
+					'border-color': type === 'free' ? '#2271b1' : '#d63638',
+					'border-width': '2px',
+					'box-shadow': type === 'free' ? '0 0 0 1px #2271b1' : '0 0 0 1px #d63638'
 				});
 			} else {
-				$(this).closest('.hezarfen-feature-item').css({
+				$item.css({
 					'background-color': '#fff',
-					'border-color': '#ddd'
+					'border-color': '#ddd',
+					'border-width': '1px',
+					'box-shadow': 'none'
 				});
 			}
 		});
@@ -64,8 +98,8 @@
 				return;
 			}
 
-			if (freeFeatures.length > 3) {
-				$message.css('color', '#d63638').text('En fazla 3 ücretsiz özellik seçebilirsiniz.').show();
+			if (freeFeatures.length > 5) {
+				$message.css('color', '#d63638').text('En fazla 5 ücretsiz özellik seçebilirsiniz.').show();
 				return;
 			}
 
@@ -117,16 +151,48 @@
 		});
 
 		// Hover effects
-		$(document).on('mouseenter', '.hezarfen-feature-item:not(:has(input:disabled))', function() {
-			$(this).css('background-color', '#f9f9f9');
-		}).on('mouseleave', '.hezarfen-feature-item', function() {
+		$(document).on('mouseenter', '.hezarfen-feature-item', function() {
 			const $checkbox = $(this).find('input[type="checkbox"]');
-			const type = $(this).closest('.hezarfen-features-list').data('type');
+			const type = $(this).attr('data-feature-type');
+			
+			if ($checkbox.is(':disabled')) {
+				// Already disabled, no hover effect
+				return;
+			}
 			
 			if ($checkbox.is(':checked')) {
-				$(this).css('background-color', type === 'free' ? '#e7f3ff' : '#ffe7e7');
-			} else if (!$checkbox.is(':disabled')) {
-				$(this).css('background-color', '#fff');
+				// Brighten the selected color
+				$(this).css({
+					'background-color': type === 'free' ? '#d4ebff' : '#ffe0e0',
+					'transform': 'translateX(2px)'
+				});
+			} else {
+				// Light hover for unselected
+				$(this).css({
+					'background-color': '#fafafa',
+					'border-color': '#999',
+					'transform': 'translateX(2px)'
+				});
+			}
+		}).on('mouseleave', '.hezarfen-feature-item', function() {
+			const $checkbox = $(this).find('input[type="checkbox"]');
+			const type = $(this).attr('data-feature-type');
+			
+			if ($checkbox.is(':disabled')) {
+				return;
+			}
+			
+			if ($checkbox.is(':checked')) {
+				$(this).css({
+					'background-color': type === 'free' ? '#e7f5ff' : '#fff0f0',
+					'transform': 'translateX(0)'
+				});
+			} else {
+				$(this).css({
+					'background-color': '#fff',
+					'border-color': '#ddd',
+					'transform': 'translateX(0)'
+				});
 			}
 		});
 	});

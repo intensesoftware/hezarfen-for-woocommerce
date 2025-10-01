@@ -768,6 +768,9 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			__( 'Özel sipariş durumları tanımlayabilme', 'hezarfen-for-woocommerce' ),
 			__( 'Kapıda ödemeye ek tutar tanımlayabilme', 'hezarfen-for-woocommerce' ),
 			__( 'Dönüşüm odaklı ve kullanıcı dostu ödeme ekranı tasarımı', 'hezarfen-for-woocommerce' ),
+			__( 'Verimor SMS entegrasyonu', 'hezarfen-for-woocommerce' ),
+			__( 'İletimerkezi SMS entegrasyonu', 'hezarfen-for-woocommerce' ),
+			__( 'Diğer SMS entegrasyonu (det)', 'hezarfen-for-woocommerce' ),
 		);
 
 		$pro_features = array(
@@ -792,7 +795,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			<div class="hezarfen-roadmap-header" style="margin-bottom: 30px;">
 				<h2><?php esc_html_e( 'Hezarfen Geliştirme Yol Haritası (v3.0 - gelecek büyük sürüm)', 'hezarfen-for-woocommerce' ); ?></h2>
 				<p style="font-size: 14px; color: #666; margin-top: 10px;">
-					<?php esc_html_e( 'Hangi özelliklerin geliştirilmesini istersiniz? En çok 3 ücretsiz ve 5 ücretli özellik seçebilirsiniz.', 'hezarfen-for-woocommerce' ); ?>
+					<?php esc_html_e( 'Hangi özelliklerin geliştirilmesini istersiniz? Her kategoriden en fazla 5 özellik seçebilirsiniz.', 'hezarfen-for-woocommerce' ); ?>
 				</p>
 				<div style="background: #e7f3ff; border-left: 4px solid #2271b1; padding: 12px 15px; margin-top: 15px;">
 					<p style="margin: 0; font-size: 13px; color: #2271b1;">
@@ -807,13 +810,13 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				<div class="hezarfen-roadmap-section">
 					<h3 style="margin-bottom: 15px; color: #0073aa;">
 						<?php esc_html_e( 'Ücretsiz Sürüm Özellikleri', 'hezarfen-for-woocommerce' ); ?>
-						<span style="font-size: 13px; color: #666; font-weight: normal;">(<?php esc_html_e( 'En fazla 3 seçim', 'hezarfen-for-woocommerce' ); ?>)</span>
+						<span id="free-counter" style="font-size: 13px; color: #666; font-weight: normal;">(0/5 <?php esc_html_e( 'seçildi', 'hezarfen-for-woocommerce' ); ?>)</span>
 					</h3>
-					<div class="hezarfen-features-list" data-type="free" data-max="3">
+					<div class="hezarfen-features-list" data-type="free" data-max="5">
 						<?php foreach ( $free_features as $index => $feature ) : ?>
-							<label class="hezarfen-feature-item" style="display: flex; align-items: flex-start; padding: 12px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s;">
-								<input type="checkbox" name="free_features[]" value="<?php echo esc_attr( $index ); ?>" style="margin: 3px 10px 0 0;">
-								<span style="flex: 1; font-size: 13px;"><?php echo esc_html( $feature ); ?></span>
+							<label class="hezarfen-feature-item" data-feature-type="free" style="display: flex; align-items: flex-start; padding: 12px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s ease; background: #fff;">
+								<input type="checkbox" name="free_features[]" value="<?php echo esc_attr( $index ); ?>" style="margin: 3px 10px 0 0; cursor: pointer;">
+								<span style="flex: 1; font-size: 13px; line-height: 1.5;"><?php echo esc_html( $feature ); ?></span>
 							</label>
 						<?php endforeach; ?>
 					</div>
@@ -823,13 +826,13 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				<div class="hezarfen-roadmap-section">
 					<h3 style="margin-bottom: 15px; color: #d63638;">
 						<?php esc_html_e( 'Ücretli Sürüm Özellikleri', 'hezarfen-for-woocommerce' ); ?>
-						<span style="font-size: 13px; color: #666; font-weight: normal;">(<?php esc_html_e( 'En fazla 5 seçim', 'hezarfen-for-woocommerce' ); ?>)</span>
+						<span id="pro-counter" style="font-size: 13px; color: #666; font-weight: normal;">(0/5 <?php esc_html_e( 'seçildi', 'hezarfen-for-woocommerce' ); ?>)</span>
 					</h3>
 					<div class="hezarfen-features-list" data-type="pro" data-max="5">
 						<?php foreach ( $pro_features as $index => $feature ) : ?>
-							<label class="hezarfen-feature-item" style="display: flex; align-items: flex-start; padding: 12px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s;">
-								<input type="checkbox" name="pro_features[]" value="<?php echo esc_attr( $index ); ?>" style="margin: 3px 10px 0 0;">
-								<span style="flex: 1; font-size: 13px;"><?php echo esc_html( $feature ); ?></span>
+							<label class="hezarfen-feature-item" data-feature-type="pro" style="display: flex; align-items: flex-start; padding: 12px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s ease; background: #fff;">
+								<input type="checkbox" name="pro_features[]" value="<?php echo esc_attr( $index ); ?>" style="margin: 3px 10px 0 0; cursor: pointer;">
+								<span style="flex: 1; font-size: 13px; line-height: 1.5;"><?php echo esc_html( $feature ); ?></span>
 							</label>
 						<?php endforeach; ?>
 					</div>
@@ -867,8 +870,8 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		$pro_features = isset( $_POST['pro_features'] ) ? array_map( 'intval', (array) $_POST['pro_features'] ) : array();
 
 		// Validate limits
-		if ( count( $free_features ) > 3 ) {
-			wp_send_json_error( array( 'message' => __( 'En fazla 3 ücretsiz özellik seçebilirsiniz.', 'hezarfen-for-woocommerce' ) ) );
+		if ( count( $free_features ) > 5 ) {
+			wp_send_json_error( array( 'message' => __( 'En fazla 5 ücretsiz özellik seçebilirsiniz.', 'hezarfen-for-woocommerce' ) ) );
 		}
 
 		if ( count( $pro_features ) > 5 ) {
@@ -898,6 +901,9 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			__( 'Özel sipariş durumları tanımlayabilme', 'hezarfen-for-woocommerce' ),
 			__( 'Kapıda ödemeye ek tutar tanımlayabilme', 'hezarfen-for-woocommerce' ),
 			__( 'Dönüşüm odaklı ve kullanıcı dostu ödeme ekranı tasarımı', 'hezarfen-for-woocommerce' ),
+			__( 'Verimor SMS entegrasyonu', 'hezarfen-for-woocommerce' ),
+			__( 'Iletimerkezi SMS entegrasyonu', 'hezarfen-for-woocommerce' ),
+			__( 'Diğer SMS entegrasyonu (detay kısmında istediğiniz SMS firmasını belirtiniz)', 'hezarfen-for-woocommerce' ),
 		);
 
 		$all_pro_features = array(
@@ -914,6 +920,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			__( 'banka sanal pos akıllı pos yönlendirme (belirli işlemlerin belirli poslardan geçmesi için kural tanımlayabilme ve bir pos başarısız olduğunda diğerinden deneme yapılması)', 'hezarfen-for-woocommerce' ),
 			__( 'Hesabım sayfasının düzenlenmesi (Hesabım sayfasının daha kullanıcı dostu hale gelebilmesi)', 'hezarfen-for-woocommerce' ),
 			__( 'Google ile giriş yap özelliği', 'hezarfen-for-woocommerce' ),
+			__( 'IYS destekli toplu e-posta gönderimi (Euromessage Express Entegrasyonu)', 'hezarfen-for-woocommerce' ),
 			__( 'Telefon ve SMS ile giriş yap özelliği (şifre istemeden)', 'hezarfen-for-woocommerce' ),
 			__( 'Müşteri alışveriş yaptıktan sonra mevcut siparişine ek yapabilsin (eğer sipariş belirli durumlardaysa)', 'hezarfen-for-woocommerce' ),
 		);
@@ -944,7 +951,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		$email_body .= "Alan Adı: " . $domain . "\n";
 		$email_body .= "Tarih: " . $timestamp . "\n\n";
 		
-		$email_body .= "=== ÜCRETSİZ SÜRÜM ÖZELLİKLERİ (" . count( $selected_free_features ) . "/3) ===\n\n";
+		$email_body .= "=== ÜCRETSİZ SÜRÜM ÖZELLİKLERİ (" . count( $selected_free_features ) . "/5) ===\n\n";
 		if ( ! empty( $selected_free_features ) ) {
 			foreach ( $selected_free_features as $i => $feature ) {
 				$email_body .= ( $i + 1 ) . ". " . $feature . "\n";
