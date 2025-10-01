@@ -745,7 +745,12 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			
 			if ( version_compare( WC_HEZARFEN_VERSION, '2.7.30', '<=' ) ) {
 				// Show Roadmap
-				$settings = $this->get_settings_for_section( $current_section );
+				if( version_compare( WC_VERSION, '5.4.0', '<' ) ) {
+					$settings = $this->get_settings( $current_section );
+				}else{
+					$settings = $this->get_settings_for_section( $current_section );
+				}
+
 				WC_Admin_Settings::output_fields( $settings );
 			} else {
 				// Show Training
@@ -755,7 +760,12 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			$hide_save_button = true;
 			$this->output_training_section();
 		} else {
-			$settings = $this->get_settings_for_section( $current_section );
+			if( version_compare( WC_VERSION, '5.4.0', '<' ) ) {
+				$settings = $this->get_settings( $current_section );
+			}else{
+				$settings = $this->get_settings_for_section( $current_section );
+			}
+
 			WC_Admin_Settings::output_fields( $settings );
 			
 			// Add NetGSM credentials modal for SMS settings section
@@ -1233,7 +1243,12 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			return false;
 		}
 
-		$settings = $this->get_settings_for_section( $current_section );
+		if( version_compare( WC_VERSION, '5.4.0', '<' ) ) {
+			$settings = $this->get_settings( $current_section );
+		}else{
+			$settings = $this->get_settings_for_section( $current_section );
+		}
+
 		WC_Admin_Settings::save_fields( $settings );
 
 		if ( 'encryption' == $current_section ) {
