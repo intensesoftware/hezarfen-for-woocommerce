@@ -1271,10 +1271,8 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			wp_enqueue_style( 'wc_hezarfen_settings_css', plugins_url( 'assets/admin/css/settings.css', WC_HEZARFEN_FILE ), array(), WC_HEZARFEN_VERSION );
 		}
 
-		// Load training script for training section and default section (when training is default)
-		if ( 'training' === $current_section || ( '' === $current_section && version_compare( WC_HEZARFEN_VERSION, '2.7.30', '>' ) ) ) {
-			wp_enqueue_script( 'wc_hezarfen_training_js', plugins_url( 'assets/admin/js/training.js', WC_HEZARFEN_FILE ), array( 'jquery' ), WC_HEZARFEN_VERSION, true );
-		}
+		// Load training script on all Hezarfen settings pages (for the swimming subscribe card)
+		wp_enqueue_script( 'wc_hezarfen_training_js', plugins_url( 'assets/admin/js/training.js', WC_HEZARFEN_FILE ), array( 'jquery' ), WC_HEZARFEN_VERSION, true );
 
 		if ( 'woocommerce_page_wc-settings' === $hook_suffix && 'sms_settings' === $current_section ) {
 			wp_enqueue_script( 'wc_hezarfen_sms_settings_js', plugins_url( 'assets/admin/js/sms-settings.js', WC_HEZARFEN_FILE ), array( 'jquery' ), WC_HEZARFEN_VERSION . '-' . filemtime( plugin_dir_path( WC_HEZARFEN_FILE ) . 'assets/admin/js/sms-settings.js' ), true );
