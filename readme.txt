@@ -135,6 +135,9 @@ For more details, please see our [Privacy Policy](https://intense.com.tr/yasal/g
 
 == Frequently Asked Questions ==
 
+= WooCommerce versiyon uyumluluğu nedir? =
+Hezarfen çalışmak için minimum WooCommerce 6.9.0 sürümüne ihtiyaç duyar, fakat maksimum verim için son sürüm olan WooCommerce 10.2.2 kullanmanız önerilir.
+
 = Eğitim içeriklerine nasıl ulaşabilirim? =
 Eğitim videoları ve rehberler için [Hezarfen YouTube resmi kanalımızı](https://www.youtube.com/@hezarfenforwoocommerce) ziyaret edebilir ve abone olabilirsiniz.
 
