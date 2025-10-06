@@ -23,6 +23,7 @@ require_once 'notification-providers/class-mst-notification-provider.php';
 require_once 'notification-providers/class-netgsm.php';
 require_once 'notification-providers/class-pandasms.php';
 require_once 'class-third-party-data-support.php';
+require_once 'class-deactivation-wizard.php';
 
 /**
  * Manual Shipment Tracking package main class.
@@ -56,6 +57,7 @@ class Manual_Shipment_Tracking {
 	 */
 	private function __construct() {
 		new Settings();
+		new Deactivation_Wizard(); // Initialize the deactivation wizard for Pro plugin
 
 		if ( self::is_enabled() ) {
 			$this->initialize_classes();
