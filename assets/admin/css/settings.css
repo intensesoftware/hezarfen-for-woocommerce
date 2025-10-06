@@ -140,6 +140,56 @@ input.error {
 	transform: scale(1.1);
 }
 
+/* WhatsApp Support Card */
+.hezarfen-whatsapp-card {
+	position: fixed;
+	bottom: 110px;
+	right: 20px;
+	width: 200px;
+	background: linear-gradient(135deg, #25D366 0%, #1ebe57 100%);
+	border-radius: 16px;
+	box-shadow: 
+		0 8px 32px rgba(37, 211, 102, 0.3),
+		0 4px 16px rgba(0, 0, 0, 0.1);
+	z-index: 50;
+	cursor: pointer;
+	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+	animation: swimIn 1s ease-out 0.3s backwards, floatCard 6s ease-in-out infinite 1.3s;
+	overflow: hidden;
+}
+
+.hezarfen-whatsapp-card::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+	animation: shimmer 3s ease-in-out infinite;
+}
+
+.hezarfen-whatsapp-card:hover {
+	transform: translateY(-8px) scale(1.05);
+	box-shadow: 
+		0 16px 48px rgba(37, 211, 102, 0.4),
+		0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.hezarfen-whatsapp-icon {
+	flex-shrink: 0;
+	width: 32px;
+	height: 32px;
+	background: #fff;
+	backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	animation: pulse 2s ease-in-out infinite;
+}
+
 /* Animations */
 @keyframes swimIn {
 	0% {
@@ -397,12 +447,19 @@ input.error {
 		right: 15px;
 	}
 	
+	.hezarfen-whatsapp-card {
+		width: 180px;
+		bottom: 100px;
+		right: 15px;
+	}
+	
 	.hezarfen-card-content {
 		padding: 12px;
 		gap: 10px;
 	}
 	
-	.hezarfen-youtube-icon {
+	.hezarfen-youtube-icon,
+	.hezarfen-whatsapp-icon {
 		width: 28px;
 		height: 28px;
 	}
@@ -423,12 +480,19 @@ input.error {
 		right: 10px;
 	}
 	
+	.hezarfen-whatsapp-card {
+		width: 160px;
+		bottom: 90px;
+		right: 10px;
+	}
+	
 	.hezarfen-card-content {
 		padding: 10px;
 		gap: 8px;
 	}
 	
-	.hezarfen-youtube-icon {
+	.hezarfen-youtube-icon,
+	.hezarfen-whatsapp-icon {
 		width: 24px;
 		height: 24px;
 	}
