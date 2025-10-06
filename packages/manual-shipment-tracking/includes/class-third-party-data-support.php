@@ -244,7 +244,11 @@ class Third_Party_Data_Support {
 
 		$tracking_num = $order->get_meta( $plugin_data[ $plugin ]['tracking_num'], true );
 
-		$tracking_url = $order->get_meta( $plugin_data[ $plugin ]['tracking_url'], true ) ?? self::NONSENSE_STRING;
+		$tracking_url = self::NONSENSE_STRING;
+
+		if( array_key_exists( $plugin, $plugin_data ) && array_key_exists( 'tracking_url', $plugin_data[ $plugin ] ) ) {
+			$tracking_url = $order->get_meta( $plugin_data[ $plugin ]['tracking_url'], true );
+		}
 
 		if ( ! $tracking_url ) {
 			// try to create tracking url.
