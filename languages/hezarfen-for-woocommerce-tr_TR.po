@@ -6,7 +6,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2025-10-01 19:43+0000\n"
+"PO-Revision-Date: 2025-10-06 08:14+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -2947,11 +2947,7 @@ msgstr "Ürünleriniz Kargoya Verildi"
 
 #: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:28
 msgid "Your order has been shipped. Tracking information is below:"
-msgstr ""
-"Siparişiniz kargoya verilmiştir. Kargo takip bilgileri aşağıdadır:"
-"Ürünleriniz kargoya verilmiştir. Kargo takip bilgileri aşağıda yer "
-"almaktadır:Ürünleriniz kargoya verilmiştir. Kargo takip bilgileri aşağıda "
-"yer almaktadır:"
+msgstr "Siparişiniz kargoya verilmiştir. Kargo takip bilgileri aşağıdadır:"
 
 #: packages/manual-shipment-tracking/includes/class-my-account.php:101
 msgid "Your order hasn't been shipped yet."
