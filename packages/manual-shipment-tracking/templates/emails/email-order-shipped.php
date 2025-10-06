@@ -44,7 +44,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 			<?php $text_color = wc_light_or_dark( $background_color, '#202020', '#ffffff' ); ?>
 			<p style="margin: 0;">
 				<a
-					style="display: inline-block; padding: 3px 10px; height: 35px; line-height: 35px; background: <?php echo esc_attr( $background_color ); ?>; color: <?php echo esc_attr( $text_color ); ?> !important; text-decoration: none;"
+					style="display: inline-block; padding: 3px 10px; height: 35px; line-height: 35px; background: <?php echo esc_attr( apply_filters( 'hezarfen_email_tracking_link_background_color', $background_color ) ); ?>; color: <?php echo esc_attr( apply_filters( 'hezarfen_email_tracking_link_text_color', $text_color ) ); ?> !important; text-decoration: none;"
 					href="<?php echo esc_url( $data->tracking_url ); ?>"
 					target="_blank">
 					<?php esc_html_e( 'Track Cargo', 'hezarfen-for-woocommerce' ); ?>
