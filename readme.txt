@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.7.7
+Stable tag: 2.7.8
 
 🚀 2 bin site kullanıyor! Kargo takip, ücretsiz Hepsijet Entegrasyonu (1-4 desi: 69,99TL+KDV), Mesafeli Satış Sözleşmesi, NetGSM sipariş ve kargo SMS
 == Description ==
@@ -261,6 +261,12 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
+= 2.7.8 - 2025-10-06 =
+* Kargoya verildi e-postasında tekrarlanan yazı problemi giderildi.
+* WooCommerce için minimum 6.9.0 gereksinim tanımlaması yapıldı.
+* Hezarfen pasif edilmeden önce "kargoya verildi" durumundaki siparişlerin "hazırlanıyor "durumuna aktarılabilmesi için bir özellik eklendi.
+* PHP uyarısı giderildi.
+
 = 2.7.7 - 2025-10-02 =
 * Minimum WooCommerce versiyon gereksinimi 6.9.0 olarak tanımlandı.
 
