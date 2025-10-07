@@ -555,7 +555,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 									<label for="condition-status"><?php esc_html_e( 'Trigger Condition', 'hezarfen-for-woocommerce' ); ?></label>
 								</th>
 								<td>
-									<select id="condition-status" name="condition_status" required style="width: 300px;">
+									<select id="condition-status" name="condition_status" style="width: 300px;">
 										<option value=""><?php esc_html_e( 'Select trigger...', 'hezarfen-for-woocommerce' ); ?></option>
 										<optgroup label="<?php esc_attr_e( 'Order Status Changes', 'hezarfen-for-woocommerce' ); ?>">
 											<?php foreach ( wc_get_order_statuses() as $status_key => $status_label ) : ?>
@@ -576,7 +576,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 									<label for="action-type"><?php esc_html_e( 'Action Type', 'hezarfen-for-woocommerce' ); ?></label>
 								</th>
 								<td>
-									<select id="action-type" name="action_type" required style="width: 300px;">
+									<select id="action-type" name="action_type" style="width: 300px;">
 										<option value=""><?php esc_html_e( 'Select action...', 'hezarfen-for-woocommerce' ); ?></option>
 										<option value="netgsm"><?php esc_html_e( 'Send SMS via NetGSM', 'hezarfen-for-woocommerce' ); ?></option>
 																			<option value="netgsm_legacy"><?php esc_html_e( 'Send SMS via NetGSM Official Plugin (Legacy - Deprecated Soon)', 'hezarfen-for-woocommerce' ); ?></option>
