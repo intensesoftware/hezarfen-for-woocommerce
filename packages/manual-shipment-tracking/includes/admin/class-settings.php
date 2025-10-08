@@ -328,6 +328,21 @@ class Settings {
 				'type' => 'sectionend',
 				'id' => 'hezarfen_hepsijet_relay_settings'
 			),
+			array(
+				'type'  => 'title',
+				'title' => __( 'Label Settings', 'hezarfen-for-woocommerce' ),
+			),
+			array(
+				'title' => __( 'Show order details on label', 'hezarfen-for-woocommerce' ),
+				'type' => 'checkbox',
+				'id' => 'hezarfen_hepsijet_show_order_details_on_label',
+				'default' => 'yes',
+				'desc' => __( 'Display order details on the PDF label. If unchecked, only Hepsijet Label will be shown.', 'hezarfen-for-woocommerce' )
+			),
+			array(
+				'type' => 'sectionend',
+				'id' => 'hezarfen_hepsijet_label_settings'
+			),
 		);
 	}
 

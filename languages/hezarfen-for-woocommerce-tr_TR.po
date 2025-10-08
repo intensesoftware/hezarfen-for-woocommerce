@@ -6,7 +6,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2025-10-06 08:14+0000\n"
+"PO-Revision-Date: 2025-10-08 09:18+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgid "850xxxxxxx, 312XXXXXXX etc."
 msgstr "850xxxxxxx, 312XXXXXXX vb."
 
 #. 1: plugin name, 2: minimum WooCommerce version, 3: current WooCommerce version
-#: hezarfen-for-woocommerce.php:82
+#: hezarfen-for-woocommerce.php:83
 #, php-format
 msgid ""
 "<strong>%1$s</strong> requires WooCommerce version %2$s or higher. You are "
@@ -130,7 +130,7 @@ msgid "Agreements will be created when the order status changes to Processing."
 msgstr ""
 "Sipariş durumu Hazırlanıyor olarak değiştiğinde sözleşmeler oluşturulacaktır."
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:371
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:386
 msgid "An error occured when installing and activating the PandaSMS plugin."
 msgstr "PandaSMS eklentisi yüklenip aktif edilirken bir hata oluştu."
 
@@ -784,6 +784,12 @@ msgstr ""
 msgid "Discount amount"
 msgstr "İndirim tutarı"
 
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:340
+msgid ""
+"Display order details on the PDF label. If unchecked, only Hepsijet Label "
+"will be shown."
+msgstr "Sipariş detaylarını PDF etiketinde göster."
+
 #: includes/contracts/admin/class-contracts-settings.php:236
 msgid "Distance Sales Contract"
 msgstr "Mesafeli Satış Sözleşmesi"
@@ -1421,11 +1427,11 @@ msgstr "Bilgilendirme (0)"
 msgid "Inline"
 msgstr "Satır İçi"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:369
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:384
 msgid "Install & activate PandaSMS for Woocommerce plugin"
 msgstr "PandaSMS for Woocommerce eklentisini yükle & aktif et"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:367
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:382
 msgid "Installing.."
 msgstr "Yükleniyor.."
 
@@ -1585,6 +1591,10 @@ msgstr ""
 #: packages/manual-shipment-tracking/includes/courier-companies/class-kurye.php:38
 msgid "Kurye"
 msgstr "Kurye"
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:333
+msgid "Label Settings"
+msgstr "Etiket Ayarları"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1054
 #, fuzzy
@@ -1795,7 +1805,7 @@ msgstr "Beklemede"
 msgid "Order #%s - Customer Agreements Saved"
 msgstr "Sipariş #%s - Müşteri Sözleşmeleri Kaydedildi"
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:662
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:666
 msgid "Order #:"
 msgstr "Sipariş no:"
 
@@ -1811,19 +1821,18 @@ msgstr "Sipariş Tarihi"
 msgid "Order date"
 msgstr "Sipariş tarihi"
 
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:715
+msgid "Order Details"
+msgstr ""
+
 #. Order Variables
 #: includes/contracts/core/class-post-order-processor.php:252
 #: includes/contracts/admin/class-contracts-settings.php:490
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:654
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:658
 msgid "Order Information"
 msgstr "Sipariş Bilgileri"
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:707
-#, fuzzy
-msgid "Order Items"
-msgstr "Sipariş Kalemleri"
-
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:876
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:881
 #, fuzzy
 msgid "Order Note"
 msgstr "Sipariş Notu"
@@ -1939,7 +1948,7 @@ msgstr ""
 msgid "PandaSMS Official Plugin (Legacy)"
 msgstr "PandaSMS Resmi Eklentisi"
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:370
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:385
 msgid "PandaSMS plugin is successfully installed and activated."
 msgstr "PandaSMS eklentisi başarıyla yüklendi ve aktif edildi."
 
@@ -1979,7 +1988,7 @@ msgstr "Bireysel"
 msgid "Phone Number"
 msgstr "Telefon Numarası:"
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:677
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:681
 #, fuzzy
 msgid "Phone:"
 msgstr "Telefon:"
@@ -2040,7 +2049,7 @@ msgstr "Hazırlanıyor"
 
 #: includes/contracts/core/class-template-processor.php:189
 #: includes/contracts/core/class-template-processor.php:285
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:717
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:723
 #, fuzzy
 msgid "Product"
 msgstr "Ürün"
@@ -2201,7 +2210,7 @@ msgstr "PandaSMS Resmi Eklentisiyle SMS Gönder"
 msgid "Sendeo Kargo"
 msgstr "Sendeo Kargo"
 
-#: hezarfen-for-woocommerce.php:113
+#: hezarfen-for-woocommerce.php:114
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:249
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:343
 msgid "Settings"
@@ -2269,7 +2278,7 @@ msgid "Shipped"
 msgstr "Kargoya Verildi"
 
 #. %s: number of orders
-#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:163
+#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:165
 #, php-format
 msgid "Shipped (%s)"
 msgid_plural "Shipped (%s)"
@@ -2387,6 +2396,10 @@ msgstr "Daha az göster"
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:147
 msgid "Show More"
 msgstr "Daha fazla göster"
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:336
+msgid "Show order details on label"
+msgstr "Sipariş detaylarını etikette göster"
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:129
 msgid "Show Shipment Tracking column on My Account > Orders page"
@@ -2520,7 +2533,7 @@ msgstr "T.C. Kimlik Numarası"
 msgid "Tami"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:669
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:673
 #, fuzzy
 msgid "Tarih:"
 msgstr "Tarih:"
@@ -2632,7 +2645,7 @@ msgstr "Şifre görünülürlüğü"
 msgid "Tosla"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:718
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:724
 #, fuzzy
 msgid "Total"
 msgstr "Toplam"
@@ -2811,8 +2824,8 @@ msgstr "Ödeme sırasında belirlenecek"
 msgid "Will load senders in 1.5 seconds..."
 msgstr "Gönderici başlıkları 1.5 sn içinde yüklenecek..."
 
-#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:157
-#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:182
+#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:159
+#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:184
 msgctxt "WooCommerce Order status"
 msgid "Shipped"
 msgstr "Kargoya Verildi"

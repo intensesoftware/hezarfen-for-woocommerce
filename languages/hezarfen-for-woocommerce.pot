@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2025-10-01 19:40+0000\n"
+"POT-Creation-Date: 2025-10-08 09:17+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #. %s plugin name
@@ -26,7 +26,7 @@ msgid "850xxxxxxx, 312XXXXXXX etc."
 msgstr ""
 
 #. 1: plugin name, 2: minimum WooCommerce version, 3: current WooCommerce version
-#: hezarfen-for-woocommerce.php:82
+#: hezarfen-for-woocommerce.php:83
 #, php-format
 msgid ""
 "<strong>%1$s</strong> requires WooCommerce version %2$s or higher. You are "
@@ -115,7 +115,7 @@ msgstr ""
 msgid "Agreements will be created when the order status changes to Processing."
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:371
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:386
 msgid "An error occured when installing and activating the PandaSMS plugin."
 msgstr ""
 
@@ -738,6 +738,12 @@ msgstr ""
 msgid "Discount amount"
 msgstr ""
 
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:340
+msgid ""
+"Display order details on the PDF label. If unchecked, only Hepsijet Label "
+"will be shown."
+msgstr ""
+
 #: includes/contracts/admin/class-contracts-settings.php:236
 msgid "Distance Sales Contract"
 msgstr ""
@@ -1298,11 +1304,11 @@ msgstr ""
 msgid "Inline"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:369
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:384
 msgid "Install & activate PandaSMS for Woocommerce plugin"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:367
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:382
 msgid "Installing.."
 msgstr ""
 
@@ -1441,6 +1447,10 @@ msgstr ""
 
 #: packages/manual-shipment-tracking/includes/courier-companies/class-kurye.php:38
 msgid "Kurye"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:333
+msgid "Label Settings"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1054
@@ -1640,7 +1650,7 @@ msgstr ""
 msgid "Order #%s - Customer Agreements Saved"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:662
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:666
 msgid "Order #:"
 msgstr ""
 
@@ -1656,18 +1666,18 @@ msgstr ""
 msgid "Order date"
 msgstr ""
 
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:715
+msgid "Order Details"
+msgstr ""
+
 #. Order Variables
 #: includes/contracts/core/class-post-order-processor.php:252
 #: includes/contracts/admin/class-contracts-settings.php:490
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:654
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:658
 msgid "Order Information"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:707
-msgid "Order Items"
-msgstr ""
-
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:876
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:881
 msgid "Order Note"
 msgstr ""
 
@@ -1778,7 +1788,7 @@ msgstr ""
 msgid "PandaSMS Official Plugin (Legacy)"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:370
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:385
 msgid "PandaSMS plugin is successfully installed and activated."
 msgstr ""
 
@@ -1816,7 +1826,7 @@ msgstr ""
 msgid "Phone Number"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:677
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:681
 msgid "Phone:"
 msgstr ""
 
@@ -1871,7 +1881,7 @@ msgstr ""
 
 #: includes/contracts/core/class-template-processor.php:189
 #: includes/contracts/core/class-template-processor.php:285
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:717
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:723
 msgid "Product"
 msgstr ""
 
@@ -2027,7 +2037,7 @@ msgstr ""
 msgid "Sendeo Kargo"
 msgstr ""
 
-#: hezarfen-for-woocommerce.php:113
+#: hezarfen-for-woocommerce.php:114
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:249
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:343
 msgid "Settings"
@@ -2095,7 +2105,7 @@ msgid "Shipped"
 msgstr ""
 
 #. %s: number of orders
-#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:163
+#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:165
 #, php-format
 msgid "Shipped (%s)"
 msgid_plural "Shipped (%s)"
@@ -2212,6 +2222,10 @@ msgstr ""
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:146
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:147
 msgid "Show More"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:336
+msgid "Show order details on label"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:129
@@ -2331,7 +2345,7 @@ msgstr ""
 msgid "Tami"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:669
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:673
 msgid "Tarih:"
 msgstr ""
 
@@ -2424,7 +2438,7 @@ msgstr ""
 msgid "Tosla"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:718
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:724
 msgid "Total"
 msgstr ""
 
@@ -2593,8 +2607,8 @@ msgstr ""
 msgid "Will load senders in 1.5 seconds..."
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:157
-#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:182
+#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:159
+#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:184
 msgctxt "WooCommerce Order status"
 msgid "Shipped"
 msgstr ""
