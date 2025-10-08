@@ -72,6 +72,10 @@ class Hezarfen {
 	 * @return array<array<string, mixed>>
 	 */
 	public function modify_tr_locale( $locales ) {
+		if ( 'yes' !== get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) ) {
+			return $locales;
+		}
+
 		$locales['TR']['city'] = array_merge(
 			$locales['TR']['city'] ?? array(),
 			array(
@@ -271,6 +275,10 @@ class Hezarfen {
 	public function force_enable_address2_field() {
 		// Only run if WooCommerce is active
 		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
+		if ( 'yes' !== get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) ) {
 			return;
 		}
 

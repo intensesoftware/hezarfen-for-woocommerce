@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2025-10-08 09:17+0000\n"
+"POT-Creation-Date: 2025-10-08 19:05+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #. %s plugin name
@@ -17,11 +17,11 @@ msgid ""
 "update it."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:883
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:893
 msgid "(opsiyonel)"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1156
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1166
 msgid "850xxxxxxx, 312XXXXXXX etc."
 msgstr ""
 
@@ -42,11 +42,11 @@ msgstr ""
 msgid "Access Hepsijet ile Avantajlı Kargo Fiyatları"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1366
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1376
 msgid "Action"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:576
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:586
 msgid "Action Type"
 msgstr ""
 
@@ -77,9 +77,9 @@ msgstr ""
 msgid "Add new shipment"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:491
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:547
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1329
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:501
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:557
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1339
 msgid "Add SMS Rule"
 msgstr ""
 
@@ -139,7 +139,7 @@ msgid ""
 "data collected through our website and API services on our dedicated page:"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:273
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:283
 msgid "Auto sort fields in checkout form?"
 msgstr ""
 
@@ -147,7 +147,7 @@ msgstr ""
 msgid "Automatic Updates"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1192
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1202
 msgid "Available sender names from your NetGSM account"
 msgstr ""
 
@@ -161,7 +161,7 @@ msgstr ""
 msgid "Available Variables (click to copy):"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1377
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1387
 msgid ""
 "Available Variables: {order_number}, {customer_name}, {order_status}, "
 "{order_total}"
@@ -171,8 +171,8 @@ msgstr ""
 msgid "Aylık alt gönderim limiti yoktur"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:208
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:418
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:218
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:428
 msgid ""
 "Back up the phrase in the box to a safe area, then place it in wp-config.php "
 "file."
@@ -240,7 +240,7 @@ msgstr ""
 msgid "BCC"
 msgstr ""
 
-#: includes/class-hezarfen.php:145
+#: includes/class-hezarfen.php:149
 msgid ""
 "Because the Woocommerce Checkout Blocks feature is active on your website, "
 "<strong>Hezarfen for Woocommerce</strong> plugin doesn't work on the "
@@ -309,10 +309,10 @@ msgstr ""
 
 #: includes/class-sms-automation.php:397 includes/class-sms-automation.php:422
 #: includes/class-sms-automation.php:624
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:518
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:624
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:680
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1371
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:528
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:634
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:690
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1381
 msgid "Billing Phone"
 msgstr ""
 
@@ -336,9 +336,9 @@ msgstr ""
 msgid "Campaign ended"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:711
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1201
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1334
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:721
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1211
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1344
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:139
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:633
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:739
@@ -387,11 +387,11 @@ msgstr ""
 msgid "Checkout Page Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:250
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:260
 msgid "Checkout Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:330
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:340
 msgid "Checkout T.C. Identity Number Fields Required Statuses"
 msgstr ""
 
@@ -399,7 +399,7 @@ msgstr ""
 msgid "Checkout Tax Fields"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:303
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:313
 msgid "Checkout Tax Fields Settings"
 msgstr ""
 
@@ -424,7 +424,7 @@ msgid ""
 "status becomes Processing."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:571
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:581
 msgid "Choose when to send the SMS notification"
 msgstr ""
 
@@ -449,28 +449,28 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1138
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1148
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:722
 msgid "Close modal"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:951
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:961
 msgid "Comment to reach out us!"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1376
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1386
 msgid "Commercial (11)"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:701
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:711
 msgid "Commercial - Campaign, promotion, celebration etc. - Business"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:700
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:710
 msgid "Commercial - Campaign, promotion, celebration etc. - Individual"
 msgstr ""
 
-#: includes/Checkout.php:362 includes/admin/order/OrderDetails.php:49
+#: includes/Checkout.php:364 includes/admin/order/OrderDetails.php:49
 msgid "Company"
 msgstr ""
 
@@ -483,7 +483,7 @@ msgstr ""
 msgid "Completed"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1365
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1375
 msgid "Condition"
 msgstr ""
 
@@ -504,23 +504,23 @@ msgstr ""
 msgid "Configure SMS automation for order status changes"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:450
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:460
 msgid "Configure SMS notifications for order status changes."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:463
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:473
 msgid "Configure SMS rules for different order status changes"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1204
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1214
 msgid "Connect"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1135
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1145
 msgid "Connect to NetGSM"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1355
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1365
 msgid "Connecting..."
 msgstr ""
 
@@ -677,8 +677,8 @@ msgstr ""
 msgid "Date:"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:535
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1359
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:545
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1369
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:138
 msgid "Delete"
 msgstr ""
@@ -688,7 +688,7 @@ msgstr ""
 msgid "Delete Contract"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1331
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1341
 msgid "Delete Rule"
 msgstr ""
 
@@ -729,7 +729,7 @@ msgstr ""
 msgid "DHL E-Commerce"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:244
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:254
 msgid ""
 "Disable the Checkout Field Editor for WooCommerce plugin to use this setting."
 msgstr ""
@@ -769,7 +769,7 @@ msgstr ""
 msgid "Dönüşüm odaklı ve kullanıcı dostu ödeme ekranı tasarımı"
 msgstr ""
 
-#: includes/class-hezarfen.php:395
+#: includes/class-hezarfen.php:403
 msgid "E-posta gönderimi başarısız oldu. Lütfen daha sonra tekrar deneyin."
 msgstr ""
 
@@ -779,12 +779,12 @@ msgid ""
 "Takip Plugin or Kargo Takip Türkiye plugin."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:532
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1358
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:542
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1368
 msgid "Edit"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:643
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:653
 msgid "Edit NetGSM SMS Content"
 msgstr ""
 
@@ -793,11 +793,11 @@ msgstr ""
 msgid "Edit Page"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1330
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1340
 msgid "Edit SMS Rule"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:882
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:892
 msgid "Eklemek istediğiniz ek bilgi veya önerileriniz:"
 msgstr ""
 
@@ -805,15 +805,15 @@ msgstr ""
 msgid "Email:"
 msgstr ""
 
-#: includes/class-hezarfen.php:329
+#: includes/class-hezarfen.php:337
 msgid "En fazla 5 ücretli özellik seçebilirsiniz."
 msgstr ""
 
-#: includes/class-hezarfen.php:324
+#: includes/class-hezarfen.php:332
 msgid "En fazla 5 ücretsiz özellik seçebilirsiniz."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:456
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:466
 msgid "Enable automatic SMS notifications for order status changes"
 msgstr ""
 
@@ -821,11 +821,15 @@ msgstr ""
 msgid "Enable Distance Sales Contract feature"
 msgstr ""
 
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:130
+msgid "Enable district and neighborhood feature"
+msgstr ""
+
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:64
 msgid "Enable Manual Shipment Tracking feature"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:454
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:464
 msgid "Enable SMS Automation"
 msgstr ""
 
@@ -839,11 +843,11 @@ msgstr ""
 msgid "Encryption"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:198
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:208
 msgid "Encryption Key"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:214
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:224
 msgid "Encryption Key Confirmation"
 msgstr ""
 
@@ -855,12 +859,12 @@ msgstr ""
 msgid "Encryption Key Recovery"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:375
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:396
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:385
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:406
 msgid "Encryption Key Recovery Screen"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:186
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:196
 msgid "Encryption Settings"
 msgstr ""
 
@@ -868,7 +872,7 @@ msgstr ""
 msgid "Enter contract name"
 msgstr ""
 
-#: includes/Checkout.php:385
+#: includes/Checkout.php:387
 msgid "Enter invoice title"
 msgstr ""
 
@@ -880,7 +884,7 @@ msgstr ""
 msgid "Enter package weight, dimensions, and delivery preferences"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1347
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1357
 msgid "Enter password (min 6 characters)"
 msgstr ""
 
@@ -892,15 +896,15 @@ msgstr ""
 msgid "Enter post meta key for tracking number"
 msgstr ""
 
-#: includes/Checkout.php:370
+#: includes/Checkout.php:372
 msgid "Enter T.C. Identity Number"
 msgstr ""
 
-#: includes/Checkout.php:396
+#: includes/Checkout.php:398
 msgid "Enter tax number"
 msgstr ""
 
-#: includes/Checkout.php:406
+#: includes/Checkout.php:408
 msgid "Enter tax office"
 msgstr ""
 
@@ -908,22 +912,22 @@ msgstr ""
 msgid "Enter Tracking Information"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1348
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1358
 msgid "Enter username"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1148
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1158
 msgid ""
 "Enter your NetGSM credentials to enable SMS functionality across all "
 "features."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:690
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:700
 msgid "Enter your SMS message template..."
 msgstr ""
 
-#: includes/Checkout.php:163 includes/Checkout.php:201
-#: includes/Checkout.php:208
+#: includes/Checkout.php:165 includes/Checkout.php:203
+#: includes/Checkout.php:210
 msgid "Enter your street, avenue, building, and apartment number information."
 msgstr ""
 
@@ -935,7 +939,7 @@ msgstr ""
 msgid "Error loading dates"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1353
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1363
 msgid "Error loading senders"
 msgstr ""
 
@@ -943,7 +947,7 @@ msgstr ""
 msgid "Error removing shipment data. Please try again."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:380
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:390
 msgid "Everything seems fine."
 msgstr ""
 
@@ -951,11 +955,11 @@ msgstr ""
 msgid "Failed"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1338
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1348
 msgid "Failed to load senders"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1344
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1354
 msgid "Failed to save credentials"
 msgstr ""
 
@@ -971,7 +975,7 @@ msgstr ""
 msgid "Fill Form Details"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1183
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1193
 msgid "First enter username and password above"
 msgstr ""
 
@@ -979,11 +983,11 @@ msgstr ""
 msgid "for Order Shipped trigger"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1340
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1350
 msgid "Found %d senders available"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1339
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1349
 #, php-format
 msgid "Found 1 sender: %s"
 msgstr ""
@@ -1060,11 +1064,11 @@ msgstr ""
 msgid "Gönderi oluşturuluyor..."
 msgstr ""
 
-#: includes/class-hezarfen.php:309
+#: includes/class-hezarfen.php:317
 msgid "Güvenlik doğrulaması başarısız. Lütfen sayfayı yenileyin."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:815
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:825
 msgid ""
 "Hangi özelliklerin geliştirilmesini istersiniz? Her kategoriden en fazla 5 "
 "özellik seçebilirsiniz. Toplanan veriler geliştirme planlamamıza ışık "
@@ -1147,7 +1151,7 @@ msgstr ""
 msgid "Hezarfen Cargo Tracking & SMS Notifications"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:809
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:819
 msgid "Hezarfen Geliştirme Yol Haritası (v3.0 - gelecek büyük sürüm)"
 msgstr ""
 
@@ -1156,21 +1160,21 @@ msgstr ""
 msgid "Hezarfen Invoice Fields"
 msgstr ""
 
-#: includes/class-hezarfen.php:249
+#: includes/class-hezarfen.php:253
 msgid "Hezarfen SMS Migration Complete!"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1053
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1063
 msgid "Hezarfen Ücretsiz Hepsijet Entegrasyonu ve Avantajlı Kargo Fiyatları"
 msgstr ""
 
-#: includes/class-hezarfen.php:460
+#: includes/class-hezarfen.php:468
 msgid ""
 "Hezarfen'in geleceğini şekillendirmemize yardımcı olun! Hangi özelliklerin "
 "geliştirilmesini istediğinizi belirtin."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:812
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:822
 msgid ""
 "Hezarfen, bugün 2bin+ site tarafından kullanılıyor ve her geçen gün büyüyor. "
 "Hezarfen’in gelecek büyük versiyonu olan 3.0 için özellik geliştirme "
@@ -1180,11 +1184,11 @@ msgid ""
 "altyapılarının stabilitesini arttırmayı amaçlıyoruz."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:150
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:160
 msgid "Hide postcode fields in My Account > Address pages?"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:262
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:272
 msgid "Hide postcode fields?"
 msgstr ""
 
@@ -1200,7 +1204,7 @@ msgstr ""
 msgid "https://intense.com.tr"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:219
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:229
 msgid ""
 "I backed up the key to a secure area and placed it in the wp-config file. In "
 "case the encryption key value is deleted from the wp-config.php file, all "
@@ -1223,14 +1227,14 @@ msgstr ""
 msgid "I must agree to the %s."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:426
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:436
 msgid ""
 "I understand and agree that I can't acces the TC ID data of the old orders "
 "by using this new encryption key. I backed up the phrase in the box to a "
 "safe area, and I placed it in wp-config.php file."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:191
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:201
 msgid ""
 "If the T.C. Identity Field is active, an encryption key must be generated. "
 "The following encryption key generated will be lost upon saving the form. "
@@ -1267,7 +1271,7 @@ msgstr ""
 msgid "In order to %1$s integration work, the %2$s plugin must be activated."
 msgstr ""
 
-#: includes/class-hezarfen.php:129
+#: includes/class-hezarfen.php:133
 msgid ""
 "In order to <strong>Hezarfen for WooCommerce</strong> plugin work, please "
 "remove the <strong>Intense Türkiye İl İlçe Eklentisi For WooCommerce</strong>"
@@ -1292,11 +1296,11 @@ msgstr ""
 msgid "Individual ID number"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:699
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:709
 msgid "Information"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1375
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1385
 msgid "Information (0)"
 msgstr ""
 
@@ -1349,7 +1353,7 @@ msgid ""
 "credentials and API permissions."
 msgstr ""
 
-#: includes/Checkout.php:356 includes/admin/order/OrderListColumns.php:49
+#: includes/Checkout.php:358 includes/admin/order/OrderListColumns.php:49
 msgid "Invoice Type"
 msgstr ""
 
@@ -1367,7 +1371,7 @@ msgstr ""
 msgid "IP Address:"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:334
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:344
 msgid "Is T.C. Identity Number field required?"
 msgstr ""
 
@@ -1383,8 +1387,8 @@ msgstr ""
 msgid "IYS destekli toplu e-posta gönderimi (Euromessage Express Entegrasyonu)"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:696
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1374
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:706
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1384
 msgid "IYS Status"
 msgstr ""
 
@@ -1453,17 +1457,17 @@ msgstr ""
 msgid "Label Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1054
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1064
 msgid ""
 "Learn how to integrate Hepsijet with Hezarfen and get advantageous shipping "
 "rates."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:922
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:932
 msgid "Learn how to use Hezarfen with these helpful video tutorials."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1083
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1093
 msgid "Learn how to use Hezarfen with this helpful tutorial."
 msgstr ""
 
@@ -1480,16 +1484,16 @@ msgstr ""
 msgid "Loading available dates..."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1350
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1360
 msgid "Loading senders automatically..."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1351
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1361
 #, php-format
 msgid "Loading senders in %ss..."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1352
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1362
 msgid "Loading senders..."
 msgstr ""
 
@@ -1518,16 +1522,16 @@ msgstr ""
 msgid "Manual Tracking Numbers"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1179
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1189
 msgid "Message Header"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:687
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1373
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:697
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1383
 msgid "Message Template"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:859
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:869
 msgid "Mevcut Pro Paket Özellikleri:"
 msgstr ""
 
@@ -1541,13 +1545,13 @@ msgid ""
 "sipariş belirli durumlardaysa)"
 msgstr ""
 
-#: includes/class-hezarfen.php:85 includes/Checkout.php:536
+#: includes/class-hezarfen.php:89 includes/Checkout.php:538
 msgid "Neighborhood"
 msgstr ""
 
 #: includes/class-sms-automation.php:611
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:511
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1360
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:521
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1370
 msgid "NetGSM"
 msgstr ""
 
@@ -1556,25 +1560,25 @@ msgstr ""
 msgid "NetGSM API error (Code: %s)"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:591
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:601
 msgid "NetGSM Configuration"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1343
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1353
 msgid "NetGSM credentials saved successfully!"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:600
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:610
 msgid "NetGSM Legacy Configuration (Deprecated Soon)"
 msgstr ""
 
 #: includes/class-sms-automation.php:612
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:513
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1361
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:523
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1371
 msgid "NetGSM Official Plugin (Legacy)"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1161
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1171
 msgid "NetGSM Password"
 msgstr ""
 
@@ -1583,23 +1587,23 @@ msgstr ""
 msgid "NetGSM system error. Please try again later."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1154
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1164
 msgid "NetGSM Username"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1337
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1347
 msgid "Network error occurred while loading senders"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1345
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1355
 msgid "Network error occurred while saving credentials"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:408
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:418
 msgid "New Encryption Key"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1368
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1378
 msgid "New Status"
 msgstr ""
 
@@ -1621,7 +1625,7 @@ msgstr ""
 msgid "No message headers found in NetGSM response"
 msgstr ""
 
-#: includes/Autoload.php:68
+#: includes/Autoload.php:69
 msgid "No results found"
 msgstr ""
 
@@ -1629,7 +1633,7 @@ msgstr ""
 msgid "No shipment data found"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:541
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:551
 msgid "No SMS rules configured yet."
 msgstr ""
 
@@ -1694,9 +1698,9 @@ msgid "Order Number:"
 msgstr ""
 
 #: includes/class-sms-automation.php:600
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:504
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:568
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1363
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:514
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:578
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1373
 #: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:23
 msgid "Order Shipped"
 msgstr ""
@@ -1713,11 +1717,11 @@ msgstr ""
 msgid "Order status and customer notifications handled automatically"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1367
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1377
 msgid "Order Status Changed"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:560
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:570
 msgid "Order Status Changes"
 msgstr ""
 
@@ -1749,19 +1753,19 @@ msgstr ""
 msgid "Order Variables"
 msgstr ""
 
-#: includes/class-hezarfen.php:464
+#: includes/class-hezarfen.php:472
 msgid "Oylamaya Katıl"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:902
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:912
 msgid "Oylarımı Gönder"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:789
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:799
 msgid "Oylarınız e-posta ile info@intense.com.tr adresine gönderildi."
 msgstr ""
 
-#: includes/class-hezarfen.php:413
+#: includes/class-hezarfen.php:421
 msgid ""
 "Oylarınız info@intense.com.tr adresine e-posta ile gönderildi. Teşekkür "
 "ederiz!"
@@ -1771,11 +1775,11 @@ msgstr ""
 msgid "PackUpp"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:653
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:663
 msgid "PandaSMS Configuration"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:656
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:666
 msgid ""
 "PandaSMS message content is configured in the PandaSMS plugin settings. This "
 "integration will use the trigger \"Sipariş kargoya verildiğinde\" with "
@@ -1783,8 +1787,8 @@ msgid ""
 msgstr ""
 
 #: includes/class-sms-automation.php:613
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:515
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1362
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:525
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1372
 msgid "PandaSMS Official Plugin (Legacy)"
 msgstr ""
 
@@ -1796,7 +1800,7 @@ msgstr ""
 msgid "ParamPos"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1346
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1356
 msgid "Password must be at least 6 characters"
 msgstr ""
 
@@ -1816,13 +1820,13 @@ msgstr ""
 msgid "Pending payment"
 msgstr ""
 
-#: includes/Checkout.php:361 includes/admin/order/OrderDetails.php:48
+#: includes/Checkout.php:363 includes/admin/order/OrderDetails.php:48
 msgid "Personal"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:619
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:675
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1370
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:629
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:685
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1380
 msgid "Phone Number"
 msgstr ""
 
@@ -1830,25 +1834,25 @@ msgstr ""
 msgid "Phone:"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1336
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1346
 msgid "Please enter username and password first"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:611
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:621
 msgid ""
 "Please install and activate the NetGSM plugin to use this SMS integration."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:664
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:674
 msgid ""
 "Please install and activate the PandaSMS plugin to use this SMS integration."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1232
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1242
 msgid "Please place the encryption key in the wp-config.php file."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1342
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1352
 msgid "Please select a message header"
 msgstr ""
 
@@ -1871,7 +1875,7 @@ msgstr ""
 msgid "Price (incl. tax)"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:839
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:849
 msgid "Pro Paket (Ücretli Sürüm) Özellikleri"
 msgstr ""
 
@@ -1954,20 +1958,20 @@ msgstr ""
 msgid "Roadmap"
 msgstr ""
 
-#: includes/class-hezarfen.php:294
+#: includes/class-hezarfen.php:302
 msgid "Roadmap oylaması bu sürümde artık mevcut değil."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:500
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:510
 msgid "Rule"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1356
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1366
 msgid "Rule #%d:"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:710
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1332
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:720
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1342
 msgid "Save Rule"
 msgstr ""
 
@@ -1975,7 +1979,7 @@ msgstr ""
 msgid "Saved Agreements:"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1333
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1343
 msgid "Saving rule..."
 msgstr ""
 
@@ -1983,7 +1987,7 @@ msgstr ""
 msgid "Scotty"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:702
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:712
 msgid ""
 "Select \"Information\" for informational messages, \"Commercial - "
 "Individual\" for promotional messages to individuals, or \"Commercial - "
@@ -1994,16 +1998,16 @@ msgstr ""
 msgid "Select a Courier Company"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1354
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1364
 msgid "Select a sender"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:580
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:590
 msgid "Select action..."
 msgstr ""
 
-#: includes/Autoload.php:67 includes/class-hezarfen-wc-helper.php:24
-#: includes/class-hezarfen.php:86
+#: includes/Autoload.php:68 includes/class-hezarfen-wc-helper.php:24
+#: includes/class-hezarfen.php:90
 msgid "Select an option"
 msgstr ""
 
@@ -2011,25 +2015,25 @@ msgstr ""
 msgid "Select page..."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:623
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:679
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:633
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:689
 msgid "Select phone type..."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:559
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:569
 msgid "Select trigger..."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:581
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1369
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:591
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1379
 msgid "Send SMS via NetGSM"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:582
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:592
 msgid "Send SMS via NetGSM Official Plugin (Legacy - Deprecated Soon)"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:583
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:593
 msgid "Send SMS via PandaSMS Official Plugin"
 msgstr ""
 
@@ -2043,12 +2047,12 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:824
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:840
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:834
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:850
 msgid "seçildi"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:898
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:908
 msgid ""
 "Seçimleriniz info@intense.com.tr adresine e-posta ile gönderilecektir. "
 "Paylaşılacak veriler: oylamanız, alan adınız, SMTP gönderimi yapan e-posta "
@@ -2056,7 +2060,7 @@ msgid ""
 "SPAM gönderim yapılmaz."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:889
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:899
 msgid ""
 "Seçtiğiniz özellikler hakkında ek açıklamalar, özel istekleriniz veya diğer "
 "önerilerinizi buraya yazabilirsiniz..."
@@ -2083,7 +2087,7 @@ msgstr ""
 msgid "Shipment Details"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:567
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:577
 msgid "Shipment Events"
 msgstr ""
 
@@ -2196,10 +2200,10 @@ msgstr ""
 
 #: includes/class-sms-automation.php:405 includes/class-sms-automation.php:432
 #: includes/class-sms-automation.php:625
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:518
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:625
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:681
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1372
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:528
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:635
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:691
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1382
 msgid "Shipping Phone"
 msgstr ""
 
@@ -2211,7 +2215,7 @@ msgstr ""
 msgid "Shipping Variables"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:130
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:140
 msgid "Show hezarfen checkout tax fields?"
 msgstr ""
 
@@ -2232,7 +2236,7 @@ msgstr ""
 msgid "Show Shipment Tracking column on My Account > Orders page"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:316
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:326
 msgid "Show T.C. Identity Field on checkout page "
 msgstr ""
 
@@ -2257,7 +2261,7 @@ msgstr ""
 msgid "SMS"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:448
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:458
 msgid "SMS Automation Settings"
 msgstr ""
 
@@ -2269,7 +2273,7 @@ msgid ""
 "%sManage SMS Rules%s"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:631
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:641
 msgid "SMS Message Template"
 msgstr ""
 
@@ -2291,7 +2295,7 @@ msgstr ""
 msgid "SMS Notification Settings (Legacy)"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:461
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:471
 msgid "SMS Rules"
 msgstr ""
 
@@ -2311,7 +2315,7 @@ msgstr ""
 msgid "SMTP ayarlarını düzenleyebilme (harici eklenti kurmadan)"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:140
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:150
 msgid "Sort address fields in My Account > Address pages?"
 msgstr ""
 
@@ -2330,14 +2334,14 @@ msgstr ""
 msgid "Sürat Kargo"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:321
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:331
 msgid ""
 "T.C. Identity Field optionally shows on checkout field when invoice type "
 "selected as person. (T.C. field requires encryption. If encryption is not "
 "enabled, this field is not displayed.)"
 msgstr ""
 
-#: includes/Checkout.php:371 includes/admin/order/OrderDetails.php:89
+#: includes/Checkout.php:373 includes/admin/order/OrderDetails.php:89
 msgid "T.C. Identity Number"
 msgstr ""
 
@@ -2353,19 +2357,19 @@ msgstr ""
 msgid "Tax amount"
 msgstr ""
 
-#: includes/Checkout.php:395 includes/admin/order/OrderDetails.php:55
+#: includes/Checkout.php:397 includes/admin/order/OrderDetails.php:55
 msgid "Tax Number"
 msgstr ""
 
-#: includes/Checkout.php:475
+#: includes/Checkout.php:477
 msgid "Tax number is not valid"
 msgstr ""
 
-#: includes/Checkout.php:405 includes/admin/order/OrderDetails.php:60
+#: includes/Checkout.php:407 includes/admin/order/OrderDetails.php:60
 msgid "Tax Office"
 msgstr ""
 
-#: includes/Checkout.php:468
+#: includes/Checkout.php:470
 msgid "TC ID number is not valid"
 msgstr ""
 
@@ -2373,7 +2377,7 @@ msgstr ""
 msgid "Telefon ve SMS ile giriş yap özelliği (şifre istemeden)"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:786
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:796
 msgid "Teşekkür Ederiz"
 msgstr ""
 
@@ -2392,7 +2396,7 @@ msgstr ""
 msgid "There are no tracking numbers added to the tracking list."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:640
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:650
 msgid ""
 "This content is synced with the NetGSM SMS content setting in Manual "
 "Shipment Tracking. To edit, go to WooCommerce > Settings > Hezarfen > Manual "
@@ -2403,13 +2407,13 @@ msgstr ""
 msgid "This email was automatically generated by Hezarfen for WooCommerce."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:603
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:613
 msgid ""
 "This option uses the NetGSM official WordPress plugin and will be deprecated "
 "soon. Please consider migrating to the direct NetGSM integration."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:401
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:411
 msgid ""
 "This page allows you to generate a new encryption key. Before proceeding, "
 "please create a complete website backup. We do not provide support for this "
@@ -2418,7 +2422,7 @@ msgid ""
 "have created backups. By continuing, you acknowledge and accept these terms."
 msgstr ""
 
-#: includes/Checkout.php:384
+#: includes/Checkout.php:386
 msgid "Title"
 msgstr ""
 
@@ -2430,7 +2434,7 @@ msgstr ""
 msgid "Today's date"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1165
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1175
 msgid "Toggle password visibility"
 msgstr ""
 
@@ -2442,7 +2446,7 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#: includes/class-hezarfen.php:78 includes/Checkout.php:519
+#: includes/class-hezarfen.php:82 includes/Checkout.php:521
 msgid "Town / City"
 msgstr ""
 
@@ -2490,7 +2494,7 @@ msgstr ""
 msgid "Training"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:921
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:931
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:478
 msgid "Training Videos"
 msgstr ""
@@ -2499,11 +2503,11 @@ msgstr ""
 msgid "Trendyol Express"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1364
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1374
 msgid "Trigger"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:555
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:565
 msgid "Trigger Condition"
 msgstr ""
 
@@ -2536,7 +2540,7 @@ msgstr ""
 msgid "User Agent:"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1341
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1351
 msgid "Username and password are required"
 msgstr ""
 
@@ -2561,11 +2565,11 @@ msgstr ""
 msgid "Visit Hezarfen Shipment Settings"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:608
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:618
 msgid "Warning: NetGSM plugin is not active!"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:661
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:671
 msgid "Warning: PandaSMS plugin is not active!"
 msgstr ""
 
@@ -2583,8 +2587,8 @@ msgstr ""
 msgid "When order status becomes Processing"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:522
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1357
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:532
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1367
 #, php-format
 msgid "When order status changes to %1$s, send SMS via %2$s to %3$s"
 msgstr ""
@@ -2603,7 +2607,7 @@ msgstr ""
 msgid "Will be determined at payment"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1349
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1359
 msgid "Will load senders in 1.5 seconds..."
 msgstr ""
 
@@ -2645,7 +2649,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: includes/class-hezarfen.php:314
+#: includes/class-hezarfen.php:322
 msgid "Yetkisiz erişim."
 msgstr ""
 
@@ -2676,11 +2680,11 @@ msgstr ""
 msgid "You can edit the general settings from this page."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:255
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:265
 msgid "You can set general checkout settings."
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:308
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:318
 msgid ""
 "You can update the checkout Tax fields. Note: T.C. number field requires "
 "encryption feature. If you do not activate the encryption feature, T.C. "
@@ -2697,8 +2701,8 @@ msgstr ""
 msgid "You must accept the agreements."
 msgstr ""
 
-#: includes/Checkout.php:162 includes/Checkout.php:200
-#: includes/Checkout.php:207
+#: includes/Checkout.php:164 includes/Checkout.php:202
+#: includes/Checkout.php:209
 msgid "Your Address"
 msgstr ""
 
@@ -2708,11 +2712,11 @@ msgstr ""
 msgid "Your Agreements"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1164
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1174
 msgid "Your API password"
 msgstr ""
 
-#: includes/class-hezarfen.php:252
+#: includes/class-hezarfen.php:256
 #, php-format
 msgid ""
 "Your legacy SMS settings have been automatically migrated to the new SMS "
@@ -2739,7 +2743,7 @@ msgstr ""
 msgid "Yurtiçi Kargo"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:862
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:872
 msgid ""
 "Yurtiçi, DHL, Hepsijet, KolayGelsin, Aras, Sürat kargo entegrasyonları tek "
 "pakette"
@@ -2749,7 +2753,7 @@ msgstr ""
 msgid "Özel sipariş durumları tanımlayabilme"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:823
+#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:833
 msgid "Ücretsiz Sürüm Özellikleri"
 msgstr ""
 
@@ -2767,7 +2771,7 @@ msgstr ""
 msgid "İptal ediliyor..."
 msgstr ""
 
-#: includes/class-hezarfen.php:457
+#: includes/class-hezarfen.php:465
 msgid "🗺️ Hezarfen v3.0 Geliştirme Yol Haritası"
 msgstr ""
 

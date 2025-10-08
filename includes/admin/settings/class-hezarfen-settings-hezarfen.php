@@ -128,6 +128,16 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			),
 			array(
 				'title'   => __(
+					'Enable district and neighborhood feature',
+					'hezarfen-for-woocommerce'
+				),
+				'type'    => 'checkbox',
+				'desc'    => '',
+				'id'      => 'hezarfen_enable_district_neighborhood_fields',
+				'default' => 'yes',
+			),
+			array(
+				'title'   => __(
 					'Show hezarfen checkout tax fields?',
 					'hezarfen-for-woocommerce'
 				),
