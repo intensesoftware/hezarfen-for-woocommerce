@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.7.8
+Stable tag: 2.7.10
 
 🚀 2 bin site kullanıyor! Kargo takip, ücretsiz Hepsijet Entegrasyonu (1-4 desi: 69,99TL+KDV), Mesafeli Satış Sözleşmesi, NetGSM sipariş ve kargo SMS
 == Description ==
@@ -95,6 +95,8 @@ Bu veriler, kargo etiketlerinin oluşturulması, fiyatların hesaplanması, gön
 
 Ayrıca, eğitim videolarının çekilebilmesi için youtube.com RSS servisine bağlantı yapılır ve Hezarfen yol haritası anket gönderimi yapıldığında info@intense.com.tr adresine mail olarak oylamalarınız, alan adınız ve yorumunuz iletilir.
 
+NetGSM aktif edildiğinde NetGSM sunucularına SMS gönderimi için gerekli olan veriler aktarılır.
+
 Detaylı bilgi için [Gizlilik Politikamız](https://intense.com.tr/yasal/gizlilik-politikasi/)
 
 ---
@@ -110,6 +112,7 @@ This data is primarily used to generate shipping labels, calculate pricing, and 
 
 Additionally, in order to fetch training videos, a connection is made to the youtube.com RSS service.
 
+When NetGSM is activated, proper data that needs for SMS sending is delivered to the NetGSM.
 
 For more details, please see our [Privacy Policy](https://intense.com.tr/yasal/gizlilik-politikasi/).
 
@@ -261,6 +264,11 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
+= 2.7.10 - 2025-10-08 =
+* SMS otomasyonunun aktif/deaktif edilmesini sağlayan butonda yaşanan sorun giderildi.
+* HepsiJet etiketinde yer alan ürün bilgilerinin isteğe bağlı olarak gizlenmesi sağlandı.
+* Kargoya verildi e-posta içeriğinde yer alan takip butonunun arkaplan ve yazı renginin düzenlenebilmesi için WP filter (hezarfen_email_tracking_link_text_color, hezarfen_email_tracking_link_background_color) eklendi.
+
 = 2.7.8 - 2025-10-06 =
 * Kargoya verildi e-postasında tekrarlanan yazı problemi giderildi.
 * WooCommerce için minimum 6.9.0 gereksinim tanımlaması yapıldı.
