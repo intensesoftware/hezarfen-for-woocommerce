@@ -136,7 +136,7 @@ class SMS_Automation {
 			),
 			'encoding' => 'TR',
 			'iysfilter' => $rule['iys_status'] ?? '0',
-			'partnercode' => ''
+			'partnercode' => 'F335A6CA'
 		);
 
 		// Send SMS via NetGSM API
