@@ -658,17 +658,17 @@ class Admin_Ajax {
 						$page_width = $pdf->GetPageWidth();
 						$margins = $pdf->getMargins();
 						
-						// Fixed height of 8mm, calculate width maintaining aspect ratio
-						$image_width = $image_info[0];
-						$image_height = $image_info[1];
-						$aspect_ratio = $image_width / $image_height;
+					// Fixed height of 8mm, calculate width maintaining aspect ratio
+					$image_width = $image_info[0];
+					$image_height = $image_info[1];
+					$aspect_ratio = $image_width / $image_height;
+					
+					// Set fixed height (8mm) and calculate width
+					$display_height = 30;
+					$display_width = $display_height * $aspect_ratio;
 						
-						// Set fixed height (8mm) and calculate width
-						$display_height = 15;
-						$display_width = $display_height * $aspect_ratio;
-						
-						// Position image on the right
-						$x_position = $page_width - $display_width - $margins['right'];
+						// Center the image
+						$x_position = ( $page_width - $display_width ) / 2;
 						
 						// Add the image to PDF
 						$pdf->Image( $custom_image, $x_position, $current_y, $display_width, $display_height );
