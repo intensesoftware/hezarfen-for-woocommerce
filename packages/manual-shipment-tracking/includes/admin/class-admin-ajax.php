@@ -633,6 +633,67 @@ class Admin_Ajax {
 				$pdf->Ln( 10 );
 			}
 		}
+
+		
+		// === CUSTOM FILTERABLE IMAGE ===
+		// Allow developers to add custom image between barcode and order details
+		$custom_image = apply_filters( 'hezarfen_hepsijet_label_custom_image', '', $order, $delivery_no );
+		
+		if ( ! empty( $custom_image ) ) {
+			$current_y = $pdf->GetY();
+			
+			// Check if it's a URL or file path
+			if ( filter_var( $custom_image, FILTER_VALIDATE_URL ) || file_exists( $custom_image ) ) {
+				try {
+					// If URL, download the image
+					if ( filter_var( $custom_image, FILTER_VALIDATE_URL ) ) {
+						$image_data = file_get_contents( $custom_image );
+						if ( $image_data !== false ) {
+							$temp_file = wp_tempnam( 'hezarfen_custom_image_' . $delivery_no );
+							file_put_contents( $temp_file, $image_data );
+							$custom_image = $temp_file;
+						}
+					}
+					
+					// Get image info to determine dimensions
+					$image_info = @getimagesize( $custom_image );
+					if ( $image_info ) {
+						$page_width = $pdf->GetPageWidth();
+						$margins = $pdf->getMargins();
+						
+						// Fixed height of 8mm, calculate width maintaining aspect ratio
+						$image_width = $image_info[0];
+						$image_height = $image_info[1];
+						$aspect_ratio = $image_width / $image_height;
+						
+						// Set fixed height (8mm) and calculate width
+						$display_height = 15;
+						$display_width = $display_height * $aspect_ratio;
+						
+						// Position image on the right
+						$x_position = $page_width - $display_width - $margins['right'];
+						
+						// Add the image to PDF
+						$pdf->Image( $custom_image, $x_position, $current_y, $display_width, $display_height );
+						
+						// Move Y position to after the image
+						$pdf->SetY( $current_y + $display_height );
+						
+						// Add spacing after custom image
+						$pdf->Ln( 5 );
+						
+						// Clean up temp file if it was downloaded
+						if ( isset( $temp_file ) && file_exists( $temp_file ) ) {
+							unlink( $temp_file );
+						}
+					}
+				} catch ( Exception $e ) {
+					// Silently fail if image cannot be processed
+					error_log( 'Hezarfen custom label image error: ' . $e->getMessage() );
+				}
+			}
+		}
+		
 		
 		// === 2-COLUMN LAYOUT ===
 		
