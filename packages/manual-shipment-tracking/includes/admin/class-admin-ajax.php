@@ -626,18 +626,15 @@ class Admin_Ajax {
 					$pdf->SetY( $current_y + $display_width );
 				}
 				
-				// Clean up temporary file
-				unlink( $temp_file );
-				
-				// Add proper spacing after barcode
-				$pdf->Ln( 10 );
-			}
+			// Clean up temporary file
+			unlink( $temp_file );
 		}
+	}
 
-		
-		// === CUSTOM FILTERABLE IMAGE ===
-		// Allow developers to add custom image between barcode and order details
-		$custom_image = apply_filters( 'hezarfen_hepsijet_label_custom_image', '', $order, $delivery_no );
+	
+	// === CUSTOM FILTERABLE IMAGE ===
+	// Allow developers to add custom image between barcode and order details
+	$custom_image = apply_filters( 'hezarfen_hepsijet_label_custom_image', '', $order, $delivery_no );
 		
 		if ( ! empty( $custom_image ) ) {
 			$current_y = $pdf->GetY();
