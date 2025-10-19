@@ -76,7 +76,7 @@ class Manual_Shipment_Tracking {
 		
 		// Register webhook callback for Hepsijet shipment status updates only if credentials are configured
 		if ( Courier_Hepsijet_Integration::has_credentials() ) {
-			add_action( 'woocommerce_api_ordermigo_shipment_status', array( 'Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration', 'handle_webhook' ) );
+			add_action( 'woocommerce_api_hez_ordermigo_shipment_status', array( 'Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration', 'handle_webhook' ) );
 		}
 	}
 

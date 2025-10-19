@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2025-10-08 19:05+0000\n"
+"POT-Creation-Date: 2025-10-19 18:31+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #. %s plugin name
@@ -87,7 +87,8 @@ msgstr ""
 msgid "Add to Tracking List"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:138
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:142
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:352
 msgid "Advanced Settings"
 msgstr ""
 
@@ -115,7 +116,7 @@ msgstr ""
 msgid "Agreements will be created when the order status changes to Processing."
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:386
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:562
 msgid "An error occured when installing and activating the PandaSMS plugin."
 msgstr ""
 
@@ -153,7 +154,7 @@ msgstr ""
 
 #: includes/class-sms-automation.php:502
 #: includes/contracts/admin/class-contracts-settings.php:114
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:222
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:226
 msgid "Available Variables"
 msgstr ""
 
@@ -267,7 +268,7 @@ msgstr ""
 msgid "Billing City"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:511
+#: includes/contracts/admin/class-contracts-settings.php:512
 msgid "Billing city"
 msgstr ""
 
@@ -283,8 +284,12 @@ msgstr ""
 msgid "Billing Country"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:513
+#: includes/contracts/admin/class-contracts-settings.php:514
 msgid "Billing country"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:511
+msgid "Billing district"
 msgstr ""
 
 #: includes/class-sms-automation.php:398 includes/class-sms-automation.php:423
@@ -316,7 +321,7 @@ msgstr ""
 msgid "Billing Phone"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:512
+#: includes/contracts/admin/class-contracts-settings.php:513
 msgid "Billing postal code"
 msgstr ""
 
@@ -528,19 +533,19 @@ msgstr ""
 msgid "Connection error"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:314
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:318
 msgid "Consumer Key"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:318
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:322
 msgid "Consumer Key from Hepsijet API Relay plugin"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:321
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:325
 msgid "Consumer Secret"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:325
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:329
 msgid "Consumer Secret from Hepsijet API Relay plugin"
 msgstr ""
 
@@ -574,11 +579,11 @@ msgstr ""
 msgid "Contracts table not found in database!"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:543
+#: includes/contracts/admin/class-contracts-settings.php:545
 msgid "Corporate tax number"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:542
+#: includes/contracts/admin/class-contracts-settings.php:544
 msgid "Corporate tax office"
 msgstr ""
 
@@ -594,7 +599,7 @@ msgstr ""
 msgid "Courier Company"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:167
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:171
 msgid "Courier company post meta key"
 msgstr ""
 
@@ -619,7 +624,7 @@ msgstr ""
 msgid "Create Shipment"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:537
+#: includes/contracts/admin/class-contracts-settings.php:539
 msgid "Current date and time"
 msgstr ""
 
@@ -669,7 +674,7 @@ msgid "Date Accepted"
 msgstr ""
 
 #. Date Variables
-#: includes/contracts/admin/class-contracts-settings.php:535
+#: includes/contracts/admin/class-contracts-settings.php:537
 msgid "Date Information"
 msgstr ""
 
@@ -738,7 +743,7 @@ msgstr ""
 msgid "Discount amount"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:340
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:344
 msgid ""
 "Display order details on the PDF label. If unchecked, only Hepsijet Label "
 "will be shown."
@@ -755,6 +760,12 @@ msgstr ""
 #: includes/admin/settings/class-hezarfen-roadmap-helper.php:49
 msgid ""
 "Diğer SMS entegrasyonu (detay kısmında istediğiniz SMS firmasını belirtiniz)"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:353
+msgid ""
+"Do not modify these settings unless you know what you are doing. These "
+"settings are automatically configured."
 msgstr ""
 
 #: includes/class-sms-automation.php:599
@@ -825,7 +836,7 @@ msgstr ""
 msgid "Enable district and neighborhood feature"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:64
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:68
 msgid "Enable Manual Shipment Tracking feature"
 msgstr ""
 
@@ -876,7 +887,7 @@ msgstr ""
 msgid "Enter invoice title"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:163
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:167
 msgid "Enter order status id. E.g: wc-shipped"
 msgstr ""
 
@@ -888,11 +899,11 @@ msgstr ""
 msgid "Enter password (min 6 characters)"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:170
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:174
 msgid "Enter post meta key for courier company"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:177
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:181
 msgid "Enter post meta key for tracking number"
 msgstr ""
 
@@ -1103,11 +1114,11 @@ msgid ""
 "yapılmasını istiyor musunuz?)"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:287
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:291
 msgid "Hepsijet Integration"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:311
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:315
 msgid ""
 "Hepsijet Integration is completely free. Simply log in at intense.com.tr, go "
 "to the Hepsijet menu under My Account, complete your registration, upload "
@@ -1156,7 +1167,7 @@ msgid "Hezarfen Geliştirme Yol Haritası (v3.0 - gelecek büyük sürüm)"
 msgstr ""
 
 #. Hezarfen Invoice Fields
-#: includes/contracts/admin/class-contracts-settings.php:541
+#: includes/contracts/admin/class-contracts-settings.php:543
 msgid "Hezarfen Invoice Fields"
 msgstr ""
 
@@ -1244,7 +1255,7 @@ msgid ""
 "sent to T.C. no values will become unreadable."
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:143
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:147
 msgid ""
 "If you used a shipment tracking plugin before, check this to recognize your "
 "old shipment tracking plugin's data."
@@ -1261,12 +1272,12 @@ msgstr ""
 msgid "Iletimerkezi SMS entegrasyonu"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:186
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:190
 msgid "Important Notice:"
 msgstr ""
 
 #. %s SMS notification provider
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:111
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:115
 #, php-format
 msgid "In order to %1$s integration work, the %2$s plugin must be activated."
 msgstr ""
@@ -1279,7 +1290,7 @@ msgid ""
 "and neighborhood data in it."
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:115
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:119
 msgid ""
 "In order to NetGSM integration work, the \"send SMS to the customer when "
 "order status changed\" option must be activated from the NetGSM plugin "
@@ -1292,7 +1303,7 @@ msgid ""
 "select courier from below and add it to your tracking list."
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:544
+#: includes/contracts/admin/class-contracts-settings.php:546
 msgid "Individual ID number"
 msgstr ""
 
@@ -1308,11 +1319,11 @@ msgstr ""
 msgid "Inline"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:384
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:560
 msgid "Install & activate PandaSMS for Woocommerce plugin"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:382
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:558
 msgid "Installing.."
 msgstr ""
 
@@ -1320,7 +1331,7 @@ msgstr ""
 msgid "Integration Shipments"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:310
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:314
 msgid "Intense Hepsijet API Relay Settings"
 msgstr ""
 
@@ -1339,7 +1350,7 @@ msgstr ""
 msgid "Intense&Hepsijet İşbirliği"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:815
+#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:988
 msgid "Invalid balance response"
 msgstr ""
 
@@ -1453,7 +1464,7 @@ msgstr ""
 msgid "Kurye"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:333
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:337
 msgid "Label Settings"
 msgstr ""
 
@@ -1506,11 +1517,11 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:88
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:92
 msgid "Manual Shipment Tracking"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:125
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:129
 msgid "Manual Shipment Tracking General Settings"
 msgstr ""
 
@@ -1654,11 +1665,11 @@ msgstr ""
 msgid "Order #%s - Customer Agreements Saved"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:666
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:724
 msgid "Order #:"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:1095
+#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:1259
 msgid "Order completed - shipment delivered"
 msgstr ""
 
@@ -1670,18 +1681,18 @@ msgstr ""
 msgid "Order date"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:715
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:773
 msgid "Order Details"
 msgstr ""
 
 #. Order Variables
 #: includes/contracts/core/class-post-order-processor.php:252
 #: includes/contracts/admin/class-contracts-settings.php:490
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:658
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:716
 msgid "Order Information"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:881
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:939
 msgid "Order Note"
 msgstr ""
 
@@ -1725,7 +1736,7 @@ msgstr ""
 msgid "Order Status Changes"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:160
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:164
 msgid "Order status ID (optional)"
 msgstr ""
 
@@ -1792,7 +1803,7 @@ msgstr ""
 msgid "PandaSMS Official Plugin (Legacy)"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:385
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:561
 msgid "PandaSMS plugin is successfully installed and activated."
 msgstr ""
 
@@ -1808,7 +1819,7 @@ msgstr ""
 msgid "Payment method"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:269
+#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:426
 msgid "Payment on delivery is not supported"
 msgstr ""
 
@@ -1830,7 +1841,7 @@ msgstr ""
 msgid "Phone Number"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:681
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:739
 msgid "Phone:"
 msgstr ""
 
@@ -1870,8 +1881,8 @@ msgstr ""
 msgid "Preparing barcode label..."
 msgstr ""
 
-#: includes/contracts/core/class-template-processor.php:191
-#: includes/contracts/core/class-template-processor.php:287
+#: includes/contracts/core/class-template-processor.php:193
+#: includes/contracts/core/class-template-processor.php:289
 msgid "Price (incl. tax)"
 msgstr ""
 
@@ -1883,9 +1894,9 @@ msgstr ""
 msgid "Processing"
 msgstr ""
 
-#: includes/contracts/core/class-template-processor.php:189
-#: includes/contracts/core/class-template-processor.php:285
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:723
+#: includes/contracts/core/class-template-processor.php:191
+#: includes/contracts/core/class-template-processor.php:287
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:781
 msgid "Product"
 msgstr ""
 
@@ -1893,8 +1904,8 @@ msgstr ""
 msgid "PTT Kargo"
 msgstr ""
 
-#: includes/contracts/core/class-template-processor.php:190
-#: includes/contracts/core/class-template-processor.php:286
+#: includes/contracts/core/class-template-processor.php:192
+#: includes/contracts/core/class-template-processor.php:288
 msgid "Quantity"
 msgstr ""
 
@@ -1907,21 +1918,21 @@ msgstr ""
 msgid "Read our full Privacy Policy here"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:149
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:153
 msgid "Recognition type"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:155
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:159
 msgid "Recognize custom post meta data"
 msgstr ""
 
 #. %s Supported plugins.
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:154
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:158
 #, php-format
 msgid "Recognize supported plugins: (%s)"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:142
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:146
 msgid "Recognize third party plugins' data"
 msgstr ""
 
@@ -2079,7 +2090,7 @@ msgstr ""
 msgid "Shipment Barcode / Automated Shipment Tracking"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:352
+#: packages/manual-shipment-tracking/includes/courier-companies/class-hepsijet-integration.php:512
 msgid "Shipment created successfully"
 msgstr ""
 
@@ -2109,7 +2120,7 @@ msgid "Shipped"
 msgstr ""
 
 #. %s: number of orders
-#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:165
+#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:167
 #, php-format
 msgid "Shipped (%s)"
 msgid_plural "Shipped (%s)"
@@ -2142,15 +2153,15 @@ msgstr[1] ""
 
 #. Shipping Address Variables
 #: includes/class-sms-automation.php:407 includes/class-sms-automation.php:434
-#: includes/contracts/admin/class-contracts-settings.php:517
+#: includes/contracts/admin/class-contracts-settings.php:518
 msgid "Shipping Address"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:521
+#: includes/contracts/admin/class-contracts-settings.php:522
 msgid "Shipping address line 1"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:522
+#: includes/contracts/admin/class-contracts-settings.php:523
 msgid "Shipping address line 2"
 msgstr ""
 
@@ -2158,7 +2169,7 @@ msgstr ""
 msgid "Shipping City"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:523
+#: includes/contracts/admin/class-contracts-settings.php:525
 msgid "Shipping city"
 msgstr ""
 
@@ -2166,7 +2177,7 @@ msgstr ""
 msgid "Shipping Company"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:520
+#: includes/contracts/admin/class-contracts-settings.php:521
 msgid "Shipping company name"
 msgstr ""
 
@@ -2178,15 +2189,19 @@ msgstr ""
 msgid "Shipping Country"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:525
+#: includes/contracts/admin/class-contracts-settings.php:527
 msgid "Shipping country"
+msgstr ""
+
+#: includes/contracts/admin/class-contracts-settings.php:524
+msgid "Shipping district"
 msgstr ""
 
 #: includes/class-sms-automation.php:403 includes/class-sms-automation.php:430
 msgid "Shipping First Name"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:518
+#: includes/contracts/admin/class-contracts-settings.php:519
 msgid "Shipping first name"
 msgstr ""
 
@@ -2194,7 +2209,7 @@ msgstr ""
 msgid "Shipping Last Name"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:519
+#: includes/contracts/admin/class-contracts-settings.php:520
 msgid "Shipping last name"
 msgstr ""
 
@@ -2207,7 +2222,7 @@ msgstr ""
 msgid "Shipping Phone"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:524
+#: includes/contracts/admin/class-contracts-settings.php:526
 msgid "Shipping postal code"
 msgstr ""
 
@@ -2228,11 +2243,11 @@ msgstr ""
 msgid "Show More"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:336
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:340
 msgid "Show order details on label"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:129
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:133
 msgid "Show Shipment Tracking column on My Account > Orders page"
 msgstr ""
 
@@ -2245,15 +2260,15 @@ msgid "Sipariş sonrası cüzdana puan yüklenmesi"
 msgstr ""
 
 #. Site Variables
-#: includes/contracts/admin/class-contracts-settings.php:529
+#: includes/contracts/admin/class-contracts-settings.php:531
 msgid "Site Information"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:530
+#: includes/contracts/admin/class-contracts-settings.php:532
 msgid "Site name"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:531
+#: includes/contracts/admin/class-contracts-settings.php:533
 msgid "Site URL"
 msgstr ""
 
@@ -2265,7 +2280,7 @@ msgstr ""
 msgid "SMS Automation Settings"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:186
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:190
 #, php-format
 msgid ""
 "SMS automation settings have been moved to a new, more advanced system. You "
@@ -2291,7 +2306,7 @@ msgid ""
 " %4$s)"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:185
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:189
 msgid "SMS Notification Settings (Legacy)"
 msgstr ""
 
@@ -2305,7 +2320,7 @@ msgstr ""
 msgid "SMS Settings"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:186
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:190
 msgid ""
 "SMS settings have been moved to the new SMS automation system. This legacy "
 "section has been removed."
@@ -2349,7 +2364,7 @@ msgstr ""
 msgid "Tami"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:673
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:731
 msgid "Tarih:"
 msgstr ""
 
@@ -2422,6 +2437,13 @@ msgid ""
 "have created backups. By continuing, you acknowledge and accept these terms."
 msgstr ""
 
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:360
+msgid ""
+"This secret is used to verify webhook notifications from OrderMigo. It is "
+"automatically generated when you create your first shipment. Do not edit "
+"this unless instructed by support."
+msgstr ""
+
 #: includes/Checkout.php:386
 msgid "Title"
 msgstr ""
@@ -2430,7 +2452,7 @@ msgstr ""
 msgid "TNT"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:536
+#: includes/contracts/admin/class-contracts-settings.php:538
 msgid "Today's date"
 msgstr ""
 
@@ -2442,7 +2464,7 @@ msgstr ""
 msgid "Tosla"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:724
+#: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:782
 msgid "Total"
 msgstr ""
 
@@ -2481,7 +2503,7 @@ msgstr ""
 msgid "Tracking Number"
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:174
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:178
 msgid "Tracking number post meta key"
 msgstr ""
 
@@ -2526,7 +2548,7 @@ msgstr ""
 msgid "UPS Kargo"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:576
+#: includes/contracts/admin/class-contracts-settings.php:578
 msgid "Usage:"
 msgstr ""
 
@@ -2565,6 +2587,10 @@ msgstr ""
 msgid "Visit Hezarfen Shipment Settings"
 msgstr ""
 
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:353
+msgid "Warning:"
+msgstr ""
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:618
 msgid "Warning: NetGSM plugin is not active!"
 msgstr ""
@@ -2575,6 +2601,10 @@ msgstr ""
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:474
 msgid "Watch training videos to learn how to use Hezarfen"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:356
+msgid "Webhook Secret"
 msgstr ""
 
 #: includes/contracts/admin/class-contracts-settings.php:73
@@ -2593,17 +2623,17 @@ msgstr ""
 msgid "When order status changes to %1$s, send SMS via %2$s to %3$s"
 msgstr ""
 
-#: includes/contracts/core/class-template-processor.php:260
+#: includes/contracts/core/class-template-processor.php:262
 msgid "Will be assigned after order"
 msgstr ""
 
 #: includes/contracts/core/class-template-processor.php:106
-#: includes/contracts/core/class-template-processor.php:262
+#: includes/contracts/core/class-template-processor.php:264
 msgid "Will be determined after order"
 msgstr ""
 
-#: includes/contracts/core/class-template-processor.php:268
-#: includes/contracts/core/class-template-processor.php:351
+#: includes/contracts/core/class-template-processor.php:270
+#: includes/contracts/core/class-template-processor.php:357
 msgid "Will be determined at payment"
 msgstr ""
 
@@ -2611,8 +2641,8 @@ msgstr ""
 msgid "Will load senders in 1.5 seconds..."
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:159
-#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:184
+#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:161
+#: packages/manual-shipment-tracking/includes/class-manual-shipment-tracking.php:186
 msgctxt "WooCommerce Order status"
 msgid "Shipped"
 msgstr ""
@@ -2637,7 +2667,7 @@ msgstr ""
 msgid "WordPress Page:"
 msgstr ""
 
-#: includes/contracts/admin/class-contracts-settings.php:577
+#: includes/contracts/admin/class-contracts-settings.php:579
 msgid ""
 "Write these variables into your contract text in the WordPress page editor. "
 "When an order is placed, these variables will be automatically replaced with "

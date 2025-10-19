@@ -52,7 +52,7 @@ class Settings {
 		add_action( 'woocommerce_settings_save_hezarfen', array( __CLASS__, 'save_hepsijet_settings' ), 5 ); // Run early with priority 5
 		
 		// Decrypt webhook secret for display
-		add_filter( 'pre_option_ordermigo_webhook_secret', array( __CLASS__, 'decrypt_webhook_secret_for_display' ), 10 );
+		add_filter( 'pre_option_hez_ordermigo_webhook_secret', array( __CLASS__, 'decrypt_webhook_secret_for_display' ), 10 );
 	}
 
 	/**
@@ -355,9 +355,9 @@ class Settings {
 			array(
 				'title' => __( 'Webhook Secret', 'hezarfen-for-woocommerce' ),
 				'type' => 'text',
-				'id' => 'ordermigo_webhook_secret',
+				'id' => 'hez_ordermigo_webhook_secret',
 				'default' => '',
-				'desc' => __( 'This secret is used to verify webhook notifications from Hepsijet API Relay. It is automatically generated when you create your first shipment. Do not edit this unless instructed by support.', 'hezarfen-for-woocommerce' ),
+				'desc' => __( 'This secret is used to verify webhook notifications from OrderMigo. It is automatically generated when you create your first shipment. Do not edit this unless instructed by support.', 'hezarfen-for-woocommerce' ),
 				'autoload' => false
 			),
 			array(
@@ -472,7 +472,7 @@ class Settings {
 		if ( is_admin() && isset( $_GET['page'] ) && 'wc-settings' === sanitize_text_field( wp_unslash( $_GET['page'] ) ) && 'hepsijet_integration' === $current_section ) {
 			// Get the raw encrypted value from database
 			global $wpdb;
-			$encrypted = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", 'ordermigo_webhook_secret' ) );
+			$encrypted = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", 'hez_ordermigo_webhook_secret' ) );
 			if ( $encrypted ) {
 				return self::decrypt_webhook_secret( $encrypted );
 			}
@@ -497,11 +497,11 @@ class Settings {
 			return;
 		}
 
-		if ( isset( $_POST['ordermigo_webhook_secret'] ) ) {
-			$webhook_secret = sanitize_text_field( wp_unslash( $_POST['ordermigo_webhook_secret'] ) );
+		if ( isset( $_POST['hez_ordermigo_webhook_secret'] ) ) {
+			$webhook_secret = sanitize_text_field( wp_unslash( $_POST['hez_ordermigo_webhook_secret'] ) );
 			
 			// Get current value to see if it changed
-			$current_encrypted = get_option( 'ordermigo_webhook_secret', '' );
+			$current_encrypted = get_option( 'hez_ordermigo_webhook_secret', '' );
 			$current_decrypted = self::decrypt_webhook_secret( $current_encrypted );
 			
 			// Only save if the value actually changed
@@ -509,15 +509,15 @@ class Settings {
 				if ( ! empty( $webhook_secret ) ) {
 					// Encrypt and save with autoload disabled
 					$encrypted = self::encrypt_webhook_secret( $webhook_secret );
-					$result = update_option( 'ordermigo_webhook_secret', $encrypted, false );
+					$result = update_option( 'hez_ordermigo_webhook_secret', $encrypted, false );
 				} else {
 					// Delete if empty
-					delete_option( 'ordermigo_webhook_secret' );
+					delete_option( 'hez_ordermigo_webhook_secret' );
 				}
 			}
 			
 			// Prevent WooCommerce from processing this field normally
-			unset( $_POST['ordermigo_webhook_secret'] );
+			unset( $_POST['hez_ordermigo_webhook_secret'] );
 		}
 		// phpcs:enable
 	}

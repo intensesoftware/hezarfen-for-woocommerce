@@ -133,7 +133,7 @@ class Courier_Hepsijet_Integration {
      * @return string Decrypted webhook secret
      */
     private function get_webhook_secret() {
-        $encrypted = get_option( 'ordermigo_webhook_secret', '' );
+        $encrypted = get_option( 'hez_ordermigo_webhook_secret', '' );
         return $this->decrypt_webhook_secret( $encrypted );
     }
 
@@ -145,7 +145,7 @@ class Courier_Hepsijet_Integration {
      */
     private function save_webhook_secret( $value ) {
         $encrypted = $this->encrypt_webhook_secret( $value );
-        return update_option( 'ordermigo_webhook_secret', $encrypted, false ); // false = not autoloaded
+        return update_option( 'hez_ordermigo_webhook_secret', $encrypted, false ); // false = not autoloaded
     }
 
     /**
@@ -603,7 +603,7 @@ class Courier_Hepsijet_Integration {
     public static function has_credentials() {
         $consumer_key = get_option( 'hezarfen_hepsijet_consumer_key', '' );
         $consumer_secret = get_option( 'hezarfen_hepsijet_consumer_secret', '' );
-        $webhook_secret = get_option( 'ordermigo_webhook_secret', '' );
+        $webhook_secret = get_option( 'hez_ordermigo_webhook_secret', '' );
         
         return ! empty( $consumer_key ) && ! empty( $consumer_secret ) && ! empty( $webhook_secret );
     }
@@ -994,7 +994,7 @@ class Courier_Hepsijet_Integration {
     /**
      * Handle webhook callback for shipment status updates
      * 
-     * Callback URL: https://yourdomain.com/wc-api/ordermigo_shipment_status/
+     * Callback URL: https://yourdomain.com/wc-api/hez_ordermigo_shipment_status/
      * Handles shipment.shipped and shipment.delivered events
      */
     public static function handle_webhook() {
