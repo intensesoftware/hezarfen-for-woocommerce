@@ -74,8 +74,8 @@ class Manual_Shipment_Tracking {
 		self::instance();
 		add_action( 'hezarfen_mst_shipment_data_saved', array( __CLASS__, 'ship_order' ), 10, 2 );
 		
-		// Register ActionScheduler hook for Hepsijet shipment monitoring
-		add_action( 'hezarfen_monitor_hepsijet_shipment', array( 'Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration', 'monitor_shipment_status' ), 10, 2 );
+		// Register webhook callback for Hepsijet shipment status updates
+		add_action( 'woocommerce_api_ordermigo_shipment_status', array( 'Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration', 'handle_webhook' ) );
 	}
 
 	/**
