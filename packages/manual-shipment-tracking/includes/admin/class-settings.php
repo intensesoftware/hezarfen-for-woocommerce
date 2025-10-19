@@ -49,6 +49,10 @@ class Settings {
 		// Add Hepsijet integration settings
 		add_filter( 'woocommerce_get_sections_' . self::HEZARFEN_WC_SETTINGS_ID, array( __CLASS__, 'add_hepsijet_section' ) );
 		add_filter( 'woocommerce_get_settings_' . self::HEZARFEN_WC_SETTINGS_ID, array( __CLASS__, 'add_hepsijet_settings' ), 10, 2 );
+		add_action( 'woocommerce_settings_save_hezarfen', array( __CLASS__, 'save_hepsijet_settings' ), 5 ); // Run early with priority 5
+		
+		// Decrypt webhook secret for display
+		add_filter( 'pre_option_ordermigo_webhook_secret', array( __CLASS__, 'decrypt_webhook_secret_for_display' ), 10 );
 	}
 
 	/**
@@ -343,7 +347,179 @@ class Settings {
 				'type' => 'sectionend',
 				'id' => 'hezarfen_hepsijet_label_settings'
 			),
+			array(
+				'type'  => 'title',
+				'title' => __( 'Advanced Settings', 'hezarfen-for-woocommerce' ),
+				'desc'  => '<div style="background: #fff3cd; border-left: 4px solid #f39c12; padding: 12px; margin: 10px 0;"><strong>⚠️ ' . __( 'Warning:', 'hezarfen-for-woocommerce' ) . '</strong> ' . __( 'Do not modify these settings unless you know what you are doing. These settings are automatically configured.', 'hezarfen-for-woocommerce' ) . '</div>',
+			),
+			array(
+				'title' => __( 'Webhook Secret', 'hezarfen-for-woocommerce' ),
+				'type' => 'text',
+				'id' => 'ordermigo_webhook_secret',
+				'default' => '',
+				'desc' => __( 'This secret is used to verify webhook notifications from Hepsijet API Relay. It is automatically generated when you create your first shipment. Do not edit this unless instructed by support.', 'hezarfen-for-woocommerce' ),
+				'autoload' => false
+			),
+			array(
+				'type' => 'sectionend',
+				'id' => 'hezarfen_hepsijet_advanced_settings'
+			),
 		);
+	}
+
+	/**
+	 * Check if OpenSSL extension is available
+	 * 
+	 * @return bool True if OpenSSL is available
+	 */
+	private static function is_openssl_available() {
+		return extension_loaded( 'openssl' ) && function_exists( 'openssl_encrypt' );
+	}
+
+	/**
+	 * Encrypt webhook secret
+	 * 
+	 * @param string $value Value to encrypt
+	 * @return string Encrypted value
+	 */
+	private static function encrypt_webhook_secret( $value ) {
+		if ( empty( $value ) ) {
+			return '';
+		}
+
+		// Check if OpenSSL is available
+		if ( ! self::is_openssl_available() ) {
+			return base64_encode( $value );
+		}
+
+		// Use WordPress auth keys for encryption
+		$key = AUTH_KEY . SECURE_AUTH_KEY;
+		$salt = AUTH_SALT . SECURE_AUTH_SALT;
+		
+		// Generate encryption key
+		$encryption_key = hash( 'sha256', $key );
+		$iv_length = openssl_cipher_iv_length( 'aes-256-cbc' );
+		$iv = substr( hash( 'sha256', $salt ), 0, $iv_length );
+		
+		// Encrypt the value
+		$encrypted = openssl_encrypt( $value, 'aes-256-cbc', $encryption_key, 0, $iv );
+		
+		if ( $encrypted === false ) {
+			return base64_encode( $value );
+		}
+		
+		return base64_encode( $encrypted );
+	}
+
+	/**
+	 * Decrypt webhook secret
+	 * 
+	 * @param string $encrypted_value Encrypted value
+	 * @return string Decrypted value
+	 */
+	private static function decrypt_webhook_secret( $encrypted_value ) {
+		if ( empty( $encrypted_value ) ) {
+			return '';
+		}
+
+		$decoded = base64_decode( $encrypted_value );
+		
+		if ( $decoded === false ) {
+			return '';
+		}
+
+		// Check if OpenSSL is available
+		if ( ! self::is_openssl_available() ) {
+			// Fallback: Value was stored with base64 only
+			return $decoded;
+		}
+
+		// Use WordPress auth keys for decryption
+		$key = AUTH_KEY . SECURE_AUTH_KEY;
+		$salt = AUTH_SALT . SECURE_AUTH_SALT;
+		
+		// Generate decryption key
+		$encryption_key = hash( 'sha256', $key );
+		$iv_length = openssl_cipher_iv_length( 'aes-256-cbc' );
+		$iv = substr( hash( 'sha256', $salt ), 0, $iv_length );
+		
+		// Decrypt the value
+		$decrypted = openssl_decrypt( $decoded, 'aes-256-cbc', $encryption_key, 0, $iv );
+		
+		// If decryption fails, try to return the base64 decoded value (fallback scenario)
+		if ( $decrypted === false ) {
+			return $decoded;
+		}
+		
+		return $decrypted;
+	}
+
+	/**
+	 * Decrypt webhook secret for display in settings
+	 * 
+	 * @param mixed $value The option value
+	 * @return string Decrypted value
+	 */
+	public static function decrypt_webhook_secret_for_display( $value ) {
+		// Don't decrypt during save operations
+		if ( isset( $_POST['save'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+			return $value;
+		}
+
+		// Only decrypt when viewing settings page (not saving)
+		global $current_section;
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( is_admin() && isset( $_GET['page'] ) && 'wc-settings' === sanitize_text_field( wp_unslash( $_GET['page'] ) ) && 'hepsijet_integration' === $current_section ) {
+			// Get the raw encrypted value from database
+			global $wpdb;
+			$encrypted = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", 'ordermigo_webhook_secret' ) );
+			if ( $encrypted ) {
+				return self::decrypt_webhook_secret( $encrypted );
+			}
+		}
+		return $value;
+	}
+
+	/**
+	 * Save Hepsijet settings with encryption for webhook secret
+	 * 
+	 * @return void
+	 */
+	public static function save_hepsijet_settings() {
+		global $current_section;
+
+		if ( 'hepsijet_integration' !== $current_section ) {
+			return;
+		}
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		if ( ! isset( $_POST['save'] ) ) {
+			return;
+		}
+
+		if ( isset( $_POST['ordermigo_webhook_secret'] ) ) {
+			$webhook_secret = sanitize_text_field( wp_unslash( $_POST['ordermigo_webhook_secret'] ) );
+			
+			// Get current value to see if it changed
+			$current_encrypted = get_option( 'ordermigo_webhook_secret', '' );
+			$current_decrypted = self::decrypt_webhook_secret( $current_encrypted );
+			
+			// Only save if the value actually changed
+			if ( $webhook_secret !== $current_decrypted ) {
+				if ( ! empty( $webhook_secret ) ) {
+					// Encrypt and save with autoload disabled
+					$encrypted = self::encrypt_webhook_secret( $webhook_secret );
+					$result = update_option( 'ordermigo_webhook_secret', $encrypted, false );
+				} else {
+					// Delete if empty
+					delete_option( 'ordermigo_webhook_secret' );
+				}
+			}
+			
+			// Prevent WooCommerce from processing this field normally
+			unset( $_POST['ordermigo_webhook_secret'] );
+		}
+		// phpcs:enable
 	}
 
 	/**

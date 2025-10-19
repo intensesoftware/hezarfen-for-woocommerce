@@ -41,6 +41,114 @@ class Courier_Hepsijet_Integration {
     }
 
     /**
+     * Check if OpenSSL extension is available
+     * 
+     * @return bool True if OpenSSL is available
+     */
+    private function is_openssl_available() {
+        return extension_loaded( 'openssl' ) && function_exists( 'openssl_encrypt' );
+    }
+
+    /**
+     * Encrypt webhook secret
+     * 
+     * @param string $value Value to encrypt
+     * @return string Encrypted value
+     */
+    private function encrypt_webhook_secret( $value ) {
+        if ( empty( $value ) ) {
+            return '';
+        }
+
+        // Check if OpenSSL is available
+        if ( ! $this->is_openssl_available() ) {
+            return base64_encode( $value );
+        }
+
+        // Use WordPress auth keys for encryption
+        $key = AUTH_KEY . SECURE_AUTH_KEY;
+        $salt = AUTH_SALT . SECURE_AUTH_SALT;
+        
+        // Generate encryption key
+        $encryption_key = hash( 'sha256', $key );
+        $iv_length = openssl_cipher_iv_length( 'aes-256-cbc' );
+        $iv = substr( hash( 'sha256', $salt ), 0, $iv_length );
+        
+        // Encrypt the value
+        $encrypted = openssl_encrypt( $value, 'aes-256-cbc', $encryption_key, 0, $iv );
+        
+        if ( $encrypted === false ) {
+            return base64_encode( $value );
+        }
+        
+        return base64_encode( $encrypted );
+    }
+
+    /**
+     * Decrypt webhook secret
+     * 
+     * @param string $encrypted_value Encrypted value
+     * @return string Decrypted value
+     */
+    private function decrypt_webhook_secret( $encrypted_value ) {
+        if ( empty( $encrypted_value ) ) {
+            return '';
+        }
+
+        $decoded = base64_decode( $encrypted_value );
+        
+        if ( $decoded === false ) {
+            return '';
+        }
+
+        // Check if OpenSSL is available
+        if ( ! $this->is_openssl_available() ) {
+            // Fallback: Value was stored with base64 only
+            return $decoded;
+        }
+
+        // Use WordPress auth keys for decryption
+        $key = AUTH_KEY . SECURE_AUTH_KEY;
+        $salt = AUTH_SALT . SECURE_AUTH_SALT;
+        
+        // Generate decryption key
+        $encryption_key = hash( 'sha256', $key );
+        $iv_length = openssl_cipher_iv_length( 'aes-256-cbc' );
+        $iv = substr( hash( 'sha256', $salt ), 0, $iv_length );
+        
+        // Decrypt the value
+        $decrypted = openssl_decrypt( $decoded, 'aes-256-cbc', $encryption_key, 0, $iv );
+        
+        // If decryption fails, try to return the base64 decoded value (fallback scenario)
+        if ( $decrypted === false ) {
+            return $decoded;
+        }
+        
+        return $decrypted;
+    }
+
+    /**
+     * Get webhook secret (decrypted)
+     * 
+     * @return string Decrypted webhook secret
+     */
+    private function get_webhook_secret() {
+        $encrypted = get_option( 'ordermigo_webhook_secret', '' );
+        return $this->decrypt_webhook_secret( $encrypted );
+    }
+
+    /**
+     * Save webhook secret (encrypted, not autoloaded)
+     * 
+     * @param string $value Webhook secret to save
+     * @return bool True on success, false on failure
+     */
+    private function save_webhook_secret( $value ) {
+        $encrypted = $this->encrypt_webhook_secret( $value );
+        return update_option( 'ordermigo_webhook_secret', $encrypted, false ); // false = not autoloaded
+    }
+
+    /**
      * Make request to relay API
      */
     private function make_relay_request( $endpoint, $data = null, $method = 'POST' ) {
@@ -255,6 +363,55 @@ class Courier_Hepsijet_Integration {
     }
 
     /**
+     * Register domain and get webhook secret
+     */
+    private function register_domain_and_get_webhook_secret() {
+        $current_domain = parse_url( home_url(), PHP_URL_HOST );
+        
+        $data = array(
+            'domain' => $current_domain
+        );
+        
+        $response = $this->make_relay_request( '/domain/register', $data, 'POST' );
+        
+        if ( is_wp_error( $response ) ) {
+            return $response;
+        }
+        
+        if ( ! isset( $response['success'] ) || ! $response['success'] ) {
+            return new \WP_Error( 'domain_registration_failed', $response['message'] ?? 'Domain registration failed' );
+        }
+        
+        if ( ! isset( $response['webhook_secret'] ) ) {
+            return new \WP_Error( 'webhook_secret_missing', 'Webhook secret not returned from API' );
+        }
+        
+        // Save webhook secret (encrypted, not autoloaded)
+        $this->save_webhook_secret( $response['webhook_secret'] );
+        
+        return $response['webhook_secret'];
+    }
+    
+    /**
+     * Ensure webhook secret exists
+     */
+    private function ensure_webhook_secret() {
+        $webhook_secret = $this->get_webhook_secret();
+        
+        if ( empty( $webhook_secret ) ) {
+            $result = $this->register_domain_and_get_webhook_secret();
+            
+            if ( is_wp_error( $result ) ) {
+                return $result;
+            }
+            
+            return true;
+        }
+        
+        return true;
+    }
+
+    /**
      * Create shipment via Relay API
      */
     public function api_create_barcode( $order_id, $package_count, $desi, $type = 'standard', $delivery_slot = '', $delivery_date = '' ) {
@@ -267,6 +424,12 @@ class Courier_Hepsijet_Integration {
         $payment_method = $order->get_payment_method();
         if ( $payment_method === 'cod' ) {
             return new \WP_Error( 'hepsijet_cod_not_supported', esc_html__( 'Payment on delivery is not supported', 'hezarfen-for-woocommerce' ) );
+        }
+        
+        // Ensure webhook secret exists
+        $webhook_check = $this->ensure_webhook_secret();
+        if ( is_wp_error( $webhook_check ) ) {
+            return $webhook_check;
         }
 
         $shipping_details = new Shipping_Details( $order_id );
