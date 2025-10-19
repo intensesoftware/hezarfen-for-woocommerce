@@ -991,9 +991,6 @@ class Courier_Hepsijet_Integration {
             $signature = $_SERVER['HTTP_X_ORDERMIGO_SIGNATURE'] ?? '';
             $event = $_SERVER['HTTP_X_ORDERMIGO_EVENT'] ?? '';
 
-            // Log incoming webhook
-            self::log_webhook( sprintf( 'Received webhook: %s', $event ) );
-
             // Parse payload
             $data = json_decode( $payload_json, true );
             if ( json_last_error() !== JSON_ERROR_NONE ) {
@@ -1013,14 +1010,12 @@ class Courier_Hepsijet_Integration {
 
             // Verify client_id matches
             if ( $data['client_id'] !== $client_id ) {
-                self::log_webhook( sprintf( 'Client ID mismatch. Expected: %s, Received: %s', $client_id, $data['client_id'] ) );
                 self::respond_error( 'Client ID mismatch', 403 );
                 return;
             }
 
             // Verify webhook signature
             if ( ! self::verify_webhook_signature( $payload_json, $signature, $data['client_id'] ) ) {
-                self::log_webhook( 'Invalid webhook signature' );
                 self::respond_error( 'Invalid signature', 401 );
                 return;
             }
@@ -1054,7 +1049,6 @@ class Courier_Hepsijet_Integration {
             ) );
 
         } catch ( \Exception $e ) {
-            self::log_webhook( 'Webhook error: ' . $e->getMessage() );
             self::respond_error( 'Internal server error', 500 );
         }
     }
@@ -1072,12 +1066,10 @@ class Courier_Hepsijet_Integration {
         $webhook_secret = $instance->get_webhook_secret();
 
         if ( empty( $webhook_secret ) ) {
-            self::log_webhook( 'Webhook secret not configured' );
             return false;
         }
 
         if ( empty( $received_signature ) ) {
-            self::log_webhook( 'No signature provided' );
             return false;
         }
 
@@ -1100,15 +1092,12 @@ class Courier_Hepsijet_Integration {
         $order_id = $data['order_id'];
         $delivery_no = $data['delivery_no'];
 
-        self::log_webhook( sprintf( 'Processing shipped event for order #%s, delivery: %s', $order_id, $delivery_no ) );
-
         $instance = new self();
         
         // Get shipment details
         $shipment_details = $instance->get_shipment_details_by_delivery_no( $order_id, $delivery_no );
         
         if ( ! $shipment_details ) {
-            self::log_webhook( sprintf( 'Shipment not found for order #%s, delivery: %s', $order_id, $delivery_no ) );
             throw new \Exception( 'Shipment not found' );
         }
 
@@ -1116,7 +1105,6 @@ class Courier_Hepsijet_Integration {
         
         // Only process if shipment is still active
         if ( $current_status !== 'active' ) {
-            self::log_webhook( sprintf( 'Shipment already processed. Current status: %s', $current_status ) );
             return;
         }
 
@@ -1130,8 +1118,6 @@ class Courier_Hepsijet_Integration {
             // Use existing ship_order logic to save tracking data
             $instance->process_shipment_shipped( $order_id, $delivery_no, $tracking_details );
         }
-
-        self::log_webhook( sprintf( 'Shipped event processed for order #%s', $order_id ) );
     }
 
     /**
@@ -1143,15 +1129,12 @@ class Courier_Hepsijet_Integration {
         $order_id = $data['order_id'];
         $delivery_no = $data['delivery_no'];
 
-        self::log_webhook( sprintf( 'Processing delivered event for order #%s, delivery: %s', $order_id, $delivery_no ) );
-
         $instance = new self();
         
         // Get shipment details
         $shipment_details = $instance->get_shipment_details_by_delivery_no( $order_id, $delivery_no );
         
         if ( ! $shipment_details ) {
-            self::log_webhook( sprintf( 'Shipment not found for order #%s, delivery: %s', $order_id, $delivery_no ) );
             throw new \Exception( 'Shipment not found' );
         }
 
@@ -1159,7 +1142,6 @@ class Courier_Hepsijet_Integration {
         
         // Only process if shipment is not already delivered
         if ( $current_status === 'delivered' ) {
-            self::log_webhook( sprintf( 'Shipment already delivered' ) );
             return;
         }
 
@@ -1168,8 +1150,6 @@ class Courier_Hepsijet_Integration {
         
         // Mark order as completed
         $instance->process_shipment_delivered( $order_id, $delivery_no );
-
-        self::log_webhook( sprintf( 'Delivered event processed for order #%s', $order_id ) );
     }
 
     /**
@@ -1198,17 +1178,6 @@ class Courier_Hepsijet_Integration {
             'error' => $message
         ) );
         exit;
-    }
-
-    /**
-     * Log webhook message
-     * 
-     * @param string $message Message to log
-     */
-    private static function log_webhook( $message ) {
-        if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-            error_log( sprintf( '[Hezarfen Hepsijet Webhook] %s', $message ) );
-        }
     }
 
     /**
