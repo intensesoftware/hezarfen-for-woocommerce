@@ -596,6 +596,19 @@ class Courier_Hepsijet_Integration {
     }
 
     /**
+     * Check if Hepsijet credentials are configured
+     *
+     * @return bool True if consumer_key, consumer_secret, and webhook_secret are set
+     */
+    public static function has_credentials() {
+        $consumer_key = get_option( 'hezarfen_hepsijet_consumer_key', '' );
+        $consumer_secret = get_option( 'hezarfen_hepsijet_consumer_secret', '' );
+        $webhook_secret = get_option( 'ordermigo_webhook_secret', '' );
+        
+        return ! empty( $consumer_key ) && ! empty( $consumer_secret ) && ! empty( $webhook_secret );
+    }
+
+    /**
      * Check if shipment is shipped
      *
      * @param array<string, mixed> $cargo_details Gönderi detayları.
