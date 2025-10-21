@@ -12,6 +12,44 @@ use \Hezarfen\ManualShipmentTracking\Helper;
     opacity: 0.7;
   }
 }
+
+#hepsijet-rotating-info .hez-pricing {
+    font-size: 1.125rem !important;
+}
+
+#hepsijet-rotating-info .hez-desi-range {
+    font-size: 16px !important;
+}
+
+@media (max-width: 1760px) {
+    .hezarfen-responsive-btn.text-sm {
+        font-size: 0.65rem !important;
+        line-height: 1.2 !important;
+        padding: 0.375rem 0.625rem !important;
+    }
+    .hezarfen-responsive-btn.text-sm svg {
+        width: 0.875rem !important;
+        height: 0.875rem !important;
+    }
+
+    .rotating-item .text-xs {
+        font-size: 0.65rem !important;
+        line-height: 1.2 !important;
+        padding: 0.2rem 0.25rem !important;
+    }
+
+    #hepsijet-rotating-info .hez-pricing {
+        font-size: 0.875rem !important;
+        line-height: 1.2 !important;
+        padding: 0 !important;
+    }
+
+    #hepsijet-rotating-info .hez-desi-range {
+        font-size: 0.65rem !important;
+        line-height: 1.2 !important;
+        padding: 0 !important;
+    }
+}
 </style>
 <div id="hez-order-shipments" class="hez-ui">
 
@@ -83,8 +121,8 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                                         if ($pricing_info !== false) {
                                                             $price = $pricing_info['price_1_desi'];
                                                             $desi_range = $pricing_info['display_text'];
-                                                            echo '<span style="font-weight: bold !important; font-size: 1.125rem !important; color: #2563eb !important;">' . esc_html(number_format($price, 2, ',', '')) . '₺+KDV</span>';
-                                                            echo ' <span style="font-size: 16px;" class="text-gray-700 font-medium">(' . esc_html($desi_range) . ')</span>';
+                                                            echo '<span class="hez-pricing" style="font-weight: bold !important; color: #2563eb !important;">' . esc_html(number_format($price, 2, ',', '')) . '₺+KDV</span>';
+                                                            echo ' <span class="hez-desi-range text-gray-700 font-medium">(' . esc_html($desi_range) . ')</span>';
                                                         }
                                                     } catch (Exception $e) {
                                                     }
@@ -101,7 +139,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                                 <!-- Avantaj 2 -->
                                                 <div class="rotating-item">
                                                     <span class="text-xs bg-orange-500 text-white px-2 py-1 rounded-full shadow-sm font-medium">
-                                                        <?php esc_html_e('Aylık alt gönderim limiti yoktur', 'hezarfen-for-woocommerce'); ?>
+                                                        <?php esc_html_e('Min. gönderim limiti yok', 'hezarfen-for-woocommerce'); ?>
                                                     </span>
                                                 </div>
                                                 
@@ -441,46 +479,46 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                     </div>
                 </div>
                 <div id="hezarfen-right-side">
-                    <!-- SMS Settings Icon Button - Top Right -->
+  <!-- SMS Settings Icon Button - Top Right -->
                     <div class="flex justify-end mb-4 gap-2">
                                                  <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=hepsijet_integration' ) ); ?>" 
-                         class="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-all duration-200 group" 
-                         target="_blank"
-                         title="<?php esc_attr_e( 'Configure Hepsijet Integration Settings', 'hezarfen-for-woocommerce' ); ?>">
-                             <svg class="w-4 h-4 mr-2 group-hover:animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                             </svg>
-                             <?php esc_html_e( 'Hepsijet Integration Settings', 'hezarfen-for-woocommerce' ); ?>
-                            <svg style="max-height: 50px" class="w-3 h-3 ml-1 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                            </svg>
-                        </a>
-                        <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=sms_settings' ) ); ?>" 
-                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-all duration-200 group" 
+                        class="hezarfen-responsive-btn inline-flex items-center px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-all duration-200 group" 
                         target="_blank"
-                        title="<?php esc_attr_e( 'Configure SMS automation for order status changes', 'hezarfen-for-woocommerce' ); ?>">
-                            <svg style="max-height: 50px" class="w-4 h-4 mr-2 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        title="<?php esc_attr_e( 'Configure Hepsijet Integration Settings', 'hezarfen-for-woocommerce' ); ?>">
+                            <svg class="w-4 h-4 mr-2 group-hover:animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
-                            <?php esc_html_e( 'SMS Settings', 'hezarfen-for-woocommerce' ); ?>
-                            <svg style="max-height: 50px" class="w-3 h-3 ml-1 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                            </svg>
-                        </a>
-                        <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen' ) ); ?>" 
-                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 transition-all duration-200 group" 
-                        target="_blank"
-                        title="<?php esc_attr_e( 'Watch training videos to learn how to use Hezarfen', 'hezarfen-for-woocommerce' ); ?>">
-                            <svg style="max-height: 50px" class="w-4 h-4 mr-2 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <?php esc_html_e( 'Training Videos', 'hezarfen-for-woocommerce' ); ?>
-                            <svg style="max-height: 50px" class="w-3 h-3 ml-1 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                            </svg>
-                        </a>
-                    </div>
+                            <?php esc_html_e( 'Hepsijet Integration Settings', 'hezarfen-for-woocommerce' ); ?>
+                           <svg style="max-height: 50px" class="w-3 h-3 ml-1 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                           </svg>
+                       </a>
+                       <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=sms_settings' ) ); ?>" 
+                       class="hezarfen-responsive-btn inline-flex items-center px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-all duration-200 group" 
+                       target="_blank"
+                       title="<?php esc_attr_e( 'Configure SMS automation for order status changes', 'hezarfen-for-woocommerce' ); ?>">
+                           <svg style="max-height: 50px" class="w-4 h-4 mr-2 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                           </svg>
+                           <?php esc_html_e( 'SMS Settings', 'hezarfen-for-woocommerce' ); ?>
+                           <svg style="max-height: 50px" class="w-3 h-3 ml-1 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                           </svg>
+                       </a>
+                       <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen' ) ); ?>" 
+                       class="hezarfen-responsive-btn inline-flex items-center px-3 py-2 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 transition-all duration-200 group" 
+                       target="_blank"
+                       title="<?php esc_attr_e( 'Watch training videos to learn how to use Hezarfen', 'hezarfen-for-woocommerce' ); ?>">
+                           <svg style="max-height: 50px" class="w-4 h-4 mr-2 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                           </svg>
+                           <?php esc_html_e( 'Training Videos', 'hezarfen-for-woocommerce' ); ?>
+                           <svg style="max-height: 50px" class="w-3 h-3 ml-1 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                           </svg>
+                       </a>
+                   </div>
                     <?php
                     // Get Hepsijet shipments from encapsulated meta data
                     $order = wc_get_order($order_id);
