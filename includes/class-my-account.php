@@ -40,6 +40,11 @@ class My_Account {
 	 * @return array<string, mixed>
 	 */
 	public function convert_to_select_elements( $address, $load_address ) {
+
+		if ( 'yes' !== get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) ) {
+			return $address;
+		}
+
 		$province_key = $load_address . '_state';
 		$district_key = $load_address . '_city';
 		$nbrhood_key  = $load_address . '_address_1';
@@ -100,6 +105,10 @@ class My_Account {
 	 */
 	public function enqueue_scripts() {
 		if ( Helper::is_edit_address_page() ) {
+			if ( 'yes' !== get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) ) {
+				return;
+			}
+
 			wp_enqueue_script( 'wc_hezarfen_my_account_addresses_js', plugins_url( 'assets/js/my-account-addresses.js', WC_HEZARFEN_FILE ), array( 'jquery', 'wc_hezarfen_mahalle_helper_js' ), WC_HEZARFEN_VERSION, true );
 		}
 	}

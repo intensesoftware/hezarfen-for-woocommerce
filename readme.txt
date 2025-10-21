@@ -6,12 +6,12 @@ Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.7.10
+Stable tag: 2.7.14
 
-🚀 2 bin site kullanıyor! Kargo takip, ücretsiz Hepsijet Entegrasyonu (1-4 desi: 69,99TL+KDV), Mesafeli Satış Sözleşmesi, NetGSM sipariş ve kargo SMS
+🚀 2 bin site kullanıyor! Kargo takip, ücretsiz Hepsijet Entegrasyonu (1-4 desi: 66,60TL+KDV), Mesafeli Satış Sözleşmesi, NetGSM sipariş ve kargo SMS
 == Description ==
 
-**Tamamen Ücretsiz!** Intense&Hepsijet İşbirliğiyle; Hezarfen kullanıcılarına Hepsijet 1-4 Desi 69,99TL+KDV - Hezarfen, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo, ödeme ve sözleşme yönetim eklentisidir. Bu WooCommerce kargo entegrasyon eklentisi, 23 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel WooCommerce kargo takip deneyimi sunar, Mesafeli Satış Sözleşmesi (MSS) desteği sağlar ve Türkiye'ye özgü mahalle, fatura ve vergi alanlarıyla ödeme ekranınızı Türkiye'ye uyumlu hale getirir.
+**Tamamen Ücretsiz!** Intense&Hepsijet İşbirliğiyle; Hezarfen kullanıcılarına Hepsijet 1-4 Desi 66,60TL+KDV - Hezarfen, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo, ödeme ve sözleşme yönetim eklentisidir. Bu WooCommerce kargo entegrasyon eklentisi, 23 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel WooCommerce kargo takip deneyimi sunar, Mesafeli Satış Sözleşmesi (MSS) desteği sağlar ve Türkiye'ye özgü mahalle, fatura ve vergi alanlarıyla ödeme ekranınızı Türkiye'ye uyumlu hale getirir.
 
 = 🚀 2000+ WooCommerce Sitesi tarafından kullanılıyor! =
 
@@ -36,7 +36,7 @@ Stable tag: 2.7.10
 = ⭐ TAMAMEN ÜCRETSİZ =
 
 **🚚 Hepsijet Ücretsiz WooCommerce Kargo Entegrasyonu**
-• 1-4 Desi 69,99TL+KDV - Anlaşma yapmanıza gerek yok, intense.com.tr'den kayıt olun, bakiye yükleyin ve gönderime başlayın. Kargo gönderim için minimum limit yok! İster ayda 1 tane, ister 10000 tane!
+• 1-4 Desi 66,60TL+KDV - Anlaşma yapmanıza gerek yok, intense.com.tr'den kayıt olun, bakiye yükleyin ve gönderime başlayın. Kargo gönderim için minimum limit yok! İster ayda 1 tane, ister 10000 tane!
 • Ücretsiz entegrasyon (otomatik kargo takip no girişi, otomatik siparişin kargoya verildi durumuna geçmesi, otomatik siparişin tamamlandı durumuna geçmesi, otomatik müşteriye e-posta bildirimi)
 
 **🚚 Kargo Yönetimi ve WooCommerce Kargo Takip Modülü**
@@ -264,6 +264,20 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
+= 2.7.14 - 2025-10-20 =
+* Hepsijet kargo durumlarının zamanlanmış görevler yerine webhook altyapısı ile güncellenmesi sağlandı.
+
+= 2.7.13 - 2025-10-20 =
+* SMS otomasyonunda {fatura_sehir}, {kargo_sehir}, {billing_city}, {shipping_city} değişkenlerinde il yerine ilçe gösterilmesi problemi giderildi.,
+* Sözleşme değişkenlerine {{fatura_ilce}} ve {{teslimat_ilce}} alanları eklendi.
+* Sözleşme değişkenlerinde {{fatura_sehir}} veya {{teslimat_sehir}} kullanıldığında, il yerine ilçe gösterilmesi problemi giderildi.
+
+= 2.7.12 - 2025-10-20 =
+* Hepsijet etiketinde fotoğraf gösterebilmesi sağlandı.
+
+= 2.7.11 - 2025-10-08 =
+* İlçe ve mahalle alanının isteğe bağlı kapatılabilmesi sağlandı.
+
 = 2.7.10 - 2025-10-08 =
 * SMS otomasyonunun aktif/deaktif edilmesini sağlayan butonda yaşanan sorun giderildi.
 * HepsiJet etiketinde yer alan ürün bilgilerinin isteğe bağlı olarak gizlenmesi sağlandı.

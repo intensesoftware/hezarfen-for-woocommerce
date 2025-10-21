@@ -745,14 +745,14 @@ class SMS_Automation {
 			'{fatura_epostasi}' => $order->get_billing_email(),
 			'{fatura_sirket}' => $order->get_billing_company(),
 			'{fatura_adresi}' => $order->get_billing_address_1() . ( $order->get_billing_address_2() ? ' ' . $order->get_billing_address_2() : '' ),
-			'{fatura_sehir}' => $order->get_billing_city(),
+			'{fatura_sehir}' => WC()->countries->states[ $order->get_billing_country() ][ $order->get_billing_state() ] ?? $order->get_billing_state(),
 			'{fatura_ulke}' => $order->get_billing_country(),
 			'{kargo_adi}' => $order->get_shipping_first_name(),
 			'{kargo_soyadi}' => $order->get_shipping_last_name(),
 			'{kargo_telefonu}' => $order->get_shipping_phone(),
 			'{kargo_sirket}' => $order->get_shipping_company(),
 			'{kargo_adresi}' => $order->get_shipping_address_1() . ( $order->get_shipping_address_2() ? ' ' . $order->get_shipping_address_2() : '' ),
-			'{kargo_sehir}' => $order->get_shipping_city(),
+			'{kargo_sehir}' => WC()->countries->states[ $order->get_shipping_country() ][ $order->get_shipping_state() ?: $order->get_billing_state() ],
 			'{kargo_ulke}' => $order->get_shipping_country(),
 			
 			// English equivalents for compatibility
@@ -770,7 +770,7 @@ class SMS_Automation {
 			'{billing_email}' => $order->get_billing_email(),
 			'{billing_company}' => $order->get_billing_company(),
 			'{billing_address}' => $order->get_billing_address_1() . ( $order->get_billing_address_2() ? ' ' . $order->get_billing_address_2() : '' ),
-			'{billing_city}' => $order->get_billing_city(),
+			'{billing_city}' => WC()->countries->states[ $order->get_billing_country() ][ $order->get_billing_state() ] ?? $order->get_billing_state(),
 			'{billing_country}' => $order->get_billing_country(),
 			
 			// Shipping variables
@@ -779,7 +779,7 @@ class SMS_Automation {
 			'{shipping_phone}' => $order->get_shipping_phone(),
 			'{shipping_company}' => $order->get_shipping_company(),
 			'{shipping_address}' => $order->get_shipping_address_1() . ( $order->get_shipping_address_2() ? ' ' . $order->get_shipping_address_2() : '' ),
-			'{shipping_city}' => $order->get_shipping_city(),
+			'{shipping_city}' => WC()->countries->states[ $order->get_shipping_country() ][ $order->get_shipping_state() ?: $order->get_billing_state() ],
 			'{shipping_country}' => $order->get_shipping_country(),
 			
 			// Shipment variables

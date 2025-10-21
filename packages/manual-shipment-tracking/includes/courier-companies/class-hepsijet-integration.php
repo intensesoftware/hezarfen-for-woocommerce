@@ -41,6 +41,114 @@ class Courier_Hepsijet_Integration {
     }
 
     /**
+     * Check if OpenSSL extension is available
+     * 
+     * @return bool True if OpenSSL is available
+     */
+    private function is_openssl_available() {
+        return extension_loaded( 'openssl' ) && function_exists( 'openssl_encrypt' );
+    }
+
+    /**
+     * Encrypt webhook secret
+     * 
+     * @param string $value Value to encrypt
+     * @return string Encrypted value
+     */
+    private function encrypt_webhook_secret( $value ) {
+        if ( empty( $value ) ) {
+            return '';
+        }
+
+        // Check if OpenSSL is available
+        if ( ! $this->is_openssl_available() ) {
+            return base64_encode( $value );
+        }
+
+        // Use WordPress auth keys for encryption
+        $key = AUTH_KEY . SECURE_AUTH_KEY;
+        $salt = AUTH_SALT . SECURE_AUTH_SALT;
+        
+        // Generate encryption key
+        $encryption_key = hash( 'sha256', $key );
+        $iv_length = openssl_cipher_iv_length( 'aes-256-cbc' );
+        $iv = substr( hash( 'sha256', $salt ), 0, $iv_length );
+        
+        // Encrypt the value
+        $encrypted = openssl_encrypt( $value, 'aes-256-cbc', $encryption_key, 0, $iv );
+        
+        if ( $encrypted === false ) {
+            return base64_encode( $value );
+        }
+        
+        return base64_encode( $encrypted );
+    }
+
+    /**
+     * Decrypt webhook secret
+     * 
+     * @param string $encrypted_value Encrypted value
+     * @return string Decrypted value
+     */
+    private function decrypt_webhook_secret( $encrypted_value ) {
+        if ( empty( $encrypted_value ) ) {
+            return '';
+        }
+
+        $decoded = base64_decode( $encrypted_value );
+        
+        if ( $decoded === false ) {
+            return '';
+        }
+
+        // Check if OpenSSL is available
+        if ( ! $this->is_openssl_available() ) {
+            // Fallback: Value was stored with base64 only
+            return $decoded;
+        }
+
+        // Use WordPress auth keys for decryption
+        $key = AUTH_KEY . SECURE_AUTH_KEY;
+        $salt = AUTH_SALT . SECURE_AUTH_SALT;
+        
+        // Generate decryption key
+        $encryption_key = hash( 'sha256', $key );
+        $iv_length = openssl_cipher_iv_length( 'aes-256-cbc' );
+        $iv = substr( hash( 'sha256', $salt ), 0, $iv_length );
+        
+        // Decrypt the value
+        $decrypted = openssl_decrypt( $decoded, 'aes-256-cbc', $encryption_key, 0, $iv );
+        
+        // If decryption fails, try to return the base64 decoded value (fallback scenario)
+        if ( $decrypted === false ) {
+            return $decoded;
+        }
+        
+        return $decrypted;
+    }
+
+    /**
+     * Get webhook secret (decrypted)
+     * 
+     * @return string Decrypted webhook secret
+     */
+    private function get_webhook_secret() {
+        $encrypted = get_option( 'hez_ordermigo_webhook_secret', '' );
+        return $this->decrypt_webhook_secret( $encrypted );
+    }
+
+    /**
+     * Save webhook secret (encrypted, not autoloaded)
+     * 
+     * @param string $value Webhook secret to save
+     * @return bool True on success, false on failure
+     */
+    private function save_webhook_secret( $value ) {
+        $encrypted = $this->encrypt_webhook_secret( $value );
+        return update_option( 'hez_ordermigo_webhook_secret', $encrypted, false ); // false = not autoloaded
+    }
+
+    /**
      * Make request to relay API
      */
     private function make_relay_request( $endpoint, $data = null, $method = 'POST' ) {
@@ -255,6 +363,55 @@ class Courier_Hepsijet_Integration {
     }
 
     /**
+     * Register domain and get webhook secret
+     */
+    private function register_domain_and_get_webhook_secret() {
+        $current_domain = parse_url( home_url(), PHP_URL_HOST );
+        
+        $data = array(
+            'domain' => $current_domain
+        );
+        
+        $response = $this->make_relay_request( '/domain/register', $data, 'POST' );
+        
+        if ( is_wp_error( $response ) ) {
+            return $response;
+        }
+        
+        if ( ! isset( $response['success'] ) || ! $response['success'] ) {
+            return new \WP_Error( 'domain_registration_failed', $response['message'] ?? 'Domain registration failed' );
+        }
+        
+        if ( ! isset( $response['webhook_secret'] ) ) {
+            return new \WP_Error( 'webhook_secret_missing', 'Webhook secret not returned from API' );
+        }
+        
+        // Save webhook secret (encrypted, not autoloaded)
+        $this->save_webhook_secret( $response['webhook_secret'] );
+        
+        return $response['webhook_secret'];
+    }
+    
+    /**
+     * Ensure webhook secret exists
+     */
+    private function ensure_webhook_secret() {
+        $webhook_secret = $this->get_webhook_secret();
+        
+        if ( empty( $webhook_secret ) ) {
+            $result = $this->register_domain_and_get_webhook_secret();
+            
+            if ( is_wp_error( $result ) ) {
+                return $result;
+            }
+            
+            return true;
+        }
+        
+        return true;
+    }
+
+    /**
      * Create shipment via Relay API
      */
     public function api_create_barcode( $order_id, $package_count, $desi, $type = 'standard', $delivery_slot = '', $delivery_date = '' ) {
@@ -267,6 +424,12 @@ class Courier_Hepsijet_Integration {
         $payment_method = $order->get_payment_method();
         if ( $payment_method === 'cod' ) {
             return new \WP_Error( 'hepsijet_cod_not_supported', esc_html__( 'Payment on delivery is not supported', 'hezarfen-for-woocommerce' ) );
+        }
+        
+        // Ensure webhook secret exists
+        $webhook_check = $this->ensure_webhook_secret();
+        if ( is_wp_error( $webhook_check ) ) {
+            return $webhook_check;
         }
 
         $shipping_details = new Shipping_Details( $order_id );
@@ -342,9 +505,6 @@ class Courier_Hepsijet_Integration {
         
         // Save order meta data
         $order->save_meta_data();
-
-        // Schedule monitoring for this shipment
-        $this->schedule_shipment_monitoring( $order_id, $delivery_no );
 
         return array(
             'success' => true,
@@ -433,6 +593,19 @@ class Courier_Hepsijet_Integration {
         }
 
         return $details['tracking_number'];
+    }
+
+    /**
+     * Check if Hepsijet credentials are configured
+     *
+     * @return bool True if consumer_key, consumer_secret, and webhook_secret are set
+     */
+    public static function has_credentials() {
+        $consumer_key = get_option( 'hezarfen_hepsijet_consumer_key', '' );
+        $consumer_secret = get_option( 'hezarfen_hepsijet_consumer_secret', '' );
+        $webhook_secret = get_option( 'hez_ordermigo_webhook_secret', '' );
+        
+        return ! empty( $consumer_key ) && ! empty( $consumer_secret ) && ! empty( $webhook_secret );
     }
 
     /**
@@ -819,214 +992,205 @@ class Courier_Hepsijet_Integration {
     }
 
     /**
-     * Schedule monitoring for a shipment
-     *
-     * @param int    $order_id    Order ID
-     * @param string $delivery_no Delivery number
-     * @return void
+     * Handle webhook callback for shipment status updates
+     * 
+     * Callback URL: https://yourdomain.com/wc-api/hez_ordermigo_shipment_status/
+     * Handles shipment.shipped and shipment.delivered events
      */
-    private function schedule_shipment_monitoring( $order_id, $delivery_no ) {
-        // Check if ActionScheduler is available
-        if ( ! function_exists( 'as_schedule_recurring_action' ) ) {
-            return;
-        }
+    public static function handle_webhook() {
+        try {
+            // Get request data
+            $payload_json = file_get_contents( 'php://input' );
+            $signature = $_SERVER['HTTP_X_ORDERMIGO_SIGNATURE'] ?? '';
+            $event = $_SERVER['HTTP_X_ORDERMIGO_EVENT'] ?? '';
 
-        // Schedule recurring action every hour
-        $hook = 'hezarfen_monitor_hepsijet_shipment';
-        $args = array( $order_id, $delivery_no );
-        $group = 'hezarfen-shipment-monitoring';
-        
-        // Cancel any existing scheduled actions for this specific shipment only
-        $this->unschedule_shipment_monitoring( $order_id, $delivery_no );
-        
-        // Check if ActionScheduler is available before scheduling
-        if ( ! function_exists( 'as_schedule_recurring_action' ) ) {
-            return;
-        }
-        
-        // Schedule single action that will reschedule itself
-        $action_id = as_schedule_single_action(
-            time() + HOUR_IN_SECONDS, // Start in 1 hour
-            $hook,
-            $args,
-            $group
-        );
+            // Parse payload
+            $data = json_decode( $payload_json, true );
+            if ( json_last_error() !== JSON_ERROR_NONE ) {
+                self::respond_error( 'Invalid JSON payload', 400 );
+                return;
+            }
 
-        // Store the action ID in shipment meta for later reference
-        $this->store_monitoring_action_id( $order_id, $delivery_no, $action_id );
-    }
+            // Verify required fields
+            if ( empty( $data['client_id'] ) || empty( $data['order_id'] ) || empty( $data['delivery_no'] ) ) {
+                self::respond_error( 'Missing required fields', 400 );
+                return;
+            }
 
-    /**
-     * Unschedule monitoring for a specific shipment
-     *
-     * @param int    $order_id    Order ID
-     * @param string $delivery_no Delivery number
-     * @return void
-     */
-    private function unschedule_shipment_monitoring( $order_id, $delivery_no ) {
-        // Get stored action ID from shipment meta
-        $action_id = $this->get_monitoring_action_id( $order_id, $delivery_no );
-        
-        if ( $action_id ) {
-            // Unschedule specific action by ID
-            $result = as_unschedule_action( $action_id );
-        } else {
-        }
-        
-        // Also try to unschedule by args as fallback (but only for this specific shipment)
-        $fallback_result = as_unschedule_all_actions( 'hezarfen_monitor_hepsijet_shipment', array( $order_id, $delivery_no ), 'hezarfen-shipment-monitoring' );
-    }
+            // Get client ID from consumer key (full consumer key)
+            $instance = new self();
+            $client_id = $instance->consumer_key;
 
-    /**
-     * Store monitoring action ID in shipment meta
-     *
-     * @param int    $order_id    Order ID
-     * @param string $delivery_no Delivery number
-     * @param int    $action_id   ActionScheduler action ID
-     * @return void
-     */
-    private function store_monitoring_action_id( $order_id, $delivery_no, $action_id ) {
-        $order = wc_get_order( $order_id );
-        if ( ! $order ) {
-            return;
-        }
+            // Verify client_id matches
+            if ( $data['client_id'] !== $client_id ) {
+                self::respond_error( 'Client ID mismatch', 403 );
+                return;
+            }
 
-        $meta_key = '_hezarfen_hepsijet_shipment_' . $delivery_no;
-        $shipment_details = $order->get_meta( $meta_key );
-        
-        if ( $shipment_details && is_array( $shipment_details ) ) {
-            $shipment_details['monitoring_action_id'] = $action_id;
-            $order->update_meta_data( $meta_key, $shipment_details );
-            $order->save_meta_data();
+            // Verify webhook signature
+            if ( ! self::verify_webhook_signature( $payload_json, $signature, $data['client_id'] ) ) {
+                self::respond_error( 'Invalid signature', 401 );
+                return;
+            }
+
+            // Verify event field matches header
+            if ( ! empty( $data['event'] ) && $data['event'] !== $event ) {
+                self::respond_error( 'Event type mismatch', 400 );
+                return;
+            }
+
+            // Process based on event type
+            switch ( $event ) {
+                case 'shipment.shipped':
+                    self::handle_shipped_event( $data );
+                    break;
+
+                case 'shipment.delivered':
+                    self::handle_delivered_event( $data );
+                    break;
+
+                default:
+                    self::respond_error( 'Unknown event type: ' . $event, 400 );
+                    return;
+            }
+
+            // Success response
+            self::respond_success( array(
+                'message' => 'Webhook processed successfully',
+                'event' => $event,
+                'order_id' => $data['order_id']
+            ) );
+
+        } catch ( \Exception $e ) {
+            self::respond_error( 'Internal server error', 500 );
         }
     }
 
     /**
-     * Get monitoring action ID from shipment meta
-     *
-     * @param int    $order_id    Order ID
-     * @param string $delivery_no Delivery number
-     * @return int|null
+     * Verify webhook signature using hardened HMAC
+     * 
+     * @param string $payload_json Raw JSON payload
+     * @param string $received_signature Signature from header
+     * @param string $client_id Client ID from payload
+     * @return bool
      */
-    private function get_monitoring_action_id( $order_id, $delivery_no ) {
-        $order = wc_get_order( $order_id );
-        if ( ! $order ) {
-            return null;
+    private static function verify_webhook_signature( $payload_json, $received_signature, $client_id ) {
+        $instance = new self();
+        $webhook_secret = $instance->get_webhook_secret();
+
+        if ( empty( $webhook_secret ) ) {
+            return false;
         }
 
-        $meta_key = '_hezarfen_hepsijet_shipment_' . $delivery_no;
-        $shipment_details = $order->get_meta( $meta_key );
-        
-        if ( $shipment_details && is_array( $shipment_details ) && isset( $shipment_details['monitoring_action_id'] ) ) {
-            return $shipment_details['monitoring_action_id'];
+        if ( empty( $received_signature ) ) {
+            return false;
         }
-        
-        return null;
+
+        // Create the same composite signing key used by the server
+        $signing_key = base64_decode( $webhook_secret ) . '|' . $client_id;
+
+        // Generate expected signature
+        $expected_signature = hash_hmac( 'sha256', $payload_json, $signing_key );
+
+        // Use timing-safe comparison
+        return hash_equals( $expected_signature, $received_signature );
     }
 
     /**
-     * Monitor shipment status (called by ActionScheduler)
-     *
-     * @param int    $order_id    Order ID
-     * @param string $delivery_no Delivery number
-     * @return void
+     * Handle shipped event from webhook
+     * 
+     * @param array $data Webhook data
      */
-    public static function monitor_shipment_status( $order_id, $delivery_no ) {
+    private static function handle_shipped_event( $data ) {
+        $order_id = $data['order_id'];
+        $delivery_no = $data['delivery_no'];
+
         $instance = new self();
         
-
         // Get shipment details
         $shipment_details = $instance->get_shipment_details_by_delivery_no( $order_id, $delivery_no );
         
         if ( ! $shipment_details ) {
-            
-            // Stop monitoring if shipment not found
-            $instance->unschedule_shipment_monitoring( $order_id, $delivery_no );
-            return;
+            throw new \Exception( 'Shipment not found' );
         }
 
         $current_status = $shipment_details['status'] ?? 'active';
         
-        // If shipment is cancelled, stop monitoring
-        if ( $current_status === 'cancelled' ) {
-            $instance->unschedule_shipment_monitoring( $order_id, $delivery_no );
+        // Only process if shipment is still active
+        if ( $current_status !== 'active' ) {
             return;
         }
 
-        // Get tracking details from Hepsijet
+        // Update shipment status to shipped
+        $instance->update_shipment_status( $order_id, $delivery_no, 'shipped' );
+        
+        // Get tracking details from API to use existing processing logic
         $tracking_details = $instance->api_get_shipping_details( $delivery_no );
         
-        if ( is_wp_error( $tracking_details ) ) {
-            return;
-        }
-
-        // Check if shipment is shipped
-        if ( $current_status === 'active' ) {
-            $is_shipped = $instance->is_shipped( $tracking_details );
-            
-            if ( $is_shipped ) {
-                
-                // Update shipment status to shipped
-                $instance->update_shipment_status( $order_id, $delivery_no, 'shipped' );
-                
-                // Use ship_order to save tracking data
-                $instance->process_shipment_shipped( $order_id, $delivery_no, $tracking_details );
-                
-                // Reschedule monitoring to check for delivery
-                $instance->reschedule_monitoring( $order_id, $delivery_no );
-            } else {
-                // Shipment is still active (not shipped yet), reschedule monitoring
-                $instance->reschedule_monitoring( $order_id, $delivery_no );
-            }
-        }
-        // Check if shipped shipment is delivered
-        elseif ( $current_status === 'shipped' ) {
-            $is_delivered = $instance->is_delivered( $tracking_details );
-            
-            if ( $is_delivered ) {
-                
-                // Update shipment status to delivered
-                $instance->update_shipment_status( $order_id, $delivery_no, 'delivered' );
-                
-                // Mark order as completed
-                $instance->process_shipment_delivered( $order_id, $delivery_no );
-                
-                // Stop monitoring as shipment is delivered
-                $instance->unschedule_shipment_monitoring( $order_id, $delivery_no );
-            } else {
-                // Shipment is shipped but not delivered yet, reschedule monitoring
-                $instance->reschedule_monitoring( $order_id, $delivery_no );
-            }
+        if ( ! is_wp_error( $tracking_details ) ) {
+            // Use existing ship_order logic to save tracking data
+            $instance->process_shipment_shipped( $order_id, $delivery_no, $tracking_details );
         }
     }
 
     /**
-     * Reschedule monitoring for a shipment
-     *
-     * @param int    $order_id    Order ID
-     * @param string $delivery_no Delivery number
-     * @return void
+     * Handle delivered event from webhook
+     * 
+     * @param array $data Webhook data
      */
-    private function reschedule_monitoring( $order_id, $delivery_no ) {
-        // Check if ActionScheduler is available
-        if ( ! function_exists( 'as_schedule_single_action' ) ) {
+    private static function handle_delivered_event( $data ) {
+        $order_id = $data['order_id'];
+        $delivery_no = $data['delivery_no'];
+
+        $instance = new self();
+        
+        // Get shipment details
+        $shipment_details = $instance->get_shipment_details_by_delivery_no( $order_id, $delivery_no );
+        
+        if ( ! $shipment_details ) {
+            throw new \Exception( 'Shipment not found' );
+        }
+
+        $current_status = $shipment_details['status'] ?? 'active';
+        
+        // Only process if shipment is not already delivered
+        if ( $current_status === 'delivered' ) {
             return;
         }
 
-        // Schedule next monitoring in 1 hour
-        $hook = 'hezarfen_monitor_hepsijet_shipment';
-        $args = array( $order_id, $delivery_no );
-        $group = 'hezarfen-shipment-monitoring';
+        // Update shipment status to delivered
+        $instance->update_shipment_status( $order_id, $delivery_no, 'delivered' );
         
-        $action_id = as_schedule_single_action(
-            time() + HOUR_IN_SECONDS, // Next check in 1 hour
-            $hook,
-            $args,
-            $group
-        );
+        // Mark order as completed
+        $instance->process_shipment_delivered( $order_id, $delivery_no );
+    }
 
-        // Update the stored action ID
-        $this->store_monitoring_action_id( $order_id, $delivery_no, $action_id );
+    /**
+     * Send success response
+     * 
+     * @param array $data Response data
+     */
+    private static function respond_success( $data ) {
+        status_header( 200 );
+        header( 'Content-Type: application/json' );
+        echo wp_json_encode( array_merge( array( 'success' => true ), $data ) );
+        exit;
+    }
+
+    /**
+     * Send error response
+     * 
+     * @param string $message Error message
+     * @param int $status HTTP status code
+     */
+    private static function respond_error( $message, $status = 400 ) {
+        status_header( $status );
+        header( 'Content-Type: application/json' );
+        echo wp_json_encode( array(
+            'success' => false,
+            'error' => $message
+        ) );
+        exit;
     }
 
     /**
