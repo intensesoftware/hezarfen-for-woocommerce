@@ -335,9 +335,16 @@ jQuery(document).ready(function($) {
             if (rule.condition_status === 'hezarfen_order_shipped') {
                 statusLabel = hezarfen_sms_settings.strings.order_shipped_label;
             }
-            const phoneTypeLabel = rule.phone_type === 'billing' ? 
-                hezarfen_sms_settings.strings.billing_phone : 
-                hezarfen_sms_settings.strings.shipping_phone;
+            let phoneTypeLabel;
+            if (rule.phone_type === 'billing') {
+                phoneTypeLabel = hezarfen_sms_settings.strings.billing_phone;
+            } else if (rule.phone_type === 'shipping') {
+                phoneTypeLabel = hezarfen_sms_settings.strings.shipping_phone;
+            } else if (rule.phone_type === 'shipping_or_billing') {
+                phoneTypeLabel = hezarfen_sms_settings.strings.shipping_or_billing_phone || 'Sipariş Kargo Telefonu (yoksa Fatura Telefonu)';
+            } else {
+                phoneTypeLabel = rule.phone_type;
+            }
             
             let actionTypeLabel = rule.action_type;
         if (rule.action_type === 'netgsm') {
