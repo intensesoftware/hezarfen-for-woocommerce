@@ -1295,11 +1295,11 @@ class SMS_Automation {
 		$response_code = wp_remote_retrieve_response_code( $response );
 		$response_body = wp_remote_retrieve_body( $response );
 
-		if ( $response_code !== 200 ) {
+		$data = json_decode( $response_body, true );
+
+		if ( ! is_array( $data ) ) {
 			return new WP_Error( 'netgsm_api_error', 'NetGSM API returned error code: ' . $response_code );
 		}
-
-		$data = json_decode( $response_body, true );
 
 		if ( json_last_error() !== JSON_ERROR_NONE ) {
 			return new WP_Error( 'json_decode_error', 'Failed to decode NetGSM API response' );

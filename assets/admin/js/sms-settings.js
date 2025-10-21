@@ -861,7 +861,7 @@ jQuery(document).ready(function($) {
 					}
 				} else {
 					$senderSelect.html('<option value="">' + hezarfen_sms_settings.strings.error_loading_senders + '</option>');
-					showInlineAlert('Error: ' + (response.data || hezarfen_sms_settings.strings.failed_to_load_senders), 'error');
+					showInlineAlert('Hata: ' + (response.data || hezarfen_sms_settings.strings.failed_to_load_senders), 'error');
 				}
 			},
 			error: function() {
