@@ -110,10 +110,6 @@ jQuery(document).ready(function($) {
         // Wait a moment for the form to be rendered
         setTimeout(function() {
             const form = document.getElementById('sms-rule-form');
-            console.log('Form found:', form ? 'Yes' : 'No');
-            console.log('All forms on page:', document.querySelectorAll('form'));
-            console.log('Looking for form with ID sms-rule-form:', document.querySelector('#sms-rule-form'));
-            console.log('Forms in container:', $('#hezarfen-sms-rule-form-container').find('form'));
             
             if (ruleData) {
                 // Edit mode
@@ -515,13 +511,15 @@ jQuery(document).ready(function($) {
 				action: 'hezarfen_get_netgsm_credentials',
 				nonce: hezarfen_sms_settings.nonce
 			},
-			success: function(response) {
-				if (response.success) {
-					updateNetGsmConnectionUI(response.data.is_connected, response.data.credentials);
-				}
-			},
-			error: function() {
-				console.error('Failed to load NetGSM connection status');
+		success: function(response) {
+			if (response.success) {
+				updateNetGsmConnectionUI(response.data.is_connected, response.data.credentials);
+			} else {
+				console.error('Failed to retrieve credentials:', response);
+			}
+		},
+			error: function(xhr, status, error) {
+				console.error('Failed to load NetGSM connection status:', error);
 			}
 		});
 	}
@@ -553,43 +551,60 @@ jQuery(document).ready(function($) {
 
 	function updateNetGsmConnectionUI(isConnected, credentials) {
 		const $statusContainer = $('#netgsm-connection-status');
+		const $statusContainerMain = $('#netgsm-connection-status-main');
 		
+		const notConnectedHtml = `
+			<div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #fff2cd; border: 1px solid #f39c12; border-radius: 4px;">
+				<div style="display: flex; align-items: center;">
+					<svg style="width: 20px; height: 20px; color: #f39c12; margin-right: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+					</svg>
+					<div>
+						<strong style="color: #856404;">NetGSM Hesabı Bağlı Değil</strong>
+						<p style="margin: 0; font-size: 12px; color: #856404;">NetGSM hesabınızı bağlayarak SMS gönderimini etkinleştirin</p>
+					</div>
+				</div>
+				<button type="button" id="netgsm-connect-btn" class="button button-primary">
+					Bağla
+				</button>
+			</div>
+			<div style="margin-top: 10px; padding: 10px; background: #e7f3ff; border-left: 4px solid #2271b1; border-radius: 4px;">
+				<p style="margin: 0; font-size: 13px; color: #1d2327;">
+					<strong>📱 NetGSM Üyesi Değil misiniz?</strong><br>
+					<a href="http://netg.sm/3105" target="_blank" rel="noopener noreferrer" style="color: #2271b1; text-decoration: none; font-weight: 500;">
+						Buraya tıklayarak NetGSM'e üye olabilirsiniz →
+					</a>
+				</p>
+			</div>
+		`;
 		
-		if (isConnected) {
-			$statusContainer.html(`
-				<div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #d1edff; border: 1px solid #0073aa; border-radius: 4px;">
-					<div style="display: flex; align-items: center;">
-						<svg style="width: 20px; height: 20px; color: #0073aa; margin-right: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-						</svg>
-						<div>
-							<strong style="color: #0073aa;">${hezarfen_sms_settings.strings.connected_to_netgsm}</strong>
-							<p style="margin: 0; font-size: 12px; color: #0073aa;">${hezarfen_sms_settings.strings.username_label}: ${credentials.username} | ${hezarfen_sms_settings.strings.sender_label}: ${credentials.msgheader}</p>
-						</div>
-					</div>
-					<button type="button" id="netgsm-connect-btn" class="button button-secondary" style="background: #0073aa; color: white; border-color: #0073aa;">
-						${hezarfen_sms_settings.strings.change_credentials}
-					</button>
-				</div>
-			`);
-		} else {
-			$statusContainer.html(`
-				<div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #fff2cd; border: 1px solid #f39c12; border-radius: 4px;">
-					<div style="display: flex; align-items: center;">
-						<svg style="width: 20px; height: 20px; color: #f39c12; margin-right: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-						</svg>
-						<div>
-							<strong style="color: #856404;">NetGSM Not Connected</strong>
-							<p style="margin: 0; font-size: 12px; color: #856404;">Connect your NetGSM account to enable SMS functionality</p>
-						</div>
-					</div>
-					<button type="button" id="netgsm-connect-btn" class="button button-primary">
-						Connect
-					</button>
-				</div>
-			`);
+		// If not connected or credentials are invalid, show not connected state
+		if (!isConnected || !credentials || !credentials.username) {
+			$statusContainer.html(notConnectedHtml);
+			$statusContainerMain.html(notConnectedHtml);
+			return;
 		}
+		
+		// Connected state - credentials are valid
+		const connectedHtml = `
+			<div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #d1edff; border: 1px solid #0073aa; border-radius: 4px;">
+				<div style="display: flex; align-items: center;">
+					<svg style="width: 20px; height: 20px; color: #0073aa; margin-right: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+					</svg>
+					<div>
+						<strong style="color: #0073aa;">${hezarfen_sms_settings.strings.connected_to_netgsm}</strong>
+						<p style="margin: 0; font-size: 12px; color: #0073aa;">${hezarfen_sms_settings.strings.username_label}: ${credentials.username} | ${hezarfen_sms_settings.strings.sender_label}: ${credentials.msgheader}</p>
+					</div>
+				</div>
+				<button type="button" id="netgsm-connect-btn" class="button button-secondary" style="background: #0073aa; color: white; border-color: #0073aa;">
+					${hezarfen_sms_settings.strings.change_credentials}
+				</button>
+			</div>
+		`;
+		
+		$statusContainer.html(connectedHtml);
+		$statusContainerMain.html(connectedHtml);
 	}
 
 	function openNetGsmCredentialsModal(credentials = null) {

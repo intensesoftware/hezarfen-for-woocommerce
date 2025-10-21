@@ -461,6 +461,12 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				'id'    => 'hezarfen_sms_settings_title',
 			),
 			array(
+				'title'   => __( 'NetGSM Connection', 'hezarfen-for-woocommerce' ),
+				'type'    => 'netgsm_connection_status',
+				'desc'    => __( 'Your NetGSM account connection status', 'hezarfen-for-woocommerce' ),
+				'id'      => 'hezarfen_netgsm_connection_status',
+			),
+			array(
 				'title'   => __( 'Enable SMS Automation', 'hezarfen-for-woocommerce' ),
 				'type'    => 'checkbox',
 				'desc'    => __( 'Enable automatic SMS notifications for order status changes', 'hezarfen-for-woocommerce' ),
@@ -482,6 +488,28 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		return $fields;
 	}
 
+
+	/**
+	 * Output NetGSM connection status field
+	 *
+	 * @param array $value Field data
+	 * @return void
+	 */
+	public function output_netgsm_connection_status( $value ) {
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+			</th>
+			<td class="forminp">
+				<div id="netgsm-connection-status-main">
+					<!-- This will be populated by JavaScript -->
+				</div>
+				<p class="description"><?php echo esc_html( $value['desc'] ?? '' ); ?></p>
+			</td>
+		</tr>
+		<?php
+	}
 
 	/**
 	 * Output SMS rules button field
