@@ -357,7 +357,7 @@ class SMS_Automation {
 	 * Get phone number from order
 	 *
 	 * @param \WC_Order $order Order object
-	 * @param string $phone_type Phone type (billing or shipping)
+	 * @param string $phone_type Phone type (billing, shipping, or shipping_or_billing)
 	 * @return string
 	 */
 	private function get_phone_number( $order, $phone_type ) {
@@ -365,6 +365,13 @@ class SMS_Automation {
 			return $order->get_billing_phone();
 		} elseif ( $phone_type === 'shipping' ) {
 			return $order->get_shipping_phone();
+		} elseif ( $phone_type === 'shipping_or_billing' ) {
+			// Try shipping phone first, fallback to billing phone if shipping is empty
+			$shipping_phone = $order->get_shipping_phone();
+			if ( ! empty( $shipping_phone ) ) {
+				return $shipping_phone;
+			}
+			return $order->get_billing_phone();
 		}
 		return '';
 	}
@@ -621,8 +628,9 @@ class SMS_Automation {
 	 */
 	public static function get_translatable_phone_type_names() {
 		return array(
-			'billing' => __( 'Billing Phone', 'hezarfen-for-woocommerce' ),
-			'shipping' => __( 'Shipping Phone', 'hezarfen-for-woocommerce' ),
+			'billing' => __( 'Order Billing Phone', 'hezarfen-for-woocommerce' ),
+			'shipping' => __( 'Order Shipping Phone', 'hezarfen-for-woocommerce' ),
+			'shipping_or_billing' => __( 'Order Shipping Phone (or Billing if not available)', 'hezarfen-for-woocommerce' ),
 		);
 	}
 
@@ -1256,8 +1264,8 @@ class SMS_Automation {
 			'is_connected' => $is_connected,
 			'credentials' => $is_connected ? array(
 				'username' => $credentials['username'],
+				'password' => $credentials['password'],
 				'msgheader' => $credentials['msgheader'],
-				// Don't send password back for security
 			) : null,
 		) );
 	}
@@ -1295,11 +1303,11 @@ class SMS_Automation {
 		$response_code = wp_remote_retrieve_response_code( $response );
 		$response_body = wp_remote_retrieve_body( $response );
 
-		if ( $response_code !== 200 ) {
+		$data = json_decode( $response_body, true );
+
+		if ( ! is_array( $data ) ) {
 			return new WP_Error( 'netgsm_api_error', 'NetGSM API returned error code: ' . $response_code );
 		}
-
-		$data = json_decode( $response_body, true );
 
 		if ( json_last_error() !== JSON_ERROR_NONE ) {
 			return new WP_Error( 'json_decode_error', 'Failed to decode NetGSM API response' );

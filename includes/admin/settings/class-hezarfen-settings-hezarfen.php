@@ -461,6 +461,12 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				'id'    => 'hezarfen_sms_settings_title',
 			),
 			array(
+				'title'   => __( 'NetGSM Connection', 'hezarfen-for-woocommerce' ),
+				'type'    => 'netgsm_connection_status',
+				'desc'    => __( 'Your NetGSM account connection status', 'hezarfen-for-woocommerce' ),
+				'id'      => 'hezarfen_netgsm_connection_status',
+			),
+			array(
 				'title'   => __( 'Enable SMS Automation', 'hezarfen-for-woocommerce' ),
 				'type'    => 'checkbox',
 				'desc'    => __( 'Enable automatic SMS notifications for order status changes', 'hezarfen-for-woocommerce' ),
@@ -482,6 +488,28 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		return $fields;
 	}
 
+
+	/**
+	 * Output NetGSM connection status field
+	 *
+	 * @param array $value Field data
+	 * @return void
+	 */
+	public function output_netgsm_connection_status( $value ) {
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+			</th>
+			<td class="forminp">
+				<div id="netgsm-connection-status-main">
+					<!-- This will be populated by JavaScript -->
+				</div>
+				<p class="description"><?php echo esc_html( $value['desc'] ?? '' ); ?></p>
+			</td>
+		</tr>
+		<?php
+	}
 
 	/**
 	 * Output SMS rules button field
@@ -525,7 +553,15 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 										$action_label = __( 'PandaSMS Official Plugin (Legacy)', 'hezarfen-for-woocommerce' );
 									}
 
-									$phone_label = $rule['phone_type'] === 'billing' ? __( 'Billing Phone', 'hezarfen-for-woocommerce' ) : __( 'Shipping Phone', 'hezarfen-for-woocommerce' );
+									if ( $rule['phone_type'] === 'billing' ) {
+										$phone_label = __( 'Order Billing Phone', 'hezarfen-for-woocommerce' );
+									} elseif ( $rule['phone_type'] === 'shipping' ) {
+										$phone_label = __( 'Order Shipping Phone', 'hezarfen-for-woocommerce' );
+									} elseif ( $rule['phone_type'] === 'shipping_or_billing' ) {
+										$phone_label = __( 'Order Shipping Phone (or Billing if not available)', 'hezarfen-for-woocommerce' );
+									} else {
+										$phone_label = $rule['phone_type'];
+									}
 
 									echo wp_kses( 
 										sprintf( 
@@ -631,8 +667,9 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 									<td>
 										<select id="netgsm-legacy-phone-type" name="netgsm_legacy_phone_type" style="width: 300px;">
 											<option value=""><?php esc_html_e( 'Select phone type...', 'hezarfen-for-woocommerce' ); ?></option>
-											<option value="billing"><?php esc_html_e( 'Billing Phone', 'hezarfen-for-woocommerce' ); ?></option>
-											<option value="shipping"><?php esc_html_e( 'Shipping Phone', 'hezarfen-for-woocommerce' ); ?></option>
+											<option value="billing"><?php esc_html_e( 'Order Billing Phone', 'hezarfen-for-woocommerce' ); ?></option>
+											<option value="shipping"><?php esc_html_e( 'Order Shipping Phone', 'hezarfen-for-woocommerce' ); ?></option>
+											<option value="shipping_or_billing"><?php esc_html_e( 'Order Shipping Phone (or Billing if not available)', 'hezarfen-for-woocommerce' ); ?></option>
 										</select>
 									</td>
 								</tr>
@@ -687,8 +724,9 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 									<td>
 										<select id="phone-type" name="phone_type" style="width: 300px;">
 											<option value=""><?php esc_html_e( 'Select phone type...', 'hezarfen-for-woocommerce' ); ?></option>
-											<option value="billing"><?php esc_html_e( 'Billing Phone', 'hezarfen-for-woocommerce' ); ?></option>
-											<option value="shipping"><?php esc_html_e( 'Shipping Phone', 'hezarfen-for-woocommerce' ); ?></option>
+											<option value="billing"><?php esc_html_e( 'Order Billing Phone', 'hezarfen-for-woocommerce' ); ?></option>
+											<option value="shipping"><?php esc_html_e( 'Order Shipping Phone', 'hezarfen-for-woocommerce' ); ?></option>
+											<option value="shipping_or_billing"><?php esc_html_e( 'Order Shipping Phone (or Billing if not available)', 'hezarfen-for-woocommerce' ); ?></option>
 										</select>
 									</td>
 								</tr>
@@ -1378,8 +1416,9 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					'new_status' => __( 'New Status', 'hezarfen-for-woocommerce' ),
 					'send_sms' => __( 'Send SMS via NetGSM', 'hezarfen-for-woocommerce' ),
 					'phone_type' => __( 'Phone Number', 'hezarfen-for-woocommerce' ),
-					'billing_phone' => __( 'Billing Phone', 'hezarfen-for-woocommerce' ),
-					'shipping_phone' => __( 'Shipping Phone', 'hezarfen-for-woocommerce' ),
+					'billing_phone' => __( 'Order Billing Phone', 'hezarfen-for-woocommerce' ),
+					'shipping_phone' => __( 'Order Shipping Phone', 'hezarfen-for-woocommerce' ),
+					'shipping_or_billing_phone' => __( 'Order Shipping Phone (or Billing if not available)', 'hezarfen-for-woocommerce' ),
 					'message_template' => __( 'Message Template', 'hezarfen-for-woocommerce' ),
 					'iys_status' => __( 'IYS Status', 'hezarfen-for-woocommerce' ),
 					'iys_info' => __( 'Information (0)', 'hezarfen-for-woocommerce' ),
