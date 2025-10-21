@@ -578,7 +578,7 @@ jQuery(document).ready(function($) {
 			<div style="margin-top: 10px; padding: 10px; background: #e7f3ff; border-left: 4px solid #2271b1; border-radius: 4px;">
 				<p style="margin: 0; font-size: 13px; color: #1d2327;">
 					<strong>📱 NetGSM Üyesi Değil misiniz?</strong><br>
-					<a href="http://netg.sm/3105" target="_blank" rel="noopener noreferrer" style="color: #2271b1; text-decoration: none; font-weight: 500;">
+					<a href="http://intense.com.tr/netgsm-abonelik" target="_blank" rel="noopener noreferrer" style="color: #2271b1; text-decoration: none; font-weight: 500;">
 						Buraya tıklayarak NetGSM'e üye olabilirsiniz →
 					</a>
 				</p>
