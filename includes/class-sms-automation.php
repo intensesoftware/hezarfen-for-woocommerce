@@ -1256,8 +1256,8 @@ class SMS_Automation {
 			'is_connected' => $is_connected,
 			'credentials' => $is_connected ? array(
 				'username' => $credentials['username'],
+				'password' => $credentials['password'],
 				'msgheader' => $credentials['msgheader'],
-				// Don't send password back for security
 			) : null,
 		) );
 	}

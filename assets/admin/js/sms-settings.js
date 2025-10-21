@@ -431,7 +431,8 @@ jQuery(document).ready(function($) {
 
 	// NetGSM Credentials Modal Handlers
 	$(document).on('click', '#netgsm-connect-btn', function() {
-		openNetGsmCredentialsModal();
+		// Load current credentials and open modal with them
+		loadCredentialsAndOpenModal();
 	});
 
 	$(document).on('click', '.netgsm-modal-close, .netgsm-modal-cancel', function() {
@@ -525,6 +526,31 @@ jQuery(document).ready(function($) {
 		});
 	}
 
+	function loadCredentialsAndOpenModal() {
+		$.ajax({
+			url: hezarfen_sms_settings.ajax_url,
+			type: 'POST',
+			data: {
+				action: 'hezarfen_get_netgsm_credentials',
+				nonce: hezarfen_sms_settings.nonce
+			},
+			success: function(response) {
+				if (response.success && response.data.is_connected && response.data.credentials) {
+					// Open modal with existing credentials
+					openNetGsmCredentialsModal(response.data.credentials);
+				} else {
+					// Open modal without credentials (new connection)
+					openNetGsmCredentialsModal(null);
+				}
+			},
+			error: function() {
+				console.error('Failed to load NetGSM credentials');
+				// Open modal anyway without credentials
+				openNetGsmCredentialsModal(null);
+			}
+		});
+	}
+
 	function updateNetGsmConnectionUI(isConnected, credentials) {
 		const $statusContainer = $('#netgsm-connection-status');
 		
@@ -566,7 +592,7 @@ jQuery(document).ready(function($) {
 		}
 	}
 
-	function openNetGsmCredentialsModal() {
+	function openNetGsmCredentialsModal(credentials = null) {
 		const $modal = $('#netgsm-credentials-modal');
 		const $content = $modal.find('.hez-modal-content');
 		
@@ -580,21 +606,38 @@ jQuery(document).ready(function($) {
 			});
 		}, 10);
 		
-		// Clear form
+		// Clear form first
 		$('#netgsm-credentials-form')[0].reset();
-		
-		// Reset sender dropdown
-		const $senderSelect = $('#netgsm-modal-msgheader');
-		$senderSelect.prop('disabled', true).html('<option value="">First enter username and password above</option>');
-		$('#netgsm-load-senders').hide();
 		
 		// Reset password visibility to hidden state
 		$('#netgsm-modal-password').attr('type', 'password');
 		$('#netgsm-eye-closed').show();
 		$('#netgsm-eye-open').hide();
 		
-		// Focus first input
-		$('#netgsm-modal-username').focus();
+		// If credentials are provided, prefill the form
+		if (credentials && credentials.username && credentials.msgheader) {
+			$('#netgsm-modal-username').val(credentials.username);
+			
+			// Prefill password if available
+			if (credentials.password) {
+				$('#netgsm-modal-password').val(credentials.password);
+			}
+			
+			$('#netgsm-modal-msgheader').html(`<option value="${credentials.msgheader}" selected>${credentials.msgheader}</option>`);
+			$('#netgsm-modal-msgheader').prop('disabled', false);
+			$('#netgsm-load-senders').show();
+			
+			// Focus msgheader field for easy editing
+			$('#netgsm-modal-msgheader').focus();
+		} else {
+			// Reset sender dropdown for new connection
+			const $senderSelect = $('#netgsm-modal-msgheader');
+			$senderSelect.prop('disabled', true).html('<option value="">First enter username and password above</option>');
+			$('#netgsm-load-senders').hide();
+			
+			// Focus first input
+			$('#netgsm-modal-username').focus();
+		}
 	}
 
 	function closeNetGsmCredentialsModal() {
