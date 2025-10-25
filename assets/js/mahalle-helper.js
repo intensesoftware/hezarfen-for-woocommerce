@@ -114,7 +114,7 @@ class hezarfen_mahalle_helper {
 			this.add_event_handlers();
 		} else {
 			// Remove select2:select event handler from the state field.
-			this.get_state_field().off('change');
+			this.get_state_field().off('change.hezarfen');
 
 			// Replace city and address_1 fields with input elements.
 			this.replaceElementsWith(elements, 'input', additional_classes);
