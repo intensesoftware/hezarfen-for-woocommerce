@@ -686,7 +686,6 @@ class Admin_Ajax {
 					}
 				} catch ( Exception $e ) {
 					// Silently fail if image cannot be processed
-					error_log( 'Hezarfen custom label image error: ' . $e->getMessage() );
 				}
 			}
 		}

@@ -7,7 +7,6 @@ defined('ABSPATH') || exit;
 class Deactivation_Wizard {
     
     public function __construct() {
-        error_log( 'Deactivation_Wizard: Constructor called' );
         add_action( 'admin_footer', array( $this, 'add_deactivation_modal' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_deactivation_assets' ) );
         add_action( 'wp_ajax_hez_pro_move_shipped_to_processing', array( $this, 'ajax_move_shipped_to_processing' ) );
@@ -19,11 +18,9 @@ class Deactivation_Wizard {
     public function enqueue_deactivation_assets( $hook ) {
         // Only load on plugins page
         if ( 'plugins.php' !== $hook ) {
-            error_log( 'Deactivation wizard - Hook: ' . $hook );
             return;
         }
 
-        error_log( 'Deactivation wizard - Enqueuing assets on plugins page' );
 
         wp_enqueue_script(
             'hez-pro-deactivation-wizard',
@@ -49,8 +46,6 @@ class Deactivation_Wizard {
             array(),
             WC_HEZARFEN_VERSION
         );
-
-        error_log( 'Deactivation wizard - Plugin slug: hezarfen-for-woocommerce/hezarfen-for-woocommerce.php' );
     }
 
     /**
@@ -59,14 +54,10 @@ class Deactivation_Wizard {
     public function add_deactivation_modal() {
         $screen = get_current_screen();
         
-        error_log( 'Deactivation_Wizard: add_deactivation_modal called. Screen: ' . ( $screen ? $screen->id : 'NULL' ) );
-        
         // Only show on plugins page
         if ( ! $screen || 'plugins' !== $screen->id ) {
             return;
         }
-        
-        error_log( 'Deactivation_Wizard: Rendering modal on plugins page' );
 
         // Count orders with shipped status
         $shipped_count = $this->get_shipped_orders_count();
@@ -116,7 +107,6 @@ class Deactivation_Wizard {
             </div>
         </div>
         <?php
-        error_log( 'Deactivation_Wizard: Modal HTML rendered successfully' );
     }
 
     /**
