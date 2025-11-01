@@ -6,6 +6,7 @@ import {
 /** @type {import("tailwindcss").Config} */
 const config = {
   important: true,
+  blocklist: ['fixed'],
   theme: {
     extend: {
       colors: {
