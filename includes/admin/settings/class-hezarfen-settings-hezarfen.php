@@ -1168,7 +1168,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	private function output_netgsm_credentials_modal() {
 		?>
 		<!-- NetGSM Credentials Modal -->
-		<div id="netgsm-credentials-modal" class="hez-modal-overlay hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="netgsm-modal-title" aria-describedby="netgsm-modal-description" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: none; align-items: center; justify-content: center; z-index: 9999;">
+		<div id="netgsm-credentials-modal" class="hez-modal-overlay hidden inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="netgsm-modal-title" aria-describedby="netgsm-modal-description" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: none; align-items: center; justify-content: center; z-index: 9999;">
 			<div class="hez-modal-content bg-white rounded-lg shadow-xl max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" style="background: white; border-radius: 8px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); max-width: 28rem; width: 100%; margin: 0 1rem; transform: scale(0.95); opacity: 0; transition: all 0.3s;">
 				<div class="p-6" style="padding: 1.5rem;">
 					<!-- Modal Header -->

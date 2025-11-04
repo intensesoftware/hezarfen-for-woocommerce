@@ -742,7 +742,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                 </div>
             </div>
             <!-- Modern Confirmation Modal -->
-            <div id="modal-body" class="hez-modal-overlay hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-description">
+            <div id="modal-body" class="hez-modal-overlay hidden inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center" style="position: fixed" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-description">
                 <div class="hez-modal-content bg-white rounded-lg shadow-xl max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0">
                     <div class="p-6">
                         <!-- Modal Header -->
@@ -785,7 +785,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
             </div>
 
             <!-- Hepsijet Shipment Details Modal -->
-            <div id="hepsijet-details-modal" class="hez-modal-overlay hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center" role="dialog" aria-modal="true">
+            <div id="hepsijet-details-modal" class="hez-modal-overlay hidden inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center" style="position: fixed" role="dialog" aria-modal="true">
                 <div class="hez-modal-content bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 transform transition-all duration-300 scale-95 opacity-0">
                     <div class="p-6">
                         <!-- Modal Header -->
@@ -818,7 +818,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
             </div>
 
             <!-- Hepsijet Barcode Label Modal -->
-            <div id="hepsijet-barcode-modal" class="hez-modal-overlay hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center" role="dialog" aria-modal="true">
+            <div id="hepsijet-barcode-modal" class="hez-modal-overlay hidden inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center" style="position: fixed" role="dialog" aria-modal="true">
                 <div class="hez-modal-content bg-white rounded-lg shadow-xl max-w-7xl w-full h-5/6 mx-4 transform transition-all duration-300 scale-95 opacity-0">
                     <div class="p-6 h-full">
                         <!-- Modal Header -->
