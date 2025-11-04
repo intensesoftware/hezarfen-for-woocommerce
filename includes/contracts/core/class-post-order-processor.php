@@ -94,6 +94,18 @@ class Post_Order_Processor {
 			return;
 		}
 		
+		// Don't include in dummy/preview orders
+		if ( ! $order || ! is_a( $order, 'WC_Order' ) ) {
+			return;
+		}
+
+		// Check if this is a dummy order used for email previews
+		// Dummy orders have ID 12345, transaction ID 999999999, and don't exist in database - re: https://github.com/woocommerce/woocommerce/issues/61790
+		$order_id = $order->get_id();
+		if ( $order_id === 12345 ||  $order->get_transaction_id() === '999999999' ) {
+			return;
+		}
+
 		if ( ! apply_filters( 'hezarfen_mss_include_agreements_in_customer_email', true ) ) {
 			return;
 		}
