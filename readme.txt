@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.7.19
+Stable tag: 2.7.20
 
 🚀 2 bin site kullanıyor! Kargo takip, ücretsiz Hepsijet Entegrasyonu (1-4 desi: 66,60TL+KDV), Mesafeli Satış Sözleşmesi, NetGSM sipariş ve kargo SMS
 == Description ==
@@ -264,6 +264,10 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
+= 2.7.20 - 2025-11-04 =
+* WooCommerce çekirdeğindeki bir hatadan kaynaklanan, Hezarfen mesafeli satış sözleşme modülü kullanılırken 12345 numaralı John Doe test siparişinin oluşması sorunu çözüldü. Kaynak: https://github.com/woocommerce/woocommerce/issues/61790
+* Sipariş düzenleme ekranında Hepsijet arayüzünde yaşanan sorun giderildi.
+
 = 2.7.19 - 2025-11-01 =
 * Sipariş düzenleme ekranında metaboxlarda (indirilebilir ürünler vs.) yaşanan görsel sorun giderildi.
 * Gereksiz error_log çağrıları kaldırıldı.
