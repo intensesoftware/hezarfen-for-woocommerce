@@ -36,7 +36,7 @@ Stable tag: 2.7.20
 = ⭐ TAMAMEN ÜCRETSİZ =
 
 **🚚 Hepsijet Ücretsiz WooCommerce Kargo Entegrasyonu**
-• 1-4 Desi 66,60TL+KDV - Anlaşma yapmanıza gerek yok, intense.com.tr'den kayıt olun, bakiye yükleyin ve gönderime başlayın. Kargo gönderim için minimum limit yok! İster ayda 1 tane, ister 10000 tane!
+• 1-4 Desi 66,60TL+KDV - Anlaşma yapmanıza gerek yok, kargokit.com'dan kayıt olun, bakiye yükleyin ve gönderime başlayın. Kargo gönderim için minimum limit yok! İster ayda 1 tane, ister 10000 tane!
 • Ücretsiz entegrasyon (otomatik kargo takip no girişi, otomatik siparişin kargoya verildi durumuna geçmesi, otomatik siparişin tamamlandı durumuna geçmesi, otomatik müşteriye e-posta bildirimi)
 
 **🚚 Kargo Yönetimi ve WooCommerce Kargo Takip Modülü**
@@ -84,7 +84,7 @@ Hezarfen, KVKK’nın yurt dışına kişisel veri aktarımına ilişkin hüküm
 
 === Harici Servisler (External Services) ===
 
-Bu eklentinin Hepsijet Entegrasyon Özelliği, Intense Yazılım İnternet Teknolojileri Sanayi ve Ticaret Limited Şirketi (“Intense”) tarafından sağlanan harici API servislerine (intense.com.tr) dayanır.  
+Bu eklentinin Hepsijet Entegrasyon Özelliği, Intense Yazılım İnternet Teknolojileri Sanayi ve Ticaret Limited Şirketi (“Intense”) tarafından sağlanan harici API servislerine (kargokit.com) dayanır.  
 Kargo fiyatlarını gösterebilmek için Intense API’larına HTTP istekleri yapılır. Bu istekler sırasında HTTP protokolü gereği teknik bilgiler (ör. alan adı, IP adresi) otomatik olarak iletilebilir; ancak müşteri veya sipariş verileri gönderilmez.  
 
 Mağazanızı bağladıktan sonra, kargo aracılık hizmetlerinin sağlanabilmesi için aşağıdaki veriler işlenebilir ve Intense sunucularına ve/veya anlaşmalı kargo şirketlerine aktarılabilir:  
