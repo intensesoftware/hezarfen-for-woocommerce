@@ -48,7 +48,7 @@ class Checkout {
 
 		// TODO: review the logic, if it's possible; define all fields in a single function.
 		// Register district/neighborhood fields on init to allow other plugins to filter
-		add_action( 'init', array( $this, 'register_district_neighborhood_fields' ) );
+		add_action( 'wp', array( $this, 'register_district_neighborhood_fields' ) );
 
 		add_filter(
 			'woocommerce_checkout_posted_data',
