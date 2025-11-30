@@ -41,7 +41,7 @@ class My_Account {
 	 */
 	public function convert_to_select_elements( $address, $load_address ) {
 
-		if ( 'yes' !== get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) ) {
+		if ( 'yes' !== apply_filters( 'hezarfen_enable_district_neighborhood_fields', get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) ) ) {
 			return $address;
 		}
 
@@ -105,7 +105,7 @@ class My_Account {
 	 */
 	public function enqueue_scripts() {
 		if ( Helper::is_edit_address_page() ) {
-			if ( 'yes' !== get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) ) {
+			if ( 'yes' !== apply_filters( 'hezarfen_enable_district_neighborhood_fields', get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) ) ) {
 				return;
 			}
 

@@ -48,7 +48,7 @@ class Checkout {
 
 		// TODO: review the logic, if it's possible; define all fields in a single function.
 
-		if ( 'yes' === get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) ) {
+		if ( 'yes' === apply_filters( 'hezarfen_enable_district_neighborhood_fields', get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) ) ) {
 			add_filter(
 				'woocommerce_checkout_fields',
 				array(

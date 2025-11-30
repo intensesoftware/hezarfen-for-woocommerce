@@ -72,7 +72,7 @@ class Hezarfen {
 	 * @return array<array<string, mixed>>
 	 */
 	public function modify_tr_locale( $locales ) {
-		if ( 'yes' !== get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) ) {
+		if ( 'yes' !== apply_filters( 'hezarfen_enable_district_neighborhood_fields', get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) ) ) {
 			return $locales;
 		}
 
@@ -278,7 +278,7 @@ class Hezarfen {
 			return;
 		}
 
-		if ( 'yes' !== get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) ) {
+		if ( 'yes' !== apply_filters( 'hezarfen_enable_district_neighborhood_fields', get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) ) ) {
 			return;
 		}
 
