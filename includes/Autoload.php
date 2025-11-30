@@ -52,7 +52,10 @@ class Autoload {
 	 * @return void
 	 */
 	public function load_js_and_css_files() {
-		if ( 'yes' === apply_filters( 'hezarfen_enable_district_neighborhood_fields', get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) ) ) {
+		$neighborhood_enabled = 'yes' === apply_filters( 'hezarfen_enable_district_neighborhood_fields', get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) );
+
+		// Only register and enqueue mahalle-helper.js if neighborhood feature is enabled
+		if ( $neighborhood_enabled ) {
 			wp_register_script(
 				'wc_hezarfen_mahalle_helper_js',
 				plugins_url( 'assets/js/mahalle-helper.js', WC_HEZARFEN_FILE ),
@@ -71,6 +74,7 @@ class Autoload {
 			);
 		}
 
+		// Always load checkout assets if on checkout page (for tax and other features)
 		if ( is_checkout() ) {
 			wp_enqueue_style(
 				'wc_hezarfen_checkout_css',
@@ -79,10 +83,16 @@ class Autoload {
 				WC_HEZARFEN_VERSION
 			);
 
+			// Conditionally include mahalle-helper.js in dependencies only if neighborhood is enabled
+			$checkout_dependencies = array( 'jquery', 'wc-checkout' );
+			if ( $neighborhood_enabled ) {
+				$checkout_dependencies[] = 'wc_hezarfen_mahalle_helper_js';
+			}
+
 			wp_enqueue_script(
 				'wc_hezarfen_checkout_js',
 				plugins_url( 'assets/js/checkout.js', WC_HEZARFEN_FILE ),
-				array( 'jquery', 'wc-checkout', 'wc_hezarfen_mahalle_helper_js' ),
+				$checkout_dependencies,
 				WC_HEZARFEN_VERSION,
 				true
 			);
@@ -93,6 +103,7 @@ class Autoload {
 				array(
 					'ajax_url'                            => admin_url( 'admin-ajax.php' ),
 					'mahalleio_nonce'                     => wp_create_nonce( 'mahalle-io-get-data' ),
+					'neighborhood_enabled'                => $neighborhood_enabled,
 					'billing_district_field_classes'      => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_billing_district', array() ),
 					'shipping_district_field_classes'     => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_shipping_district', array() ),
 					'billing_neighborhood_field_classes'  => apply_filters( 'hezarfen_checkout_fields_class_wc_hezarfen_billing_neighborhood', array() ),
