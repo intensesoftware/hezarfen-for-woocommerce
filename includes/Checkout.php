@@ -47,38 +47,8 @@ class Checkout {
 		}
 
 		// TODO: review the logic, if it's possible; define all fields in a single function.
-
-		if ( 'yes' === apply_filters( 'hezarfen_enable_district_neighborhood_fields', get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) ) ) {
-			add_filter(
-				'woocommerce_checkout_fields',
-				array(
-					$this,
-					'add_district_and_neighborhood_fields',
-				),
-				100,
-				1
-			);
-
-			add_filter( 'woocommerce_get_country_locale', array( $this, 'update_address_2_fields_for_tr' ) );
-
-			add_filter(
-				'woocommerce_checkout_fields',
-				array(
-					$this,
-					'make_address2_required_and_update_the_label',
-				),
-				999998,
-				1
-			);
-
-			add_filter(
-				'woocommerce_default_address_fields',
-				array(
-					$this,
-					'make_visible_address2_label',
-				),
-			);
-		}
+		// Register district/neighborhood fields on init to allow other plugins to filter
+		add_action( 'init', array( $this, 'register_district_neighborhood_fields' ) );
 
 		add_filter(
 			'woocommerce_checkout_posted_data',
@@ -117,6 +87,50 @@ class Checkout {
 		);
 
 		add_filter('woocommerce_form_field_text', array(__CLASS__, 'filter_tc_number_field'), 10, 4);
+	}
+
+	/**
+	 * Register district and neighborhood fields hooks.
+	 * Called on 'init' hook to allow other plugins/themes to filter the enable option.
+	 *
+	 * @return void
+	 */
+	public function register_district_neighborhood_fields() {
+		$enable_district_neighborhood = apply_filters( 'hezarfen_enable_district_neighborhood_fields', get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) );
+		
+		if ( 'yes' !== $enable_district_neighborhood ) {
+			return;
+		}
+
+		add_filter(
+			'woocommerce_checkout_fields',
+			array(
+				$this,
+				'add_district_and_neighborhood_fields',
+			),
+			100,
+			1
+		);
+
+		add_filter( 'woocommerce_get_country_locale', array( $this, 'update_address_2_fields_for_tr' ) );
+
+		add_filter(
+			'woocommerce_checkout_fields',
+			array(
+				$this,
+				'make_address2_required_and_update_the_label',
+			),
+			999998,
+			1
+		);
+
+		add_filter(
+			'woocommerce_default_address_fields',
+			array(
+				$this,
+				'make_visible_address2_label',
+			),
+		);
 	}
 
 	/**
