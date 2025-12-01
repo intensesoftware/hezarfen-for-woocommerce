@@ -513,7 +513,26 @@ jQuery(document).ready($ => {
     };
     $.post(ajaxurl, data, function (response) {
       if (response.success) {
-        location.reload();
+        // Debug: Log the response to console
+        console.log('Hepsijet Response:', response);
+
+        // Check multiple possible paths for cost_info
+        let costInfo = null;
+        if (response.data && response.data.response_data && response.data.response_data.cost_info) {
+          costInfo = response.data.response_data.cost_info;
+        } else if (response.data && response.data.cost_info) {
+          costInfo = response.data.cost_info;
+        } else if (response.cost_info) {
+          costInfo = response.cost_info;
+        }
+        console.log('Cost Info:', costInfo);
+        if (costInfo) {
+          showShipmentCostModal(costInfo);
+        } else {
+          // No cost info, just reload
+          console.log('No cost_info found, reloading page');
+          location.reload();
+        }
       } else {
         alert('Hata: ' + (response.data || 'Bilinmeyen hata'));
       }
@@ -525,6 +544,31 @@ jQuery(document).ready($ => {
       $button.prop('disabled', false).text(originalText);
     });
   });
+
+  // Show shipment cost alert
+  function showShipmentCostModal(costInfo) {
+    const packages = costInfo.packages || [];
+    const summary = costInfo.summary || {};
+
+    // Build alert message
+    let message = '✓ Barkod Başarıyla Oluşturuldu!\n\n';
+    message += '━━━━━━━━━━━━━━━━━━━━━━\n';
+    message += 'Toplam Maliyet (Tahmini):\n';
+    message += parseFloat(summary.total_cost_with_vat).toFixed(2) + ' ' + (summary.currency || 'TRY');
+    if (summary.vat_rate) {
+      message += ' (KDV Dahil %' + (summary.vat_rate * 100).toFixed(0) + ')';
+    }
+    message += '\n━━━━━━━━━━━━━━━━━━━━━━\n\n';
+    message += 'Koli Detayları:\n\n';
+    packages.forEach((pkg, index) => {
+      message += 'Koli ' + (pkg.package_number || index + 1) + ': ';
+      message += parseFloat(pkg.desi).toFixed(2) + ' desi → ';
+      message += parseFloat(pkg.cost_with_vat).toFixed(2) + ' ' + (summary.currency || 'TRY');
+      message += '\n';
+    });
+    alert(message);
+    location.reload();
+  }
 
   // Handle Hepsijet check details button (using event delegation)
   $(document).off('click', '.check-hepsijet-details').on('click', '.check-hepsijet-details', function (e) {
