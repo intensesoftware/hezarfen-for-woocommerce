@@ -414,7 +414,7 @@ class Courier_Hepsijet_Integration {
     /**
      * Create shipment via Relay API
      */
-    public function api_create_barcode( $order_id, $package_count, $desi, $type = 'standard', $delivery_slot = '', $delivery_date = '' ) {
+    public function api_create_barcode( $order_id, $packages, $type = 'standard', $delivery_slot = '', $delivery_date = '' ) {
         $order = wc_get_order($order_id);
         if ( ! $order ) {
             return new \WP_Error( 'hepsijet_error', 'Order not found' );
@@ -464,8 +464,7 @@ class Courier_Hepsijet_Integration {
 
         $params = array(
             'order_id' => $order_id,
-            'package_count' => $package_count,
-            'desi' => $desi,
+            'packages' => $packages,
             'type' => $type,
             'delivery_slot' => $delivery_slot,
             'delivery_date' => $final_delivery_date,
@@ -488,10 +487,18 @@ class Courier_Hepsijet_Integration {
         $zpl_data = $response['zpl'];
         $print_date = $response['print_date'];
 
+        // Calculate totals from packages array
+        $package_count = count( $packages );
+        $total_desi = 0;
+        foreach ( $packages as $package ) {
+            $total_desi += floatval( $package['desi'] );
+        }
+
         // Save all shipment details in a single encapsulated JSON meta field
         $shipment_details = array(
+            'packages' => $packages,
             'package_count' => $package_count,
-            'desi' => $desi,
+            'desi' => $total_desi,
             'delivery_no' => $delivery_no,
             'created_at' => current_time('mysql'),
             'status' => 'active',
@@ -732,9 +739,20 @@ class Courier_Hepsijet_Integration {
     
     /**
      * Auto shipment creation handler with parameters
+     * This method provides backward compatibility by converting old parameters to new packages array format
      */
     public function auto_shipment_create_handler_with_params( $order_id, $package_count, $desi, $type = 'standard', $delivery_slot = '', $delivery_date = '' ) {
-        return $this->api_create_barcode( $order_id, $package_count, $desi, $type, $delivery_slot, $delivery_date );
+        // Convert old parameters to new packages array format
+        $packages = array();
+        $desi_per_package = $desi / $package_count;
+        
+        for ( $i = 0; $i < $package_count; $i++ ) {
+            $packages[] = array(
+                'desi' => $desi_per_package
+            );
+        }
+        
+        return $this->api_create_barcode( $order_id, $packages, $type, $delivery_slot, $delivery_date );
     }
 
     /**

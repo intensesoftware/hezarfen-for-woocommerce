@@ -406,14 +406,18 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                 </div>
                             </div>
                             
-                            <div class="grid grid-cols-2 gap-4 mb-4">
-                                <div>
-                                    <label for="hepsijet-package-count" class="font-light text-gray-1 block mb-2 text-sm dark:text-white"><?php esc_html_e('Koli Adedi', 'hezarfen-for-woocommerce'); ?></label>
-                                    <input type="number" id="hepsijet-package-count" min="1" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-3 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" />
+                            <div class="mb-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <label class="font-light text-gray-1 text-sm dark:text-white"><?php esc_html_e('Koliler', 'hezarfen-for-woocommerce'); ?></label>
+                                    <button type="button" id="add-hepsijet-package" class="inline-flex items-center px-2 py-1 text-xs font-medium text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                        </svg>
+                                        <?php esc_html_e('Koli Ekle', 'hezarfen-for-woocommerce'); ?>
+                                    </button>
                                 </div>
-                                <div>
-                                    <label for="hepsijet-desi" class="font-light text-gray-1 block mb-2 text-sm dark:text-white"><?php esc_html_e('Desi', 'hezarfen-for-woocommerce'); ?></label>
-                                    <input type="number" id="hepsijet-desi" step="0.01" min="0.01" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-3 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" />
+                                <div id="hepsijet-packages-container" class="space-y-2">
+                                    <!-- Package items will be dynamically added here -->
                                 </div>
                             </div>
 
@@ -584,6 +588,7 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                                 $shipment_details = $shipment_args->shipment_details;
                                                 
                                                 // Extract data from encapsulated JSON meta
+                                                $packages = $shipment_details['packages'] ?? null;
                                                 $package_count = $shipment_details['package_count'] ?? null;
                                                 $desi = $shipment_details['desi'] ?? null;
                                                 $delivery_no = $shipment_details['delivery_no'] ?? null;
@@ -611,14 +616,36 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                                     <td class="px-6 py-4">
                                                         <?php if ($is_cancelled): ?>
                                                             <div class="text-xs text-gray-500">
-                                                                <div class="line-through"><?php esc_html_e('Koli:', 'hezarfen-for-woocommerce'); ?> <?php echo esc_html($package_count ?: 'N/A'); ?></div>
-                                                                <div class="line-through"><?php esc_html_e('Desi:', 'hezarfen-for-woocommerce'); ?> <?php echo esc_html($desi ?: 'N/A'); ?></div>
+                                                                <?php if (!empty($packages) && is_array($packages)): ?>
+                                                                    <!-- Yeni format: Her koli için ayrı desi -->
+                                                                    <?php foreach ($packages as $index => $package): ?>
+                                                                        <div class="line-through">
+                                                                            <?php printf(esc_html__('Koli %d:', 'hezarfen-for-woocommerce'), $index + 1); ?> 
+                                                                            <?php echo esc_html(number_format($package['desi'], 2)); ?> desi
+                                                                        </div>
+                                                                    <?php endforeach; ?>
+                                                                <?php else: ?>
+                                                                    <!-- Eski format: Toplam göster -->
+                                                                    <div class="line-through"><?php esc_html_e('Koli:', 'hezarfen-for-woocommerce'); ?> <?php echo esc_html($package_count ?: 'N/A'); ?></div>
+                                                                    <div class="line-through"><?php esc_html_e('Desi:', 'hezarfen-for-woocommerce'); ?> <?php echo esc_html($desi ?: 'N/A'); ?></div>
+                                                                <?php endif; ?>
                                                                 <div class="text-red-600 font-medium mt-1"><?php esc_html_e('Cancelled:', 'hezarfen-for-woocommerce'); ?> <?php echo esc_html(date('d/m/Y H:i', strtotime($cancelled_at))); ?></div>
                                                             </div>
                                                         <?php else: ?>
                                                             <div class="text-xs">
-                                                                <div><?php esc_html_e('Koli:', 'hezarfen-for-woocommerce'); ?> <?php echo esc_html($package_count ?: 'N/A'); ?></div>
-                                                                <div><?php esc_html_e('Desi:', 'hezarfen-for-woocommerce'); ?> <?php echo esc_html($desi ?: 'N/A'); ?></div>
+                                                                <?php if (!empty($packages) && is_array($packages)): ?>
+                                                                    <!-- Yeni format: Her koli için ayrı desi -->
+                                                                    <?php foreach ($packages as $index => $package): ?>
+                                                                        <div class="mb-0.5">
+                                                                            <span class="font-medium"><?php printf(esc_html__('Koli %d:', 'hezarfen-for-woocommerce'), $index + 1); ?></span> 
+                                                                            <?php echo esc_html(number_format($package['desi'], 2)); ?> desi
+                                                                        </div>
+                                                                    <?php endforeach; ?>
+                                                                <?php else: ?>
+                                                                    <!-- Eski format: Toplam göster -->
+                                                                    <div><?php esc_html_e('Koli:', 'hezarfen-for-woocommerce'); ?> <?php echo esc_html($package_count ?: 'N/A'); ?></div>
+                                                                    <div><?php esc_html_e('Desi:', 'hezarfen-for-woocommerce'); ?> <?php echo esc_html($desi ?: 'N/A'); ?></div>
+                                                                <?php endif; ?>
                                                             </div>
                                                         <?php endif; ?>
                                                     </td>

@@ -163,16 +163,27 @@ class Admin_Ajax {
 			wp_send_json_error( 'Insufficient permissions', 403 );
 		}
 
-		if ( empty( $_POST['order_id'] ) || empty( $_POST['package_count'] ) || empty( $_POST['desi'] ) ) {
+		if ( empty( $_POST['order_id'] ) || empty( $_POST['packages'] ) ) {
 			wp_send_json_error( 'Missing required parameters', 400 );
 		}
 
 		$order_id = absint( $_POST['order_id'] );
-		$package_count = absint( $_POST['package_count'] );
-		$desi = floatval( $_POST['desi'] );
+		$packages = json_decode( stripslashes( $_POST['packages'] ), true );
 		$type = sanitize_text_field( $_POST['type'] ?? 'standard' );
 		$delivery_slot = sanitize_text_field( $_POST['delivery_slot'] ?? '' );
 		$delivery_date = sanitize_text_field( $_POST['delivery_date'] ?? '' );
+
+		// Validate packages array
+		if ( ! is_array( $packages ) || empty( $packages ) ) {
+			wp_send_json_error( 'Invalid packages data', 400 );
+		}
+
+		// Validate each package
+		foreach ( $packages as $package ) {
+			if ( ! isset( $package['desi'] ) || floatval( $package['desi'] ) < 0.01 ) {
+				wp_send_json_error( 'Invalid package desi value', 400 );
+			}
+		}
 
 		$order = wc_get_order( $order_id );
 		if ( ! $order ) {
@@ -182,7 +193,7 @@ class Admin_Ajax {
 		// Create Hepsijet integration instance
 		$hepsijet_integration = new \Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration();
 		
-		$result = $hepsijet_integration->api_create_barcode( $order_id, $package_count, $desi, $type, $delivery_slot, $delivery_date );
+		$result = $hepsijet_integration->api_create_barcode( $order_id, $packages, $type, $delivery_slot, $delivery_date );
 
 		if ( is_wp_error( $result ) ) {
 			wp_send_json_error( $result->get_error_message(), 500 );

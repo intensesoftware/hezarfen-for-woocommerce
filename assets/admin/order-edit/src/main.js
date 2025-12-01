@@ -407,21 +407,111 @@ jQuery(document).ready(($)=>{
     });
   });
 
+  // Initialize Hepsijet packages system
+  function initHepsijetPackages() {
+    const $container = $('#hepsijet-packages-container');
+    
+    // Clear container
+    $container.empty();
+    
+    // Add initial package
+    addHepsijetPackage();
+  }
+
+  // Add a new package input
+  function addHepsijetPackage() {
+    const $container = $('#hepsijet-packages-container');
+    const packageIndex = $container.find('.hepsijet-package-item').length;
+    
+    const packageHtml = `
+      <div class="hepsijet-package-item flex items-center gap-2 p-2 bg-gray-50 border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600">
+        <span class="text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[60px]">Koli ${packageIndex + 1}:</span>
+        <div class="flex-1">
+          <input type="number" 
+                 class="hepsijet-package-desi shadow-sm bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:text-white" 
+                 step="0.01" 
+                 min="0.01" 
+                 placeholder="Desi" 
+                 required />
+        </div>
+        <button type="button" class="remove-hepsijet-package inline-flex items-center p-2 text-sm font-medium text-red-600 bg-red-50 rounded hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30" ${packageIndex === 0 ? 'style="visibility: hidden;"' : ''}>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    `;
+    
+    $container.append(packageHtml);
+    updatePackageLabels();
+  }
+
+  // Update package labels after add/remove
+  function updatePackageLabels() {
+    const $container = $('#hepsijet-packages-container');
+    $container.find('.hepsijet-package-item').each(function(index) {
+      $(this).find('span').first().text('Koli ' + (index + 1) + ':');
+      
+      // Hide remove button for first package, show for others
+      if (index === 0) {
+        $(this).find('.remove-hepsijet-package').css('visibility', 'hidden');
+      } else {
+        $(this).find('.remove-hepsijet-package').css('visibility', 'visible');
+      }
+    });
+  }
+
+  // Add package button handler
+  $(document).on('click', '#add-hepsijet-package', function(e) {
+    e.preventDefault();
+    addHepsijetPackage();
+  });
+
+  // Remove package button handler
+  $(document).on('click', '.remove-hepsijet-package', function(e) {
+    e.preventDefault();
+    const $container = $('#hepsijet-packages-container');
+    
+    // Don't allow removing the last package
+    if ($container.find('.hepsijet-package-item').length > 1) {
+      $(this).closest('.hepsijet-package-item').remove();
+      updatePackageLabels();
+    }
+  });
+
+  // Initialize packages when the modal is shown
+  initHepsijetPackages();
+
   // Handle Hepsijet shipment creation
   const createHepsijetShipment = metabox_wrapper.find('#create-hepsijet-shipment');
 
   createHepsijetShipment.on('click', function() {
     const $button = $(this);
     const originalText = $button.text();
-    const packageCount = $('#hepsijet-package-count').val();
-    const desi = $('#hepsijet-desi').val();
     const deliveryType = $('#hepsijet-delivery-type').val();
     const deliverySlot = $('#hepsijet-delivery-slot').val();
     const returnDate = $('#hepsijet-return-date').val();
 
+    // Collect packages data
+    const packages = [];
+    let hasError = false;
+    
+    $('#hepsijet-packages-container .hepsijet-package-item').each(function() {
+      const desi = $(this).find('.hepsijet-package-desi').val();
+      
+      if (!desi || parseFloat(desi) < 0.01) {
+        hasError = true;
+        return false; // Break loop
+      }
+      
+      packages.push({
+        desi: parseFloat(desi)
+      });
+    });
+
     // Validate inputs
-    if (!packageCount || !desi || packageCount < 1 || desi < 0.01) {
-      alert('Lütfen koli adedi ve desi değerlerini doğru giriniz.');
+    if (hasError || packages.length === 0) {
+      alert('Lütfen tüm koliler için desi değerlerini doğru giriniz.');
       return;
     }
 
@@ -443,8 +533,7 @@ jQuery(document).ready(($)=>{
       action: hezarfen_mst_backend.create_hepsijet_shipment_action,
       _wpnonce: hezarfen_mst_backend.create_hepsijet_shipment_nonce,
       order_id: $(this).data('order_id'),
-      package_count: packageCount,
-      desi: desi,
+      packages: JSON.stringify(packages),
       type: deliveryType,
       delivery_slot: deliverySlot || '',
       delivery_date: returnDate || ''
