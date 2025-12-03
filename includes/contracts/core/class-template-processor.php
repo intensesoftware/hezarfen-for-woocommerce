@@ -410,6 +410,11 @@ class Template_Processor {
 			if ( strpos( $key, '_' ) === 0 ) {
 				continue;
 			}
+
+			$should_include = apply_filters( 'hezarfen_contracts_include_item_meta', true, $key, $meta_data_array, $item );
+			if ( ! $should_include ) {
+				continue;
+			}
 			
 			// Get human-readable label
 			$display_key = $key;
