@@ -63,6 +63,10 @@ class hezarfen_mahalle_helper {
 		};
 
 		jQuery.get(hezarfen_mahalle_helper_backend.api_url, data, function (response) {
+			if (!Array.isArray(response)) {
+				return;
+			}
+
 			for (const district_name of response) {
 				thisHelper.get_city_field().append(thisHelper.create_option(district_name, district_name));
 			}
@@ -96,6 +100,10 @@ class hezarfen_mahalle_helper {
 		};
 
 		jQuery.get(hezarfen_mahalle_helper_backend.api_url, data, function (response) {
+			if (!Array.isArray(response)) {
+				return;
+			}
+
 			for (const neighborhood_name of response) {
 				thisHelper.get_nbrhood_field().append(thisHelper.create_option(neighborhood_name, neighborhood_name));
 			}
