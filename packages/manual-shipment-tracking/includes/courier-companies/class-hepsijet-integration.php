@@ -414,7 +414,7 @@ class Courier_Hepsijet_Integration {
     /**
      * Create shipment via Relay API
      */
-    public function api_create_barcode( $order_id, $packages, $type = 'standard', $delivery_slot = '', $delivery_date = '' ) {
+    public function api_create_barcode( $order_id, $packages, $type = 'standard', $delivery_slot = '', $delivery_date = '', $warehouse_id = '' ) {
         $order = wc_get_order($order_id);
         if ( ! $order ) {
             return new \WP_Error( 'hepsijet_error', 'Order not found' );
@@ -471,6 +471,11 @@ class Courier_Hepsijet_Integration {
             'receiver' => $receiver,
             'domain' => home_url()
         );
+
+        // Add warehouse_id if provided
+        if ( ! empty( $warehouse_id ) ) {
+            $params['warehouse_id'] = $warehouse_id;
+        }
 
         $response = $this->make_relay_request( '/barcode/create', $params );
 
@@ -752,7 +757,7 @@ class Courier_Hepsijet_Integration {
             );
         }
         
-        return $this->api_create_barcode( $order_id, $packages, $type, $delivery_slot, $delivery_date );
+        return $this->api_create_barcode( $order_id, $packages, $type, $delivery_slot, $delivery_date, '' );
     }
 
     /**

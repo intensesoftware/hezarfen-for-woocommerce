@@ -195,7 +195,8 @@ class Admin_Ajax {
 		// Create Hepsijet integration instance
 		$hepsijet_integration = new \Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration();
 		
-		$result = $hepsijet_integration->api_create_barcode( $order_id, $packages, $type, $delivery_slot, $delivery_date );
+		// Pass warehouse_id to API
+		$result = $hepsijet_integration->api_create_barcode( $order_id, $packages, $type, $delivery_slot, $delivery_date, $warehouse_id );
 
 		if ( is_wp_error( $result ) ) {
 			wp_send_json_error( $result->get_error_message(), 500 );
