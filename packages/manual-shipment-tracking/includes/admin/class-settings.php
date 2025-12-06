@@ -53,6 +53,12 @@ class Settings {
 		
 		// Decrypt webhook secret for display
 		add_filter( 'pre_option_hez_ordermigo_webhook_secret', array( __CLASS__, 'decrypt_webhook_secret_for_display' ), 10 );
+		
+		// AJAX handler for clearing warehouses cache
+		add_action( 'wp_ajax_hezarfen_clear_warehouses_cache', array( __CLASS__, 'ajax_clear_warehouses_cache' ) );
+		
+		// Custom field type for cache clear button
+		add_action( 'woocommerce_admin_field_hepsijet_cache_button', array( __CLASS__, 'render_cache_clear_button' ) );
 	}
 
 	/**
@@ -334,6 +340,19 @@ class Settings {
 			),
 			array(
 				'type'  => 'title',
+				'title' => __( 'Cache Management', 'hezarfen-for-woocommerce' ),
+				'desc'  => __( 'Warehouse data is cached for 3 hours to improve performance. Use the button below to refresh immediately after adding new stores.', 'hezarfen-for-woocommerce' ),
+			),
+			array(
+				'type' => 'hepsijet_cache_button',
+				'id' => 'hezarfen_hepsijet_clear_cache',
+			),
+			array(
+				'type' => 'sectionend',
+				'id' => 'hezarfen_hepsijet_cache_management'
+			),
+			array(
+				'type'  => 'title',
 				'title' => __( 'Label Settings', 'hezarfen-for-woocommerce' ),
 			),
 			array(
@@ -572,6 +591,127 @@ class Settings {
 				'hezarfen_mst_backend',
 				$object_props,
 			);
+		}
+	}
+
+	/**
+	 * Render cache clear button
+	 * 
+	 * @param array $value Field settings
+	 * @return void
+	 */
+	public static function render_cache_clear_button( $value ) {
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label><?php esc_html_e( 'Warehouse List Cache', 'hezarfen-for-woocommerce' ); ?></label>
+			</th>
+			<td class="forminp forminp-button">
+				<button type="button" id="clear-hepsijet-warehouses-cache" class="button button-secondary">
+					<span class="dashicons dashicons-update" style="margin-top: 3px;"></span>
+					<?php esc_html_e( 'Refresh Warehouse List', 'hezarfen-for-woocommerce' ); ?>
+				</button>
+				<p class="description">
+					<?php esc_html_e( 'Click to immediately refresh the warehouse list. Use this after adding new stores on intense.com.tr.', 'hezarfen-for-woocommerce' ); ?>
+				</p>
+				<div id="cache-clear-status" style="margin-top: 10px; display: none;"></div>
+				
+				<script type="text/javascript">
+				jQuery(document).ready(function($) {
+					$('#clear-hepsijet-warehouses-cache').on('click', function(e) {
+						e.preventDefault();
+						
+						var $button = $(this);
+						var $status = $('#cache-clear-status');
+						var originalText = $button.html();
+						
+						$button.prop('disabled', true).html('<span class="dashicons dashicons-update spin" style="margin-top: 3px;"></span> <?php esc_html_e( 'Refreshing...', 'hezarfen-for-woocommerce' ); ?>');
+						
+						$.ajax({
+							url: ajaxurl,
+							type: 'POST',
+							data: {
+								action: 'hezarfen_clear_warehouses_cache',
+								_wpnonce: '<?php echo esc_js( wp_create_nonce( 'clear_warehouses_cache' ) ); ?>'
+							},
+							success: function(response) {
+								if (response.success) {
+									$status.html('<div class="notice notice-success inline" style="padding: 8px 12px; margin: 0;"><p style="margin: 0;">' +
+										'<span class="dashicons dashicons-yes-alt" style="color: #46b450;"></span> ' +
+										response.data.message +
+									'</p></div>').fadeIn();
+									
+									setTimeout(function() {
+										$status.fadeOut();
+									}, 5000);
+								} else {
+									$status.html('<div class="notice notice-error inline" style="padding: 8px 12px; margin: 0;"><p style="margin: 0;">' +
+										'<span class="dashicons dashicons-warning"></span> ' +
+										(response.data.message || '<?php esc_html_e( 'An error occurred', 'hezarfen-for-woocommerce' ); ?>') +
+									'</p></div>').fadeIn();
+								}
+							},
+							error: function() {
+								$status.html('<div class="notice notice-error inline" style="padding: 8px 12px; margin: 0;"><p style="margin: 0;">' +
+									'<span class="dashicons dashicons-warning"></span> ' +
+									'<?php esc_html_e( 'Connection error', 'hezarfen-for-woocommerce' ); ?>' +
+								'</p></div>').fadeIn();
+							},
+							complete: function() {
+								$button.prop('disabled', false).html(originalText);
+							}
+						});
+					});
+				});
+				</script>
+				
+				<style>
+				.dashicons.spin {
+					animation: rotation 1s infinite linear;
+				}
+				@keyframes rotation {
+					from { transform: rotate(0deg); }
+					to { transform: rotate(359deg); }
+				}
+				</style>
+			</td>
+		</tr>
+		<?php
+	}
+
+	/**
+	 * AJAX handler to clear warehouses cache
+	 * 
+	 * @return void
+	 */
+	public static function ajax_clear_warehouses_cache() {
+		check_ajax_referer( 'clear_warehouses_cache', '_wpnonce' );
+		
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'You do not have permission to perform this action.', 'hezarfen-for-woocommerce' )
+			) );
+		}
+		
+		try {
+			// Clear the warehouses cache
+			$cleared = delete_transient( 'hepsijet_warehouses_cache' );
+			
+			// Also clear pricing cache for good measure
+			$integration = new Courier_Hepsijet_Integration();
+			$integration->clear_pricing_cache();
+			
+			wp_send_json_success( array(
+				'message' => __( 'Warehouse list cache cleared successfully! New warehouses will appear on next order page load.', 'hezarfen-for-woocommerce' ),
+				'cleared' => $cleared
+			) );
+		} catch ( \Exception $e ) {
+			wp_send_json_error( array(
+				'message' => sprintf( 
+					__( 'Error clearing cache: %s', 'hezarfen-for-woocommerce' ),
+					$e->getMessage()
+				)
+			) );
 		}
 	}
 }

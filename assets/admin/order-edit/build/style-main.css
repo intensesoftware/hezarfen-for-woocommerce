@@ -1843,6 +1843,10 @@ video:where(.hez-ui,.hez-ui *) {
   --tw-text-opacity: 1 !important;
   color: rgb(138 44 13 / var(--tw-text-opacity)) !important;
 }
+.text-red-500 {
+  --tw-text-opacity: 1 !important;
+  color: rgb(240 82 82 / var(--tw-text-opacity)) !important;
+}
 .text-red-600 {
   --tw-text-opacity: 1 !important;
   color: rgb(224 36 36 / var(--tw-text-opacity)) !important;

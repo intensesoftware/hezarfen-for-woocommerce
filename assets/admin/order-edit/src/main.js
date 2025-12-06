@@ -482,6 +482,10 @@ jQuery(document).ready(($)=>{
   // Initialize packages when the modal is shown
   initHepsijetPackages();
 
+  // Warehouses are now loaded server-side in PHP template
+  // No need to load via AJAX - better performance and no race conditions
+  // loadHepsijetWarehouses(); // DISABLED
+
   // Handle Hepsijet shipment creation
   const createHepsijetShipment = metabox_wrapper.find('#create-hepsijet-shipment');
 
@@ -491,6 +495,13 @@ jQuery(document).ready(($)=>{
     const deliveryType = $('#hepsijet-delivery-type').val();
     const deliverySlot = $('#hepsijet-delivery-slot').val();
     const returnDate = $('#hepsijet-return-date').val();
+    const warehouseId = $('#hepsijet-warehouse').val();
+
+    // Validate warehouse selection
+    if (!warehouseId) {
+      alert('Lütfen depo seçiniz.');
+      return;
+    }
 
     // Collect packages data
     const packages = [];
@@ -536,7 +547,8 @@ jQuery(document).ready(($)=>{
       packages: JSON.stringify(packages),
       type: deliveryType,
       delivery_slot: deliverySlot || '',
-      delivery_date: returnDate || ''
+      delivery_date: returnDate || '',
+      warehouse_id: warehouseId
     };
 
     $.post(
@@ -1340,6 +1352,97 @@ jQuery(document).ready(($)=>{
       balanceElement.text(hezarfen_mst_backend.connection_error);
       console.error('Balance AJAX error:', error);
     });
+  }
+
+  /**
+   * Load HepsiJet warehouses with 3-hour caching
+   */
+  function loadHepsijetWarehouses() {
+    const $warehouseSelect = $('#hepsijet-warehouse');
+    
+    if (!$warehouseSelect.length) {
+      return; // Element not found
+    }
+
+    // Check cache first (3 hours = 10800 seconds)
+    const cacheKey = 'hepsijet_warehouses';
+    const cacheExpiry = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+    const cached = localStorage.getItem(cacheKey);
+    const cacheTime = localStorage.getItem(cacheKey + '_time');
+    
+    if (cached && cacheTime) {
+      const age = Date.now() - parseInt(cacheTime);
+      if (age < cacheExpiry) {
+        // Use cached data
+        try {
+          const warehouses = JSON.parse(cached);
+          populateWarehouseDropdown(warehouses);
+          return;
+        } catch (e) {
+          // Invalid cache, continue to fetch
+        }
+      }
+    }
+
+    // Fetch from API
+    const data = {
+      action: 'hepsijet_get_warehouses',
+      _wpnonce: hezarfen_mst_backend.create_hepsijet_shipment_nonce
+    };
+
+    $.post(hezarfen_mst_backend.ajax_url, data, function(response) {
+      if (response.success && response.data && response.data.warehouses) {
+        const warehouses = response.data.warehouses;
+        
+        // Cache the response
+        localStorage.setItem(cacheKey, JSON.stringify(warehouses));
+        localStorage.setItem(cacheKey + '_time', Date.now().toString());
+        
+        // Populate dropdown
+        populateWarehouseDropdown(warehouses);
+      } else {
+        $warehouseSelect.html('<option value="">Adres yüklenemedi</option>');
+      }
+    }).fail(function() {
+      $warehouseSelect.html('<option value="">Adres yüklenemedi</option>');
+    });
+  }
+
+  /**
+   * Populate warehouse dropdown
+   */
+  function populateWarehouseDropdown(warehouses) {
+    const $warehouseSelect = $('#hepsijet-warehouse');
+    const $container = $('#hepsijet-warehouse-container');
+    
+    $warehouseSelect.empty();
+    
+    if (!warehouses || warehouses.length === 0) {
+      $warehouseSelect.html('<option value="">Kayıtlı adres bulunamadı</option>');
+      return;
+    }
+    
+    // If only one warehouse (merchant only), select it by default and hide dropdown
+    if (warehouses.length === 1) {
+      $warehouseSelect.append(
+        $('<option></option>').val(warehouses[0].id).text(warehouses[0].label).attr('selected', 'selected')
+      );
+      $container.hide(); // Hide the entire container
+    } else {
+      // Multiple warehouses - show dropdown
+      $warehouseSelect.append('<option value="">-- Depo Seçiniz --</option>');
+      
+      $.each(warehouses, function(index, warehouse) {
+        $warehouseSelect.append(
+          $('<option></option>')
+            .val(warehouse.id)
+            .text(warehouse.label)
+            .data('warehouse', warehouse)
+        );
+      });
+      
+      $container.show(); // Make sure container is visible
+    }
   }
 
 });

@@ -2,6 +2,27 @@
 defined('ABSPATH') || exit;
 
 use \Hezarfen\ManualShipmentTracking\Helper;
+
+// Fetch warehouses for Hepsijet
+$warehouses_data = array();
+$has_multiple_warehouses = false;
+$warehouse_error = null;
+
+try {
+    $hepsijet_integration_warehouses = new \Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration();
+    $warehouses_response = $hepsijet_integration_warehouses->get_warehouses();
+    
+    if ( is_wp_error( $warehouses_response ) ) {
+        $warehouse_error = $warehouses_response->get_error_message();
+    } elseif ( isset( $warehouses_response['warehouses'] ) ) {
+        $warehouses_data = $warehouses_response['warehouses'];
+        $has_multiple_warehouses = count( $warehouses_data ) > 1;
+    } else {
+        $warehouse_error = 'Invalid response format';
+    }
+} catch ( Exception $e ) {
+    $warehouse_error = $e->getMessage();
+}
 ?>
 <style>
 @keyframes pulse {
@@ -406,6 +427,49 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                 </div>
                             </div>
                             
+                            <!-- Warehouse Selection -->
+                            <div class="mb-4">
+                                <label for="hepsijet-warehouse" class="block text-sm font-medium text-gray-700 mb-2">
+                                    <?php esc_html_e( 'Depo Seçiniz', 'hezarfen-for-woocommerce' ); ?>
+                                    <span class="text-red-500">*</span>
+                                </label>
+                                <?php if ( ! empty( $warehouses_data ) ) : ?>
+                                    <select id="hepsijet-warehouse" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" data-loaded-server-side="true">
+                                        <?php if ( $has_multiple_warehouses ) : ?>
+                                            <option value=""><?php esc_html_e( 'Depo seçiniz', 'hezarfen-for-woocommerce' ); ?></option>
+                                        <?php endif; ?>
+                                        <?php foreach ( $warehouses_data as $warehouse ) : ?>
+                                            <option value="<?php echo esc_attr( $warehouse['id'] ); ?>" <?php selected( ! $has_multiple_warehouses ); ?>>
+                                                <?php echo esc_html( $warehouse['label'] ); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <?php if ( ! $has_multiple_warehouses ) : ?>
+                                    <p class="text-xs text-gray-500 mt-1">
+                                        <?php esc_html_e( 'Tek deponuz var. Daha fazla depo eklemek için intense.com.tr HepsiJet Stores bölümünü ziyaret edin.', 'hezarfen-for-woocommerce' ); ?>
+                                    </p>
+                                    <?php endif; ?>
+                                <?php else : ?>
+                                    <div class="p-3 bg-red-50 border border-red-200 rounded-lg">
+                                        <p class="text-sm text-red-800">
+                                            <?php 
+                                            if ( $warehouse_error ) {
+                                                printf( 
+                                                    esc_html__( 'Depo bilgisi yüklenemedi: %s', 'hezarfen-for-woocommerce' ),
+                                                    esc_html( $warehouse_error )
+                                                );
+                                            } else {
+                                                esc_html_e( 'Depo bilgisi yüklenemedi. Lütfen intense.com.tr hesabınızda firma kaydınızı tamamladığınızdan emin olun.', 'hezarfen-for-woocommerce' );
+                                            }
+                                            ?>
+                                        </p>
+                                    </div>
+                                    <select id="hepsijet-warehouse" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" disabled>
+                                        <option value="">Depo bulunamadı</option>
+                                    </select>
+                                <?php endif; ?>
+                            </div>
+
                             <div class="mb-4">
                                 <div class="flex justify-between items-center mb-2">
                                     <label class="font-light text-gray-1 text-sm dark:text-white"><?php esc_html_e('Koliler', 'hezarfen-for-woocommerce'); ?></label>
@@ -434,7 +498,6 @@ use \Hezarfen\ManualShipmentTracking\Helper;
                                     </p>
                                 </div>
                             <?php endif; ?>
-                            
                             
                             <!-- Delivery Type - Feature Flag: Hidden for now, hard-coded to 'standard' -->
                             <?php 
@@ -897,3 +960,37 @@ use \Hezarfen\ManualShipmentTracking\Helper;
         ?>
     </div>
 </div>
+
+<script type="text/javascript">
+jQuery(function($) {
+    'use strict';
+    
+    const $warehouse = $('#hepsijet-warehouse');
+    const serverSideData = $warehouse.attr('data-loaded-server-side');
+    
+    if (serverSideData === 'true' && $warehouse.find('option').length > 0) {
+        // Save the server-side HTML
+        const serverSideHTML = $warehouse.html();
+        const serverSideOptions = $warehouse.find('option').length;
+        
+        // Watch for changes and restore if needed
+        let checkCount = 0;
+        const checkInterval = setInterval(function() {
+            checkCount++;
+            
+            const currentOptions = $warehouse.find('option').length;
+            
+            // If dropdown was emptied or options changed significantly
+            if (currentOptions < serverSideOptions) {
+                $warehouse.html(serverSideHTML);
+                $warehouse.attr('data-loaded-server-side', 'true');
+            }
+            
+            // Stop checking after 5 seconds
+            if (checkCount > 50) {
+                clearInterval(checkInterval);
+            }
+        }, 100);
+    }
+});
+</script>

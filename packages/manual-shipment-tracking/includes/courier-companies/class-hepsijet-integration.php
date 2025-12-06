@@ -1290,4 +1290,44 @@ class Courier_Hepsijet_Integration {
         
         return $result;
     }
+
+    /**
+     * Get warehouses (merchant + stores) with 3-hour caching
+     * 
+     * @return array|WP_Error Array of warehouses or WP_Error on failure
+     */
+    public function get_warehouses() {
+        $cache_key = 'hepsijet_warehouses_cache';
+        $cache_duration = 3 * HOUR_IN_SECONDS; // 3 hours
+
+        // Try to get from cache first
+        $cached_data = get_transient( $cache_key );
+        if ( false !== $cached_data ) {
+            return $cached_data;
+        }
+
+        // Make API request
+        $response = $this->make_relay_request( '/warehouses', null, 'GET' );
+
+        if ( is_wp_error( $response ) ) {
+            return $response;
+        }
+
+        // Cache the response
+        if ( isset( $response['warehouses'] ) ) {
+            set_transient( $cache_key, $response, $cache_duration );
+            return $response;
+        }
+
+        return new \WP_Error( 'invalid_response', 'Invalid warehouse data received' );
+    }
+
+    /**
+     * Clear warehouses cache
+     * 
+     * @return bool True if cache was cleared
+     */
+    public function clear_warehouses_cache() {
+        return delete_transient( 'hepsijet_warehouses_cache' );
+    }
 }

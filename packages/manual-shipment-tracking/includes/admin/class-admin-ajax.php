@@ -67,6 +67,7 @@ class Admin_Ajax {
 		add_action( 'wp_ajax_' . self::GET_KARGOGATE_BALANCE_ACTION, array( __CLASS__, 'get_kargogate_balance' ) );
 		
 		add_action( 'wp_ajax_hezarfen_mst_get_return_dates', array( __CLASS__, 'get_return_dates' ) );
+		add_action( 'wp_ajax_hepsijet_get_warehouses', array( __CLASS__, 'get_hepsijet_warehouses' ) );
 			
 		} catch ( Exception $e ) {
 		}
@@ -172,6 +173,7 @@ class Admin_Ajax {
 		$type = sanitize_text_field( $_POST['type'] ?? 'standard' );
 		$delivery_slot = sanitize_text_field( $_POST['delivery_slot'] ?? '' );
 		$delivery_date = sanitize_text_field( $_POST['delivery_date'] ?? '' );
+		$warehouse_id = sanitize_text_field( $_POST['warehouse_id'] ?? '' );
 
 		// Validate packages array
 		if ( ! is_array( $packages ) || empty( $packages ) ) {
@@ -1179,5 +1181,40 @@ class Admin_Ajax {
 
 		// Return the balance data
 		wp_send_json_success( $result );
+	}
+
+	/**
+	 * Gets HepsiJet warehouses (merchant + stores)
+	 * 
+	 * @return void
+	 */
+	public static function get_hepsijet_warehouses() {
+		check_ajax_referer( self::CREATE_HEPSIJET_SHIPMENT_NONCE );
+
+		// Check user capabilities
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_send_json_error( 'Insufficient permissions', 403 );
+		}
+
+		try {
+			// Create Hepsijet integration instance
+			$hepsijet_integration = new \Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration();
+			
+			// Get warehouses (with 3-hour caching)
+			$result = $hepsijet_integration->get_warehouses();
+
+			if ( is_wp_error( $result ) ) {
+				wp_send_json_error( array(
+					'message' => $result->get_error_message()
+				), 500 );
+			}
+
+			// Return the warehouses data
+			wp_send_json_success( $result );
+		} catch ( \Exception $e ) {
+			wp_send_json_error( array(
+				'message' => $e->getMessage()
+			), 500 );
+		}
 	}
 }
