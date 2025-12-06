@@ -439,7 +439,9 @@ try {
                                             <option value=""><?php esc_html_e( 'Depo seçiniz', 'hezarfen-for-woocommerce' ); ?></option>
                                         <?php endif; ?>
                                         <?php foreach ( $warehouses_data as $warehouse ) : ?>
-                                            <option value="<?php echo esc_attr( $warehouse['id'] ); ?>" <?php selected( ! $has_multiple_warehouses ); ?>>
+                                            <option value="<?php echo esc_attr( $warehouse['id'] ); ?>" 
+                                                    data-type="<?php echo esc_attr( $warehouse['type'] ); ?>"
+                                                    <?php selected( ! $has_multiple_warehouses ); ?>>
                                                 <?php echo esc_html( $warehouse['label'] ); ?>
                                             </option>
                                         <?php endforeach; ?>
