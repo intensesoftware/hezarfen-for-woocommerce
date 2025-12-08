@@ -428,11 +428,11 @@ jQuery(document).ready(($)=>{
         <span class="text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[60px]">Koli ${packageIndex + 1}:</span>
         <div class="flex-1">
           <input type="number" 
+                 name="hezarfen_hepsijet_package_desi[]"
                  class="hepsijet-package-desi shadow-sm bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:text-white" 
                  step="0.01" 
                  min="0.01" 
-                 placeholder="Desi" 
-                 required />
+                 placeholder="Desi" />
         </div>
         <button type="button" class="remove-hepsijet-package inline-flex items-center p-2 text-sm font-medium text-red-600 bg-red-50 rounded hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30" ${packageIndex === 0 ? 'style="visibility: hidden;"' : ''}>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
