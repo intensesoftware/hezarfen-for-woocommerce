@@ -204,6 +204,7 @@ $tr_neighborhoods = array(
 		'58219' => 'Yeşiltepe Mah',
 		'58230' => 'Yeşilyurt Mah',
 		'58220' => 'Yukarıaksu Mah',
+		'73342' => 'Atakent Mah',
 	),
 	'Ayvacık'    => array(
 		'58231' => 'Ardıç Mah',
@@ -248,7 +249,7 @@ $tr_neighborhoods = array(
 		'58270' => 'Yeşildere Mah',
 		'58271' => 'Yeşilpınar Mah',
 		'58272' => 'Yunus Emre Mah',
-		'58273' => 'Zafer Mah',
+		'58273' => 'Zafer Mah'
 	),
 	'Bafra'      => array(
 		'58274' => 'Adaköy Mah',
