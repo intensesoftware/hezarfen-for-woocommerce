@@ -3,10 +3,10 @@
 Contributors: intenseyazilim, mucahitbal, mskapusuz
 Tags: kargo, sözleşmeler, hepsijet, mng, fatura
 Requires at least: 5.3
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.7.21
+Stable tag: 2.7.28
 
 🚀 2 bin site kullanıyor! Kargo takip, ücretsiz Hepsijet Entegrasyonu (1-4 desi: 66,60TL+KDV), Mesafeli Satış Sözleşmesi, NetGSM sipariş ve kargo SMS
 == Description ==
@@ -264,7 +264,31 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
-* 2.7.21 - 2025-11-18 =
+= 2.7.28 - 2025-12-08 =
+* Samsun Atakum'a Atakent Mah. eklendi.
+
+= 2.7.27 - 2025-12-07 =
+* Kargokit Hepsijet entegrasyonunda çoklu depo özelliği
+
+= 2.7.26 - 2025-12-04 =
+* Özellik: Yeni filtre eklendi: hezarfen_contracts_include_item_meta
+
+= 2.7.25 - 2025-12-03 =
+* Düzeltme: Mahalle helper verilerinin geçerli bir dizi olup olmadığının kontrol edilmesi sağlandı
+* Özellik: Kargokit - Hepsijet için çoklu koli girebilme özelliği
+* Özellik: Kargokit - Hepsijet için barkod oluşturulduktan sonra tahmini fiyat gösterilmesi
+
+= 2.7.24 - 2025-11-30 =
+* Düzeltme: hezarfen_enable_district_neighborhood_fields filtresinin register_district_neighborhood_fields hook'u ile geç çalıştırılması sağlandı
+
+= 2.7.23 - 2025-11-30 =
+* Düzeltme: hezarfen_enable_district_neighborhood_fields filtresi düzeltmesi
+
+= 2.7.22 - 2025-11-30 =
+* Düzeltme: Mahalle özelliği kapalıyken vergi özelliklerinin çalışmasının sağlanması
+* Özellik: hezarfen_enable_district_neighborhood_fields wp filtresi eklendi
+
+= 2.7.21 - 2025-11-18 =
 * Kargo hizmetleri için kargokit.com servisleri kullanılmaya başlandı.
 
 = 2.7.20 - 2025-11-04 =
@@ -325,7 +349,7 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 = 2.7.3 - 2025-10-01 =
 * Tekrar yol haritası için oylama yapılmasına izin verilmesi problemi giderildi.
 
-= 2..7.2 - 2025-10-01 =
+= 2.7.2 - 2025-10-01 =
 * Yol haritası için admin uyarısı
 
 = 2.7.1 - 2025-10-01 =
