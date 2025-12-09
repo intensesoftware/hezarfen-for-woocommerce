@@ -1143,9 +1143,6 @@ class Courier_Hepsijet_Integration {
         if ( $current_status !== 'active' ) {
             return;
         }
-
-        // Update shipment status to shipped
-        $instance->update_shipment_status( $order_id, $delivery_no, 'shipped' );
         
         // Get tracking details from API to use existing processing logic
         $tracking_details = $instance->api_get_shipping_details( $delivery_no );
@@ -1154,6 +1151,9 @@ class Courier_Hepsijet_Integration {
             // Use existing ship_order logic to save tracking data
             $instance->process_shipment_shipped( $order_id, $delivery_no, $tracking_details );
         }
+
+        // Update shipment status to shipped
+        $instance->update_shipment_status( $order_id, $delivery_no, 'shipped' );
     }
 
     /**
