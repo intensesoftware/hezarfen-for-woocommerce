@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.9
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.7.29
+Stable tag: 2.7.30
 
 🚀 2 bin site kullanıyor! Kargo takip, ücretsiz Hepsijet Entegrasyonu (1-4 desi: 66,60TL+KDV), Mesafeli Satış Sözleşmesi, NetGSM sipariş ve kargo SMS
 == Description ==
@@ -264,6 +264,9 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
+= 2.7.30 - 2025-12-09 =
+* Kargokit Hepsijet webhook handler iyileştirme
+
 = 2.7.29 - 2025-12-08 =
 * WP admin sipariş düzenleme ekranında yaşanan sipariş düzenleme problemi giderildi.
 
