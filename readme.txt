@@ -6,9 +6,9 @@ Requires at least: 5.3
 Tested up to: 6.9
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.7.30
+Stable tag: 2.7.31
 
-🚀 2 bin site kullanıyor! Kargo takip, ücretsiz Hepsijet Entegrasyonu (1-4 desi: 66,60TL+KDV), Mesafeli Satış Sözleşmesi, NetGSM sipariş ve kargo SMS
+🚀 2 bin site! Kargo takip, ücretsiz Hepsijet Entegrasyonu (1-4 desi: 66,60TL+KDV - Hezarfen Pro gerekmez), Mesafeli Sözleşmeler, NetGSM sipariş SMS
 == Description ==
 
 **Tamamen Ücretsiz!** Intense&Hepsijet İşbirliğiyle; Hezarfen kullanıcılarına Hepsijet 1-4 Desi 66,60TL+KDV - Hezarfen, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo, ödeme ve sözleşme yönetim eklentisidir. Bu WooCommerce kargo entegrasyon eklentisi, 23 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel WooCommerce kargo takip deneyimi sunar, Mesafeli Satış Sözleşmesi (MSS) desteği sağlar ve Türkiye'ye özgü mahalle, fatura ve vergi alanlarıyla ödeme ekranınızı Türkiye'ye uyumlu hale getirir.
@@ -36,7 +36,7 @@ Stable tag: 2.7.30
 = ⭐ TAMAMEN ÜCRETSİZ =
 
 **🚚 Hepsijet Ücretsiz WooCommerce Kargo Entegrasyonu**
-• 1-4 Desi 66,60TL+KDV - Anlaşma yapmanıza gerek yok, kargokit.com'dan kayıt olun, bakiye yükleyin ve gönderime başlayın. Kargo gönderim için minimum limit yok! İster ayda 1 tane, ister 10000 tane!
+• 1-4 Desi 66,60TL+KDV - (Hezarfen Pro gerekmez!) Anlaşma yapmanıza gerek yok, kargokit.com'dan kayıt olun, bakiye yükleyin ve gönderime başlayın. Kargo gönderim için minimum limit yok! İster ayda 1 tane, ister 10000 tane!
 • Ücretsiz entegrasyon (otomatik kargo takip no girişi, otomatik siparişin kargoya verildi durumuna geçmesi, otomatik siparişin tamamlandı durumuna geçmesi, otomatik müşteriye e-posta bildirimi)
 
 **🚚 Kargo Yönetimi ve WooCommerce Kargo Takip Modülü**
@@ -264,6 +264,9 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
+= 2.7.31 - 2025-12-11 =
+* Performans hata giderme (Hepsijet gereksiz warehouse sorgulama yapılmasının engellenmesi)
+
 = 2.7.30 - 2025-12-09 =
 * Kargokit Hepsijet webhook handler iyileştirme
 

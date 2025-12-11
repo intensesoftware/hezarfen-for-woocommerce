@@ -8,8 +8,9 @@ use \Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration;
 $warehouses_data = array();
 $has_multiple_warehouses = false;
 $warehouse_error = null;
+$has_hepsijet_credentials = Courier_Hepsijet_Integration::has_credentials();
 
-if ( Courier_Hepsijet_Integration::has_credentials() ) {
+if ( $has_hepsijet_credentials ) {
     try {
         $hepsijet_integration_warehouses = new Courier_Hepsijet_Integration();
         $warehouses_response = $hepsijet_integration_warehouses->get_warehouses();
@@ -431,6 +432,7 @@ if ( Courier_Hepsijet_Integration::has_credentials() ) {
                             </div>
                             
                             <!-- Warehouse Selection -->
+                            <?php if ( $has_hepsijet_credentials ) : ?>
                             <div class="mb-4">
                                 <label for="hepsijet-warehouse" class="block text-sm font-medium text-gray-700 mb-2">
                                     <?php esc_html_e( 'Depo Seçiniz', 'hezarfen-for-woocommerce' ); ?>
@@ -474,6 +476,7 @@ if ( Courier_Hepsijet_Integration::has_credentials() ) {
                                     </select>
                                 <?php endif; ?>
                             </div>
+                            <?php endif; ?>
 
                             <div class="mb-4">
                                 <div class="flex justify-between items-center mb-2">
