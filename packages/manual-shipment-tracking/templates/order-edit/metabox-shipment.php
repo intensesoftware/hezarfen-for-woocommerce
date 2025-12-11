@@ -2,26 +2,29 @@
 defined('ABSPATH') || exit;
 
 use \Hezarfen\ManualShipmentTracking\Helper;
+use \Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration;
 
 // Fetch warehouses for Hepsijet
 $warehouses_data = array();
 $has_multiple_warehouses = false;
 $warehouse_error = null;
 
-try {
-    $hepsijet_integration_warehouses = new \Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration();
-    $warehouses_response = $hepsijet_integration_warehouses->get_warehouses();
-    
-    if ( is_wp_error( $warehouses_response ) ) {
-        $warehouse_error = $warehouses_response->get_error_message();
-    } elseif ( isset( $warehouses_response['warehouses'] ) ) {
-        $warehouses_data = $warehouses_response['warehouses'];
-        $has_multiple_warehouses = count( $warehouses_data ) > 1;
-    } else {
-        $warehouse_error = 'Invalid response format';
+if ( Courier_Hepsijet_Integration::has_credentials() ) {
+    try {
+        $hepsijet_integration_warehouses = new Courier_Hepsijet_Integration();
+        $warehouses_response = $hepsijet_integration_warehouses->get_warehouses();
+
+        if ( is_wp_error( $warehouses_response ) ) {
+            $warehouse_error = $warehouses_response->get_error_message();
+        } elseif ( isset( $warehouses_response['warehouses'] ) ) {
+            $warehouses_data = $warehouses_response['warehouses'];
+            $has_multiple_warehouses = count( $warehouses_data ) > 1;
+        } else {
+            $warehouse_error = 'Invalid response format';
+        }
+    } catch ( Exception $e ) {
+        $warehouse_error = $e->getMessage();
     }
-} catch ( Exception $e ) {
-    $warehouse_error = $e->getMessage();
 }
 ?>
 <style>
