@@ -607,12 +607,24 @@ class Courier_Hepsijet_Integration {
         return $details['tracking_number'];
     }
 
-    /**
+     /**
      * Check if Hepsijet credentials are configured
      *
      * @return bool True if consumer_key, consumer_secret, and webhook_secret are set
      */
     public static function has_credentials() {
+        $consumer_key = get_option( 'hezarfen_hepsijet_consumer_key', '' );
+        $consumer_secret = get_option( 'hezarfen_hepsijet_consumer_secret', '' );
+
+        return ! empty( $consumer_key ) && ! empty( $consumer_secret );
+    }
+
+    /**
+     * Check if Hepsijet credentials are configured
+     *
+     * @return bool True if consumer_key, consumer_secret, and webhook_secret are set
+     */
+    public static function has_credentials_with_webhook() {
         $consumer_key = get_option( 'hezarfen_hepsijet_consumer_key', '' );
         $consumer_secret = get_option( 'hezarfen_hepsijet_consumer_secret', '' );
         $webhook_secret = get_option( 'hez_ordermigo_webhook_secret', '' );
