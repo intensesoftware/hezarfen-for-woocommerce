@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.9
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.7.31
+Stable tag: 2.7.33
 
 🚀 2 bin site! Kargo takip, ücretsiz Hepsijet Entegrasyonu (1-4 desi: 66,60TL+KDV - Hezarfen Pro gerekmez), Mesafeli Sözleşmeler, NetGSM sipariş SMS
 == Description ==
@@ -264,6 +264,9 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
+= 2.7.33 - 2025-12-18 =
+* Sözleşmeler e fatura telefonu ve fatura e-posta değişkenleri eklendi.
+
 = 2.7.31 - 2025-12-11 =
 * Performans hata giderme (Hepsijet gereksiz warehouse sorgulama yapılmasının engellenmesi)
 
