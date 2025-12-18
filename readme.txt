@@ -267,6 +267,9 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 = 2.7.33 - 2025-12-18 =
 * Sözleşmeler e fatura telefonu ve fatura e-posta değişkenleri eklendi.
 
+= 2.7.32 - 2025-12-16 =
+* Kargokit bazı kullanıcıları etkileyen depo seçme sorunu giderildi.
+
 = 2.7.31 - 2025-12-11 =
 * Performans hata giderme (Hepsijet gereksiz warehouse sorgulama yapılmasının engellenmesi)
 
