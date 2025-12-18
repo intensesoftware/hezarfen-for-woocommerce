@@ -162,6 +162,8 @@ class Template_Processor {
 			'{{fatura_sehir}}' => WC()->countries->states[ $order->get_billing_country() ][ $order->get_billing_state() ] ?? $order->get_billing_state(),
 			'{{fatura_posta_kodu}}' => $order->get_billing_postcode(),
 			'{{fatura_ulke}}' => WC()->countries->countries[ $order->get_billing_country() ] ?? $order->get_billing_country(),
+			'{{fatura_telefon}}' => $order->get_billing_phone(),
+			'{{fatura_eposta}}' => $order->get_billing_email(),
 			
 			// New format - Shipping Address Variables
 			'{{teslimat_adi}}' => $order->get_shipping_first_name() ?: $order->get_billing_first_name(),
@@ -352,6 +354,8 @@ class Template_Processor {
 			'{{fatura_ilce}}' => isset( $form_data['billing_city'] ) ? sanitize_text_field( $form_data['billing_city'] ) : '',
 			'{{fatura_posta_kodu}}' => isset( $form_data['billing_postcode'] ) ? sanitize_text_field( $form_data['billing_postcode'] ) : '',
 			'{{fatura_ulke}}' => isset( $form_data['billing_country'] ) ? self::get_country_name( sanitize_text_field( $form_data['billing_country'] ) ) : '',
+			'{{fatura_telefon}}' => isset( $form_data['billing_phone'] ) ? sanitize_text_field( $form_data['billing_phone'] ) : '',
+			'{{fatura_eposta}}' => isset( $form_data['billing_email'] ) ? sanitize_email( $form_data['billing_email'] ) : '',
 			
 			// Payment method from form data
 			'{{odeme_yontemi}}' => ! empty( $payment_method_title ) ? $payment_method_title : __( 'Will be determined at payment', 'hezarfen-for-woocommerce' ),

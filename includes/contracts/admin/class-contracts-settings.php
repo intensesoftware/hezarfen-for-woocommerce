@@ -512,6 +512,8 @@ public function output_available_variables( $value ) {
 			'{{fatura_sehir}}' => __( 'Billing city', 'hezarfen-for-woocommerce' ),
 			'{{fatura_posta_kodu}}' => __( 'Billing postal code', 'hezarfen-for-woocommerce' ),
 			'{{fatura_ulke}}' => __( 'Billing country', 'hezarfen-for-woocommerce' ),
+			'{{fatura_telefon}}' => __( 'Billing phone', 'hezarfen-for-woocommerce' ),
+			'{{fatura_eposta}}' => __( 'Billing email', 'hezarfen-for-woocommerce' ),
 		),
 		
 		// Shipping Address Variables
