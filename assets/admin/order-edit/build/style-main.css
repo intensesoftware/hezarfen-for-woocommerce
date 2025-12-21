@@ -1067,8 +1067,14 @@ video:where(.hez-ui,.hez-ui *) {
 .z-50 {
   z-index: 50 !important;
 }
+.col-span-1 {
+  grid-column: span 1 / span 1 !important;
+}
 .col-span-2 {
   grid-column: span 2 / span 2 !important;
+}
+.col-span-3 {
+  grid-column: span 3 / span 3 !important;
 }
 .mx-4 {
   margin-left: 1rem !important;
@@ -1092,6 +1098,9 @@ video:where(.hez-ui,.hez-ui *) {
 }
 .mb-2 {
   margin-bottom: 0.5rem !important;
+}
+.mb-3 {
+  margin-bottom: 0.75rem !important;
 }
 .mb-4 {
   margin-bottom: 1rem !important;
@@ -1192,6 +1201,9 @@ video:where(.hez-ui,.hez-ui *) {
 .h-full {
   height: 100% !important;
 }
+.max-h-12 {
+  max-height: 3rem !important;
+}
 .max-h-24 {
   max-height: 6rem !important;
 }
@@ -1221,6 +1233,9 @@ video:where(.hez-ui,.hez-ui *) {
 }
 .w-4 {
   width: 1rem !important;
+}
+.w-44 {
+  width: 11rem !important;
 }
 .w-5 {
   width: 1.25rem !important;
@@ -1308,6 +1323,9 @@ video:where(.hez-ui,.hez-ui *) {
 .resize {
   resize: both !important;
 }
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+}
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
 }
@@ -1347,6 +1365,9 @@ video:where(.hez-ui,.hez-ui *) {
 .gap-1 {
   gap: 0.25rem !important;
 }
+.gap-12 {
+  gap: 3rem !important;
+}
 .gap-2 {
   gap: 0.5rem !important;
 }
@@ -1378,6 +1399,15 @@ video:where(.hez-ui,.hez-ui *) {
   --tw-space-y-reverse: 0 !important;
   margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse))) !important;
   margin-bottom: calc(1.5rem * var(--tw-space-y-reverse)) !important;
+}
+.divide-y > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-y-reverse: 0 !important;
+  border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse))) !important;
+  border-bottom-width: calc(1px * var(--tw-divide-y-reverse)) !important;
+}
+.divide-gray-100 > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-opacity: 1 !important;
+  border-color: rgb(243 244 246 / var(--tw-divide-opacity)) !important;
 }
 .overflow-hidden {
   overflow: hidden !important;
@@ -1916,6 +1946,9 @@ video:where(.hez-ui,.hez-ui *) {
 .duration-300 {
   transition-duration: 300ms !important;
 }
+.ease-in-out {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
 .ease-out {
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1) !important;
 }
@@ -2393,6 +2426,11 @@ video:where(.hez-ui,.hez-ui *) {
   --tw-ring-color: rgb(209 213 219 / var(--tw-ring-opacity)) !important;
 }
 
+.focus\:ring-gray-50:focus {
+  --tw-ring-opacity: 1 !important;
+  --tw-ring-color: rgb(249 250 251 / var(--tw-ring-opacity)) !important;
+}
+
 .focus\:ring-gray-500:focus {
   --tw-ring-opacity: 1 !important;
   --tw-ring-color: rgb(107 114 128 / var(--tw-ring-opacity)) !important;
@@ -2478,6 +2516,11 @@ video:where(.hez-ui,.hez-ui *) {
       color: rgba(0, 0, 0, var(--tw-text-opacity)) !important; /* Custom lighter blue */
     }
 
+.dark\:divide-gray-600:is(.dark *) > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-opacity: 1 !important;
+  border-color: rgb(75 85 99 / var(--tw-divide-opacity)) !important;
+}
+
 .dark\:border-blue-500:is(.dark *) {
   --tw-border-opacity: 1 !important;
   border-color: rgb(63 131 248 / var(--tw-border-opacity)) !important;
@@ -2543,6 +2586,11 @@ video:where(.hez-ui,.hez-ui *) {
 .dark\:text-blue-500:is(.dark *) {
   --tw-text-opacity: 1 !important;
   color: rgb(63 131 248 / var(--tw-text-opacity)) !important;
+}
+
+.dark\:text-gray-200:is(.dark *) {
+  --tw-text-opacity: 1 !important;
+  color: rgb(229 231 235 / var(--tw-text-opacity)) !important;
 }
 
 .dark\:text-gray-400:is(.dark *) {
@@ -2626,6 +2674,11 @@ video:where(.hez-ui,.hez-ui *) {
   --tw-ring-color: rgb(30 66 159 / var(--tw-ring-opacity)) !important;
 }
 
+.dark\:focus\:ring-gray-600:focus:is(.dark *) {
+  --tw-ring-opacity: 1 !important;
+  --tw-ring-color: rgb(75 85 99 / var(--tw-ring-opacity)) !important;
+}
+
 .dark\:focus\:ring-gray-700:focus:is(.dark *) {
   --tw-ring-opacity: 1 !important;
   --tw-ring-color: rgb(55 65 81 / var(--tw-ring-opacity)) !important;
@@ -2681,6 +2734,10 @@ video:where(.hez-ui,.hez-ui *) {
     grid-column: span 2 / span 2 !important;
   }
 
+  .xl\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
   .xl\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
@@ -2712,6 +2769,10 @@ video:where(.hez-ui,.hez-ui *) {
 }
 
 @media (min-width: 2304px) {
+
+  .\35xl\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
 
   .\35xl\:grid-cols-7 {
     grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
