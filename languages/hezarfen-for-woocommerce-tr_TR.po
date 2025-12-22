@@ -6,7 +6,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2025-12-22 13:59+0000\n"
+"PO-Revision-Date: 2025-12-22 14:17+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -102,7 +102,7 @@ msgstr "Gönderi listesine ekle"
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:612
 msgid "Address"
-msgstr ""
+msgstr "Adres"
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:148
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:371

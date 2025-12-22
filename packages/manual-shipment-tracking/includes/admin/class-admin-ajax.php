@@ -174,6 +174,20 @@ class Admin_Ajax {
 		$delivery_slot = sanitize_text_field( $_POST['delivery_slot'] ?? '' );
 		$delivery_date = sanitize_text_field( $_POST['delivery_date'] ?? '' );
 		$warehouse_id = sanitize_text_field( $_POST['warehouse_id'] ?? '' );
+		$return_address = isset( $_POST['return_address'] ) ? json_decode( stripslashes( $_POST['return_address'] ), true ) : null;
+
+		// Sanitize return address fields if present
+		if ( $return_address && is_array( $return_address ) ) {
+			$return_address = array(
+				'first_name'   => sanitize_text_field( $return_address['first_name'] ?? '' ),
+				'last_name'    => sanitize_text_field( $return_address['last_name'] ?? '' ),
+				'city'         => sanitize_text_field( $return_address['city'] ?? '' ),
+				'district'     => sanitize_text_field( $return_address['district'] ?? '' ),
+				'neighborhood' => sanitize_text_field( $return_address['neighborhood'] ?? '' ),
+				'address'      => sanitize_textarea_field( $return_address['address'] ?? '' ),
+				'phone'        => sanitize_text_field( $return_address['phone'] ?? '' ),
+			);
+		}
 
 		// Validate packages array
 		if ( ! is_array( $packages ) || empty( $packages ) ) {
@@ -183,6 +197,15 @@ class Admin_Ajax {
 		// Return shipments only allow single package
 		if ( $type === 'returned' && count( $packages ) > 1 ) {
 			wp_send_json_error( __( 'Return shipments can only have one package.', 'hezarfen-for-woocommerce' ), 400 );
+		}
+
+		// Validate return address for return shipments
+		if ( $type === 'returned' ) {
+			if ( ! $return_address || empty( $return_address['first_name'] ) || empty( $return_address['last_name'] ) ||
+			     empty( $return_address['city'] ) || empty( $return_address['district'] ) ||
+			     empty( $return_address['neighborhood'] ) || empty( $return_address['address'] ) || empty( $return_address['phone'] ) ) {
+				wp_send_json_error( __( 'All return address fields are required.', 'hezarfen-for-woocommerce' ), 400 );
+			}
 		}
 
 		// Validate each package
@@ -199,9 +222,9 @@ class Admin_Ajax {
 
 		// Create Hepsijet integration instance
 		$hepsijet_integration = new \Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration();
-		
-		// Pass warehouse_id to API
-		$result = $hepsijet_integration->api_create_barcode( $order_id, $packages, $type, $delivery_slot, $delivery_date, $warehouse_id );
+
+		// Pass warehouse_id and return_address to API
+		$result = $hepsijet_integration->api_create_barcode( $order_id, $packages, $type, $delivery_slot, $delivery_date, $warehouse_id, $return_address );
 
 		if ( is_wp_error( $result ) ) {
 			wp_send_json_error( $result->get_error_message(), 500 );
