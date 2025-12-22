@@ -131,9 +131,6 @@ jQuery(document).ready(($)=>{
         hepsijetButton.removeClass('hidden');
       }
       
-      // Reset conditional fields when showing Hepsijet fields
-      $('#hepsijet-delivery-slot-container').addClass('hidden');
-      $('#hepsijet-return-date-container').addClass('hidden');
     } else if (selectedCourier) {
       // Show standard tracking fields for any other selected courier
       standardFields.removeClass('hidden');
@@ -234,37 +231,42 @@ jQuery(document).ready(($)=>{
   });
 
   // Handle delivery type selection
-  metabox_wrapper.find('input[name="hepsijet-delivery-type"]').on('change', function() {
+  $(document).on('change', 'input[name="hepsijet-delivery-type"]', function() {
     const selectedType = $(this).val();
+    console.log('Delivery type changed:', selectedType);
+
     const deliverySlotContainer = $('#hepsijet-delivery-slot-container');
-    const returnDateContainer = $('#hepsijet-return-date-container');
+    const returnFieldsContainer = $('#hepsijet-return-fields-container');
     const warehouseContainer = $('#hepsijet-warehouse-container');
     const addPackageButton = $('#add-hepsijet-package');
 
-    // Hide all conditional containers first
-    deliverySlotContainer.addClass('hidden');
-    returnDateContainer.addClass('hidden');
+    console.log('Return fields container found:', returnFieldsContainer.length);
+
+    // Hide all conditional containers first (use jQuery hide/show for reliability)
+    deliverySlotContainer.hide();
+    returnFieldsContainer.hide();
 
     // Show relevant container based on selection
     if (selectedType === 'sameday' || selectedType === 'nextday') {
-      deliverySlotContainer.removeClass('hidden');
+      deliverySlotContainer.show();
       // Show warehouse and allow multiple packages for shipment types
-      warehouseContainer.removeClass('hidden');
-      addPackageButton.removeClass('hidden');
+      warehouseContainer.show();
+      addPackageButton.show();
     } else if (selectedType === 'returned') {
-      returnDateContainer.removeClass('hidden');
+      console.log('Showing return fields container');
+      returnFieldsContainer.show();
       loadReturnDates();
       // Hide warehouse selection for returns
-      warehouseContainer.addClass('hidden');
+      warehouseContainer.hide();
       // Hide add package button and keep only one package for returns
-      addPackageButton.addClass('hidden');
+      addPackageButton.hide();
       // Remove extra packages, keep only the first one
       const packagesContainer = $('#hepsijet-packages-container');
       packagesContainer.find('.hepsijet-package-item:not(:first)').remove();
     } else {
       // Standard shipment - show warehouse and allow multiple packages
-      warehouseContainer.removeClass('hidden');
-      addPackageButton.removeClass('hidden');
+      warehouseContainer.show();
+      addPackageButton.show();
     }
   });
   
@@ -395,7 +397,10 @@ jQuery(document).ready(($)=>{
             if (Array.isArray(datesData[region]) && datesData[region].length > 0) {
               hasAnyDates = true;
               datesData[region].forEach(function(date) {
-                options += `<option value="${date}">${date} - ${region}</option>`;
+                // Format date from YYYY-MM-DD to DD.MM.YYYY
+                const [year, month, day] = date.split('-');
+                const formattedDate = `${day}.${month}.${year}`;
+                options += `<option value="${date}">${formattedDate} - ${region}</option>`;
               });
             }
           });
@@ -535,8 +540,8 @@ jQuery(document).ready(($)=>{
     const returnDate = $('#hepsijet-return-date').val();
     const warehouseId = $('#hepsijet-warehouse').val();
 
-    // Validate warehouse selection
-    if (!warehouseId) {
+    // Validate warehouse selection (only for non-return types)
+    if (deliveryType !== 'returned' && !warehouseId) {
       alert('Lütfen depo seçiniz.');
       return;
     }
@@ -544,15 +549,15 @@ jQuery(document).ready(($)=>{
     // Collect packages data
     const packages = [];
     let hasError = false;
-    
+
     $('#hepsijet-packages-container .hepsijet-package-item').each(function() {
       const desi = $(this).find('.hepsijet-package-desi').val();
-      
+
       if (!desi || parseFloat(desi) < 0.01) {
         hasError = true;
         return false; // Break loop
       }
-      
+
       packages.push({
         desi: parseFloat(desi)
       });
@@ -570,9 +575,26 @@ jQuery(document).ready(($)=>{
       return;
     }
 
-    if (deliveryType === 'returned' && !returnDate) {
-      alert('Lütfen iade tarihini seçiniz.');
-      return;
+    // Validate return specific fields
+    if (deliveryType === 'returned') {
+      if (!returnDate) {
+        alert('Lütfen iade tarihini seçiniz.');
+        return;
+      }
+
+      // Validate return address fields
+      const returnFirstName = $('#hepsijet-return-first-name').val().trim();
+      const returnLastName = $('#hepsijet-return-last-name').val().trim();
+      const returnCity = $('#hepsijet-return-city').val().trim();
+      const returnDistrict = $('#hepsijet-return-district').val().trim();
+      const returnNeighborhood = $('#hepsijet-return-neighborhood').val().trim();
+      const returnAddress = $('#hepsijet-return-address').val().trim();
+      const returnPhone = $('#hepsijet-return-phone').val().trim();
+
+      if (!returnFirstName || !returnLastName || !returnCity || !returnDistrict || !returnNeighborhood || !returnAddress || !returnPhone) {
+        alert('Lütfen tüm iade adres bilgilerini doldurunuz.');
+        return;
+      }
     }
 
     // Disable button and show loading state
@@ -586,8 +608,21 @@ jQuery(document).ready(($)=>{
       type: deliveryType,
       delivery_slot: deliverySlot || '',
       delivery_date: returnDate || '',
-      warehouse_id: warehouseId
+      warehouse_id: warehouseId || ''
     };
+
+    // Add return address data if return type
+    if (deliveryType === 'returned') {
+      data.return_address = JSON.stringify({
+        first_name: $('#hepsijet-return-first-name').val().trim(),
+        last_name: $('#hepsijet-return-last-name').val().trim(),
+        city: $('#hepsijet-return-city').val().trim(),
+        district: $('#hepsijet-return-district').val().trim(),
+        neighborhood: $('#hepsijet-return-neighborhood').val().trim(),
+        address: $('#hepsijet-return-address').val().trim(),
+        phone: $('#hepsijet-return-phone').val().trim()
+      });
+    }
 
     $.post(
       ajaxurl,

@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2025-12-22 05:59+0000\n"
+"POT-Creation-Date: 2025-12-22 08:03+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #. %s plugin name
@@ -37,8 +37,8 @@ msgstr ""
 msgid "Accepted:"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:282
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:375
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:320
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:413
 msgid "Access Hepsijet ile Avantajlı Kargo Fiyatları"
 msgstr ""
 
@@ -51,7 +51,7 @@ msgid "Action Type"
 msgstr ""
 
 #: includes/contracts/admin/class-order-agreements.php:140
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:653
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:734
 msgid "Actions"
 msgstr ""
 
@@ -59,8 +59,8 @@ msgstr ""
 msgid "Active Contracts"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:296
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:389
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:334
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:427
 msgid "Add Balance"
 msgstr ""
 
@@ -83,8 +83,12 @@ msgstr ""
 msgid "Add SMS Rule"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:549
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:630
 msgid "Add to Tracking List"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:622
+msgid "Address"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:148
@@ -132,7 +136,7 @@ msgstr ""
 msgid "Are you sure you want to delete this contract?"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:868
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:949
 msgid ""
 "Are you sure you want to remove this shipment data? This action cannot be "
 "undone and the tracking information will be permanently deleted."
@@ -148,7 +152,7 @@ msgstr ""
 msgid "Auto sort fields in checkout form?"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:333
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:371
 msgid "Automatic Updates"
 msgstr ""
 
@@ -230,10 +234,10 @@ msgid ""
 "Finansbank, Ziraat)"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:727
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:739
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:751
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:763
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:808
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:820
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:832
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:844
 msgid "Barcode"
 msgstr ""
 
@@ -352,18 +356,18 @@ msgstr ""
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1249
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1382
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:139
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:769
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:875
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:850
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:956
 msgid "Cancel"
 msgstr ""
 
 #: includes/class-sms-automation.php:603
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:680
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:733
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:761
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:814
 msgid "Cancelled"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:703
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:784
 msgid "Cancelled:"
 msgstr ""
 
@@ -379,7 +383,7 @@ msgstr ""
 msgid "Change Agreement Settings"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:427
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:465
 msgid "Check"
 msgstr ""
 
@@ -440,7 +444,11 @@ msgstr ""
 msgid "Choose when to send the SMS notification"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:327
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:605
+msgid "City"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:365
 msgid "Click Create Shipment to generate barcode and tracking"
 msgstr ""
 
@@ -448,7 +456,7 @@ msgstr ""
 msgid "Click on any variable to copy it to your clipboard."
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:424
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:462
 msgid "Click to check"
 msgstr ""
 
@@ -463,12 +471,12 @@ msgid ""
 msgstr ""
 
 #: includes/contracts/core/class-contract-renderer.php:178
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:911
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:992
 msgid "Close"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1186
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:858
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:939
 msgid "Close modal"
 msgstr ""
 
@@ -492,8 +500,8 @@ msgstr ""
 msgid "Company"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:290
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:383
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:328
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:421
 msgid "Complete the form and copy credentials to Hezarfen settings"
 msgstr ""
 
@@ -505,20 +513,20 @@ msgstr ""
 msgid "Condition"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:504
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:561
 msgid "Configure credentials in settings to enable shipment creation."
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:562
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:643
 msgid "Configure Hepsijet Integration Settings"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:289
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:382
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:327
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:420
 msgid "Configure Integration"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:575
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:656
 msgid "Configure SMS automation for order status changes"
 msgstr ""
 
@@ -601,7 +609,7 @@ msgstr ""
 msgid "Corporate tax office"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:651
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:732
 msgid "Courier"
 msgstr ""
 
@@ -609,7 +617,7 @@ msgstr ""
 #: packages/manual-shipment-tracking/includes/class-my-account.php:119
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:245
 #: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:33
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:790
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:871
 msgid "Courier Company"
 msgstr ""
 
@@ -617,24 +625,24 @@ msgstr ""
 msgid "Courier company post meta key"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:270
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:363
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:308
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:401
 msgid "Create Account"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:303
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:396
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:341
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:434
 msgid "Create first barcode here!"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:273
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:366
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:311
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:404
 #, php-format
 msgid "Create or sign in to your %s account"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:326
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:552
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:364
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:633
 msgid "Create Shipment"
 msgstr ""
 
@@ -711,47 +719,47 @@ msgstr ""
 msgid "Delete Rule"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:682
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:745
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:763
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:826
 msgid "Delivered"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:530
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:569
 msgid "Delivery Slot"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:511
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:474
 msgid "Delivery Type"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:469
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:526
 msgid ""
 "Depo bilgisi yüklenemedi. Lütfen intense.com.tr hesabınızda firma kaydınızı "
 "tamamladığınızdan emin olun."
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:465
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:522
 #, php-format
 msgid "Depo bilgisi yüklenemedi: %s"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:438
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:495
 msgid "Depo Seçiniz"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:444
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:501
 msgid "Depo seçiniz"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:701
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:718
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:782
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:799
 msgid "Desi:"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:730
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:742
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:754
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:766
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:811
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:823
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:835
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:847
 msgid "Details"
 msgstr ""
 
@@ -786,6 +794,10 @@ msgstr ""
 msgid "Distance Sales Contract Settings"
 msgstr ""
 
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:612
+msgid "District"
+msgstr ""
+
 #: includes/admin/settings/class-hezarfen-roadmap-helper.php:49
 msgid ""
 "Diğer SMS entegrasyonu (detay kısmında istediğiniz SMS firmasını belirtiniz)"
@@ -813,7 +825,7 @@ msgstr ""
 msgid "E-posta gönderimi başarısız oldu. Lütfen daha sonra tekrar deneyin."
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:958
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:1039
 msgid ""
 "Easy Data Recognition - We've detected that you're using the Intense Kargo "
 "Takip Plugin or Kargo Takip Türkiye plugin."
@@ -920,7 +932,7 @@ msgstr ""
 msgid "Enter order status id. E.g: wc-shipped"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:320
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:358
 msgid "Enter package weight, dimensions, and delivery preferences"
 msgstr ""
 
@@ -948,7 +960,7 @@ msgstr ""
 msgid "Enter tax office"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:99
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:137
 msgid "Enter Tracking Information"
 msgstr ""
 
@@ -1016,12 +1028,16 @@ msgstr ""
 msgid "Fetching data.."
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:319
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:357
 msgid "Fill Form Details"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1231
 msgid "First enter username and password above"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:590
+msgid "First Name"
 msgstr ""
 
 #: includes/class-sms-automation.php:688
@@ -1037,14 +1053,14 @@ msgstr ""
 msgid "Found 1 sender: %s"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:186
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:224
 msgid ""
 "Free integration with barcode creation, instant tracking updates, and "
 "complimentary SMS/email notifications. Orders are marked as shipped "
 "automatically, and once delivered, status is set to completed."
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:964
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:1045
 msgid "Free Support on wordpress.org"
 msgstr ""
 
@@ -1087,17 +1103,17 @@ msgstr ""
 msgid "Gizlilik Politikası / Privacy Policy"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:309
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:403
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:347
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:441
 msgid "Go to intense.com.tr"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:283
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:376
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:321
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:414
 msgid "Go to My Account → Click Hepsijet ile Avantajlı Kargo Fiyatları"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:505
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:562
 msgid "Go to Settings"
 msgstr ""
 
@@ -1121,7 +1137,7 @@ msgid ""
 "teşekkür ederiz!"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:239
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:277
 msgid "Help"
 msgstr ""
 
@@ -1161,7 +1177,7 @@ msgid ""
 "with discounted rates—no shipping contract needed."
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:567
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:648
 msgid "Hepsijet Integration Settings"
 msgstr ""
 
@@ -1181,7 +1197,7 @@ msgstr ""
 msgid "Hezarfen - WooCommerce Kargo Entegrasyonu"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:960
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:1041
 msgid ""
 "Hezarfen can automatically recognize the shipment data of your previous "
 "orders with just one click. Moreover, this data remains accessible in "
@@ -1241,7 +1257,7 @@ msgstr ""
 msgid "Horoz Lojistik"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:262
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:300
 msgid "How to use HepsiJet integration effectively"
 msgstr ""
 
@@ -1331,7 +1347,7 @@ msgid ""
 "settings."
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:100
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:138
 msgid ""
 "In order to track your shipment, please enter your tracking number and "
 "select courier from below and add it to your tracking list."
@@ -1361,7 +1377,7 @@ msgstr ""
 msgid "Installing.."
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:646
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:727
 msgid "Integration Shipments"
 msgstr ""
 
@@ -1380,7 +1396,7 @@ msgid ""
 "sayfamızdan ulaşabilirsiniz:"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:181
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:219
 msgid "Intense&Hepsijet İşbirliği"
 msgstr ""
 
@@ -1449,11 +1465,11 @@ msgstr ""
 msgid "Kapıda ödemeye ek tutar tanımlayabilme"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:174
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:212
 msgid "Kargo adresinizden alınır"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:160
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:198
 msgid "Kargo anlaşması gerekmez"
 msgstr ""
 
@@ -1477,25 +1493,25 @@ msgstr ""
 msgid "Kolay Gelsin"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:694
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:711
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:775
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:792
 msgid "Koli %d:"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:488
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:545
 msgid "Koli Ekle"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:652
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:733
 msgid "Koli/Desi"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:700
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:717
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:781
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:798
 msgid "Koli:"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:483
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:540
 msgid "Koliler"
 msgstr ""
 
@@ -1509,6 +1525,10 @@ msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:356
 msgid "Label Settings"
+msgstr ""
+
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:594
+msgid "Last Name"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1102
@@ -1534,7 +1554,7 @@ msgid "List of ordered products"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:172
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:542
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:583
 msgid "Loading available dates..."
 msgstr ""
 
@@ -1552,7 +1572,7 @@ msgid "Loading senders..."
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:171
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:904
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:985
 msgid "Loading shipment details..."
 msgstr ""
 
@@ -1568,11 +1588,11 @@ msgstr ""
 msgid "Manual Shipment Tracking General Settings"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:90
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:128
 msgid "Manual Tracking"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:785
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:866
 msgid "Manual Tracking Numbers"
 msgstr ""
 
@@ -1589,7 +1609,7 @@ msgstr ""
 msgid "Mevcut Pro Paket Özellikleri:"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:167
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:205
 msgid "Min. gönderim limiti yok"
 msgstr ""
 
@@ -1604,6 +1624,7 @@ msgid ""
 msgstr ""
 
 #: includes/class-hezarfen.php:89 includes/Checkout.php:552
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:616
 msgid "Neighborhood"
 msgstr ""
 
@@ -1703,7 +1724,7 @@ msgstr ""
 msgid "No tracking information available"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:632
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:713
 msgid "Nothing to Track Yet"
 msgstr ""
 
@@ -1799,7 +1820,7 @@ msgstr ""
 msgid "Order Status"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:334
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:372
 msgid "Order status and customer notifications handled automatically"
 msgstr ""
 
@@ -1910,6 +1931,10 @@ msgstr ""
 msgid "Personal"
 msgstr ""
 
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:601
+msgid "Phone"
+msgstr ""
+
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:665
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:722
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1418
@@ -1984,8 +2009,8 @@ msgstr ""
 msgid "Quantity"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:260
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:357
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:298
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:395
 msgid "Quick setup to unlock Hepsijet free integration"
 msgstr ""
 
@@ -2023,11 +2048,11 @@ msgstr ""
 msgid "Refunded"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:878
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:959
 msgid "Remove"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:855
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:936
 msgid "Remove shipment data?"
 msgstr ""
 
@@ -2040,11 +2065,11 @@ msgstr ""
 msgid "Require User Agreement"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:522
-msgid "Return"
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:485
+msgid "Return by appointment"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:540
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:581
 msgid "Return Date"
 msgstr ""
 
@@ -2088,7 +2113,7 @@ msgid ""
 "Business\" for promotional messages to businesses."
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:104
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:142
 msgid "Select a Courier Company"
 msgstr ""
 
@@ -2136,8 +2161,8 @@ msgid "Sendeo Kargo"
 msgstr ""
 
 #: hezarfen-for-woocommerce.php:114
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:312
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:406
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:350
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:444
 msgid "Settings"
 msgstr ""
 
@@ -2161,15 +2186,15 @@ msgid ""
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:55
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:516
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:479
 msgid "Shipment"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:416
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:454
 msgid "Shipment Balance:"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:86
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:124
 msgid "Shipment Barcode / Automated Shipment Tracking"
 msgstr ""
 
@@ -2177,7 +2202,7 @@ msgstr ""
 msgid "Shipment created successfully"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:892
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:973
 msgid "Shipment Details"
 msgstr ""
 
@@ -2189,7 +2214,7 @@ msgstr ""
 msgid "Shipment in pieces"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:925
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:1006
 msgid "Shipment Label PDF"
 msgstr ""
 
@@ -2197,8 +2222,8 @@ msgstr ""
 msgid "Shipment Variables"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:684
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:757
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:765
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:838
 msgid "Shipped"
 msgstr ""
 
@@ -2312,12 +2337,12 @@ msgstr ""
 msgid "Show hezarfen checkout tax fields?"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:209
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:247
 msgid "Show Less"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:209
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:210
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:247
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:248
 msgid "Show More"
 msgstr ""
 
@@ -2350,7 +2375,7 @@ msgstr ""
 msgid "Site URL"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:792
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:873
 msgid "SMS"
 msgstr ""
 
@@ -2394,7 +2419,7 @@ msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:53
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:62
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:579
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:660
 msgid "SMS Settings"
 msgstr ""
 
@@ -2412,8 +2437,8 @@ msgstr ""
 msgid "Sort address fields in My Account > Address pages?"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:304
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:397
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:342
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:435
 msgid "Start creating shipments with automatic tracking"
 msgstr ""
 
@@ -2466,10 +2491,10 @@ msgstr ""
 msgid "TC ID number is not valid"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:456
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:513
 msgid ""
-"Tek deponuz var. Daha fazla depo eklemek için intense.com.tr HepsiJet Stores "
-"bölümünü ziyaret edin."
+"Tek deponuz var. Daha fazla depo eklemek için KargoKit müşteri hizmetleriyle "
+"iletişime geçin"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-roadmap-helper.php:75
@@ -2491,7 +2516,7 @@ msgid ""
 "installation."
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:634
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:715
 msgid "There are no tracking numbers added to the tracking list."
 msgstr ""
 
@@ -2582,8 +2607,8 @@ msgstr ""
 #: packages/manual-shipment-tracking/includes/class-my-account.php:120
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:246
 #: packages/manual-shipment-tracking/templates/emails/email-order-shipped.php:38
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:220
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:791
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:258
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:872
 msgid "Tracking Number"
 msgstr ""
 
@@ -2601,7 +2626,7 @@ msgid "Training"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:969
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:591
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:672
 msgid "Training Videos"
 msgstr ""
 
@@ -2623,8 +2648,8 @@ msgid ""
 "sms, e-posta bildirimleri + Mesafeli Satış Sözleşmesi desteği"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:297
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:390
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:335
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:428
 msgid "Upload balance to your Intense Wallet"
 msgstr ""
 
@@ -2667,7 +2692,7 @@ msgstr ""
 msgid "View Order in Admin"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:963
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:1044
 msgid "Visit Hezarfen Shipment Settings"
 msgstr ""
 
@@ -2699,7 +2724,7 @@ msgstr ""
 msgid "Warning: PandaSMS plugin is not active!"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:587
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:668
 msgid "Watch training videos to learn how to use Hezarfen"
 msgstr ""
 
@@ -2913,11 +2938,11 @@ msgstr ""
 msgid "🗺️ Hezarfen v3.0 Geliştirme Yol Haritası"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:255
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:293
 msgid "🚀 HepsiJet Integration Guide"
 msgstr ""
 
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:253
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:354
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:291
+#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:392
 msgid "🚀 Start Shipping Without a Shipping Agreement"
 msgstr ""

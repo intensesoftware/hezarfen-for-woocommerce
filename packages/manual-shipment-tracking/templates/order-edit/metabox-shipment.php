@@ -4,6 +4,44 @@ defined('ABSPATH') || exit;
 use \Hezarfen\ManualShipmentTracking\Helper;
 use \Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration;
 
+// Get order data for return address fields
+$return_order = wc_get_order($order_id);
+$return_address_data = array(
+    'first_name' => '',
+    'last_name' => '',
+    'city' => '',
+    'district' => '',
+    'neighborhood' => '',
+    'address' => '',
+    'phone' => '',
+);
+
+if ($return_order) {
+    // Name fields - only from shipping
+    $return_address_data['first_name'] = $return_order->get_shipping_first_name();
+    $return_address_data['last_name'] = $return_order->get_shipping_last_name();
+
+    $shipping_country = $return_order->get_shipping_country();
+    $shipping_state = $return_order->get_shipping_state();
+
+    // City (Il) - from WooCommerce states (Turkey uses state for city)
+    if ($shipping_country && $shipping_state && isset(WC()->countries->states[$shipping_country][$shipping_state])) {
+        $return_address_data['city'] = WC()->countries->states[$shipping_country][$shipping_state];
+    }
+
+    // District (Ilce) - stored in city field for Turkey
+    $return_address_data['district'] = $return_order->get_shipping_city();
+
+    // Neighborhood (Mahalle) - stored in address_2 for Turkey
+    $return_address_data['neighborhood'] = $return_order->get_shipping_address_2();
+
+    // Address
+    $return_address_data['address'] = $return_order->get_shipping_address_1();
+
+    // Phone: try shipping first, fallback to billing
+    $return_address_data['phone'] = $return_order->get_shipping_phone() ?: $return_order->get_billing_phone();
+}
+
 // Fetch warehouses for Hepsijet
 $warehouses_data = array();
 $has_multiple_warehouses = false;
@@ -434,7 +472,7 @@ if ( $has_hepsijet_credentials ) {
                             <!-- Delivery Type -->
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-2"><?php esc_html_e('Delivery Type', 'hezarfen-for-woocommerce'); ?></label>
-                                <ul class="grid w-full gap-2 grid-cols-2" style="max-width: 300px;">
+                                <ul class="grid w-full gap-2 grid-cols-2" style="max-width: 400px;">
                                     <li>
                                         <input type="radio" id="hepsijet-delivery-type-standard" name="hepsijet-delivery-type" value="standard" class="hidden peer" checked>
                                         <label for="hepsijet-delivery-type-standard" class="inline-flex items-center justify-center w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 peer-checked:text-blue-600 peer-checked:bg-blue-50 hover:text-gray-600 hover:bg-gray-100">
@@ -444,7 +482,7 @@ if ( $has_hepsijet_credentials ) {
                                     <li>
                                         <input type="radio" id="hepsijet-delivery-type-returned" name="hepsijet-delivery-type" value="returned" class="hidden peer">
                                         <label for="hepsijet-delivery-type-returned" class="inline-flex items-center justify-center w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 peer-checked:text-blue-600 peer-checked:bg-blue-50 hover:text-gray-600 hover:bg-gray-100">
-                                            <span class="text-sm font-medium"><?php esc_html_e('Return', 'hezarfen-for-woocommerce'); ?></span>
+                                            <span class="text-sm font-medium"><?php esc_html_e('Return by appointment', 'hezarfen-for-woocommerce'); ?></span>
                                         </label>
                                     </li>
                                 </ul>
@@ -472,7 +510,7 @@ if ( $has_hepsijet_credentials ) {
                                     </select>
                                     <?php if ( ! $has_multiple_warehouses ) : ?>
                                     <p class="text-xs text-gray-500 mt-1">
-                                        <?php esc_html_e( 'Tek deponuz var. Daha fazla depo eklemek için intense.com.tr HepsiJet Stores bölümünü ziyaret edin.', 'hezarfen-for-woocommerce' ); ?>
+                                        <?php esc_html_e( 'Tek deponuz var. Daha fazla depo eklemek için KargoKit müşteri hizmetleriyle iletişime geçin', 'hezarfen-for-woocommerce' ); ?>
                                     </p>
                                     <?php endif; ?>
                                 <?php else : ?>
@@ -525,23 +563,55 @@ if ( $has_hepsijet_credentials ) {
                                     </p>
                                 </div>
                             <?php endif; ?>
-
-                            <!-- Delivery Slot (for sameday/nextday) -->
-                            <div class="mb-4 hidden" id="hepsijet-delivery-slot-container">
-                                <label for="hepsijet-delivery-slot" class="font-light text-gray-1 block mb-2 text-sm dark:text-white"><?php esc_html_e('Delivery Slot', 'hezarfen-for-woocommerce'); ?></label>
-                                <select id="hepsijet-delivery-slot" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-3 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">
-                                    <option value="1">09:00–13:00</option>
-                                    <option value="2">13:00–18:00</option>
-                                    <option value="3">18:00–23:00</option>
-                                </select>
-                            </div>
                             
-                            <!-- Return Date (for return type) -->
-                            <div class="mb-4 hidden" id="hepsijet-return-date-container">
-                                <label for="hepsijet-return-date" class="block text-sm font-medium text-gray-700 mb-2"><?php esc_html_e('Return Date', 'hezarfen-for-woocommerce'); ?></label>
-                                <select id="hepsijet-return-date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                    <option value=""><?php esc_html_e('Loading available dates...', 'hezarfen-for-woocommerce'); ?></option>
-                                </select>
+                            <!-- Return Fields Container (for return type) -->
+                            <div style="display: none;" id="hepsijet-return-fields-container">
+                                <!-- Return Date -->
+                                <div class="mb-4" id="hepsijet-return-date-container">
+                                    <label for="hepsijet-return-date" class="block text-sm font-medium text-gray-700 mb-2"><?php esc_html_e('Return Date', 'hezarfen-for-woocommerce'); ?></label>
+                                    <select id="hepsijet-return-date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        <option value=""><?php esc_html_e('Loading available dates...', 'hezarfen-for-woocommerce'); ?></option>
+                                    </select>
+                                </div>
+
+                                <!-- Return Address Fields -->
+                                <div class="grid grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label for="hepsijet-return-first-name" class="block text-sm font-medium text-gray-700 mb-2"><?php esc_html_e('First Name', 'hezarfen-for-woocommerce'); ?> <span class="text-red-500">*</span></label>
+                                        <input type="text" id="hepsijet-return-first-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" value="<?php echo esc_attr($return_address_data['first_name']); ?>">
+                                    </div>
+                                    <div>
+                                        <label for="hepsijet-return-last-name" class="block text-sm font-medium text-gray-700 mb-2"><?php esc_html_e('Last Name', 'hezarfen-for-woocommerce'); ?> <span class="text-red-500">*</span></label>
+                                        <input type="text" id="hepsijet-return-last-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" value="<?php echo esc_attr($return_address_data['last_name']); ?>">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label for="hepsijet-return-phone" class="block text-sm font-medium text-gray-700 mb-2"><?php esc_html_e('Phone', 'hezarfen-for-woocommerce'); ?> <span class="text-red-500">*</span></label>
+                                        <input type="text" id="hepsijet-return-phone" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" value="<?php echo esc_attr($return_address_data['phone']); ?>">
+                                    </div>
+                                    <div>
+                                        <label for="hepsijet-return-city" class="block text-sm font-medium text-gray-700 mb-2"><?php esc_html_e('City', 'hezarfen-for-woocommerce'); ?> <span class="text-red-500">*</span></label>
+                                        <input type="text" id="hepsijet-return-city" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" value="<?php echo esc_attr($return_address_data['city']); ?>">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label for="hepsijet-return-district" class="block text-sm font-medium text-gray-700 mb-2"><?php esc_html_e('District', 'hezarfen-for-woocommerce'); ?> <span class="text-red-500">*</span></label>
+                                        <input type="text" id="hepsijet-return-district" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" value="<?php echo esc_attr($return_address_data['district']); ?>">
+                                    </div>
+                                    <div>
+                                        <label for="hepsijet-return-neighborhood" class="block text-sm font-medium text-gray-700 mb-2"><?php esc_html_e('Neighborhood', 'hezarfen-for-woocommerce'); ?> <span class="text-red-500">*</span></label>
+                                        <input type="text" id="hepsijet-return-neighborhood" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" value="<?php echo esc_attr($return_address_data['neighborhood']); ?>">
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="hepsijet-return-address" class="block text-sm font-medium text-gray-700 mb-2"><?php esc_html_e('Address', 'hezarfen-for-woocommerce'); ?> <span class="text-red-500">*</span></label>
+                                    <textarea id="hepsijet-return-address" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"><?php echo esc_textarea($return_address_data['address']); ?></textarea>
+                                </div>
                             </div>
                         </div>
 
