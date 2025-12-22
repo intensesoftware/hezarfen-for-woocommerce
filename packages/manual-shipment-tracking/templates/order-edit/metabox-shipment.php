@@ -431,9 +431,28 @@ if ( $has_hepsijet_credentials ) {
                                 </div>
                             </div>
                             
+                            <!-- Delivery Type -->
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2"><?php esc_html_e('Delivery Type', 'hezarfen-for-woocommerce'); ?></label>
+                                <ul class="grid w-full gap-2 grid-cols-2" style="max-width: 300px;">
+                                    <li>
+                                        <input type="radio" id="hepsijet-delivery-type-standard" name="hepsijet-delivery-type" value="standard" class="hidden peer" checked>
+                                        <label for="hepsijet-delivery-type-standard" class="inline-flex items-center justify-center w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 peer-checked:text-blue-600 peer-checked:bg-blue-50 hover:text-gray-600 hover:bg-gray-100">
+                                            <span class="text-sm font-medium"><?php esc_html_e('Shipment', 'hezarfen-for-woocommerce'); ?></span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <input type="radio" id="hepsijet-delivery-type-returned" name="hepsijet-delivery-type" value="returned" class="hidden peer">
+                                        <label for="hepsijet-delivery-type-returned" class="inline-flex items-center justify-center w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 peer-checked:text-blue-600 peer-checked:bg-blue-50 hover:text-gray-600 hover:bg-gray-100">
+                                            <span class="text-sm font-medium"><?php esc_html_e('Return', 'hezarfen-for-woocommerce'); ?></span>
+                                        </label>
+                                    </li>
+                                </ul>
+                            </div>
+
                             <!-- Warehouse Selection -->
                             <?php if ( $has_hepsijet_credentials ) : ?>
-                            <div class="mb-4">
+                            <div class="mb-4" id="hepsijet-warehouse-container">
                                 <label for="hepsijet-warehouse" class="block text-sm font-medium text-gray-700 mb-2">
                                     <?php esc_html_e( 'Depo Seçiniz', 'hezarfen-for-woocommerce' ); ?>
                                     <span class="text-red-500">*</span>
@@ -478,7 +497,7 @@ if ( $has_hepsijet_credentials ) {
                             </div>
                             <?php endif; ?>
 
-                            <div class="mb-4">
+                            <div class="mb-4" id="hepsijet-packages-section">
                                 <div class="flex justify-between items-center mb-2">
                                     <label class="block text-sm font-medium text-gray-700"><?php esc_html_e('Koliler', 'hezarfen-for-woocommerce'); ?></label>
                                     <button type="button" id="add-hepsijet-package" class="inline-flex items-center px-2 py-1 text-xs font-medium text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -507,24 +526,6 @@ if ( $has_hepsijet_credentials ) {
                                 </div>
                             <?php endif; ?>
 
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2"><?php esc_html_e('Delivery Type', 'hezarfen-for-woocommerce'); ?></label>
-                                <ul class="grid w-full gap-2 grid-cols-2" style="max-width: 300px;">
-                                    <li>
-                                        <input type="radio" id="hepsijet-delivery-type-standard" name="hepsijet-delivery-type" value="standard" class="hidden peer" checked>
-                                        <label for="hepsijet-delivery-type-standard" class="inline-flex items-center justify-center w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 peer-checked:text-blue-600 peer-checked:bg-blue-50 hover:text-gray-600 hover:bg-gray-100">
-                                            <span class="text-sm font-medium"><?php esc_html_e('Shipment', 'hezarfen-for-woocommerce'); ?></span>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <input type="radio" id="hepsijet-delivery-type-returned" name="hepsijet-delivery-type" value="returned" class="hidden peer">
-                                        <label for="hepsijet-delivery-type-returned" class="inline-flex items-center justify-center w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 peer-checked:text-blue-600 peer-checked:bg-blue-50 hover:text-gray-600 hover:bg-gray-100">
-                                            <span class="text-sm font-medium"><?php esc_html_e('Return', 'hezarfen-for-woocommerce'); ?></span>
-                                        </label>
-                                    </li>
-                                </ul>
-                            </div>
-                            
                             <!-- Delivery Slot (for sameday/nextday) -->
                             <div class="mb-4 hidden" id="hepsijet-delivery-slot-container">
                                 <label for="hepsijet-delivery-slot" class="font-light text-gray-1 block mb-2 text-sm dark:text-white"><?php esc_html_e('Delivery Slot', 'hezarfen-for-woocommerce'); ?></label>

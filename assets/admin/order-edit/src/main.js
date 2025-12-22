@@ -238,17 +238,33 @@ jQuery(document).ready(($)=>{
     const selectedType = $(this).val();
     const deliverySlotContainer = $('#hepsijet-delivery-slot-container');
     const returnDateContainer = $('#hepsijet-return-date-container');
-    
+    const warehouseContainer = $('#hepsijet-warehouse-container');
+    const addPackageButton = $('#add-hepsijet-package');
+
     // Hide all conditional containers first
     deliverySlotContainer.addClass('hidden');
     returnDateContainer.addClass('hidden');
-    
+
     // Show relevant container based on selection
     if (selectedType === 'sameday' || selectedType === 'nextday') {
       deliverySlotContainer.removeClass('hidden');
+      // Show warehouse and allow multiple packages for shipment types
+      warehouseContainer.removeClass('hidden');
+      addPackageButton.removeClass('hidden');
     } else if (selectedType === 'returned') {
       returnDateContainer.removeClass('hidden');
       loadReturnDates();
+      // Hide warehouse selection for returns
+      warehouseContainer.addClass('hidden');
+      // Hide add package button and keep only one package for returns
+      addPackageButton.addClass('hidden');
+      // Remove extra packages, keep only the first one
+      const packagesContainer = $('#hepsijet-packages-container');
+      packagesContainer.find('.hepsijet-package-item:not(:first)').remove();
+    } else {
+      // Standard shipment - show warehouse and allow multiple packages
+      warehouseContainer.removeClass('hidden');
+      addPackageButton.removeClass('hidden');
     }
   });
   
