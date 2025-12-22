@@ -131,9 +131,6 @@ jQuery(document).ready(($)=>{
         hepsijetButton.removeClass('hidden');
       }
       
-      // Reset conditional fields when showing Hepsijet fields
-      $('#hepsijet-delivery-slot-container').addClass('hidden');
-      $('#hepsijet-return-date-container').addClass('hidden');
     } else if (selectedCourier) {
       // Show standard tracking fields for any other selected courier
       standardFields.removeClass('hidden');
@@ -234,21 +231,44 @@ jQuery(document).ready(($)=>{
   });
 
   // Handle delivery type selection
-  metabox_wrapper.find('#hepsijet-delivery-type').on('change', function() {
+  $(document).on('change', 'input[name="hepsijet-delivery-type"]', function() {
     const selectedType = $(this).val();
+    console.log('Delivery type changed:', selectedType);
+
     const deliverySlotContainer = $('#hepsijet-delivery-slot-container');
-    const returnDateContainer = $('#hepsijet-return-date-container');
-    
-    // Hide all conditional containers first
-    deliverySlotContainer.addClass('hidden');
-    returnDateContainer.addClass('hidden');
-    
+    const returnFieldsContainer = $('#hepsijet-return-fields-container');
+    const warehouseContainer = $('#hepsijet-warehouse-container');
+    const addPackageButton = $('#add-hepsijet-package');
+
+    console.log('Return fields container found:', returnFieldsContainer.length);
+
+    // Hide all conditional containers first (use jQuery hide/show for reliability)
+    deliverySlotContainer.hide();
+    returnFieldsContainer.hide();
+
     // Show relevant container based on selection
     if (selectedType === 'sameday' || selectedType === 'nextday') {
-      deliverySlotContainer.removeClass('hidden');
+      deliverySlotContainer.show();
+      // Show warehouse and allow multiple packages for shipment types
+      warehouseContainer.show();
+      addPackageButton.show();
     } else if (selectedType === 'returned') {
-      returnDateContainer.removeClass('hidden');
+      console.log('Showing return fields container');
+      returnFieldsContainer.show();
       loadReturnDates();
+      // Hide warehouse selection for returns
+      warehouseContainer.hide();
+      // Hide add package button and keep only one package for returns
+      console.log('Add package button found:', addPackageButton.length);
+      addPackageButton.hide();
+      addPackageButton.css('display', 'none');
+      // Remove extra packages, keep only the first one
+      const packagesContainer = $('#hepsijet-packages-container');
+      packagesContainer.find('.hepsijet-package-item:not(:first)').remove();
+    } else {
+      // Standard shipment - show warehouse and allow multiple packages
+      warehouseContainer.show();
+      addPackageButton.show();
     }
   });
   
@@ -344,34 +364,59 @@ jQuery(document).ready(($)=>{
     
     $.post(ajaxurl, data, function(response) {
       console.log('Return dates API response:', response);
-      
+
       if (response.success && response.data) {
         console.log('Response data:', response.data);
-        
-        if (response.data.dates && response.data.dates.length > 0) {
-          let options = '<option value="">Select return date</option>';
-          response.data.dates.forEach(function(date) {
-            options += `<option value="${date}">${date}</option>`;
+
+        /*
+         * Backend AJAX response format:
+         * {
+         *   "success": true,
+         *   "data": {
+         *     "dates": {
+         *       "SARIYER": ["2025-12-23", "2025-12-24"],
+         *       "ZEKERİYAKÖY": ["2025-12-23", "2025-12-24"]
+         *     }
+         *   }
+         * }
+         * or when no dates: { "success": true, "data": { "dates": [], "message": "..." } }
+         */
+        const datesData = response.data.dates;
+
+        // Check if we have a message (no dates available case)
+        if (response.data.message) {
+          showNotification(response.data.message, 'info');
+          returnDateSelect.html('<option value="">Müsait tarih bulunamadı</option>');
+          return;
+        }
+
+        // Check if datesData is an object with regions as keys
+        if (datesData && typeof datesData === 'object' && !Array.isArray(datesData)) {
+          let options = '<option value="">Randevu tarihi seçiniz</option>';
+          let hasAnyDates = false;
+
+          Object.keys(datesData).forEach(function(region) {
+            if (Array.isArray(datesData[region]) && datesData[region].length > 0) {
+              hasAnyDates = true;
+              datesData[region].forEach(function(date) {
+                // Format date from YYYY-MM-DD to DD.MM.YYYY
+                const [year, month, day] = date.split('-');
+                const formattedDate = `${day}.${month}.${year}`;
+                options += `<option value="${date}">${formattedDate} - ${region}</option>`;
+              });
+            }
           });
-          returnDateSelect.html(options);
-          
-          // Show success message if available
-          if (response.data.message) {
-            console.log('Return dates loaded:', response.data.message);
+
+          if (hasAnyDates) {
+            returnDateSelect.html(options);
+          } else {
+            showNotification('Müsait tarih bulunamadı', 'info');
+            returnDateSelect.html('<option value="">Müsait tarih bulunamadı</option>');
           }
         } else {
-          // No dates available, show the message from API
-          const message = response.data.message || 'No available return dates';
-          console.log('Setting message in dropdown:', message);
-          
-          // Show nice notification
-          showNotification(message, 'info');
-          
-          // Set dropdown to show no dates available
-          returnDateSelect.html('<option value="">No available return dates</option>');
-          
-          // Log the message for debugging
-          console.log('No return dates available:', message);
+          // No dates available or unexpected format
+          showNotification('Müsait tarih bulunamadı', 'info');
+          returnDateSelect.html('<option value="">Müsait tarih bulunamadı</option>');
         }
       } else {
         console.log('Response not successful or missing data:', response);
@@ -482,6 +527,40 @@ jQuery(document).ready(($)=>{
   // Initialize packages when the modal is shown
   initHepsijetPackages();
 
+  // Copy delivery number to clipboard
+  $(document).on('click', '.copy-delivery-no', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const deliveryNo = $(this).attr('data-delivery_no');
+    const $btn = $(this);
+    const originalHtml = $btn.html();
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(deliveryNo).then(() => {
+        // Show brief feedback
+        $btn.html('<svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>');
+        setTimeout(() => {
+          $btn.html(originalHtml);
+        }, 1500);
+      });
+    } else {
+      // Fallback for older browsers or non-secure contexts
+      const textArea = document.createElement('textarea');
+      textArea.value = deliveryNo;
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      // Show brief feedback
+      $btn.html('<svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>');
+      setTimeout(() => {
+        $btn.html(originalHtml);
+      }, 1500);
+    }
+  });
+
   // Warehouses are now loaded server-side in PHP template
   // No need to load via AJAX - better performance and no race conditions
   // loadHepsijetWarehouses(); // DISABLED
@@ -492,13 +571,13 @@ jQuery(document).ready(($)=>{
   createHepsijetShipment.on('click', function() {
     const $button = $(this);
     const originalText = $button.text();
-    const deliveryType = $('#hepsijet-delivery-type').val();
+    const deliveryType = $('input[name="hepsijet-delivery-type"]:checked').val();
     const deliverySlot = $('#hepsijet-delivery-slot').val();
     const returnDate = $('#hepsijet-return-date').val();
     const warehouseId = $('#hepsijet-warehouse').val();
 
-    // Validate warehouse selection
-    if (!warehouseId) {
+    // Validate warehouse selection (only for non-return types)
+    if (deliveryType !== 'returned' && !warehouseId) {
       alert('Lütfen depo seçiniz.');
       return;
     }
@@ -506,15 +585,15 @@ jQuery(document).ready(($)=>{
     // Collect packages data
     const packages = [];
     let hasError = false;
-    
+
     $('#hepsijet-packages-container .hepsijet-package-item').each(function() {
       const desi = $(this).find('.hepsijet-package-desi').val();
-      
+
       if (!desi || parseFloat(desi) < 0.01) {
         hasError = true;
         return false; // Break loop
       }
-      
+
       packages.push({
         desi: parseFloat(desi)
       });
@@ -532,9 +611,26 @@ jQuery(document).ready(($)=>{
       return;
     }
 
-    if (deliveryType === 'returned' && !returnDate) {
-      alert('Lütfen iade tarihini seçiniz.');
-      return;
+    // Validate return specific fields
+    if (deliveryType === 'returned') {
+      if (!returnDate) {
+        alert('Lütfen iade tarihini seçiniz.');
+        return;
+      }
+
+      // Validate return address fields
+      const returnFirstName = $('#hepsijet-return-first-name').val().trim();
+      const returnLastName = $('#hepsijet-return-last-name').val().trim();
+      const returnCity = $('#hepsijet-return-city').val().trim();
+      const returnDistrict = $('#hepsijet-return-district').val().trim();
+      const returnNeighborhood = $('#hepsijet-return-neighborhood').val().trim();
+      const returnAddress = $('#hepsijet-return-address').val().trim();
+      const returnPhone = $('#hepsijet-return-phone').val().trim();
+
+      if (!returnFirstName || !returnLastName || !returnCity || !returnDistrict || !returnNeighborhood || !returnAddress || !returnPhone) {
+        alert('Lütfen tüm iade adres bilgilerini doldurunuz.');
+        return;
+      }
     }
 
     // Disable button and show loading state
@@ -548,8 +644,21 @@ jQuery(document).ready(($)=>{
       type: deliveryType,
       delivery_slot: deliverySlot || '',
       delivery_date: returnDate || '',
-      warehouse_id: warehouseId
+      warehouse_id: warehouseId || ''
     };
+
+    // Add return address data if return type
+    if (deliveryType === 'returned') {
+      data.return_address = JSON.stringify({
+        first_name: $('#hepsijet-return-first-name').val().trim(),
+        last_name: $('#hepsijet-return-last-name').val().trim(),
+        city: $('#hepsijet-return-city').val().trim(),
+        district: $('#hepsijet-return-district').val().trim(),
+        neighborhood: $('#hepsijet-return-neighborhood').val().trim(),
+        address: $('#hepsijet-return-address').val().trim(),
+        phone: $('#hepsijet-return-phone').val().trim()
+      });
+    }
 
     $.post(
       ajaxurl,

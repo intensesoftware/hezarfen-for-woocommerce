@@ -24,6 +24,17 @@
         @apply hidden !important;
     }
 
+    /* Hide add package button when return type is selected */
+    &:has(#hepsijet-return-fields-container[style*="display: block"]) #add-hepsijet-package,
+    &:has(#hepsijet-return-fields-container:not([style*="display: none"])):has(#hepsijet-delivery-type-returned:checked) #add-hepsijet-package {
+        display: none !important;
+    }
+
+    /* Simpler approach: when returned radio is checked, hide add package button */
+    &:has(#hepsijet-delivery-type-returned:checked) #add-hepsijet-package {
+        display: none !important;
+    }
+
     .actions {
         a:hover {
             opacity: 0.7 !important;

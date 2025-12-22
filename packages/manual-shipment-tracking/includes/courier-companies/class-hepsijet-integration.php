@@ -414,7 +414,7 @@ class Courier_Hepsijet_Integration {
     /**
      * Create shipment via Relay API
      */
-    public function api_create_barcode( $order_id, $packages, $type = 'standard', $delivery_slot = '', $delivery_date = '', $warehouse_id = '' ) {
+    public function api_create_barcode( $order_id, $packages, $type = 'standard', $delivery_slot = '', $delivery_date = '', $warehouse_id = '', $return_address = null ) {
         $order = wc_get_order($order_id);
         if ( ! $order ) {
             return new \WP_Error( 'hepsijet_error', 'Order not found' );
@@ -425,7 +425,7 @@ class Courier_Hepsijet_Integration {
         if ( $payment_method === 'cod' ) {
             return new \WP_Error( 'hepsijet_cod_not_supported', esc_html__( 'Payment on delivery is not supported', 'hezarfen-for-woocommerce' ) );
         }
-        
+
         // Ensure webhook secret exists
         $webhook_check = $this->ensure_webhook_secret();
         if ( is_wp_error( $webhook_check ) ) {
@@ -435,22 +435,39 @@ class Courier_Hepsijet_Integration {
         $shipping_details = new Shipping_Details( $order_id );
 
         // Prepare receiver data for relay API
-        $receiver = array(
-            'firstName' => $order->get_shipping_first_name(),
-            'lastName' => $order->get_shipping_last_name(),
-            'phone1' => preg_replace('/\D/', '', $order->get_billing_phone()),
-            'email' => $order->get_billing_email(),
-            'address' => array(
-                'city' => $shipping_details->get_city(),
-                'town' => $shipping_details->get_district(),
-                'district' => $shipping_details->get_neighborhood(),
-                'addressLine1' => $shipping_details->get_address()
-            )
-        );
+        // For return shipments, use the provided return address
+        if ( $type === 'returned' && $return_address ) {
+            $receiver = array(
+                'firstName' => $return_address['first_name'],
+                'lastName' => $return_address['last_name'],
+                'phone1' => preg_replace('/\D/', '', $return_address['phone']),
+                'email' => $order->get_billing_email(),
+                'address' => array(
+                    'city' => $return_address['city'],
+                    'town' => $return_address['district'],
+                    'district' => $return_address['neighborhood'],
+                    'addressLine1' => $return_address['address']
+                )
+            );
+        } else {
+            // For regular shipments, use order shipping address
+            $receiver = array(
+                'firstName' => $order->get_shipping_first_name(),
+                'lastName' => $order->get_shipping_last_name(),
+                'phone1' => preg_replace('/\D/', '', $order->get_billing_phone()),
+                'email' => $order->get_billing_email(),
+                'address' => array(
+                    'city' => $shipping_details->get_city(),
+                    'town' => $shipping_details->get_district(),
+                    'district' => $shipping_details->get_neighborhood(),
+                    'addressLine1' => $shipping_details->get_address()
+                )
+            );
 
-        // Add company if exists
-        if ( $order->get_shipping_company() ) {
-            $receiver['company'] = $order->get_shipping_company();
+            // Add company if exists (only for regular shipments)
+            if ( $order->get_shipping_company() ) {
+                $receiver['company'] = $order->get_shipping_company();
+            }
         }
 
         // Determine delivery date based on type
@@ -509,7 +526,9 @@ class Courier_Hepsijet_Integration {
             'status' => 'active',
             'cancelled_at' => null,
             'cancel_reason' => null,
-            'print_date' => $print_date
+            'print_date' => $print_date,
+            'is_return' => $type === 'returned',
+            'planned_pickup_date' => $type === 'returned' ? $final_delivery_date : null
         );
         
         $order->update_meta_data( '_hezarfen_hepsijet_shipment_' . $delivery_no, $shipment_details );
