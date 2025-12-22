@@ -1,3 +1,6 @@
+/*!*******************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./assets/admin/order-edit/src/style.css ***!
+  \*******************************************************************************************************************************************************************************************/
 .tooltip-arrow,.tooltip-arrow:before {
   position: absolute;
   width: 8px;
@@ -1628,6 +1631,10 @@ video:where(.hez-ui,.hez-ui *) {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(253 253 234 / var(--tw-bg-opacity)) !important;
 }
+.bg-purple-100 {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(237 235 254 / var(--tw-bg-opacity)) !important;
+}
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5 !important;
 }
@@ -1862,6 +1869,14 @@ video:where(.hez-ui,.hez-ui *) {
 .text-yellow-800 {
   --tw-text-opacity: 1 !important;
   color: rgb(114 59 19 / var(--tw-text-opacity)) !important;
+}
+.text-purple-600 {
+  --tw-text-opacity: 1 !important;
+  color: rgb(126 58 242 / var(--tw-text-opacity)) !important;
+}
+.text-purple-800 {
+  --tw-text-opacity: 1 !important;
+  color: rgb(85 33 181 / var(--tw-text-opacity)) !important;
 }
 .underline {
   text-decoration-line: underline !important;
@@ -2824,3 +2839,5 @@ video:where(.hez-ui,.hez-ui *) {
 .rtl\:text-right:where([dir="rtl"], [dir="rtl"] *) {
   text-align: right !important;
 }
+
+/*# sourceMappingURL=style-main.css.map*/

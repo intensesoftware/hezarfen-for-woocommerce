@@ -509,7 +509,9 @@ class Courier_Hepsijet_Integration {
             'status' => 'active',
             'cancelled_at' => null,
             'cancel_reason' => null,
-            'print_date' => $print_date
+            'print_date' => $print_date,
+            'is_return' => $type === 'returned',
+            'planned_pickup_date' => $type === 'returned' ? $final_delivery_date : null
         );
         
         $order->update_meta_data( '_hezarfen_hepsijet_shipment_' . $delivery_no, $shipment_details );

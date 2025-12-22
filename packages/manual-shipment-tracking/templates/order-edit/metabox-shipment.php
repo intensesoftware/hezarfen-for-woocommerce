@@ -737,6 +737,8 @@ if ( $has_hepsijet_credentials ) {
                                                 $cancelled_at = $shipment_details['cancelled_at'] ?? null;
                                                 $cancel_reason = $shipment_details['cancel_reason'] ?? null;
                                                 $status = $shipment_details['status'] ?? 'active';
+                                                $is_return = $shipment_details['is_return'] ?? false;
+                                                $planned_pickup_date = $shipment_details['planned_pickup_date'] ?? null;
                                                 
                                                 // Use tracking number as fallback for delivery_no
                                                 $effective_delivery_no = $delivery_no ?: $shipment_args->tracking_num;
@@ -747,12 +749,20 @@ if ( $has_hepsijet_credentials ) {
                                                 <tr data-delivery_no="<?php echo esc_attr($effective_delivery_no); ?>" data-order_id="<?php echo esc_attr($order_id); ?>" class="<?php echo $is_cancelled ? 'bg-gray-100 opacity-60' : 'bg-white'; ?> border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                                     <th scope="row" class="px-6 py-4 font-medium <?php echo $is_cancelled ? 'text-gray-500 line-through' : 'text-gray-900'; ?> whitespace-nowrap dark:text-white">
                                                         <?php echo esc_html($shipment_args->courier_title); ?>
+                                                        <?php if ($is_return): ?>
+                                                            <span class="ml-2 px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full"><?php esc_html_e('Return by appointment', 'hezarfen-for-woocommerce'); ?></span>
+                                                        <?php endif; ?>
                                                         <?php if ($is_cancelled): ?>
                                                             <span class="ml-2 px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full"><?php esc_html_e('Cancelled', 'hezarfen-for-woocommerce'); ?></span>
                                                         <?php elseif ($is_delivered): ?>
                                                             <span class="ml-2 px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"><?php esc_html_e('Delivered', 'hezarfen-for-woocommerce'); ?></span>
                                                         <?php elseif ($is_shipped): ?>
                                                             <span class="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"><?php esc_html_e('Shipped', 'hezarfen-for-woocommerce'); ?></span>
+                                                        <?php endif; ?>
+                                                        <?php if ($is_return && $planned_pickup_date): ?>
+                                                            <div class="text-xs text-purple-600 mt-1">
+                                                                <?php esc_html_e('Planned Pickup:', 'hezarfen-for-woocommerce'); ?> <?php echo esc_html(date('d.m.Y', strtotime($planned_pickup_date))); ?>
+                                                            </div>
                                                         <?php endif; ?>
                                                     </th>
                                                     <td class="px-6 py-4">
