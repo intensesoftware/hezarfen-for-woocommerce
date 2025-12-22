@@ -42,8 +42,8 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 */
 	protected function get_own_sections() {
 		// Build base sections
-		if ( version_compare( WC_HEZARFEN_VERSION, '2.7.30', '<=' ) ) {
-			// Version <= 2.7.30: Roadmap is default, Training is separate
+		if ( version_compare( WC_HEZARFEN_VERSION, '2.7.40', '<=' ) ) {
+			// Version <= 2.7.40: Roadmap is default, Training is separate
 			$sections = array(
 				''              => __( 'Roadmap', 'hezarfen-for-woocommerce' ),
 				'training'      => __( 'Training', 'hezarfen-for-woocommerce' ),
@@ -53,7 +53,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				'sms_settings'  => __( 'SMS Settings', 'hezarfen-for-woocommerce' ),
 			);
 		} else {
-			// Version > 2.7.30: Training is default, no Roadmap
+			// Version > 2.7.40: Training is default, no Roadmap
 			$sections = array(
 				''              => __( 'Training', 'hezarfen-for-woocommerce' ),
 				'general'       => __( 'General', 'hezarfen-for-woocommerce' ),
@@ -83,8 +83,8 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 * @return array<array<string, string>>
 	 */
 	protected function get_settings_for_default_section() {
-		// If version > 2.7.30, default is Training (no fields needed)
-		if ( version_compare( WC_HEZARFEN_VERSION, '2.7.30', '>' ) ) {
+		// If version > 2.7.40, default is Training (no fields needed)
+		if ( version_compare( WC_HEZARFEN_VERSION, '2.7.40', '>' ) ) {
 			return array();
 		}
 		
@@ -788,10 +788,10 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 
 			require 'views/encryption.php';
 		} elseif ( '' === $current_section ) {
-			// Default section - Roadmap (if version <= 2.7.30) or Training (if version > 2.7.30)
+			// Default section - Roadmap (if version <= 2.7.40) or Training (if version > 2.7.40)
 			$hide_save_button = true;
 			
-			if ( version_compare( WC_HEZARFEN_VERSION, '2.7.30', '<=' ) ) {
+			if ( version_compare( WC_HEZARFEN_VERSION, '2.7.40', '<=' ) ) {
 				// Show Roadmap
 				$settings = $this->get_settings_for_section( $current_section );
 				WC_Admin_Settings::output_fields( $settings );
@@ -1339,8 +1339,8 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			wp_enqueue_style( 'wc_hezarfen_settings_css', plugins_url( 'assets/admin/css/settings.css', WC_HEZARFEN_FILE ), array(), WC_HEZARFEN_VERSION );
 		}
 
-		if ( '' === $current_section && version_compare( WC_HEZARFEN_VERSION, '2.7.30', '<=' ) ) {
-			// Roadmap section (only for version <= 2.7.30)
+		if ( '' === $current_section && version_compare( WC_HEZARFEN_VERSION, '2.7.40', '<=' ) ) {
+			// Roadmap section (only for version <= 2.7.40)
 			wp_enqueue_script( 'wc_hezarfen_roadmap_js', plugins_url( 'assets/admin/js/roadmap.js', WC_HEZARFEN_FILE ), array( 'jquery' ), WC_HEZARFEN_VERSION, true );
 			wp_localize_script( 'wc_hezarfen_roadmap_js', 'hezarfenRoadmap', array(
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
