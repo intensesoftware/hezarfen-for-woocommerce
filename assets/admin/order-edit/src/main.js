@@ -527,6 +527,40 @@ jQuery(document).ready(($)=>{
   // Initialize packages when the modal is shown
   initHepsijetPackages();
 
+  // Copy delivery number to clipboard
+  $(document).on('click', '.copy-delivery-no', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const deliveryNo = $(this).attr('data-delivery_no');
+    const $btn = $(this);
+    const originalHtml = $btn.html();
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(deliveryNo).then(() => {
+        // Show brief feedback
+        $btn.html('<svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>');
+        setTimeout(() => {
+          $btn.html(originalHtml);
+        }, 1500);
+      });
+    } else {
+      // Fallback for older browsers or non-secure contexts
+      const textArea = document.createElement('textarea');
+      textArea.value = deliveryNo;
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      // Show brief feedback
+      $btn.html('<svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>');
+      setTimeout(() => {
+        $btn.html(originalHtml);
+      }, 1500);
+    }
+  });
+
   // Warehouses are now loaded server-side in PHP template
   // No need to load via AJAX - better performance and no race conditions
   // loadHepsijetWarehouses(); // DISABLED

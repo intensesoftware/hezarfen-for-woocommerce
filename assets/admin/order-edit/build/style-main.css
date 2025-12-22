@@ -1,6 +1,3 @@
-/*!*******************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./assets/admin/order-edit/src/style.css ***!
-  \*******************************************************************************************************************************************************************************************/
 .tooltip-arrow,.tooltip-arrow:before {
   position: absolute;
   width: 8px;
@@ -1510,6 +1507,10 @@ video:where(.hez-ui,.hez-ui *) {
   --tw-border-opacity: 1 !important;
   border-color: rgb(209 213 219 / var(--tw-border-opacity)) !important;
 }
+.border-purple-200 {
+  --tw-border-opacity: 1 !important;
+  border-color: rgb(220 215 254 / var(--tw-border-opacity)) !important;
+}
 .border-red-200 {
   --tw-border-opacity: 1 !important;
   border-color: rgb(251 213 213 / var(--tw-border-opacity)) !important;
@@ -1604,6 +1605,14 @@ video:where(.hez-ui,.hez-ui *) {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(208 56 1 / var(--tw-bg-opacity)) !important;
 }
+.bg-purple-100 {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(237 235 254 / var(--tw-bg-opacity)) !important;
+}
+.bg-purple-50 {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(246 245 255 / var(--tw-bg-opacity)) !important;
+}
 .bg-purple-500 {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(144 97 249 / var(--tw-bg-opacity)) !important;
@@ -1630,10 +1639,6 @@ video:where(.hez-ui,.hez-ui *) {
 .bg-yellow-50 {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(253 253 234 / var(--tw-bg-opacity)) !important;
-}
-.bg-purple-100 {
-  --tw-bg-opacity: 1 !important;
-  background-color: rgb(237 235 254 / var(--tw-bg-opacity)) !important;
 }
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5 !important;
@@ -1737,6 +1742,9 @@ video:where(.hez-ui,.hez-ui *) {
 .text-center {
   text-align: center !important;
 }
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+}
 .text-\[7px\] {
   font-size: 7px !important;
 }
@@ -1769,6 +1777,9 @@ video:where(.hez-ui,.hez-ui *) {
 }
 .uppercase {
   text-transform: uppercase !important;
+}
+.italic {
+  font-style: italic !important;
 }
 .leading-6 {
   line-height: 1.5rem !important;
@@ -1850,6 +1861,18 @@ video:where(.hez-ui,.hez-ui *) {
   --tw-text-opacity: 1 !important;
   color: rgb(138 44 13 / var(--tw-text-opacity)) !important;
 }
+.text-purple-500 {
+  --tw-text-opacity: 1 !important;
+  color: rgb(144 97 249 / var(--tw-text-opacity)) !important;
+}
+.text-purple-600 {
+  --tw-text-opacity: 1 !important;
+  color: rgb(126 58 242 / var(--tw-text-opacity)) !important;
+}
+.text-purple-800 {
+  --tw-text-opacity: 1 !important;
+  color: rgb(85 33 181 / var(--tw-text-opacity)) !important;
+}
 .text-red-500 {
   --tw-text-opacity: 1 !important;
   color: rgb(240 82 82 / var(--tw-text-opacity)) !important;
@@ -1869,14 +1892,6 @@ video:where(.hez-ui,.hez-ui *) {
 .text-yellow-800 {
   --tw-text-opacity: 1 !important;
   color: rgb(114 59 19 / var(--tw-text-opacity)) !important;
-}
-.text-purple-600 {
-  --tw-text-opacity: 1 !important;
-  color: rgb(126 58 242 / var(--tw-text-opacity)) !important;
-}
-.text-purple-800 {
-  --tw-text-opacity: 1 !important;
-  color: rgb(85 33 181 / var(--tw-text-opacity)) !important;
 }
 .underline {
   text-decoration-line: underline !important;
@@ -2390,6 +2405,11 @@ video:where(.hez-ui,.hez-ui *) {
   color: rgb(17 24 39 / var(--tw-text-opacity)) !important;
 }
 
+.hover\:text-purple-600:hover {
+  --tw-text-opacity: 1 !important;
+  color: rgb(126 58 242 / var(--tw-text-opacity)) !important;
+}
+
 .hover\:text-red-700:hover {
   --tw-text-opacity: 1 !important;
   color: rgb(200 30 30 / var(--tw-text-opacity)) !important;
@@ -2839,5 +2859,3 @@ video:where(.hez-ui,.hez-ui *) {
 .rtl\:text-right:where([dir="rtl"], [dir="rtl"] *) {
   text-align: right !important;
 }
-
-/*# sourceMappingURL=style-main.css.map*/
