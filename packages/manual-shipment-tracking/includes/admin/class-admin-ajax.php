@@ -180,6 +180,11 @@ class Admin_Ajax {
 			wp_send_json_error( 'Invalid packages data', 400 );
 		}
 
+		// Return shipments only allow single package
+		if ( $type === 'returned' && count( $packages ) > 1 ) {
+			wp_send_json_error( __( 'Return shipments can only have one package.', 'hezarfen-for-woocommerce' ), 400 );
+		}
+
 		// Validate each package
 		foreach ( $packages as $package ) {
 			if ( ! isset( $package['desi'] ) || floatval( $package['desi'] ) < 0.01 ) {

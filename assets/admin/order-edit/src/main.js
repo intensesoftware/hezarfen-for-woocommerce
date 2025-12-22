@@ -259,7 +259,9 @@ jQuery(document).ready(($)=>{
       // Hide warehouse selection for returns
       warehouseContainer.hide();
       // Hide add package button and keep only one package for returns
+      console.log('Add package button found:', addPackageButton.length);
       addPackageButton.hide();
+      addPackageButton.css('display', 'none');
       // Remove extra packages, keep only the first one
       const packagesContainer = $('#hepsijet-packages-container');
       packagesContainer.find('.hepsijet-package-item:not(:first)').remove();

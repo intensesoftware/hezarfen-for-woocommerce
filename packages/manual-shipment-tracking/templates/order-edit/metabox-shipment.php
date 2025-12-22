@@ -32,11 +32,11 @@ if ($return_order) {
     // District (Ilce) - stored in city field for Turkey
     $return_address_data['district'] = $return_order->get_shipping_city();
 
-    // Neighborhood (Mahalle) - stored in address_2 for Turkey
-    $return_address_data['neighborhood'] = $return_order->get_shipping_address_2();
+    // Neighborhood (Mahalle) - stored in address_1 for Turkey
+    $return_address_data['neighborhood'] = $return_order->get_shipping_address_1();
 
-    // Address
-    $return_address_data['address'] = $return_order->get_shipping_address_1();
+    // Address - stored in address_2 for Turkey
+    $return_address_data['address'] = $return_order->get_shipping_address_2();
 
     // Phone: try shipping first, fallback to billing
     $return_address_data['phone'] = $return_order->get_shipping_phone() ?: $return_order->get_billing_phone();
