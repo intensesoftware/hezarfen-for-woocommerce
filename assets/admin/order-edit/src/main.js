@@ -234,7 +234,7 @@ jQuery(document).ready(($)=>{
   });
 
   // Handle delivery type selection
-  metabox_wrapper.find('#hepsijet-delivery-type').on('change', function() {
+  metabox_wrapper.find('input[name="hepsijet-delivery-type"]').on('change', function() {
     const selectedType = $(this).val();
     const deliverySlotContainer = $('#hepsijet-delivery-slot-container');
     const returnDateContainer = $('#hepsijet-return-date-container');
@@ -344,34 +344,56 @@ jQuery(document).ready(($)=>{
     
     $.post(ajaxurl, data, function(response) {
       console.log('Return dates API response:', response);
-      
+
       if (response.success && response.data) {
         console.log('Response data:', response.data);
-        
-        if (response.data.dates && response.data.dates.length > 0) {
-          let options = '<option value="">Select return date</option>';
-          response.data.dates.forEach(function(date) {
-            options += `<option value="${date}">${date}</option>`;
+
+        /*
+         * Backend AJAX response format:
+         * {
+         *   "success": true,
+         *   "data": {
+         *     "dates": {
+         *       "SARIYER": ["2025-12-23", "2025-12-24"],
+         *       "ZEKERİYAKÖY": ["2025-12-23", "2025-12-24"]
+         *     }
+         *   }
+         * }
+         * or when no dates: { "success": true, "data": { "dates": [], "message": "..." } }
+         */
+        const datesData = response.data.dates;
+
+        // Check if we have a message (no dates available case)
+        if (response.data.message) {
+          showNotification(response.data.message, 'info');
+          returnDateSelect.html('<option value="">Müsait tarih bulunamadı</option>');
+          return;
+        }
+
+        // Check if datesData is an object with regions as keys
+        if (datesData && typeof datesData === 'object' && !Array.isArray(datesData)) {
+          let options = '<option value="">Randevu tarihi seçiniz</option>';
+          let hasAnyDates = false;
+
+          Object.keys(datesData).forEach(function(region) {
+            if (Array.isArray(datesData[region]) && datesData[region].length > 0) {
+              hasAnyDates = true;
+              datesData[region].forEach(function(date) {
+                options += `<option value="${date}">${date} - ${region}</option>`;
+              });
+            }
           });
-          returnDateSelect.html(options);
-          
-          // Show success message if available
-          if (response.data.message) {
-            console.log('Return dates loaded:', response.data.message);
+
+          if (hasAnyDates) {
+            returnDateSelect.html(options);
+          } else {
+            showNotification('Müsait tarih bulunamadı', 'info');
+            returnDateSelect.html('<option value="">Müsait tarih bulunamadı</option>');
           }
         } else {
-          // No dates available, show the message from API
-          const message = response.data.message || 'No available return dates';
-          console.log('Setting message in dropdown:', message);
-          
-          // Show nice notification
-          showNotification(message, 'info');
-          
-          // Set dropdown to show no dates available
-          returnDateSelect.html('<option value="">No available return dates</option>');
-          
-          // Log the message for debugging
-          console.log('No return dates available:', message);
+          // No dates available or unexpected format
+          showNotification('Müsait tarih bulunamadı', 'info');
+          returnDateSelect.html('<option value="">Müsait tarih bulunamadı</option>');
         }
       } else {
         console.log('Response not successful or missing data:', response);
@@ -492,7 +514,7 @@ jQuery(document).ready(($)=>{
   createHepsijetShipment.on('click', function() {
     const $button = $(this);
     const originalText = $button.text();
-    const deliveryType = $('#hepsijet-delivery-type').val();
+    const deliveryType = $('input[name="hepsijet-delivery-type"]:checked').val();
     const deliverySlot = $('#hepsijet-delivery-slot').val();
     const returnDate = $('#hepsijet-return-date').val();
     const warehouseId = $('#hepsijet-warehouse').val();

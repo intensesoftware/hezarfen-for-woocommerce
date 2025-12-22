@@ -1018,30 +1018,9 @@ class Admin_Ajax {
 			// Response is already decoded from the integration method
 			$data = $response;
 
-
-			// Check if we have dates array
-			if ( isset( $data['dates'] ) && is_array( $data['dates'] ) && ! empty( $data['dates'] ) ) {
-				// We have available dates
-				wp_send_json_success( array(
-					'dates' => $data['dates'],
-					'message' => 'Return dates loaded successfully'
-				) );
-			} else {
-				// No dates available - check for API message or use default
-				$message = '';
-				if ( isset( $data['message'] ) ) {
-					$message = $data['message'];
-				} elseif ( isset( $data['status'] ) && $data['status'] === 'OK' && isset( $data['message'] ) ) {
-					$message = $data['message'];
-				} else {
-					$message = 'No available return dates found';
-				}
-				
-				wp_send_json_success( array(
-					'dates' => array(),
-					'message' => $message
-				) );
-			}
+			wp_send_json_success( array(
+				'dates' => $data
+			) );
 
 		} catch ( Exception $e ) {
 			wp_send_json_success( array(

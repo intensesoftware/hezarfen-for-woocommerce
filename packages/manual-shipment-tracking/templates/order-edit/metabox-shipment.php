@@ -480,7 +480,7 @@ if ( $has_hepsijet_credentials ) {
 
                             <div class="mb-4">
                                 <div class="flex justify-between items-center mb-2">
-                                    <label class="font-light text-gray-1 text-sm dark:text-white"><?php esc_html_e('Koliler', 'hezarfen-for-woocommerce'); ?></label>
+                                    <label class="block text-sm font-medium text-gray-700"><?php esc_html_e('Koliler', 'hezarfen-for-woocommerce'); ?></label>
                                     <button type="button" id="add-hepsijet-package" class="inline-flex items-center px-2 py-1 text-xs font-medium text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                         <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -506,24 +506,24 @@ if ( $has_hepsijet_credentials ) {
                                     </p>
                                 </div>
                             <?php endif; ?>
-                            
-                            <!-- Delivery Type - Feature Flag: Hidden for now, hard-coded to 'standard' -->
-                            <?php 
-                            // Feature flag: Set to true when ready to release delivery type selection
-                            $show_delivery_type_dropdown = false;
-                            
-                            if ($show_delivery_type_dropdown): ?>
+
                             <div class="mb-4">
-                                <label for="hepsijet-delivery-type" class="font-light text-gray-1 block mb-2 text-sm dark:text-white"><?php esc_html_e('Delivery Type', 'hezarfen-for-woocommerce'); ?></label>
-                                <select id="hepsijet-delivery-type" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-3 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">
-                                    <option value="standard"><?php esc_html_e('Shipment', 'hezarfen-for-woocommerce'); ?></option>
-                                    <option value="returned"><?php esc_html_e('Return', 'hezarfen-for-woocommerce'); ?></option>
-                                </select>
+                                <label class="block text-sm font-medium text-gray-700 mb-2"><?php esc_html_e('Delivery Type', 'hezarfen-for-woocommerce'); ?></label>
+                                <ul class="grid w-full gap-2 grid-cols-2" style="max-width: 300px;">
+                                    <li>
+                                        <input type="radio" id="hepsijet-delivery-type-standard" name="hepsijet-delivery-type" value="standard" class="hidden peer" checked>
+                                        <label for="hepsijet-delivery-type-standard" class="inline-flex items-center justify-center w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 peer-checked:text-blue-600 peer-checked:bg-blue-50 hover:text-gray-600 hover:bg-gray-100">
+                                            <span class="text-sm font-medium"><?php esc_html_e('Shipment', 'hezarfen-for-woocommerce'); ?></span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <input type="radio" id="hepsijet-delivery-type-returned" name="hepsijet-delivery-type" value="returned" class="hidden peer">
+                                        <label for="hepsijet-delivery-type-returned" class="inline-flex items-center justify-center w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 peer-checked:text-blue-600 peer-checked:bg-blue-50 hover:text-gray-600 hover:bg-gray-100">
+                                            <span class="text-sm font-medium"><?php esc_html_e('Return', 'hezarfen-for-woocommerce'); ?></span>
+                                        </label>
+                                    </li>
+                                </ul>
                             </div>
-                            <?php else: ?>
-                            <!-- Hidden delivery type field - hard-coded to 'standard' -->
-                            <input type="hidden" id="hepsijet-delivery-type" value="standard">
-                            <?php endif; ?>
                             
                             <!-- Delivery Slot (for sameday/nextday) -->
                             <div class="mb-4 hidden" id="hepsijet-delivery-slot-container">
@@ -537,8 +537,8 @@ if ( $has_hepsijet_credentials ) {
                             
                             <!-- Return Date (for return type) -->
                             <div class="mb-4 hidden" id="hepsijet-return-date-container">
-                                <label for="hepsijet-return-date" class="font-light text-gray-1 block mb-2 text-sm dark:text-white"><?php esc_html_e('Return Date', 'hezarfen-for-woocommerce'); ?></label>
-                                <select id="hepsijet-return-date" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-3 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">
+                                <label for="hepsijet-return-date" class="block text-sm font-medium text-gray-700 mb-2"><?php esc_html_e('Return Date', 'hezarfen-for-woocommerce'); ?></label>
+                                <select id="hepsijet-return-date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                     <option value=""><?php esc_html_e('Loading available dates...', 'hezarfen-for-woocommerce'); ?></option>
                                 </select>
                             </div>
