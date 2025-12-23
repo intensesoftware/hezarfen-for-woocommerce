@@ -566,14 +566,6 @@ if ( $has_hepsijet_credentials ) {
                             
                             <!-- Return Fields Container (for return type) -->
                             <div style="display: none;" id="hepsijet-return-fields-container">
-                                <!-- Return Date -->
-                                <div class="mb-4" id="hepsijet-return-date-container">
-                                    <label for="hepsijet-return-date" class="block text-sm font-medium text-gray-700 mb-2"><?php esc_html_e('Return Date', 'hezarfen-for-woocommerce'); ?></label>
-                                    <select id="hepsijet-return-date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                        <option value=""><?php esc_html_e('Loading available dates...', 'hezarfen-for-woocommerce'); ?></option>
-                                    </select>
-                                </div>
-
                                 <!-- Return Address Fields -->
                                 <div class="grid grid-cols-2 gap-4 mb-4">
                                     <div>
@@ -611,6 +603,24 @@ if ( $has_hepsijet_credentials ) {
                                 <div class="mb-4">
                                     <label for="hepsijet-return-address" class="block text-sm font-medium text-gray-700 mb-2"><?php esc_html_e('Address', 'hezarfen-for-woocommerce'); ?> <span class="text-red-500">*</span></label>
                                     <textarea id="hepsijet-return-address" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"><?php echo esc_textarea($return_address_data['address']); ?></textarea>
+                                </div>
+
+                                <!-- Fetch Available Dates Button -->
+                                <div class="mb-4">
+                                    <button type="button" id="hepsijet-fetch-return-dates" class="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded-lg transition-colors duration-200">
+                                        <svg class="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                        <?php esc_html_e('Alım Yapılabilecek Tarihleri Listele', 'hezarfen-for-woocommerce'); ?>
+                                    </button>
+                                </div>
+
+                                <!-- Return Date (hidden by default, shown after fetching dates) -->
+                                <div class="mb-4 hidden" id="hepsijet-return-date-container">
+                                    <label for="hepsijet-return-date" class="block text-sm font-medium text-gray-700 mb-2"><?php esc_html_e('Return Date', 'hezarfen-for-woocommerce'); ?> <span class="text-red-500">*</span></label>
+                                    <select id="hepsijet-return-date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        <option value=""><?php esc_html_e('Select a date', 'hezarfen-for-woocommerce'); ?></option>
+                                    </select>
                                 </div>
                             </div>
                         </div>

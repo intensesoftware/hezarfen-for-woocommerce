@@ -255,7 +255,7 @@ jQuery(document).ready(($)=>{
     } else if (selectedType === 'returned') {
       console.log('Showing return fields container');
       returnFieldsContainer.show();
-      loadReturnDates();
+      // Don't auto-load dates - wait for user to click the button
       // Hide warehouse selection for returns
       warehouseContainer.hide();
       // Hide add package button and keep only one package for returns
@@ -328,38 +328,29 @@ jQuery(document).ready(($)=>{
   // Load available return dates from API
   function loadReturnDates() {
     const returnDateSelect = $('#hepsijet-return-date');
-        returnDateSelect.html(`<option value="">${hezarfen_mst_backend.loading_available_dates}</option>`);
-    
-    // Get order shipping city and district
-    const orderId = $('#create-hepsijet-shipment').data('order_id');
-    
-    // Get shipping city and district from WooCommerce order edit screen shipping metabox
-    const shippingDistrict = $('#_shipping_city').val() || 'Istanbul';
-    
-    // Get human-readable district name from the shipping state field display
-    let shippingCity = '';
-    const shippingStateField = $('#_shipping_state');
-    if (shippingStateField.length) {
-      // Try to get the selected option text (human-readable name)
-      const selectedOption = shippingStateField.find('option:selected');
-      if (selectedOption.length && selectedOption.text()) {
-        shippingCity = selectedOption.text();
-      } else {
-        // Fallback: try to get from the field's display value
-        shippingCity = shippingStateField.val() ;
-      }
+    returnDateSelect.html(`<option value="">${hezarfen_mst_backend.loading_available_dates}</option>`);
+
+    // Get city and district from the return address form fields
+    const returnCity = $('#hepsijet-return-city').val() || '';
+    const returnDistrict = $('#hepsijet-return-district').val() || '';
+
+    // Validate that city and district are filled
+    if (!returnCity || !returnDistrict) {
+      showNotification('Lütfen önce şehir ve ilçe bilgilerini doldurun.', 'warning');
+      returnDateSelect.html('<option value="">Şehir ve ilçe bilgisi gerekli</option>');
+      return;
     }
-    
+
     const startDate = new Date().toISOString().split('T')[0]; // Today
     const endDate = new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 10 days later
-    
+
     const data = {
       action: 'hezarfen_mst_get_return_dates',
       _wpnonce: hezarfen_mst_backend.get_return_dates_nonce,
       start_date: startDate,
       end_date: endDate,
-      city: shippingCity,
-      district: shippingDistrict
+      city: returnCity,
+      district: returnDistrict
     };
     
     $.post(ajaxurl, data, function(response) {
@@ -425,8 +416,37 @@ jQuery(document).ready(($)=>{
     }).fail(function(xhr, status, error) {
       console.error('Failed to load return dates:', {xhr, status, error});
       returnDateSelect.html(`<option value="">${hezarfen_mst_backend.error_loading_dates}</option>`);
+      // Hide loading state and show error
+      fetchReturnDatesBtn.prop('disabled', false).html(originalBtnText);
     });
   }
+
+  // Fetch Return Dates Button Click Handler
+  const fetchReturnDatesBtn = $('#hepsijet-fetch-return-dates');
+  let originalBtnText = fetchReturnDatesBtn.html();
+
+  fetchReturnDatesBtn.on('click', function() {
+    const btn = $(this);
+    // Show loading state
+    btn.prop('disabled', true).html(`
+      <svg class="w-4 h-4 inline-block mr-2 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      Tarihler yükleniyor...
+    `);
+
+    // Load dates and show the date container after success
+    loadReturnDates();
+
+    // Show the date container
+    $('#hepsijet-return-date-container').removeClass('hidden');
+
+    // Reset button after a short delay (the AJAX will complete)
+    setTimeout(() => {
+      btn.prop('disabled', false).html(originalBtnText);
+    }, 2000);
+  });
 
   const addToTrackList = metabox_wrapper.find('#add-to-tracking-list');
 

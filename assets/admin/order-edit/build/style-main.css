@@ -2572,6 +2572,11 @@ video:where(.hez-ui,.hez-ui *) {
       color: rgba(0, 0, 0, var(--tw-text-opacity)) !important; /* Custom lighter blue */
     }
 
+.peer:checked ~ .peer-checked\:border-blue-600 {
+      --tw-border-opacity: 1 !important;
+      border-color: rgba(242, 159, 44, var(--tw-border-opacity)) !important; /* Custom darker blue */
+    }
+
 .dark\:divide-gray-600:is(.dark *) > :not([hidden]) ~ :not([hidden]) {
   --tw-divide-opacity: 1 !important;
   border-color: rgb(75 85 99 / var(--tw-divide-opacity)) !important;
