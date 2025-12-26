@@ -526,6 +526,19 @@ class Admin_Menu {
                 color: #1d2327;
                 font-weight: 600;
             }
+            .hezarfen-coming-soon {
+                display: inline-block;
+                background: #f0f0f1;
+                color: #50575e;
+                font-size: 10px;
+                font-weight: 500;
+                padding: 2px 6px;
+                border-radius: 3px;
+                margin-left: 6px;
+                vertical-align: middle;
+                text-transform: uppercase;
+                letter-spacing: 0.3px;
+            }
             .hezarfen-free-features {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -702,20 +715,20 @@ class Admin_Menu {
                     </div>
                     <div class="hezarfen-feature-group"><?php esc_html_e( 'Entegrasyonlar', 'hezarfen-for-woocommerce' ); ?></div>
                     <ul>
-                        <li><?php esc_html_e( 'FunnelKit ödeme ekranına ilçe/mahalle desteği', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Yaymail ile "kargoya verildi" e-posta içeriğini özelleştirme', 'hezarfen-for-woocommerce' ); ?></li>
+                        <li><?php esc_html_e( 'FunnelKit ödeme ekranına ilçe/mahalle desteği', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-coming-soon"><?php esc_html_e( 'Yakında', 'hezarfen-for-woocommerce' ); ?></span></li>
+                        <li><?php esc_html_e( 'Yaymail ile "kargoya verildi" e-posta içeriğini özelleştirme', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-coming-soon"><?php esc_html_e( 'Yakında', 'hezarfen-for-woocommerce' ); ?></span></li>
                         <li><?php esc_html_e( 'Paraşüt ile fatura kesme entegrasyonu', 'hezarfen-for-woocommerce' ); ?></li>
                     </ul>
 
                     <div class="hezarfen-feature-group"><?php esc_html_e( 'Hesabım Sayfası', 'hezarfen-for-woocommerce' ); ?></div>
                     <ul>
-                        <li><?php esc_html_e( 'SMS ile giriş (telefon numarasıyla giriş, şifre gerekmeden)', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Kurumsal/bireysel ve fatura alanları', 'hezarfen-for-woocommerce' ); ?></li>
+                        <li><?php esc_html_e( 'SMS ile giriş (telefon numarasıyla giriş, şifre gerekmeden)', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-coming-soon"><?php esc_html_e( 'Yakında', 'hezarfen-for-woocommerce' ); ?></span></li>
+                        <li><?php esc_html_e( 'Kurumsal/bireysel ve fatura alanları', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-coming-soon"><?php esc_html_e( 'Yakında', 'hezarfen-for-woocommerce' ); ?></span></li>
                     </ul>
 
                     <div class="hezarfen-feature-group"><?php esc_html_e( 'Bildirimler', 'hezarfen-for-woocommerce' ); ?></div>
                     <ul>
-                        <li><?php esc_html_e( 'Kapıda ödemeli siparişlere SMS doğrulaması', 'hezarfen-for-woocommerce' ); ?></li>
+                        <li><?php esc_html_e( 'Kapıda ödemeli siparişlere SMS doğrulaması', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-coming-soon"><?php esc_html_e( 'Yakında', 'hezarfen-for-woocommerce' ); ?></span></li>
                         <li><?php esc_html_e( 'Kargoya verildi SMS bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik SMS gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                         <li><?php esc_html_e( 'Kargoya verildi e-posta bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik e-posta gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                     </ul>
