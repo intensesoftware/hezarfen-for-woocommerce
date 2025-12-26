@@ -38,62 +38,7 @@ class Admin_Menu {
         add_filter( 'submenu_file', array( $this, 'highlight_submenu' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_upgrade_styles' ) );
         add_action( 'wp_ajax_hezarfen_submit_demand', array( $this, 'handle_demand_submission' ) );
-        add_action( 'admin_init', array( $this, 'maybe_redirect_after_update' ) );
-    }
-
-    /**
-     * Redirect to upgrade page after manual plugin update (one time only)
-     *
-     * @return void
-     */
-    public function maybe_redirect_after_update() {
-        // Don't redirect if Hezarfen Pro is installed
-        if ( $this->is_pro_installed() ) {
-            return;
-        }
-
-        // Don't redirect on AJAX, CLI or if user doesn't have capability
-        if ( wp_doing_ajax() || ( defined( 'WP_CLI' ) && WP_CLI ) || ! current_user_can( 'manage_options' ) ) {
-            return;
-        }
-
-        // Don't redirect if this is an auto-update
-        if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
-            return;
-        }
-
-        // Don't redirect during bulk actions or plugin activation
-        if ( isset( $_GET['activate-multi'] ) || isset( $_GET['activate'] ) ) {
-            return;
-        }
-
-        $saved_version = get_option( 'hezarfen_version', '' );
-        $current_version = WC_HEZARFEN_VERSION;
-
-        // If this is a new install or version hasn't changed, skip
-        if ( empty( $saved_version ) ) {
-            update_option( 'hezarfen_version', $current_version );
-            return;
-        }
-
-        // Check if version changed (update happened)
-        if ( version_compare( $saved_version, $current_version, '<' ) ) {
-            // Update stored version
-            update_option( 'hezarfen_version', $current_version );
-
-            // Check if we already redirected for this version
-            $redirected_version = get_option( 'hezarfen_upgrade_redirected', '' );
-            if ( $redirected_version === $current_version ) {
-                return;
-            }
-
-            // Mark as redirected for this version
-            update_option( 'hezarfen_upgrade_redirected', $current_version );
-
-            // Redirect to upgrade page
-            wp_safe_redirect( admin_url( 'admin.php?page=' . self::UPGRADE_SLUG ) );
-            exit;
-        }
+        add_action( 'woocommerce_settings_hezarfen', array( $this, 'add_upgrade_button_to_settings' ) );
     }
 
     /**
@@ -298,6 +243,11 @@ class Admin_Menu {
                 font-size: 14px;
                 font-weight: normal;
                 color: #666;
+            }
+            .hezarfen-package-sites {
+                font-size: 12px;
+                color: #666;
+                margin-top: 5px;
             }
             .hezarfen-package ul {
                 list-style: none;
@@ -624,14 +574,15 @@ class Admin_Menu {
             </div>
 
             <div class="hezarfen-packages">
-                <!-- Kanat Paket -->
-                <div class="hezarfen-package" data-package-container="kanat" style="display: none;">
+                <!-- Standard Paket -->
+                <div class="hezarfen-package" data-package-container="standard" style="display: none;">
                     <div class="hezarfen-package-header">
-                        <h2><?php esc_html_e( 'Kanat', 'hezarfen-for-woocommerce' ); ?></h2>
+                        <h2><?php esc_html_e( 'Standard', 'hezarfen-for-woocommerce' ); ?></h2>
                         <div class="hezarfen-package-price">
-                            <span class="hezarfen-price-skeleton price-main" data-price-key="kanat"></span>
-                            <small><span class="hezarfen-price-skeleton price-small" data-price-suffix="kanat"></span></small>
+                            <span class="hezarfen-price-skeleton price-main" data-price-key="standard"></span>
+                            <small><span class="hezarfen-price-skeleton price-small" data-price-suffix="standard"></span></small>
                         </div>
+                        <div class="hezarfen-package-sites"><?php esc_html_e( '1 site', 'hezarfen-for-woocommerce' ); ?></div>
                     </div>
                     <div class="hezarfen-feature-group"><?php esc_html_e( 'Entegrasyonlar', 'hezarfen-for-woocommerce' ); ?></div>
                     <ul>
@@ -658,19 +609,19 @@ class Admin_Menu {
                         <li><?php esc_html_e( 'Barkod okutulunca sipariş durumu otomatik "Kargoya Verildi" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firması barkodu okuttuğunda sipariş durumu otomatik olarak "Kargoya Verildi" olur.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                         <li><?php esc_html_e( 'Teslimatta sipariş durumu otomatik "Tamamlandı" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş alıcıya teslim edilince sipariş durumu otomatik olarak "Tamamlandı" durumuna geçer.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                         <li><?php esc_html_e( 'Kargo takip numarası siparişe otomatik girilir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo takip numarası otomatik olarak siparişe (Hezarfen kargo takip alanına) girilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Detaylı kargo hareketleri sipariş detayında ve kargo takip ekranında görüntülenir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firmasının sitesine gitmeden, kargonuzun anlık olarak nerede olduğunu zaman çizelgesi şeklinde görüntüleyin.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                     </ul>
-                    <div class="hezarfen-cta-container" data-package="kanat" data-admin-email="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>"></div>
+                    <div class="hezarfen-cta-container" data-package="standard" data-admin-email="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>"></div>
                 </div>
 
-                <!-- Uçuş Paket -->
-                <div class="hezarfen-package featured" data-package-container="ucus" style="display: none;">
+                <!-- Growth Paket -->
+                <div class="hezarfen-package featured" data-package-container="growth" style="display: none;">
                     <div class="hezarfen-package-header">
-                        <h2><?php esc_html_e( 'Uçuş', 'hezarfen-for-woocommerce' ); ?></h2>
+                        <h2><?php esc_html_e( 'Growth', 'hezarfen-for-woocommerce' ); ?></h2>
                         <div class="hezarfen-package-price">
-                            <span class="hezarfen-price-skeleton price-main" data-price-key="ucus"></span>
-                            <small><span class="hezarfen-price-skeleton price-small" data-price-suffix="ucus"></span></small>
+                            <span class="hezarfen-price-skeleton price-main" data-price-key="growth"></span>
+                            <small><span class="hezarfen-price-skeleton price-small" data-price-suffix="growth"></span></small>
                         </div>
+                        <div class="hezarfen-package-sites"><?php esc_html_e( '1 site', 'hezarfen-for-woocommerce' ); ?></div>
                     </div>
                     <div class="hezarfen-feature-group"><?php esc_html_e( 'Entegrasyonlar', 'hezarfen-for-woocommerce' ); ?></div>
                     <ul>
@@ -680,7 +631,7 @@ class Admin_Menu {
 
                     <div class="hezarfen-feature-group"><?php esc_html_e( 'Hesabım Sayfası', 'hezarfen-for-woocommerce' ); ?></div>
                     <ul>
-                        <li><?php esc_html_e( 'SMS ile giriş (telefon numarasıyla giriş, şifre gerekmeden)', 'hezarfen-for-woocommerce' ); ?></li>
+                        <li><?php esc_html_e( 'SMS ile müşteri girişi (telefon numarasıyla giriş, şifre gerekmeden)', 'hezarfen-for-woocommerce' ); ?></li>
                         <li><?php esc_html_e( 'Kurumsal/bireysel ve fatura alanları', 'hezarfen-for-woocommerce' ); ?></li>
                     </ul>
 
@@ -699,9 +650,8 @@ class Admin_Menu {
                         <li><?php esc_html_e( 'Barkod okutulunca sipariş durumu otomatik "Kargoya Verildi" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firması barkodu okuttuğunda sipariş durumu otomatik olarak "Kargoya Verildi" olur.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                         <li><?php esc_html_e( 'Teslimatta sipariş durumu otomatik "Tamamlandı" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş alıcıya teslim edilince sipariş durumu otomatik olarak "Tamamlandı" durumuna geçer.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                         <li><?php esc_html_e( 'Kargo takip numarası siparişe otomatik girilir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo takip numarası otomatik olarak siparişe (Hezarfen kargo takip alanına) girilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Detaylı kargo hareketleri sipariş detayında ve kargo takip ekranında görüntülenir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firmasının sitesine gitmeden, kargonuzun anlık olarak nerede olduğunu zaman çizelgesi şeklinde görüntüleyin.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                     </ul>
-                    <div class="hezarfen-cta-container" data-package="ucus" data-admin-email="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>"></div>
+                    <div class="hezarfen-cta-container" data-package="growth" data-admin-email="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>"></div>
                 </div>
 
                 <!-- Pro Paket -->
@@ -712,6 +662,7 @@ class Admin_Menu {
                             <span class="hezarfen-price-skeleton price-main" data-price-key="pro"></span>
                             <small><span class="hezarfen-price-skeleton price-small" data-price-suffix="pro"></span></small>
                         </div>
+                        <div class="hezarfen-package-sites"><?php esc_html_e( '1 site', 'hezarfen-for-woocommerce' ); ?></div>
                     </div>
                     <div class="hezarfen-feature-group"><?php esc_html_e( 'Entegrasyonlar', 'hezarfen-for-woocommerce' ); ?></div>
                     <ul>
@@ -729,19 +680,20 @@ class Admin_Menu {
                     <div class="hezarfen-feature-group"><?php esc_html_e( 'Bildirimler', 'hezarfen-for-woocommerce' ); ?></div>
                     <ul>
                         <li><?php esc_html_e( 'Kapıda ödemeli siparişlere SMS doğrulaması', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-coming-soon"><?php esc_html_e( 'Yakında', 'hezarfen-for-woocommerce' ); ?></span></li>
+                        <li><?php esc_html_e( 'Terkedilmiş sepet için NetGSM otomasyonu', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-coming-soon"><?php esc_html_e( 'Yakında', 'hezarfen-for-woocommerce' ); ?></span></li>
                         <li><?php esc_html_e( 'Kargoya verildi SMS bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik SMS gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                         <li><?php esc_html_e( 'Kargoya verildi e-posta bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik e-posta gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                     </ul>
 
                     <div class="hezarfen-feature-group"><?php esc_html_e( 'Kargo Entegrasyonu', 'hezarfen-for-woocommerce' ); ?></div>
                     <ul>
-                        <li><?php esc_html_e( 'Sınırsız gönderi için kargo entegrasyonu', 'hezarfen-for-woocommerce' ); ?></li>
+                        <li><?php esc_html_e( 'Sınırsız gönderi için kargo entegrasyonu (kendi anlaşmanızla)', 'hezarfen-for-woocommerce' ); ?></li>
                         <li><?php esc_html_e( 'Yurtiçi, Aras, Sürat, Hepsijet, DHL E-Com, Kolay Gelsin', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kendi anlaşmanızla bu kargo firmalarına entegrasyon sağlayabilirsiniz.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                         <li><?php esc_html_e( 'Kargo barkodu oluşturma (kargo firmasına otomatik adres aktarımı)', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş adresi barkod ile kargo firmasına iletilir, hatalı adres girişi engellenir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                         <li><?php esc_html_e( 'Barkod okutulunca sipariş durumu otomatik "Kargoya Verildi" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firması barkodu okuttuğunda sipariş durumu otomatik olarak "Kargoya Verildi" olur.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                         <li><?php esc_html_e( 'Teslimatta sipariş durumu otomatik "Tamamlandı" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş alıcıya teslim edilince sipariş durumu otomatik olarak "Tamamlandı" durumuna geçer.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                         <li><?php esc_html_e( 'Kargo takip numarası siparişe otomatik girilir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo takip numarası otomatik olarak siparişe (Hezarfen kargo takip alanına) girilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Detaylı kargo hareketleri sipariş detayında ve kargo takip ekranında görüntülenir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firmasının sitesine gitmeden, kargonuzun anlık olarak nerede olduğunu zaman çizelgesi şeklinde görüntüleyin.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Kullanıcı dostu kargo takip ekranında anlık kargo hareketlerinin görünmesi (kargo firmasının linkine tıklamadan)', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-coming-soon"><?php esc_html_e( 'Yakında', 'hezarfen-for-woocommerce' ); ?></span></li>
                     </ul>
                     <div class="hezarfen-cta-container" data-package="pro" data-admin-email="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>"></div>
                 </div>
@@ -995,13 +947,13 @@ class Admin_Menu {
 
             function updatePrices(data) {
                 // Update prices for each package
-                ['kanat', 'ucus', 'pro'].forEach(function(key) {
+                ['standard', 'growth', 'pro'].forEach(function(key) {
                     const packageContainer = document.querySelector('[data-package-container="' + key + '"]');
                     const priceEl = document.querySelector('[data-price-key="' + key + '"]');
                     const suffixEl = document.querySelector('[data-price-suffix="' + key + '"]');
 
-                    // Show/hide package container based on JSON data (only for kanat and ucus)
-                    if (packageContainer && (key === 'kanat' || key === 'ucus')) {
+                    // Show/hide package container based on JSON data (only for standard and growth)
+                    if (packageContainer && (key === 'standard' || key === 'growth')) {
                         if (data[key]) {
                             packageContainer.style.display = '';
                         } else {
@@ -1081,5 +1033,64 @@ class Admin_Menu {
         }
 
         return $submenu_file;
+    }
+
+    /**
+     * Add upgrade button to WooCommerce Hezarfen settings page
+     *
+     * @return void
+     */
+    public function add_upgrade_button_to_settings() {
+        // Don't show if Pro is installed
+        if ( $this->is_pro_installed() ) {
+            return;
+        }
+
+        $upgrade_url = admin_url( 'admin.php?page=' . self::UPGRADE_SLUG );
+        ?>
+        <style>
+            .hezarfen-settings-upgrade-badge {
+                display: inline-block;
+                margin-left: 10px;
+            }
+            .hezarfen-settings-upgrade-badge a {
+                display: inline-block;
+                background: #46b450;
+                color: #fff;
+                padding: 6px 12px;
+                border-radius: 4px;
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 12px;
+                transition: all 0.2s ease;
+                vertical-align: middle;
+            }
+            .hezarfen-settings-upgrade-badge a:hover {
+                background: #3a9a42;
+                color: #fff;
+            }
+        </style>
+        <script>
+        (function() {
+            function addUpgradeBadge() {
+                var badge = document.querySelector('.hezarfen-settings-upgrade-badge');
+                var subsubsub = document.querySelector('.woocommerce .subsubsub');
+                if (badge && subsubsub) {
+                    subsubsub.appendChild(badge);
+                }
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', addUpgradeBadge);
+            } else {
+                addUpgradeBadge();
+            }
+        })();
+        </script>
+        <div class="hezarfen-settings-upgrade-badge">
+            <a href="<?php echo esc_url( $upgrade_url ); ?>">
+                <?php esc_html_e( 'Yükselt', 'hezarfen-for-woocommerce' ); ?>
+            </a>
+        </div>
+        <?php
     }
 }
