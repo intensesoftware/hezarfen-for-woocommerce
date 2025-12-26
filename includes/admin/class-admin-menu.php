@@ -620,28 +620,32 @@ class Admin_Menu {
                             <small><span class="hezarfen-price-skeleton price-small" data-price-suffix="kanat"></span></small>
                         </div>
                     </div>
-                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Kargo Entegrasyonu', 'hezarfen-for-woocommerce' ); ?></div>
+                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Entegrasyonlar', 'hezarfen-for-woocommerce' ); ?></div>
                     <ul>
-                        <li><?php esc_html_e( 'Yılda 500 sipariş için kargo entegrasyonu', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Yurtiçi, Aras, Sürat, Hepsijet, DHL E-Com, Kolay Gelsin', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kendi anlaşmanızla bu kargo firmalarına entegrasyon sağlayabilirsiniz.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargo barkodu oluşturma', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş adresi barkod ile kargo firmasına iletilir, hatalı adres girişi engellenir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Barkod okutulunca sipariş durumu otomatik "Kargoya Verildi" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firması barkodu okuttuğunda sipariş durumu otomatik olarak "Kargoya Verildi" olur.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Teslimatta sipariş durumu otomatik "Tamamlandı" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş alıcıya teslim edilince sipariş durumu otomatik olarak "Tamamlandı" durumuna geçer.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargo takip numarası siparişe otomatik girilir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo takip numarası otomatik olarak siparişe (Hezarfen kargo takip alanına) girilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Detaylı kargo hareketleri sipariş detayında ve kargo takip ekranında görüntülenir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firmasının sitesine gitmeden, kargonuzun anlık olarak nerede olduğunu zaman çizelgesi şeklinde görüntüleyin.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                    </ul>
-
-                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Bildirimler', 'hezarfen-for-woocommerce' ); ?></div>
-                    <ul>
-                        <li><?php esc_html_e( 'Kargoya verildi SMS bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik SMS gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargoya verildi e-posta bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik e-posta gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                         <li><?php esc_html_e( 'Yaymail ile "kargoya verildi" e-posta içeriğini özelleştirme', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Kapıda ödemeli siparişlere SMS doğrulaması', 'hezarfen-for-woocommerce' ); ?></li>
                     </ul>
 
                     <div class="hezarfen-feature-group"><?php esc_html_e( 'Hesabım Sayfası', 'hezarfen-for-woocommerce' ); ?></div>
                     <ul>
                         <li><?php esc_html_e( 'Kurumsal/bireysel ve fatura alanları', 'hezarfen-for-woocommerce' ); ?></li>
+                    </ul>
+
+                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Bildirimler', 'hezarfen-for-woocommerce' ); ?></div>
+                    <ul>
+                        <li><?php esc_html_e( 'Kapıda ödemeli siparişlere SMS doğrulaması', 'hezarfen-for-woocommerce' ); ?></li>
+                        <li><?php esc_html_e( 'Kargoya verildi SMS bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik SMS gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Kargoya verildi e-posta bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik e-posta gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                    </ul>
+
+                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Kargo Entegrasyonu', 'hezarfen-for-woocommerce' ); ?></div>
+                    <ul>
+                        <li><?php esc_html_e( 'Yılda 500 gönderi için kargo entegrasyonu', 'hezarfen-for-woocommerce' ); ?></li>
+                        <li><?php esc_html_e( 'Yurtiçi, Aras, Sürat, Hepsijet, DHL E-Com, Kolay Gelsin', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kendi anlaşmanızla bu kargo firmalarına entegrasyon sağlayabilirsiniz.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Kargo barkodu oluşturma (kargo firmasına otomatik adres aktarımı)', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş adresi barkod ile kargo firmasına iletilir, hatalı adres girişi engellenir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Barkod okutulunca sipariş durumu otomatik "Kargoya Verildi" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firması barkodu okuttuğunda sipariş durumu otomatik olarak "Kargoya Verildi" olur.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Teslimatta sipariş durumu otomatik "Tamamlandı" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş alıcıya teslim edilince sipariş durumu otomatik olarak "Tamamlandı" durumuna geçer.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Kargo takip numarası siparişe otomatik girilir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo takip numarası otomatik olarak siparişe (Hezarfen kargo takip alanına) girilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Detaylı kargo hareketleri sipariş detayında ve kargo takip ekranında görüntülenir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firmasının sitesine gitmeden, kargonuzun anlık olarak nerede olduğunu zaman çizelgesi şeklinde görüntüleyin.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                     </ul>
                     <div class="hezarfen-cta-container" data-package="kanat" data-admin-email="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>"></div>
                 </div>
@@ -655,34 +659,34 @@ class Admin_Menu {
                             <small><span class="hezarfen-price-skeleton price-small" data-price-suffix="ucus"></span></small>
                         </div>
                     </div>
-                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Kargo Entegrasyonu', 'hezarfen-for-woocommerce' ); ?></div>
+                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Entegrasyonlar', 'hezarfen-for-woocommerce' ); ?></div>
                     <ul>
-                        <li><?php esc_html_e( 'Yılda 1.200 sipariş için kargo entegrasyonu', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Yurtiçi, Aras, Sürat, Hepsijet, DHL E-Com, Kolay Gelsin', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kendi anlaşmanızla bu kargo firmalarına entegrasyon sağlayabilirsiniz.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargo barkodu oluşturma', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş adresi barkod ile kargo firmasına iletilir, hatalı adres girişi engellenir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Barkod okutulunca sipariş durumu otomatik "Kargoya Verildi" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firması barkodu okuttuğunda sipariş durumu otomatik olarak "Kargoya Verildi" olur.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Teslimatta sipariş durumu otomatik "Tamamlandı" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş alıcıya teslim edilince sipariş durumu otomatik olarak "Tamamlandı" durumuna geçer.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargo takip numarası siparişe otomatik girilir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo takip numarası otomatik olarak siparişe (Hezarfen kargo takip alanına) girilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Detaylı kargo hareketleri sipariş detayında ve kargo takip ekranında görüntülenir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firmasının sitesine gitmeden, kargonuzun anlık olarak nerede olduğunu zaman çizelgesi şeklinde görüntüleyin.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                    </ul>
-
-                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Bildirimler', 'hezarfen-for-woocommerce' ); ?></div>
-                    <ul>
-                        <li><?php esc_html_e( 'Kargoya verildi SMS bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik SMS gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargoya verildi e-posta bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik e-posta gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'FunnelKit ödeme ekranına ilçe/mahalle desteği', 'hezarfen-for-woocommerce' ); ?></li>
                         <li><?php esc_html_e( 'Yaymail ile "kargoya verildi" e-posta içeriğini özelleştirme', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Kapıda ödemeli siparişlere SMS doğrulaması', 'hezarfen-for-woocommerce' ); ?></li>
                     </ul>
 
                     <div class="hezarfen-feature-group"><?php esc_html_e( 'Hesabım Sayfası', 'hezarfen-for-woocommerce' ); ?></div>
                     <ul>
-                        <li><?php esc_html_e( 'Kurumsal/bireysel ve fatura alanları', 'hezarfen-for-woocommerce' ); ?></li>
                         <li><?php esc_html_e( 'SMS ile giriş (telefon numarasıyla giriş, şifre gerekmeden)', 'hezarfen-for-woocommerce' ); ?></li>
+                        <li><?php esc_html_e( 'Kurumsal/bireysel ve fatura alanları', 'hezarfen-for-woocommerce' ); ?></li>
                     </ul>
 
-                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Entegrasyonlar', 'hezarfen-for-woocommerce' ); ?></div>
+                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Bildirimler', 'hezarfen-for-woocommerce' ); ?></div>
                     <ul>
-                        <li><?php esc_html_e( 'FunnelKit ödeme ekranına ilçe/mahalle desteği', 'hezarfen-for-woocommerce' ); ?></li>
+                        <li><?php esc_html_e( 'Kapıda ödemeli siparişlere SMS doğrulaması', 'hezarfen-for-woocommerce' ); ?></li>
+                        <li><?php esc_html_e( 'Kargoya verildi SMS bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik SMS gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Kargoya verildi e-posta bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik e-posta gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                    </ul>
+
+                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Kargo Entegrasyonu', 'hezarfen-for-woocommerce' ); ?></div>
+                    <ul>
+                        <li><?php esc_html_e( 'Yılda 1.200 gönderi için kargo entegrasyonu', 'hezarfen-for-woocommerce' ); ?></li>
+                        <li><?php esc_html_e( 'Yurtiçi, Aras, Sürat, Hepsijet, DHL E-Com, Kolay Gelsin', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kendi anlaşmanızla bu kargo firmalarına entegrasyon sağlayabilirsiniz.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Kargo barkodu oluşturma (kargo firmasına otomatik adres aktarımı)', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş adresi barkod ile kargo firmasına iletilir, hatalı adres girişi engellenir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Barkod okutulunca sipariş durumu otomatik "Kargoya Verildi" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firması barkodu okuttuğunda sipariş durumu otomatik olarak "Kargoya Verildi" olur.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Teslimatta sipariş durumu otomatik "Tamamlandı" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş alıcıya teslim edilince sipariş durumu otomatik olarak "Tamamlandı" durumuna geçer.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Kargo takip numarası siparişe otomatik girilir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo takip numarası otomatik olarak siparişe (Hezarfen kargo takip alanına) girilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Detaylı kargo hareketleri sipariş detayında ve kargo takip ekranında görüntülenir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firmasının sitesine gitmeden, kargonuzun anlık olarak nerede olduğunu zaman çizelgesi şeklinde görüntüleyin.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                     </ul>
                     <div class="hezarfen-cta-container" data-package="ucus" data-admin-email="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>"></div>
                 </div>
@@ -696,35 +700,35 @@ class Admin_Menu {
                             <small><span class="hezarfen-price-skeleton price-small" data-price-suffix="pro"></span></small>
                         </div>
                     </div>
-                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Kargo Entegrasyonu', 'hezarfen-for-woocommerce' ); ?></div>
+                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Entegrasyonlar', 'hezarfen-for-woocommerce' ); ?></div>
                     <ul>
-                        <li><?php esc_html_e( 'Sınırsız sipariş için kargo entegrasyonu', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Yurtiçi, Aras, Sürat, Hepsijet, DHL E-Com, Kolay Gelsin', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kendi anlaşmanızla bu kargo firmalarına entegrasyon sağlayabilirsiniz.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargo barkodu oluşturma', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş adresi barkod ile kargo firmasına iletilir, hatalı adres girişi engellenir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Barkod okutulunca sipariş durumu otomatik "Kargoya Verildi" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firması barkodu okuttuğunda sipariş durumu otomatik olarak "Kargoya Verildi" olur.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Teslimatta sipariş durumu otomatik "Tamamlandı" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş alıcıya teslim edilince sipariş durumu otomatik olarak "Tamamlandı" durumuna geçer.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargo takip numarası siparişe otomatik girilir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo takip numarası otomatik olarak siparişe (Hezarfen kargo takip alanına) girilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Detaylı kargo hareketleri sipariş detayında ve kargo takip ekranında görüntülenir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firmasının sitesine gitmeden, kargonuzun anlık olarak nerede olduğunu zaman çizelgesi şeklinde görüntüleyin.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                    </ul>
-
-                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Bildirimler', 'hezarfen-for-woocommerce' ); ?></div>
-                    <ul>
-                        <li><?php esc_html_e( 'Kargoya verildi SMS bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik SMS gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargoya verildi e-posta bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik e-posta gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'FunnelKit ödeme ekranına ilçe/mahalle desteği', 'hezarfen-for-woocommerce' ); ?></li>
                         <li><?php esc_html_e( 'Yaymail ile "kargoya verildi" e-posta içeriğini özelleştirme', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Kapıda ödemeli siparişlere SMS doğrulaması', 'hezarfen-for-woocommerce' ); ?></li>
+                        <li><?php esc_html_e( 'Paraşüt ile fatura kesme entegrasyonu', 'hezarfen-for-woocommerce' ); ?></li>
                     </ul>
 
                     <div class="hezarfen-feature-group"><?php esc_html_e( 'Hesabım Sayfası', 'hezarfen-for-woocommerce' ); ?></div>
                     <ul>
-                        <li><?php esc_html_e( 'Kurumsal/bireysel ve fatura alanları', 'hezarfen-for-woocommerce' ); ?></li>
                         <li><?php esc_html_e( 'SMS ile giriş (telefon numarasıyla giriş, şifre gerekmeden)', 'hezarfen-for-woocommerce' ); ?></li>
+                        <li><?php esc_html_e( 'Kurumsal/bireysel ve fatura alanları', 'hezarfen-for-woocommerce' ); ?></li>
                     </ul>
 
-                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Entegrasyonlar', 'hezarfen-for-woocommerce' ); ?></div>
+                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Bildirimler', 'hezarfen-for-woocommerce' ); ?></div>
                     <ul>
-                        <li><?php esc_html_e( 'FunnelKit ödeme ekranına ilçe/mahalle desteği', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Paraşüt ile fatura kesme entegrasyonu', 'hezarfen-for-woocommerce' ); ?></li>
+                        <li><?php esc_html_e( 'Kapıda ödemeli siparişlere SMS doğrulaması', 'hezarfen-for-woocommerce' ); ?></li>
+                        <li><?php esc_html_e( 'Kargoya verildi SMS bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik SMS gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Kargoya verildi e-posta bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik e-posta gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                    </ul>
+
+                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Kargo Entegrasyonu', 'hezarfen-for-woocommerce' ); ?></div>
+                    <ul>
+                        <li><?php esc_html_e( 'Sınırsız gönderi için kargo entegrasyonu', 'hezarfen-for-woocommerce' ); ?></li>
+                        <li><?php esc_html_e( 'Yurtiçi, Aras, Sürat, Hepsijet, DHL E-Com, Kolay Gelsin', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kendi anlaşmanızla bu kargo firmalarına entegrasyon sağlayabilirsiniz.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Kargo barkodu oluşturma (kargo firmasına otomatik adres aktarımı)', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş adresi barkod ile kargo firmasına iletilir, hatalı adres girişi engellenir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Barkod okutulunca sipariş durumu otomatik "Kargoya Verildi" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firması barkodu okuttuğunda sipariş durumu otomatik olarak "Kargoya Verildi" olur.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Teslimatta sipariş durumu otomatik "Tamamlandı" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş alıcıya teslim edilince sipariş durumu otomatik olarak "Tamamlandı" durumuna geçer.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Kargo takip numarası siparişe otomatik girilir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo takip numarası otomatik olarak siparişe (Hezarfen kargo takip alanına) girilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Detaylı kargo hareketleri sipariş detayında ve kargo takip ekranında görüntülenir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firmasının sitesine gitmeden, kargonuzun anlık olarak nerede olduğunu zaman çizelgesi şeklinde görüntüleyin.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                     </ul>
                     <div class="hezarfen-cta-container" data-package="pro" data-admin-email="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>"></div>
                 </div>
