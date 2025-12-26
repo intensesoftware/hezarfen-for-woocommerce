@@ -38,6 +38,57 @@ class Admin_Menu {
         add_filter( 'submenu_file', array( $this, 'highlight_submenu' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_upgrade_styles' ) );
         add_action( 'wp_ajax_hezarfen_submit_demand', array( $this, 'handle_demand_submission' ) );
+        add_action( 'admin_init', array( $this, 'maybe_redirect_after_update' ) );
+    }
+
+    /**
+     * Redirect to upgrade page after manual plugin update (one time only)
+     *
+     * @return void
+     */
+    public function maybe_redirect_after_update() {
+        // Don't redirect on AJAX, CLI or if user doesn't have capability
+        if ( wp_doing_ajax() || ( defined( 'WP_CLI' ) && WP_CLI ) || ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        // Don't redirect if this is an auto-update
+        if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
+            return;
+        }
+
+        // Don't redirect during bulk actions or plugin activation
+        if ( isset( $_GET['activate-multi'] ) || isset( $_GET['activate'] ) ) {
+            return;
+        }
+
+        $saved_version = get_option( 'hezarfen_version', '' );
+        $current_version = WC_HEZARFEN_VERSION;
+
+        // If this is a new install or version hasn't changed, skip
+        if ( empty( $saved_version ) ) {
+            update_option( 'hezarfen_version', $current_version );
+            return;
+        }
+
+        // Check if version changed (update happened)
+        if ( version_compare( $saved_version, $current_version, '<' ) ) {
+            // Update stored version
+            update_option( 'hezarfen_version', $current_version );
+
+            // Check if we already redirected for this version
+            $redirected_version = get_option( 'hezarfen_upgrade_redirected', '' );
+            if ( $redirected_version === $current_version ) {
+                return;
+            }
+
+            // Mark as redirected for this version
+            update_option( 'hezarfen_upgrade_redirected', $current_version );
+
+            // Redirect to upgrade page
+            wp_safe_redirect( admin_url( 'admin.php?page=' . self::UPGRADE_SLUG ) );
+            exit;
+        }
     }
 
     /**
