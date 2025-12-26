@@ -505,23 +505,26 @@ class Admin_Menu {
                 display: none !important;
             }
             .hezarfen-hero-tagline {
-                max-width: 680px;
-                margin: 0 auto 45px;
+                max-width: 720px;
+                margin: 0 auto 50px;
                 text-align: center;
                 padding: 0 20px;
             }
             .hezarfen-hero-tagline p {
                 margin: 0;
-                font-size: 15px;
-                line-height: 1.8;
-                color: #3c434a;
-            }
-            .hezarfen-hero-tagline .subtle {
-                color: #50575e;
+                font-size: 18px;
+                line-height: 1.7;
+                color: #1d2327;
+                font-weight: 400;
+                letter-spacing: -0.01em;
             }
             .hezarfen-hero-tagline .emphasis {
+                color: #2271b1;
+                font-weight: 600;
+            }
+            .hezarfen-hero-tagline .emphasis-dark {
                 color: #1d2327;
-                font-weight: 500;
+                font-weight: 600;
             }
             .hezarfen-free-features {
                 display: grid;
@@ -604,7 +607,7 @@ class Admin_Menu {
         <div class="wrap hezarfen-upgrade-wrap">
             <h1><?php esc_html_e( 'Hezarfen Paketleri', 'hezarfen-for-woocommerce' ); ?></h1>
             <div class="hezarfen-hero-tagline">
-                <p><?php echo wp_kses( __( 'Sipariş yönetiminde harcadığınız her dakika, <span class="emphasis">işinizi büyütmek</span> için kullanabileceğiniz bir dakikadır. Hezarfen ile müşteri deneyimini iyileştirin, operasyonel süreçlerinizi otomatikleştirin.', 'hezarfen-for-woocommerce' ), array( 'span' => array( 'class' => array() ) ) ); ?></p>
+                <p><?php echo wp_kses( __( 'Sipariş yönetiminde <span class="emphasis">manuel işlemlerle kaybettiğiniz</span> her dakika, <span class="emphasis-dark">işinizi büyütmek</span> için kullanabileceğiniz bir dakikadır. Hezarfen ile müşteri deneyimini iyileştirin, operasyonel süreçlerinizi otomatikleştirin.', 'hezarfen-for-woocommerce' ), array( 'span' => array( 'class' => array() ) ) ); ?></p>
             </div>
 
             <div class="hezarfen-packages">
