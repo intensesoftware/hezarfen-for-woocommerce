@@ -602,7 +602,7 @@ class Admin_Menu {
                 emailLabel: '<?php echo esc_js( __( 'Bildirim e-postası', 'hezarfen-for-woocommerce' ) ); ?>',
                 emailLabelHint: '<?php echo esc_js( __( '(satışa açıldığında haber verelim)', 'hezarfen-for-woocommerce' ) ); ?>',
                 emailPlaceholder: '<?php echo esc_js( __( 'ornek@siteniz.com', 'hezarfen-for-woocommerce' ) ); ?>',
-                emailHintLine1: '<?php echo esc_js( __( 'info@intense.com.tr adresine gönderilir.', 'hezarfen-for-woocommerce' ) ); ?>',
+                emailHintLine1: '<?php echo esc_js( __( 'Sitenizin e-posta altyapısı kullanılarak info@intense.com.tr adresine gönderilir.', 'hezarfen-for-woocommerce' ) ); ?>',
                 emailHintLine2: '<?php echo esc_js( __( 'Paylaşılan: site URL, e-posta, paket.', 'hezarfen-for-woocommerce' ) ); ?>',
                 demandNotice: '<?php echo esc_js( __( 'Yeterli talep gelirse Aralık Sonu - Ocak ilk haftası satışa açılacaktır.', 'hezarfen-for-woocommerce' ) ); ?>',
                 invalidEmail: '<?php echo esc_js( __( 'Geçerli bir e-posta adresi girin.', 'hezarfen-for-woocommerce' ) ); ?>'
