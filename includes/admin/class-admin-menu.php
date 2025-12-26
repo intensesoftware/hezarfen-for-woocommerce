@@ -604,7 +604,7 @@ class Admin_Menu {
         <div class="wrap hezarfen-upgrade-wrap">
             <h1><?php esc_html_e( 'Hezarfen Paketleri', 'hezarfen-for-woocommerce' ); ?></h1>
             <div class="hezarfen-hero-tagline">
-                <p><?php echo wp_kses( __( 'Sipariş yönetiminde harcadığınız her dakika, <span class="emphasis">işinizi büyütmek</span> için kullanabileceğiniz bir dakikadır. Hezarfen ile operasyonel süreçlerinizi otomatikleştirin.', 'hezarfen-for-woocommerce' ), array( 'span' => array( 'class' => array() ) ) ); ?></p>
+                <p><?php echo wp_kses( __( 'Sipariş yönetiminde harcadığınız her dakika, <span class="emphasis">işinizi büyütmek</span> için kullanabileceğiniz bir dakikadır. Hezarfen ile müşteri deneyimini iyileştirin, operasyonel süreçlerinizi otomatikleştirin.', 'hezarfen-for-woocommerce' ), array( 'span' => array( 'class' => array() ) ) ); ?></p>
             </div>
 
             <div class="hezarfen-packages">
@@ -865,11 +865,7 @@ class Admin_Menu {
             const PRICING_URL = 'https://hezarfen-r2.intense.com.tr/plugin-assets/pricing.json';
             const AJAX_URL = '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ); ?>';
             const NONCE = '<?php echo esc_js( wp_create_nonce( 'hezarfen_demand_nonce' ) ); ?>';
-            const PACKAGE_URLS = {
-                kanat: 'https://intense.com.tr/hezarfen-kanat',
-                ucus: 'https://intense.com.tr/hezarfen-ucus',
-                pro: 'https://intense.com.tr/hezarfen-pro'
-            };
+            const BASE_URL = 'https://intense.com.tr';
 
             const TEXTS = {
                 buy: '<?php echo esc_js( __( 'Satın Al', 'hezarfen-for-woocommerce' ) ); ?>',
@@ -897,10 +893,16 @@ class Admin_Menu {
                 if (!container || !packageData) return;
 
                 const adminEmail = container.dataset.adminEmail || '';
-                const url = PACKAGE_URLS[packageKey];
-                const isPreorder = packageData.availability && packageData.availability.status === 'preorder';
+                const availability = packageData.availability || {};
+                const isOnSale = availability.status === 'on_sale' && availability.purchase_enabled;
+                const isPreorder = availability.status === 'preorder';
 
-                if (isPreorder) {
+                if (isOnSale && availability.link_path) {
+                    const url = BASE_URL + availability.link_path;
+                    container.innerHTML = `
+                        <a href="${url}" class="hezarfen-cta" target="_blank" rel="noopener noreferrer nofollow">${TEXTS.buy}</a>
+                    `;
+                } else if (isPreorder) {
                     container.innerHTML = `
                         <div class="hezarfen-demand-form">
                             <label for="hezarfen_demand_email_${packageKey}">
@@ -922,10 +924,6 @@ class Admin_Menu {
                         e.preventDefault();
                         submitDemand(packageKey);
                     });
-                } else {
-                    container.innerHTML = `
-                        <a href="${url}" class="hezarfen-cta" target="_blank">${TEXTS.buy}</a>
-                    `;
                 }
             }
 
