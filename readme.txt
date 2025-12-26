@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.9
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.7.34
+Stable tag: 2.7.35
 
 🚀 2 bin site! Kargo takip, ücretsiz Hepsijet Entegrasyonu (1-4 desi: 66,60TL+KDV - Hezarfen Pro gerekmez), Mesafeli Sözleşmeler, NetGSM sipariş SMS
 == Description ==
@@ -264,6 +264,10 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
+= 2.7.35 - 2025-12-26 =
+* WP admin sol menüye Hezarfen menüsü eklenmesi
+* Hezafen yükselt sayfası
+
 = 2.7.34 - 2025-12-21 =
 * Hezarfen Pro sipariş ekranındaki tasarımdaki bozulma için düzeltme
 * Anket ekranının tekrar aktif edilmesi
