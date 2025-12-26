@@ -431,6 +431,74 @@ class Admin_Menu {
             .hezarfen-upgrade-wrap .notice {
                 display: none !important;
             }
+            .hezarfen-free-features {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+                gap: 20px;
+                max-width: 1400px;
+                margin: 0 auto;
+                text-align: left;
+            }
+            .hezarfen-free-category {
+                background: #fff;
+                border: 1px solid #e0e0e0;
+                border-radius: 8px;
+                padding: 20px;
+            }
+            .hezarfen-free-category-title {
+                font-size: 15px;
+                font-weight: 600;
+                color: #1d2327;
+                margin: 0 0 15px 0;
+                padding-bottom: 10px;
+                border-bottom: 2px solid #46b450;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .hezarfen-free-category ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .hezarfen-free-category li {
+                padding: 6px 0 6px 20px;
+                position: relative;
+                font-size: 13px;
+                color: #50575e;
+                line-height: 1.5;
+            }
+            .hezarfen-free-category li:before {
+                content: "✓";
+                position: absolute;
+                left: 0;
+                color: #46b450;
+                font-weight: bold;
+            }
+            .hezarfen-free-category .sub-feature {
+                padding-left: 35px;
+                font-size: 12px;
+                color: #666;
+            }
+            .hezarfen-free-category .sub-feature:before {
+                content: "→";
+                color: #999;
+            }
+            .hezarfen-free-category .highlight-note {
+                background: #f0f6fc;
+                border-left: 3px solid #2271b1;
+                padding: 8px 12px;
+                margin: 10px 0;
+                font-size: 12px;
+                color: #1d2327;
+            }
+            .hezarfen-free-category .price-highlight {
+                background: #f7f7f7;
+                padding: 10px 12px;
+                border-radius: 4px;
+                margin: 8px 0;
+                font-size: 12px;
+            }
         ';
     }
 
@@ -569,16 +637,130 @@ class Admin_Menu {
                 <p style="color: #666; max-width: 800px; margin: 0 auto 20px;">
                     <?php esc_html_e( 'Aşağıdaki özellikler tüm kullanıcılar için ücretsizdir:', 'hezarfen-for-woocommerce' ); ?>
                 </p>
-                <div class="hezarfen-package free" style="max-width: 600px; margin: 0 auto;">
-                    <ul>
-                        <li><?php esc_html_e( 'Kargokit anlaşmasıyla Hepsijet Entegrasyonu (0-4 desi:', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-price-skeleton price-inline" data-price-key="kargokit_hepsijet"></span><?php esc_html_e( '+KDV - Tüm Türkiye, adresten alım adrese gönderim)', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Sipariş durumlarına göre SMS oluşturabilme', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Kargoya verildi durumunda SMS oluşturabilme', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Sınırsız farklı ödeme ekranı sözleşme tipi ekleyebilme', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Sözleşmelerin anlık olarak ödeme ekranında güncellenmesi', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'İlçe ve mahalle alanının ödeme ekranında gösterimi', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Bireysel/kurumsal ve vergi bilgileri alanları', 'hezarfen-for-woocommerce' ); ?></li>
-                    </ul>
+
+                <div class="hezarfen-free-features">
+                    <!-- Kargo & Gönderim -->
+                    <div class="hezarfen-free-category">
+                        <h3 class="hezarfen-free-category-title">🚚 <?php esc_html_e( 'Kargo & Gönderim', 'hezarfen-for-woocommerce' ); ?></h3>
+                        <ul>
+                            <li><?php esc_html_e( 'Kargokit anlaşmasıyla Hepsijet WooCommerce entegrasyonu', 'hezarfen-for-woocommerce' ); ?></li>
+                        </ul>
+                        <div class="price-highlight">
+                            <?php esc_html_e( '1–4 Desi:', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-price-skeleton price-inline" data-price-key="kargokit_hepsijet"></span> <?php esc_html_e( '+KDV – Tüm Türkiye, adresten alım & adrese teslim', 'hezarfen-for-woocommerce' ); ?>
+                        </div>
+                        <div class="highlight-note">
+                            <?php esc_html_e( 'Minimum gönderim limiti yoktur, ek sözleşme gerekmez.', 'hezarfen-for-woocommerce' ); ?>
+                        </div>
+                        <p style="font-size: 12px; color: #666; margin: 10px 0 5px;"><?php esc_html_e( 'Kargokit üzerinden oluşturulan gönderilerde:', 'hezarfen-for-woocommerce' ); ?></p>
+                        <ul>
+                            <li class="sub-feature"><?php esc_html_e( 'WooCommerce sipariş düzenleme ekranından kargo barkodu oluşturabilme', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li class="sub-feature"><?php esc_html_e( 'Kargo takip numarasının siparişe otomatik olarak işlenmesi', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li class="sub-feature"><?php esc_html_e( 'Sipariş durumunun otomatik olarak "Kargoya Verildi" ve ardından "Tamamlandı" olarak güncellenmesi', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li class="sub-feature"><?php esc_html_e( 'Müşteriye otomatik e-posta ve SMS bilgilendirmeleri', 'hezarfen-for-woocommerce' ); ?></li>
+                        </ul>
+                    </div>
+
+                    <!-- Kargo Takip & Sipariş Yönetimi -->
+                    <div class="hezarfen-free-category">
+                        <h3 class="hezarfen-free-category-title">📦 <?php esc_html_e( 'Kargo Takip & Sipariş Yönetimi', 'hezarfen-for-woocommerce' ); ?></h3>
+                        <ul>
+                            <li><?php esc_html_e( '23 farklı kargo firması için kargo takip desteği', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li><?php esc_html_e( 'Tüm desteklenen kargo firmaları için manuel kargo takip numarası girişi', 'hezarfen-for-woocommerce' ); ?></li>
+                        </ul>
+                        <p style="font-size: 12px; color: #666; margin: 10px 0 5px;"><?php esc_html_e( 'Manuel takip numarası girildiğinde:', 'hezarfen-for-woocommerce' ); ?></p>
+                        <ul>
+                            <li class="sub-feature"><?php esc_html_e( 'Siparişin otomatik olarak "Kargoya Verildi" durumuna geçmesi', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li class="sub-feature"><?php esc_html_e( 'E-posta bildirimi', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li class="sub-feature"><?php esc_html_e( 'SMS gönderimi', 'hezarfen-for-woocommerce' ); ?></li>
+                        </ul>
+                        <p style="font-size: 12px; color: #666; margin: 10px 0 5px;"><?php esc_html_e( 'Müşteri hesabım sayfasında:', 'hezarfen-for-woocommerce' ); ?></p>
+                        <ul>
+                            <li class="sub-feature"><?php esc_html_e( 'Kargo firması', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li class="sub-feature"><?php esc_html_e( 'Kargo takip numarası', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li class="sub-feature"><?php esc_html_e( 'Takip linkinin görüntülenmesi', 'hezarfen-for-woocommerce' ); ?></li>
+                        </ul>
+                    </div>
+
+                    <!-- SMS & Bildirim Otomasyonu -->
+                    <div class="hezarfen-free-category">
+                        <h3 class="hezarfen-free-category-title">📩 <?php esc_html_e( 'SMS & Bildirim Otomasyonu', 'hezarfen-for-woocommerce' ); ?></h3>
+                        <ul>
+                            <li><?php esc_html_e( 'NetGSM dahili entegrasyonu (NetGSM eklentisi gerektirmez)', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li><?php esc_html_e( 'Sipariş durumlarına göre otomatik SMS gönderimi', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li><?php esc_html_e( '"Kargoya Verildi" durumunda otomatik SMS bildirimi', 'hezarfen-for-woocommerce' ); ?></li>
+                        </ul>
+                    </div>
+
+                    <!-- Sözleşme & Hukuki Uyum -->
+                    <div class="hezarfen-free-category">
+                        <h3 class="hezarfen-free-category-title">📋 <?php esc_html_e( 'Sözleşme & Hukuki Uyum (MSS)', 'hezarfen-for-woocommerce' ); ?></h3>
+                        <ul>
+                            <li><?php esc_html_e( 'Sınırsız sayıda sözleşme tipi ekleyebilme (Mesafeli Satış, Ön Bilgilendirme, Cayma Hakkı vb.)', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li><?php esc_html_e( 'WordPress sayfalarını sözleşme şablonu olarak kullanabilme', 'hezarfen-for-woocommerce' ); ?></li>
+                        </ul>
+                        <p style="font-size: 12px; color: #666; margin: 10px 0 5px;"><?php esc_html_e( 'Ödeme ekranında sözleşmelerin:', 'hezarfen-for-woocommerce' ); ?></p>
+                        <ul>
+                            <li class="sub-feature"><?php esc_html_e( 'Sayfa içi veya modal olarak gösterilmesi', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li class="sub-feature"><?php esc_html_e( 'Anlık ve dinamik olarak güncellenmesi', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li class="sub-feature"><?php esc_html_e( 'Siparişe özel değişkenlerin otomatik işlenmesi (müşteri adı, ürün bilgileri, tarih vb.)', 'hezarfen-for-woocommerce' ); ?></li>
+                        </ul>
+                        <ul>
+                            <li><?php esc_html_e( 'Hangi sözleşmelerin zorunlu onay gerektirdiğini belirleyebilme', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li><?php esc_html_e( 'Sipariş bazlı sözleşme arşivleme', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li><?php esc_html_e( 'Sözleşmelerin sipariş e-postalarına otomatik eklenmesi', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li><?php esc_html_e( 'Müşteri hesabım sayfasında sözleşmelere erişim', 'hezarfen-for-woocommerce' ); ?></li>
+                        </ul>
+                    </div>
+
+                    <!-- Türkiye'ye Özel Checkout Çözümleri -->
+                    <div class="hezarfen-free-category">
+                        <h3 class="hezarfen-free-category-title">🇹🇷 <?php esc_html_e( "Türkiye'ye Özel Checkout Çözümleri", 'hezarfen-for-woocommerce' ); ?></h3>
+                        <ul>
+                            <li><?php esc_html_e( 'İl / ilçe / mahalle alanlarının ödeme ekranında gösterimi', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li><?php esc_html_e( 'Türkiye standartlarına uygun adres alanı sıralaması', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li><?php esc_html_e( 'Posta kodu alanını tek tıkla kaldırabilme', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li><?php esc_html_e( "Ödeme formunun Türkiye'ye göre otomatik optimize edilmesi", 'hezarfen-for-woocommerce' ); ?></li>
+                        </ul>
+                    </div>
+
+                    <!-- Fatura & Kimlik Alanları -->
+                    <div class="hezarfen-free-category">
+                        <h3 class="hezarfen-free-category-title">💼 <?php esc_html_e( 'Fatura & Kimlik Alanları', 'hezarfen-for-woocommerce' ); ?></h3>
+                        <ul>
+                            <li><?php esc_html_e( 'Bireysel / Kurumsal fatura seçimi', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li><?php esc_html_e( 'TC Kimlik No alanı', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li><?php esc_html_e( '11 haneli TC Kimlik No doğrulama', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li><?php esc_html_e( 'Vergi No ve Vergi Dairesi alanları', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li><?php esc_html_e( 'Fatura alanlarının ödeme ekranında dinamik gösterimi', 'hezarfen-for-woocommerce' ); ?></li>
+                        </ul>
+                    </div>
+
+                    <!-- Güvenlik -->
+                    <div class="hezarfen-free-category">
+                        <h3 class="hezarfen-free-category-title">🔒 <?php esc_html_e( 'Güvenlik', 'hezarfen-for-woocommerce' ); ?></h3>
+                        <ul>
+                            <li><?php esc_html_e( 'TC Kimlik Numaralarının şifrelenerek saklanması', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li><?php esc_html_e( 'Güvenli anahtar yönetimi', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li><?php esc_html_e( 'Hassas veriler için WordPress standartlarına uygun koruma', 'hezarfen-for-woocommerce' ); ?></li>
+                        </ul>
+                    </div>
+
+                    <!-- Performans & Stabilite -->
+                    <div class="hezarfen-free-category">
+                        <h3 class="hezarfen-free-category-title">⚡ <?php esc_html_e( 'Performans & Stabilite', 'hezarfen-for-woocommerce' ); ?></h3>
+                        <ul>
+                            <li><?php esc_html_e( 'WooCommerce ve yüksek trafikli sitelerle uyumlu mimari', 'hezarfen-for-woocommerce' ); ?></li>
+                            <li><?php esc_html_e( 'Hafif, stabil ve ölçeklenebilir yapı', 'hezarfen-for-woocommerce' ); ?></li>
+                        </ul>
+                    </div>
+
+                    <!-- KVKK Uyumluluğu -->
+                    <div class="hezarfen-free-category">
+                        <h3 class="hezarfen-free-category-title">🛡️ <?php esc_html_e( 'KVKK Uyumluluğu', 'hezarfen-for-woocommerce' ); ?></h3>
+                        <ul>
+                            <li><?php esc_html_e( 'Yurt dışı sunuculara veri aktaran SaaS çözümlerine alternatif güvenli yapı', 'hezarfen-for-woocommerce' ); ?></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -603,7 +785,7 @@ class Admin_Menu {
                 emailLabelHint: '<?php echo esc_js( __( '(satışa açıldığında haber verelim)', 'hezarfen-for-woocommerce' ) ); ?>',
                 emailPlaceholder: '<?php echo esc_js( __( 'ornek@siteniz.com', 'hezarfen-for-woocommerce' ) ); ?>',
                 emailHintLine1: '<?php echo esc_js( __( 'Sitenizin e-posta altyapısı kullanılarak info@intense.com.tr adresine gönderilir.', 'hezarfen-for-woocommerce' ) ); ?>',
-                emailHintLine2: '<?php echo esc_js( __( 'Paylaşılan: site URL, e-posta, paket.', 'hezarfen-for-woocommerce' ) ); ?>',
+                emailHintLine2: '<?php echo esc_js( __( 'Paylaşılan: site URL, e-posta, seçtiğiniz paket.', 'hezarfen-for-woocommerce' ) ); ?>',
                 demandNotice: '<?php echo esc_js( __( 'Yeterli talep gelirse Aralık Sonu - Ocak ilk haftası satışa açılacaktır.', 'hezarfen-for-woocommerce' ) ); ?>',
                 invalidEmail: '<?php echo esc_js( __( 'Geçerli bir e-posta adresi girin.', 'hezarfen-for-woocommerce' ) ); ?>'
             };
