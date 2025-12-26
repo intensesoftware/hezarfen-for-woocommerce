@@ -47,6 +47,11 @@ class Admin_Menu {
      * @return void
      */
     public function maybe_redirect_after_update() {
+        // Don't redirect if Hezarfen Pro is installed
+        if ( $this->is_pro_installed() ) {
+            return;
+        }
+
         // Don't redirect on AJAX, CLI or if user doesn't have capability
         if ( wp_doing_ajax() || ( defined( 'WP_CLI' ) && WP_CLI ) || ! current_user_can( 'manage_options' ) ) {
             return;
@@ -89,6 +94,15 @@ class Admin_Menu {
             wp_safe_redirect( admin_url( 'admin.php?page=' . self::UPGRADE_SLUG ) );
             exit;
         }
+    }
+
+    /**
+     * Check if Hezarfen Pro is installed
+     *
+     * @return bool
+     */
+    private function is_pro_installed() {
+        return false !== get_option( 'hezarfen_pro_db_version', false );
     }
 
     /**
@@ -169,14 +183,17 @@ class Admin_Menu {
             'admin.php?page=wc-settings&tab=hezarfen'
         );
 
-        add_submenu_page(
-            self::MENU_SLUG,
-            __( 'Yükselt', 'hezarfen-for-woocommerce' ),
-            __( 'Yükselt', 'hezarfen-for-woocommerce' ),
-            'manage_options',
-            self::UPGRADE_SLUG,
-            array( $this, 'render_upgrade_page' )
-        );
+        // Only show upgrade menu if Hezarfen Pro is not installed
+        if ( ! $this->is_pro_installed() ) {
+            add_submenu_page(
+                self::MENU_SLUG,
+                __( 'Yükselt', 'hezarfen-for-woocommerce' ),
+                __( 'Yükselt', 'hezarfen-for-woocommerce' ),
+                'manage_options',
+                self::UPGRADE_SLUG,
+                array( $this, 'render_upgrade_page' )
+            );
+        }
 
         // Remove the auto-created duplicate submenu
         remove_submenu_page( self::MENU_SLUG, self::MENU_SLUG );
@@ -189,6 +206,11 @@ class Admin_Menu {
      * @return void
      */
     public function enqueue_upgrade_styles( $hook ) {
+        // Don't add upgrade styles if Hezarfen Pro is installed
+        if ( $this->is_pro_installed() ) {
+            return;
+        }
+
         // Always add menu styling for Yükselt button
         wp_add_inline_style( 'wp-admin', $this->get_menu_styles() );
 
