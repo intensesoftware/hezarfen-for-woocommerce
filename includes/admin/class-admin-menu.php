@@ -557,6 +557,16 @@ class Admin_Menu {
                 margin: 8px 0;
                 font-size: 12px;
             }
+            .hezarfen-packages-loading {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 300px;
+            }
+            .hezarfen-packages-loading .spinner {
+                float: none;
+                margin: 0;
+            }
         ';
     }
 
@@ -573,129 +583,10 @@ class Admin_Menu {
                 <p><?php echo wp_kses( __( 'Sipariş yönetiminde <span class="emphasis">manuel işlemlerle kaybettiğiniz</span> her dakika, <span class="emphasis-dark">işinizi büyütmek</span> için kullanabileceğiniz bir dakikadır. Hezarfen ile müşteri deneyimini iyileştirin, operasyonel süreçlerinizi otomatikleştirin.', 'hezarfen-for-woocommerce' ), array( 'span' => array( 'class' => array() ) ) ); ?></p>
             </div>
 
-            <div class="hezarfen-packages">
-                <!-- Standard Paket -->
-                <div class="hezarfen-package" data-package-container="standard" style="display: none;">
-                    <div class="hezarfen-package-header">
-                        <h2><?php esc_html_e( 'Standard', 'hezarfen-for-woocommerce' ); ?></h2>
-                        <div class="hezarfen-package-price">
-                            <span class="hezarfen-price-skeleton price-main" data-price-key="standard"></span>
-                            <small><span class="hezarfen-price-skeleton price-small" data-price-suffix="standard"></span></small>
-                        </div>
-                        <div class="hezarfen-package-sites"><?php esc_html_e( '1 site', 'hezarfen-for-woocommerce' ); ?></div>
-                    </div>
-                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Entegrasyonlar', 'hezarfen-for-woocommerce' ); ?></div>
-                    <ul>
-                        <li><?php esc_html_e( 'Yaymail ile "kargoya verildi" e-posta içeriğini özelleştirme', 'hezarfen-for-woocommerce' ); ?></li>
-                    </ul>
-
-                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Hesabım Sayfası', 'hezarfen-for-woocommerce' ); ?></div>
-                    <ul>
-                        <li><?php esc_html_e( 'Kurumsal/bireysel ve fatura alanları', 'hezarfen-for-woocommerce' ); ?></li>
-                    </ul>
-
-                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Bildirimler', 'hezarfen-for-woocommerce' ); ?></div>
-                    <ul>
-                        <li><?php esc_html_e( 'Kapıda ödemeli siparişlere SMS doğrulaması', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Kargoya verildi SMS bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik SMS gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargoya verildi e-posta bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik e-posta gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                    </ul>
-
-                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Kargo Entegrasyonu', 'hezarfen-for-woocommerce' ); ?></div>
-                    <ul>
-                        <li><?php esc_html_e( 'Yılda 500 gönderi için kargo entegrasyonu', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Yurtiçi, Aras, Sürat, Hepsijet, DHL E-Com, Kolay Gelsin', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kendi anlaşmanızla bu kargo firmalarına entegrasyon sağlayabilirsiniz.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargo barkodu oluşturma (kargo firmasına otomatik adres aktarımı)', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş adresi barkod ile kargo firmasına iletilir, hatalı adres girişi engellenir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Barkod okutulunca sipariş durumu otomatik "Kargoya Verildi" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firması barkodu okuttuğunda sipariş durumu otomatik olarak "Kargoya Verildi" olur.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Teslimatta sipariş durumu otomatik "Tamamlandı" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş alıcıya teslim edilince sipariş durumu otomatik olarak "Tamamlandı" durumuna geçer.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargo takip numarası siparişe otomatik girilir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo takip numarası otomatik olarak siparişe (Hezarfen kargo takip alanına) girilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                    </ul>
-                    <div class="hezarfen-cta-container" data-package="standard" data-admin-email="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>"></div>
-                </div>
-
-                <!-- Growth Paket -->
-                <div class="hezarfen-package featured" data-package-container="growth" style="display: none;">
-                    <div class="hezarfen-package-header">
-                        <h2><?php esc_html_e( 'Growth', 'hezarfen-for-woocommerce' ); ?></h2>
-                        <div class="hezarfen-package-price">
-                            <span class="hezarfen-price-skeleton price-main" data-price-key="growth"></span>
-                            <small><span class="hezarfen-price-skeleton price-small" data-price-suffix="growth"></span></small>
-                        </div>
-                        <div class="hezarfen-package-sites"><?php esc_html_e( '1 site', 'hezarfen-for-woocommerce' ); ?></div>
-                    </div>
-                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Entegrasyonlar', 'hezarfen-for-woocommerce' ); ?></div>
-                    <ul>
-                        <li><?php esc_html_e( 'FunnelKit ödeme ekranına ilçe/mahalle desteği', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Yaymail ile "kargoya verildi" e-posta içeriğini özelleştirme', 'hezarfen-for-woocommerce' ); ?></li>
-                    </ul>
-
-                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Hesabım Sayfası', 'hezarfen-for-woocommerce' ); ?></div>
-                    <ul>
-                        <li><?php esc_html_e( 'SMS ile müşteri girişi (telefon numarasıyla giriş, şifre gerekmeden)', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Kurumsal/bireysel ve fatura alanları', 'hezarfen-for-woocommerce' ); ?></li>
-                    </ul>
-
-                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Bildirimler', 'hezarfen-for-woocommerce' ); ?></div>
-                    <ul>
-                        <li><?php esc_html_e( 'Kapıda ödemeli siparişlere SMS doğrulaması', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Kargoya verildi SMS bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik SMS gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargoya verildi e-posta bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik e-posta gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                    </ul>
-
-                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Kargo Entegrasyonu', 'hezarfen-for-woocommerce' ); ?></div>
-                    <ul>
-                        <li><?php esc_html_e( 'Yılda 1.200 gönderi için kargo entegrasyonu', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Yurtiçi, Aras, Sürat, Hepsijet, DHL E-Com, Kolay Gelsin', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kendi anlaşmanızla bu kargo firmalarına entegrasyon sağlayabilirsiniz.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargo barkodu oluşturma (kargo firmasına otomatik adres aktarımı)', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş adresi barkod ile kargo firmasına iletilir, hatalı adres girişi engellenir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Barkod okutulunca sipariş durumu otomatik "Kargoya Verildi" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firması barkodu okuttuğunda sipariş durumu otomatik olarak "Kargoya Verildi" olur.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Teslimatta sipariş durumu otomatik "Tamamlandı" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş alıcıya teslim edilince sipariş durumu otomatik olarak "Tamamlandı" durumuna geçer.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargo takip numarası siparişe otomatik girilir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo takip numarası otomatik olarak siparişe (Hezarfen kargo takip alanına) girilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                    </ul>
-                    <div class="hezarfen-cta-container" data-package="growth" data-admin-email="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>"></div>
-                </div>
-
-                <!-- Pro Paket -->
-                <div class="hezarfen-package">
-                    <div class="hezarfen-package-header">
-                        <h2><?php esc_html_e( 'Pro', 'hezarfen-for-woocommerce' ); ?></h2>
-                        <div class="hezarfen-package-price">
-                            <span class="hezarfen-price-skeleton price-main" data-price-key="pro"></span>
-                            <small><span class="hezarfen-price-skeleton price-small" data-price-suffix="pro"></span></small>
-                        </div>
-                        <div class="hezarfen-package-sites"><?php esc_html_e( '1 site', 'hezarfen-for-woocommerce' ); ?></div>
-                    </div>
-                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Entegrasyonlar', 'hezarfen-for-woocommerce' ); ?></div>
-                    <ul>
-                        <li><?php esc_html_e( 'FunnelKit ödeme ekranına ilçe/mahalle desteği', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-coming-soon"><?php esc_html_e( 'Yakında', 'hezarfen-for-woocommerce' ); ?></span></li>
-                        <li><?php esc_html_e( 'Yaymail ile "kargoya verildi" e-posta içeriğini özelleştirme', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-coming-soon"><?php esc_html_e( 'Yakında', 'hezarfen-for-woocommerce' ); ?></span></li>
-                        <li><?php esc_html_e( 'Paraşüt ile fatura kesme entegrasyonu', 'hezarfen-for-woocommerce' ); ?></li>
-                    </ul>
-
-                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Hesabım Sayfası', 'hezarfen-for-woocommerce' ); ?></div>
-                    <ul>
-                        <li><?php esc_html_e( 'SMS ile giriş (telefon numarasıyla giriş, şifre gerekmeden)', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-coming-soon"><?php esc_html_e( 'Yakında', 'hezarfen-for-woocommerce' ); ?></span></li>
-                        <li><?php esc_html_e( 'Kurumsal/bireysel ve fatura alanları', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-coming-soon"><?php esc_html_e( 'Yakında', 'hezarfen-for-woocommerce' ); ?></span></li>
-                    </ul>
-
-                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Bildirimler', 'hezarfen-for-woocommerce' ); ?></div>
-                    <ul>
-                        <li><?php esc_html_e( 'Kapıda ödemeli siparişlere SMS doğrulaması', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-coming-soon"><?php esc_html_e( 'Yakında', 'hezarfen-for-woocommerce' ); ?></span></li>
-                        <li><?php esc_html_e( 'Terkedilmiş sepet için NetGSM otomasyonu', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-coming-soon"><?php esc_html_e( 'Yakında', 'hezarfen-for-woocommerce' ); ?></span></li>
-                        <li><?php esc_html_e( 'Kargoya verildi SMS bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik SMS gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargoya verildi e-posta bildirimi', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş kargoya verildiğinde müşteriye otomatik e-posta gönderilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                    </ul>
-
-                    <div class="hezarfen-feature-group"><?php esc_html_e( 'Kargo Entegrasyonu', 'hezarfen-for-woocommerce' ); ?></div>
-                    <ul>
-                        <li><?php esc_html_e( 'Sınırsız gönderi için kargo entegrasyonu (kendi anlaşmanızla)', 'hezarfen-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Yurtiçi, Aras, Sürat, Hepsijet, DHL E-Com, Kolay Gelsin', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kendi anlaşmanızla bu kargo firmalarına entegrasyon sağlayabilirsiniz.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargo barkodu oluşturma (kargo firmasına otomatik adres aktarımı)', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş adresi barkod ile kargo firmasına iletilir, hatalı adres girişi engellenir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Barkod okutulunca sipariş durumu otomatik "Kargoya Verildi" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firması barkodu okuttuğunda sipariş durumu otomatik olarak "Kargoya Verildi" olur.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Teslimatta sipariş durumu otomatik "Tamamlandı" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş alıcıya teslim edilince sipariş durumu otomatik olarak "Tamamlandı" durumuna geçer.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargo takip numarası siparişe otomatik girilir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo takip numarası otomatik olarak siparişe (Hezarfen kargo takip alanına) girilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kullanıcı dostu kargo takip ekranında anlık kargo hareketlerinin görünmesi (kargo firmasının linkine tıklamadan)', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-coming-soon"><?php esc_html_e( 'Yakında', 'hezarfen-for-woocommerce' ); ?></span></li>
-                    </ul>
-                    <div class="hezarfen-cta-container" data-package="pro" data-admin-email="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>"></div>
+            <div class="hezarfen-packages" id="hezarfen-packages-container" data-admin-email="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>">
+                <!-- Paketler JSON'dan dinamik olarak yüklenecek -->
+                <div class="hezarfen-packages-loading">
+                    <span class="spinner is-active"></span>
                 </div>
             </div>
 
@@ -850,8 +741,18 @@ class Admin_Menu {
                 emailHintLine1: '<?php echo esc_js( __( 'Sitenizin e-posta altyapısı kullanılarak info@intense.com.tr adresine gönderilir.', 'hezarfen-for-woocommerce' ) ); ?>',
                 emailHintLine2: '<?php echo esc_js( __( 'Paylaşılan: site URL, e-posta, seçtiğiniz paket.', 'hezarfen-for-woocommerce' ) ); ?>',
                 demandNotice: '<?php echo esc_js( __( 'Yeterli talep gelirse Aralık Sonu - Ocak ilk haftası satışa açılacaktır.', 'hezarfen-for-woocommerce' ) ); ?>',
-                invalidEmail: '<?php echo esc_js( __( 'Geçerli bir e-posta adresi girin.', 'hezarfen-for-woocommerce' ) ); ?>'
+                invalidEmail: '<?php echo esc_js( __( 'Geçerli bir e-posta adresi girin.', 'hezarfen-for-woocommerce' ) ); ?>',
+                comingSoon: '<?php echo esc_js( __( 'Yakında', 'hezarfen-for-woocommerce' ) ); ?>',
+                site: '<?php echo esc_js( __( 'site', 'hezarfen-for-woocommerce' ) ); ?>',
+                featureGroups: {
+                    entegrasyonlar: '<?php echo esc_js( __( 'Entegrasyonlar', 'hezarfen-for-woocommerce' ) ); ?>',
+                    hesabim_sayfasi: '<?php echo esc_js( __( 'Hesabım Sayfası', 'hezarfen-for-woocommerce' ) ); ?>',
+                    bildirimler: '<?php echo esc_js( __( 'Bildirimler', 'hezarfen-for-woocommerce' ) ); ?>',
+                    kargo_entegrasyonu: '<?php echo esc_js( __( 'Kargo Entegrasyonu', 'hezarfen-for-woocommerce' ) ); ?>'
+                }
             };
+
+            const PACKAGE_ORDER = ['standard', 'growth', 'pro'];
 
             function formatPrice(price) {
                 return new Intl.NumberFormat('tr-TR', {
@@ -860,42 +761,118 @@ class Admin_Menu {
                 }).format(price) + '₺';
             }
 
-            function renderCtaContainer(packageKey, packageData) {
-                const container = document.querySelector('[data-package="' + packageKey + '"]');
-                if (!container || !packageData) return;
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
 
-                const adminEmail = container.dataset.adminEmail || '';
+            function renderFeatureItem(feature) {
+                let html = '<li>' + escapeHtml(feature.text);
+                if (feature.coming_soon) {
+                    html += ' <span class="hezarfen-coming-soon">' + TEXTS.comingSoon + '</span>';
+                } else if (feature.tooltip) {
+                    html += ' <span class="hezarfen-tooltip" data-tooltip="' + escapeHtml(feature.tooltip) + '">ⓘ</span>';
+                }
+                html += '</li>';
+                return html;
+            }
+
+            function renderFeatures(features) {
+                if (!features) return '';
+                let html = '';
+                const groupOrder = ['entegrasyonlar', 'hesabim_sayfasi', 'bildirimler', 'kargo_entegrasyonu'];
+
+                groupOrder.forEach(function(groupKey) {
+                    if (features[groupKey] && features[groupKey].length > 0) {
+                        html += '<div class="hezarfen-feature-group">' + (TEXTS.featureGroups[groupKey] || groupKey) + '</div>';
+                        html += '<ul>';
+                        features[groupKey].forEach(function(feature) {
+                            html += renderFeatureItem(feature);
+                        });
+                        html += '</ul>';
+                    }
+                });
+                return html;
+            }
+
+            function renderCtaContainer(packageKey, packageData, adminEmail) {
                 const availability = packageData.availability || {};
                 const isOnSale = availability.status === 'on_sale' && availability.purchase_enabled;
                 const isPreorder = availability.status === 'preorder';
 
                 if (isOnSale && availability.link_path) {
                     const url = BASE_URL + availability.link_path;
-                    container.innerHTML = `
-                        <a href="${url}" class="hezarfen-cta" target="_blank" rel="noopener noreferrer nofollow">${TEXTS.buy}</a>
-                    `;
+                    return '<div class="hezarfen-cta-container"><a href="' + url + '" class="hezarfen-cta" target="_blank" rel="noopener noreferrer nofollow">' + TEXTS.buy + '</a></div>';
                 } else if (isPreorder) {
-                    container.innerHTML = `
-                        <div class="hezarfen-demand-form">
-                            <label for="hezarfen_demand_email_${packageKey}">
-                                ${TEXTS.emailLabel}
-                                <span>${TEXTS.emailLabelHint}</span>
-                            </label>
-                            <div class="hezarfen-demand-email-wrap">
-                                <input type="email" class="hezarfen-demand-email" id="hezarfen_demand_email_${packageKey}" name="hezarfen_demand_email_${packageKey}" value="${adminEmail}" placeholder="${TEXTS.emailPlaceholder}" />
+                    return `
+                        <div class="hezarfen-cta-container" data-package="${packageKey}" data-admin-email="${adminEmail}">
+                            <div class="hezarfen-demand-form">
+                                <label for="hezarfen_demand_email_${packageKey}">
+                                    ${TEXTS.emailLabel}
+                                    <span>${TEXTS.emailLabelHint}</span>
+                                </label>
+                                <div class="hezarfen-demand-email-wrap">
+                                    <input type="email" class="hezarfen-demand-email" id="hezarfen_demand_email_${packageKey}" name="hezarfen_demand_email_${packageKey}" value="${adminEmail}" placeholder="${TEXTS.emailPlaceholder}" />
+                                </div>
+                                <p class="hezarfen-demand-hint">${TEXTS.emailHintLine1}<br>${TEXTS.emailHintLine2}</p>
+                                <button type="button" class="hezarfen-cta demand" data-package="${packageKey}">${TEXTS.demand}</button>
                             </div>
-                            <p class="hezarfen-demand-hint">${TEXTS.emailHintLine1}<br>${TEXTS.emailHintLine2}</p>
-                            <button type="button" class="hezarfen-cta demand" data-package="${packageKey}">${TEXTS.demand}</button>
+                            <p class="hezarfen-demand-notice">${TEXTS.demandNotice}</p>
                         </div>
-                        <p class="hezarfen-demand-notice">${TEXTS.demandNotice}</p>
                     `;
+                }
+                return '<div class="hezarfen-cta-container"></div>';
+            }
 
-                    // Add click handler for demand button
-                    const btn = container.querySelector('.hezarfen-cta.demand');
+            function renderPackage(key, packageData, adminEmail) {
+                const isFeatured = packageData.featured === true;
+                const sites = packageData.sites || 1;
+                const packageName = key.charAt(0).toUpperCase() + key.slice(1);
+
+                let html = '<div class="hezarfen-package' + (isFeatured ? ' featured' : '') + '" data-package-container="' + key + '">';
+                html += '<div class="hezarfen-package-header">';
+                html += '<h2>' + escapeHtml(packageName) + '</h2>';
+                html += '<div class="hezarfen-package-price">';
+                html += '<span>' + formatPrice(packageData.price) + '</span>';
+                html += '<small>+KDV / 1 yıllık</small>';
+                html += '</div>';
+                html += '<div class="hezarfen-package-sites">' + sites + ' ' + TEXTS.site + '</div>';
+                html += '</div>';
+                html += renderFeatures(packageData.features);
+                html += renderCtaContainer(key, packageData, adminEmail);
+                html += '</div>';
+                return html;
+            }
+
+            function renderPackages(data) {
+                const container = document.getElementById('hezarfen-packages-container');
+                if (!container) return;
+
+                const adminEmail = container.dataset.adminEmail || '';
+                let html = '';
+
+                PACKAGE_ORDER.forEach(function(key) {
+                    if (data[key]) {
+                        html += renderPackage(key, data[key], adminEmail);
+                    }
+                });
+
+                container.innerHTML = html;
+
+                // Add click handlers for demand buttons
+                container.querySelectorAll('.hezarfen-cta.demand').forEach(function(btn) {
                     btn.addEventListener('click', function(e) {
                         e.preventDefault();
-                        submitDemand(packageKey);
+                        submitDemand(btn.dataset.package);
                     });
+                });
+
+                // Update Kargokit Hepsijet price
+                const kargokitPrice = document.querySelector('[data-price-key="kargokit_hepsijet"]');
+                if (kargokitPrice && data.kargokit_pricing && data.kargokit_pricing.hepsijet) {
+                    kargokitPrice.textContent = formatPrice(data.kargokit_pricing.hepsijet['0_4desi']);
+                    kargokitPrice.classList.remove('hezarfen-price-skeleton', 'price-inline');
                 }
             }
 
@@ -945,58 +922,24 @@ class Admin_Menu {
                 });
             }
 
-            function updatePrices(data) {
-                // Update prices for each package
-                ['standard', 'growth', 'pro'].forEach(function(key) {
-                    const packageContainer = document.querySelector('[data-package-container="' + key + '"]');
-                    const priceEl = document.querySelector('[data-price-key="' + key + '"]');
-                    const suffixEl = document.querySelector('[data-price-suffix="' + key + '"]');
-
-                    // Show/hide package container based on JSON data (only for standard and growth)
-                    if (packageContainer && (key === 'standard' || key === 'growth')) {
-                        if (data[key]) {
-                            packageContainer.style.display = '';
-                        } else {
-                            packageContainer.style.display = 'none';
-                        }
-                    }
-
-                    if (priceEl && data[key]) {
-                        priceEl.textContent = formatPrice(data[key].price);
-                        priceEl.classList.remove('hezarfen-price-skeleton', 'price-main');
-                    }
-                    if (suffixEl && data[key]) {
-                        suffixEl.textContent = '+KDV / 1 yıllık';
-                        suffixEl.classList.remove('hezarfen-price-skeleton', 'price-small');
-                    }
-                    // Render CTA based on availability
-                    if (data[key]) {
-                        renderCtaContainer(key, data[key]);
-                    }
-                });
-
-                // Update Kargokit Hepsijet price
-                const kargokitPrice = document.querySelector('[data-price-key="kargokit_hepsijet"]');
-                if (kargokitPrice && data.kargokit_pricing && data.kargokit_pricing.hepsijet) {
-                    kargokitPrice.textContent = formatPrice(data.kargokit_pricing.hepsijet['0_4desi']);
-                    kargokitPrice.classList.remove('hezarfen-price-skeleton', 'price-inline');
-                }
-            }
-
-            function fetchPrices() {
+            function fetchAndRender() {
                 fetch(PRICING_URL)
                     .then(response => response.json())
-                    .then(data => updatePrices(data))
+                    .then(data => renderPackages(data))
                     .catch(error => {
                         console.error('Hezarfen pricing fetch error:', error);
+                        const container = document.getElementById('hezarfen-packages-container');
+                        if (container) {
+                            container.innerHTML = '<p style="text-align: center; color: #666;">Paket bilgileri yüklenemedi. Lütfen sayfayı yenileyin.</p>';
+                        }
                     });
             }
 
-            // Fetch prices when DOM is ready
+            // Fetch and render when DOM is ready
             if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', fetchPrices);
+                document.addEventListener('DOMContentLoaded', fetchAndRender);
             } else {
-                fetchPrices();
+                fetchAndRender();
             }
         })();
         </script>
