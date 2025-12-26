@@ -446,7 +446,7 @@ class Admin_Menu {
 
             <div class="hezarfen-packages">
                 <!-- Kanat Paket -->
-                <div class="hezarfen-package">
+                <div class="hezarfen-package" data-package-container="kanat" style="display: none;">
                     <div class="hezarfen-package-header">
                         <h2><?php esc_html_e( 'Kanat', 'hezarfen-for-woocommerce' ); ?></h2>
                         <div class="hezarfen-package-price">
@@ -462,7 +462,7 @@ class Admin_Menu {
                         <li><?php esc_html_e( 'Barkod okutulunca sipariş durumu otomatik "Kargoya Verildi" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firması barkodu okuttuğunda sipariş durumu otomatik olarak "Kargoya Verildi" olur.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                         <li><?php esc_html_e( 'Teslimatta sipariş durumu otomatik "Tamamlandı" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş alıcıya teslim edilince sipariş durumu otomatik olarak "Tamamlandı" durumuna geçer.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                         <li><?php esc_html_e( 'Kargo takip numarası siparişe otomatik girilir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo takip numarası otomatik olarak siparişe (Hezarfen kargo takip alanına) girilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargo takip ekranında detaylı kargo hareketleri', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firmasının API\'sinden çekilen bilgilerle, kargonuzun anlık olarak nerede olduğunu zaman çizelgesi şeklinde görüntüleyin.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Detaylı kargo hareketleri sipariş detayında ve kargo takip ekranında görüntülenir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firmasının sitesine gitmeden, kargonuzun anlık olarak nerede olduğunu zaman çizelgesi şeklinde görüntüleyin.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                     </ul>
 
                     <div class="hezarfen-feature-group"><?php esc_html_e( 'Bildirimler', 'hezarfen-for-woocommerce' ); ?></div>
@@ -481,7 +481,7 @@ class Admin_Menu {
                 </div>
 
                 <!-- Uçuş Paket -->
-                <div class="hezarfen-package featured">
+                <div class="hezarfen-package featured" data-package-container="ucus" style="display: none;">
                     <div class="hezarfen-package-header">
                         <h2><?php esc_html_e( 'Uçuş', 'hezarfen-for-woocommerce' ); ?></h2>
                         <div class="hezarfen-package-price">
@@ -497,7 +497,7 @@ class Admin_Menu {
                         <li><?php esc_html_e( 'Barkod okutulunca sipariş durumu otomatik "Kargoya Verildi" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firması barkodu okuttuğunda sipariş durumu otomatik olarak "Kargoya Verildi" olur.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                         <li><?php esc_html_e( 'Teslimatta sipariş durumu otomatik "Tamamlandı" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş alıcıya teslim edilince sipariş durumu otomatik olarak "Tamamlandı" durumuna geçer.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                         <li><?php esc_html_e( 'Kargo takip numarası siparişe otomatik girilir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo takip numarası otomatik olarak siparişe (Hezarfen kargo takip alanına) girilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargo takip ekranında detaylı kargo hareketleri', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firmasının API\'sinden çekilen bilgilerle, kargonuzun anlık olarak nerede olduğunu zaman çizelgesi şeklinde görüntüleyin.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Detaylı kargo hareketleri sipariş detayında ve kargo takip ekranında görüntülenir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firmasının sitesine gitmeden, kargonuzun anlık olarak nerede olduğunu zaman çizelgesi şeklinde görüntüleyin.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                     </ul>
 
                     <div class="hezarfen-feature-group"><?php esc_html_e( 'Bildirimler', 'hezarfen-for-woocommerce' ); ?></div>
@@ -538,7 +538,7 @@ class Admin_Menu {
                         <li><?php esc_html_e( 'Barkod okutulunca sipariş durumu otomatik "Kargoya Verildi" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firması barkodu okuttuğunda sipariş durumu otomatik olarak "Kargoya Verildi" olur.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                         <li><?php esc_html_e( 'Teslimatta sipariş durumu otomatik "Tamamlandı" olur', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Sipariş alıcıya teslim edilince sipariş durumu otomatik olarak "Tamamlandı" durumuna geçer.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                         <li><?php esc_html_e( 'Kargo takip numarası siparişe otomatik girilir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo takip numarası otomatik olarak siparişe (Hezarfen kargo takip alanına) girilir.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
-                        <li><?php esc_html_e( 'Kargo takip ekranında detaylı kargo hareketleri', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firmasının API\'sinden çekilen bilgilerle, kargonuzun anlık olarak nerede olduğunu zaman çizelgesi şeklinde görüntüleyin.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
+                        <li><?php esc_html_e( 'Detaylı kargo hareketleri sipariş detayında ve kargo takip ekranında görüntülenir', 'hezarfen-for-woocommerce' ); ?> <span class="hezarfen-tooltip" data-tooltip="<?php esc_attr_e( 'Kargo firmasının sitesine gitmeden, kargonuzun anlık olarak nerede olduğunu zaman çizelgesi şeklinde görüntüleyin.', 'hezarfen-for-woocommerce' ); ?>">ⓘ</span></li>
                     </ul>
 
                     <div class="hezarfen-feature-group"><?php esc_html_e( 'Bildirimler', 'hezarfen-for-woocommerce' ); ?></div>
@@ -701,8 +701,19 @@ class Admin_Menu {
             function updatePrices(data) {
                 // Update prices for each package
                 ['kanat', 'ucus', 'pro'].forEach(function(key) {
+                    const packageContainer = document.querySelector('[data-package-container="' + key + '"]');
                     const priceEl = document.querySelector('[data-price-key="' + key + '"]');
                     const suffixEl = document.querySelector('[data-price-suffix="' + key + '"]');
+
+                    // Show/hide package container based on JSON data (only for kanat and ucus)
+                    if (packageContainer && (key === 'kanat' || key === 'ucus')) {
+                        if (data[key]) {
+                            packageContainer.style.display = '';
+                        } else {
+                            packageContainer.style.display = 'none';
+                        }
+                    }
+
                     if (priceEl && data[key]) {
                         priceEl.textContent = formatPrice(data[key].price);
                         priceEl.classList.remove('hezarfen-price-skeleton', 'price-main');
@@ -712,7 +723,9 @@ class Admin_Menu {
                         suffixEl.classList.remove('hezarfen-price-skeleton', 'price-small');
                     }
                     // Render CTA based on availability
-                    renderCtaContainer(key, data[key]);
+                    if (data[key]) {
+                        renderCtaContainer(key, data[key]);
+                    }
                 });
 
                 // Update Kargokit Hepsijet price
