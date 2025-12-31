@@ -8,10 +8,10 @@ Requires PHP: 7.0
 License: GPL2
 Stable tag: 2.7.36
 
-🚀 2 bin site! Kargo takip, ücretsiz Hepsijet Entegrasyonu (1-4 desi: 66,60TL+KDV - Hezarfen Pro gerekmez), Mesafeli Sözleşmeler, NetGSM sipariş SMS
+🚀 2 bin site! Kargo takip, ücretsiz Hepsijet Entegrasyonu (1-4 desi: 89,24TL+KDV - Hezarfen Pro gerekmez), Mesafeli Sözleşmeler, NetGSM sipariş SMS
 == Description ==
 
-**Tamamen Ücretsiz!** Intense&Hepsijet İşbirliğiyle; Hezarfen kullanıcılarına Hepsijet 1-4 Desi 66,60TL+KDV - Hezarfen, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo, ödeme ve sözleşme yönetim eklentisidir. Bu WooCommerce kargo entegrasyon eklentisi, 23 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel WooCommerce kargo takip deneyimi sunar, Mesafeli Satış Sözleşmesi (MSS) desteği sağlar ve Türkiye'ye özgü mahalle, fatura ve vergi alanlarıyla ödeme ekranınızı Türkiye'ye uyumlu hale getirir.
+**Tamamen Ücretsiz!** Intense&Hepsijet İşbirliğiyle; Hezarfen kullanıcılarına Hepsijet 1-4 Desi 89,24TL+KDV - Hezarfen, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo, ödeme ve sözleşme yönetim eklentisidir. Bu WooCommerce kargo entegrasyon eklentisi, 23 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel WooCommerce kargo takip deneyimi sunar, Mesafeli Satış Sözleşmesi (MSS) desteği sağlar ve Türkiye'ye özgü mahalle, fatura ve vergi alanlarıyla ödeme ekranınızı Türkiye'ye uyumlu hale getirir.
 
 = 🚀 2000+ WooCommerce Sitesi tarafından kullanılıyor! =
 
@@ -36,7 +36,7 @@ Stable tag: 2.7.36
 = ⭐ TAMAMEN ÜCRETSİZ =
 
 **🚚 Hepsijet Ücretsiz WooCommerce Kargo Entegrasyonu**
-• 1-4 Desi 66,60TL+KDV - (Hezarfen Pro gerekmez!) Anlaşma yapmanıza gerek yok, kargokit.com'dan kayıt olun, bakiye yükleyin ve gönderime başlayın. Kargo gönderim için minimum limit yok! İster ayda 1 tane, ister 10000 tane!
+• 1-4 Desi 89,24TL+KDV - (Hezarfen Pro gerekmez!) Anlaşma yapmanıza gerek yok, kargokit.com'dan kayıt olun, bakiye yükleyin ve gönderime başlayın. Kargo gönderim için minimum limit yok! İster ayda 1 tane, ister 10000 tane!
 • Ücretsiz entegrasyon (otomatik kargo takip no girişi, otomatik siparişin kargoya verildi durumuna geçmesi, otomatik siparişin tamamlandı durumuna geçmesi, otomatik müşteriye e-posta bildirimi)
 
 **🚚 Kargo Yönetimi ve WooCommerce Kargo Takip Modülü**
