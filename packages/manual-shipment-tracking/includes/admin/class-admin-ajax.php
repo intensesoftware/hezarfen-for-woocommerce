@@ -898,22 +898,24 @@ class Admin_Ajax {
 						$product_text .= "\n  " . $variant;
 					}
 				}
-				
-				// Calculate cell height based on number of lines
-				$line_count = 1 + count( $variants );
-				$cell_height = 4 * $line_count;
-				
+
 				// Save current position
 				$start_x = $right_col_x;
 				$start_y = $pdf->GetY();
-				
+
+				// Calculate actual cell height based on text content using TCPDF's getStringHeight
+				$cell_height = $pdf->getStringHeight( $product_col_width, self::ensure_utf8( $product_text ) );
+
 				// Draw product cell with border
 				$pdf->SetXY( $start_x, $start_y );
 				$pdf->MultiCell( $product_col_width, 4, self::ensure_utf8( $product_text ), 1, 'L' );
-				
+
+				// Get actual height used by MultiCell
+				$actual_height = $pdf->GetY() - $start_y;
+
 				// Draw total cell with border (aligned to the right of product cell)
 				$pdf->SetXY( $start_x + $product_col_width, $start_y );
-				$pdf->Cell( $total_col_width, $cell_height, self::format_price_for_pdf( $item->get_total() ), 1, 1, 'R' );
+				$pdf->Cell( $total_col_width, $actual_height, self::format_price_for_pdf( $item->get_total() ), 1, 1, 'R' );
 				
 				// Move to next row (MultiCell already moved Y position)
 			}
