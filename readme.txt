@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 6.9
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.7.36
+Stable tag: 2.7.37
 
 🚀 2 bin site! Kargo takip, ücretsiz Hepsijet Entegrasyonu (1-4 desi: 89,24TL+KDV - Hezarfen Pro gerekmez), Mesafeli Sözleşmeler, NetGSM sipariş SMS
 == Description ==
@@ -264,6 +264,12 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
+= 2.7.37 - 2026-01-17 =
+* Şifreleme ayarlarındaki açıklama iyileştirildi.
+* Sipariş düzenleme ekranında indirimli kargo hizmetiyle ilgili servis bilgisi intense.comt.r yerine kargokit.com olarak değiştirildi.
+* Kargokit kargo etiketinde ürün satırlarının üst üste geçmesi problemi giderildi.
+* Kargokit kargo etiketinde çeviri düzeltildi.
+
 = 2.7.36 - 2025-12-26 =
 * Hezarfen ayarlarına "yükselt" butonu eklenmesi
 * Yükselt sayfasında değişiklikler
