@@ -269,7 +269,7 @@ if ( $has_hepsijet_credentials ) {
                             ?>
 
                             <div class="mb-4 flex items-center justify-between">
-                                <span class="text-sm font-medium text-orange-600" style="font-size: 13px !important;">intense.com.tr & Hepsijet işbirliği ile Avantajlı Kargo Fiyatları</span>
+                                <span class="text-sm font-medium text-orange-600" style="font-size: 13px !important;">kargokit.com & Hepsijet işbirliği ile Avantajlı Kargo Fiyatları</span>
                                 <button type="button" id="hepsijet-help-toggle" class="px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-lg hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 ml-2">
                                     <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -309,7 +309,7 @@ if ( $has_hepsijet_credentials ) {
                                                     <p class="text-xs text-gray-600">
                                                         <?php printf( 
                                                             esc_html__('Create or sign in to your %s account', 'hezarfen-for-woocommerce'), 
-                                                            '<strong>intense.com.tr</strong>' 
+                                                            '<strong>kargokit.com</strong>' 
                                                         ); ?>
                                                     </p>
                                                 </div>
@@ -343,8 +343,8 @@ if ( $has_hepsijet_credentials ) {
                                                 </div>
                                             </div>
                                             <div class="flex gap-2 mt-6">
-                                                <a href="https://intense.com.tr" target="_blank" class="flex-1 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
-                                                    <?php esc_html_e('Go to intense.com.tr', 'hezarfen-for-woocommerce'); ?>
+                                                <a href="https://kargokit.com" target="_blank" class="flex-1 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
+                                                    <?php esc_html_e('Go to kargokit.com', 'hezarfen-for-woocommerce'); ?>
                                                 </a>
                                                 <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=hepsijet_integration' ) ); ?>" target="_blank" class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 text-center">
                                                     <?php esc_html_e('Settings', 'hezarfen-for-woocommerce'); ?>
@@ -402,7 +402,7 @@ if ( $has_hepsijet_credentials ) {
                                                 <p class="text-xs text-gray-600">
                                                     <?php printf( 
                                                         esc_html__('Create or sign in to your %s account', 'hezarfen-for-woocommerce'), 
-                                                        '<strong>intense.com.tr</strong>' 
+                                                        '<strong>kargokit.com</strong>' 
                                                     ); ?>
                                                 </p>
                                             </div>
@@ -437,8 +437,8 @@ if ( $has_hepsijet_credentials ) {
                                         </div>
                                         
                                         <div class="flex gap-2 mt-6">
-                                            <a href="https://intense.com.tr" target="_blank" class="flex-1 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
-                                                <?php esc_html_e('Go to intense.com.tr', 'hezarfen-for-woocommerce'); ?>
+                                            <a href="https://kargokit.com" target="_blank" class="flex-1 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
+                                                <?php esc_html_e('Go to kargokit.com', 'hezarfen-for-woocommerce'); ?>
                                             </a>
                                             <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=hepsijet_integration' ) ); ?>" target="_blank" class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 text-center">
                                                 <?php esc_html_e('Settings', 'hezarfen-for-woocommerce'); ?>
@@ -451,7 +451,7 @@ if ( $has_hepsijet_credentials ) {
                             <!-- Wallet Balance Display -->
                             <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                                 <div class="flex items-center justify-between">
-                                    <span class="text-sm font-medium text-blue-800">intense.com.tr <?php esc_html_e('Shipment Balance:', 'hezarfen-for-woocommerce'); ?></span>
+                                    <span class="text-sm font-medium text-blue-800">kargokit.com <?php esc_html_e('Shipment Balance:', 'hezarfen-for-woocommerce'); ?></span>
                                     <div class="flex items-center gap-2">
                                         <?php if ( $credentials_missing ): ?>
                                             <span id="kargogate-balance" class="text-sm font-bold text-blue-600">
@@ -523,7 +523,7 @@ if ( $has_hepsijet_credentials ) {
                                                     esc_html( $warehouse_error )
                                                 );
                                             } else {
-                                                esc_html_e( 'Depo bilgisi yüklenemedi. Lütfen intense.com.tr hesabınızda firma kaydınızı tamamladığınızdan emin olun.', 'hezarfen-for-woocommerce' );
+                                                esc_html_e( 'Depo bilgisi yüklenemedi. Lütfen kargokit.com hesabınızda firma kaydınızı tamamladığınızdan emin olun.', 'hezarfen-for-woocommerce' );
                                             }
                                             ?>
                                         </p>
