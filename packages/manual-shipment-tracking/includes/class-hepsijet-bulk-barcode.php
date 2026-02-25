@@ -257,6 +257,8 @@ class Hepsijet_Bulk_Barcode {
 					'preparing_print'       => __( 'Yazdırma hazırlanıyor...', 'hezarfen-for-woocommerce' ),
 					'print_error'           => __( 'Yazdırma verisi alınırken hata oluştu.', 'hezarfen-for-woocommerce' ),
 					'barcode_created'       => __( 'Barkod oluşturuldu', 'hezarfen-for-woocommerce' ),
+				'all_barcodes_ready'    => __( 'Tüm barkodlar hazır.', 'hezarfen-for-woocommerce' ),
+				'print_barcodes_btn'    => __( 'Barkodları Yazdır', 'hezarfen-for-woocommerce' ),
 				),
 			)
 		);

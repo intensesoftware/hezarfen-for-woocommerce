@@ -33,6 +33,54 @@
 		$('#hezarfen-cancel-btn').on('click', cancelProcessing);
 		$('#hezarfen-print-btn').on('click', printBarcodes);
 		$('#hezarfen-retry-btn').on('click', retryFailed);
+
+		// If all orders already have barcodes, show print button directly.
+		checkAllBarcodesReady();
+	}
+
+	/**
+	 * Checks if all orders already have barcodes on page load.
+	 * If so, populates state.skipped and shows the print button directly.
+	 */
+	function checkAllBarcodesReady() {
+		var $rows = $('#hezarfen-bulk-orders-table tbody tr');
+		if ($rows.length === 0) {
+			return;
+		}
+
+		var allReady = true;
+		var skipped = [];
+
+		$rows.each(function () {
+			var $row = $(this);
+			var hasBarcode = $row.data('has-barcode') === 1 || $row.data('hasBarcode') === 1;
+
+			if (!hasBarcode) {
+				allReady = false;
+				return false; // break
+			}
+
+			skipped.push({
+				order_id: parseInt($row.data('order-id'), 10),
+				order_number: $row.find('.column-order-number strong').text().trim(),
+				barcode: $row.data('delivery-no') || $row.data('deliveryNo')
+			});
+		});
+
+		if (allReady && skipped.length > 0) {
+			state.skipped = skipped;
+
+			// Hide the create button, show print button directly.
+			$('#hezarfen-bulk-create-print').hide();
+			$('.hezarfen-bulk-desi-section').hide();
+			$('#hezarfen-bulk-results-section').show();
+			$('#hezarfen-results-summary').html(
+				'<div class="notice notice-success inline"><p>' +
+				escapeHtml(i18n.all_barcodes_ready || 'Tüm barkodlar hazır.') +
+				'</p></div>'
+			);
+			$('#hezarfen-print-btn').text((i18n.print_barcodes_btn || 'Barkodları Yazdır') + ' (' + skipped.length + ')').show();
+		}
 	}
 
 	/**
