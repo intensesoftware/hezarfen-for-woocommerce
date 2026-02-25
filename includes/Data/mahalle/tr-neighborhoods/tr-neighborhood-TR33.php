@@ -575,6 +575,7 @@ $tr_neighborhoods = array(
 		'52477' => 'Ardıçlı Mah',
 		'52355' => 'Arıklı Mah',
 		'52455' => 'Atalar Mah',
+		'73343' => 'Atatürk Mah',
 		'52356' => 'Avadan Mah',
 		'52346' => 'Bağlar Mah',
 		'52456' => 'Baharlı Mah',
