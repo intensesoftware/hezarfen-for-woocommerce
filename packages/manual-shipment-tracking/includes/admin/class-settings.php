@@ -36,14 +36,12 @@ class Settings {
 	 * @return void
 	 */
 	public function __construct() {
-		self::add_enable_disable_option();
-
 		add_filter( 'woocommerce_get_sections_' . self::HEZARFEN_WC_SETTINGS_ID, array( __CLASS__, 'add_section' ) );
+		add_filter( 'woocommerce_get_settings_' . self::HEZARFEN_WC_SETTINGS_ID, array( __CLASS__, 'add_settings_to_section' ), 10, 2 );
+		add_action( 'woocommerce_settings_save_hezarfen', array( __CLASS__, 'settings_save' ) );
 
 		if ( Manual_Shipment_Tracking::is_enabled() ) {
 			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_scripts_and_styles' ) );
-			add_filter( 'woocommerce_get_settings_' . self::HEZARFEN_WC_SETTINGS_ID, array( __CLASS__, 'add_settings_to_section' ), 10, 2 );
-			add_action( 'woocommerce_settings_save_hezarfen', array( __CLASS__, 'settings_save' ) );
 		}
 
 		// Add Hepsijet integration settings
@@ -62,31 +60,6 @@ class Settings {
 	}
 
 	/**
-	 * Adds a checkbox to enable/disable the package.
-	 * 
-	 * @return void
-	 */
-	private static function add_enable_disable_option() {
-		add_filter(
-			'hezarfen_general_settings',
-			function ( $hezarfen_settings ) {
-				$hezarfen_settings[] = array(
-					'title'   => __(
-						'Enable Manual Shipment Tracking feature',
-						'hezarfen-for-woocommerce'
-					),
-					'type'    => 'checkbox',
-					'desc'    => '',
-					'id'      => Manual_Shipment_Tracking::ENABLE_DISABLE_OPTION,
-					'default' => 'yes',
-				);
-	
-				return $hezarfen_settings;
-			} 
-		);
-	}
-
-	/**
 	 * Adds a new section to Hezarfen's settings tab.
 	 * 
 	 * @param array<string, string> $hezarfen_sections Hezarfen's sections.
@@ -94,9 +67,7 @@ class Settings {
 	 * @return array<string, string>
 	 */
 	public static function add_section( $hezarfen_sections ) {
-		if ( Manual_Shipment_Tracking::is_enabled() ) {
-			$hezarfen_sections[ self::SECTION ] = __( 'Manual Shipment Tracking', 'hezarfen-for-woocommerce' );
-		}
+		$hezarfen_sections[ self::SECTION ] = __( 'Manual Shipment Tracking', 'hezarfen-for-woocommerce' );
 
 		return $hezarfen_sections;
 	}
@@ -111,50 +82,60 @@ class Settings {
 	 */
 	public static function add_settings_to_section( $settings, $current_section ) {
 		if ( self::SECTION === $current_section ) {
-			add_action( 'woocommerce_admin_field_hezarfen_mst_netgsm_sms_content_textarea', array( __CLASS__, 'render_netgsm_sms_content_setting' ) );
-
-			foreach ( Manual_Shipment_Tracking::notification_providers() as $id => $class ) {
-				$notice = '';
-
-				if ( ! $class::is_plugin_ready() ) {
-					/* translators: %s SMS notification provider */
-					$notice = sprintf( __( 'In order to %1$s integration work, the %2$s plugin must be activated.', 'hezarfen-for-woocommerce' ), $class::$title, $class::$title );
-				}
-
-				if ( Netgsm::$id === $id && ! Netgsm::is_netgsm_order_status_change_notif_active() ) {
-					$notice = __( 'In order to NetGSM integration work, the "send SMS to the customer when order status changed" option must be activated from the NetGSM plugin settings.', 'hezarfen-for-woocommerce' );
-				}
-
-				$label                         = $notice ? sprintf( '%s (%s)', $class::$title, $notice ) : $class::$title;
-				$notification_providers[ $id ] = $label;
-			}
-
-			return array(
+			$mst_settings = array(
 				array(
 					'type'  => 'title',
 					'title' => __( 'Manual Shipment Tracking General Settings', 'hezarfen-for-woocommerce' ),
 				),
 				array(
+					'title'   => __( 'Enable Manual Shipment Tracking feature', 'hezarfen-for-woocommerce' ),
+					'type'    => 'checkbox',
+					'desc'    => '',
+					'id'      => Manual_Shipment_Tracking::ENABLE_DISABLE_OPTION,
+					'default' => 'yes',
+				),
+			);
+
+			if ( Manual_Shipment_Tracking::is_enabled() ) {
+				add_action( 'woocommerce_admin_field_hezarfen_mst_netgsm_sms_content_textarea', array( __CLASS__, 'render_netgsm_sms_content_setting' ) );
+
+				foreach ( Manual_Shipment_Tracking::notification_providers() as $id => $class ) {
+					$notice = '';
+
+					if ( ! $class::is_plugin_ready() ) {
+						/* translators: %s SMS notification provider */
+						$notice = sprintf( __( 'In order to %1$s integration work, the %2$s plugin must be activated.', 'hezarfen-for-woocommerce' ), $class::$title, $class::$title );
+					}
+
+					if ( Netgsm::$id === $id && ! Netgsm::is_netgsm_order_status_change_notif_active() ) {
+						$notice = __( 'In order to NetGSM integration work, the "send SMS to the customer when order status changed" option must be activated from the NetGSM plugin settings.', 'hezarfen-for-woocommerce' );
+					}
+
+					$label                         = $notice ? sprintf( '%s (%s)', $class::$title, $notice ) : $class::$title;
+					$notification_providers[ $id ] = $label;
+				}
+
+				$mst_settings[] = array(
 					'type'  => 'checkbox',
 					'title' => __( 'Show Shipment Tracking column on My Account > Orders page', 'hezarfen-for-woocommerce' ),
 					'id'    => self::OPT_SHOW_TRACKING_COLUMN,
-				),
-				array(
+				);
+				$mst_settings[] = array(
 					'type' => 'sectionend',
 					'id'   => 'hezarfen_mst_general',
-				),
-				array(
+				);
+				$mst_settings[] = array(
 					'type'  => 'title',
 					'title' => __( 'Advanced Settings', 'hezarfen-for-woocommerce' ),
-				),
-				array(
+				);
+				$mst_settings[] = array(
 					'type'  => 'checkbox',
 					'title' => __( "Recognize third party plugins' data", 'hezarfen-for-woocommerce' ),
 					'desc'  => __( "If you used a shipment tracking plugin before, check this to recognize your old shipment tracking plugin's data.", 'hezarfen-for-woocommerce' ),
 					'id'    => self::OPT_RECOG_DATA,
 					'class' => 'recogize-data',
-				),
-				array(
+				);
+				$mst_settings[] = array(
 					'type'    => 'radio',
 					'title'   => __( 'Recognition type', 'hezarfen-for-woocommerce' ),
 					'id'      => self::OPT_RECOGNITION_TYPE,
@@ -164,42 +145,49 @@ class Settings {
 						self::RECOG_TYPE_SUPPORTED_PLUGINS => sprintf( __( 'Recognize supported plugins: (%s)', 'hezarfen-for-woocommerce' ), implode( ', ', Third_Party_Data_Support::SUPPORTED_PLUGINS ) ),
 						self::RECOG_TYPE_CUSTOM_META       => __( 'Recognize custom post meta data', 'hezarfen-for-woocommerce' ),
 					),
-				),
-				array(
+				);
+				$mst_settings[] = array(
 					'type'        => 'text',
 					'title'       => __( 'Order status ID (optional)', 'hezarfen-for-woocommerce' ),
 					'id'          => self::OPT_ORDER_STATUS_ID,
 					'class'       => 'recognition custom-meta',
 					'placeholder' => __( 'Enter order status id. E.g: wc-shipped', 'hezarfen-for-woocommerce' ),
-				),
-				array(
+				);
+				$mst_settings[] = array(
 					'type'        => 'text',
 					'title'       => __( 'Courier company post meta key', 'hezarfen-for-woocommerce' ),
 					'id'          => self::OPT_COURIER_CUSTOM_META,
 					'class'       => 'recognition custom-meta',
 					'placeholder' => __( 'Enter post meta key for courier company', 'hezarfen-for-woocommerce' ),
-				),
-				array(
+				);
+				$mst_settings[] = array(
 					'type'        => 'text',
 					'title'       => __( 'Tracking number post meta key', 'hezarfen-for-woocommerce' ),
 					'id'          => self::OPT_TRACKING_NUM_CUSTOM_META,
 					'class'       => 'recognition custom-meta',
 					'placeholder' => __( 'Enter post meta key for tracking number', 'hezarfen-for-woocommerce' ),
-				),
-				array(
+				);
+				$mst_settings[] = array(
 					'type' => 'sectionend',
 					'id'   => 'hezarfen_mst_advanced',
-				),
-				array(
+				);
+				$mst_settings[] = array(
 					'type'  => 'title',
 					'title' => __( 'SMS Notification Settings (Legacy)', 'hezarfen-for-woocommerce' ),
 					'desc'  => '<div style="background: #fff3cd; border: 2px solid #f39c12; border-radius: 6px; padding: 15px; margin: 15px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><div style="display: flex; align-items: center; margin-bottom: 10px;"><span style="font-size: 20px; margin-right: 8px;">⚠️</span><strong style="color: #d68910; font-size: 16px;">' . __( 'Important Notice:', 'hezarfen-for-woocommerce' ) . '</strong></div><p style="margin: 0 0 12px 0; line-height: 1.5;">' . sprintf( __( 'SMS automation settings have been moved to a new, more advanced system. You can now configure multiple SMS rules with different triggers and conditions. %sManage SMS Rules%s', 'hezarfen-for-woocommerce' ), '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=sms_settings' ) ) . '" style="color: #0073aa; text-decoration: none; font-weight: bold; border-bottom: 1px solid #0073aa;">', '</a>' ) . '</p><p style="margin: 0; color: #856404; font-style: italic;">' . __( 'SMS settings have been moved to the new SMS automation system. This legacy section has been removed.', 'hezarfen-for-woocommerce' ) . '</p></div>',
-				),
-				array(
+				);
+				$mst_settings[] = array(
 					'type' => 'sectionend',
 					'id'   => 'hezarfen_mst_sms_notification',
-				)
-			);
+				);
+			} else {
+				$mst_settings[] = array(
+					'type' => 'sectionend',
+					'id'   => 'hezarfen_mst_general',
+				);
+			}
+
+			return $mst_settings;
 		}
 
 		return $settings;
