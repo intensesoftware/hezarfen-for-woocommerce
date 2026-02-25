@@ -257,8 +257,10 @@ class Hepsijet_Bulk_Barcode {
 					'preparing_print'       => __( 'Yazdırma hazırlanıyor...', 'hezarfen-for-woocommerce' ),
 					'print_error'           => __( 'Yazdırma verisi alınırken hata oluştu.', 'hezarfen-for-woocommerce' ),
 					'barcode_created'       => __( 'Barkod oluşturuldu', 'hezarfen-for-woocommerce' ),
-				'all_barcodes_ready'    => __( 'Tüm barkodlar hazır.', 'hezarfen-for-woocommerce' ),
-				'print_barcodes_btn'    => __( 'Barkodları Yazdır', 'hezarfen-for-woocommerce' ),
+					'all_barcodes_ready'    => __( 'Tüm barkodlar hazır.', 'hezarfen-for-woocommerce' ),
+					'print_barcodes_btn'    => __( 'Barkodları Yazdır', 'hezarfen-for-woocommerce' ),
+					'package_label'         => __( 'Koli', 'hezarfen-for-woocommerce' ),
+					'remove'                => __( 'Kaldır', 'hezarfen-for-woocommerce' ),
 				),
 			)
 		);
@@ -276,15 +278,28 @@ class Hepsijet_Bulk_Barcode {
 			wp_send_json_error( array( 'message' => __( 'Yetkisiz işlem.', 'hezarfen-for-woocommerce' ) ) );
 		}
 
-		$order_id = isset( $_POST['order_id'] ) ? absint( $_POST['order_id'] ) : 0;
-		$desi     = isset( $_POST['desi'] ) ? floatval( $_POST['desi'] ) : 0;
+		$order_id      = isset( $_POST['order_id'] ) ? absint( $_POST['order_id'] ) : 0;
+		$packages_json = isset( $_POST['packages'] ) ? sanitize_text_field( wp_unslash( $_POST['packages'] ) ) : '';
 
 		if ( ! $order_id ) {
 			wp_send_json_error( array( 'message' => __( 'Geçersiz sipariş ID.', 'hezarfen-for-woocommerce' ) ) );
 		}
 
-		if ( $desi < 0.01 || $desi > 9999 ) {
-			wp_send_json_error( array( 'message' => __( 'Geçersiz desi değeri.', 'hezarfen-for-woocommerce' ) ) );
+		// Parse packages from JSON.
+		$packages_raw = json_decode( $packages_json, true );
+
+		if ( empty( $packages_raw ) || ! is_array( $packages_raw ) ) {
+			wp_send_json_error( array( 'message' => __( 'Geçersiz koli verisi.', 'hezarfen-for-woocommerce' ) ) );
+		}
+
+		// Validate and sanitize each package.
+		$packages = array();
+		foreach ( $packages_raw as $pkg ) {
+			$desi = isset( $pkg['desi'] ) ? floatval( $pkg['desi'] ) : 0;
+			if ( $desi < 0.01 || $desi > 9999 ) {
+				wp_send_json_error( array( 'message' => __( 'Geçersiz desi değeri.', 'hezarfen-for-woocommerce' ) ) );
+			}
+			$packages[] = array( 'desi' => $desi );
 		}
 
 		$order = wc_get_order( $order_id );
@@ -297,15 +312,10 @@ class Hepsijet_Bulk_Barcode {
 		$existing = self::get_active_hepsijet_shipment( $order );
 		if ( $existing ) {
 			wp_send_json_success( array(
-				'barcode'      => $existing['delivery_no'],
+				'barcode'        => $existing['delivery_no'],
 				'already_exists' => true,
 			) );
 		}
-
-		// Prepare packages array with the given desi.
-		$packages = array(
-			array( 'desi' => $desi ),
-		);
 
 		// Use the existing integration class to create the barcode.
 		$hepsijet_integration = new Courier_Hepsijet_Integration();

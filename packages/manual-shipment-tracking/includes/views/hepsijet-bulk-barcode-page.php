@@ -13,14 +13,22 @@ defined( 'ABSPATH' ) || exit;
 
 	<!-- Bulk Desi Input Section -->
 	<div class="hezarfen-bulk-desi-section">
-		<h2><?php esc_html_e( 'Toplu Desi Girişi', 'hezarfen-for-woocommerce' ); ?></h2>
-		<p class="description"><?php esc_html_e( 'Aşağıdaki değer sadece barkodu henüz oluşturulmamış siparişlere uygulanır.', 'hezarfen-for-woocommerce' ); ?></p>
-		<div class="hezarfen-bulk-desi-row">
-			<label for="hezarfen-bulk-desi-input"><?php esc_html_e( 'Desi Değeri:', 'hezarfen-for-woocommerce' ); ?></label>
-			<input type="number" id="hezarfen-bulk-desi-input" min="0.01" max="9999" step="0.01" />
-			<button type="button" id="hezarfen-bulk-desi-apply" class="button button-secondary">
-				<?php esc_html_e( 'Uygula', 'hezarfen-for-woocommerce' ); ?>
-			</button>
+		<h2><?php esc_html_e( 'Toplu Koli / Desi Girişi', 'hezarfen-for-woocommerce' ); ?></h2>
+		<p class="description"><?php esc_html_e( 'Aşağıdaki koli yapısı barkodu henüz oluşturulmamış tüm siparişlere uygulanır.', 'hezarfen-for-woocommerce' ); ?></p>
+		<div class="hezarfen-bulk-packages-area">
+			<div id="hezarfen-bulk-packages-container" class="hezarfen-packages-container">
+				<div class="hezarfen-package-item">
+					<span class="hezarfen-package-label"><?php esc_html_e( 'Koli 1:', 'hezarfen-for-woocommerce' ); ?></span>
+					<input type="number" class="hezarfen-package-desi" min="0.01" max="9999" step="0.01" placeholder="Desi" />
+					<button type="button" class="hezarfen-remove-package" style="visibility:hidden;" title="<?php esc_attr_e( 'Kaldır', 'hezarfen-for-woocommerce' ); ?>">&times;</button>
+				</div>
+			</div>
+			<div class="hezarfen-bulk-packages-actions">
+				<button type="button" id="hezarfen-bulk-add-package" class="button-link">+ <?php esc_html_e( 'Koli Ekle', 'hezarfen-for-woocommerce' ); ?></button>
+				<button type="button" id="hezarfen-bulk-desi-apply" class="button button-secondary">
+					<?php esc_html_e( 'Tümüne Uygula', 'hezarfen-for-woocommerce' ); ?>
+				</button>
+			</div>
 		</div>
 	</div>
 
@@ -34,7 +42,7 @@ defined( 'ABSPATH' ) || exit;
 					<th class="column-items"><?php esc_html_e( 'Ürünler', 'hezarfen-for-woocommerce' ); ?></th>
 					<th class="column-barcode-status"><?php esc_html_e( 'Barkod Durumu', 'hezarfen-for-woocommerce' ); ?></th>
 					<th class="column-barcode-number"><?php esc_html_e( 'Barkod Numarası', 'hezarfen-for-woocommerce' ); ?></th>
-					<th class="column-desi"><?php esc_html_e( 'Desi', 'hezarfen-for-woocommerce' ); ?></th>
+					<th class="column-packages"><?php esc_html_e( 'Koliler', 'hezarfen-for-woocommerce' ); ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -67,11 +75,20 @@ defined( 'ABSPATH' ) || exit;
 								<span class="hezarfen-no-barcode">&mdash;</span>
 							<?php endif; ?>
 						</td>
-						<td class="column-desi">
+						<td class="column-packages">
 							<?php if ( $order_data['has_barcode'] ) : ?>
-								<input type="number" class="hezarfen-desi-input" value="<?php echo esc_attr( $order_data['desi'] ); ?>" readonly disabled />
+								<div class="hezarfen-packages-readonly">
+									<?php echo esc_html( $order_data['desi'] ); ?> desi
+								</div>
 							<?php else : ?>
-								<input type="number" class="hezarfen-desi-input hezarfen-desi-editable" name="desi[<?php echo esc_attr( $order_data['order_id'] ); ?>]" min="0.01" max="9999" step="0.01" placeholder="0.00" required />
+								<div class="hezarfen-packages-container">
+									<div class="hezarfen-package-item">
+										<span class="hezarfen-package-label"><?php esc_html_e( 'Koli 1:', 'hezarfen-for-woocommerce' ); ?></span>
+										<input type="number" class="hezarfen-package-desi" min="0.01" max="9999" step="0.01" placeholder="Desi" />
+										<button type="button" class="hezarfen-remove-package" style="visibility:hidden;" title="<?php esc_attr_e( 'Kaldır', 'hezarfen-for-woocommerce' ); ?>">&times;</button>
+									</div>
+								</div>
+								<button type="button" class="hezarfen-add-package button-link">+ <?php esc_html_e( 'Koli Ekle', 'hezarfen-for-woocommerce' ); ?></button>
 							<?php endif; ?>
 						</td>
 					</tr>

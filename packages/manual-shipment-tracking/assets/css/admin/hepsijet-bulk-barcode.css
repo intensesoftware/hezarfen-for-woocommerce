@@ -22,19 +22,25 @@
 	font-size: 14px;
 }
 
-.hezarfen-bulk-desi-row {
-	display: flex;
-	align-items: center;
-	gap: 10px;
+.hezarfen-bulk-packages-area {
 	margin-top: 10px;
 }
 
-.hezarfen-bulk-desi-row label {
-	font-weight: 600;
+.hezarfen-bulk-packages-area .hezarfen-packages-container {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 6px;
 }
 
-.hezarfen-bulk-desi-row input[type="number"] {
-	width: 120px;
+.hezarfen-bulk-packages-area .hezarfen-package-desi {
+	width: 100px !important;
+}
+
+.hezarfen-bulk-packages-actions {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-top: 8px;
 }
 
 /* Orders Table */
@@ -47,24 +53,24 @@
 }
 
 #hezarfen-bulk-orders-table .column-customer {
-	width: 15%;
+	width: 14%;
 }
 
 #hezarfen-bulk-orders-table .column-items {
-	width: 28%;
+	width: 24%;
 }
 
 #hezarfen-bulk-orders-table .column-barcode-status {
-	width: 8%;
+	width: 6%;
 	text-align: center;
 }
 
 #hezarfen-bulk-orders-table .column-barcode-number {
-	width: 22%;
+	width: 20%;
 }
 
-#hezarfen-bulk-orders-table .column-desi {
-	width: 10%;
+#hezarfen-bulk-orders-table .column-packages {
+	width: 18%;
 }
 
 /* Items list */
@@ -75,6 +81,73 @@
 	padding: 1px 0;
 }
 
+/* Package items within table cells */
+.hezarfen-packages-container {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.hezarfen-package-item {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.hezarfen-package-label {
+	font-size: 12px;
+	font-weight: 600;
+	color: #50575e;
+	white-space: nowrap;
+	min-width: 42px;
+}
+
+.hezarfen-package-desi {
+	width: 72px !important;
+	min-width: 0;
+	padding: 2px 6px !important;
+	height: 28px !important;
+	font-size: 13px;
+}
+
+.hezarfen-package-desi.hezarfen-input-error {
+	border-color: #d63638;
+	box-shadow: 0 0 0 1px #d63638;
+}
+
+.hezarfen-remove-package {
+	background: none;
+	border: none;
+	color: #d63638;
+	cursor: pointer;
+	font-size: 16px;
+	line-height: 1;
+	padding: 0 2px;
+	font-weight: bold;
+}
+
+.hezarfen-remove-package:hover {
+	color: #a00;
+}
+
+.hezarfen-add-package {
+	font-size: 12px;
+	margin-top: 2px;
+	color: #2271b1;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.hezarfen-add-package:hover {
+	color: #135e96;
+}
+
+.hezarfen-packages-readonly {
+	font-size: 13px;
+	color: #50575e;
+}
+
+/* Legacy desi input (for backward compat) */
 .hezarfen-desi-input {
 	width: 100px;
 }

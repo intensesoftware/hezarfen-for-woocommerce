@@ -13,7 +13,7 @@
 	var state = {
 		isProcessing: false,
 		isCancelled: false,
-		queue: [],        // Orders to process: { order_id, desi }
+		queue: [],        // Orders to process: { order_id, order_number, packages: [{ desi }] }
 		results: [],      // { order_id, order_number, success, barcode, message }
 		skipped: [],      // Orders that already had barcodes
 		totalToProcess: 0,
@@ -34,8 +34,62 @@
 		$('#hezarfen-print-btn').on('click', printBarcodes);
 		$('#hezarfen-retry-btn').on('click', retryFailed);
 
+		// Bulk packages section: add/remove.
+		$('#hezarfen-bulk-add-package').on('click', function () {
+			addPackageToContainer($('#hezarfen-bulk-packages-container'));
+		});
+
+		$('#hezarfen-bulk-packages-container').on('click', '.hezarfen-remove-package', function () {
+			var $container = $(this).closest('.hezarfen-packages-container');
+			if ($container.find('.hezarfen-package-item').length > 1) {
+				$(this).closest('.hezarfen-package-item').remove();
+				updatePackageLabels($container);
+			}
+		});
+
+		// Per-order package handlers (delegated on table).
+		$('#hezarfen-bulk-orders-table').on('click', '.hezarfen-add-package', function () {
+			var $container = $(this).siblings('.hezarfen-packages-container');
+			addPackageToContainer($container);
+		});
+
+		$('#hezarfen-bulk-orders-table').on('click', '.hezarfen-remove-package', function () {
+			var $container = $(this).closest('.hezarfen-packages-container');
+			if ($container.find('.hezarfen-package-item').length > 1) {
+				$(this).closest('.hezarfen-package-item').remove();
+				updatePackageLabels($container);
+			}
+		});
+
 		// If all orders already have barcodes, show print button directly.
 		checkAllBarcodesReady();
+	}
+
+	/**
+	 * Adds a new package input to a container.
+	 */
+	function addPackageToContainer($container) {
+		var $item = $('<div class="hezarfen-package-item">' +
+			'<span class="hezarfen-package-label"></span>' +
+			'<input type="number" class="hezarfen-package-desi" min="0.01" max="9999" step="0.01" placeholder="Desi" />' +
+			'<button type="button" class="hezarfen-remove-package" title="' + escapeHtml(i18n.remove || 'Kaldır') + '">&times;</button>' +
+			'</div>');
+		$container.append($item);
+		updatePackageLabels($container);
+	}
+
+	/**
+	 * Updates package labels (Koli 1, Koli 2, ...) and remove button visibility.
+	 */
+	function updatePackageLabels($container) {
+		$container.find('.hezarfen-package-item').each(function (index) {
+			$(this).find('.hezarfen-package-label').text((i18n.package_label || 'Koli') + ' ' + (index + 1) + ':');
+			if (index === 0) {
+				$(this).find('.hezarfen-remove-package').css('visibility', 'hidden');
+			} else {
+				$(this).find('.hezarfen-remove-package').css('visibility', 'visible');
+			}
+		});
 	}
 
 	/**
@@ -84,21 +138,53 @@
 	}
 
 	/**
-	 * Apply bulk desi value to all orders without barcodes.
+	 * Apply bulk packages to all orders without barcodes.
+	 * Clones the package structure from the bulk section into each order row.
 	 */
 	function applyBulkDesi() {
-		var desiVal = parseDesi($('#hezarfen-bulk-desi-input').val());
+		// Collect packages from the bulk section.
+		var bulkPackages = [];
+		var hasError = false;
 
-		if (!desiVal || desiVal < 0.01) {
-			$('#hezarfen-bulk-desi-input').focus();
+		$('#hezarfen-bulk-packages-container .hezarfen-package-desi').each(function () {
+			var desiVal = parseDesi($(this).val());
+			if (!desiVal || desiVal < 0.01) {
+				$(this).addClass('hezarfen-input-error');
+				hasError = true;
+			} else {
+				$(this).removeClass('hezarfen-input-error');
+				bulkPackages.push(desiVal);
+			}
+		});
+
+		if (hasError || bulkPackages.length === 0) {
 			return;
 		}
 
 		$('#hezarfen-bulk-orders-table tbody tr').each(function () {
 			var $row = $(this);
-			if ($row.data('has-barcode') !== 1 && $row.data('hasBarcode') !== 1) {
-				$row.find('.hezarfen-desi-editable').val(desiVal);
+			var hasBarcode = $row.data('has-barcode') === 1 || $row.data('hasBarcode') === 1;
+			if (hasBarcode) {
+				return; // continue
 			}
+
+			var $container = $row.find('.hezarfen-packages-container');
+
+			// Clear existing packages.
+			$container.empty();
+
+			// Clone package structure from bulk section.
+			for (var i = 0; i < bulkPackages.length; i++) {
+				var $item = $('<div class="hezarfen-package-item">' +
+					'<span class="hezarfen-package-label"></span>' +
+					'<input type="number" class="hezarfen-package-desi" min="0.01" max="9999" step="0.01" placeholder="Desi" />' +
+					'<button type="button" class="hezarfen-remove-package" title="' + escapeHtml(i18n.remove || 'Kaldır') + '">&times;</button>' +
+					'</div>');
+				$item.find('.hezarfen-package-desi').val(bulkPackages[i]);
+				$container.append($item);
+			}
+
+			updatePackageLabels($container);
 		});
 	}
 
@@ -106,7 +192,6 @@
 	 * Validates inputs and starts the sequential processing.
 	 */
 	function startProcessing() {
-		// Client-side validation: every order without a barcode must have a desi.
 		var valid = true;
 		var queue = [];
 
@@ -126,16 +211,28 @@
 				return; // continue
 			}
 
-			var desiVal = parseDesi($row.find('.hezarfen-desi-editable').val());
-			if (!desiVal || desiVal < 0.01) {
-				$row.find('.hezarfen-desi-editable').addClass('hezarfen-input-error');
+			// Collect packages for this order.
+			var packages = [];
+			var orderValid = true;
+
+			$row.find('.hezarfen-package-desi').each(function () {
+				var desiVal = parseDesi($(this).val());
+				if (!desiVal || desiVal < 0.01) {
+					$(this).addClass('hezarfen-input-error');
+					orderValid = false;
+				} else {
+					$(this).removeClass('hezarfen-input-error');
+					packages.push({ desi: desiVal });
+				}
+			});
+
+			if (!orderValid || packages.length === 0) {
 				valid = false;
 			} else {
-				$row.find('.hezarfen-desi-editable').removeClass('hezarfen-input-error');
 				queue.push({
 					order_id: orderId,
 					order_number: orderNumber,
-					desi: desiVal
+					packages: packages
 				});
 			}
 		});
@@ -211,7 +308,7 @@
 				action: config.create_action,
 				_ajax_nonce: config.create_nonce,
 				order_id: item.order_id,
-				desi: item.desi
+				packages: JSON.stringify(item.packages)
 			},
 			timeout: 60000, // 60 seconds per request
 			success: function (response) {
@@ -407,7 +504,7 @@
 
 		for (var i = 0; i < state.results.length; i++) {
 			if (!state.results[i].success) {
-				// Find the original queue item to get the desi.
+				// Find the original queue item to get the packages.
 				for (var j = 0; j < state.queue.length; j++) {
 					if (state.queue[j].order_id === state.results[i].order_id) {
 						failedItems.push(state.queue[j]);
