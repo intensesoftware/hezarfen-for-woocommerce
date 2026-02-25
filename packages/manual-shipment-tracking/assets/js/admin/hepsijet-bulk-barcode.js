@@ -391,9 +391,12 @@
 		// Show retry button if there are errors.
 		if (state.errorCount > 0) {
 			$('#hezarfen-retry-btn').text(i18n.retry_btn + ' (' + state.errorCount + ')').show();
+			$('#hezarfen-bulk-create-print').prop('disabled', false);
+		} else {
+			// All successful — hide create button and desi section.
+			$('#hezarfen-bulk-create-print').hide();
+			$('.hezarfen-bulk-desi-section').hide();
 		}
-
-		$('#hezarfen-bulk-create-print').prop('disabled', false);
 	}
 
 	/**
