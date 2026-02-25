@@ -15,7 +15,7 @@
  * Requires Plugins: woocommerce
  * 
  * WC requires at least: 6.9.0
- * WC tested up to: 10.6
+ * WC tested up to: 10.5
  * 
  * @package Hezarfen
  */
