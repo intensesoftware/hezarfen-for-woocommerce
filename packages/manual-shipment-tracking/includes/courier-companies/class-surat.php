@@ -50,6 +50,6 @@ class Courier_Surat extends Courier_Company {
 			return '';
 		}
 
-		return 'http://www.suratkargo.com.tr/kargoweb/bireysel.aspx?no=' . $tracking_number;
+		return 'https://www.suratkargo.com.tr/KargoTakip/?kargotakipno=' . $tracking_number;
 	}
 }
