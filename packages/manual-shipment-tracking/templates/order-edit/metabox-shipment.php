@@ -143,6 +143,7 @@ if ( $has_hepsijet_credentials ) {
                             
                             
                             <ul id="shipping-companies" class="max-h-24 grid w-full gap-2 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 5xl:grid-cols-7 6xl:grid-cols-8 overflow-hidden">
+                                <?php if ( Helper::is_courier_enabled( 'hepsijet-entegrasyon' ) ) : ?>
                                 <li class="flex justify-center col-span-2 xl:col-span-2 2xl:col-span-3">
                                     <input type="radio" id="courier-company-select-hepsijet-entegrasyon"
                                             name="courier-company-select" value="hepsijet-entegrasyon"
@@ -227,6 +228,7 @@ if ( $has_hepsijet_credentials ) {
                                         </div>
                                     </label>
                                 </li>
+                                <?php endif; ?>
 
 
                                 <?php foreach (Helper::courier_company_options() as $courier_id => $courier_label) : if (empty($courier_id)) {

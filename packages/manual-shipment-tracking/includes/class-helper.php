@@ -108,8 +108,14 @@ class Helper {
 	 * @return array<string, string>
 	 */
 	public static function courier_company_options( $first_item_blank = false ) {
+		$disabled_couriers = self::get_disabled_courier_ids();
+
 		// prepare the "ID => Courier title" array.
 		foreach ( Manual_Shipment_Tracking::courier_companies() as $id => $courier_class ) {
+			// Skip disabled couriers (but always keep empty ID for placeholder).
+			if ( ! empty( $id ) && in_array( $id, $disabled_couriers, true ) ) {
+				continue;
+			}
 			$options[ $id ] = $courier_class::get_title();
 		}
 
@@ -120,6 +126,28 @@ class Helper {
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Returns the list of disabled courier IDs from settings.
+	 * Empty array means all couriers are enabled (default).
+	 *
+	 * @return string[]
+	 */
+	public static function get_disabled_courier_ids() {
+		$disabled = get_option( Settings::OPT_DISABLED_COURIERS, array() );
+
+		return is_array( $disabled ) ? $disabled : array();
+	}
+
+	/**
+	 * Checks if a courier is enabled.
+	 *
+	 * @param string $courier_id Courier ID.
+	 * @return bool
+	 */
+	public static function is_courier_enabled( $courier_id ) {
+		return ! in_array( $courier_id, self::get_disabled_courier_ids(), true );
 	}
 
 	/**
