@@ -389,7 +389,7 @@
 	}
 
 	/**
-	 * Collects all successful barcodes and opens a print window.
+	 * Collects all successful barcodes and requests a combined PDF.
 	 */
 	function printBarcodes() {
 		var printItems = [];
@@ -398,7 +398,6 @@
 		for (var i = 0; i < state.skipped.length; i++) {
 			printItems.push({
 				order_id: state.skipped[i].order_id,
-				order_number: state.skipped[i].order_number,
 				delivery_no: state.skipped[i].barcode
 			});
 		}
@@ -408,7 +407,6 @@
 			if (state.results[j].success) {
 				printItems.push({
 					order_id: state.results[j].order_id,
-					order_number: state.results[j].order_number,
 					delivery_no: state.results[j].barcode
 				});
 			}
@@ -418,114 +416,73 @@
 			return;
 		}
 
-		$('#hezarfen-print-btn').prop('disabled', true).text(i18n.preparing_print);
+		// Open new tab synchronously (before AJAX) to avoid popup blocker.
+		var printWin = window.open('about:blank', '_blank');
 
-		fetchAndPrintBarcodes(printItems);
-	}
-
-	/**
-	 * Fetches barcode label data sequentially, then opens a print window.
-	 *
-	 * @param {Array} items Items to print.
-	 */
-	function fetchAndPrintBarcodes(items) {
-		var fetched = [];
-		var fetchIndex = 0;
-
-		function fetchNext() {
-			if (fetchIndex >= items.length) {
-				openPrintWindow(fetched);
-				return;
-			}
-
-			var item = items[fetchIndex];
-			fetchIndex++;
-
-			$.ajax({
-				url: config.ajax_url,
-				type: 'POST',
-				data: {
-					action: config.get_barcode_action,
-					_ajax_nonce: config.get_barcode_nonce,
-					delivery_no: item.delivery_no,
-					order_id: item.order_id
-				},
-				timeout: 30000,
-				success: function (response) {
-					if (response.success && response.data) {
-						fetched.push({
-							order_number: item.order_number,
-							delivery_no: item.delivery_no,
-							barcode_data: response.data.barcode_data
-						});
-					}
-					fetchNext();
-				},
-				error: function () {
-					// Skip items we can't fetch barcode data for.
-					fetchNext();
-				}
-			});
-		}
-
-		fetchNext();
-	}
-
-	/**
-	 * Opens a new window with all barcode labels for printing.
-	 *
-	 * @param {Array} items Array of { order_number, delivery_no, barcode_data }.
-	 */
-	function openPrintWindow(items) {
-		$('#hezarfen-print-btn').prop('disabled', false).text(i18n.print_btn + ' (' + (state.successCount + state.skipped.length) + ')');
-
-		if (items.length === 0) {
-			alert(i18n.print_error);
-			return;
-		}
-
-		var html = '<!DOCTYPE html><html><head><meta charset="UTF-8">' +
-			'<title>HepsiJet Barkodlar</title>' +
-			'<style>' +
-			'* { margin: 0; padding: 0; box-sizing: border-box; }' +
-			'body { font-family: Arial, sans-serif; }' +
-			'.barcode-page { page-break-after: always; padding: 10mm; text-align: center; }' +
-			'.barcode-page:last-child { page-break-after: auto; }' +
-			'.barcode-header { font-size: 14px; margin-bottom: 5mm; font-weight: bold; }' +
-			'.barcode-img { max-width: 100%; height: auto; }' +
-			'@media print {' +
-			'  .barcode-page { page-break-after: always; padding: 5mm; }' +
-			'  .barcode-page:last-child { page-break-after: auto; }' +
-			'}' +
-			'</style></head><body>';
-
-		for (var i = 0; i < items.length; i++) {
-			var item = items[i];
-			html += '<div class="barcode-page">';
-			html += '<div class="barcode-header">#' + escapeHtml(item.order_number) + ' &mdash; ' + escapeHtml(item.delivery_no) + '</div>';
-
-			if (item.barcode_data && Array.isArray(item.barcode_data) && item.barcode_data.length > 0) {
-				for (var j = 0; j < item.barcode_data.length; j++) {
-					var imgSrc = item.barcode_data[j];
-					// Add data URI prefix if not present.
-					if (imgSrc && imgSrc.indexOf('data:') !== 0) {
-						imgSrc = 'data:image/jpeg;base64,' + imgSrc;
-					}
-					html += '<img class="barcode-img" src="' + imgSrc + '" alt="Barcode" />';
-				}
-			}
-
-			html += '</div>';
-		}
-
-		html += '<script>window.onload=function(){window.print();}<\/script>';
-		html += '</body></html>';
-
-		var printWin = window.open('', '_blank', 'width=800,height=600');
+		// Show loading message in the new tab while PDF is generated.
 		if (printWin) {
-			printWin.document.write(html);
+			printWin.document.write(
+				'<!DOCTYPE html><html><head><meta charset="UTF-8"><title>PDF Hazırlanıyor...</title>' +
+				'<style>body{display:flex;align-items:center;justify-content:center;height:100vh;margin:0;' +
+				'font-family:Arial,sans-serif;background:#f0f0f1;color:#333;}' +
+				'.loader{text-align:center;}.spinner{border:4px solid #e5e5e5;border-top:4px solid #2271b1;' +
+				'border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;margin:0 auto 16px;}' +
+				'@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style></head>' +
+				'<body><div class="loader"><div class="spinner"></div><p>' + escapeHtml(i18n.preparing_print) + '</p></div></body></html>'
+			);
 			printWin.document.close();
 		}
+
+		$('#hezarfen-print-btn').prop('disabled', true).text(i18n.preparing_print);
+
+		$.ajax({
+			url: config.ajax_url,
+			type: 'POST',
+			data: {
+				action: config.combined_action,
+				_ajax_nonce: config.combined_nonce,
+				orders: JSON.stringify(printItems)
+			},
+			timeout: 120000, // 2 minutes for combined PDF
+			success: function (response) {
+				$('#hezarfen-print-btn').prop('disabled', false).text(i18n.print_btn + ' (' + (state.successCount + state.skipped.length) + ')');
+
+				if (response.success && response.data && response.data.pdf_url) {
+					if (printWin) {
+						var blobUrl = dataUriToBlobUrl(response.data.pdf_url);
+						printWin.location.href = blobUrl;
+					}
+				} else {
+					var msg = (response.data && response.data.message) ? response.data.message : i18n.print_error;
+					alert(msg);
+					if (printWin) {
+						printWin.close();
+					}
+				}
+			},
+			error: function () {
+				$('#hezarfen-print-btn').prop('disabled', false).text(i18n.print_btn + ' (' + (state.successCount + state.skipped.length) + ')');
+				alert(i18n.print_error);
+				if (printWin) {
+					printWin.close();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Converts a base64 data URI to a Blob URL (browsers block data: URL navigation).
+	 */
+	function dataUriToBlobUrl(dataUri) {
+		var parts = dataUri.split(',');
+		var mime = parts[0].match(/:(.*?);/)[1];
+		var raw = atob(parts[1]);
+		var arr = new Uint8Array(raw.length);
+		for (var i = 0; i < raw.length; i++) {
+			arr[i] = raw.charCodeAt(i);
+		}
+		var blob = new Blob([arr], { type: mime });
+		return URL.createObjectURL(blob);
 	}
 
 	/**

@@ -234,6 +234,8 @@ class Hepsijet_Bulk_Barcode {
 				'create_nonce'          => wp_create_nonce( self::AJAX_NONCE ),
 				'get_barcode_action'    => self::AJAX_GET_BARCODE_ACTION,
 				'get_barcode_nonce'     => wp_create_nonce( self::AJAX_GET_BARCODE_NONCE ),
+				'combined_action'       => Admin_Ajax::GET_COMBINED_BARCODE_ACTION,
+				'combined_nonce'        => wp_create_nonce( Admin_Ajax::GET_COMBINED_BARCODE_NONCE ),
 				'orders_data'           => $orders_data,
 				'i18n'                  => array(
 					'creating'              => __( 'Barkod Oluşturuluyor...', 'hezarfen-for-woocommerce' ),

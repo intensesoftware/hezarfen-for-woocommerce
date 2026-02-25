@@ -561,53 +561,53 @@ class Admin_Ajax {
 	 * @return string Base64 encoded PDF data for inline display.
 	 * @throws Exception If PDF generation fails.
 	 */
-	private static function create_hepsijet_pdf( $order, $barcode_data, $delivery_no ) {
-		// Try to load TCPDF manually if class doesn't exist
-		if ( ! class_exists( 'TCPDF' ) ) {
-			// Check if vendor directory exists and try to include TCPDF directly
-			$tcpdf_path = WC_HEZARFEN_UYGULAMA_YOLU . 'vendor/tecnickcom/tcpdf/tcpdf.php';
-			if ( file_exists( $tcpdf_path ) ) {
-				require_once $tcpdf_path;
-				
-				if ( class_exists( 'TCPDF' ) ) {
+	private static function create_hepsijet_pdf( $order, $barcode_data, $delivery_no, $pdf = null, $return_pdf_object = false ) {
+		// Initialize TCPDF if no existing instance was provided.
+		if ( null === $pdf ) {
+			// Try to load TCPDF manually if class doesn't exist
+			if ( ! class_exists( 'TCPDF' ) ) {
+				// Check if vendor directory exists and try to include TCPDF directly
+				$tcpdf_path = WC_HEZARFEN_UYGULAMA_YOLU . 'vendor/tecnickcom/tcpdf/tcpdf.php';
+				if ( file_exists( $tcpdf_path ) ) {
+					require_once $tcpdf_path;
+
+					if ( ! class_exists( 'TCPDF' ) ) {
+						throw new Exception( 'TCPDF not available. Please ensure TCPDF is installed via Composer.' );
+					}
 				} else {
-					throw new Exception( 'TCPDF not available. Please ensure TCPDF is installed via Composer.' );
+					throw new Exception( 'TCPDF file not found. Please ensure TCPDF is installed via Composer.' );
 				}
-			} else {
-				throw new Exception( 'TCPDF file not found. Please ensure TCPDF is installed via Composer.' );
 			}
-		} else {
+
+			// Create new PDF document with fallback constants
+			$orientation = defined( 'PDF_PAGE_ORIENTATION' ) ? PDF_PAGE_ORIENTATION : 'P';
+			$unit = defined( 'PDF_UNIT' ) ? PDF_UNIT : 'mm';
+			$format = defined( 'PDF_PAGE_FORMAT' ) ? PDF_PAGE_FORMAT : 'A4';
+
+			$pdf = new \TCPDF( $orientation, $unit, $format, true, 'UTF-8', false );
+
+			// Set document information
+			$pdf->SetCreator( 'WooCommerce' );
+			$pdf->SetAuthor( get_bloginfo( 'name' ) );
+			$pdf->SetTitle( 'Shipment Label - ' . $delivery_no );
+			$pdf->SetSubject( 'Shipment Label' );
+
+			// Disable header and footer completely
+			$pdf->setPrintHeader( false );
+			$pdf->setPrintFooter( false );
+
+			// Set default monospaced font
+			$pdf->SetDefaultMonospacedFont( 'dejavusansmono' );
+
+			// Set margins (minimal margins for maximum space)
+			$pdf->SetMargins( 5, 5, 5 );
+
+			// Set auto page breaks
+			$pdf->SetAutoPageBreak( TRUE, 5 );
+
+			// Set image scale factor
+			$pdf->setImageScale( defined( 'PDF_IMAGE_SCALE_RATIO' ) ? PDF_IMAGE_SCALE_RATIO : 1.25 );
 		}
-		
-		// Create new PDF document with fallback constants
-		$orientation = defined( 'PDF_PAGE_ORIENTATION' ) ? PDF_PAGE_ORIENTATION : 'P';
-		$unit = defined( 'PDF_UNIT' ) ? PDF_UNIT : 'mm';
-		$format = defined( 'PDF_PAGE_FORMAT' ) ? PDF_PAGE_FORMAT : 'A4';
-		
-		
-		$pdf = new \TCPDF( $orientation, $unit, $format, true, 'UTF-8', false );
-
-		// Set document information
-		$pdf->SetCreator( 'WooCommerce' );
-		$pdf->SetAuthor( get_bloginfo( 'name' ) );
-		$pdf->SetTitle( 'Shipment Label - ' . $delivery_no );
-		$pdf->SetSubject( 'Shipment Label' );
-
-		// Disable header and footer completely
-		$pdf->setPrintHeader( false );
-		$pdf->setPrintFooter( false );
-
-		// Set default monospaced font
-		$pdf->SetDefaultMonospacedFont( 'dejavusansmono' );
-
-		// Set margins (minimal margins for maximum space)
-		$pdf->SetMargins( 5, 5, 5 );
-
-		// Set auto page breaks
-		$pdf->SetAutoPageBreak( TRUE, 5 );
-
-		// Set image scale factor
-		$pdf->setImageScale( defined( 'PDF_IMAGE_SCALE_RATIO' ) ? PDF_IMAGE_SCALE_RATIO : 1.25 );
 
 		// Add a page
 		$pdf->AddPage();
@@ -995,12 +995,17 @@ class Admin_Ajax {
 
 
 
+		// If caller wants the TCPDF object back (for combined/multi-page PDFs), return it.
+		if ( $return_pdf_object ) {
+			return $pdf;
+		}
+
 		// Generate PDF in memory and return as base64 data
 		$pdf_data = $pdf->Output( '', 'S' );
-		
+
 		// Convert to base64 for inline display
 		$pdf_base64 = base64_encode( $pdf_data );
-		
+
 		// Return base64 PDF data for inline display
 		return 'data:application/pdf;base64,' . $pdf_base64;
 	}
@@ -1194,8 +1199,84 @@ class Admin_Ajax {
 	}
 
 	/**
+	 * AJAX handler: Generates a combined PDF with barcodes from multiple orders.
+	 *
+	 * Expects POST data:
+	 *   - orders: JSON-encoded array of { order_id, delivery_no }.
+	 *
+	 * @return void
+	 */
+	public static function get_combined_barcode() {
+		check_ajax_referer( self::GET_COMBINED_BARCODE_NONCE );
+
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Yetkisiz işlem.', 'hezarfen-for-woocommerce' ) ) );
+		}
+
+		$orders_json = isset( $_POST['orders'] ) ? sanitize_text_field( wp_unslash( $_POST['orders'] ) ) : '';
+		$orders      = json_decode( $orders_json, true );
+
+		if ( empty( $orders ) || ! is_array( $orders ) ) {
+			wp_send_json_error( array( 'message' => __( 'Geçersiz sipariş verisi.', 'hezarfen-for-woocommerce' ) ) );
+		}
+
+		try {
+			$pdf_data_uri = self::generate_combined_pdf( $orders );
+
+			wp_send_json_success( array( 'pdf_url' => $pdf_data_uri ) );
+		} catch ( Exception $e ) {
+			wp_send_json_error( array( 'message' => $e->getMessage() ) );
+		}
+	}
+
+	/**
+	 * Generates a single combined PDF containing barcode labels for multiple orders.
+	 *
+	 * @param array $orders Array of arrays, each with 'order_id' and 'delivery_no'.
+	 * @return string Base64-encoded data URI of the combined PDF.
+	 * @throws Exception If PDF generation fails.
+	 */
+	public static function generate_combined_pdf( $orders ) {
+		$hepsijet_integration = new Courier_Hepsijet_Integration();
+		$pdf = null;
+
+		foreach ( $orders as $order_item ) {
+			$order_id    = absint( $order_item['order_id'] );
+			$delivery_no = sanitize_text_field( $order_item['delivery_no'] );
+
+			if ( ! $order_id || empty( $delivery_no ) ) {
+				continue;
+			}
+
+			$order = wc_get_order( $order_id );
+			if ( ! $order ) {
+				continue;
+			}
+
+			$barcode_data = $hepsijet_integration->get_barcode( $delivery_no );
+
+			if ( is_wp_error( $barcode_data ) || false === $barcode_data ) {
+				continue;
+			}
+
+			// Pass existing $pdf (or null for the first iteration) and request the object back.
+			$pdf = self::create_hepsijet_pdf( $order, $barcode_data, $delivery_no, $pdf, true );
+		}
+
+		if ( null === $pdf ) {
+			throw new Exception( __( 'Hiçbir barkod PDF\'e eklenemedi.', 'hezarfen-for-woocommerce' ) );
+		}
+
+		// Finalize: render the combined PDF as base64 data URI.
+		$pdf_data   = $pdf->Output( '', 'S' );
+		$pdf_base64 = base64_encode( $pdf_data );
+
+		return 'data:application/pdf;base64,' . $pdf_base64;
+	}
+
+	/**
 	 * Gets HepsiJet warehouses (merchant + stores)
-	 * 
+	 *
 	 * @return void
 	 */
 	public static function get_hepsijet_warehouses() {
