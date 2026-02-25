@@ -102,6 +102,17 @@
 	color: #999;
 }
 
+.hezarfen-barcode-created-badge {
+	display: inline-block;
+	background: #00a32a;
+	color: #fff;
+	font-size: 11px;
+	padding: 1px 6px;
+	border-radius: 3px;
+	margin-left: 4px;
+	vertical-align: middle;
+}
+
 /* Action Section */
 .hezarfen-bulk-actions-section {
 	margin: 16px 0;

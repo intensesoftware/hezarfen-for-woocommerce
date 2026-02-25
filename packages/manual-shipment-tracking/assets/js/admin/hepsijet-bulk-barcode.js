@@ -188,7 +188,7 @@
 					$row.data('has-barcode', 1).attr('data-has-barcode', '1');
 					$row.data('delivery-no', barcode).attr('data-delivery-no', barcode);
 					$row.find('.column-barcode-status').html('<span class="hezarfen-status hezarfen-status-exists" title="">&#10004;</span>');
-					$row.find('.column-barcode-number').html('<code>' + escapeHtml(barcode) + '</code>');
+					$row.find('.column-barcode-number').html('<code>' + escapeHtml(barcode) + '</code> <span class="hezarfen-barcode-created-badge">' + escapeHtml(i18n.barcode_created) + '</span>');
 				} else {
 					state.errorCount++;
 					var msg = (response.data && response.data.message) ? response.data.message : i18n.error;

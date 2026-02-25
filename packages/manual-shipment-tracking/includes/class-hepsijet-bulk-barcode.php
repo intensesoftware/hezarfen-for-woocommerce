@@ -254,6 +254,7 @@ class Hepsijet_Bulk_Barcode {
 					'confirm_cancel'        => __( 'İşlemi iptal etmek istediğinize emin misiniz?', 'hezarfen-for-woocommerce' ),
 					'preparing_print'       => __( 'Yazdırma hazırlanıyor...', 'hezarfen-for-woocommerce' ),
 					'print_error'           => __( 'Yazdırma verisi alınırken hata oluştu.', 'hezarfen-for-woocommerce' ),
+					'barcode_created'       => __( 'Barkod oluşturuldu', 'hezarfen-for-woocommerce' ),
 				),
 			)
 		);
@@ -311,14 +312,6 @@ class Hepsijet_Bulk_Barcode {
 		}
 
 		if ( ! empty( $result['tracking_number'] ) ) {
-			// Also save shipment tracking data for the order.
-			Helper::new_order_shipment_data(
-				$order,
-				null,
-				'hepsijet-entegrasyon',
-				$result['tracking_number']
-			);
-
 			wp_send_json_success( array(
 				'barcode'        => $result['tracking_number'],
 				'already_exists' => false,
