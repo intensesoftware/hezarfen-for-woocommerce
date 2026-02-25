@@ -24,6 +24,7 @@ require_once 'notification-providers/class-netgsm.php';
 require_once 'notification-providers/class-pandasms.php';
 require_once 'class-third-party-data-support.php';
 require_once 'class-deactivation-wizard.php';
+require_once 'class-hepsijet-bulk-barcode.php';
 
 /**
  * Manual Shipment Tracking package main class.
@@ -103,6 +104,7 @@ class Manual_Shipment_Tracking {
 		My_Account::init();
 		Admin_Ajax::init();
 		Admin_Orders::init();
+		Hepsijet_Bulk_Barcode::init();
 		Third_Party_Data_Support::init();
 
 		// Add PandaSMS filter globally if the plugin is ready

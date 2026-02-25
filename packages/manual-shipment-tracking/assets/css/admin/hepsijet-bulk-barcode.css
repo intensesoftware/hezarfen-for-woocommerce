@@ -1,0 +1,244 @@
+/**
+ * HepsiJet Bulk Barcode — Admin styles.
+ *
+ * @package Hezarfen\ManualShipmentTracking
+ */
+
+/* Wrap */
+.hezarfen-bulk-barcode-wrap {
+	max-width: 100%;
+}
+
+/* Bulk Desi Section */
+.hezarfen-bulk-desi-section {
+	background: #fff;
+	border: 1px solid #ccd0d4;
+	padding: 16px 20px;
+	margin: 16px 0;
+}
+
+.hezarfen-bulk-desi-section h2 {
+	margin-top: 0;
+	font-size: 14px;
+}
+
+.hezarfen-bulk-desi-row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-top: 10px;
+}
+
+.hezarfen-bulk-desi-row label {
+	font-weight: 600;
+}
+
+.hezarfen-bulk-desi-row input[type="number"] {
+	width: 120px;
+}
+
+/* Orders Table */
+.hezarfen-bulk-orders-section {
+	margin: 16px 0;
+}
+
+#hezarfen-bulk-orders-table .column-order-number {
+	width: 8%;
+}
+
+#hezarfen-bulk-orders-table .column-customer {
+	width: 15%;
+}
+
+#hezarfen-bulk-orders-table .column-items {
+	width: 28%;
+}
+
+#hezarfen-bulk-orders-table .column-barcode-status {
+	width: 8%;
+	text-align: center;
+}
+
+#hezarfen-bulk-orders-table .column-barcode-number {
+	width: 22%;
+}
+
+#hezarfen-bulk-orders-table .column-desi {
+	width: 10%;
+}
+
+/* Items list */
+.hezarfen-item-line {
+	font-size: 12px;
+	line-height: 1.6;
+	color: #50575e;
+	padding: 1px 0;
+}
+
+.hezarfen-desi-input {
+	width: 100px;
+}
+
+.hezarfen-desi-input.hezarfen-input-error {
+	border-color: #d63638;
+	box-shadow: 0 0 0 1px #d63638;
+}
+
+/* Barcode status icons */
+.hezarfen-status {
+	font-size: 18px;
+	display: inline-block;
+}
+
+.hezarfen-status-exists {
+	color: #00a32a;
+}
+
+.hezarfen-status-missing {
+	color: #d63638;
+}
+
+.hezarfen-no-barcode {
+	color: #999;
+}
+
+/* Action Section */
+.hezarfen-bulk-actions-section {
+	margin: 16px 0;
+}
+
+/* Progress Section */
+.hezarfen-bulk-progress-section {
+	background: #fff;
+	border: 1px solid #ccd0d4;
+	padding: 20px;
+	margin: 20px 0;
+}
+
+.hezarfen-progress-header {
+	display: flex;
+	align-items: baseline;
+	gap: 10px;
+	margin-bottom: 12px;
+}
+
+.hezarfen-progress-header h3 {
+	margin: 0;
+	font-size: 14px;
+}
+
+#hezarfen-progress-counter,
+#hezarfen-progress-percent {
+	font-weight: 600;
+	color: #555;
+}
+
+/* Progress Bar */
+.hezarfen-progress-bar-container {
+	width: 100%;
+	height: 24px;
+	background: #e5e5e5;
+	border-radius: 4px;
+	overflow: hidden;
+	margin-bottom: 10px;
+}
+
+.hezarfen-progress-bar {
+	height: 100%;
+	background: #2271b1;
+	border-radius: 4px;
+	transition: width 0.3s ease;
+}
+
+/* Estimated time */
+.hezarfen-progress-estimated {
+	font-size: 13px;
+	color: #666;
+	margin-bottom: 12px;
+}
+
+/* Progress Log */
+.hezarfen-progress-log {
+	max-height: 300px;
+	overflow-y: auto;
+	border: 1px solid #e5e5e5;
+	padding: 8px 12px;
+	margin-bottom: 12px;
+	background: #f9f9f9;
+	font-size: 13px;
+	font-family: monospace;
+}
+
+.hezarfen-log-entry {
+	padding: 3px 0;
+	border-bottom: 1px solid #eee;
+}
+
+.hezarfen-log-entry:last-child {
+	border-bottom: none;
+}
+
+.hezarfen-log-order {
+	font-weight: 600;
+}
+
+.hezarfen-log-success .hezarfen-log-message {
+	color: #00a32a;
+}
+
+.hezarfen-log-error .hezarfen-log-message {
+	color: #d63638;
+}
+
+.hezarfen-log-processing .hezarfen-log-message {
+	color: #dba617;
+}
+
+.hezarfen-log-cancelled .hezarfen-log-message {
+	color: #999;
+}
+
+/* Icons */
+.hezarfen-icon-success {
+	color: #00a32a;
+}
+
+.hezarfen-icon-error {
+	color: #d63638;
+}
+
+.hezarfen-icon-processing {
+	color: #dba617;
+}
+
+.hezarfen-icon-cancelled {
+	color: #999;
+}
+
+.hezarfen-icon-waiting {
+	color: #ccc;
+}
+
+/* Progress Actions */
+.hezarfen-progress-actions {
+	text-align: right;
+}
+
+/* Results Section */
+.hezarfen-bulk-results-section {
+	margin: 20px 0;
+}
+
+.hezarfen-results-summary {
+	margin-bottom: 12px;
+}
+
+.hezarfen-results-summary .notice {
+	margin: 0;
+}
+
+.hezarfen-results-actions {
+	display: flex;
+	gap: 10px;
+	margin-top: 12px;
+}
