@@ -607,15 +607,16 @@ jQuery(document).ready(($)=>{
     let hasError = false;
 
     $('#hepsijet-packages-container .hepsijet-package-item').each(function() {
-      const desi = $(this).find('.hepsijet-package-desi').val();
+      const desiRaw = $(this).find('.hepsijet-package-desi').val();
+      const desi = parseFloat(typeof desiRaw === 'string' ? desiRaw.replace(',', '.') : desiRaw);
 
-      if (!desi || parseFloat(desi) < 0.01) {
+      if (!desi || desi < 0.01) {
         hasError = true;
         return false; // Break loop
       }
 
       packages.push({
-        desi: parseFloat(desi)
+        desi: desi
       });
     });
 

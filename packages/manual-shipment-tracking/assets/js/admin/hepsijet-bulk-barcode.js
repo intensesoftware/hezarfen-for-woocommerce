@@ -87,7 +87,7 @@
 	 * Apply bulk desi value to all orders without barcodes.
 	 */
 	function applyBulkDesi() {
-		var desiVal = parseFloat($('#hezarfen-bulk-desi-input').val());
+		var desiVal = parseDesi($('#hezarfen-bulk-desi-input').val());
 
 		if (!desiVal || desiVal < 0.01) {
 			$('#hezarfen-bulk-desi-input').focus();
@@ -126,7 +126,7 @@
 				return; // continue
 			}
 
-			var desiVal = parseFloat($row.find('.hezarfen-desi-editable').val());
+			var desiVal = parseDesi($row.find('.hezarfen-desi-editable').val());
 			if (!desiVal || desiVal < 0.01) {
 				$row.find('.hezarfen-desi-editable').addClass('hezarfen-input-error');
 				valid = false;
@@ -531,6 +531,16 @@
 		}
 		var blob = new Blob([arr], { type: mime });
 		return URL.createObjectURL(blob);
+	}
+
+	/**
+	 * Parses a desi value, converting comma decimal separator to dot.
+	 */
+	function parseDesi(val) {
+		if (typeof val === 'string') {
+			val = val.replace(',', '.');
+		}
+		return parseFloat(val);
 	}
 
 	/**
