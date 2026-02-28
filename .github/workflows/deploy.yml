@@ -28,11 +28,6 @@ jobs:
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
 
       - name: Upload release asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ steps.deploy.outputs.zip-path }}
-          asset_name: ${{ github.event.repository.name }}.zip
-          asset_content_type: application/zip
+          files: ${{ steps.deploy.outputs.zip-path }}
