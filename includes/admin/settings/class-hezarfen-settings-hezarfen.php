@@ -928,10 +928,9 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			// "Contact Support" → close banner
 			document.getElementById('hezarfen-review-support').addEventListener('click', function(){ hide(); });
 
-			// "Write a Review" → snooze 7 days
+			// "Write a Review" → snooze 14 days, stays visible until page reload
 			document.getElementById('hezarfen-review-go').addEventListener('click', function(){
 				send('snooze_short');
-				hide();
 			});
 
 			// "Not Now" → snooze 30 days
