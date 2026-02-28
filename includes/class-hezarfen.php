@@ -55,6 +55,7 @@ class Hezarfen {
 		add_action( 'admin_notices', array( $this, 'show_migration_notice' ) );
 		add_action( 'admin_notices', array( $this, 'show_roadmap_contribution_notice' ) );
 		add_action( 'wp_ajax_hezarfen_dismiss_roadmap_notice', array( $this, 'handle_dismiss_roadmap_notice' ) );
+		add_action( 'wp_ajax_hezarfen_dismiss_review', array( $this, 'handle_dismiss_review' ) );
 		add_action( 'plugins_loaded', array( $this, 'force_enable_address2_field' ) );
 		add_filter( 'woocommerce_get_settings_pages', array( $this, 'add_hezarfen_setting_page' ) );
 		add_filter( 'woocommerce_get_country_locale', array( $this, 'modify_tr_locale' ), PHP_INT_MAX - 2 );
@@ -493,9 +494,35 @@ class Hezarfen {
 	 */
 	public function handle_dismiss_roadmap_notice() {
 		check_ajax_referer( 'hezarfen_dismiss_roadmap_notice', 'nonce' );
-		
+
 		update_option( 'hezarfen_roadmap_notice_dismissed', true );
-		
+
+		wp_send_json_success();
+	}
+
+	/**
+	 * Handle dismiss/snooze review banner AJAX request.
+	 *
+	 * type=dismiss → never show again.
+	 * type=snooze  → show again after 30 days.
+	 *
+	 * @return void
+	 */
+	public function handle_dismiss_review() {
+		check_ajax_referer( 'hezarfen_dismiss_review', 'nonce' );
+
+		$type = isset( $_POST['type'] ) ? sanitize_key( $_POST['type'] ) : 'snooze';
+
+		// Increment shown count on every interaction
+		$count = (int) get_option( 'hezarfen_review_shown_count', 0 );
+		update_option( 'hezarfen_review_shown_count', $count + 1 );
+
+		if ( 'snooze_short' === $type ) {
+			update_option( 'hezarfen_review_snoozed_until', time() + 14 * DAY_IN_SECONDS );
+		} else {
+			update_option( 'hezarfen_review_snoozed_until', time() + 30 * DAY_IN_SECONDS );
+		}
+
 		wp_send_json_success();
 	}
 }

@@ -3,6 +3,157 @@ input.error {
 	box-shadow: 0 0 0 1px #f20000;
 }
 
+/* Review Banner */
+.hezarfen-review-banner {
+	position: relative;
+	background: #fff;
+	border: 1px solid #e0e0e0;
+	border-left: 4px solid #2271b1;
+	border-radius: 8px;
+	padding: 20px 48px 20px 24px;
+	margin: 20px 0;
+}
+
+.hezarfen-review-close {
+	position: absolute;
+	top: 12px;
+	right: 14px;
+	background: none;
+	border: none;
+	font-size: 22px;
+	color: #999;
+	cursor: pointer;
+	line-height: 1;
+	padding: 0 4px;
+	transition: color .2s;
+}
+
+.hezarfen-review-close:hover {
+	color: #333;
+}
+
+.hezarfen-review-step {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 12px;
+}
+
+.hezarfen-review-icon {
+	font-size: 32px;
+	line-height: 1;
+	flex-shrink: 0;
+}
+
+.hezarfen-review-text {
+	flex: 1;
+	min-width: 200px;
+}
+
+.hezarfen-review-question {
+	font-size: 16px;
+	font-weight: 600;
+	color: #1d2327;
+	margin: 0;
+}
+
+.hezarfen-review-subtitle {
+	font-size: 14px;
+	color: #50575e;
+	margin: 4px 0 0;
+}
+
+.hezarfen-review-hint {
+	font-size: 13px;
+	color: #787c82;
+	margin: 6px 0 0;
+	font-style: italic;
+}
+
+.hezarfen-review-actions {
+	display: flex;
+	gap: 10px;
+}
+
+.hezarfen-review-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 9px 20px;
+	border-radius: 6px;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+	border: 1px solid transparent;
+	text-decoration: none;
+	transition: all .2s;
+	white-space: nowrap;
+}
+
+.hezarfen-review-btn--yes {
+	background: #fff;
+	color: #2e7d32;
+	border-color: #2e7d32;
+}
+
+.hezarfen-review-btn--yes:hover {
+	background: #2e7d32;
+	color: #fff;
+}
+
+.hezarfen-review-btn--no {
+	background: #fff;
+	color: #666;
+	border-color: #ccc;
+}
+
+.hezarfen-review-btn--no:hover {
+	background: #f0f0f0;
+	color: #333;
+}
+
+.hezarfen-review-btn--primary {
+	background: #2271b1;
+	color: #fff;
+	border-color: #2271b1;
+}
+
+.hezarfen-review-btn--primary:hover {
+	background: #135e96;
+	color: #fff;
+}
+
+.hezarfen-review-btn--later {
+	background: transparent;
+	color: #787c82;
+	border-color: #ccc;
+}
+
+.hezarfen-review-btn--later:hover {
+	background: #f0f0f0;
+	color: #50575e;
+}
+
+.hezarfen-review-support-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin-top: 10px;
+	padding: 9px 20px;
+	background: #25D366;
+	color: #fff;
+	font-size: 14px;
+	font-weight: 600;
+	text-decoration: none;
+	border-radius: 6px;
+	transition: background .2s;
+}
+
+.hezarfen-review-support-link:hover {
+	background: #1ebe57;
+	color: #fff;
+}
+
 /* Training Section Styles */
 .hezarfen-training-section {
 	padding: 20px 0;

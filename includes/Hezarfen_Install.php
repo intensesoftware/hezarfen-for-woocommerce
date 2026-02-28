@@ -29,7 +29,7 @@ class Hezarfen_Install {
 		}
 		
 		self::update_version();
-		
+
 		self::migrate_legacy_sms_settings();
 		
 		self::setup_mss_database();
