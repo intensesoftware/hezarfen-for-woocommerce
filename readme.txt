@@ -264,6 +264,9 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
+= 2.8.2 - 2026-02-28 =
+* Memnuniyet değerlendirme
+
 = 2.8.1 - 2026-02-28 =
 * PHP uyarısı giderildi.
 
