@@ -1032,13 +1032,20 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			return $this->get_fallback_videos();
 		}
 
+		$response_code = wp_remote_retrieve_response_code( $response );
+		if ( 200 !== $response_code ) {
+			return $this->get_fallback_videos();
+		}
+
 		$body = wp_remote_retrieve_body( $response );
 		if ( empty( $body ) ) {
 			return $this->get_fallback_videos();
 		}
 
 		// Parse XML
+		libxml_use_internal_errors( true );
 		$xml = simplexml_load_string( $body );
+		libxml_clear_errors();
 		if ( false === $xml ) {
 			return $this->get_fallback_videos();
 		}
