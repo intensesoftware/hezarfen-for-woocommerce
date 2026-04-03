@@ -775,8 +775,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		global $current_section;
 		global $hide_save_button;
 
-		$this->maybe_output_review_banner();
-
 		$post_meta_encryption = new PostMetaEncryption();
 
 		if ( 'encryption' == $current_section && $post_meta_encryption->is_encryption_key_generated() ) {
@@ -826,7 +824,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 *
 	 * @return void
 	 */
-	private function maybe_output_review_banner() {
+	public function maybe_output_review_banner() {
 		// Permanently dismissed
 		if ( get_option( 'hezarfen_review_dismissed', false ) ) {
 			return;

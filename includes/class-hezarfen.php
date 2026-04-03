@@ -55,6 +55,7 @@ class Hezarfen {
 		add_action( 'admin_notices', array( $this, 'show_migration_notice' ) );
 		add_action( 'admin_notices', array( $this, 'show_roadmap_contribution_notice' ) );
 		add_action( 'admin_notices', array( $this, 'show_compatibility_notices' ) );
+		add_action( 'admin_notices', array( $this, 'show_review_banner' ) );
 		add_action( 'wp_ajax_hezarfen_dismiss_roadmap_notice', array( $this, 'handle_dismiss_roadmap_notice' ) );
 		add_action( 'wp_ajax_hezarfen_dismiss_review', array( $this, 'handle_dismiss_review' ) );
 		add_action( 'wp_ajax_hezarfen_dismiss_theme_checkout_notice', array( $this, 'handle_dismiss_theme_checkout_notice' ) );
@@ -541,6 +542,122 @@ class Hezarfen {
 
 		$this->show_woodmart_notice();
 		$this->show_hosting_notice();
+	}
+
+	/**
+	 * Show review banner on all admin pages.
+	 *
+	 * @return void
+	 */
+	public function show_review_banner() {
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			return;
+		}
+
+		// Permanently dismissed.
+		if ( get_option( 'hezarfen_review_dismissed', false ) ) {
+			return;
+		}
+
+		// Max 3 impressions.
+		$shown_count = (int) get_option( 'hezarfen_review_shown_count', 0 );
+		if ( $shown_count >= 3 ) {
+			return;
+		}
+
+		// Snoozed (30-day cooldown after "Not Now" or "X").
+		$snoozed_until = (int) get_option( 'hezarfen_review_snoozed_until', 0 );
+		if ( $snoozed_until > time() ) {
+			return;
+		}
+
+		// Features must be actively in use.
+		if ( ! \Hezarfen\Inc\Feature_Status::are_features_active() ) {
+			return;
+		}
+
+		$nonce = wp_create_nonce( 'hezarfen_dismiss_review' );
+		$review_url = 'https://wordpress.org/support/plugin/hezarfen-for-woocommerce/reviews/#new-post';
+		?>
+		<div id="hezarfen-review-banner" class="notice notice-info is-dismissible" style="padding:12px 16px;border-left-color:#2271b1;">
+			<!-- Step 1: Micro question -->
+			<div id="hezarfen-review-step1">
+				<p style="font-size:14px;margin:0 0 10px;">
+					<strong>Hezarfen for WooCommerce:</strong>
+					<?php esc_html_e( 'Everything running smoothly with Hezarfen?', 'hezarfen-for-woocommerce' ); ?>
+				</p>
+				<p style="margin:0;">
+					<button type="button" class="button button-small" id="hezarfen-review-yes" style="margin-right:6px;">&#128077; <?php esc_html_e( 'Yes', 'hezarfen-for-woocommerce' ); ?></button>
+					<button type="button" class="button button-small" id="hezarfen-review-no">&#128078; <?php esc_html_e( 'No', 'hezarfen-for-woocommerce' ); ?></button>
+				</p>
+			</div>
+
+			<!-- Step 2a: Review prompt (shown after Yes) -->
+			<div id="hezarfen-review-step2-yes" style="display:none;">
+				<p style="font-size:14px;margin:0 0 4px;">
+					<strong><?php esc_html_e( 'Great! Would you like to share your experience with a short review?', 'hezarfen-for-woocommerce' ); ?></strong>
+				</p>
+				<p style="color:#50575e;margin:0 0 4px;font-size:13px;"><?php esc_html_e( 'Your review helps us keep developing the plugin.', 'hezarfen-for-woocommerce' ); ?></p>
+				<p style="color:#787c82;margin:0 0 10px;font-size:13px;font-style:italic;"><?php esc_html_e( 'You can use your free WordPress.org account to write a review.', 'hezarfen-for-woocommerce' ); ?></p>
+				<p style="margin:0;">
+					<a href="<?php echo esc_url( $review_url ); ?>" target="_blank" rel="noopener noreferrer" class="button button-primary button-small" id="hezarfen-review-go">&#11088; <?php esc_html_e( 'Write a Review', 'hezarfen-for-woocommerce' ); ?></a>
+					<button type="button" class="button button-small" id="hezarfen-review-later" style="margin-left:6px;"><?php esc_html_e( 'Not Now', 'hezarfen-for-woocommerce' ); ?></button>
+				</p>
+			</div>
+
+			<!-- Step 2b: Support prompt (shown after No) -->
+			<div id="hezarfen-review-step2-no" style="display:none;">
+				<p style="font-size:14px;margin:0 0 10px;">
+					<strong><?php esc_html_e( 'We\'d love to help! Let us know what we can improve.', 'hezarfen-for-woocommerce' ); ?></strong>
+				</p>
+				<p style="margin:0;">
+					<a href="https://intense.com.tr/whatsapp-destek" target="_blank" rel="noopener noreferrer" class="button button-small" id="hezarfen-review-support" style="background:#25D366;border-color:#25D366;color:#fff;">&#128172; <?php esc_html_e( 'WhatsApp Support', 'hezarfen-for-woocommerce' ); ?></a>
+				</p>
+			</div>
+		</div>
+
+		<script>
+		(function(){
+			var banner = document.getElementById('hezarfen-review-banner');
+			if (!banner) return;
+			var step1 = document.getElementById('hezarfen-review-step1');
+			var step2Yes = document.getElementById('hezarfen-review-step2-yes');
+			var step2No = document.getElementById('hezarfen-review-step2-no');
+			var nonce = '<?php echo esc_js( $nonce ); ?>';
+
+			function hide() {
+				banner.style.transition = 'opacity .3s';
+				banner.style.opacity = '0';
+				setTimeout(function(){ banner.remove(); }, 300);
+			}
+
+			function send(type) {
+				var xhr = new XMLHttpRequest();
+				xhr.open('POST', ajaxurl);
+				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+				xhr.send('action=hezarfen_dismiss_review&nonce=' + nonce + '&type=' + type);
+			}
+
+			function showStep(el) {
+				step1.style.display = 'none';
+				el.style.display = '';
+			}
+
+			document.getElementById('hezarfen-review-yes').addEventListener('click', function(){ showStep(step2Yes); send('snooze_short'); });
+			document.getElementById('hezarfen-review-no').addEventListener('click', function(){ showStep(step2No); send('snooze'); });
+			document.getElementById('hezarfen-review-support').addEventListener('click', function(){ hide(); });
+			document.getElementById('hezarfen-review-go').addEventListener('click', function(){ send('snooze_short'); });
+			document.getElementById('hezarfen-review-later').addEventListener('click', function(){ send('snooze'); hide(); });
+
+			// WP native dismiss button (is-dismissible)
+			banner.addEventListener('click', function(e) {
+				if (e.target.classList.contains('notice-dismiss')) {
+					send('snooze');
+				}
+			});
+		})();
+		</script>
+		<?php
 	}
 
 	/**

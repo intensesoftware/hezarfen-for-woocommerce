@@ -6,13 +6,13 @@ msgstr ""
 "Language: tr_TR\n"
 "Language-Team: Türkçe\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2026-02-28 11:36+0000\n"
+"PO-Revision-Date: 2026-04-03 18:52+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Loco-Version: 2.8.0; wp-6.9.1; php-8.0.30"
+"X-Loco-Version: 2.8.0; wp-6.9.4; php-8.2.27"
 
 #: includes/admin/class-admin-menu.php:648
 msgid "\"Kargoya Verildi\" durumunda otomatik SMS bildirimi"
@@ -1392,8 +1392,7 @@ msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:872
 msgid "Great! Would you like to share your experience with a short review?"
-msgstr ""
-"Harika! Deneyiminizi kısa bir değerlendirme ile paylaşmak ister misiniz?"
+msgstr "1 cümlelik yorumunuz bizim için çok değerli 🙌"
 
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:174
 #, fuzzy
@@ -3702,9 +3701,7 @@ msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:874
 msgid "You can use your free WordPress.org account to write a review."
-msgstr ""
-"Değerlendirme yazmak için ücretsiz WordPress.org hesabınızı "
-"kullanabilirsiniz."
+msgstr "Yorum yazmak için ücretsiz WordPress.org hesabınızı kullanabilirsiniz."
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:707
 msgid "You do not have permission to perform this action."
