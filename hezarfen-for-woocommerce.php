@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: Hezarfen - WooCommerce için Kargo Entegrasyonu - WooCommerce Kargo Takip, İlçe/Mahalle, Sözleşmeler For Woocommerce
- * Description: Türkiye'nin WooCommerce kargo eklentisi - 26+ kargo firmalası için takip, sms, e-posta bildirimleri + Mesafeli Satış Sözleşmesi desteği
- * Version: 2.8.2
+ * Plugin Name: Kargo Takip, Kargo SMS, İlçe Mahalle Sözleşme by Hezarfen
+ * Description: WooCommerce kargo takip ve kargo entegrasyon eklentisi. 26+ kargo firması: kargo barkod oluşturma, kargo durum sorgulama, kargo SMS ve e-posta bildirimleri. Ücretsiz Hepsijet kargo entegrasyonu. İlçe/mahalle seçimi, mesafeli satış sözleşmesi, ön bilgilendirme formu, e-fatura alanları.
+ * Version: 2.8.3
  * Author: Intense Yazılım Ltd.
  * Author URI: https://intense.com.tr
  * Developer: Intense Yazılım Ltd.
@@ -27,7 +27,7 @@ if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins',
 	return;
 }
 
-define( 'WC_HEZARFEN_VERSION', '2.8.2' );
+define( 'WC_HEZARFEN_VERSION', '2.8.3' );
 define( 'WC_HEZARFEN_MIN_MBGB_VERSION', '0.6.1' );
 define( 'WC_HEZARFEN_MIN_WC_VERSION', '6.9.0' );
 define( 'WC_HEZARFEN_FILE', __FILE__ );
