@@ -54,13 +54,16 @@ class Hezarfen {
 		add_action( 'plugins_loaded', array( $this, 'define_constants' ) );
 		add_action( 'admin_notices', array( $this, 'show_migration_notice' ) );
 		add_action( 'admin_notices', array( $this, 'show_roadmap_contribution_notice' ) );
+		add_action( 'admin_notices', array( $this, 'show_compatibility_notices' ) );
 		add_action( 'wp_ajax_hezarfen_dismiss_roadmap_notice', array( $this, 'handle_dismiss_roadmap_notice' ) );
 		add_action( 'wp_ajax_hezarfen_dismiss_review', array( $this, 'handle_dismiss_review' ) );
+		add_action( 'wp_ajax_hezarfen_dismiss_theme_checkout_notice', array( $this, 'handle_dismiss_theme_checkout_notice' ) );
+		add_action( 'wp_ajax_hezarfen_dismiss_hosting_notice', array( $this, 'handle_dismiss_hosting_notice' ) );
 		add_action( 'plugins_loaded', array( $this, 'force_enable_address2_field' ) );
 		add_filter( 'woocommerce_get_settings_pages', array( $this, 'add_hezarfen_setting_page' ) );
 		add_filter( 'woocommerce_get_country_locale', array( $this, 'modify_tr_locale' ), PHP_INT_MAX - 2 );
 		add_filter('woocommerce_rest_prepare_shop_order_object', array( $this, 'add_virtual_order_metas_to_metadata' ), 10, 2);
-		
+
 		// Register roadmap voting AJAX action
 		add_action( 'wp_ajax_hezarfen_submit_roadmap_votes', array( $this, 'handle_roadmap_vote_submission_proxy' ) );
 	}
@@ -523,6 +526,177 @@ class Hezarfen {
 			update_option( 'hezarfen_review_snoozed_until', time() + 30 * DAY_IN_SECONDS );
 		}
 
+		wp_send_json_success();
+	}
+
+	/**
+	 * Show compatibility notices for Woodmart theme and SiteGround/Cloudways hosting.
+	 *
+	 * @return void
+	 */
+	public function show_compatibility_notices() {
+		if ( ! is_admin() || ! current_user_can( 'manage_woocommerce' ) ) {
+			return;
+		}
+
+		$this->show_woodmart_notice();
+		$this->show_hosting_notice();
+	}
+
+	/**
+	 * Show theme checkout fields compatibility notice for Woodmart and Flatsome.
+	 *
+	 * @return void
+	 */
+	private function show_woodmart_notice() {
+		if ( get_option( 'hezarfen_theme_checkout_notice_dismissed', false ) ) {
+			return;
+		}
+
+		// Check if district/neighborhood feature is enabled.
+		if ( 'yes' !== apply_filters( 'hezarfen_enable_district_neighborhood_fields', get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) ) ) {
+			return;
+		}
+
+		$notice_message = $this->get_theme_checkout_notice_message();
+		if ( ! $notice_message ) {
+			return;
+		}
+
+		?>
+		<div class="notice notice-warning is-dismissible hezarfen-theme-checkout-notice">
+			<p>
+				<strong>Hezarfen for WooCommerce:</strong>
+				<?php echo wp_kses( $notice_message, array( 'strong' => array() ) ); ?>
+			</p>
+		</div>
+		<script type="text/javascript">
+		jQuery(document).ready(function($) {
+			$(document).on('click', '.hezarfen-theme-checkout-notice .notice-dismiss', function() {
+				$.post(ajaxurl, {
+					action: 'hezarfen_dismiss_theme_checkout_notice',
+					nonce: '<?php echo esc_js( wp_create_nonce( 'hezarfen_dismiss_theme_checkout_notice' ) ); ?>'
+				});
+			});
+		});
+		</script>
+		<?php
+	}
+
+	/**
+	 * Get theme-specific checkout compatibility notice message.
+	 *
+	 * @return string|false Notice message or false if no notice needed.
+	 */
+	private function get_theme_checkout_notice_message() {
+		// Woodmart detection: only warn when checkout fields module is enabled.
+		if ( 'woodmart' === wp_get_theme()->get_stylesheet() || defined( 'WOODMART_THEME_DIR' ) ) {
+			$checkout_fields_enabled = function_exists( 'woodmart_get_opt' ) && woodmart_get_opt( 'checkout_fields' );
+
+			if ( $checkout_fields_enabled ) {
+				return __( '<strong>İlçe/mahalle seçimi zaten düzgün çalışıyorsa bu uyarıyı görmezden gelebilirsiniz.</strong> Woodmart teması tespit edildi. Woodmart\'ın "Checkout fields" (Ödeme Alanları) özelliği aktif olduğunda, Hezarfen\'in ilçe/mahalle seçimleri sayfa yenilenmeden düzgün çalışamaz. Hezarfen ilçe/mahalle özelliğini sorunsuz kullanmak için lütfen Woodmart ayarlarından "Checkout fields" modülünü devre dışı bırakın.', 'hezarfen-for-woocommerce' );
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Show SiteGround/Cloudways hosting compatibility notice.
+	 *
+	 * @return void
+	 */
+	private function show_hosting_notice() {
+		if ( get_option( 'hezarfen_hosting_notice_dismissed', false ) ) {
+			return;
+		}
+
+		// Check if district/neighborhood feature is enabled.
+		if ( 'yes' !== apply_filters( 'hezarfen_enable_district_neighborhood_fields', get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) ) ) {
+			return;
+		}
+
+		$hosting_provider = $this->detect_hosting_provider();
+
+		if ( ! $hosting_provider ) {
+			return;
+		}
+
+		?>
+		<div class="notice notice-warning is-dismissible hezarfen-hosting-notice">
+			<p>
+				<strong>Hezarfen for WooCommerce:</strong>
+				<?php
+				echo wp_kses(
+					sprintf(
+						/* translators: 1: hosting provider name, 2: API file path */
+						__( '<strong>İlçe/mahalle seçimi zaten düzgün çalışıyorsa bu uyarıyı görmezden gelebilirsiniz.</strong> %1$s hosting altyapısı kullandığınız için bu uyarı gösterilmektedir. %1$s doğrudan PHP dosyası erişimini engelleyebildiği için Hezarfen\'in ilçe/mahalle özelliği etkilenebilir. Sorun yaşarsanız %2$s dosyası için hosting panelinizden güvenlik istisnası tanımlayın veya hosting firmanızdan destek alın.', 'hezarfen-for-woocommerce' ),
+						esc_html( $hosting_provider ),
+						'<code>wp-content/plugins/hezarfen-for-woocommerce/api/get-mahalle-data.php</code>'
+					),
+					array( 'code' => array(), 'strong' => array() )
+				);
+				?>
+			</p>
+		</div>
+		<script type="text/javascript">
+		jQuery(document).ready(function($) {
+			$(document).on('click', '.hezarfen-hosting-notice .notice-dismiss', function() {
+				$.post(ajaxurl, {
+					action: 'hezarfen_dismiss_hosting_notice',
+					nonce: '<?php echo esc_js( wp_create_nonce( 'hezarfen_dismiss_hosting_notice' ) ); ?>'
+				});
+			});
+		});
+		</script>
+		<?php
+	}
+
+	/**
+	 * Detect if the site is hosted on SiteGround or Cloudways.
+	 *
+	 * @return string|false Hosting provider name or false if not detected.
+	 */
+	private function detect_hosting_provider() {
+		// SiteGround detection: SG Optimizer plugin or SG Security plugin.
+		if (
+			Helper::is_plugin_active( 'sg-cachepress/sg-cachepress.php' ) ||
+			Helper::is_plugin_active( 'sg-security/sg-security.php' ) ||
+			class_exists( '\SiteGround_Optimizer\Supercacher\Supercacher' )
+		) {
+			return 'SiteGround';
+		}
+
+		// Cloudways detection: Breeze plugin (Cloudways default cache plugin).
+		if (
+			Helper::is_plugin_active( 'breeze/breeze.php' ) ||
+			defined( 'STARTER_STARTER_VERSION' ) // Cloudways starter plugin.
+		) {
+			return 'Cloudways';
+		}
+
+		return false;
+	}
+
+	/**
+	 * Handle dismiss theme checkout notice AJAX request.
+	 *
+	 * @return void
+	 */
+	public function handle_dismiss_theme_checkout_notice() {
+		check_ajax_referer( 'hezarfen_dismiss_theme_checkout_notice', 'nonce' );
+		update_option( 'hezarfen_theme_checkout_notice_dismissed', true );
+		wp_send_json_success();
+	}
+
+	/**
+	 * Handle dismiss hosting notice AJAX request.
+	 *
+	 * @return void
+	 */
+	public function handle_dismiss_hosting_notice() {
+		check_ajax_referer( 'hezarfen_dismiss_hosting_notice', 'nonce' );
+		update_option( 'hezarfen_hosting_notice_dismissed', true );
 		wp_send_json_success();
 	}
 }
