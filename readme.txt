@@ -1,7 +1,7 @@
 
 === Kargo Takip, Kargo SMS, İlçe Mahalle Sözleşme by Hezarfen ===
 Contributors: intenseyazilim, mucahitbal, mskapusuz
-Tags: kargo, kargo takip, kargo entegrasyonu
+Tags: kargo, kargo takip, kargo entegrasyonu, yurtiçi kargo, aras kargo
 Requires at least: 5.3
 Tested up to: 6.9
 Requires PHP: 7.0
