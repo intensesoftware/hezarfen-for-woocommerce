@@ -74,6 +74,8 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			$sections['encryption_recovery'] = __( 'Encryption Key Recovery', 'hezarfen-for-woocommerce' );
 		}
 
+		$sections['system_report'] = __( 'Sistem Raporu', 'hezarfen-for-woocommerce' );
+
 		return $sections;
 	}
 
@@ -802,6 +804,9 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		} elseif ( 'training' === $current_section ) {
 			$hide_save_button = true;
 			$this->output_training_section();
+		} elseif ( 'system_report' === $current_section ) {
+			$hide_save_button = true;
+			do_action( 'hezarfen_system_report_output' );
 		} else {
 			$settings = $this->get_settings_for_section( $current_section );
 			WC_Admin_Settings::output_fields( $settings );
