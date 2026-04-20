@@ -31,11 +31,33 @@ Bu komut **her zaman** plugin kök dizininde çalışır:
 - **Major'u asla otomatik seçme** — sadece argüman ile.
 
 ### 4. Türkçe changelog taslağı
-- Commit'leri kategorize et (feat → "Yeni özellikler", fix → "Düzeltmeler", diğer → "Diğer iyileştirmeler"). Saf chore/release commit'lerini ("new tags", "readme.txt update", "X.Y.Z" gibi) ele.
-- Kullanıcı odaklı, kısa ve sade Türkçe cümleler kur. Conventional commit prefix'lerini (`feat:`, `fix:`) çıkar. Mümkünse mevcut readme.txt changelog stilini taklit et (`* Cümle.` formatı).
-- Bu draft'ı **kullanıcıya göster** ve şunu sor:
-  > "Önerilen versiyon: **X.Y.Z** (bump türü: <minor|patch|major>). Aşağıdaki Türkçe changelog'u onaylıyor musun, yoksa düzenlemek ister misin?"
-- **DUR ve kullanıcının onayını/düzenlemelerini bekle.** Kullanıcı onaylamadan veya düzeltme istemeden dosyalara dokunma.
+
+**Commit'leri 1:1 çevirme.** Eklenti son kullanıcısı (mağaza sahibi) için yazıyorsun; geliştiriciye değil.
+
+#### Yazım stili — readme.txt mevcut tarzına birebir uy:
+- **Geçmiş edilgen** çatı kullan: "eklendi", "düzeltildi", "iyileştirildi", "güncellendi", "kaldırıldı".
+  - ❌ "Sipariş ekranında fatura bilgilerini göster." (emir/şimdiki)
+  - ✅ "Sipariş görüntüleme ekranında fatura bilgileri eklendi."
+- Conventional commit prefix'lerini (`feat:`, `fix:`, `chore:`) **at**.
+- Tek cümle, sonu nokta, başında `* `.
+- Teknik jargon yok (`<br/>`, "billing address section", "merge", commit hash vs.). Kullanıcı arayüzü dilinde konuş.
+
+#### Konsolidasyon — agresif birleştir:
+- Aynı özelliği farklı yüzeylere ekleyen birden fazla commit varsa, **tek satırda** topla. Örn:
+  - 4 ayrı commit: "show invoice info in emails", "show on thank-you page", "show on my-account view", "show invoice type on order view"
+  - ❌ 4 ayrı bullet
+  - ✅ Tek bullet: "Fatura bilgileri sipariş e-postalarında, teşekkür sayfasında ve hesabım sipariş detayında gösterilmeye başlandı."
+- Kullanıcının fark edemeyeceği iç düzeltmeleri (CSS spacing tweak'leri, küçük HTML temizlikleri, refactor, lint düzeltmeleri) **silebilirsin** — en fazla genel "iyileştirildi" cümlesine soğutur. Ürün davranışını gözle görülür şekilde değiştiren her commit'i koru.
+- "new tags", "readme.txt update", "X.Y.Z", "bump version" gibi release house-keeping commit'lerini her zaman at.
+
+#### Sıralama:
+Önce yeni özellikler (eklendi), sonra iyileştirmeler (güncellendi/iyileştirildi), en sonda hata düzeltmeleri (düzeltildi/giderildi). Kategori başlığı yazma, sadece `* ` listesi.
+
+#### Sunum:
+Draft'ı kullanıcıya göster ve şunu sor:
+> "Önerilen versiyon: **X.Y.Z** (bump türü: <minor|patch|major>). Aşağıdaki Türkçe changelog'u onaylıyor musun, yoksa düzenlemek ister misin?"
+
+**DUR ve kullanıcının onayını/düzenlemelerini bekle.** Kullanıcı onaylamadan veya düzeltme istemeden dosyalara dokunma.
 
 ### 5. Dosya güncellemeleri (kullanıcı onayından sonra)
 Şu üç dosyayı güncelle:
