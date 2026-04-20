@@ -17,13 +17,14 @@ Bu komut **her zaman** plugin kök dizininde çalışır:
 - `cd` ile plugin dizinine git, `git status` ile temiz mi kontrol et. Kirli ise dur ve kullanıcıya bildir.
 - `git fetch --tags --prune origin` çalıştır (master, develop, tag'ler güncel olsun).
 - Mevcut branch `develop` olmalı; değilse `git checkout develop` ile geç (veya kullanıcıya sor).
-- `git pull --ff-only origin develop` ile lokal develop'ı güncelle. Fast-forward değilse dur ve kullanıcıya bildir.
-- `origin/master`'ın da güncel olduğundan emin ol (fetch sonrası zaten öyle olmalı). Karşılaştırma `origin/master..develop` üzerinden yapılır.
+- `git pull --ff-only origin develop` ile lokal develop'ı güncelle. Fast-forward değilse dur.
+- **Develop master'la sync mi kontrol et.** `git log develop..origin/master --oneline` çıktı veriyorsa develop master'ın gerisinde (önceki release PR'ı merge commit ile geldi). Önce `git merge --ff-only origin/master` ile FF et, başarılı olursa `git push origin develop`. FF mümkün değilse dur ve kullanıcıya sor.
 
-### 2. Yayınlanmamış commit'leri topla
-- `develop` üzerinde olup `master`'da olmayan commit'ler: `git log origin/master..develop --pretty=format:'%h %s' --no-merges`
-- Sanity check için son semver tag: `git tag --sort=-v:refname | head -1` — bu tag normalde `master`'ın tepesinde olmalı; değilse kullanıcıya uyarı ver ama devam et.
-- Eğer hiç yeni commit yoksa: "release atılacak değişiklik yok" deyip dur.
+### 2. Son tag'i bul ve yayınlanmamış commit'leri topla
+- En son semver tag: `LATEST_TAG=$(git tag --sort=-v:refname | head -1)`
+- Bu tag'den `develop`'a kadarki yayınlanmamış commit'ler: `git log "$LATEST_TAG"..develop --pretty=format:'%h %s' --no-merges`
+  - Bu liste hem master'a düşmüş ama henüz tag'lenmemiş commit'leri (önceki release'den sonra merge edilen tooling/hotfix gibi şeyler) hem de develop'ta master'a girmemiş commit'leri kapsar — develop az önce master'la FF'lendiği için ikisi de aynı bakış açısından görünür.
+- Eğer hiç commit yoksa: "release atılacak değişiklik yok" deyip dur.
 
 ### 3. Versiyon bump kararı
 - `$ARGUMENTS` `major` içeriyorsa → major bump (X+1.0.0).
