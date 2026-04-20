@@ -3,6 +3,7 @@
 .gitignore
 .distignore
 .github
+.claude
 package.json
 package-lock.json
 composer.json

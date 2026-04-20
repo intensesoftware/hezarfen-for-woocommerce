@@ -100,3 +100,28 @@ jobs:
             --title "$VERSION" \
             --target "${{ github.event.pull_request.merge_commit_sha }}" \
             --notes "$NOTES"
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+
+      - name: Install Composer dependencies (production)
+        run: composer install -o --no-dev
+
+      - name: Deploy to WordPress.org
+        id: deploy
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        with:
+          generate-zip: true
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          VERSION: ${{ steps.version.outputs.version }}
+
+      - name: Upload release ZIP asset
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+          ZIP: ${{ steps.deploy.outputs.zip-path }}
+        run: gh release upload "$VERSION" "$ZIP"
