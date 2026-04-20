@@ -40,7 +40,22 @@ class InvoiceInfo {
 		}
 
 		$invoice_type = $order->get_meta( '_billing_hez_invoice_type', true );
-		$rows         = array();
+
+		if ( ! in_array( $invoice_type, array( 'person', 'company' ), true ) ) {
+			return array();
+		}
+
+		$type_labels = array(
+			'person'  => __( 'Personal', 'hezarfen-for-woocommerce' ),
+			'company' => __( 'Company', 'hezarfen-for-woocommerce' ),
+		);
+
+		$rows = array(
+			array(
+				'label' => __( 'Invoice Type', 'hezarfen-for-woocommerce' ),
+				'value' => $type_labels[ $invoice_type ],
+			),
+		);
 
 		if ( 'person' === $invoice_type ) {
 			$tc_number = self::get_decrypted_tc_number( $order );
@@ -51,7 +66,7 @@ class InvoiceInfo {
 					'value' => $tc_number,
 				);
 			}
-		} elseif ( 'company' === $invoice_type ) {
+		} else {
 			$tax_office = $order->get_meta( '_billing_hez_tax_office', true );
 			$tax_number = $order->get_meta( '_billing_hez_tax_number', true );
 
@@ -148,7 +163,7 @@ class InvoiceInfo {
 
 		foreach ( $rows as $row ) {
 			printf(
-				'<p class="hezarfen-invoice-info"><strong>%s:</strong> %s</p>',
+				'<br/><strong>%s:</strong> %s',
 				esc_html( $row['label'] ),
 				esc_html( $row['value'] )
 			);
