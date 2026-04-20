@@ -15,13 +15,15 @@ Bu komut **her zaman** plugin kök dizininde çalışır:
 
 ### 1. Ortam doğrulaması
 - `cd` ile plugin dizinine git, `git status` ile temiz mi kontrol et. Kirli ise dur ve kullanıcıya bildir.
-- Mevcut branch `master` olmalı; değilse uyar ve durdur.
-- `git fetch --tags origin` çalıştır (en güncel tag'ler).
+- `git fetch --tags --prune origin` çalıştır (master, develop, tag'ler güncel olsun).
+- Mevcut branch `develop` olmalı; değilse `git checkout develop` ile geç (veya kullanıcıya sor).
+- `git pull --ff-only origin develop` ile lokal develop'ı güncelle. Fast-forward değilse dur ve kullanıcıya bildir.
+- `origin/master` referansının da güncel olduğundan emin ol (fetch sonrası zaten öyle olmalı). Karşılaştırma `origin/master..develop` üzerinden yapılacak.
 
-### 2. Son tag'i bul ve commit'leri topla
-- En son semver tag: `git tag --sort=-v:refname | head -1`
-- O tag'den `HEAD`'e commit'leri al: `git log <tag>..HEAD --pretty=format:'%h %s' --no-merges`
-- Eğer hiç yeni commit yoksa: kullanıcıya "release atılacak değişiklik yok" deyip dur.
+### 2. Yayınlanmamış commit'leri topla
+- `develop` üzerinde olup `master`'da olmayan commit'ler: `git log origin/master..develop --pretty=format:'%h %s' --no-merges`
+- Sanity check için son semver tag: `git tag --sort=-v:refname | head -1` — bu tag normalde `master`'ın tepesinde olmalı; değilse kullanıcıya uyarı ver ama devam et.
+- Eğer hiç yeni commit yoksa: "release atılacak değişiklik yok" deyip dur.
 
 ### 3. Versiyon bump kararı
 - `$ARGUMENTS` `major` içeriyorsa → major bump (X+1.0.0).
@@ -90,8 +92,10 @@ Versiyon güncellemelerinden sonra, commit'ten **önce** şunları sırayla çal
 
 Herhangi biri hata verirse dur, kullanıcıya bildir, devam etme.
 
-### 7. Branch + commit + push + PR
-- Branch oluştur: `git checkout -b release/vX.Y.Z`
+### 7. Commit + push + PR
+Versiyon bump'ı **doğrudan `develop` branch'ine** commit'lenir; ayrı release branch'i açılmaz.
+
+- Hâlâ `develop` üzerinde olduğunu doğrula (`git branch --show-current`).
 - Stage: `git add hezarfen-for-woocommerce.php readme.txt assets/admin/order-edit/build assets/admin/flowbite/build`
 - `git status` ile beklenmeyen değişiklik var mı kontrol et; varsa kullanıcıya sor.
 - Commit:
@@ -100,14 +104,16 @@ Herhangi biri hata verirse dur, kullanıcıya bildir, devam etme.
 
   Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
   ```
-- Push: `git push -u origin release/vX.Y.Z`
+- Push: `git push origin develop`
 - PR aç (`gh pr create`):
   - **Title:** `Release vX.Y.Z` (bu format kritik — auto-tag workflow buna bakar)
   - **Base:** `master`
+  - **Head:** `develop`
+  - Aynı `develop → master` PR'ı zaten açıksa (önceki release'den kalan açık PR), `gh pr create` hata verir — bu durumda dur ve kullanıcıya sor.
   - **Body:**
     ```
     ## Özet
-    Versiyon X.Y.Z release PR'ı.
+    Versiyon X.Y.Z release PR'ı (develop → master).
 
     ## Changelog
     <onaylanmış Türkçe changelog satırları>
