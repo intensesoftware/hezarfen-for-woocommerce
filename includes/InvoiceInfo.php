@@ -161,13 +161,17 @@ class InvoiceInfo {
 			return;
 		}
 
+		$lines = array();
+
 		foreach ( $rows as $row ) {
-			printf(
-				'<br/><strong>%s:</strong> %s',
+			$lines[] = sprintf(
+				'<strong>%s:</strong> %s',
 				esc_html( $row['label'] ),
 				esc_html( $row['value'] )
 			);
 		}
+
+		echo wp_kses_post( implode( '<br/>', $lines ) );
 	}
 }
 
