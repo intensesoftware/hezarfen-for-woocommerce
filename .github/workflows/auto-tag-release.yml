@@ -1,0 +1,102 @@
+name: Auto Tag & Release on PR Merge
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [master]
+
+jobs:
+  tag-and-release:
+    if: >-
+      github.event.pull_request.merged == true &&
+      startsWith(github.event.pull_request.title, 'Release v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout master at merge commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          fetch-depth: 0
+
+      - name: Extract version from PR title
+        id: version
+        run: |
+          TITLE="${{ github.event.pull_request.title }}"
+          VERSION="${TITLE#Release v}"
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::PR title version '$VERSION' is not a valid semver (X.Y.Z)"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Verify version matches plugin files
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          HEADER_VERSION=$(grep -E '^[[:space:]]*\*[[:space:]]*Version:' hezarfen-for-woocommerce.php | head -1 | sed -E 's/.*Version:[[:space:]]*//' | tr -d '[:space:]')
+          CONST_VERSION=$(grep -E "define\([[:space:]]*'WC_HEZARFEN_VERSION'" hezarfen-for-woocommerce.php | sed -E "s/.*'WC_HEZARFEN_VERSION'[[:space:]]*,[[:space:]]*'([^']+)'.*/\1/")
+          STABLE_TAG=$(grep -E '^Stable tag:' readme.txt | sed -E 's/Stable tag:[[:space:]]*//' | tr -d '[:space:]')
+
+          echo "PR title version : $VERSION"
+          echo "Plugin header    : $HEADER_VERSION"
+          echo "WC_HEZARFEN_VERSION: $CONST_VERSION"
+          echo "Stable tag       : $STABLE_TAG"
+
+          fail=0
+          [ "$HEADER_VERSION" = "$VERSION" ] || { echo "::error::Plugin header version mismatch"; fail=1; }
+          [ "$CONST_VERSION" = "$VERSION" ]  || { echo "::error::WC_HEZARFEN_VERSION mismatch"; fail=1; }
+          [ "$STABLE_TAG" = "$VERSION" ]     || { echo "::error::readme.txt Stable tag mismatch"; fail=1; }
+          [ "$fail" = "0" ] || exit 1
+
+      - name: Ensure tag does not already exist
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          if git rev-parse "refs/tags/$VERSION" >/dev/null 2>&1; then
+            echo "::error::Tag $VERSION already exists"
+            exit 1
+          fi
+
+      - name: Extract release notes from readme.txt changelog
+        id: notes
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          NOTES=$(awk -v ver="$VERSION" '
+            $0 ~ "^= "ver" - " { flag=1; next }
+            flag && /^= [0-9]+\.[0-9]+\.[0-9]+ - / { flag=0 }
+            flag { print }
+          ' readme.txt | sed -e 's/[[:space:]]*$//' | awk 'NF{p=1} p')
+
+          if [ -z "$NOTES" ]; then
+            echo "::warning::No changelog block found in readme.txt for $VERSION; using fallback"
+            NOTES="Release $VERSION"
+          fi
+
+          {
+            echo "notes<<RELEASE_NOTES_EOF"
+            echo "$NOTES"
+            echo "RELEASE_NOTES_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create tag
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$VERSION" -m "Release $VERSION"
+          git push origin "$VERSION"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+          NOTES: ${{ steps.notes.outputs.notes }}
+        run: |
+          gh release create "$VERSION" \
+            --title "$VERSION" \
+            --target "${{ github.event.pull_request.merge_commit_sha }}" \
+            --notes "$NOTES"
