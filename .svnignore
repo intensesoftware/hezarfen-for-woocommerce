@@ -1,6 +1,7 @@
 .editorconfig
 .git
 .gitignore
+.claude
 .phpcs.xml.dist
 .prettierrc.json
 .svnignore
