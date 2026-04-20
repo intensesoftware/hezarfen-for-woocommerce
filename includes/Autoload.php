@@ -125,6 +125,7 @@ class Autoload {
 		require_once 'Data/Abstracts/Abstract_Encryption.php';
 		require_once 'Data/PostMetaEncryption.php';
 		require_once 'Checkout.php';
+		require_once 'EmailInvoiceDetails.php';
 		require_once 'class-my-account.php';
 		require_once 'Ajax.php';
 		require_once 'class-mahalle-local.php';
