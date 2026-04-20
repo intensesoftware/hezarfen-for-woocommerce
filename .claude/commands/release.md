@@ -48,6 +48,10 @@ Bu komut **her zaman** plugin kök dizininde çalışır:
   - ❌ 4 ayrı bullet
   - ✅ Tek bullet: "Fatura bilgileri sipariş e-postalarında, teşekkür sayfasında ve hesabım sipariş detayında gösterilmeye başlandı."
 - Kullanıcının fark edemeyeceği iç düzeltmeleri (CSS spacing tweak'leri, küçük HTML temizlikleri, refactor, lint düzeltmeleri) **silebilirsin** — en fazla genel "iyileştirildi" cümlesine soğutur. Ürün davranışını gözle görülür şekilde değiştiren her commit'i koru.
+- **Aynı release'te yeni eklenen bir özelliğe ait geliştirme-sırası commit'lerini ayrı "iyileştirildi" satırı yapma.** Özellik henüz yayınlanmıyor; yapılan tweak'ler özelliğin ilk halinin parçası — feature bullet'ına dahildir, ayrıca sayılmaz.
+  - ❌ "Fatura bilgileri ... gösterilmeye başlandı." + "Fatura bilgileri alanında görsel iyileştirmeler yapıldı."
+  - ✅ Sadece tek satır: "Fatura bilgileri ... gösterilmeye başlandı."
+  - "İyileştirildi/giderildi" satırları **yalnızca önceki release'lerde zaten yayınlanmış** davranışı değiştiren commit'ler için.
 - "new tags", "readme.txt update", "X.Y.Z", "bump version" gibi release house-keeping commit'lerini her zaman at.
 
 #### Sıralama:
