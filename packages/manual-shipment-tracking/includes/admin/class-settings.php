@@ -391,7 +391,7 @@ class Settings {
 				'type' => 'text',
 				'id' => 'hez_ordermigo_webhook_secret',
 				'default' => '',
-				'desc' => __( 'This secret is used to verify webhook notifications from OrderMigo. It is automatically generated when you create your first shipment. Do not edit this unless instructed by support.', 'hezarfen-for-woocommerce' ),
+				'desc' => __( 'This secret is used to verify webhook notifications from KargoKit. It is automatically generated when you create your first shipment. Do not edit this unless instructed by support.', 'hezarfen-for-woocommerce' ),
 				'autoload' => false
 			),
 			array(
@@ -627,7 +627,7 @@ class Settings {
 					<?php esc_html_e( 'Refresh Warehouse List', 'hezarfen-for-woocommerce' ); ?>
 				</button>
 				<p class="description">
-					<?php esc_html_e( 'Click to immediately refresh the warehouse list. Use this after adding new stores on intense.com.tr.', 'hezarfen-for-woocommerce' ); ?>
+					<?php esc_html_e( 'Click to immediately refresh the warehouse list. Use this after adding new stores on kargokit.com', 'hezarfen-for-woocommerce' ); ?>
 				</p>
 				<div id="cache-clear-status" style="margin-top: 10px; display: none;"></div>
 				
