@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2026-04-21 19:10+0000\n"
+"POT-Creation-Date: 2026-04-21 19:19+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: includes/admin/class-admin-menu.php:648
@@ -1439,7 +1439,7 @@ msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:336
 msgid ""
-"Hepsijet Integration is completely free. Simply log in at intense.com.tr, go "
+"Hepsijet Integration is completely free. Simply log in at kargokit.com, go "
 "to the Hepsijet menu under My Account, complete your registration, upload "
 "the required documents, and add balance via credit card or bank transfer. "
 "After that, you can create your first label and start shipping right away "

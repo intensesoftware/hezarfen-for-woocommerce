@@ -333,7 +333,7 @@ class Settings {
 			array(
 				'type'  => 'title',
 				'title' => __( 'Intense Hepsijet API Relay Settings', 'hezarfen-for-woocommerce' ),
-				'desc'  => __( 'Hepsijet Integration is completely free. Simply log in at intense.com.tr, go to the Hepsijet menu under My Account, complete your registration, upload the required documents, and add balance via credit card or bank transfer. After that, you can create your first label and start shipping right away with discounted rates—no shipping contract needed.', 'hezarfen-for-woocommerce' ),
+				'desc'  => __( 'Hepsijet Integration is completely free. Simply log in at kargokit.com, go to the Hepsijet menu under My Account, complete your registration, upload the required documents, and add balance via credit card or bank transfer. After that, you can create your first label and start shipping right away with discounted rates—no shipping contract needed.', 'hezarfen-for-woocommerce' ),
 			),
 			array(
 				'title' => __( 'Consumer Key', 'hezarfen-for-woocommerce' ),
