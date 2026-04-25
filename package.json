@@ -23,6 +23,9 @@
     "start:order-edit": "wp-scripts start assets/admin/order-edit/src/main.js --output-path=assets/admin/order-edit/build",
     "start:flowbite": "wp-scripts start assets/admin/flowbite/src/main.js --output-path=assets/admin/flowbite/build",
     "test:e2e": "wp-scripts test-e2e",
+    "test:e2e:playwright": "playwright test --config=tests/e2e/playwright.config.ts",
+    "test:e2e:playwright:install": "playwright install chromium",
+    "test:e2e:playwright:report": "playwright show-report tests/e2e/playwright-report",
     "test:unit": "wp-scripts test-unit-js"
   },
   "repository": {
@@ -36,6 +39,7 @@
   },
   "homepage": "https://github.com/intensesoftware/hezarfen-for-woocommerce#readme",
   "devDependencies": {
+    "@playwright/test": "^1.43.0",
     "@prettier/plugin-php": "^0.15.2",
     "@tailwindcss/forms": "^0.5.7",
     "@wordpress/scripts": "^27.7.0",
