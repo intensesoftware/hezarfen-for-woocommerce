@@ -265,9 +265,8 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 
 == Changelog ==
 = 2.10.3 - 2026-04-25 =
-
 * test: e2e — TC/Vergi alanları + My Account adres düzenleme
-* test: e2e — kalan akışlar (MSS, country switch, ship-to-different, BACS, options, shipment tracking)
+
 = 2.10.2 - 2026-04-21 =
 * HepsiJet kargo ayarları ekranındaki ayar başlıkları düzeltildi.
 
