@@ -9,16 +9,18 @@ import { wp } from './wp-cli';
 export function seedTestOrder( opts: {
 	status?: string;
 	customerEmail?: string;
+	customerId?: string;
 } = {} ): string {
 	const status = opts.status ?? 'on-hold';
 	const email = opts.customerEmail ?? 'e2e-buyer@example.test';
+	const customerId = opts.customerId ?? '0';
 
 	const out = wp( [
 		'eval',
 		`
 			$product = get_page_by_path( 'hezarfen-e2e-product', OBJECT, 'product' );
 			if ( ! $product ) { echo 'ERR_NO_PRODUCT'; return; }
-			$order = wc_create_order( array( 'status' => '${ status }' ) );
+			$order = wc_create_order( array( 'status' => '${ status }', 'customer_id' => ${ customerId } ) );
 			$order->add_product( wc_get_product( $product->ID ), 1 );
 			$order->set_billing_first_name( 'Ada' );
 			$order->set_billing_last_name( 'Lovelace' );
@@ -42,6 +44,34 @@ export function seedTestOrder( opts: {
 		throw new Error( `seedTestOrder failed: ${ out }` );
 	}
 	return out;
+}
+
+/**
+ * Save manual-shipment-tracking data on an order using the same
+ * Helper::new_order_shipment_data API the admin metabox calls. We
+ * skip the AJAX layer because the metabox UI is hepsijet-aware and
+ * involves several radios + nonces — testing storage + display is
+ * the high-value bit.
+ */
+export function seedShipmentTracking( opts: {
+	orderId: string;
+	courierId: string;
+	trackingNum: string;
+} ): void {
+	wp( [
+		'eval',
+		`
+			$order = wc_get_order( ${ opts.orderId } );
+			if ( ! $order ) { echo 'ERR_NO_ORDER'; return; }
+			\\Hezarfen\\ManualShipmentTracking\\Helper::new_order_shipment_data(
+				$order,
+				null,
+				'${ opts.courierId }',
+				'${ opts.trackingNum }'
+			);
+			echo 'OK';
+		`,
+	] );
 }
 
 export function deleteOrder( orderId: string ): void {
