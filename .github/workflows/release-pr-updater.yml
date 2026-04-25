@@ -1,0 +1,71 @@
+name: Release PR Updater
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [develop]
+
+concurrency:
+  group: release-pr-updater
+  cancel-in-progress: false
+
+jobs:
+  update-release-pr:
+    if: >-
+      github.event.pull_request.merged == true &&
+      !contains(github.event.pull_request.labels.*.name, 'skip-changelog')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout develop
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git identity
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Run release PR updater script
+        id: updater
+        env:
+          REPO_ROOT: ${{ github.workspace }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_LABELS_JSON: ${{ toJson(github.event.pull_request.labels.*.name) }}
+        run: python3 .github/scripts/release_pr_updater.py
+
+      - name: Commit bump to develop
+        env:
+          VERSION: ${{ steps.updater.outputs.version }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          git add hezarfen-for-woocommerce.php readme.txt
+          if git diff --cached --quiet; then
+            echo "No file changes — skipping commit."
+            exit 0
+          fi
+          git commit -m "chore(release): bump to v${VERSION} (#${PR_NUMBER})"
+          git push origin develop
+
+      - name: Create or update Release PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.updater.outputs.version }}
+          BODY_FILE: ${{ steps.updater.outputs.pr_body_file }}
+        run: |
+          set -euo pipefail
+          TITLE="Release v${VERSION}"
+          EXISTING=$(gh pr list --base master --head develop --state open --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            echo "Updating existing Release PR #$EXISTING"
+            gh pr edit "$EXISTING" --title "$TITLE" --body-file "$BODY_FILE"
+          else
+            echo "Opening new Release PR"
+            gh pr create --base master --head develop --title "$TITLE" --body-file "$BODY_FILE"
+          fi
