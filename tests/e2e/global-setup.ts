@@ -34,7 +34,117 @@ export default async function globalSetup( _config: FullConfig ): Promise< void 
 	ensureCodEnabled();
 	ensureFlatRateShipping();
 	ensureTestProduct();
+	ensureClassicCheckoutPage();
+	ensureE2ECustomer();
+	ensureE2EAdmin();
 }
+
+/**
+ * Force the /checkout/ page to use the classic shortcode. The plugin
+ * does not (yet) support the WooCommerce Cart/Checkout blocks, so a
+ * site that drifted onto the new block-based checkout would silently
+ * break every test. We rewrite to the classic shortcode here so the
+ * suite is self-healing.
+ */
+function ensureClassicCheckoutPage(): void {
+	const checkoutId = wp( [
+		'option',
+		'get',
+		'woocommerce_checkout_page_id',
+	] ).trim();
+	if ( ! checkoutId ) return;
+
+	const content = wp( [
+		'post',
+		'get',
+		checkoutId,
+		'--field=post_content',
+	] );
+	if (
+		content.includes( 'wp:woocommerce/classic-shortcode' ) &&
+		content.includes( 'checkout' )
+	) {
+		return;
+	}
+	wp( [
+		'post',
+		'update',
+		checkoutId,
+		'--post_content=<!-- wp:woocommerce/classic-shortcode {"shortcode":"checkout","className":"wc-block-checkout"} /-->',
+	] );
+}
+
+const E2E_CUSTOMER_USERNAME = 'hezarfen-e2e-customer';
+const E2E_CUSTOMER_EMAIL = 'hezarfen-e2e-customer@example.test';
+const E2E_CUSTOMER_PASSWORD = 'hezarfen-e2e-pass-1234';
+
+function ensureE2ECustomer(): void {
+	const existing = wp(
+		[ 'user', 'get', E2E_CUSTOMER_USERNAME, '--field=ID' ],
+		{ allowFailure: true }
+	).trim();
+	if ( existing ) {
+		// Reset the password each run so the value the test uses always
+		// matches what the WP user has stored.
+		wp( [
+			'user',
+			'update',
+			existing,
+			`--user_pass=${ E2E_CUSTOMER_PASSWORD }`,
+		] );
+		return;
+	}
+	wp( [
+		'user',
+		'create',
+		E2E_CUSTOMER_USERNAME,
+		E2E_CUSTOMER_EMAIL,
+		'--role=customer',
+		`--user_pass=${ E2E_CUSTOMER_PASSWORD }`,
+		'--first_name=Ada',
+		'--last_name=Lovelace',
+	] );
+}
+
+export const E2E_CUSTOMER = {
+	username: E2E_CUSTOMER_USERNAME,
+	email: E2E_CUSTOMER_EMAIL,
+	password: E2E_CUSTOMER_PASSWORD,
+};
+
+const E2E_ADMIN_USERNAME = 'hezarfen-e2e-admin';
+const E2E_ADMIN_EMAIL = 'hezarfen-e2e-admin@example.test';
+const E2E_ADMIN_PASSWORD = 'hezarfen-e2e-admin-pass-1234';
+
+function ensureE2EAdmin(): void {
+	const existing = wp(
+		[ 'user', 'get', E2E_ADMIN_USERNAME, '--field=ID' ],
+		{ allowFailure: true }
+	).trim();
+	if ( existing ) {
+		wp( [
+			'user',
+			'update',
+			existing,
+			`--user_pass=${ E2E_ADMIN_PASSWORD }`,
+		] );
+		return;
+	}
+	wp( [
+		'user',
+		'create',
+		E2E_ADMIN_USERNAME,
+		E2E_ADMIN_EMAIL,
+		'--role=administrator',
+		`--user_pass=${ E2E_ADMIN_PASSWORD }`,
+	] );
+}
+
+export const E2E_ADMIN = {
+	username: E2E_ADMIN_USERNAME,
+	email: E2E_ADMIN_EMAIL,
+	password: E2E_ADMIN_PASSWORD,
+};
 
 function ensureCodEnabled(): void {
 	// Disable the other built-in offline gateways so COD is the sole
