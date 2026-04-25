@@ -36,6 +36,7 @@ export default async function globalSetup( _config: FullConfig ): Promise< void 
 	ensureTestProduct();
 	ensureClassicCheckoutPage();
 	ensureE2ECustomer();
+	ensureE2EAdmin();
 }
 
 /**
@@ -109,6 +110,40 @@ export const E2E_CUSTOMER = {
 	username: E2E_CUSTOMER_USERNAME,
 	email: E2E_CUSTOMER_EMAIL,
 	password: E2E_CUSTOMER_PASSWORD,
+};
+
+const E2E_ADMIN_USERNAME = 'hezarfen-e2e-admin';
+const E2E_ADMIN_EMAIL = 'hezarfen-e2e-admin@example.test';
+const E2E_ADMIN_PASSWORD = 'hezarfen-e2e-admin-pass-1234';
+
+function ensureE2EAdmin(): void {
+	const existing = wp(
+		[ 'user', 'get', E2E_ADMIN_USERNAME, '--field=ID' ],
+		{ allowFailure: true }
+	).trim();
+	if ( existing ) {
+		wp( [
+			'user',
+			'update',
+			existing,
+			`--user_pass=${ E2E_ADMIN_PASSWORD }`,
+		] );
+		return;
+	}
+	wp( [
+		'user',
+		'create',
+		E2E_ADMIN_USERNAME,
+		E2E_ADMIN_EMAIL,
+		'--role=administrator',
+		`--user_pass=${ E2E_ADMIN_PASSWORD }`,
+	] );
+}
+
+export const E2E_ADMIN = {
+	username: E2E_ADMIN_USERNAME,
+	email: E2E_ADMIN_EMAIL,
+	password: E2E_ADMIN_PASSWORD,
 };
 
 function ensureCodEnabled(): void {
