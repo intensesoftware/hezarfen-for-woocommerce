@@ -7,6 +7,7 @@ import {
 	pickFromSelect,
 	TR_SAMPLE_ADDRESS,
 	waitForCheckoutIdle,
+	waitForOptionsPopulated,
 } from './helpers/checkout';
 
 /**
@@ -20,6 +21,7 @@ const SHIPPING = {
 	cityPlate: 'TR34',
 	city: 'İstanbul',
 	district: 'Kadıköy',
+	neighborhood: '19 Mayıs Mah',
 	street: 'Bahariye Cad. No:5',
 	postcode: '34710',
 };
@@ -76,6 +78,7 @@ test.describe( 'Hezarfen farklı kargo adresi', () => {
 			SHIPPING.cityPlate
 		);
 		await districtPromise;
+		await waitForOptionsPopulated( page, '#shipping_city' );
 		const districts = await page
 			.locator( '#shipping_city option' )
 			.allTextContents();
@@ -84,20 +87,17 @@ test.describe( 'Hezarfen farklı kargo adresi', () => {
 		const neighborhoodPromise = expectMahalleAjax( page, 'neighborhood' );
 		await pickFromSelect( page, '#shipping_city', SHIPPING.district );
 		await neighborhoodPromise;
+		await waitForOptionsPopulated( page, '#shipping_address_1' );
 		const shippingNeighborhoods = await page
 			.locator( '#shipping_address_1 option' )
 			.allTextContents();
-		expect( shippingNeighborhoods.length ).toBeGreaterThan( 1 );
-		// Pick the first non-placeholder option so the test isn't tied
-		// to a specific Kadıköy mahalle name (data file changes).
-		const firstReal = shippingNeighborhoods.find(
-			( n ) => !! n && ! /seçiniz/i.test( n )
+		expect( shippingNeighborhoods ).toContain(
+			SHIPPING.neighborhood
 		);
-		expect( firstReal ).toBeTruthy();
 		await pickFromSelect(
 			page,
 			'#shipping_address_1',
-			firstReal as string
+			SHIPPING.neighborhood
 		);
 
 		await page.locator( '#shipping_address_2' ).fill( SHIPPING.street );

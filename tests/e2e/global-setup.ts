@@ -16,6 +16,12 @@ export default async function globalSetup( _config: FullConfig ): Promise< void 
 
 	wp( [ 'plugin', 'activate', 'woocommerce', 'hezarfen-for-woocommerce' ] );
 
+	ensureWooCommercePages();
+	ensurePrettyPermalinks();
+	ensureHezarfenEncryptionKey();
+	ensureMssContracts();
+	ensureHPOSEnabled();
+
 	wp( [ 'option', 'update', 'woocommerce_default_country', 'TR:TR06' ] );
 	wp( [ 'option', 'update', 'woocommerce_currency', 'TRY' ] );
 	wp( [ 'option', 'update', 'woocommerce_enable_guest_checkout', 'yes' ] );
@@ -37,6 +43,167 @@ export default async function globalSetup( _config: FullConfig ): Promise< void 
 	ensureClassicCheckoutPage();
 	ensureE2ECustomer();
 	ensureE2EAdmin();
+}
+
+/**
+ * Make sure the WooCommerce-managed pages (Cart, Checkout, My Account,
+ * Shop) exist and their IDs are pinned to the matching options. On a
+ * fresh wp-env install WC's `WC_Install::install()` won't have run
+ * because wp-env activates plugins during DB-less runtime — pages
+ * end up missing and downstream wp-cli calls (`option get
+ * woocommerce_checkout_page_id`) return 0. Idempotent on existing
+ * sites (LocalWP) since `create_pages()` checks before inserting.
+ */
+function ensureWooCommercePages(): void {
+	wp( [
+		'eval',
+		`if ( class_exists( 'WC_Install' ) ) { WC_Install::create_pages(); }`,
+	] );
+}
+
+/**
+ * Default WP installs use plain "?p=N" permalinks, which return 404 for
+ * /checkout/ etc. Test specs hit those slugs directly, so we switch to
+ * pretty permalinks and flush rewrites once. Idempotent.
+ */
+/**
+ * Hezarfen's TC Identity field is rendered ONLY when
+ * `PostMetaEncryption::health_check()` passes — that wants both
+ * the `hezarfen_encryption_key_generated` option set to "yes" AND
+ * the `HEZARFEN_ENCRYPTION_KEY` constant defined in wp-config.php.
+ * On a real LocalWP install this is one-time admin UI work; for a
+ * fresh wp-env we automate it. Idempotent on existing sites.
+ */
+function ensureHezarfenEncryptionKey(): void {
+	const generated = wp(
+		[ 'option', 'get', 'hezarfen_encryption_key_generated' ],
+		{ allowFailure: true }
+	).trim();
+	if ( generated === 'yes' ) return;
+
+	// Generate a key with the same routine the plugin uses internally.
+	const key = wp( [
+		'eval',
+		`echo base64_encode( openssl_random_pseudo_bytes( 64 ) );`,
+	] ).trim();
+
+	// Pin it as a constant in wp-config.php so future requests can
+	// read it. wp config set defaults to a quoted string constant
+	// when no --type is given.
+	wp( [ 'config', 'set', 'HEZARFEN_ENCRYPTION_KEY', key ] );
+
+	// Now mark the option + write a tester ciphertext. The constant
+	// is now in wp-config.php so the next wp-cli request will see it.
+	wp( [
+		'eval-file',
+		'wp-content/plugins/hezarfen-for-woocommerce/tests/e2e/fixtures/seed-encryption-tester.php',
+	] );
+}
+
+/**
+ * Seed the MSS / OBF contracts settings so the contracts spec finds
+ * a checkbox to validate. We hand it the same shape Hezarfen's
+ * settings UI would persist: two contracts, both rendered in the
+ * combined-checkbox layout.
+ */
+function ensureMssContracts(): void {
+	const existing = wp(
+		[ 'option', 'get', 'hezarfen_mss_settings' ],
+		{ allowFailure: true }
+	).trim();
+	if ( existing && existing.includes( 'mesafeli' ) ) return;
+
+	// Use a "Sample Page" or any published page as the contract
+	// template — the renderer just needs a valid post id with content.
+	const templateId = wp( [
+		'post',
+		'list',
+		'--post_type=page',
+		'--post_status=publish',
+		'--field=ID',
+		'--posts_per_page=1',
+	] )
+		.trim()
+		.split( '\n' )[ 0 ];
+
+	wp( [
+		'eval',
+		`
+			update_option( 'hezarfen_mss_settings', array(
+				'agreement_creation_timing' => 'processing',
+				'odeme_sayfasinda_sozlesme_gosterim_tipi' => 'modal',
+				'contracts' => array(
+					array(
+						'name' => 'Mesafeli Satış Sözleşmesi',
+						'template_id' => '${ templateId }',
+						'enabled' => '1',
+						'show_in_checkbox' => '1',
+						'id' => 'mss',
+					),
+					array(
+						'name' => 'Ön Bilgilendirme Formu',
+						'template_id' => '${ templateId }',
+						'enabled' => '1',
+						'show_in_checkbox' => '1',
+						'id' => 'obf',
+					),
+				),
+			) );
+		`,
+	] );
+}
+
+/**
+ * Make sure HPOS (High-Performance Order Storage) is on. The
+ * admin-order-edit specs hit /wp-admin/admin.php?page=wc-orders which
+ * only exists when HPOS is enabled, and on a fresh wp-env install WC
+ * defaults to legacy CPT order storage.
+ */
+function ensureHPOSEnabled(): void {
+	const current = wp(
+		[ 'option', 'get', 'woocommerce_custom_orders_table_enabled' ],
+		{ allowFailure: true }
+	).trim();
+	if ( current === 'yes' ) return;
+	// Use string-form FQCNs ('Foo\\Bar\\Baz') and let `class_exists`
+	// resolve them — that avoids escaping a backslash through TS →
+	// argv → PHP eval, which is brittle.
+	// Backslash-heavy PHP code is brittle to escape through TS → argv
+	// → wp-cli eval. Hand it off to `wp eval-file` with a real PHP
+	// file on disk. Path is relative to the WP root, which works in
+	// both LocalWP (real fs) and wp-env (container fs) since the
+	// plugin sits under wp-content/plugins/ in either case.
+	wp( [
+		'eval-file',
+		'wp-content/plugins/hezarfen-for-woocommerce/tests/e2e/fixtures/enable-hpos.php',
+	] );
+}
+
+function ensurePrettyPermalinks(): void {
+	wp( [ 'rewrite', 'structure', '/%postname%/', '--hard' ] );
+	wp( [ 'rewrite', 'flush', '--hard' ] );
+	// On wp-env the cli container runs as a different unix user than
+	// the wordpress container, so `wp rewrite flush --hard` silently
+	// fails to write /var/www/html/.htaccess. Drop the canonical
+	// WP-generated .htaccess directly via PHP inside the WP runtime.
+	wp( [
+		'eval',
+		`
+			$path = ABSPATH . '.htaccess';
+			$rules = "# BEGIN WordPress\\n" .
+				"<IfModule mod_rewrite.c>\\n" .
+				"RewriteEngine On\\n" .
+				"RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]\\n" .
+				"RewriteBase /\\n" .
+				"RewriteRule ^index\\\\.php$ - [L]\\n" .
+				"RewriteCond %{REQUEST_FILENAME} !-f\\n" .
+				"RewriteCond %{REQUEST_FILENAME} !-d\\n" .
+				"RewriteRule . /index.php [L]\\n" .
+				"</IfModule>\\n" .
+				"# END WordPress\\n";
+			file_put_contents( $path, $rules );
+		`,
+	] );
 }
 
 /**
