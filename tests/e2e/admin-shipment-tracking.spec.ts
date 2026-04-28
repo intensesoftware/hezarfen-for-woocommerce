@@ -54,13 +54,10 @@ test.describe( 'Hezarfen manuel kargo takibi', () => {
 		await expect(
 			page.locator( '#hez-order-shipments' )
 		).toBeAttached();
-		// Lite (manual) tab must be present even if Pro panel is hidden.
-		await expect(
-			page.locator( '#hezarfen-lite-tab' )
-		).toBeAttached();
-		// Two `#shipping-companies` lists render — one in the Lite
-		// (manual) tab, one in the Pro tab. Either being attached is
-		// fine for our regression check.
+		// The pro/lite tab toggle only renders when Hezarfen Pro is
+		// active, so we skip asserting on the tab buttons. The manual
+		// courier picker is always present and is the bit that
+		// actually drives the regression check.
 		await expect(
 			page.locator( '#shipping-companies' ).first()
 		).toBeAttached();

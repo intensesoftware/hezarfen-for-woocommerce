@@ -117,12 +117,36 @@ export async function fillTrAddressChain(
 	const districtPromise = expectMahalleAjax( page, 'district' );
 	await pickFromSelect( page, `#${ type }_state`, cityPlate );
 	await districtPromise;
+	await waitForOptionsPopulated( page, `#${ type }_city` );
 
 	const neighborhoodPromise = expectMahalleAjax( page, 'neighborhood' );
 	await pickFromSelect( page, `#${ type }_city`, district );
 	await neighborhoodPromise;
+	await waitForOptionsPopulated( page, `#${ type }_address_1` );
 
 	await pickFromSelect( page, `#${ type }_address_1`, neighborhood );
+}
+
+/**
+ * The mahalle AJAX response hands the options off to a `for…of` loop in
+ * `mahalle-helper.js` — there's a microtask gap between the HTTP
+ * response (which `expectMahalleAjax` resolves on) and the moment the
+ * <option> elements actually exist in the DOM. On a fast LocalWP run
+ * we usually win that race; on a slower wp-env CI run we don't. Wait
+ * explicitly for the options to land before reading or selecting.
+ */
+export async function waitForOptionsPopulated(
+	page: Page,
+	selector: string
+): Promise< void > {
+	await page.waitForFunction(
+		( sel ) => {
+			const el = document.querySelector< HTMLSelectElement >( sel );
+			return !! el && el.options.length > 1;
+		},
+		selector,
+		{ timeout: 10_000 }
+	);
 }
 
 export const TR_SAMPLE_ADDRESS = {

@@ -98,10 +98,24 @@ export interface WpCliOptions {
 	stdin?: string;
 }
 
+const USE_WP_ENV = process.env.HEZARFEN_E2E_USE_WP_ENV === '1';
+
 /**
- * Run a wp-cli command for the LocalWP site. Returns trimmed stdout.
+ * Run a wp-cli command. Two modes:
+ *   - Default: against the LocalWP site this checkout sits in.
+ *   - HEZARFEN_E2E_USE_WP_ENV=1: against the @wordpress/env Docker
+ *     stack (used in CI). We invoke `npx wp-env run cli wp …`,
+ *     redirect wp-env's own progress chatter to stderr, and capture
+ *     the actual wp-cli stdout.
  */
 export function wp( args: string[], opts: WpCliOptions = {} ): string {
+	if ( USE_WP_ENV ) {
+		return wpViaWpEnv( args, opts );
+	}
+	return wpViaLocalWp( args, opts );
+}
+
+function wpViaLocalWp( args: string[], opts: WpCliOptions ): string {
 	const env = {
 		...process.env,
 		...wpEnv(),
@@ -126,6 +140,62 @@ export function wp( args: string[], opts: WpCliOptions = {} ): string {
 			`wp ${ args.join( ' ' ) } failed:\n${ stderr || e.message }`
 		);
 	}
+}
+
+function wpViaWpEnv( args: string[], opts: WpCliOptions ): string {
+	// Resolve node_modules/.bin/wp-env directly so we don't go through
+	// npm/npx wrappers that prepend "> pkg@x.y.z scriptname" banners
+	// to stdout.
+	const wpEnvBin = path.resolve(
+		__dirname,
+		'..',
+		'..',
+		'..',
+		'node_modules',
+		'.bin',
+		'wp-env'
+	);
+	try {
+		const out = execFileSync(
+			wpEnvBin,
+			[ 'run', 'cli', '--', 'wp', ...args ],
+			{
+				encoding: 'utf8',
+				input: opts.stdin,
+				stdio: opts.stdin
+					? [ 'pipe', 'pipe', 'pipe' ]
+					: [ 'ignore', 'pipe', 'pipe' ],
+			}
+		);
+		return stripWpEnvNoise( out ).trim();
+	} catch ( e: any ) {
+		if ( opts.allowFailure ) {
+			return stripWpEnvNoise( e.stdout?.toString?.() || '' ).trim();
+		}
+		const stderr = e.stderr?.toString?.() || '';
+		throw new Error(
+			`wp ${ args.join( ' ' ) } (wp-env) failed:\n${ stderr || e.message }`
+		);
+	}
+}
+
+/**
+ * Some wp-env versions still leak progress chatter onto stdout
+ * (ℹ Starting / ✔ Ran). Drop those lines defensively so callers
+ * always see plain wp-cli output.
+ */
+function stripWpEnvNoise( raw: string ): string {
+	return raw
+		.split( '\n' )
+		.filter( ( line ) => {
+			const trimmed = line.trimStart();
+			if ( trimmed.startsWith( 'ℹ' ) ) return false;
+			if ( trimmed.startsWith( '✔' ) ) return false;
+			if ( trimmed.startsWith( 'Starting' ) ) return false;
+			if ( trimmed.startsWith( 'Ran ' ) ) return false;
+			return true;
+		} )
+		.join( '\n' );
 }
 
 export function wpJson< T = unknown >(
