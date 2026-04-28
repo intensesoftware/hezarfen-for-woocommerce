@@ -1,0 +1,75 @@
+name: E2E (Playwright)
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+  workflow_dispatch:
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  playwright:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
+
+      - name: Install composer deps (no-dev)
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Install npm deps
+        run: npm ci
+
+      - name: Build admin bundles
+        run: npm run build
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Start wp-env
+        run: npx wp-env start
+
+      - name: Run Playwright tests
+        env:
+          HEZARFEN_E2E_USE_WP_ENV: '1'
+          HEZARFEN_E2E_BASE_URL: http://localhost:8888
+        run: npx playwright test --config=tests/e2e/playwright.config.ts
+
+      - name: Stop wp-env
+        if: always()
+        run: npx wp-env stop || true
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: tests/e2e/playwright-report
+          retention-days: 14
+
+      - name: Upload test results (failures)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: tests/e2e/test-results
+          retention-days: 14
