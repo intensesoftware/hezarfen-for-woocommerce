@@ -1,16 +1,6 @@
 name: E2E (Playwright)
 
 on:
-  push:
-    branches:
-      - develop
-  pull_request:
-    # `develop` keeps the dev-feedback path; adding `master` makes the
-    # check appear on Release PRs (develop → master) so branch
-    # protection on master can require it.
-    branches:
-      - develop
-      - master
   workflow_dispatch:
 
 concurrency:
