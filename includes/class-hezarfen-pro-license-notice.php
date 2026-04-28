@@ -144,7 +144,12 @@ class Pro_License_Notice {
 
 		// Beyaz bilgi kartı artık admin_footer üzerinden JS ile form üstüne taşınıyor.
 		// Bu hook yalnızca uyarı banner'ı için (sayfa üstünde kalması uygun).
-		if ( ! in_array( $state['status'], array( 'expiring_soon', 'expired' ), true ) ) {
+		if ( ! in_array( $state['status'], array( 'expiring_soon', 'expired', 'not_activated' ), true ) ) {
+			return;
+		}
+
+		if ( 'not_activated' === $state['status'] ) {
+			$this->render_not_activated_banner( $state );
 			return;
 		}
 
@@ -184,6 +189,54 @@ class Pro_License_Notice {
 					'hezarfen-for-woocommerce'
 				);
 				?>
+			</p>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Lisans aktif değilken (yerel olarak hiç aktive edilmemiş ya da
+	 * intense.com.tr'de pasif edilmiş) lisans ayarları sayfasında üstte
+	 * gösterilen banner. Müşteri iki senaryodan hangisinde olduğunu kendisi
+	 * bildiği için tek banner her iki yola da yönlendiriyor: geçerli anahtarı
+	 * varsa aşağıdan aktif edebilir, aboneliği bitmişse yenileme akışına gidebilir.
+	 *
+	 * @param array<string, mixed> $state License state (sub_id metadata'sı yenileme URL'ine geçirilir).
+	 * @return void
+	 */
+	private function render_not_activated_banner( array $state = array() ) {
+		$accent       = '#d63638';
+		$bg           = '#fff0f0';
+		$style        = sprintf(
+			'padding:20px 24px;border-left-width:6px;border-left-color:%s;background:%s;margin:20px 0;',
+			$accent,
+			$bg
+		);
+		$purchase_url = $this->build_purchase_url( $state );
+		?>
+		<div class="notice notice-error hezarfen-pro-license-banner" style="<?php echo esc_attr( $style ); ?>">
+			<p style="font-size:14px;margin-top:0;">
+				<?php
+				esc_html_e(
+					'Hezarfen Pro lisansınız aktif değil. Güncellemeler, güvenlik güncellemeleri ve destek bu siteye gelmiyor.',
+					'hezarfen-for-woocommerce'
+				);
+				?>
+			</p>
+
+			<p class="description" style="margin-top:8px;">
+				<?php
+				esc_html_e(
+					'Geçerli bir API anahtarınız varsa aşağıdaki "API Anahtarı" alanına yapıştırıp kaydedin. Aboneliğiniz dolduysa yenileyerek yeni bir anahtar alabilirsiniz.',
+					'hezarfen-for-woocommerce'
+				);
+				?>
+			</p>
+
+			<p style="margin-top:14px;">
+				<a href="<?php echo esc_url( $purchase_url ); ?>" target="_blank" rel="noopener" class="button button-primary button-hero">
+					<?php esc_html_e( 'Lisansı Yenile →', 'hezarfen-for-woocommerce' ); ?>
+				</a>
 			</p>
 		</div>
 		<?php
@@ -474,11 +527,11 @@ class Pro_License_Notice {
 		}
 
 		$state = $this->monitor->get_license_state();
-		if ( ! in_array( $state['status'], array( 'expiring_soon', 'expired' ), true ) ) {
+		if ( ! in_array( $state['status'], array( 'expiring_soon', 'expired', 'not_activated' ), true ) ) {
 			return;
 		}
 
-		$is_expired = 'expired' === $state['status'];
+		$is_expired = in_array( $state['status'], array( 'expired', 'not_activated' ), true );
 		$class      = $is_expired ? 'notice-error' : 'notice-warning';
 		$style      = $is_expired
 			? ''
@@ -569,6 +622,21 @@ class Pro_License_Notice {
 			esc_url( $this->get_license_page_url() ),
 			esc_html__( 'Lisansı Yönet', 'hezarfen-for-woocommerce' )
 		);
+
+		if ( 'not_activated' === $state['status'] ) {
+			if ( 'row' === $variant ) {
+				return sprintf(
+					/* translators: 1: link HTML. */
+					__( '<strong>Hezarfen Pro:</strong> Lisansınız aktif değil — güncellemeler, güvenlik güncellemeleri ve destek aktif değil. %1$s', 'hezarfen-for-woocommerce' ),
+					$link
+				);
+			}
+			return sprintf(
+				/* translators: 1: link HTML. */
+				__( '<strong>Hezarfen Pro</strong> lisansınız aktif değil. Güncellemeler, güvenlik güncellemeleri ve destek bu siteye gelmiyor. %1$s', 'hezarfen-for-woocommerce' ),
+				$link
+			);
+		}
 
 		if ( 'expired' === $state['status'] ) {
 			if ( 'row' === $variant ) {

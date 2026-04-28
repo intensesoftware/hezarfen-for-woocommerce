@@ -163,8 +163,9 @@ class Pro_License_Monitor {
 			return;
 		}
 
-		$resource = $this->parse_resource( $response );
-		$this->update_cache( $resource );
+		$resource         = $this->parse_resource( $response );
+		$remote_activated = ! empty( $response['data']['activated'] );
+		$this->update_cache( $resource, $remote_activated );
 	}
 
 	/**
@@ -289,21 +290,28 @@ class Pro_License_Monitor {
 	/**
 	 * Updates the normalized status cache from a parsed resource.
 	 *
-	 * @param array<string, mixed>|null $resource Parsed resource.
+	 * Müşteri intense.com.tr'de lisansını pasif etse bile WCAM cevabı
+	 * api_key_expirations alanını dolu döndürebiliyor; bu durumda local
+	 * cache eski expiry'lere göre "ok" durumuna düşmesin diye, gerçek
+	 * uzak aktivasyon bayrağını (`remote_activated`) ayrıca saklıyoruz.
+	 *
+	 * @param array<string, mixed>|null $resource         Parsed resource.
+	 * @param bool                      $remote_activated En son API cevabındaki data.activated değeri.
 	 * @return void
 	 */
-	private function update_cache( $resource ) {
-		if ( ! is_array( $resource ) ) {
-			return;
+	private function update_cache( $resource, $remote_activated = false ) {
+		$existing = get_option( self::OPT_STATUS_CACHE );
+		$cache    = is_array( $existing ) ? $existing : array();
+
+		if ( is_array( $resource ) ) {
+			$cache['support_expires_ts'] = (int) $resource['support_expires_ts'];
+			$cache['email_masked']       = isset( $resource['email_masked'] ) ? (string) $resource['email_masked'] : '';
+			$cache['sub_id']             = isset( $resource['sub_id'] ) ? (int) $resource['sub_id'] : 0;
+			$cache['order_id']           = isset( $resource['order_id'] ) ? (int) $resource['order_id'] : 0;
 		}
 
-		$cache = array(
-			'support_expires_ts' => (int) $resource['support_expires_ts'],
-			'email_masked'       => isset( $resource['email_masked'] ) ? (string) $resource['email_masked'] : '',
-			'sub_id'             => isset( $resource['sub_id'] ) ? (int) $resource['sub_id'] : 0,
-			'order_id'           => isset( $resource['order_id'] ) ? (int) $resource['order_id'] : 0,
-			'checked_at'         => time(),
-		);
+		$cache['remote_activated'] = (bool) $remote_activated;
+		$cache['checked_at']       = time();
 
 		update_option( self::OPT_STATUS_CACHE, $cache, false );
 	}
@@ -329,6 +337,22 @@ class Pro_License_Monitor {
 		}
 
 		$cache = get_option( self::OPT_STATUS_CACHE );
+
+		// Uzak taraf "deactivated" diyorsa local option ne derse desin
+		// lisans aktif değil — kart/expiry datası gösterilmemeli; ama sub/order
+		// metadata'sı renewal URL'ine sub_id geçirebilmek için state'te kalsın.
+		if ( is_array( $cache ) && array_key_exists( 'remote_activated', $cache ) && false === (bool) $cache['remote_activated'] ) {
+			return array(
+				'status'             => 'not_activated',
+				'support_expires_ts' => (int) ( $cache['support_expires_ts'] ?? 0 ),
+				'days_left'          => 0,
+				'checked_at'         => (int) ( $cache['checked_at'] ?? 0 ),
+				'email_masked'       => (string) ( $cache['email_masked'] ?? '' ),
+				'sub_id'             => (int) ( $cache['sub_id'] ?? 0 ),
+				'order_id'           => (int) ( $cache['order_id'] ?? 0 ),
+			);
+		}
+
 		if ( ! is_array( $cache ) || empty( $cache['support_expires_ts'] ) ) {
 			return $this->empty_state( 'unknown' );
 		}
