@@ -43,18 +43,70 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
+      - name: Start Mailpit
+        # Stand-alone container with the SMTP listener on :1025 and the
+        # HTTP API on :8025. Both ports are forwarded to the runner's
+        # localhost so Playwright (which runs on the host, not in
+        # docker) can reach the API directly.
+        run: |
+          docker run -d --name mailpit \
+            -p 1025:1025 -p 8025:8025 \
+            axllent/mailpit:latest
+          # Wait for the HTTP API to come up before continuing — newer
+          # axllent/mailpit images take ~1s to bind.
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8025/api/v1/info >/dev/null; then
+              echo "mailpit ready"; break
+            fi
+            sleep 1
+          done
+
       - name: Start wp-env
         run: npx wp-env start
+
+      - name: Connect Mailpit to wp-env's docker network
+        # wp-env spins up a docker-compose stack with its own network.
+        # We attach the mailpit container to that network so WP can
+        # reach it as `mailpit:1025` (DNS via Docker's embedded server).
+        # Discover the network by inspecting whichever wordpress
+        # container wp-env created — tests-wordpress on default
+        # configurations.
+        run: |
+          container=$(docker ps --format '{{.Names}}' | grep -E 'wordpress' | head -1)
+          if [ -z "$container" ]; then
+            echo "::error::no wordpress container found after wp-env start"
+            docker ps
+            exit 1
+          fi
+          network=$(docker inspect "$container" \
+            --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}}{{end}}')
+          echo "wp-env network: $network"
+          docker network connect "$network" mailpit
+
+      - name: Tell WP about Mailpit (sets HEZARFEN_E2E_MAILPIT_HOST constant)
+        # Both `cli` and `tests-cli` write into separate wp-config.php
+        # files (development vs. tests environments). Since the
+        # Playwright suite runs against the tests environment on :8888,
+        # we set the constant there. We also set it on the dev env so
+        # ad-hoc `wp` calls match.
+        run: |
+          npx wp-env run cli -- wp config set HEZARFEN_E2E_MAILPIT_HOST mailpit
+          npx wp-env run tests-cli -- wp config set HEZARFEN_E2E_MAILPIT_HOST mailpit
 
       - name: Run Playwright tests
         env:
           HEZARFEN_E2E_USE_WP_ENV: '1'
           HEZARFEN_E2E_BASE_URL: http://localhost:8888
+          HEZARFEN_E2E_MAILPIT_API: http://localhost:8025
         run: npx playwright test --config=tests/e2e/playwright.config.ts
 
       - name: Stop wp-env
         if: always()
         run: npx wp-env stop || true
+
+      - name: Stop Mailpit
+        if: always()
+        run: docker rm -f mailpit || true
 
       - name: Upload Playwright report
         if: always()

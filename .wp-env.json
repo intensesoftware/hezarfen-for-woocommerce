@@ -12,5 +12,8 @@
 		"WP_DEBUG": true,
 		"WP_DEBUG_LOG": true,
 		"WP_DEBUG_DISPLAY": false
+	},
+	"mappings": {
+		"wp-content/mu-plugins/hezarfen-e2e-mailpit.php": "./tests/e2e/fixtures/mailpit-mu-plugin.php"
 	}
 }
