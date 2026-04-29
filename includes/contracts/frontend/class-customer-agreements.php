@@ -264,10 +264,9 @@ class Customer_Agreements {
 			return array();
 		}
 		
-		$agreements = $wpdb->get_results( $wpdb->prepare(
-			"SELECT * FROM {$table_name} WHERE order_id = %d ORDER BY created_at ASC",
-			$order_id
-		) );
+		// Table name comes from $wpdb->prefix and cannot be passed through prepare placeholders.
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$agreements = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$table_name} WHERE order_id = %d ORDER BY created_at ASC", $order_id ) );
 		
 		return $agreements ? $agreements : array();
 	}

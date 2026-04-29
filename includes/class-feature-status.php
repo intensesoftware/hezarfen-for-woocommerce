@@ -55,17 +55,17 @@ class Feature_Status {
 
 		$meta_table = self::get_meta_table();
 
+		// Table names come from $wpdb->prefix and cannot be passed through prepare placeholders.
 		// 1. Check if checkout invoice type has been used
-		if ( $wpdb->get_var( $wpdb->prepare(
-			"SELECT 1 FROM {$meta_table} WHERE meta_key = %s LIMIT 1",
-			'_billing_hez_invoice_type'
-		) ) ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		if ( $wpdb->get_var( $wpdb->prepare( "SELECT 1 FROM {$meta_table} WHERE meta_key = %s LIMIT 1", '_billing_hez_invoice_type' ) ) ) {
 			return true;
 		}
 
 		// 2. Check if any contract has been generated
 		$contracts_table = $wpdb->prefix . 'hezarfen_contracts';
 		$wpdb->suppress_errors( true );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$has_contracts = $wpdb->get_var( "SELECT 1 FROM {$contracts_table} LIMIT 1" );
 		$wpdb->suppress_errors( false );
 
@@ -74,10 +74,8 @@ class Feature_Status {
 		}
 
 		// 3. Check if any SMS notification has been sent
-		if ( $wpdb->get_var( $wpdb->prepare(
-			"SELECT 1 FROM {$meta_table} WHERE meta_key LIKE %s LIMIT 1",
-			$wpdb->esc_like( '_hezarfen_sms_sent_' ) . '%'
-		) ) ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		if ( $wpdb->get_var( $wpdb->prepare( "SELECT 1 FROM {$meta_table} WHERE meta_key LIKE %s LIMIT 1", $wpdb->esc_like( '_hezarfen_sms_sent_' ) . '%' ) ) ) {
 			return true;
 		}
 

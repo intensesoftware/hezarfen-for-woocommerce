@@ -495,7 +495,9 @@ class Settings {
 	 * @return string Decrypted value
 	 */
 	public static function decrypt_webhook_secret_for_display( $value ) {
-		// Don't decrypt during save operations
+		// Don't decrypt during save operations.
+		// Nonce verification happens in WordPress core's options.php / WC settings handler before this filter fires; here we only branch on presence.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( isset( $_POST['save'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 			return $value;
 		}

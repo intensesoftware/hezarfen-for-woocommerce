@@ -67,9 +67,11 @@ class Contract_Validator {
 		$current_lang = get_locale();
 		$is_turkish = ( strpos( $current_lang, 'tr' ) === 0 );
 
-		// Check for combined checkbox (multiple contracts)
+		// Check for combined checkbox (multiple contracts).
+		// Nonce is verified by WooCommerce during checkout processing before this validation hook fires.
 		if ( count( $active_contracts ) > 1 ) {
-			$contract_combined_checkbox = isset( $_POST['contract_combined_checkbox'] ) ? sanitize_text_field( $_POST['contract_combined_checkbox'] ) : '';
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$contract_combined_checkbox = isset( $_POST['contract_combined_checkbox'] ) ? sanitize_text_field( wp_unslash( $_POST['contract_combined_checkbox'] ) ) : '';
 			if ( empty( $contract_combined_checkbox ) ) {
 				$error_message = __( 'You must accept the agreements.', 'hezarfen-for-woocommerce' );
 				wc_add_notice( $error_message, 'error' );
@@ -78,7 +80,8 @@ class Contract_Validator {
 			// Check individual checkbox (single contract)
 			foreach ( $active_contracts as $contract ) {
 				$checkbox_name = "contract_{$contract['id']}_checkbox";
-				$checkbox_value = isset( $_POST[ $checkbox_name ] ) ? sanitize_text_field( $_POST[ $checkbox_name ] ) : '';
+				// phpcs:ignore WordPress.Security.NonceVerification.Missing
+				$checkbox_value = isset( $_POST[ $checkbox_name ] ) ? sanitize_text_field( wp_unslash( $_POST[ $checkbox_name ] ) ) : '';
 				
 				if ( empty( $checkbox_value ) ) {
 					$error_message = sprintf(

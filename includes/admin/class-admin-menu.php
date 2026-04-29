@@ -956,7 +956,8 @@ class Admin_Menu {
         global $plugin_page, $submenu_file;
 
         if ( isset( $_GET['page'] ) && $_GET['page'] === 'wc-settings' && isset( $_GET['tab'] ) && $_GET['tab'] === 'hezarfen' ) {
-            // Override plugin_page to prevent WooCommerce menu from being highlighted
+            // Intentionally overriding the WP global to prevent WooCommerce menu from being highlighted on our settings tab.
+            // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
             $plugin_page = 'admin.php?page=wc-settings&tab=hezarfen';
             return self::MENU_SLUG;
         }
