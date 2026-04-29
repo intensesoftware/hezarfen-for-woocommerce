@@ -83,7 +83,7 @@ class Deactivation_Wizard {
                     
                     <?php if ( $shipped_count > 0 ) : ?>
                     <div class="hez-pro-order-count">
-                        <strong><?php echo sprintf( esc_html__( 'Toplam %s adet "Kargoya Verildi" durumunda sipariş bulundu.', 'hezarfen-pro-for-woocommerce' ), number_format_i18n( $shipped_count ) ); ?></strong>
+                        <strong><?php echo esc_html( sprintf( __( 'Toplam %s adet "Kargoya Verildi" durumunda sipariş bulundu.', 'hezarfen-pro-for-woocommerce' ), number_format_i18n( $shipped_count ) ) ); ?></strong>
                     </div>
                     <?php endif; ?>
 
@@ -173,23 +173,20 @@ class Deactivation_Wizard {
     private function get_shipped_orders() {
         global $wpdb;
 
-        // Check if HPOS is enabled
-        if ( class_exists( 'Automattic\WooCommerce\Utilities\OrderUtil' ) && 
+        // Check if HPOS is enabled.
+        // Table names come from $wpdb->prefix and cannot be passed through prepare placeholders.
+        if ( class_exists( 'Automattic\WooCommerce\Utilities\OrderUtil' ) &&
              \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
             // HPOS query
             $orders_table = $wpdb->prefix . 'wc_orders';
-            $query = $wpdb->prepare(
-                "SELECT id FROM {$orders_table} WHERE status = %s",
-                'wc-hezarfen-shipped'
-            );
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+            $query = $wpdb->prepare( "SELECT id FROM {$orders_table} WHERE status = %s", 'wc-hezarfen-shipped' );
         } else {
             // Legacy post query
-            $query = $wpdb->prepare(
-                "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'shop_order' AND post_status = %s",
-                'wc-hezarfen-shipped'
-            );
+            $query = $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'shop_order' AND post_status = %s", 'wc-hezarfen-shipped' );
         }
 
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $results = $wpdb->get_col( $query );
         
         return $results ? $results : array();

@@ -87,10 +87,10 @@ class Admin_Orders {
 			} else {
 				$no_shipment_msg = apply_filters( 'hezarfen_shop_order_no_shipment_found_msg', null, $order_id );
 
-				if( is_null( $no_shipment_msg ) ) {
+				if ( is_null( $no_shipment_msg ) ) {
 					esc_html_e( 'No shipment data found', 'hezarfen-for-woocommerce' );
-				}else{
-					printf( $no_shipment_msg );
+				} else {
+					echo wp_kses_post( $no_shipment_msg );
 				}
 			}
 		}

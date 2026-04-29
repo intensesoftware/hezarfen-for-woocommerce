@@ -165,11 +165,14 @@ class Contracts_Settings {
 			return;
 		}
 		
-		// Handle MSS specific settings save
+		// Handle MSS specific settings save.
+		// Nonce is verified by WooCommerce settings handler before this hook fires.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		if ( isset( $_POST['hezarfen_mss_settings'] ) && is_array( $_POST['hezarfen_mss_settings'] ) ) {
-			$mss_settings = $this->sanitize_settings_recursively( $_POST['hezarfen_mss_settings'] );
+			$mss_settings = $this->sanitize_settings_recursively( wp_unslash( $_POST['hezarfen_mss_settings'] ) );
 			update_option( 'hezarfen_mss_settings', $mss_settings );
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 	
 	/**
@@ -458,7 +461,7 @@ class Contracts_Settings {
 						
 						if (selectedPageId && selectedPageId !== '') {
 							// Get the WordPress admin edit URL for the page
-							const editUrl = '<?php echo admin_url("post.php?action=edit&post="); ?>' + selectedPageId;
+							const editUrl = '<?php echo esc_url( admin_url( 'post.php?action=edit&post=' ) ); ?>' + selectedPageId;
 							$link.attr('href', editUrl).show();
 						} else {
 							$link.hide();

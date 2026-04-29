@@ -1016,15 +1016,17 @@ class Admin_Ajax {
 	 * @return void
 	 */
 	public static function get_return_dates() {
+		check_ajax_referer( 'hezarfen_mst_get_return_dates' );
+
 		// Check user capabilities
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_send_json_error( 'Insufficient permissions', 403 );
 		}
 
-		$start_date = sanitize_text_field( $_POST['start_date'] ?? '' );
-		$end_date = sanitize_text_field( $_POST['end_date'] ?? '' );
-		$city = sanitize_text_field( $_POST['city'] ?? '' );
-		$district = sanitize_text_field( $_POST['district'] ?? '' );
+		$start_date = isset( $_POST['start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['start_date'] ) ) : '';
+		$end_date   = isset( $_POST['end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['end_date'] ) ) : '';
+		$city       = isset( $_POST['city'] ) ? sanitize_text_field( wp_unslash( $_POST['city'] ) ) : '';
+		$district   = isset( $_POST['district'] ) ? sanitize_text_field( wp_unslash( $_POST['district'] ) ) : '';
 
 		if ( ! $start_date || ! $end_date || ! $city || ! $district ) {
 			wp_send_json_error( 'Missing required parameters', 400 );

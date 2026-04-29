@@ -376,7 +376,7 @@ class Contract_Renderer {
 							<?php checked( $default_checked, 1 ); ?>
 							required
 						/>
-						<span><?php echo $combined_text; ?></span>
+						<span><?php echo wp_kses_post( $combined_text ); ?></span>
 					</label>
 				</p>
 			<?php else : ?>
@@ -391,10 +391,10 @@ class Contract_Renderer {
 								<?php checked( $default_checked, 1 ); ?>
 								required
 							/>
-							<span><?php 
+							<span><?php
 								$contract_name = $is_turkish ? self::get_ek( $contract['name'] ) : $contract['name'];
-								printf( 
-									__( 'I have read and agree to the %s.', 'hezarfen-for-woocommerce' ), 
+								printf(
+									wp_kses_post( __( 'I have read and agree to the %s.', 'hezarfen-for-woocommerce' ) ),
 									'<a href="#" class="contract-modal-link" data-contract-id="' . esc_attr( $contract['id'] ) . '" data-contract-name="' . esc_attr( $contract['name'] ) . '">' . esc_html( $contract_name ) . '</a>'
 								);
 							?></span>
@@ -413,10 +413,13 @@ class Contract_Renderer {
 	 * @return array
 	 */
 	public static function get_contract_fragments( $fragments ) {
-		// Parse form data from post_data parameter
+		// Parse form data from post_data parameter.
+		// Nonce is verified by WooCommerce before update_order_review fragments are rendered.
 		$form_data = array();
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( isset( $_POST['post_data'] ) ) {
-			parse_str( $_POST['post_data'], $form_data );
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+			parse_str( wp_unslash( $_POST['post_data'] ), $form_data );
 		}
 		
 		// Get all contracts
