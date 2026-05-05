@@ -67,6 +67,9 @@ class Hezarfen {
 
 		// Register roadmap voting AJAX action
 		add_action( 'wp_ajax_hezarfen_submit_roadmap_votes', array( $this, 'handle_roadmap_vote_submission_proxy' ) );
+
+		$pro_license_monitor = new Pro_License_Monitor();
+		new Pro_License_Notice( $pro_license_monitor );
 	}
 
 	/**
