@@ -213,6 +213,7 @@ class Pro_License_Notice {
 			$bg
 		);
 		$purchase_url = $this->build_purchase_url( $state );
+		$email_masked = isset( $state['email_masked'] ) ? (string) $state['email_masked'] : '';
 		?>
 		<div class="notice notice-error hezarfen-pro-license-banner" style="<?php echo esc_attr( $style ); ?>">
 			<p style="font-size:14px;margin-top:0;">
@@ -223,6 +224,18 @@ class Pro_License_Notice {
 				);
 				?>
 			</p>
+
+			<?php if ( '' !== $email_masked ) : ?>
+			<p style="margin-top:10px;font-size:13px;">
+				<?php
+				printf(
+					/* translators: %s: maskelenmiş e-posta adresi */
+					esc_html__( 'Bu lisans %s hesabına kayıtlı. Yenileme yapacaksanız bu hesapla oturum açmanız gerekecek.', 'hezarfen-for-woocommerce' ),
+					'<code>' . esc_html( $email_masked ) . '</code>'
+				);
+				?>
+			</p>
+			<?php endif; ?>
 
 			<p class="description" style="margin-top:8px;">
 				<?php
@@ -444,7 +457,20 @@ class Pro_License_Notice {
 			'renew_old_subscription_id' => (int) ( $state['sub_id'] ?? 0 ),
 		);
 		$args = array_filter( $args, static function ( $v ) { return '' !== $v && 0 !== $v; } );
-		return add_query_arg( $args, self::PURCHASE_URL );
+		return add_query_arg( $args, $this->get_purchase_base_url() );
+	}
+
+	/**
+	 * Purchase URL'inin base'i. API_BASE override aktifse aynı host'u kullanır
+	 * ki local end-to-end testte renewal butonu intense.local'e gitsin.
+	 *
+	 * @return string
+	 */
+	private function get_purchase_base_url() {
+		if ( Pro_License_Monitor::is_api_base_overridden() ) {
+			return Pro_License_Monitor::get_api_base() . 'odeme/?add-to-cart-multiple=18509,241';
+		}
+		return self::PURCHASE_URL;
 	}
 
 	/**

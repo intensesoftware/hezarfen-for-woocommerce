@@ -34,6 +34,30 @@ class Pro_License_Monitor {
 	const STALE_THRESHOLD   = 7 * DAY_IN_SECONDS;
 
 	/**
+	 * API base URL'ini döndürür. Local end-to-end test için
+	 * `define('HEZARFEN_PRO_LICENSE_API_BASE', 'http://intense.local/')`
+	 * tanımlanırsa override kullanılır; production'da default kalır.
+	 *
+	 * @return string
+	 */
+	public static function get_api_base() {
+		if ( defined( 'HEZARFEN_PRO_LICENSE_API_BASE' ) && HEZARFEN_PRO_LICENSE_API_BASE ) {
+			return trailingslashit( (string) HEZARFEN_PRO_LICENSE_API_BASE );
+		}
+		return self::API_BASE;
+	}
+
+	/**
+	 * Override aktif mi? (intense.local gibi private host'lara wp_safe_remote_post
+	 * loopback bloku uyguladığı için override'da wp_remote_post'a düşürülür.)
+	 *
+	 * @return bool
+	 */
+	public static function is_api_base_overridden() {
+		return defined( 'HEZARFEN_PRO_LICENSE_API_BASE' ) && HEZARFEN_PRO_LICENSE_API_BASE && self::API_BASE !== HEZARFEN_PRO_LICENSE_API_BASE;
+	}
+
+	/**
 	 * Constructor — register hooks.
 	 */
 	public function __construct() {
@@ -197,9 +221,12 @@ class Pro_License_Monitor {
 		if ( $force_flush ) {
 			$args['hezarfen_force_flush'] = 1;
 		}
-		$url = add_query_arg( $args, self::API_BASE );
+		$url = add_query_arg( $args, self::get_api_base() );
 
-		$response = wp_safe_remote_post( esc_url_raw( $url ), array( 'timeout' => 15 ) );
+		// Override aktifse wp_safe_remote_post loopback'i blokladığı için wp_remote_post kullan.
+		$response = self::is_api_base_overridden()
+			? wp_remote_post( esc_url_raw( $url ), array( 'timeout' => 15 ) )
+			: wp_safe_remote_post( esc_url_raw( $url ), array( 'timeout' => 15 ) );
 
 		if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
 			update_option(
