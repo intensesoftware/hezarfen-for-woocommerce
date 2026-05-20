@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Kargo Takip, Kargo SMS, İlçe Mahalle Sözleşme by Hezarfen
+ * Plugin Name: Kargo Takip Türkiye, WooCommerce Kargo Entegrasyonu, SMS, Mesafeli Sözleşme – Hezarfen
  * Description: WooCommerce kargo takip ve kargo entegrasyon eklentisi. 26+ kargo firması: kargo barkod oluşturma, kargo durum sorgulama, kargo SMS ve e-posta bildirimleri. Ücretsiz Hepsijet kargo entegrasyonu. İlçe/mahalle seçimi, mesafeli satış sözleşmesi, ön bilgilendirme formu, e-fatura alanları.
  * Version: 2.10.2
  * Author: Intense Yazılım Ltd.
