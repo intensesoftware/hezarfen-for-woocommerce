@@ -371,11 +371,18 @@ class Settings {
 				'title' => __( 'Label Settings', 'hezarfen-for-woocommerce' ),
 			),
 			array(
-				'title' => __( 'Show order details on label', 'hezarfen-for-woocommerce' ),
-				'type' => 'checkbox',
-				'id' => 'hezarfen_hepsijet_show_order_details_on_label',
+				'title'   => __( 'Show order details on label', 'hezarfen-for-woocommerce' ),
+				'type'    => 'checkbox',
+				'id'      => 'hezarfen_hepsijet_show_order_details_on_label',
 				'default' => 'yes',
-				'desc' => __( 'Display order details on the PDF label. If unchecked, only Hepsijet Label will be shown.', 'hezarfen-for-woocommerce' )
+				'desc'    => __( 'Display order details on the PDF label. If unchecked, only Hepsijet Label will be shown.', 'hezarfen-for-woocommerce' ),
+			),
+			array(
+				'title'   => __( 'Hide prices', 'hezarfen-for-woocommerce' ),
+				'type'    => 'checkbox',
+				'id'      => 'hezarfen_hepsijet_hide_prices_on_label',
+				'default' => 'no',
+				'desc'    => __( 'Hide item totals and the order totals section on the PDF label. Only takes effect when order details are shown.', 'hezarfen-for-woocommerce' ),
 			),
 			array(
 				'type' => 'sectionend',
