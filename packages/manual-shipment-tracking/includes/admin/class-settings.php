@@ -382,7 +382,7 @@ class Settings {
 				'type'    => 'checkbox',
 				'id'      => 'hezarfen_hepsijet_hide_prices_on_label',
 				'default' => 'no',
-				'desc'    => __( 'Hide item totals and the order totals section on the PDF label. Only takes effect when order details are shown.', 'hezarfen-for-woocommerce' ),
+				'desc'    => __( 'Hide item totals and the order totals section on the PDF label.', 'hezarfen-for-woocommerce' ),
 			),
 			array(
 				'type' => 'sectionend',
