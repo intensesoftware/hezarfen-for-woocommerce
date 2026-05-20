@@ -620,6 +620,12 @@ class Admin_Ajax {
 		$show_order_details = get_option( 'hezarfen_hepsijet_show_order_details_on_label', 'yes' ) === 'yes';
 		$show_prices        = get_option( 'hezarfen_hepsijet_show_prices_on_label', 'yes' ) === 'yes';
 
+		// All content (barcode + 2-column block + order note) is constrained to a
+		// 100mm-wide column centered on the A4 page so the output can be cut out
+		// or printed onto a 100mm label without rescaling.
+		$content_width = 100;
+		$content_x     = ( $pdf->GetPageWidth() - $content_width ) / 2;
+
 		// === BARCODE AT TOP ===
 
 		// Add barcode image at the top
@@ -648,32 +654,31 @@ class Admin_Ajax {
 				$image_info = getimagesizefromstring( $image_data );
 				if ( $image_info ) {
 					if ( $show_order_details ) {
-						// Rotated layout: barcode sits at the top so order details
-						// can be rendered below it.
-						$display_width  = 130; // becomes height after rotation
-						$display_height = 163; // becomes width after rotation
+						// Rotated layout: barcode sits at the top of the 100mm
+						// content column so order details can render below it.
+						// Visible footprint is $content_width wide; original
+						// proportions are preserved by scaling 130×163 / 163.
+						$scale          = $content_width / 163;
+						$display_width  = 130 * $scale; // becomes visible height after rotation
+						$display_height = 163 * $scale; // becomes visible width after rotation
+						$image_offset_y = -30 * $scale; // pre-rotation y offset of the image
 
 						$pdf->StartTransform();
-						$pdf->Translate( $display_width, $current_y );
+						$pdf->Translate( $content_x + $display_width, $current_y );
 						$pdf->Rotate( -90 );
-						$pdf->Image( $temp_file, 0, -30, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
+						$pdf->Image( $temp_file, 0, $image_offset_y, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
 						$pdf->StopTransform();
 
 						$pdf->SetY( $current_y + $display_width );
 					} else {
-						// Flat layout: render the barcode in its natural orientation,
-						// centered horizontally. No rotation is applied.
+						// Flat layout: render the barcode in its natural orientation
+						// inside the 100mm content column. No rotation is applied.
 						$image_aspect_ratio = $image_info[0] / max( 1, $image_info[1] );
 
-						// Fit the barcode into the usable page area while keeping
-						// the aspect ratio intact.
-						$usable_width  = $page_width - ( $margins['left'] + $margins['right'] );
-						$display_width = $usable_width;
+						$display_width  = $content_width;
 						$display_height = $display_width / $image_aspect_ratio;
 
-						$x_position = $margins['left'];
-
-						$pdf->Image( $temp_file, $x_position, $current_y, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
+						$pdf->Image( $temp_file, $content_x, $current_y, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
 
 						$pdf->SetY( $current_y + $display_height );
 					}
@@ -708,21 +713,23 @@ class Admin_Ajax {
 					// Get image info to determine dimensions
 					$image_info = @getimagesize( $custom_image );
 					if ( $image_info ) {
-						$page_width = $pdf->GetPageWidth();
-						$margins = $pdf->getMargins();
-						
-					// Fixed height of 8mm, calculate width maintaining aspect ratio
-					$image_width = $image_info[0];
-					$image_height = $image_info[1];
-					$aspect_ratio = $image_width / $image_height;
-					
-					// Set fixed height (8mm) and calculate width
-					$display_height = 30;
-					$display_width = $display_height * $aspect_ratio;
-						
-						// Center the image
-						$x_position = ( $page_width - $display_width ) / 2;
-						
+						// Fixed height of 30mm, calculate width maintaining aspect ratio.
+						// Width is clamped to the 100mm content column so custom
+						// images don't break out of the label area.
+						$image_width  = $image_info[0];
+						$image_height = $image_info[1];
+						$aspect_ratio = $image_width / $image_height;
+
+						$display_height = 30;
+						$display_width  = $display_height * $aspect_ratio;
+						if ( $display_width > $content_width ) {
+							$display_width  = $content_width;
+							$display_height = $display_width / $aspect_ratio;
+						}
+
+						// Center within the 100mm content column
+						$x_position = $content_x + ( $content_width - $display_width ) / 2;
+
 						// Add the image to PDF
 						$pdf->Image( $custom_image, $x_position, $current_y, $display_width, $display_height );
 						
@@ -748,14 +755,13 @@ class Admin_Ajax {
 		// $show_order_details and $show_prices are resolved above, alongside the
 		// barcode rendering decision.
 
-		// Define column positions and widths
-		// Total available width is approximately 190 units (page width minus margins)
-		$total_width = 190;
-		$left_col_x = 5;
-		$left_col_width = $total_width * 0.30; // 30% for Order Details
-		$right_col_x = $left_col_x + $left_col_width + 5; // 5 units gap between columns
-		$right_col_width = $total_width * 0.70; // 70% for Order Items
-		$line_height = 4;
+		// Column positions and widths inside the centered 100mm content column.
+		$column_gap      = 3;
+		$left_col_x      = $content_x;
+		$left_col_width  = $content_width * 0.30;
+		$right_col_x     = $left_col_x + $left_col_width + $column_gap;
+		$right_col_width = $content_width - $left_col_width - $column_gap;
+		$line_height     = 4;
 		$section_start_y = $pdf->GetY();
 		
 		if ( $show_order_details ) {
@@ -999,17 +1005,20 @@ class Admin_Ajax {
 			// === ORDER NOTE SECTION ===
 			$order_note = $order->get_customer_note();
 			$pdf->Ln( 5 );
-			
-			// Order Note Header
+
+			// Order Note Header (constrained to the 100mm content column)
+			$pdf->SetX( $content_x );
 			$pdf->SetFont( 'dejavusans', 'B', 14 );
-			$pdf->Cell( 0, 5, self::ensure_utf8( __( 'Order Note', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
-			$pdf->Line( $pdf->GetX(), $pdf->GetY(), $pdf->GetX() + 190, $pdf->GetY() );
+			$pdf->Cell( $content_width, 5, self::ensure_utf8( __( 'Order Note', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
+			$pdf->SetX( $content_x );
+			$pdf->Line( $content_x, $pdf->GetY(), $content_x + $content_width, $pdf->GetY() );
 			$pdf->Ln( 3 );
-			
+
 			// Order Note Content (show dash if empty)
+			$pdf->SetX( $content_x );
 			$pdf->SetFont( 'dejavusans', '', 12 );
 			$note_content = ! empty( $order_note ) ? $order_note : '-';
-			$pdf->MultiCell( 0, 5, self::ensure_utf8( $note_content ), 0, 'L' );
+			$pdf->MultiCell( $content_width, 5, self::ensure_utf8( $note_content ), 0, 'L' );
 			$pdf->Ln( 3 );
 			
 			$pdf->Ln( 3 );
