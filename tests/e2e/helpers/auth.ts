@@ -20,10 +20,29 @@ export async function loginAsCustomer( page: Page ): Promise< void > {
 }
 
 export async function loginAsAdmin( page: Page ): Promise< void > {
-	await page.goto( '/wp-login.php' );
-	await page.locator( '#user_login' ).fill( E2E_ADMIN.username );
-	await page.locator( '#user_pass' ).fill( E2E_ADMIN.password );
-	await page.locator( '#wp-submit' ).click();
-	await page.waitForURL( /wp-admin/, { timeout: 15_000 } );
+	// On wp-env cold-starts (first test in a worker), `wp-login.php`'s
+	// show-password JS can mutate `#user_pass` after we've already
+	// resolved a locator for it — the fill then lands on whatever input
+	// still has focus (typically `#user_login`), and the submit is
+	// rejected by the browser's native required-field validator.
+	// Waiting for both inputs to be attached + clicking before fill
+	// pins focus to the right element, and Promise.all on submit avoids
+	// the race where waitForURL is registered after the redirect already
+	// fired.
+	await page.goto( '/wp-login.php', { waitUntil: 'domcontentloaded' } );
+	const userInput = page.locator( '#user_login' );
+	const passInput = page.locator( '#user_pass' );
+	await userInput.waitFor( { state: 'visible' } );
+	await passInput.waitFor( { state: 'visible' } );
+
+	await userInput.click();
+	await userInput.fill( E2E_ADMIN.username );
+	await passInput.click();
+	await passInput.fill( E2E_ADMIN.password );
+
+	await Promise.all( [
+		page.waitForURL( /wp-admin/, { timeout: 30_000 } ),
+		page.locator( '#wp-submit' ).click(),
+	] );
 	await expect( page.locator( '#wpadminbar' ) ).toBeVisible();
 }
