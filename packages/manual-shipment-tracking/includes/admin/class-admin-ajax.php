@@ -618,7 +618,7 @@ class Admin_Ajax {
 		// Determine label layout up-front: rotated barcode only when order details
 		// are rendered next to it. Without order details, the barcode is shown flat.
 		$show_order_details = get_option( 'hezarfen_hepsijet_show_order_details_on_label', 'yes' ) === 'yes';
-		$hide_prices        = get_option( 'hezarfen_hepsijet_hide_prices_on_label', 'no' ) === 'yes';
+		$show_prices        = get_option( 'hezarfen_hepsijet_show_prices_on_label', 'yes' ) === 'yes';
 
 		// === BARCODE AT TOP ===
 
@@ -745,7 +745,7 @@ class Admin_Ajax {
 		
 		
 		// === 2-COLUMN LAYOUT ===
-		// $show_order_details and $hide_prices are resolved above, alongside the
+		// $show_order_details and $show_prices are resolved above, alongside the
 		// barcode rendering decision.
 
 		// Define column positions and widths
@@ -816,12 +816,12 @@ class Admin_Ajax {
 
 			// Define column widths (used by both items and totals sections).
 			// When prices are hidden, the product column expands to fill the row.
-			if ( $hide_prices ) {
-				$product_col_width = $right_col_width;
-				$total_col_width   = 0;
-			} else {
+			if ( $show_prices ) {
 				$product_col_width = $right_col_width - 40; // Product column takes most space
 				$total_col_width   = 40; // Fixed width for total column
+			} else {
+				$product_col_width = $right_col_width;
+				$total_col_width   = 0;
 			}
 
 			// Order Details Header
@@ -835,11 +835,11 @@ class Admin_Ajax {
 			// Items table headers (no Qty column)
 			$pdf->SetFont( 'dejavusans', 'B', 12 );
 			$pdf->SetX( $right_col_x );
-			if ( $hide_prices ) {
-				$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Product', 'hezarfen-for-woocommerce' ) ), 1, 1, 'L' );
-			} else {
+			if ( $show_prices ) {
 				$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Product', 'hezarfen-for-woocommerce' ) ), 1, 0, 'L' );
 				$pdf->Cell( $total_col_width, 4, self::ensure_utf8( __( 'Total', 'hezarfen-for-woocommerce' ) ), 1, 1, 'R' );
+			} else {
+				$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Product', 'hezarfen-for-woocommerce' ) ), 1, 1, 'L' );
 			}
 			
 			// Order items
@@ -933,7 +933,7 @@ class Admin_Ajax {
 				// Get actual height used by MultiCell
 				$actual_height = $pdf->GetY() - $start_y;
 
-				if ( ! $hide_prices ) {
+				if ( $show_prices ) {
 					// Draw total cell with border (aligned to the right of product cell)
 					$pdf->SetXY( $start_x + $product_col_width, $start_y );
 					$pdf->Cell( $total_col_width, $actual_height, self::format_price_for_pdf( $item->get_total() ), 1, 1, 'R' );
@@ -943,7 +943,7 @@ class Admin_Ajax {
 			}
 
 			// === ORDER TOTALS (matching WooCommerce native format exactly) ===
-			if ( ! $hide_prices ) {
+			if ( $show_prices ) {
 				// Items Subtotal
 				$pdf->SetFont( 'dejavusans', '', 11 );
 				$pdf->SetX( $right_col_x );

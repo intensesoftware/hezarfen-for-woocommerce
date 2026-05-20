@@ -381,11 +381,11 @@ class Settings {
 				'desc'    => __( 'Display order details on the PDF label. If unchecked, only Hepsijet Label will be shown.', 'hezarfen-for-woocommerce' ),
 			),
 			array(
-				'title'   => __( 'Hide prices', 'hezarfen-for-woocommerce' ),
+				'title'   => __( 'Show prices', 'hezarfen-for-woocommerce' ),
 				'type'    => 'checkbox',
-				'id'      => 'hezarfen_hepsijet_hide_prices_on_label',
-				'default' => 'no',
-				'desc'    => __( 'Hide item totals and the order totals section on the PDF label.', 'hezarfen-for-woocommerce' ),
+				'id'      => 'hezarfen_hepsijet_show_prices_on_label',
+				'default' => 'yes',
+				'desc'    => __( 'Show item totals and the order totals section on the PDF label.', 'hezarfen-for-woocommerce' ),
 			),
 			array(
 				'type' => 'sectionend',
@@ -727,7 +727,7 @@ class Settings {
 		<script>
 		jQuery(function ($) {
 			var $parent = $('#hezarfen_hepsijet_show_order_details_on_label');
-			var $childRow = $('#hezarfen_hepsijet_hide_prices_on_label').closest('tr');
+			var $childRow = $('#hezarfen_hepsijet_show_prices_on_label').closest('tr');
 			if (!$parent.length || !$childRow.length) {
 				return;
 			}

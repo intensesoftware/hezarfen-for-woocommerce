@@ -1530,20 +1530,12 @@ msgid ""
 "altyapılarının stabilitesini arttırmayı amaçlıyoruz."
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:385
-msgid "Hide item totals and the order totals section on the PDF label."
-msgstr ""
-
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:162
 msgid "Hide postcode fields in My Account > Address pages?"
 msgstr ""
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:274
 msgid "Hide postcode fields?"
-msgstr ""
-
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:381
-msgid "Hide prices"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:1267
@@ -2783,6 +2775,10 @@ msgstr ""
 msgid "Show hezarfen checkout tax fields?"
 msgstr ""
 
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:385
+msgid "Show item totals and the order totals section on the PDF label."
+msgstr ""
+
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:249
 msgid "Show Less"
 msgstr ""
@@ -2794,6 +2790,10 @@ msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:374
 msgid "Show order details on label"
+msgstr ""
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:381
+msgid "Show prices"
 msgstr ""
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:124

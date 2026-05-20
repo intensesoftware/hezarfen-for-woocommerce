@@ -1627,12 +1627,6 @@ msgid ""
 "altyapılarının stabilitesini arttırmayı amaçlıyoruz."
 msgstr ""
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:385
-msgid "Hide item totals and the order totals section on the PDF label."
-msgstr ""
-"PDF etiketinde ürün başına toplam tutarı ve sipariş toplamları bölümünü "
-"gizler."
-
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:162
 msgid "Hide postcode fields in My Account > Address pages?"
 msgstr "Hesabım > Adres Düzenleme sayfalarındaki posta kodu alanını gizle?"
@@ -1640,10 +1634,6 @@ msgstr "Hesabım > Adres Düzenleme sayfalarındaki posta kodu alanını gizle?"
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:274
 msgid "Hide postcode fields?"
 msgstr "Posta kodu alanları gizlensin mi?"
-
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:381
-msgid "Hide prices"
-msgstr "Fiyatları gizle"
 
 #: packages/manual-shipment-tracking/includes/admin/class-admin-ajax.php:1267
 msgid "Hiçbir barkod PDF'e eklenemedi."
@@ -2970,6 +2960,12 @@ msgstr "Kargo Adresi Değişkenleri"
 msgid "Show hezarfen checkout tax fields?"
 msgstr "Ödeme sayfasında vergi alanları gösterilsin mi?"
 
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:385
+msgid "Show item totals and the order totals section on the PDF label."
+msgstr ""
+"PDF etiketinde ürün başına toplam tutarı ve sipariş toplamları bölümünü "
+"gösterir."
+
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:249
 msgid "Show Less"
 msgstr "Daha az göster"
@@ -2982,6 +2978,10 @@ msgstr "Daha fazla göster"
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:374
 msgid "Show order details on label"
 msgstr "Sipariş detaylarını etikette göster"
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:381
+msgid "Show prices"
+msgstr "Fiyatları göster"
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:124
 msgid "Show Shipment Tracking column on My Account > Orders page"
