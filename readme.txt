@@ -1,5 +1,5 @@
 
-=== Kargo Takip, WooCommerce Kargo Entegrasyonu, SMS, Mesafeli Sözleşme – Hezarfen ===
+=== Kargo Takip, Kargo SMS, İlçe Mahalle Sözleşme by Hezarfen ===
 Contributors: intenseyazilim, mucahitbal, mskapusuz
 Tags: kargo, kargo takip, kargo entegrasyonu, yurtiçi kargo, aras kargo
 Requires at least: 5.3
