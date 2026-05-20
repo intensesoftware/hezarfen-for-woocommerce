@@ -374,6 +374,18 @@ class Settings {
 				'title' => __( 'Label Settings', 'hezarfen-for-woocommerce' ),
 			),
 			array(
+				'title'   => __( 'Paper size', 'hezarfen-for-woocommerce' ),
+				'type'    => 'select',
+				'id'      => 'hezarfen_hepsijet_label_paper_size',
+				'default' => 'a4',
+				'options' => array(
+					'a4'      => __( 'A4 (210×297mm)', 'hezarfen-for-woocommerce' ),
+					'100x150' => __( '100×150mm (thermal label)', 'hezarfen-for-woocommerce' ),
+					'100x100' => __( '100×100mm (thermal label)', 'hezarfen-for-woocommerce' ),
+				),
+				'desc'    => __( 'Page size used when generating the PDF label. A4 places the label in the top-left of the sheet; 100mm sizes match common thermal label printers.', 'hezarfen-for-woocommerce' ),
+			),
+			array(
 				'title'   => __( 'Show order details on label', 'hezarfen-for-woocommerce' ),
 				'type'    => 'checkbox',
 				'id'      => 'hezarfen_hepsijet_show_order_details_on_label',

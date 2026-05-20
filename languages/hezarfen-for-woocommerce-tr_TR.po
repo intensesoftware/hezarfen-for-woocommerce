@@ -2471,6 +2471,31 @@ msgstr ""
 msgid "Password must be at least 6 characters"
 msgstr "Şifre en az 6 karakter olmalı"
 
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:374
+msgid "Paper size"
+msgstr "Kağıt boyutu"
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:383
+msgid ""
+"Page size used when generating the PDF label. A4 places the label in the "
+"top-left of the sheet; 100mm sizes match common thermal label printers."
+msgstr ""
+"PDF etiketi oluşturulurken kullanılacak sayfa boyutu. A4 etiketi sayfanın "
+"sol üst köşesine yerleştirir; 100mm boyutlar yaygın termal etiket "
+"yazıcılarıyla uyumludur."
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:380
+msgid "100×150mm (thermal label)"
+msgstr "100×150mm (termal etiket)"
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:381
+msgid "100×100mm (thermal label)"
+msgstr "100×100mm (termal etiket)"
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:379
+msgid "A4 (210×297mm)"
+msgstr "A4 (210×297mm)"
+
 #: includes/admin/class-admin-menu.php:742
 msgid "Paylaşılan: site URL, e-posta, seçtiğiniz paket."
 msgstr ""

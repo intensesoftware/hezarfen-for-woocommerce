@@ -582,7 +582,21 @@ class Admin_Ajax {
 			// Create new PDF document with fallback constants
 			$orientation = defined( 'PDF_PAGE_ORIENTATION' ) ? PDF_PAGE_ORIENTATION : 'P';
 			$unit = defined( 'PDF_UNIT' ) ? PDF_UNIT : 'mm';
-			$format = defined( 'PDF_PAGE_FORMAT' ) ? PDF_PAGE_FORMAT : 'A4';
+
+			// Resolve the page format from the admin-selected paper size.
+			$paper_size = get_option( 'hezarfen_hepsijet_label_paper_size', 'a4' );
+			switch ( $paper_size ) {
+				case '100x150':
+					$format = array( 100, 150 );
+					break;
+				case '100x100':
+					$format = array( 100, 100 );
+					break;
+				case 'a4':
+				default:
+					$format = defined( 'PDF_PAGE_FORMAT' ) ? PDF_PAGE_FORMAT : 'A4';
+					break;
+			}
 
 			$pdf = new \TCPDF( $orientation, $unit, $format, true, 'UTF-8', false );
 
@@ -599,11 +613,13 @@ class Admin_Ajax {
 			// Set default monospaced font
 			$pdf->SetDefaultMonospacedFont( 'dejavusansmono' );
 
-			// Set margins (minimal margins for maximum space)
-			$pdf->SetMargins( 5, 5, 5 );
+			// Smaller pages need tighter margins to keep the 100mm content column
+			// from being cropped by the printable area.
+			$page_margin = is_array( $format ) ? 2 : 5;
+			$pdf->SetMargins( $page_margin, $page_margin, $page_margin );
 
 			// Set auto page breaks
-			$pdf->SetAutoPageBreak( TRUE, 5 );
+			$pdf->SetAutoPageBreak( TRUE, $page_margin );
 
 			// Set image scale factor
 			$pdf->setImageScale( defined( 'PDF_IMAGE_SCALE_RATIO' ) ? PDF_IMAGE_SCALE_RATIO : 1.25 );
@@ -621,10 +637,13 @@ class Admin_Ajax {
 		$show_prices        = get_option( 'hezarfen_hepsijet_show_prices_on_label', 'yes' ) === 'yes';
 
 		// All content (barcode + 2-column block + order note) is constrained to a
-		// 100mm-wide column anchored to the left margin of the A4 page so the
-		// output can be cut out or printed onto a 100mm label without rescaling.
+		// 100mm-wide column anchored to the left margin so the output prints at
+		// the same physical size on either an A4 sheet (top-left corner) or a
+		// 100mm thermal label. On pages narrower than 100mm + margins, the
+		// column collapses to whatever usable width the page allows.
 		$margins       = $pdf->getMargins();
-		$content_width = 100;
+		$usable_width  = $pdf->GetPageWidth() - ( $margins['left'] + $margins['right'] );
+		$content_width = min( 100, $usable_width );
 		$content_x     = $margins['left'];
 
 		// === BARCODE AT TOP ===
@@ -647,8 +666,6 @@ class Admin_Ajax {
 				file_put_contents( $temp_file, $image_data );
 
 				// Add image to PDF at top with proper sizing
-				$page_width = $pdf->GetPageWidth();
-				$margins = $pdf->getMargins();
 				$current_y = $pdf->GetY();
 
 				// Get image dimensions to calculate aspect ratio
