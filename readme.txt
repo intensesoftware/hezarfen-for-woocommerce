@@ -1,7 +1,7 @@
 
 === Kargo Takip Türkiye, WooCommerce Kargo Entegrasyonu, SMS, Mesafeli Sözleşme – Hezarfen ===
 Contributors: intenseyazilim, mucahitbal, mskapusuz
-Tags: kargo, kargo takip, hepsijet, woocommerce kargo, kargo entegrasyonu, mesafeli satış sözleşmesi, yurtiçi kargo, aras kargo, mng kargo, sürat kargo, ptt kargo, sms
+Tags: kargo, kargo takip, hepsijet, woocommerce kargo, kargo entegrasyonu
 Requires at least: 5.3
 Tested up to: 7.0
 Requires PHP: 7.0
