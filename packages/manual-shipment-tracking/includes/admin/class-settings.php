@@ -61,6 +61,9 @@ class Settings {
 
 		// Custom field type for courier visibility
 		add_action( 'woocommerce_admin_field_hezarfen_courier_visibility', array( __CLASS__, 'render_courier_visibility_setting' ) );
+
+		// Toggle Hepsijet label sub-options based on parent checkbox state.
+		add_action( 'admin_print_footer_scripts', array( __CLASS__, 'print_hepsijet_label_settings_script' ) );
 	}
 
 	/**
@@ -371,11 +374,30 @@ class Settings {
 				'title' => __( 'Label Settings', 'hezarfen-for-woocommerce' ),
 			),
 			array(
-				'title' => __( 'Show order details on label', 'hezarfen-for-woocommerce' ),
-				'type' => 'checkbox',
-				'id' => 'hezarfen_hepsijet_show_order_details_on_label',
+				'title'   => __( 'Paper size', 'hezarfen-for-woocommerce' ),
+				'type'    => 'select',
+				'id'      => 'hezarfen_hepsijet_label_paper_size',
+				'default' => 'a4',
+				'options' => array(
+					'a4'      => __( 'A4 (210×297mm)', 'hezarfen-for-woocommerce' ),
+					'100x150' => __( '100×150mm (thermal label)', 'hezarfen-for-woocommerce' ),
+					'100x100' => __( '100×100mm (thermal label)', 'hezarfen-for-woocommerce' ),
+				),
+				'desc'    => __( 'Page size used when generating the PDF label. A4 places the label in the top-left of the sheet; 100mm sizes match common thermal label printers.', 'hezarfen-for-woocommerce' ),
+			),
+			array(
+				'title'   => __( 'Show order details on label', 'hezarfen-for-woocommerce' ),
+				'type'    => 'checkbox',
+				'id'      => 'hezarfen_hepsijet_show_order_details_on_label',
 				'default' => 'yes',
-				'desc' => __( 'Display order details on the PDF label. If unchecked, only Hepsijet Label will be shown.', 'hezarfen-for-woocommerce' )
+				'desc'    => __( 'Display order details on the PDF label. If unchecked, only Hepsijet Label will be shown.', 'hezarfen-for-woocommerce' ),
+			),
+			array(
+				'title'   => __( 'Show prices', 'hezarfen-for-woocommerce' ),
+				'type'    => 'checkbox',
+				'id'      => 'hezarfen_hepsijet_show_prices_on_label',
+				'default' => 'yes',
+				'desc'    => __( 'Show item totals and the order totals section on the PDF label.', 'hezarfen-for-woocommerce' ),
 			),
 			array(
 				'type' => 'sectionend',
@@ -695,8 +717,45 @@ class Settings {
 	}
 
 	/**
+	 * Toggle the Hide-prices row based on the parent "Show order details" checkbox.
+	 *
+	 * Inline so it only loads on the Hepsijet settings screen and avoids
+	 * shipping an extra asset for a one-line dependency.
+	 *
+	 * @return void
+	 */
+	public static function print_hepsijet_label_settings_script() {
+		global $current_section;
+
+		// Bail unless we're on the WooCommerce settings page, Hezarfen tab, Hepsijet section.
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( ! $screen || 'woocommerce_page_wc-settings' !== $screen->id ) {
+			return;
+		}
+		if ( 'hepsijet_integration' !== $current_section ) {
+			return;
+		}
+		?>
+		<script>
+		jQuery(function ($) {
+			var $parent = $('#hezarfen_hepsijet_show_order_details_on_label');
+			var $childRow = $('#hezarfen_hepsijet_show_prices_on_label').closest('tr');
+			if (!$parent.length || !$childRow.length) {
+				return;
+			}
+			var sync = function () {
+				$childRow.toggle($parent.is(':checked'));
+			};
+			$parent.on('change', sync);
+			sync();
+		});
+		</script>
+		<?php
+	}
+
+	/**
 	 * AJAX handler to clear warehouses cache
-	 * 
+	 *
 	 * @return void
 	 */
 	public static function ajax_clear_warehouses_cache() {
