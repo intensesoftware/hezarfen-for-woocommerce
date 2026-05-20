@@ -1808,6 +1808,9 @@ video:where(.hez-ui,.hez-ui *) {
 .text-\[10px\] {
   font-size: 10px !important;
 }
+.text-\[11px\] {
+  font-size: 11px !important;
+}
 .text-\[8px\] {
   font-size: 8px !important;
 }
@@ -1855,6 +1858,9 @@ video:where(.hez-ui,.hez-ui *) {
 }
 .leading-relaxed {
   line-height: 1.625 !important;
+}
+.leading-snug {
+  line-height: 1.375 !important;
 }
 .leading-tight {
   line-height: 1.25 !important;

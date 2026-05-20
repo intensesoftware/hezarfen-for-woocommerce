@@ -135,6 +135,7 @@ if ( $has_hepsijet_credentials ) {
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
                 <div>
                     <div>
+                        <p class="text-[11px] italic text-gray-500 mb-2 leading-snug"><?php esc_html_e( 'Takip numarası eklendiğinde otomatik SMS ve e-posta bildirimi gönderilir (ayarlanmışsa).', 'hezarfen-for-woocommerce' ); ?></p>
                         <div class="mb-2">
                             <label class="sr-only" id="hez-courier-select-label"><?php esc_html_e('Select a Courier Company', 'hezarfen-for-woocommerce'); ?></label>
 
