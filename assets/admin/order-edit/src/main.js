@@ -91,11 +91,11 @@ jQuery(document).ready(($)=>{
     const $buttonText = $(this).find('span');
     $button.find('svg').toggleClass('rotate-180');
 
-    if ($content.hasClass('max-h-24')) {
-      $content.removeClass('max-h-24').addClass('max-h-[1000px]');
+    if ($content.hasClass('max-h-40')) {
+      $content.removeClass('max-h-40').addClass('max-h-[1000px]');
       $buttonText.text($button.data('show-less-label'));
     } else {
-      $content.removeClass('max-h-[1000px]').addClass('max-h-24');
+      $content.removeClass('max-h-[1000px]').addClass('max-h-40');
       $buttonText.text($button.data('show-more-label'));
     }
   });
