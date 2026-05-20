@@ -132,17 +132,13 @@ if ( $has_hepsijet_credentials ) {
     <?php endif; ?>
     <div id="default-tab-content">
         <div class="<?php if (defined('HEZARFEN_PRO_VERSION')) : ?>hidden<?php endif; ?> rounded-lg" id="hezarfen-lite" role="tabpanel" aria-labelledby="hezarfen-lite-tab">
-            <div class="grid grid-cols-2 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
                 <div>
-                    <p class="text-lg text-black"><?php esc_html_e('Enter Tracking Information', 'hezarfen-for-woocommerce'); ?></p>
-                    <p class="text-gray-1 text-xs font-light"><?php esc_html_e('In order to track your shipment, please enter your tracking number and select courier from below and add it to your tracking list.', 'hezarfen-for-woocommerce'); ?></p>
-
-                    <div class="mt-4">
+                    <div>
                         <div class="mb-2">
-                            <label class="font-light text-gray-1 block mb-2 text-sm dark:text-white"><?php esc_html_e('Select a Courier Company', 'hezarfen-for-woocommerce'); ?></label>
-                            
-                            
-                            <ul id="shipping-companies" class="max-h-40 grid w-full gap-2 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 5xl:grid-cols-7 6xl:grid-cols-8 overflow-hidden transition-all duration-300">
+                            <label class="sr-only" id="hez-courier-select-label"><?php esc_html_e('Select a Courier Company', 'hezarfen-for-woocommerce'); ?></label>
+
+                            <ul id="shipping-companies" aria-labelledby="hez-courier-select-label" class="max-h-40 grid w-full gap-2 grid-cols-2 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 5xl:grid-cols-7 6xl:grid-cols-8 overflow-hidden transition-all duration-300">
                                 <?php if ( Helper::is_courier_enabled( 'hepsijet-entegrasyon' ) ) : ?>
                                 <li class="flex justify-center col-span-2 xl:col-span-2 2xl:col-span-3">
                                     <input type="radio" id="courier-company-select-hepsijet-entegrasyon"
@@ -639,7 +635,7 @@ if ( $has_hepsijet_credentials ) {
                 </div>
                 <div id="hezarfen-right-side">
   <!-- Secondary quick links: Settings / SMS / Training -->
-                    <div class="flex justify-end mb-4 gap-1.5">
+                    <div class="flex flex-wrap justify-start lg:justify-end mb-4 gap-1.5">
                                                  <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=hepsijet_integration' ) ); ?>"
                         class="hezarfen-responsive-btn inline-flex items-center px-2.5 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50 hover:text-gray-900 hover:border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-400 transition-colors duration-150"
                         target="_blank"
