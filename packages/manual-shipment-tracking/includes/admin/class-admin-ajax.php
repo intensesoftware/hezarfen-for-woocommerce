@@ -621,10 +621,11 @@ class Admin_Ajax {
 		$show_prices        = get_option( 'hezarfen_hepsijet_show_prices_on_label', 'yes' ) === 'yes';
 
 		// All content (barcode + 2-column block + order note) is constrained to a
-		// 100mm-wide column centered on the A4 page so the output can be cut out
-		// or printed onto a 100mm label without rescaling.
+		// 100mm-wide column anchored to the left margin of the A4 page so the
+		// output can be cut out or printed onto a 100mm label without rescaling.
+		$margins       = $pdf->getMargins();
 		$content_width = 100;
-		$content_x     = ( $pdf->GetPageWidth() - $content_width ) / 2;
+		$content_x     = $margins['left'];
 
 		// === BARCODE AT TOP ===
 
