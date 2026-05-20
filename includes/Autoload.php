@@ -121,6 +121,8 @@ class Autoload {
 	 */
 	public function load_plugin_files() {
 		require_once 'class-hezarfen-wc-helper.php';
+		require_once 'class-hezarfen-pro-license-monitor.php';
+		require_once 'class-hezarfen-pro-license-notice.php';
 		require_once 'class-hezarfen.php';
 		require_once 'Data/Abstracts/Abstract_Encryption.php';
 		require_once 'Data/PostMetaEncryption.php';
