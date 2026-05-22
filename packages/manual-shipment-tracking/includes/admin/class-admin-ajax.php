@@ -681,8 +681,15 @@ class Admin_Ajax {
 						$display_height = 163 * $scale; // becomes visible width after rotation
 						$image_offset_y = -30 * $scale; // pre-rotation y offset of the image
 
+						// Rotation pivot is chosen so that after -90° the visible
+						// image's left edge lands exactly on $content_x. The
+						// -90° transform maps (x, y) to (tx - y, ty + x), so the
+						// leftmost visible point ends up at
+						// tx - ($image_offset_y + $display_height). Solving for
+						// tx with that point set to $content_x gives the offset
+						// below.
 						$pdf->StartTransform();
-						$pdf->Translate( $content_x + $display_width, $current_y );
+						$pdf->Translate( $content_x + $display_height + $image_offset_y, $current_y );
 						$pdf->Rotate( -90 );
 						$pdf->Image( $temp_file, 0, $image_offset_y, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
 						$pdf->StopTransform();
