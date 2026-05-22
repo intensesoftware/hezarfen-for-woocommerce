@@ -1,6 +1,8 @@
 import { expect, test } from '@playwright/test';
-import { loginAsAdmin } from './helpers/auth';
+import { loginAsAdmin, loginAsCustomer } from './helpers/auth';
 import { deleteOrder, seedTestOrder } from './helpers/orders';
+import { E2E_CUSTOMER } from './global-setup';
+import { wp } from './helpers/wp-cli';
 
 /**
  * The Hepsijet relay integration exposes
@@ -117,24 +119,26 @@ test.describe( 'Hezarfen MST iade tarihleri AJAX yetkilendirme', () => {
 	test( 'admin yetkisi yoksa endpoint Insufficient permissions ile reddediyor', async ( {
 		page,
 	} ) => {
-		// Take the admin nonce first, then drop privileges by logging
-		// out before we POST. The nonce is bound to the user session
-		// that minted it, so the post-logout request hits the
-		// capability check with a stale anonymous session.
-		await loginAsAdmin( page );
-		await page.goto(
-			`/wp-admin/admin.php?page=wc-orders&action=edit&id=${ orderId }`
-		);
-		const nonce = await page.evaluate( () => {
-			const ns = ( window as any ).hezarfen_mst_backend;
-			return ns ? ns.get_return_dates_nonce : '';
-		} );
-		expect( nonce ).toBeTruthy();
+		// Sign in as a customer (no `manage_woocommerce`) so the AJAX
+		// dispatcher accepts the request — `wp_ajax_<action>` only fires
+		// for authenticated users. Anonymous traffic would be rejected
+		// at the dispatcher level with `wp_die("0", 400)` and never
+		// reach the capability check we're trying to exercise.
+		await loginAsCustomer( page );
 
-		// Clear cookies — request runs unauthenticated. Nonce is
-		// session-bound, so verify_nonce returns false first, and we
-		// see the same 403/-1 wp_die from the nonce guard.
-		await page.context().clearCookies();
+		// `wp_create_nonce` binds the token to (user_id, action). Mint
+		// one server-side under the customer's identity so
+		// `check_ajax_referer` passes and execution reaches the
+		// capability guard inside the handler.
+		const nonce = wp( [
+			'eval',
+			`
+				$u = get_user_by( 'login', '${ E2E_CUSTOMER.username }' );
+				wp_set_current_user( $u->ID );
+				echo wp_create_nonce( 'hezarfen_mst_get_return_dates' );
+			`,
+		] ).trim();
+		expect( nonce ).toMatch( /^[a-f0-9]+$/ );
 
 		const response = await page.request.post(
 			'/wp-admin/admin-ajax.php',
@@ -151,5 +155,10 @@ test.describe( 'Hezarfen MST iade tarihleri AJAX yetkilendirme', () => {
 			}
 		);
 		expect( response.status() ).toBe( 403 );
+		const body = await response.json();
+		expect( body ).toMatchObject( {
+			success: false,
+			data: 'Insufficient permissions',
+		} );
 	} );
 } );

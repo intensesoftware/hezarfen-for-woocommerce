@@ -31,6 +31,14 @@ let snapshot: Record< string, string >;
 
 test.describe( 'Hezarfen WC sürüm uyarı bandı render bütünlüğü', () => {
 	test.beforeAll( () => {
+		// The assertions below grep for the English source of the
+		// notice format string. The site locale and which `.mo` files
+		// are loaded are environment-dependent (dev runs in `tr_TR`
+		// with the plugin translation loaded; CI runs in `en_US`
+		// without it). To make the test portable we override the
+		// specific gettext lookup right inside the mu-plugin, so the
+		// notice always renders against the English source regardless
+		// of which translation files happen to be on disk.
 		writeMuPlugin(
 			MU_SLUG,
 			`<?php
@@ -39,6 +47,21 @@ defined( 'ABSPATH' ) || exit;
 if ( 'yes' !== get_option( 'hezarfen_e2e_force_wc_version_notice' ) ) {
 	return;
 }
+
+add_filter(
+	'gettext',
+	function ( $translation, $text, $domain ) {
+		if (
+			'hezarfen-for-woocommerce' === $domain
+			&& '<strong>%1$s</strong> requires WooCommerce version %2$s or higher. You are running version %3$s. Please update WooCommerce.' === $text
+		) {
+			return $text;
+		}
+		return $translation;
+	},
+	10,
+	3
+);
 
 add_action(
 	'admin_notices',
@@ -50,6 +73,7 @@ add_action(
 	1
 );`
 		);
+
 		snapshot = snapshotOptions( [ FLAG_OPTION ] );
 		applyOptions( { [ FLAG_OPTION ]: 'yes' } );
 	} );

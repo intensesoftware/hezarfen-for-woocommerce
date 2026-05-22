@@ -95,34 +95,46 @@ test.describe( 'Hezarfen sözleşme ayarları — page-selector edit linki', () 
 	} ) => {
 		await loginAsAdmin( page );
 		await page.goto(
-			'/wp-admin/admin.php?page=wc-settings&tab=hezarfen&section=contracts_settings'
+			'/wp-admin/admin.php?page=wc-settings&tab=hezarfen&section=contracts_settings',
+			{ waitUntil: 'domcontentloaded' }
 		);
 
 		const link = page.locator( '.page-link' ).first();
 		await expect( link ).toBeVisible();
+
+		// The inline `updatePageLink()` jQuery handler writes the href
+		// asynchronously after `.page-selector`'s change event fires on
+		// page load. Wait for the href to settle before clicking so we
+		// don't race the JS that wires it up.
+		await expect
+			.poll( () => link.getAttribute( 'href' ), { timeout: 10_000 } )
+			.toMatch( /post\.php\?action=edit&post=\d+/ );
 
 		// `target="_blank"` is on the markup; remove it so we can assert
 		// the same-tab navigation directly without juggling popup events.
 		await link.evaluate( ( el ) => el.removeAttribute( 'target' ) );
 		await Promise.all( [
 			page.waitForURL( /post\.php\?action=edit&post=\d+/, {
-				timeout: 15_000,
+				timeout: 30_000,
+				waitUntil: 'domcontentloaded',
 			} ),
 			link.click(),
 		] );
 
-		// `post.php?action=edit&post=<id>` resolves to the block editor
-		// (or classic editor depending on the post type) — both render
-		// a title input with `#title` (classic) or `.editor-post-title`
-		// (block). Either is fine; the regression we care about is the
-		// post id reaching the server, which means the page must NOT
-		// have bounced us to the post listing or shown "Sorry, you
-		// are not allowed to edit this item."
+		// The regression we care about is "did the post id reach the
+		// server" — i.e. WordPress did NOT bounce us to the post
+		// listing or to "Sorry, you are not allowed to edit this
+		// item." We use lightweight signals from the initial HTML
+		// response (admin bar + post-edit form's hidden post_ID input)
+		// instead of waiting for the block editor's JS bundle to
+		// render `#title` / `.editor-post-title`, which can take
+		// 20-30s on a cold worker and push us past the suite-wide
+		// 90s test timeout.
+		await expect( page.locator( '#wpadminbar' ) ).toBeVisible();
 		await expect(
-			page.locator(
-				'#title, .editor-post-title, .editor-post-title__input'
-			)
-		).toBeVisible();
+			page.locator( `input[name="post_ID"][value="${ templatePageId }"]` )
+		).toHaveCount( 1 );
 		expect( page.url() ).toContain( `post=${ templatePageId }` );
+		expect( page.url() ).toContain( 'action=edit' );
 	} );
 } );
