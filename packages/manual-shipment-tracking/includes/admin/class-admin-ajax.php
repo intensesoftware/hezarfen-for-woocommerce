@@ -614,8 +614,10 @@ class Admin_Ajax {
 			$pdf->SetDefaultMonospacedFont( 'dejavusansmono' );
 
 			// Smaller pages need tighter margins to keep the 100mm content column
-			// from being cropped by the printable area.
-			$page_margin = is_array( $format ) ? 2 : 5;
+			// from being cropped by the printable area. A4 also uses a tight
+			// margin so the label hugs the left edge of the sheet instead of
+			// floating in the middle of a wide page.
+			$page_margin = is_array( $format ) ? 2 : 3;
 			$pdf->SetMargins( $page_margin, $page_margin, $page_margin );
 
 			// Set auto page breaks
