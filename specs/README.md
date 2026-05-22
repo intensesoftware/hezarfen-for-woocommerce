@@ -18,7 +18,10 @@ specs/
 │   ├── invoice-fields.md
 │   ├── sms-automation.md
 │   ├── checkout-customization.md
-│   └── my-account.md
+│   ├── my-account.md
+│   ├── install-migration.md
+│   ├── privacy-policy.md
+│   └── admin-menu.md
 └── shared/                         # tüm modülleri kesen referanslar
     ├── glossary.md                 # MSS, ÖBF, desi, IYS, KVKK vs.
     ├── data-model.md               # option key'leri, meta key'leri, tablo şemaları
