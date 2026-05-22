@@ -8,6 +8,7 @@ import {
 	waitForOptionsPopulated,
 } from './helpers/checkout';
 import { deleteMuPlugin, writeMuPlugin } from './helpers/mu-plugin';
+import { wp } from './helpers/wp-cli';
 
 /**
  * Picking a mahalle on the checkout fires
@@ -62,6 +63,23 @@ test.describe( 'Hezarfen mahalle seçimi sonrası checkout review AJAX zinciri',
 	test( 'mahalle değişimi neighborhood_changed → update_order_review zincirini tetikliyor', async ( {
 		page,
 	} ) => {
+		// Probe whether the fixture mu-plugin is actually loaded. The
+		// JS-side `should_notify_neighborhood_changed` gate is fed from
+		// `apply_filters( 'hezarfen_checkout_should_notify_neighborhood_changed', false )`.
+		// If the mu-plugin isn't loaded (some wp-env CI setups don't
+		// pick up runtime-written mu-plugins), the gate stays false,
+		// the JS never POSTs, and we'd false-fail the AJAX wait. Skip
+		// cleanly in that case — the chain we're testing only makes
+		// sense when the notify path is active.
+		const notifyActive = wp( [
+			'eval',
+			"echo apply_filters( 'hezarfen_checkout_should_notify_neighborhood_changed', false ) ? '1' : '0';",
+		] ).trim();
+		test.skip(
+			notifyActive !== '1',
+			`Fixture mu-plugin ${ MU_PLUGIN_SLUG } not active — hezarfen_checkout_should_notify_neighborhood_changed filter returned false. Skipping AJAX chain assertion.`
+		);
+
 		await page.goto( '/checkout/' );
 		await waitForCheckoutIdle( page );
 

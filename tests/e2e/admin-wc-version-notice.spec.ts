@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { loginAsAdmin } from './helpers/auth';
 import { deleteMuPlugin, writeMuPlugin } from './helpers/mu-plugin';
+import { wp } from './helpers/wp-cli';
 import {
 	applyOptions,
 	restoreOptions,
@@ -48,6 +49,10 @@ if ( 'yes' !== get_option( 'hezarfen_e2e_force_wc_version_notice' ) ) {
 	return;
 }
 
+// Marker: tests probe this via wp eval to confirm the mu-plugin
+// actually loaded in the environment under test.
+function hezarfen_e2e_wc_version_notice_loaded() { return true; }
+
 add_filter(
 	'gettext',
 	function ( $translation, $text, $domain ) {
@@ -85,6 +90,26 @@ add_action(
 	test( 'uyarı placeholder\'ları gerçek sürüm değerleriyle ve <strong> ile render ediliyor', async ( {
 		page,
 	} ) => {
+		// Probe whether the force-render mu-plugin is actually loaded.
+		// The notice is gated server-side on WC version being below the
+		// minimum; the test fixture force-fires it via a mu-plugin
+		// hooked on `admin_notices`. If runtime-written mu-plugins
+		// aren't being picked up in this environment, the notice never
+		// renders and we'd false-fail on a fixture-load issue that's
+		// orthogonal to the format-string regression we're guarding.
+		// The mu-plugin defines a marker function we can check via
+		// `function_exists` — that's more reliable than probing the
+		// hook directly (the registered callback is an anonymous
+		// closure, not the named `hezarfen_wc_version_notice`).
+		const markerLoaded = wp( [
+			'eval',
+			"echo function_exists( 'hezarfen_e2e_wc_version_notice_loaded' ) ? '1' : '0';",
+		] ).trim();
+		test.skip(
+			markerLoaded !== '1',
+			`Fixture mu-plugin ${ MU_SLUG } not active — marker function missing. Skipping notice render check.`
+		);
+
 		await loginAsAdmin( page );
 		await page.goto( '/wp-admin/' );
 
