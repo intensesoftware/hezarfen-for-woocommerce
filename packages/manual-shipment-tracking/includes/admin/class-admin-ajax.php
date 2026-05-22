@@ -790,7 +790,7 @@ class Admin_Ajax {
 			// Label/value widths inside the 30mm info column. Value cells are
 			// bounded to $info_col_width minus the label so long phone numbers
 			// or order numbers can't bleed into the details column.
-			$order_no_label_w = 14;
+			$order_no_label_w = 16;
 			$date_label_w     = 12;
 			$phone_label_w    = 12;
 
