@@ -1015,10 +1015,10 @@ class Admin_Ajax {
 				}
 
 				// Order Total
-				$pdf->SetFont( 'dejavusans', 'B', 10 );
+				$pdf->SetFont( 'dejavusans', 'B', 8 );
 				$pdf->SetX( $right_col_x );
-				$pdf->Cell( $product_col_width, 5, self::ensure_utf8( __( 'Order Total', 'woocommerce' ) . ':' ), 1, 0, 'R' );
-				$pdf->Cell( $total_col_width, 5, self::format_price_for_pdf( $order->get_total() ), 1, 1, 'R' );
+				$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Order Total', 'woocommerce' ) . ':' ), 1, 0, 'R' );
+				$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( $order->get_total() ), 1, 1, 'R' );
 			}
 			
 			// Store right column end position
