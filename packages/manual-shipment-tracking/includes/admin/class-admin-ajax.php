@@ -769,28 +769,32 @@ class Admin_Ajax {
 		}
 		
 		
-		// === LAYOUT ===
+		// === 2-COLUMN LAYOUT ===
 		// $show_order_details and $show_prices are resolved above, alongside the
 		// barcode rendering decision.
 		//
-		// Order Information renders as a compact block on the left (~30mm).
-		// Order Details renders below it, spanning the full 100mm content
-		// column so product names get the room they need.
+		// Order Information sits on the left (~30mm). Order Details sits next
+		// to it, taking the remaining ~67mm of the 100mm content column.
+		// Inside the Order Details table the Total column is sized just for
+		// the price text so the Product column gets as much room as possible.
 
-		$info_col_x      = $content_x;
-		$info_col_width  = $content_width * 0.30;
-		$line_height     = 4;
-		$section_start_y = $pdf->GetY();
+		$column_gap         = 3;
+		$info_col_x         = $content_x;
+		$info_col_width     = $content_width * 0.30;
+		$details_col_x      = $info_col_x + $info_col_width + $column_gap;
+		$details_col_width  = $content_width - $info_col_width - $column_gap;
+		$line_height        = 4;
+		$section_start_y    = $pdf->GetY();
 
 		if ( $show_order_details ) {
 			// Label/value widths inside the 30mm info column. Value cells are
 			// bounded to $info_col_width minus the label so long phone numbers
-			// or order numbers can't bleed past the column edge.
+			// or order numbers can't bleed into the details column.
 			$order_no_label_w = 14;
 			$date_label_w     = 12;
 			$phone_label_w    = 12;
 
-			// === ORDER INFORMATION (compact left block) ===
+			// === LEFT COLUMN: ORDER INFORMATION ===
 
 			// Order Information Header
 			$pdf->SetXY( $info_col_x, $section_start_y );
@@ -838,31 +842,32 @@ class Admin_Ajax {
 			$pdf->SetX( $info_col_x );
 			$pdf->MultiCell( $info_col_width, 3, self::ensure_utf8( $shipping_address ), 0, 'L' );
 
-			// === ORDER DETAILS (full 100mm width, below Order Information) ===
+			// Store left column end position
+			$info_col_end_y = $pdf->GetY();
 
-			$pdf->Ln( 4 );
+			// === RIGHT COLUMN: ORDER DETAILS ===
 
-			// Items/totals column widths. Total is sized just for the price
-			// text; Product gets everything else so long product names fit.
+			// Items/totals column widths inside the details column. Total is
+			// sized just for the price text so Product gets the rest.
 			if ( $show_prices ) {
 				$total_col_width   = 18;
-				$product_col_width = $content_width - $total_col_width;
+				$product_col_width = $details_col_width - $total_col_width;
 			} else {
-				$product_col_width = $content_width;
+				$product_col_width = $details_col_width;
 				$total_col_width   = 0;
 			}
 
 			// Order Details Header
-			$pdf->SetX( $content_x );
+			$pdf->SetXY( $details_col_x, $section_start_y );
 			$pdf->SetFont( 'dejavusans', 'B', 10 );
-			$pdf->Cell( $content_width, 5, self::ensure_utf8( __( 'Order Details', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
-			$pdf->SetX( $content_x );
-			$pdf->Line( $content_x, $pdf->GetY(), $content_x + $content_width, $pdf->GetY() );
+			$pdf->Cell( $details_col_width, 5, self::ensure_utf8( __( 'Order Details', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
+			$pdf->SetX( $details_col_x );
+			$pdf->Line( $details_col_x, $pdf->GetY(), $details_col_x + $details_col_width, $pdf->GetY() );
 			$pdf->Ln( 2 );
 
 			// Items table headers (no Qty column)
 			$pdf->SetFont( 'dejavusans', 'B', 9 );
-			$pdf->SetX( $content_x );
+			$pdf->SetX( $details_col_x );
 			if ( $show_prices ) {
 				$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Product', 'hezarfen-for-woocommerce' ) ), 1, 0, 'L' );
 				$pdf->Cell( $total_col_width, 4, self::ensure_utf8( __( 'Total', 'hezarfen-for-woocommerce' ) ), 1, 1, 'R' );
@@ -948,7 +953,7 @@ class Admin_Ajax {
 				}
 
 				// Save current position
-				$start_x = $content_x;
+				$start_x = $details_col_x;
 				$start_y = $pdf->GetY();
 
 				// Calculate actual cell height based on text content using TCPDF's getStringHeight
@@ -974,14 +979,14 @@ class Admin_Ajax {
 			if ( $show_prices ) {
 				// Items Subtotal
 				$pdf->SetFont( 'dejavusans', '', 8 );
-				$pdf->SetX( $content_x );
+				$pdf->SetX( $details_col_x );
 				$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Items Subtotal:', 'woocommerce' ) ), 1, 0, 'R' );
 				$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( $order->get_subtotal() ), 1, 1, 'R' );
 
 				// Coupon(s) - if discount > 0
 				if ( $order->get_total_discount() > 0 ) {
 					$pdf->SetFont( 'dejavusans', '', 8 );
-					$pdf->SetX( $content_x );
+					$pdf->SetX( $details_col_x );
 					$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Coupon(s):', 'woocommerce' ) ), 1, 0, 'R' );
 					$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( -$order->get_total_discount() ), 1, 1, 'R' );
 				}
@@ -989,7 +994,7 @@ class Admin_Ajax {
 				// Fees - if total fees > 0
 				if ( $order->get_total_fees() > 0 ) {
 					$pdf->SetFont( 'dejavusans', '', 8 );
-					$pdf->SetX( $content_x );
+					$pdf->SetX( $details_col_x );
 					$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Fees:', 'woocommerce' ) ), 1, 0, 'R' );
 					$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( $order->get_total_fees() ), 1, 1, 'R' );
 				}
@@ -997,7 +1002,7 @@ class Admin_Ajax {
 				// Shipping - if shipping methods exist
 				if ( $order->get_shipping_methods() ) {
 					$pdf->SetFont( 'dejavusans', '', 8 );
-					$pdf->SetX( $content_x );
+					$pdf->SetX( $details_col_x );
 					$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Shipping:', 'woocommerce' ) ), 1, 0, 'R' );
 					$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( $order->get_shipping_total() ), 1, 1, 'R' );
 				}
@@ -1006,7 +1011,7 @@ class Admin_Ajax {
 				if ( wc_tax_enabled() ) {
 					foreach ( $order->get_tax_totals() as $code => $tax_total ) {
 						$pdf->SetFont( 'dejavusans', '', 8 );
-						$pdf->SetX( $content_x );
+						$pdf->SetX( $details_col_x );
 						$pdf->Cell( $product_col_width, 4, self::ensure_utf8( $tax_total->label . ':' ), 1, 0, 'R' );
 						$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( wc_round_tax_total( $tax_total->amount ) ), 1, 1, 'R' );
 					}
@@ -1014,10 +1019,14 @@ class Admin_Ajax {
 
 				// Order Total
 				$pdf->SetFont( 'dejavusans', 'B', 8 );
-				$pdf->SetX( $content_x );
+				$pdf->SetX( $details_col_x );
 				$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Order Total', 'woocommerce' ) . ':' ), 1, 0, 'R' );
 				$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( $order->get_total() ), 1, 1, 'R' );
 			}
+
+			// Move to the end of the longer column before the Order Note section
+			$details_col_end_y = $pdf->GetY();
+			$pdf->SetY( max( $info_col_end_y, $details_col_end_y ) + 3 );
 
 			// === ORDER NOTE SECTION ===
 			$order_note = $order->get_customer_note();
