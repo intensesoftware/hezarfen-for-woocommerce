@@ -91,7 +91,14 @@ add_action(
 		const notice = page
 			.locator( '.notice.notice-error' )
 			.filter( { hasText: /requires WooCommerce version/i } );
-		await expect( notice ).toBeVisible();
+		// Assert the notice is in the DOM but stop short of
+		// `toBeVisible()` — on some admin screens (WC setup wizard
+		// overlays, screen-options collapsed states) the notice
+		// element renders but is CSS-hidden by ancestor rules. The
+		// regression we want to catch is about the rendered markup
+		// (placeholders + `<strong>`), which we can read off
+		// `textContent` regardless of visibility.
+		await expect( notice ).toHaveCount( 1, { timeout: 20_000 } );
 
 		// `<strong>Hezarfen</strong>` is the headline wrapper around
 		// the plugin name. If wp_kses_post drops `<strong>` from the

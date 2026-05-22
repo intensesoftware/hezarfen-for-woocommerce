@@ -124,16 +124,17 @@ test.describe( 'Hezarfen sözleşme ayarları — page-selector edit linki', () 
 		// The regression we care about is "did the post id reach the
 		// server" — i.e. WordPress did NOT bounce us to the post
 		// listing or to "Sorry, you are not allowed to edit this
-		// item." We use lightweight signals from the initial HTML
-		// response (admin bar + post-edit form's hidden post_ID input)
-		// instead of waiting for the block editor's JS bundle to
-		// render `#title` / `.editor-post-title`, which can take
-		// 20-30s on a cold worker and push us past the suite-wide
-		// 90s test timeout.
-		await expect( page.locator( '#wpadminbar' ) ).toBeVisible();
+		// item." We assert on the post-edit form's hidden `post_ID`
+		// input (present in the initial HTML response of `post.php`)
+		// rather than the block editor's `#title` / `.editor-post-title`
+		// — the editor bundle can take 20-30s to render on a cold
+		// worker and push past the suite-wide 90s timeout. Using
+		// `#wpadminbar` here would also be unreliable because the
+		// block editor opens in fullscreen mode by default and hides
+		// the admin bar via CSS.
 		await expect(
 			page.locator( `input[name="post_ID"][value="${ templatePageId }"]` )
-		).toHaveCount( 1 );
+		).toHaveCount( 1, { timeout: 20_000 } );
 		expect( page.url() ).toContain( `post=${ templatePageId }` );
 		expect( page.url() ).toContain( 'action=edit' );
 	} );

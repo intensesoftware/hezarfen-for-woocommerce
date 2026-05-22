@@ -89,7 +89,10 @@ test.describe( 'Hezarfen mahalle seçimi sonrası checkout review AJAX zinciri',
 		// Register the response listener BEFORE selecting the
 		// neighborhood — `notify_neighborhood_changed` POSTs via
 		// jQuery.ajax with no debounce on this side, so a slow listener
-		// can miss the call entirely.
+		// can miss the call entirely. The 30s window covers cold CI
+		// workers where WC's `update_order_review` triggered by the
+		// preceding district AJAX is still in-flight and serializes
+		// against the neighborhood call.
 		const notifyPromise = page.waitForResponse(
 			( res ) =>
 				res.url().includes( '/wp-admin/admin-ajax.php' ) &&
@@ -99,7 +102,7 @@ test.describe( 'Hezarfen mahalle seçimi sonrası checkout review AJAX zinciri',
 				).includes(
 					'action=wc_hezarfen_neighborhood_changed'
 				),
-			{ timeout: 15_000 }
+			{ timeout: 30_000 }
 		);
 
 		await pickFromSelect(
