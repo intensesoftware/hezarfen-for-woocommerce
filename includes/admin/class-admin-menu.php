@@ -47,6 +47,9 @@ class Admin_Menu {
      * @return bool
      */
     private function is_pro_installed() {
+        if ( defined( 'HEZARFEN_FORCE_SHOW_UPGRADE' ) && HEZARFEN_FORCE_SHOW_UPGRADE ) {
+            return false;
+        }
         return false !== get_option( 'hezarfen_pro_db_version', false );
     }
 

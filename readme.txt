@@ -3,12 +3,12 @@
 Contributors: intenseyazilim, mucahitbal, mskapusuz
 Tags: kargo, kargo takip, kargo entegrasyonu, yurtiçi kargo, aras kargo
 Requires at least: 5.3
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.10.2
+Stable tag: 2.11.4
 
-🚀 2 bin site! Kargo takip, ücretsiz Hepsijet Entegrasyonu (1-4 desi: 89,24TL+KDV - Hezarfen Pro gerekmez), Mesafeli Sözleşmeler, NetGSM sipariş SMS
+WooCommerce Kargo Takip eklentisi: ücretsiz Hepsijet entegrasyonu, 23 kargo firması, NetGSM SMS, Mesafeli Satış Sözleşmesi, mahalle seçimi.
 == Description ==
 
 **Tamamen Ücretsiz!** Intense&Hepsijet İşbirliğiyle; Hezarfen kullanıcılarına Hepsijet 1-4 Desi 89,24TL+KDV - Hezarfen, WooCommerce mağazanızı Türkiye e-ticaret standartlarına uygun hale getiren kapsamlı bir kargo, ödeme ve sözleşme yönetim eklentisidir. Bu WooCommerce kargo entegrasyon eklentisi, 23 farklı kargo firmasıyla çalışabilir, müşterilerinize profesyonel WooCommerce kargo takip deneyimi sunar, Mesafeli Satış Sözleşmesi (MSS) desteği sağlar ve Türkiye'ye özgü mahalle, fatura ve vergi alanlarıyla ödeme ekranınızı Türkiye'ye uyumlu hale getirir.
@@ -264,6 +264,21 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
+= 2.11.4 - 2026-05-22 =
+* fix(hepsijet-label): 100mm kolona sığacak şekilde font küçültme ve sol kolon hücre sınırlama
+
+= 2.11.3 - 2026-05-20 =
+* Fix/restore plugin title 2
+
+= 2.11.2 - 2026-05-20 =
+* Fix/restore plugin title
+
+= 2.11.1 - 2026-05-20 =
+* ux(order-edit): kargo seçici, üst aksiyonlar ve iptal satırı iyileştirmeleri
+
+= 2.11.0 - 2026-05-20 =
+* feat(hepsijet-label): flat barcode when order details hidden, add hide-prices option
+
 = 2.10.2 - 2026-04-21 =
 * HepsiJet kargo ayarları ekranındaki ayar başlıkları düzeltildi.
 

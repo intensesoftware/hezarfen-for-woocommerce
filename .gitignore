@@ -7,3 +7,6 @@ node_modules
 # Playwright e2e
 tests/e2e/test-results
 tests/e2e/playwright-report
+
+# wp-env local/CI override (e.g. matrix-driven phpVersion)
+.wp-env.override.json
