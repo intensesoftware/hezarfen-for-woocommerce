@@ -783,55 +783,61 @@ class Admin_Ajax {
 		$section_start_y = $pdf->GetY();
 		
 		if ( $show_order_details ) {
+			// Label/value widths inside the 30mm left column. Value cells are
+			// bounded to $left_col_width minus the label so long phone numbers
+			// or order numbers can't bleed into the right column.
+			$order_no_label_w = 14;
+			$date_label_w     = 12;
+			$phone_label_w    = 12;
+
 			// === LEFT COLUMN: ORDER INFO & RECIPIENT ===
-			
+
 			// Order Information Header
 			$pdf->SetXY( $left_col_x, $section_start_y );
-			$pdf->SetFont( 'dejavusans', 'B', 14 );
+			$pdf->SetFont( 'dejavusans', 'B', 10 );
 			$pdf->Cell( $left_col_width, 5, self::ensure_utf8( __( 'Order Information', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
 			$pdf->SetX( $left_col_x );
 			$pdf->Line( $left_col_x, $pdf->GetY(), $left_col_x + $left_col_width, $pdf->GetY() );
 			$pdf->Ln( 2 );
-			
+
 			// Order details - Order # on first row
-			$pdf->SetFont( 'dejavusans', '', 11 );
+			$pdf->SetFont( 'dejavusans', '', 8 );
 			$pdf->SetX( $left_col_x );
-			$pdf->Cell( 20, $line_height, self::ensure_utf8( __( 'Order #:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
-			$pdf->SetFont( 'dejavusans', 'B', 11 );
-			$pdf->Cell( 0, $line_height, self::ensure_utf8( $order->get_order_number() ), 0, 1, 'L' );
-			
+			$pdf->Cell( $order_no_label_w, $line_height, self::ensure_utf8( __( 'Order #:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
+			$pdf->SetFont( 'dejavusans', 'B', 8 );
+			$pdf->Cell( $left_col_width - $order_no_label_w, $line_height, self::ensure_utf8( $order->get_order_number() ), 0, 1, 'L' );
+
 			// Date on second row
-			$pdf->SetFont( 'dejavusans', '', 11 );
+			$pdf->SetFont( 'dejavusans', '', 8 );
 			$pdf->SetX( $left_col_x );
-			$pdf->Cell( 18, $line_height, self::ensure_utf8( __( 'Tarih:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
-			$pdf->SetFont( 'dejavusans', 'B', 11 );
-			$pdf->Cell( 0, $line_height, self::ensure_utf8( $order->get_date_created()->date( 'd/m/Y' ) ), 0, 1, 'L' );
-		
-		// Customer and Phone on same row
-			$pdf->SetFont( 'dejavusans', '', 11 );
+			$pdf->Cell( $date_label_w, $line_height, self::ensure_utf8( __( 'Tarih:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
+			$pdf->SetFont( 'dejavusans', 'B', 8 );
+			$pdf->Cell( $left_col_width - $date_label_w, $line_height, self::ensure_utf8( $order->get_date_created()->date( 'd/m/Y' ) ), 0, 1, 'L' );
+
+			// Phone row
+			$pdf->SetFont( 'dejavusans', '', 8 );
 			$pdf->SetX( $left_col_x );
-			$pdf->SetFont( 'dejavusans', '', 11 );
-			$pdf->Cell( 18, $line_height, self::ensure_utf8( __( 'Phone:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
-			$pdf->SetFont( 'dejavusans', 'B', 11 );
+			$pdf->Cell( $phone_label_w, $line_height, self::ensure_utf8( __( 'Phone:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
+			$pdf->SetFont( 'dejavusans', 'B', 8 );
 			$phone = $order->get_shipping_phone() ? $order->get_shipping_phone() : $order->get_billing_phone();
-			$pdf->Cell( 0, $line_height, self::ensure_utf8( $phone ), 0, 1, 'L' );
-			
+			$pdf->Cell( $left_col_width - $phone_label_w, $line_height, self::ensure_utf8( $phone ), 0, 1, 'L' );
+
 			$pdf->Ln( 2 );
-			
+
 			// Shipping Address in Left Column (no header)
-			
-			$pdf->SetFont( 'dejavusans', '', 11 );
+
+			$pdf->SetFont( 'dejavusans', '', 8 );
 			$shipping_address = $order->get_formatted_shipping_address();
 			if ( empty( $shipping_address ) ) {
 				$shipping_address = $order->get_formatted_billing_address();
 			}
-			
+
 			// Clean up the address formatting for PDF
 			$shipping_address = str_replace( '<br/>', "\n", $shipping_address );
 			$shipping_address = strip_tags( $shipping_address );
-		
+
 			$pdf->SetX( $left_col_x );
-			$pdf->MultiCell( $left_col_width, 3.5, self::ensure_utf8( $shipping_address ), 0, 'L' );
+			$pdf->MultiCell( $left_col_width, 3, self::ensure_utf8( $shipping_address ), 0, 'L' );
 			
 			// Store left column end position
 			$left_col_end_y = $pdf->GetY();
@@ -850,14 +856,14 @@ class Admin_Ajax {
 
 			// Order Details Header
 			$pdf->SetXY( $right_col_x, $section_start_y );
-			$pdf->SetFont( 'dejavusans', 'B', 14 );
+			$pdf->SetFont( 'dejavusans', 'B', 10 );
 			$pdf->Cell( $right_col_width, 5, self::ensure_utf8( __( 'Order Details', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
 			$pdf->SetX( $right_col_x );
 			$pdf->Line( $right_col_x, $pdf->GetY(), $right_col_x + $right_col_width, $pdf->GetY() );
 			$pdf->Ln( 2 );
 
 			// Items table headers (no Qty column)
-			$pdf->SetFont( 'dejavusans', 'B', 12 );
+			$pdf->SetFont( 'dejavusans', 'B', 9 );
 			$pdf->SetX( $right_col_x );
 			if ( $show_prices ) {
 				$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Product', 'hezarfen-for-woocommerce' ) ), 1, 0, 'L' );
@@ -865,9 +871,9 @@ class Admin_Ajax {
 			} else {
 				$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Product', 'hezarfen-for-woocommerce' ) ), 1, 1, 'L' );
 			}
-			
+
 			// Order items
-			$pdf->SetFont( 'dejavusans', '', 11 );
+			$pdf->SetFont( 'dejavusans', '', 8 );
 			foreach ( $order->get_items() as $item ) {
 				$product_name = $item->get_name();
 				$quantity = $item->get_quantity();
@@ -969,14 +975,14 @@ class Admin_Ajax {
 			// === ORDER TOTALS (matching WooCommerce native format exactly) ===
 			if ( $show_prices ) {
 				// Items Subtotal
-				$pdf->SetFont( 'dejavusans', '', 11 );
+				$pdf->SetFont( 'dejavusans', '', 8 );
 				$pdf->SetX( $right_col_x );
 				$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Items Subtotal:', 'woocommerce' ) ), 1, 0, 'R' );
 				$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( $order->get_subtotal() ), 1, 1, 'R' );
 
 				// Coupon(s) - if discount > 0
 				if ( $order->get_total_discount() > 0 ) {
-					$pdf->SetFont( 'dejavusans', '', 11 );
+					$pdf->SetFont( 'dejavusans', '', 8 );
 					$pdf->SetX( $right_col_x );
 					$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Coupon(s):', 'woocommerce' ) ), 1, 0, 'R' );
 					$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( -$order->get_total_discount() ), 1, 1, 'R' );
@@ -984,7 +990,7 @@ class Admin_Ajax {
 
 				// Fees - if total fees > 0
 				if ( $order->get_total_fees() > 0 ) {
-					$pdf->SetFont( 'dejavusans', '', 11 );
+					$pdf->SetFont( 'dejavusans', '', 8 );
 					$pdf->SetX( $right_col_x );
 					$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Fees:', 'woocommerce' ) ), 1, 0, 'R' );
 					$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( $order->get_total_fees() ), 1, 1, 'R' );
@@ -992,7 +998,7 @@ class Admin_Ajax {
 
 				// Shipping - if shipping methods exist
 				if ( $order->get_shipping_methods() ) {
-					$pdf->SetFont( 'dejavusans', '', 11 );
+					$pdf->SetFont( 'dejavusans', '', 8 );
 					$pdf->SetX( $right_col_x );
 					$pdf->Cell( $product_col_width, 4, self::ensure_utf8( __( 'Shipping:', 'woocommerce' ) ), 1, 0, 'R' );
 					$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( $order->get_shipping_total() ), 1, 1, 'R' );
@@ -1001,7 +1007,7 @@ class Admin_Ajax {
 				// Tax - if tax enabled
 				if ( wc_tax_enabled() ) {
 					foreach ( $order->get_tax_totals() as $code => $tax_total ) {
-						$pdf->SetFont( 'dejavusans', '', 11 );
+						$pdf->SetFont( 'dejavusans', '', 8 );
 						$pdf->SetX( $right_col_x );
 						$pdf->Cell( $product_col_width, 4, self::ensure_utf8( $tax_total->label . ':' ), 1, 0, 'R' );
 						$pdf->Cell( $total_col_width, 4, self::format_price_for_pdf( wc_round_tax_total( $tax_total->amount ) ), 1, 1, 'R' );
@@ -1009,7 +1015,7 @@ class Admin_Ajax {
 				}
 
 				// Order Total
-				$pdf->SetFont( 'dejavusans', 'B', 14 );
+				$pdf->SetFont( 'dejavusans', 'B', 10 );
 				$pdf->SetX( $right_col_x );
 				$pdf->Cell( $product_col_width, 5, self::ensure_utf8( __( 'Order Total', 'woocommerce' ) . ':' ), 1, 0, 'R' );
 				$pdf->Cell( $total_col_width, 5, self::format_price_for_pdf( $order->get_total() ), 1, 1, 'R' );
@@ -1026,7 +1032,7 @@ class Admin_Ajax {
 
 			// Order Note Header (constrained to the 100mm content column)
 			$pdf->SetX( $content_x );
-			$pdf->SetFont( 'dejavusans', 'B', 14 );
+			$pdf->SetFont( 'dejavusans', 'B', 10 );
 			$pdf->Cell( $content_width, 5, self::ensure_utf8( __( 'Order Note', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
 			$pdf->SetX( $content_x );
 			$pdf->Line( $content_x, $pdf->GetY(), $content_x + $content_width, $pdf->GetY() );
@@ -1034,9 +1040,9 @@ class Admin_Ajax {
 
 			// Order Note Content (show dash if empty)
 			$pdf->SetX( $content_x );
-			$pdf->SetFont( 'dejavusans', '', 12 );
+			$pdf->SetFont( 'dejavusans', '', 8.5 );
 			$note_content = ! empty( $order_note ) ? $order_note : '-';
-			$pdf->MultiCell( $content_width, 5, self::ensure_utf8( $note_content ), 0, 'L' );
+			$pdf->MultiCell( $content_width, 4, self::ensure_utf8( $note_content ), 0, 'L' );
 			$pdf->Ln( 3 );
 			
 			$pdf->Ln( 3 );
