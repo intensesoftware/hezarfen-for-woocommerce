@@ -1,5 +1,5 @@
 
-=== Kargo Takip, WooCommerce Kargo Entegrasyonu, SMS, Mesafeli Sözleşme – Hezarfen ===
+=== Kargo Takip, Kargo SMS, İlçe Mahalle Sözleşme by Hezarfen ===
 Contributors: intenseyazilim, mucahitbal, mskapusuz
 Tags: kargo, kargo takip, kargo entegrasyonu, yurtiçi kargo, aras kargo
 Requires at least: 5.3
@@ -266,6 +266,9 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 == Changelog ==
 = 2.11.4 - 2026-05-22 =
 * fix(hepsijet-label): 100mm kolona sığacak şekilde font küçültme ve sol kolon hücre sınırlama
+
+= 2.11.3 - 2026-05-20 =
+* Fix/restore plugin title 2
 
 = 2.11.2 - 2026-05-20 =
 * Fix/restore plugin title
