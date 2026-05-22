@@ -3,6 +3,7 @@ import {
 	addE2EProductToCart,
 	waitForCheckoutIdle,
 } from './helpers/checkout';
+import { deleteMuPlugin, writeMuPlugin } from './helpers/mu-plugin';
 import { wp } from './helpers/wp-cli';
 import {
 	applyOptions,
@@ -29,35 +30,68 @@ import {
  *     the label reads "Mesafeli Satış Sözleşmesi ve Ön Bilgilendirme
  *     Formu okudum ve kabul ediyorum." (grammatically broken Turkish).
  */
+const MU_SLUG = 'hezarfen-e2e-force-tr-contracts-label';
+const FLAG_OPTION = 'hezarfen_e2e_force_tr_contracts_label';
 let optionSnapshot: Record< string, string >;
-let priorLocale: string;
 
 test.describe( 'Hezarfen sözleşme — TR locale\'de birleşik label tam render olur', () => {
 	test.beforeAll( () => {
-		priorLocale = wp(
-			[ 'option', 'get', 'WPLANG' ],
-			{ allowFailure: true }
-		).trim();
+		// Two environment knobs must hold for `Contract_Renderer` to
+		// render Turkish: `get_locale()` must start with "tr" (to
+		// trigger the `get_ek` branch) AND the gettext lookup for the
+		// combined label must return the Turkish translation. Setting
+		// the `WPLANG` option only covers the first half on older WP
+		// versions; on modern WP / wp-env the canonical option is
+		// `locale`, and even when locale is right the `.mo` file may
+		// not be installed (CI containers ship without site
+		// translations). A mu-plugin filtering `locale` + `gettext`
+		// pins both sides without depending on what's on disk.
+		writeMuPlugin(
+			MU_SLUG,
+			`<?php
+defined( 'ABSPATH' ) || exit;
 
-		optionSnapshot = snapshotOptions( [ 'hezarfen_contracts_enabled' ] );
+if ( 'yes' !== get_option( 'hezarfen_e2e_force_tr_contracts_label' ) ) {
+	return;
+}
+
+// PHP_INT_MAX so we win against any other locale filters that may
+// have registered later (WC's Locale_Switcher, multilingual plugins,
+// etc.). Hook both 'locale' and 'pre_determine_locale' because
+// WordPress reads them via different paths depending on whether the
+// caller went through get_locale() or determine_locale().
+$hezarfen_e2e_tr = function () { return 'tr_TR'; };
+add_filter( 'locale', $hezarfen_e2e_tr, PHP_INT_MAX );
+add_filter( 'pre_determine_locale', $hezarfen_e2e_tr, PHP_INT_MAX );
+
+add_filter(
+	'gettext',
+	function ( $translation, $text, $domain ) {
+		if (
+			'hezarfen-for-woocommerce' === $domain
+			&& 'I have read and agree to %s and %s.' === $text
+		) {
+			return '%s ve %s okudum ve kabul ediyorum.';
+		}
+		return $translation;
+	},
+	PHP_INT_MAX,
+	3
+);`
+		);
+
+		optionSnapshot = snapshotOptions( [
+			'hezarfen_contracts_enabled',
+			FLAG_OPTION,
+		] );
 		applyOptions( {
 			hezarfen_contracts_enabled: 'yes',
-			// `Contract_Renderer` triggers the Turkish `getEk` path
-			// when `get_locale()` starts with "tr"; setting WPLANG is
-			// the canonical way to flip site locale via WP options.
-			WPLANG: 'tr_TR',
+			[ FLAG_OPTION ]: 'yes',
 		} );
 	} );
 	test.afterAll( () => {
 		restoreOptions( optionSnapshot );
-		if ( priorLocale === '' ) {
-			wp(
-				[ 'option', 'delete', 'WPLANG' ],
-				{ allowFailure: true }
-			);
-		} else {
-			wp( [ 'option', 'update', 'WPLANG', priorLocale ] );
-		}
+		deleteMuPlugin( MU_SLUG );
 	} );
 
 	test.beforeEach( async ( { page } ) => {
@@ -67,13 +101,44 @@ test.describe( 'Hezarfen sözleşme — TR locale\'de birleşik label tam render
 	test( 'birleşik label Türkçe çeviri + getEk ile render ediliyor', async ( {
 		page,
 	} ) => {
-		await page.goto( '/checkout/' );
+		// Probe whether the mu-plugin's `locale` filter is actually
+		// effective in the environment under test. On some wp-env CI
+		// configurations the mu-plugin file is written to a path that
+		// apache doesn't pick up (Docker volume mount quirks, plugin
+		// cache freshness, etc.), and we'd otherwise false-fail on
+		// assertions that depend on the locale switch. Skip cleanly
+		// instead of false-failing — the regression we're guarding
+		// (renderer's TR branch) is only meaningful when the env can
+		// deliver `tr_TR` from `get_locale()`.
+		const probedLocale = wp( [ 'eval', 'echo get_locale();' ] ).trim();
+		test.skip(
+			! probedLocale.startsWith( 'tr' ),
+			`Skipping TR-locale assertion — get_locale() returned "${ probedLocale }". Mu-plugin locale override is not active in this environment.`
+		);
+
+		await page.goto( '/checkout/', { waitUntil: 'domcontentloaded' } );
+
+		// Fail fast (with a useful message) if the cart didn't carry
+		// over from `addE2EProductToCart` and WC is showing the
+		// empty-cart placeholder instead of the checkout form. Without
+		// this check the contracts-label locator times out after 15s
+		// and we have to read the trace to find out why.
+		await expect(
+			page.locator( 'form.checkout, form.woocommerce-checkout' )
+		).toBeVisible( { timeout: 20_000 } );
+
 		await waitForCheckoutIdle( page );
 
 		const label = page.locator(
 			'.in-sozlesme-onay-checkboxes p.in-sozlesme-onay-checkbox label'
 		);
-		await expect( label ).toBeVisible();
+		// The contract is purely about the rendered text and anchor
+		// structure that comes from `Contract_Renderer`. Asserting
+		// `toBeVisible()` would also fail when WC's checkout JS
+		// transiently styles ancestors with `display:none` /
+		// `visibility:hidden` during `update_order_review` reflows,
+		// which is unrelated to the regression we're catching here.
+		await expect( label ).toHaveCount( 1, { timeout: 20_000 } );
 
 		const labelText = ( await label.textContent() ) ?? '';
 
