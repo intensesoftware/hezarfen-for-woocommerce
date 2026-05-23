@@ -477,15 +477,18 @@ class Checkout {
 	public function validate_posted_data( $data, $errors ) {
 		$tc_id_number = ! empty( $data['billing_hez_TC_number'] ) ? ( new PostMetaEncryption() )->decrypt( $data['billing_hez_TC_number'] ) : '';
 
-		$invoice_type = array_key_exists( 'billing_hez_invoice_type', $_POST ) ? sanitize_key( $_POST['billing_hez_invoice_type'] ) : '';
+		// Nonce is verified by WooCommerce during checkout processing before this hook fires.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$invoice_type = array_key_exists( 'billing_hez_invoice_type', $_POST ) ? sanitize_key( wp_unslash( $_POST['billing_hez_invoice_type'] ) ) : '';
 
 		// extend here to cover only number validaiton check for the TC ID number.
 		if ( 'person' === $invoice_type && $tc_id_number && ( 11 !== strlen( $tc_id_number ) || ! is_numeric( $tc_id_number ) ) ) {
 			$errors->add( 'billing_hez_TC_number_validation', '<strong>' . __( 'TC ID number is not valid', 'hezarfen-for-woocommerce' ) . '</strong>', array( 'id' => 'billing_hez_TC_number' ) );
 		}
 
-		if( 'company' === $invoice_type ) {
-			$tax_number = array_key_exists( 'billing_hez_tax_number', $_POST ) ? sanitize_text_field( $_POST['billing_hez_tax_number'] ) : '';
+		if ( 'company' === $invoice_type ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$tax_number = array_key_exists( 'billing_hez_tax_number', $_POST ) ? sanitize_text_field( wp_unslash( $_POST['billing_hez_tax_number'] ) ) : '';
 
 			if ( ! is_numeric( $tax_number ) || ! in_array( strlen( $tax_number ), array( 10, 11 ), true ) ) {
 				$errors->add( 'billing_hez_tax_number_validation', '<strong>' . esc_html__( 'Tax number is not valid', 'hezarfen-for-woocommerce' ) . '</strong>', array( 'id' => 'billing_hez_tax_number' ) );

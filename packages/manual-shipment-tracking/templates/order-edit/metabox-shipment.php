@@ -244,7 +244,7 @@ if ( $has_hepsijet_credentials ) {
 
                         <div class="flex justify-center">
                             <div class="flex justify-center">
-                                <button type="button" class="h-expand items-center text-black px-4 py-2 flex" data-show-more-label="<?php esc_html_e( 'Show More', 'hezarfen-for-woocommerce' ); ?>" data-show-less-label="<?php esc_html_e( 'Show Less', 'hezarfen-for-woocommerce' ); ?>">
+                                <button type="button" class="h-expand items-center text-black px-4 py-2 flex" data-show-more-label="<?php echo esc_attr__( 'Show More', 'hezarfen-for-woocommerce' ); ?>" data-show-less-label="<?php echo esc_attr__( 'Show Less', 'hezarfen-for-woocommerce' ); ?>">
                                     <span><?php esc_html_e( 'Show More', 'hezarfen-for-woocommerce' ); ?></span>
                                     <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M8.00048 9.11403L11.3005 5.81403L12.2431 6.75736L8.00048 11L3.75781 6.75736L4.70048 5.81469L8.00048 9.11403Z" fill="black"/>
@@ -667,7 +667,8 @@ if ( $has_hepsijet_credentials ) {
                        </a>
                    </div>
                     <?php
-                    // Get Hepsijet shipments from encapsulated meta data
+                    // Get Hepsijet shipments from encapsulated meta data.
+                    // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
                     $order = wc_get_order($order_id);
                     $all_meta = $order->get_meta_data();
                     $integration_shipments = array();
@@ -737,6 +738,7 @@ if ( $has_hepsijet_credentials ) {
                                                 $delivery_no = $shipment_details['delivery_no'] ?? null;
                                                 $cancelled_at = $shipment_details['cancelled_at'] ?? null;
                                                 $cancel_reason = $shipment_details['cancel_reason'] ?? null;
+                                                // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
                                                 $status = $shipment_details['status'] ?? 'active';
                                                 $is_return = $shipment_details['is_return'] ?? false;
                                                 $planned_pickup_date = $shipment_details['planned_pickup_date'] ?? null;
@@ -794,7 +796,7 @@ if ( $has_hepsijet_credentials ) {
                                                                     <!-- Yeni format: Her koli için ayrı desi -->
                                                                     <?php foreach ($packages as $index => $package): ?>
                                                                         <div class="mb-0.5">
-                                                                            <span class="font-medium"><?php printf(esc_html__('Koli %d:', 'hezarfen-for-woocommerce'), $index + 1); ?></span> 
+                                                                            <span class="font-medium"><?php printf(esc_html__('Koli %d:', 'hezarfen-for-woocommerce'), (int) $index + 1); ?></span>
                                                                             <?php echo esc_html(number_format($package['desi'], 2)); ?> desi
                                                                         </div>
                                                                     <?php endforeach; ?>
@@ -1069,7 +1071,7 @@ if ( $has_hepsijet_credentials ) {
                     <?php  esc_html_e( "Hezarfen can automatically recognize the shipment data of your previous orders with just one click. Moreover, this data remains accessible in Hezarfen even if you deactivate the Kargo Takip Türkiye plugin later on. You can start doing it on the Hezarfen Settings screen. In Hezarfen Manual Shipment Tracking Settings -> Advanced -> Recognize third party plugins' data -> Recognition type -> click 'Desteklenen eklentilerin verilerini algıla: (Intense Kargo Takip, Kargo Takip Turkiye)'", 'hezarfen-for-woocommerce' ); ?>
                 </div>
 
-                <a target="_blank" class="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" href="<?php echo esc_html( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=manual_shipment_tracking' ) ); ?>"><?php esc_html_e( 'Visit Hezarfen Shipment Settings', 'hezarfen-for-woocommerce' ); ?></a>
+                <a target="_blank" class="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=manual_shipment_tracking' ) ); ?>"><?php esc_html_e( 'Visit Hezarfen Shipment Settings', 'hezarfen-for-woocommerce' ); ?></a>
                 <a target="_blank" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" href="https://wordpress.org/support/plugin/hezarfen-for-woocommerce/"><?php esc_html_e( 'Free Support on wordpress.org', 'hezarfen-for-woocommerce' ); ?></a>
             </div>
             <?php

@@ -24,3 +24,4 @@ phpunit.xml.dist
 readme.md
 bin
 .DS_Store
+specs

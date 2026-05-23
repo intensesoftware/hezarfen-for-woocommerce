@@ -80,10 +80,10 @@ function hezarfen_wc_version_notice() {
 			<?php
 			printf(
 				/* translators: 1: plugin name, 2: minimum WooCommerce version, 3: current WooCommerce version */
-				__( '<strong>%1$s</strong> requires WooCommerce version %2$s or higher. You are running version %3$s. Please update WooCommerce.', 'hezarfen-for-woocommerce' ),
+				wp_kses_post( __( '<strong>%1$s</strong> requires WooCommerce version %2$s or higher. You are running version %3$s. Please update WooCommerce.', 'hezarfen-for-woocommerce' ) ),
 				'Hezarfen',
-				WC_HEZARFEN_MIN_WC_VERSION,
-				WC()->version
+				esc_html( WC_HEZARFEN_MIN_WC_VERSION ),
+				esc_html( WC()->version )
 			);
 			?>
 		</p>

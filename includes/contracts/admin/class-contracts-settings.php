@@ -165,11 +165,14 @@ class Contracts_Settings {
 			return;
 		}
 		
-		// Handle MSS specific settings save
+		// Handle MSS specific settings save.
+		// Nonce is verified by WooCommerce settings handler before this hook fires.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		if ( isset( $_POST['hezarfen_mss_settings'] ) && is_array( $_POST['hezarfen_mss_settings'] ) ) {
-			$mss_settings = $this->sanitize_settings_recursively( $_POST['hezarfen_mss_settings'] );
+			$mss_settings = $this->sanitize_settings_recursively( wp_unslash( $_POST['hezarfen_mss_settings'] ) );
 			update_option( 'hezarfen_mss_settings', $mss_settings );
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 	
 	/**
@@ -457,8 +460,14 @@ class Contracts_Settings {
 						const selectedPageId = $select.val();
 						
 						if (selectedPageId && selectedPageId !== '') {
-							// Get the WordPress admin edit URL for the page
-							const editUrl = '<?php echo admin_url("post.php?action=edit&post="); ?>' + selectedPageId;
+							// `esc_url()` HTML-entity-encodes `&` to `&#038;`, which is correct
+							// for an HTML attribute but breaks this JS string literal: the resulting
+							// href ends up as `post.php?action=edit&#038;post=<id>`, the browser parses
+							// `#038;` as a fragment, drops the `post` query param, and lands the user
+							// on the post listing instead of the edit screen. Use `wp_json_encode()`
+							// here — that's the canonical "embed a PHP value into a <script>" escape
+							// and it preserves `&` as-is inside a quoted JS string.
+							const editUrl = <?php echo wp_json_encode( admin_url( 'post.php?action=edit&post=' ) ); ?> + selectedPageId;
 							$link.attr('href', editUrl).show();
 						} else {
 							$link.hide();

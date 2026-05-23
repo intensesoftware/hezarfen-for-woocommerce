@@ -18,7 +18,27 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  matrix:
+    # Build the PHP matrix dynamically: the full sweep on `develop`
+    # (push + workflow_dispatch from that branch), only PHP 8.2 on
+    # everything else (feature-branch PRs, release PRs into master,
+    # ad-hoc dispatches from other branches). Keeps CI minutes sane on
+    # day-to-day work while still catching version drift before code
+    # lands on develop.
+    runs-on: ubuntu-latest
+    outputs:
+      php-versions: ${{ steps.set.outputs.php-versions }}
+    steps:
+      - id: set
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/develop" ]; then
+            echo 'php-versions=["7.4","8.0","8.1","8.2","8.3","8.4"]' >> "$GITHUB_OUTPUT"
+          else
+            echo 'php-versions=["8.2"]' >> "$GITHUB_OUTPUT"
+          fi
+
   playwright:
+    needs: matrix
     # Pinned to 22.04 because Playwright 1.43's `--with-deps` installer
     # asks for the pre-time_t-transition package name `libasound2`,
     # which Ubuntu 24.04 (noble) replaced with `libasound2t64`.
@@ -28,7 +48,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
+        php-version: ${{ fromJSON(needs.matrix.outputs.php-versions) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

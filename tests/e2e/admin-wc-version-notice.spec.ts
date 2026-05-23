@@ -1,0 +1,156 @@
+import { expect, test } from '@playwright/test';
+import { loginAsAdmin } from './helpers/auth';
+import { deleteMuPlugin, writeMuPlugin } from './helpers/mu-plugin';
+import { wp } from './helpers/wp-cli';
+import {
+	applyOptions,
+	restoreOptions,
+	snapshotOptions,
+} from './helpers/wp-options';
+
+/**
+ * `hezarfen_wc_version_notice()` (in
+ * [hezarfen-for-woocommerce.php](../../hezarfen-for-woocommerce.php))
+ * is hooked on `admin_notices` whenever the active WooCommerce version
+ * is below `WC_HEZARFEN_MIN_WC_VERSION`. The notice uses a translated
+ * format string with three positional placeholders — plugin name,
+ * minimum version, current version — and wraps the plugin name in a
+ * `<strong>` tag so it reads as headline text.
+ *
+ * The pitfall here is that any sanitizer applied to the format string
+ * (e.g., to make PHPCS happy) can strip the `<strong>` tag or eat the
+ * placeholder tokens, leaving the admin with a half-rendered notice
+ * like "<strong></strong> requires WooCommerce version  or higher."
+ *
+ * Drive the notice unconditionally via a tiny mu-plugin so we can
+ * assert the rendered HTML without having to roll back WooCommerce to
+ * an old version on the test site.
+ */
+const MU_SLUG = 'hezarfen-e2e-force-wc-version-notice';
+const FLAG_OPTION = 'hezarfen_e2e_force_wc_version_notice';
+let snapshot: Record< string, string >;
+
+test.describe( 'Hezarfen WC sürüm uyarı bandı render bütünlüğü', () => {
+	test.beforeAll( () => {
+		// The assertions below grep for the English source of the
+		// notice format string. The site locale and which `.mo` files
+		// are loaded are environment-dependent (dev runs in `tr_TR`
+		// with the plugin translation loaded; CI runs in `en_US`
+		// without it). To make the test portable we override the
+		// specific gettext lookup right inside the mu-plugin, so the
+		// notice always renders against the English source regardless
+		// of which translation files happen to be on disk.
+		writeMuPlugin(
+			MU_SLUG,
+			`<?php
+defined( 'ABSPATH' ) || exit;
+
+if ( 'yes' !== get_option( 'hezarfen_e2e_force_wc_version_notice' ) ) {
+	return;
+}
+
+// Marker: tests probe this via wp eval to confirm the mu-plugin
+// actually loaded in the environment under test.
+function hezarfen_e2e_wc_version_notice_loaded() { return true; }
+
+add_filter(
+	'gettext',
+	function ( $translation, $text, $domain ) {
+		if (
+			'hezarfen-for-woocommerce' === $domain
+			&& '<strong>%1$s</strong> requires WooCommerce version %2$s or higher. You are running version %3$s. Please update WooCommerce.' === $text
+		) {
+			return $text;
+		}
+		return $translation;
+	},
+	10,
+	3
+);
+
+add_action(
+	'admin_notices',
+	function () {
+		if ( function_exists( 'hezarfen_wc_version_notice' ) ) {
+			hezarfen_wc_version_notice();
+		}
+	},
+	1
+);`
+		);
+
+		snapshot = snapshotOptions( [ FLAG_OPTION ] );
+		applyOptions( { [ FLAG_OPTION ]: 'yes' } );
+	} );
+	test.afterAll( () => {
+		restoreOptions( snapshot );
+		deleteMuPlugin( MU_SLUG );
+	} );
+
+	test( 'uyarı placeholder\'ları gerçek sürüm değerleriyle ve <strong> ile render ediliyor', async ( {
+		page,
+	} ) => {
+		// Probe whether the force-render mu-plugin is actually loaded.
+		// The notice is gated server-side on WC version being below the
+		// minimum; the test fixture force-fires it via a mu-plugin
+		// hooked on `admin_notices`. If runtime-written mu-plugins
+		// aren't being picked up in this environment, the notice never
+		// renders and we'd false-fail on a fixture-load issue that's
+		// orthogonal to the format-string regression we're guarding.
+		// The mu-plugin defines a marker function we can check via
+		// `function_exists` — that's more reliable than probing the
+		// hook directly (the registered callback is an anonymous
+		// closure, not the named `hezarfen_wc_version_notice`).
+		const markerLoaded = wp( [
+			'eval',
+			"echo function_exists( 'hezarfen_e2e_wc_version_notice_loaded' ) ? '1' : '0';",
+		] ).trim();
+		test.skip(
+			markerLoaded !== '1',
+			`Fixture mu-plugin ${ MU_SLUG } not active — marker function missing. Skipping notice render check.`
+		);
+
+		await loginAsAdmin( page );
+		await page.goto( '/wp-admin/' );
+
+		const notice = page
+			.locator( '.notice.notice-error' )
+			.filter( { hasText: /requires WooCommerce version/i } );
+		// Assert the notice is in the DOM but stop short of
+		// `toBeVisible()` — on some admin screens (WC setup wizard
+		// overlays, screen-options collapsed states) the notice
+		// element renders but is CSS-hidden by ancestor rules. The
+		// regression we want to catch is about the rendered markup
+		// (placeholders + `<strong>`), which we can read off
+		// `textContent` regardless of visibility.
+		await expect( notice ).toHaveCount( 1, { timeout: 20_000 } );
+
+		// `<strong>Hezarfen</strong>` is the headline wrapper around
+		// the plugin name. If wp_kses_post drops `<strong>` from the
+		// allowed-tags list the headline collapses into the body text.
+		await expect( notice.locator( 'strong' ) ).toHaveText( 'Hezarfen' );
+
+		const text = ( await notice.textContent() ) ?? '';
+
+		// Three positional placeholders must each resolve to a real
+		// value. A `printf` regression that loses `%2$s` or `%3$s`
+		// would leave them as literal "%s" tokens in the output.
+		expect( text ).not.toContain( '%s' );
+		expect( text ).not.toContain( '%1$s' );
+		expect( text ).not.toContain( '%2$s' );
+		expect( text ).not.toContain( '%3$s' );
+
+		// `WC_HEZARFEN_MIN_WC_VERSION` follows semver (e.g. 6.9.0).
+		// We don't pin the literal value — that drifts as we bump the
+		// floor — but we do assert that the rendered body contains a
+		// version-looking number in both the "requires …" and
+		// "running …" positions.
+		expect( text ).toMatch(
+			/requires WooCommerce version\s+\d+\.\d+(?:\.\d+)?/i
+		);
+		expect( text ).toMatch(
+			/running version\s+\d+\.\d+(?:\.\d+)?/i
+		);
+		expect( text ).toMatch( /Please update WooCommerce/i );
+	} );
+} );
