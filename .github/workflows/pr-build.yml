@@ -33,13 +33,6 @@ jobs:
       - name: Install Composer dependencies (production)
         run: composer install -o --no-dev --no-progress
 
-      - name: Install WP-CLI + dist-archive
-        run: |
-          curl -sO https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-          chmod +x wp-cli.phar
-          sudo mv wp-cli.phar /usr/local/bin/wp
-          wp package install wp-cli/dist-archive-command:@stable
-
       - name: Compute build metadata
         id: meta
         env:
@@ -57,8 +50,13 @@ jobs:
         env:
           ZIP_NAME: ${{ steps.meta.outputs.zip_name }}
         run: |
-          wp dist-archive . "${ZIP_NAME}.zip"
+          PACKAGE_DIR=$(mktemp -d)
+          mkdir -p "$PACKAGE_DIR/hezarfen-for-woocommerce"
+          rsync -a --exclude-from=.distignore ./ "$PACKAGE_DIR/hezarfen-for-woocommerce/"
+          (cd "$PACKAGE_DIR" && zip -rq "${GITHUB_WORKSPACE}/${ZIP_NAME}.zip" hezarfen-for-woocommerce)
           ls -lh "${ZIP_NAME}.zip"
+          echo "--- top-level entries in zip ---"
+          unzip -l "${ZIP_NAME}.zip" | head -20
 
       - name: Upload artifact
         id: upload
