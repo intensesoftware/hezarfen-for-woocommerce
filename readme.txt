@@ -265,7 +265,7 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 
 == Changelog ==
 = 2.11.5 - 2026-05-23 =
-* fix(phpcs): kritik PHPCS hatalarını gider
+* Eklenti kod kalitesi ve güvenlik kontrolleri iyileştirildi.
 
 = 2.11.4 - 2026-05-22 =
 * fix(hepsijet-label): 100mm kolona sığacak şekilde font küçültme ve sol kolon hücre sınırlama
