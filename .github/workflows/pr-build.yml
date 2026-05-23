@@ -41,29 +41,23 @@ jobs:
         run: |
           VERSION=$(grep -E '^[[:space:]]*\*[[:space:]]*Version:' hezarfen-for-woocommerce.php | head -1 | sed -E 's/.*Version:[[:space:]]*//' | tr -d '[:space:]')
           SHORT_SHA=${HEAD_SHA::7}
-          ZIP_NAME="hezarfen-for-woocommerce-pr${PR_NUMBER}-${SHORT_SHA}"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "short_sha=$SHORT_SHA" >> "$GITHUB_OUTPUT"
-          echo "zip_name=$ZIP_NAME" >> "$GITHUB_OUTPUT"
 
-      - name: Build dist zip
-        env:
-          ZIP_NAME: ${{ steps.meta.outputs.zip_name }}
+      - name: Stage plugin package
         run: |
-          PACKAGE_DIR=$(mktemp -d)
-          mkdir -p "$PACKAGE_DIR/hezarfen-for-woocommerce"
-          rsync -a --exclude-from=.distignore ./ "$PACKAGE_DIR/hezarfen-for-woocommerce/"
-          (cd "$PACKAGE_DIR" && zip -rq "${GITHUB_WORKSPACE}/${ZIP_NAME}.zip" hezarfen-for-woocommerce)
-          ls -lh "${ZIP_NAME}.zip"
-          echo "--- top-level entries in zip ---"
-          unzip -l "${ZIP_NAME}.zip" | head -20
+          rm -rf package
+          mkdir -p package/hezarfen-for-woocommerce
+          rsync -a --exclude-from=.distignore ./ package/hezarfen-for-woocommerce/
+          echo "--- package tree (top level) ---"
+          ls -la package/hezarfen-for-woocommerce/ | head -25
 
       - name: Upload artifact
         id: upload
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.meta.outputs.zip_name }}
-          path: ${{ steps.meta.outputs.zip_name }}.zip
+          name: hezarfen-for-woocommerce
+          path: package
           retention-days: 14
           if-no-files-found: error
 
@@ -78,8 +72,10 @@ jobs:
 
             **İndirme:**
             - [Artifact sayfası (GitHub login gerekir)](${{ steps.upload.outputs.artifact-url }})
-            - [Direkt zip (nightly.link, login gerektirmez)](https://nightly.link/${{ github.repository }}/actions/runs/${{ github.run_id }}/${{ steps.meta.outputs.zip_name }}.zip)
+            - [Direkt zip (nightly.link, login gerektirmez)](https://nightly.link/${{ github.repository }}/actions/runs/${{ github.run_id }}/hezarfen-for-woocommerce.zip)
 
-            > İndirilen wrapper zip'i bir kez aç → içindeki `${{ steps.meta.outputs.zip_name }}.zip` dosyasını WordPress > Eklentiler > Yeni Ekle > Eklenti Yükle ile kurabilirsin.
+            > **Kurulum:** İndirdiğin `hezarfen-for-woocommerce.zip` dosyasını **açmadan** WordPress > Eklentiler > Yeni Ekle > Eklenti Yükle ile direkt yükle — zip içinde plugin klasörü kök seviyede.
+            >
+            > Lokal açacaksan içinden `hezarfen-for-woocommerce/` klasörü çıkar; bunu `wp-content/plugins/` altına kopyalayabilirsin.
             >
             > Bu yorum her yeni commit'te güncellenir. Build istemiyorsan PR'a `skip-build` label'ı ekle.
