@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 7.0
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.11.4
+Stable tag: 2.11.5
 
 WooCommerce Kargo Takip eklentisi: ücretsiz Hepsijet entegrasyonu, 23 kargo firması, NetGSM SMS, Mesafeli Satış Sözleşmesi, mahalle seçimi.
 == Description ==
@@ -264,6 +264,9 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
+= 2.11.5 - 2026-05-23 =
+* fix(phpcs): kritik PHPCS hatalarını gider
+
 = 2.11.4 - 2026-05-22 =
 * fix(hepsijet-label): 100mm kolona sığacak şekilde font küçültme ve sol kolon hücre sınırlama
 
