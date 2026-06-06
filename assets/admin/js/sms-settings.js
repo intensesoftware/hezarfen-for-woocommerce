@@ -1036,14 +1036,21 @@ jQuery(document).ready(function($) {
 		const titleColor = success ? '#1e7e34' : '#8a1f1f';
 		const icon = success ? '✓' : '✕';
 
-		// On success just confirm it was sent. On failure show the reason so the
-		// problem can be diagnosed.
-		const detail = success ? '' : (description || '');
+		// Show both the NetGSM code and its description.
+		const codeLabel = smsStrings.label_netgsm_code || 'NetGSM kodu';
+		let detail = '';
+		if (data.code && description) {
+			detail = escapeHtml(codeLabel) + ' ' + escapeHtml(data.code) + ' — ' + escapeHtml(description);
+		} else if (description) {
+			detail = escapeHtml(description);
+		} else if (data.code) {
+			detail = escapeHtml(codeLabel) + ' ' + escapeHtml(data.code);
+		}
 
 		$container.html(
 			'<div style="padding: 12px 14px; background: ' + bg + '; border: 1px solid ' + border + '; border-radius: 6px;">' +
 				'<p style="margin: 0; font-weight: 600; color: ' + titleColor + ';">' + icon + ' ' + escapeHtml(title) + '</p>' +
-				(detail ? '<p style="margin: 8px 0 0 0; color: #1d2327;">' + escapeHtml(detail) + '</p>' : '') +
+				(detail ? '<p style="margin: 8px 0 0 0; color: #1d2327;">' + detail + '</p>' : '') +
 			'</div>'
 		).show();
 	}

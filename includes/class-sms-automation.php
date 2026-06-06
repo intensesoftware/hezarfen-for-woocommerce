@@ -916,8 +916,16 @@ class SMS_Automation {
 		$response_code = wp_remote_retrieve_response_code( $response );
 		$response_body = wp_remote_retrieve_body( $response );
 
-		// Handle HTTP status codes
+		// NetGSM's v2 API can return a meaningful code in the body even with a
+		// non-200 HTTP status (e.g. 406 + {"code":"40"} for an invalid header).
+		// Prefer that code so the user sees the precise reason; only fall back to
+		// a generic HTTP-level message when the body carries no usable code.
 		if ( $response_code !== 200 ) {
+			$json = json_decode( trim( (string) $response_body ), true );
+			if ( json_last_error() === JSON_ERROR_NONE && is_array( $json ) && isset( $json['code'] ) ) {
+				return $this->handle_netgsm_json_response( $json, $response_code );
+			}
+
 			$http_description = $response_code === 406
 				? 'NetGSM isteği reddetti (HTTP 406). Kullanıcı bilgileriniz, gönderici adınız veya mesaj içeriği geçersiz olabilir.'
 				: sprintf( 'NetGSM API beklenmeyen bir HTTP durumu döndürdü: %d', $response_code );
@@ -939,15 +947,25 @@ class SMS_Automation {
 	 * @param int|null    $http_code   HTTP status code.
 	 * @return array
 	 */
-	private static function netgsm_result( $success, $code, $jobid, $description = '', $http_code = 200 ) {
-		if ( '' === $description ) {
-			$description = self::get_netgsm_code_message( $code );
+	private static function netgsm_result( $success, $code, $jobid, $api_description = '', $http_code = 200 ) {
+		$code = (string) $code;
+		$map  = self::netgsm_code_messages();
+
+		// Prefer our documented Turkish description for known codes. NetGSM's own
+		// "description" field is terse/technical (e.g. "queued", "invalidHeader"),
+		// so it is only used as a fallback for codes we don't have a message for.
+		if ( isset( $map[ $code ] ) ) {
+			$description = $map[ $code ];
+		} elseif ( '' !== $api_description ) {
+			$description = $api_description;
+		} else {
+			$description = sprintf( 'NetGSM bilinmeyen bir yanıt döndürdü (Kod: %s).', $code );
 		}
 
 		return array(
 			'success'     => $success,
 			'jobid'       => $jobid,
-			'code'        => (string) $code,
+			'code'        => $code,
 			'description' => $description,
 			'http_code'   => $http_code,
 		);
@@ -960,29 +978,39 @@ class SMS_Automation {
 	 * @return string
 	 */
 	public static function get_netgsm_code_message( $code ) {
-		// NetGSM messages are shown in Turkish regardless of site locale, since
-		// the provider and its documentation are Turkish.
-		$messages = array(
-			'00'  => 'Görev başarıyla oluşturuldu. SMS gönderim için sıraya alındı.',
-			'01'  => 'Mesaj gönderim başlangıç tarihinde hata var; sistem tarihiyle değiştirilip işleme alındı.',
-			'02'  => 'Mesaj gönderim sonlandırma tarihinde hata var; sistem tarihiyle değiştirilip işleme alındı.',
-			'20'  => 'Mesaj metninde veya gönderilen parametrelerde sorun var. Karakter sınırı aşılmış olabilir.',
-			'30'  => 'Geçersiz kullanıcı adı/şifre ya da API erişim izniniz yok. IP adresiniz API erişimine yetkili olmayabilir.',
-			'40'  => 'Gönderici adınız (mesaj başlığınız) sistemde tanımlı değil.',
-			'50'  => 'Aboneliğiniz İYS kontrollü gönderime kapalı. İYS\'ye kayıtlı olmayan aboneliklerden gönderim yapılamaz.',
-			'51'  => 'Aboneliğinize ait İYS marka bilgisi bulunamadı.',
-			'70'  => 'Hatalı veya eksik parametre gönderdiniz. Gönderdiğiniz değerleri kontrol edin.',
+		$map  = self::netgsm_code_messages();
+		$code = (string) $code;
+
+		return $map[ $code ] ?? sprintf( 'NetGSM bilinmeyen bir yanıt döndürdü (Kod: %s).', $code );
+	}
+
+	/**
+	 * NetGSM SMS sending response code => human readable (Turkish) description.
+	 *
+	 * Descriptions follow the official NetGSM SMS sending documentation
+	 * (netgsm.com.tr/dokuman). Messages are always Turkish since the provider
+	 * and its documentation are Turkish.
+	 *
+	 * @return array<string, string>
+	 */
+	private static function netgsm_code_messages() {
+		return array(
+			// Success codes.
+			'00'  => 'Görev başarıyla oluşturuldu.',
+			'01'  => 'Görev oluşturuldu; mesaj gönderim başlangıç tarihinde hata olduğu için sistem tarihiyle işleme alındı.',
+			'02'  => 'Görev oluşturuldu; mesaj gönderim bitiş tarihinde hata olduğu için sistem tarihiyle işleme alındı.',
+			// Error codes (resmi dokümandaki açıklamalar).
+			'20'  => 'Mesaj metnindeki problemden dolayı gönderilemedi veya standart maksimum mesaj karakter sayısını geçtiniz.',
+			'30'  => 'Geçersiz kullanıcı adı, şifre veya API erişim izniniz yok. API erişiminizde IP sınırlaması varsa, sınırladığınız IP dışından gönderimde de bu kodu alırsınız.',
+			'40'  => 'Mesaj başlığınız (gönderici adınız) sistemde tanımlı değil. Gönderici adlarınızı API ile sorgulayarak kontrol edebilirsiniz.',
+			'50'  => 'Abone hesabınız ile İYS kontrollü gönderimler yapılamamaktadır.',
+			'51'  => 'Aboneliğinize tanımlı İYS Marka bilgisi bulunamadı.',
+			'70'  => 'Hatalı sorgulama. Gönderdiğiniz parametrelerden biri hatalı veya zorunlu alanlardan biri eksik.',
 			'80'  => 'Gönderim sınır aşımı.',
-			'85'  => 'Mükerrer gönderim sınır aşımı. Aynı numaraya 1 dakikada en fazla 20 görev oluşturabilirsiniz.',
+			'85'  => 'Mükerrer gönderim sınır aşımı. Aynı numaraya 1 dakika içerisinde 20\'den fazla görev oluşturulamaz.',
 			'100' => 'Sistem hatası. Lütfen daha sonra tekrar deneyin.',
 			'101' => 'Sistem hatası. Lütfen daha sonra tekrar deneyin.',
 		);
-
-		if ( isset( $messages[ $code ] ) ) {
-			return $messages[ $code ];
-		}
-
-		return sprintf( 'NetGSM bilinmeyen bir yanıt döndürdü (Kod: %s).', $code );
 	}
 
 	/**
@@ -1486,18 +1514,12 @@ class SMS_Automation {
 		$result = $this->send_netgsm_sms( $data, $username, $password );
 
 		// Test results are intentionally NOT persisted to the SMS log; they are
-		// only returned for display right below the test button.
-
-		// When NetGSM accepts the message (queued), show it directly as success
-		// with a clean message instead of the technical "queued" wording.
-		$description = $result['success']
-			? 'Test SMS başarıyla NetGSM\'e iletildi.'
-			: ( $result['description'] ?? '' );
-
+		// only returned for display right below the test button. Both the NetGSM
+		// code and its description are returned so the UI can show both.
 		$payload = array(
 			'success'     => (bool) $result['success'],
 			'code'        => $result['code'] ?? '',
-			'description' => $description,
+			'description' => $result['description'] ?? '',
 			'jobid'       => $result['jobid'] ?? null,
 			'phone'       => $phone,
 			'message'     => $message,
