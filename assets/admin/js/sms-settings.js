@@ -21,6 +21,37 @@ jQuery(document).ready(function($) {
 	// Sub-tabs (NetGSM Connection / Test Gönderimi / SMS Şablon-Mesaj Ayarları)
 	initSmsSubTabs();
 
+	// SMS provider (company) selector
+	initSmsProvider();
+
+	function initSmsProvider() {
+		const $select = $('#hezarfen-sms-provider');
+		if (!$select.length) {
+			return;
+		}
+
+		function apply(provider) {
+			$('.hez-provider-row').hide();
+			$('.hez-provider-row[data-provider="' + provider + '"]').show();
+		}
+
+		apply($select.val());
+
+		$select.on('change', function() {
+			const provider = $(this).val();
+			apply(provider);
+			$.ajax({
+				url: hezarfen_sms_settings.ajax_url,
+				type: 'POST',
+				data: {
+					action: 'hezarfen_set_sms_provider',
+					nonce: hezarfen_sms_settings.nonce,
+					provider: provider
+				}
+			});
+		});
+	}
+
 	function initSmsSubTabs() {
 		const $tabs = $('.hezarfen-sms-tab');
 		if (!$tabs.length) {

@@ -27,6 +27,41 @@ class SMS_Automation {
 		add_action( 'wp_ajax_hezarfen_get_netgsm_senders', array( $this, 'ajax_get_netgsm_senders' ) );
 		add_action( 'wp_ajax_hezarfen_test_netgsm', array( $this, 'ajax_test_netgsm' ) );
 		add_action( 'wp_ajax_hezarfen_set_netgsm_header', array( $this, 'ajax_set_netgsm_header' ) );
+		add_action( 'wp_ajax_hezarfen_set_sms_provider', array( $this, 'ajax_set_sms_provider' ) );
+	}
+
+	/**
+	 * Get the selected SMS provider for the connection screen.
+	 *
+	 * This is a UI preference for which provider's connection settings are shown.
+	 * Actual sending is still decided per rule (action_type).
+	 *
+	 * @return string
+	 */
+	public static function get_sms_provider() {
+		$provider = get_option( 'hezarfen_sms_provider', 'netgsm' );
+		return in_array( $provider, array( 'netgsm', 'pandasms' ), true ) ? $provider : 'netgsm';
+	}
+
+	/**
+	 * AJAX handler that stores the selected SMS provider.
+	 *
+	 * @return void
+	 */
+	public function ajax_set_sms_provider() {
+		check_ajax_referer( 'hezarfen_sms_settings_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_send_json_error( array( 'message' => 'Bu işlemi yapmaya yetkiniz yok.' ) );
+		}
+
+		$provider = sanitize_text_field( wp_unslash( $_POST['provider'] ?? '' ) );
+		if ( ! in_array( $provider, array( 'netgsm', 'pandasms' ), true ) ) {
+			wp_send_json_error( array( 'message' => 'Geçersiz sağlayıcı.' ) );
+		}
+
+		update_option( 'hezarfen_sms_provider', $provider );
+		wp_send_json_success( array( 'provider' => $provider ) );
 	}
 
 	/**

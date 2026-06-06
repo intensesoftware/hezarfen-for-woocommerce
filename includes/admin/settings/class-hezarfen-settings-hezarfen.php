@@ -28,7 +28,9 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		$this->label = 'Hezarfen';
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_and_styles' ) );
+		add_action( 'woocommerce_admin_field_sms_provider_select', array( $this, 'output_sms_provider_select' ) );
 		add_action( 'woocommerce_admin_field_netgsm_connection_status', array( $this, 'output_netgsm_connection_status' ) );
+		add_action( 'woocommerce_admin_field_pandasms_connection_info', array( $this, 'output_pandasms_connection_info' ) );
 		add_action( 'woocommerce_admin_field_sms_rules_button', array( $this, 'output_sms_rules_button' ) );
 		add_action( 'woocommerce_admin_field_netgsm_test_connection', array( $this, 'output_netgsm_test_connection' ) );
 		add_action( 'woocommerce_admin_field_roadmap_voting', array( $this, 'output_roadmap_voting' ) );
@@ -473,10 +475,16 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	private function get_sms_connection_fields() {
 		return array(
 			array(
-				'title' => 'NetGSM Bağlantısı',
+				'title' => 'SMS Sağlayıcısı',
 				'type'  => 'title',
-				'desc'  => 'NetGSM hesabınızı bağlayarak SMS gönderimini etkinleştirin.',
-				'id'    => 'hezarfen_netgsm_connection_card',
+				'desc'  => 'SMS göndermek istediğiniz firmayı seçin ve bağlantısını kurun.',
+				'id'    => 'hezarfen_sms_provider_card',
+			),
+			array(
+				'title' => 'SMS Firması',
+				'type'  => 'sms_provider_select',
+				'desc'  => '',
+				'id'    => 'hezarfen_sms_provider',
 			),
 			array(
 				'title'   => __( 'NetGSM Connection', 'hezarfen-for-woocommerce' ),
@@ -485,8 +493,14 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				'id'      => 'hezarfen_netgsm_connection_status',
 			),
 			array(
+				'title'   => 'PandaSMS',
+				'type'    => 'pandasms_connection_info',
+				'desc'    => '',
+				'id'      => 'hezarfen_pandasms_connection_info',
+			),
+			array(
 				'type' => 'sectionend',
-				'id'   => 'hezarfen_netgsm_connection_card_end',
+				'id'   => 'hezarfen_sms_provider_card_end',
 			),
 		);
 	}
@@ -559,7 +573,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 */
 	public function output_netgsm_connection_status( $value ) {
 		?>
-		<tr valign="top">
+		<tr valign="top" class="hez-provider-row" data-provider="netgsm">
 			<th scope="row" class="titledesc">
 				<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 			</th>
@@ -617,6 +631,72 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				</div>
 
 				<p class="description"><?php echo esc_html( $value['desc'] ?? '' ); ?></p>
+			</td>
+		</tr>
+		<?php
+	}
+
+	/**
+	 * Output the SMS provider (company) selector.
+	 *
+	 * @param array $value Field data.
+	 * @return void
+	 */
+	public function output_sms_provider_select( $value ) {
+		$provider = class_exists( 'SMS_Automation' ) ? SMS_Automation::get_sms_provider() : 'netgsm';
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label for="hezarfen-sms-provider"><?php echo esc_html( $value['title'] ); ?></label>
+			</th>
+			<td class="forminp">
+				<select id="hezarfen-sms-provider" style="min-width: 260px;">
+					<option value="netgsm" <?php selected( $provider, 'netgsm' ); ?>>NetGSM</option>
+					<option value="pandasms" <?php selected( $provider, 'pandasms' ); ?>>PandaSMS (yakında kaldırılacak)</option>
+				</select>
+				<p class="description"><?php esc_html_e( 'Select the SMS company you want to use.', 'hezarfen-for-woocommerce' ); ?></p>
+			</td>
+		</tr>
+		<?php
+	}
+
+	/**
+	 * Output the PandaSMS info row (legacy provider, configured via its own plugin).
+	 * Kept intentionally simple, like before, plus a deprecation notice.
+	 *
+	 * @param array $value Field data.
+	 * @return void
+	 */
+	public function output_pandasms_connection_info( $value ) {
+		$is_ready = \Hezarfen\ManualShipmentTracking\Pandasms::is_plugin_ready();
+		?>
+		<tr valign="top" class="hez-provider-row" data-provider="pandasms">
+			<th scope="row" class="titledesc">
+				<label><?php echo esc_html( $value['title'] ); ?></label>
+			</th>
+			<td class="forminp">
+				<div style="background: #fff2cd; border: 1px solid #f39c12; border-radius: 4px; padding: 12px; margin-bottom: 15px; max-width: 560px;">
+					<p style="margin: 0; color: #856404; font-weight: 600;">
+						⚠️ <?php esc_html_e( 'The PandaSMS integration will be removed soon. We recommend using NetGSM.', 'hezarfen-for-woocommerce' ); ?>
+					</p>
+				</div>
+				<div style="max-width: 560px; padding: 15px; background: #fff; border: 1px solid <?php echo $is_ready ? '#0073aa' : '#d63638'; ?>; border-radius: 6px;">
+					<h4 style="margin: 0 0 15px 0; color: <?php echo $is_ready ? '#0073aa' : '#d63638'; ?>;"><?php esc_html_e( 'PandaSMS Configuration', 'hezarfen-for-woocommerce' ); ?></h4>
+					<?php if ( $is_ready ) : ?>
+						<p class="description" style="margin-top: 10px;">
+							<?php esc_html_e( 'PandaSMS message content is configured in the PandaSMS plugin settings. This integration will use the trigger "Sipariş kargoya verildiğinde" with shipment variables.', 'hezarfen-for-woocommerce' ); ?>
+						</p>
+					<?php else : ?>
+						<div style="background: #fff2cd; border: 1px solid #f39c12; border-radius: 4px; padding: 12px;">
+							<p style="margin: 0; color: #856404; font-weight: 500;">
+								⚠️ <?php esc_html_e( 'Warning: PandaSMS plugin is not active!', 'hezarfen-for-woocommerce' ); ?>
+							</p>
+							<p style="margin: 8px 0 0 0; color: #856404;">
+								<?php esc_html_e( 'Please install and activate the PandaSMS plugin to use this SMS integration.', 'hezarfen-for-woocommerce' ); ?>
+							</p>
+						</div>
+					<?php endif; ?>
+				</div>
 			</td>
 		</tr>
 		<?php
@@ -985,7 +1065,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 */
 	private function output_sms_settings_tabs() {
 		$tabs = array(
-			'connection' => 'NetGSM Bağlantısı',
+			'connection' => 'SMS Sağlayıcısı',
 			'test'       => 'Test Gönderimi',
 			'template'   => 'SMS Şablon/Mesaj Ayarları',
 		);
