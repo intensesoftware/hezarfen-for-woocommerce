@@ -1061,15 +1061,20 @@ jQuery(document).ready(function($) {
 		const titleColor = success ? '#1e7e34' : '#8a1f1f';
 		const icon = success ? '✓' : '✕';
 
-		// Show both the NetGSM code and its description.
-		const codeLabel = smsStrings.label_netgsm_code || 'NetGSM kodu';
+		// On success the green title ("Test SMS başarıyla gönderildi") is enough.
+		// On failure show the NetGSM code and its description for diagnosis.
 		let detail = '';
-		if (data.code && description) {
-			detail = escapeHtml(codeLabel) + ' ' + escapeHtml(data.code) + ' — ' + escapeHtml(description);
-		} else if (description) {
-			detail = escapeHtml(description);
-		} else if (data.code) {
-			detail = escapeHtml(codeLabel) + ' ' + escapeHtml(data.code);
+		if (success) {
+			detail = 'Mesaj alıcıya gönderildi.';
+		} else {
+			const codeLabel = smsStrings.label_netgsm_code || 'NetGSM kodu';
+			if (data.code && description) {
+				detail = escapeHtml(codeLabel) + ' ' + escapeHtml(data.code) + ' — ' + escapeHtml(description);
+			} else if (description) {
+				detail = escapeHtml(description);
+			} else if (data.code) {
+				detail = escapeHtml(codeLabel) + ' ' + escapeHtml(data.code);
+			}
 		}
 
 		// On code 40 (sender name not registered) help the user: list the sender
