@@ -475,13 +475,13 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	private function get_sms_connection_fields() {
 		return array(
 			array(
-				'title' => 'SMS Sağlayıcısı',
+				'title' => __( 'SMS Provider', 'hezarfen-for-woocommerce' ),
 				'type'  => 'title',
-				'desc'  => 'SMS göndermek istediğiniz firmayı seçin ve bağlantısını kurun.',
+				'desc'  => __( 'Choose the SMS company you want to use and set up its connection.', 'hezarfen-for-woocommerce' ),
 				'id'    => 'hezarfen_sms_provider_card',
 			),
 			array(
-				'title' => 'SMS Firması',
+				'title' => __( 'SMS Company', 'hezarfen-for-woocommerce' ),
 				'type'  => 'sms_provider_select',
 				'desc'  => '',
 				'id'    => 'hezarfen_sms_provider',
@@ -513,15 +513,15 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	private function get_sms_test_fields() {
 		return array(
 			array(
-				'title' => 'Test Gönderimi',
+				'title' => __( 'Test Sending', 'hezarfen-for-woocommerce' ),
 				'type'  => 'title',
-				'desc'  => 'Bir test SMS göndererek NetGSM bağlantınızı doğrulayın.',
+				'desc'  => __( 'Verify your NetGSM connection by sending a test SMS.', 'hezarfen-for-woocommerce' ),
 				'id'    => 'hezarfen_netgsm_test_card',
 			),
 			array(
-				'title'   => 'Test SMS',
+				'title'   => __( 'Test SMS', 'hezarfen-for-woocommerce' ),
 				'type'    => 'netgsm_test_connection',
-				'desc'    => 'NetGSM bağlantınızı doğrulamak için test SMS gönderin. Mesaj içeriği otomatik oluşturulur.',
+				'desc'    => __( 'Send a test SMS to verify your NetGSM connection. The message content is generated automatically.', 'hezarfen-for-woocommerce' ),
 				'id'      => 'hezarfen_netgsm_test_connection',
 			),
 			array(
@@ -539,7 +539,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	private function get_sms_template_fields() {
 		return array(
 			array(
-				'title' => 'SMS Şablon/Mesaj Ayarları',
+				'title' => __( 'SMS Template / Message Settings', 'hezarfen-for-woocommerce' ),
 				'type'  => 'title',
 				'desc'  => __( 'Configure SMS notifications for order status changes.', 'hezarfen-for-woocommerce' ),
 				'id'    => 'hezarfen_sms_settings_title',
@@ -652,7 +652,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			<td class="forminp">
 				<select id="hezarfen-sms-provider" style="min-width: 260px;">
 					<option value="netgsm" <?php selected( $provider, 'netgsm' ); ?>>NetGSM</option>
-					<option value="pandasms" <?php selected( $provider, 'pandasms' ); ?>>PandaSMS (yakında kaldırılacak)</option>
+					<option value="pandasms" <?php selected( $provider, 'pandasms' ); ?>>PandaSMS (<?php esc_html_e( 'will be removed soon', 'hezarfen-for-woocommerce' ); ?>)</option>
 				</select>
 				<p class="description"><?php esc_html_e( 'Select the SMS company you want to use.', 'hezarfen-for-woocommerce' ); ?></p>
 			</td>
@@ -684,7 +684,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					<h4 style="margin: 0 0 15px 0; color: <?php echo $is_ready ? '#0073aa' : '#d63638'; ?>;"><?php esc_html_e( 'PandaSMS Configuration', 'hezarfen-for-woocommerce' ); ?></h4>
 					<?php if ( $is_ready ) : ?>
 						<p class="description" style="margin-top: 10px;">
-							<?php esc_html_e( 'PandaSMS message content is configured in the PandaSMS plugin settings. This integration will use the trigger "Sipariş kargoya verildiğinde" with shipment variables.', 'hezarfen-for-woocommerce' ); ?>
+							<?php esc_html_e( 'PandaSMS message content is configured in the PandaSMS plugin settings.', 'hezarfen-for-woocommerce' ); ?>
 						</p>
 					<?php else : ?>
 						<div style="background: #fff2cd; border: 1px solid #f39c12; border-radius: 4px; padding: 12px;">
@@ -723,23 +723,23 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					<?php if ( ! $is_connected ) : ?>
 						<div style="padding: 10px 12px; background: #fcf0f1; border-left: 4px solid #d63638; border-radius: 4px;">
 							<p style="margin: 0; color: #8a1f1f;">
-								Test SMS göndermeden önce yukarıdan NetGSM hesabınızı bağlayın.
+								<?php esc_html_e( 'Connect your NetGSM account above before sending a test SMS.', 'hezarfen-for-woocommerce' ); ?>
 							</p>
 						</div>
 					<?php else : ?>
 						<div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-end;">
 							<div style="flex: 1; min-width: 220px;">
 								<label for="hezarfen-test-phone" style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px;">
-									Hedef telefon numarası
+									<?php esc_html_e( 'Destination phone number', 'hezarfen-for-woocommerce' ); ?>
 								</label>
 								<input type="tel" id="hezarfen-test-phone" class="regular-text" placeholder="5XXXXXXXXX" style="width: 100%;" />
 							</div>
 							<button type="button" id="hezarfen-send-test-sms" class="button button-primary">
-								Test SMS Gönder
+								<?php esc_html_e( 'Send Test SMS', 'hezarfen-for-woocommerce' ); ?>
 							</button>
 						</div>
 						<p class="description" style="margin-top: 8px;">
-							Test mesajı için NetGSM hesabınızdan standart ücret alınır.
+							<?php esc_html_e( 'A standard charge from your NetGSM account applies for the test message.', 'hezarfen-for-woocommerce' ); ?>
 						</p>
 						<div id="hezarfen-test-result" style="margin-top: 12px; display: none;"></div>
 					<?php endif; ?>
@@ -1065,9 +1065,9 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 */
 	private function output_sms_settings_tabs() {
 		$tabs = array(
-			'connection' => 'SMS Sağlayıcısı',
-			'test'       => 'Test Gönderimi',
-			'template'   => 'SMS Şablon/Mesaj Ayarları',
+			'connection' => __( 'SMS Provider', 'hezarfen-for-woocommerce' ),
+			'test'       => __( 'Test Sending', 'hezarfen-for-woocommerce' ),
+			'template'   => __( 'SMS Template / Message Settings', 'hezarfen-for-woocommerce' ),
 		);
 		?>
 		<h2 class="nav-tab-wrapper hezarfen-sms-tabs" style="margin-bottom: 16px;">
@@ -1705,7 +1705,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					'found_senders_multiple' => __( 'Found %d senders available', 'hezarfen-for-woocommerce' ),
 					'credentials_required' => __( 'Username and password are required', 'hezarfen-for-woocommerce' ),
 					'select_message_header' => __( 'Please select a message header', 'hezarfen-for-woocommerce' ),
-					'credentials_saved_successfully' => 'NetGSM bağlantısı doğrulandı ve kuruldu!',
+					'credentials_saved_successfully' => __( 'NetGSM connection verified and established!', 'hezarfen-for-woocommerce' ),
 					'failed_to_save_credentials' => __( 'Failed to save credentials', 'hezarfen-for-woocommerce' ),
 					'network_error_saving_credentials' => __( 'Network error occurred while saving credentials', 'hezarfen-for-woocommerce' ),
 					'password_min_length' => __( 'Password must be at least 6 characters', 'hezarfen-for-woocommerce' ),
@@ -1741,21 +1741,36 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					'iys_info' => __( 'Information (0)', 'hezarfen-for-woocommerce' ),
 					'iys_commercial' => __( 'Commercial (11)', 'hezarfen-for-woocommerce' ),
 					'available_variables' => __( 'Available Variables: {order_number}, {customer_name}, {order_status}, {order_total}', 'hezarfen-for-woocommerce' ),
-					// NetGSM Connection Status strings - Force Turkish for now
-					'connected_to_netgsm' => 'NetGSM\'e Bağlandı',
-					'change_credentials' => 'Bilgileri Değiştir',
-					'username_label' => 'Kullanıcı Adı',
-					'sender_label' => 'Gönderici',
-					// Test SMS strings - Force Turkish
-					'enter_test_phone'      => 'Test SMS için bir telefon numarası girin.',
-					'sending_test'          => 'Test SMS gönderiliyor…',
-					'test_success_title'    => 'Test SMS başarıyla gönderildi',
-					'test_failed_title'     => 'Test SMS gönderilemedi',
-					'test_network_error'    => 'Test SMS gönderilirken bir ağ hatası oluştu.',
-					'label_result'          => 'Sonuç',
-					'label_netgsm_code'     => 'NetGSM kodu',
-					'label_job_id'          => 'Görev No',
-					'label_sent_to'         => 'Gönderilen numara',
+					// NetGSM Connection Status strings
+					'connected_to_netgsm' => __( 'Connected to NetGSM', 'hezarfen-for-woocommerce' ),
+					'change_credentials' => __( 'Change Credentials', 'hezarfen-for-woocommerce' ),
+					'username_label' => __( 'Username', 'hezarfen-for-woocommerce' ),
+					'sender_label' => __( 'Sender', 'hezarfen-for-woocommerce' ),
+					// Test SMS strings
+					'enter_test_phone'      => __( 'Enter a phone number for the test SMS.', 'hezarfen-for-woocommerce' ),
+					'sending_test'          => __( 'Sending test SMS…', 'hezarfen-for-woocommerce' ),
+					'test_success_title'    => __( 'Test SMS sent successfully', 'hezarfen-for-woocommerce' ),
+					'test_failed_title'     => __( 'Test SMS could not be sent', 'hezarfen-for-woocommerce' ),
+					'test_network_error'    => __( 'A network error occurred while sending the test SMS.', 'hezarfen-for-woocommerce' ),
+					'label_result'          => __( 'Result', 'hezarfen-for-woocommerce' ),
+					'label_netgsm_code'     => __( 'NetGSM code', 'hezarfen-for-woocommerce' ),
+					'label_job_id'          => __( 'Job ID', 'hezarfen-for-woocommerce' ),
+					'label_sent_to'         => __( 'Sent to', 'hezarfen-for-woocommerce' ),
+					'message_sent_recipient'=> __( 'Message sent to the recipient.', 'hezarfen-for-woocommerce' ),
+					'registered_senders'    => __( 'Your registered sender names:', 'hezarfen-for-woocommerce' ),
+					'pick_sender_hint'      => __( 'Click a sender name and connect it with the Confirm button.', 'hezarfen-for-woocommerce' ),
+					'confirm_and_connect'   => __( 'Confirm & Connect', 'hezarfen-for-woocommerce' ),
+					'no_registered_senders' => __( 'You have no registered sender names. Please contact NetGSM to register a sender name (header).', 'hezarfen-for-woocommerce' ),
+					'sender_connected'      => __( 'Sender name connected.', 'hezarfen-for-woocommerce' ),
+					'test_again_hint'       => __( 'You can run the test again now.', 'hezarfen-for-woocommerce' ),
+					'sender_connect_failed' => __( 'Could not connect the sender name.', 'hezarfen-for-woocommerce' ),
+					'network_error'         => __( 'Network error.', 'hezarfen-for-woocommerce' ),
+					'connecting_short'      => __( 'Connecting…', 'hezarfen-for-woocommerce' ),
+					// Connection status box
+					'not_connected_title'   => __( 'NetGSM Account Not Connected', 'hezarfen-for-woocommerce' ),
+					'not_connected_desc'    => __( 'Fill in the form below to connect your NetGSM account and enable SMS sending.', 'hezarfen-for-woocommerce' ),
+					'not_member_title'      => __( 'Not a NetGSM member?', 'hezarfen-for-woocommerce' ),
+					'not_member_link'       => __( 'Click here to sign up for NetGSM →', 'hezarfen-for-woocommerce' ),
 				)
 			) );
 		}

@@ -629,15 +629,15 @@ jQuery(document).ready(function($) {
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
 				</svg>
 				<div>
-					<strong style="color: #856404;">NetGSM Hesabı Bağlı Değil</strong>
-					<p style="margin: 0; font-size: 12px; color: #856404;">Aşağıdaki formu doldurarak NetGSM hesabınızı bağlayın ve SMS gönderimini etkinleştirin</p>
+					<strong style="color: #856404;">${smsStrings.not_connected_title || 'NetGSM Account Not Connected'}</strong>
+					<p style="margin: 0; font-size: 12px; color: #856404;">${smsStrings.not_connected_desc || ''}</p>
 				</div>
 			</div>
 			<div style="margin-top: 10px; padding: 10px; background: #e7f3ff; border-left: 4px solid #2271b1; border-radius: 4px;">
 				<p style="margin: 0; font-size: 13px; color: #1d2327;">
-					<strong>📱 NetGSM Üyesi Değil misiniz?</strong><br>
+					<strong>📱 ${smsStrings.not_member_title || 'Not a NetGSM member?'}</strong><br>
 					<a href="http://intense.com.tr/netgsm-abonelik" target="_blank" rel="noopener noreferrer" style="color: #2271b1; text-decoration: none; font-weight: 500;">
-						Buraya tıklayarak NetGSM'e üye olabilirsiniz →
+						${smsStrings.not_member_link || 'Click here to sign up for NetGSM →'}
 					</a>
 				</p>
 			</div>
@@ -1086,7 +1086,7 @@ jQuery(document).ready(function($) {
 		}
 
 		const originalText = $btn.text();
-		$btn.prop('disabled', true).text(hezarfen_sms_settings.strings.connecting || 'Bağlanıyor…');
+		$btn.prop('disabled', true).text(smsStrings.connecting_short || 'Connecting…');
 
 		$.ajax({
 			url: hezarfen_sms_settings.ajax_url,
@@ -1100,19 +1100,19 @@ jQuery(document).ready(function($) {
 				if (response && response.success) {
 					$('#hezarfen-test-result').html(
 						'<div style="padding: 12px 14px; background: #edfaef; border: 1px solid #46b450; border-radius: 6px;">' +
-							'<p style="margin: 0; font-weight: 600; color: #1e7e34;">✓ ' + escapeHtml(response.data.message || 'Gönderici adı bağlandı.') + '</p>' +
-							'<p style="margin: 8px 0 0 0; color: #1d2327;">Artık yeniden test gönderebilirsiniz.</p>' +
+							'<p style="margin: 0; font-weight: 600; color: #1e7e34;">✓ ' + escapeHtml(response.data.message || smsStrings.sender_connected || 'Sender name connected.') + '</p>' +
+							'<p style="margin: 8px 0 0 0; color: #1d2327;">' + escapeHtml(smsStrings.test_again_hint || 'You can run the test again now.') + '</p>' +
 						'</div>'
 					).show();
 					loadNetGsmConnectionStatus();
 				} else {
 					$btn.prop('disabled', false).text(originalText);
-					alert((response && response.data && response.data.message) || 'Gönderici adı bağlanamadı.');
+					alert((response && response.data && response.data.message) || smsStrings.sender_connect_failed || 'Could not connect the sender name.');
 				}
 			},
 			error: function() {
 				$btn.prop('disabled', false).text(originalText);
-				alert(hezarfen_sms_settings.strings.network_error_saving_credentials || 'Ağ hatası.');
+				alert(smsStrings.network_error || 'Network error.');
 			}
 		});
 	});
@@ -1130,9 +1130,9 @@ jQuery(document).ready(function($) {
 		// On failure show the NetGSM code and its description for diagnosis.
 		let detail = '';
 		if (success) {
-			detail = 'Mesaj alıcıya gönderildi.';
+			detail = escapeHtml(smsStrings.message_sent_recipient || 'Message sent to the recipient.');
 		} else {
-			const codeLabel = smsStrings.label_netgsm_code || 'NetGSM kodu';
+			const codeLabel = smsStrings.label_netgsm_code || 'NetGSM code';
 			if (data.code && description) {
 				detail = escapeHtml(codeLabel) + ' ' + escapeHtml(data.code) + ' — ' + escapeHtml(description);
 			} else if (description) {
@@ -1152,15 +1152,15 @@ jQuery(document).ready(function($) {
 					return '<button type="button" class="hez-pick-header" data-header="' + escapeHtml(h) + '" style="display: inline-block; padding: 4px 10px; margin: 2px 6px 2px 0; border-radius: 4px; background: #fff; border: 1px solid #c3c4c7; font-weight: 600; font-size: 12px; cursor: pointer;">' + escapeHtml(h) + '</button>';
 				}).join('');
 				extra = '<div style="margin-top: 10px;">' +
-					'<p style="margin: 0 0 4px 0; color: #1d2327;">Sistemde kayıtlı gönderici adlarınız:</p>' +
+					'<p style="margin: 0 0 4px 0; color: #1d2327;">' + escapeHtml(smsStrings.registered_senders || 'Your registered sender names:') + '</p>' +
 					'<div class="hez-header-list">' + chips + '</div>' +
-					'<p style="margin: 6px 0 0 0; font-size: 12px; color: #50575e;">Bir gönderici adına tıklayıp <strong>Onayla</strong> ile bağlayın.</p>' +
+					'<p style="margin: 6px 0 0 0; font-size: 12px; color: #50575e;">' + escapeHtml(smsStrings.pick_sender_hint || 'Click a sender name and connect it with the Confirm button.') + '</p>' +
 					'<div class="hez-header-confirm" style="margin-top: 8px; display: none;">' +
-						'<button type="button" class="hez-confirm-header button button-primary">Onayla ve Bağla</button>' +
+						'<button type="button" class="hez-confirm-header button button-primary">' + escapeHtml(smsStrings.confirm_and_connect || 'Confirm & Connect') + '</button>' +
 					'</div>' +
 				'</div>';
 			} else {
-				extra = '<p style="margin: 10px 0 0 0; color: #1d2327;">Sistemde kayıtlı gönderici adınız bulunmuyor. NetGSM ile görüşüp bir başlık (gönderici adı) kaydı yaptırın.</p>';
+				extra = '<p style="margin: 10px 0 0 0; color: #1d2327;">' + escapeHtml(smsStrings.no_registered_senders || 'You have no registered sender names. Please contact NetGSM to register a sender name (header).') + '</p>';
 			}
 		}
 

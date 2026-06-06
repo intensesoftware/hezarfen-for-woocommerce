@@ -52,12 +52,12 @@ class SMS_Automation {
 		check_ajax_referer( 'hezarfen_sms_settings_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_send_json_error( array( 'message' => 'Bu işlemi yapmaya yetkiniz yok.' ) );
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'hezarfen-for-woocommerce' ) ) );
 		}
 
 		$provider = sanitize_text_field( wp_unslash( $_POST['provider'] ?? '' ) );
 		if ( ! in_array( $provider, array( 'netgsm', 'pandasms' ), true ) ) {
-			wp_send_json_error( array( 'message' => 'Geçersiz sağlayıcı.' ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid provider.', 'hezarfen-for-woocommerce' ) ) );
 		}
 
 		update_option( 'hezarfen_sms_provider', $provider );
@@ -945,7 +945,7 @@ class SMS_Automation {
 		$response = wp_remote_post( $url, $args );
 
 		if ( is_wp_error( $response ) ) {
-			$wp_error_description = 'NetGSM sunucusuna bağlanılamadı: ' . $response->get_error_message();
+			$wp_error_description = sprintf( __( 'Could not connect to the NetGSM server: %s', 'hezarfen-for-woocommerce' ), $response->get_error_message() );
 			return self::netgsm_result( false, 'WP_ERROR', null, $wp_error_description, null );
 		}
 
@@ -963,8 +963,8 @@ class SMS_Automation {
 			}
 
 			$http_description = $response_code === 406
-				? 'NetGSM isteği reddetti (HTTP 406). Kullanıcı bilgileriniz, gönderici adınız veya mesaj içeriği geçersiz olabilir.'
-				: sprintf( 'NetGSM API beklenmeyen bir HTTP durumu döndürdü: %d', $response_code );
+				? __( 'NetGSM rejected the request (HTTP 406). Your credentials, sender name or message content may be invalid.', 'hezarfen-for-woocommerce' )
+				: sprintf( __( 'NetGSM API returned an unexpected HTTP status: %d', 'hezarfen-for-woocommerce' ), $response_code );
 
 			return self::netgsm_result( false, 'HTTP_' . $response_code, null, $http_description, $response_code );
 		}
@@ -995,7 +995,7 @@ class SMS_Automation {
 		} elseif ( '' !== $api_description ) {
 			$description = $api_description;
 		} else {
-			$description = sprintf( 'NetGSM bilinmeyen bir yanıt döndürdü (Kod: %s).', $code );
+			$description = sprintf( __( 'NetGSM returned an unknown response (Code: %s).', 'hezarfen-for-woocommerce' ), $code );
 		}
 
 		return array(
@@ -1017,7 +1017,7 @@ class SMS_Automation {
 		$map  = self::netgsm_code_messages();
 		$code = (string) $code;
 
-		return $map[ $code ] ?? sprintf( 'NetGSM bilinmeyen bir yanıt döndürdü (Kod: %s).', $code );
+		return $map[ $code ] ?? sprintf( __( 'NetGSM returned an unknown response (Code: %s).', 'hezarfen-for-woocommerce' ), $code );
 	}
 
 	/**
@@ -1032,20 +1032,20 @@ class SMS_Automation {
 	private static function netgsm_code_messages() {
 		return array(
 			// Success codes.
-			'00'  => 'Görev başarıyla oluşturuldu.',
-			'01'  => 'Görev oluşturuldu; mesaj gönderim başlangıç tarihinde hata olduğu için sistem tarihiyle işleme alındı.',
-			'02'  => 'Görev oluşturuldu; mesaj gönderim bitiş tarihinde hata olduğu için sistem tarihiyle işleme alındı.',
-			// Error codes (resmi dokümandaki açıklamalar).
-			'20'  => 'Mesaj metnindeki problemden dolayı gönderilemedi veya standart maksimum mesaj karakter sayısını geçtiniz.',
-			'30'  => 'Geçersiz kullanıcı adı, şifre veya API erişim izniniz yok. API erişiminizde IP sınırlaması varsa, sınırladığınız IP dışından gönderimde de bu kodu alırsınız.',
-			'40'  => 'Mesaj başlığınız (gönderici adınız) sistemde tanımlı değil. Gönderici adlarınızı API ile sorgulayarak kontrol edebilirsiniz.',
-			'50'  => 'Abone hesabınız ile İYS kontrollü gönderimler yapılamamaktadır.',
-			'51'  => 'Aboneliğinize tanımlı İYS Marka bilgisi bulunamadı.',
-			'70'  => 'Hatalı sorgulama. Gönderdiğiniz parametrelerden biri hatalı veya zorunlu alanlardan biri eksik.',
-			'80'  => 'Gönderim sınır aşımı.',
-			'85'  => 'Mükerrer gönderim sınır aşımı. Aynı numaraya 1 dakika içerisinde 20\'den fazla görev oluşturulamaz.',
-			'100' => 'Sistem hatası. Lütfen daha sonra tekrar deneyin.',
-			'101' => 'Sistem hatası. Lütfen daha sonra tekrar deneyin.',
+			'00'  => __( 'Task created successfully.', 'hezarfen-for-woocommerce' ),
+			'01'  => __( 'Task created; the start date had an error so it was processed with the system date.', 'hezarfen-for-woocommerce' ),
+			'02'  => __( 'Task created; the end date had an error so it was processed with the system date.', 'hezarfen-for-woocommerce' ),
+			// Error codes (descriptions from the official NetGSM documentation).
+			'20'  => __( 'Could not be sent due to a problem in the message text, or you exceeded the standard maximum character count.', 'hezarfen-for-woocommerce' ),
+			'30'  => __( 'Invalid username, password or no API access permission. If you set an IP restriction for API access, sending from another IP also returns this code.', 'hezarfen-for-woocommerce' ),
+			'40'  => __( 'Your message header (sender name) is not registered in the system. You can check your sender names via the API.', 'hezarfen-for-woocommerce' ),
+			'50'  => __( 'IYS-controlled sending cannot be done with your subscriber account.', 'hezarfen-for-woocommerce' ),
+			'51'  => __( 'No IYS brand information is defined for your subscription.', 'hezarfen-for-woocommerce' ),
+			'70'  => __( 'Invalid query. One of the parameters you sent is wrong, or a required field is missing.', 'hezarfen-for-woocommerce' ),
+			'80'  => __( 'Sending limit exceeded.', 'hezarfen-for-woocommerce' ),
+			'85'  => __( 'Duplicate sending limit exceeded. You cannot create more than 20 tasks for the same number within 1 minute.', 'hezarfen-for-woocommerce' ),
+			'100' => __( 'System error. Please try again later.', 'hezarfen-for-woocommerce' ),
+			'101' => __( 'System error. Please try again later.', 'hezarfen-for-woocommerce' ),
 		);
 	}
 
@@ -1349,7 +1349,7 @@ class SMS_Automation {
 		$msgheader = sanitize_text_field( $_POST['msgheader'] ?? '' );
 
 		if ( empty( $username ) || empty( $password ) || empty( $msgheader ) ) {
-			wp_send_json_error( 'Lütfen kullanıcı adı, şifre ve gönderici adını girin.' );
+			wp_send_json_error( __( 'Please enter the username, password and sender name.', 'hezarfen-for-woocommerce' ) );
 		}
 
 		// Validate against NetGSM before marking the account as connected: the
@@ -1362,7 +1362,7 @@ class SMS_Automation {
 		}
 
 		if ( ! in_array( $msgheader, array_map( 'strval', (array) $headers ), true ) ) {
-			wp_send_json_error( 'Seçtiğiniz gönderici adı NetGSM hesabınızda kayıtlı değil. Lütfen listeden kayıtlı bir ad seçin.' );
+			wp_send_json_error( __( 'The sender name you selected is not registered in your NetGSM account. Please choose a registered name from the list.', 'hezarfen-for-woocommerce' ) );
 		}
 
 		$credentials = array(
@@ -1372,7 +1372,7 @@ class SMS_Automation {
 		);
 
 		if ( self::save_global_netgsm_credentials( $credentials ) ) {
-			wp_send_json_success( 'NetGSM bağlantısı doğrulandı ve kuruldu.' );
+			wp_send_json_success( __( 'NetGSM connection verified and established.', 'hezarfen-for-woocommerce' ) );
 		} else {
 			wp_send_json_error( 'NetGSM bilgileri kaydedilemedi.' );
 		}
@@ -1531,12 +1531,12 @@ class SMS_Automation {
 		check_ajax_referer( 'hezarfen_sms_settings_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_send_json_error( array( 'message' => 'Bu işlemi yapmaya yetkiniz yok.' ) );
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'hezarfen-for-woocommerce' ) ) );
 		}
 
 		$phone = sanitize_text_field( wp_unslash( $_POST['phone'] ?? '' ) );
 		if ( empty( $phone ) ) {
-			wp_send_json_error( array( 'message' => 'Test SMS göndermek için bir telefon numarası girin.' ) );
+			wp_send_json_error( array( 'message' => __( 'Enter a phone number to send the test SMS.', 'hezarfen-for-woocommerce' ) ) );
 		}
 
 		$credentials = self::get_global_netgsm_credentials();
@@ -1546,11 +1546,11 @@ class SMS_Automation {
 
 		if ( empty( $username ) || empty( $password ) || empty( $msgheader ) ) {
 			wp_send_json_error( array(
-				'message' => 'NetGSM henüz bağlı değil. Test öncesi NetGSM hesabınızı bağlayın.',
+				'message' => __( 'NetGSM is not connected yet. Please connect your NetGSM account before testing.', 'hezarfen-for-woocommerce' ),
 			) );
 		}
 
-		$message = sprintf( 'Hezarfen for WooCommerce: Bu bir NetGSM test mesajıdır. SMS entegrasyonunuz çalışıyor. (Gönderici: %s)', $msgheader );
+		$message = sprintf( __( 'Hezarfen for WooCommerce: This is a NetGSM test message. Your SMS integration is working. (Sender: %s)', 'hezarfen-for-woocommerce' ), $msgheader );
 
 		$data = array(
 			'msgheader'   => $msgheader,
@@ -1618,17 +1618,17 @@ class SMS_Automation {
 		check_ajax_referer( 'hezarfen_sms_settings_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_send_json_error( array( 'message' => 'Bu işlemi yapmaya yetkiniz yok.' ) );
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'hezarfen-for-woocommerce' ) ) );
 		}
 
 		$header = sanitize_text_field( wp_unslash( $_POST['msgheader'] ?? '' ) );
 		if ( empty( $header ) ) {
-			wp_send_json_error( array( 'message' => 'Lütfen bir gönderici adı seçin.' ) );
+			wp_send_json_error( array( 'message' => __( 'Please select a sender name.', 'hezarfen-for-woocommerce' ) ) );
 		}
 
 		$credentials = self::get_global_netgsm_credentials();
 		if ( ! $credentials || empty( $credentials['username'] ) || empty( $credentials['password'] ) ) {
-			wp_send_json_error( array( 'message' => 'Önce NetGSM kullanıcı adı ve şifrenizi girin.' ) );
+			wp_send_json_error( array( 'message' => __( 'Please enter your NetGSM username and password first.', 'hezarfen-for-woocommerce' ) ) );
 		}
 
 		$credentials['msgheader'] = $header;
@@ -1636,7 +1636,7 @@ class SMS_Automation {
 
 		wp_send_json_success( array(
 			/* translators: %s sender (message header) name */
-			'message'   => sprintf( 'Gönderici adı bağlandı: %s', $header ),
+			'message'   => sprintf( __( 'Sender name connected: %s', 'hezarfen-for-woocommerce' ), $header ),
 			'msgheader' => $header,
 		) );
 	}
