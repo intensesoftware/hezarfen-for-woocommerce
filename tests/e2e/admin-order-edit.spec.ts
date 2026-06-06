@@ -171,10 +171,42 @@ function collectPageErrors( page: Page ): {
 	consoleErrors: string[];
 } {
 	const pageErrors: string[] = [];
-	const consoleErrors: string[] = [];
+	const rawConsoleErrors: string[] = [];
+
+	// WordPress/WooCommerce core fire admin-ajax actions on the HPOS order edit
+	// screen that can legitimately 403 there — e.g. core's `sample-permalink`,
+	// whose nonce only exists in the classic post editor. These are core
+	// requests (Hezarfen issues none of them) and the exact set varies with the
+	// floating WooCommerce/WordPress version used in CI, so they must not fail
+	// this "no Hezarfen JS/PHP errors" smoke check. A genuine Hezarfen failure
+	// (any other failing request) is still surfaced below.
+	const CORE_NOISE_AJAX_ACTIONS = [ 'sample-permalink' ];
+	const failingRequests: Array< { url: string; action: string } > = [];
+
 	page.on( 'pageerror', ( err ) => {
 		pageErrors.push( err.message );
 	} );
+
+	// Authoritatively classify failing requests. The generic console message
+	// ("Failed to load resource … 403") does not expose the URL/action, so we
+	// detect failures here and only treat allowlisted core actions as noise.
+	page.on( 'response', ( response ) => {
+		if ( response.status() < 400 ) return;
+		const url = response.url();
+		let action = '';
+		if ( url.includes( 'admin-ajax.php' ) ) {
+			try {
+				action =
+					new URLSearchParams(
+						response.request().postData() || ''
+					).get( 'action' ) || '';
+			} catch ( e ) {
+				/* postData unavailable — leave action empty (treated as non-core) */
+			}
+		}
+		failingRequests.push( { url, action } );
+	} );
+
 	page.on( 'console', ( msg: ConsoleMessage ) => {
 		if ( msg.type() !== 'error' ) return;
 		const text = msg.text();
@@ -186,7 +218,27 @@ function collectPageErrors( page: Page ): {
 		) {
 			return;
 		}
-		consoleErrors.push( text );
+		rawConsoleErrors.push( text );
 	} );
-	return { pageErrors, consoleErrors };
+
+	return {
+		pageErrors,
+		// Computed at assertion time (after networkidle), so every failing
+		// request has been classified. We drop the generic resource-load
+		// failures only when *every* failing request is allowlisted core noise;
+		// any non-core failure keeps them so a real regression still fails.
+		get consoleErrors(): string[] {
+			const onlyCoreNoiseFailed =
+				failingRequests.length > 0 &&
+				failingRequests.every( ( r ) =>
+					CORE_NOISE_AJAX_ACTIONS.includes( r.action )
+				);
+			return rawConsoleErrors.filter( ( text ) => {
+				const isResourceLoadFailure = text.includes(
+					'Failed to load resource'
+				);
+				return ! ( isResourceLoadFailure && onlyCoreNoiseFailed );
+			} );
+		},
+	};
 }
