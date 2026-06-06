@@ -1023,8 +1023,6 @@ jQuery(document).ready(function($) {
 			},
 			complete: function() {
 				$button.prop('disabled', false).text(originalText);
-				// Refresh the log table so the test attempt shows up immediately.
-				loadSmsLogs();
 			}
 		});
 	});

@@ -1561,22 +1561,19 @@ class SMS_Automation {
 
 		$result = $this->send_netgsm_sms( $data, $username, $password );
 
-		self::add_log_entry( array(
-			'source'      => 'test',
-			'order_id'    => 0,
-			'phone'       => $phone,
-			'message'     => $message,
-			'trigger'     => 'test',
-			'success'     => $result['success'],
-			'code'        => $result['code'] ?? '',
-			'description' => $result['description'] ?? '',
-			'jobid'       => $result['jobid'] ?? null,
-		) );
+		// Test results are intentionally NOT persisted to the SMS log; they are
+		// only returned for display right below the test button.
+
+		// When NetGSM accepts the message (queued), show it directly as success
+		// with a clean message instead of the technical "queued" wording.
+		$description = $result['success']
+			? 'Test SMS başarıyla NetGSM\'e iletildi.'
+			: ( $result['description'] ?? '' );
 
 		$payload = array(
 			'success'     => (bool) $result['success'],
 			'code'        => $result['code'] ?? '',
-			'description' => $result['description'] ?? '',
+			'description' => $description,
 			'jobid'       => $result['jobid'] ?? null,
 			'phone'       => $phone,
 			'message'     => $message,
