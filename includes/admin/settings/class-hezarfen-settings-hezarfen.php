@@ -31,7 +31,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		add_action( 'woocommerce_admin_field_netgsm_connection_status', array( $this, 'output_netgsm_connection_status' ) );
 		add_action( 'woocommerce_admin_field_sms_rules_button', array( $this, 'output_sms_rules_button' ) );
 		add_action( 'woocommerce_admin_field_netgsm_test_connection', array( $this, 'output_netgsm_test_connection' ) );
-		add_action( 'woocommerce_admin_field_sms_logs_viewer', array( $this, 'output_sms_logs_viewer' ) );
 		add_action( 'woocommerce_admin_field_roadmap_voting', array( $this, 'output_roadmap_voting' ) );
 		// Note: AJAX action is registered in main Hezarfen class to ensure it's always available
 
@@ -491,12 +490,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				'id'      => 'hezarfen_netgsm_test_connection',
 			),
 			array(
-				'title'   => 'SMS Logları',
-				'type'    => 'sms_logs_viewer',
-				'desc'    => 'Her SMS gönderim denemesinin ve NetGSM sonucunun detaylı kaydı.',
-				'id'      => 'hezarfen_sms_logs_viewer',
-			),
-			array(
 				'type' => 'sectionend',
 				'id'   => 'hezarfen_sms_settings_section_end',
 			),
@@ -576,58 +569,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		<?php
 	}
 
-	/**
-	 * Output the "SMS Logs" viewer panel.
-	 *
-	 * The table body is populated via AJAX so it always reflects the latest
-	 * sending attempts without reloading the settings page.
-	 *
-	 * @param array $value Field data.
-	 * @return void
-	 */
-	public function output_sms_logs_viewer( $value ) {
-		?>
-		<tr valign="top">
-			<th scope="row" class="titledesc">
-				<label><?php echo esc_html( $value['title'] ); ?></label>
-			</th>
-			<td class="forminp">
-				<div id="hezarfen-sms-logs" style="max-width: 900px;">
-					<div style="display: flex; gap: 8px; margin-bottom: 10px;">
-						<button type="button" id="hezarfen-refresh-logs" class="button">
-							<span class="dashicons dashicons-update" style="margin-top: 3px;"></span>
-							Yenile
-						</button>
-						<button type="button" id="hezarfen-clear-logs" class="button">
-							<span class="dashicons dashicons-trash" style="margin-top: 3px;"></span>
-							Logları Temizle
-						</button>
-					</div>
-					<table class="widefat striped" style="border-radius: 6px; overflow: hidden;">
-						<thead>
-							<tr>
-								<th style="width: 150px;">Tarih</th>
-								<th style="width: 90px;">Tür</th>
-								<th style="width: 90px;">Sipariş</th>
-								<th style="width: 120px;">Telefon</th>
-								<th style="width: 110px;">Durum</th>
-								<th>NetGSM Sonucu</th>
-							</tr>
-						</thead>
-						<tbody id="hezarfen-sms-logs-body">
-							<tr>
-								<td colspan="6" style="text-align: center; padding: 16px; color: #646970;">
-									Loglar yükleniyor…
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-				<p class="description"><?php echo esc_html( $value['desc'] ?? '' ); ?></p>
-			</td>
-		</tr>
-		<?php
-	}
 
 	/**
 	 * Output SMS rules button field
@@ -1698,13 +1639,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					'label_netgsm_code'     => 'NetGSM kodu',
 					'label_job_id'          => 'Görev No',
 					'label_sent_to'         => 'Gönderilen numara',
-					// SMS Logs strings - Force Turkish
-					'logs_loading'          => 'Loglar yükleniyor…',
-					'logs_empty'            => 'Henüz kayıtlı bir SMS etkinliği yok.',
-					'logs_load_error'       => 'SMS logları yüklenemedi.',
-					'logs_clear_confirm'    => 'Tüm SMS loglarını silmek istediğinize emin misiniz?',
-					'status_delivered'      => 'NetGSM\'e iletildi',
-					'status_failed'         => 'Başarısız',
 				)
 			) );
 		}

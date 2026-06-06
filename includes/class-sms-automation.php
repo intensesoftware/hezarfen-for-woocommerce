@@ -15,20 +15,6 @@ defined( 'ABSPATH' ) || exit;
 class SMS_Automation {
 
 	/**
-	 * Option key that stores the central SMS activity log.
-	 *
-	 * @var string
-	 */
-	const LOG_OPTION = 'hezarfen_sms_log';
-
-	/**
-	 * Maximum number of entries kept in the central SMS log.
-	 *
-	 * @var int
-	 */
-	const LOG_MAX_ENTRIES = 200;
-
-	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -40,8 +26,6 @@ class SMS_Automation {
 		add_action( 'wp_ajax_hezarfen_get_netgsm_credentials', array( $this, 'ajax_get_netgsm_credentials' ) );
 		add_action( 'wp_ajax_hezarfen_get_netgsm_senders', array( $this, 'ajax_get_netgsm_senders' ) );
 		add_action( 'wp_ajax_hezarfen_test_netgsm', array( $this, 'ajax_test_netgsm' ) );
-		add_action( 'wp_ajax_hezarfen_get_sms_logs', array( $this, 'ajax_get_sms_logs' ) );
-		add_action( 'wp_ajax_hezarfen_clear_sms_logs', array( $this, 'ajax_clear_sms_logs' ) );
 	}
 
 	/**
@@ -1088,66 +1072,6 @@ class SMS_Automation {
 		// Store in order meta for easy access
 		$order->add_meta_data( '_hezarfen_sms_log_' . time(), $log_entry );
 		$order->save_meta_data();
-
-		// Also store in the central log so it can be viewed from the SMS settings screen.
-		self::add_log_entry( array(
-			'source'      => 'automation',
-			'order_id'    => $order->get_id(),
-			'phone'       => $phone,
-			'message'     => $message,
-			'trigger'     => $rule['condition_status'] ?? '',
-			'success'     => $success,
-			'code'        => $sms_result['code'] ?? '',
-			'description' => $sms_result['description'] ?? '',
-			'jobid'       => $jobid,
-		) );
-	}
-
-	/**
-	 * Append an entry to the central SMS activity log.
-	 *
-	 * Newest entries are stored first and the log is capped at LOG_MAX_ENTRIES.
-	 *
-	 * @param array $entry Partial entry. Missing keys are filled with defaults.
-	 * @return void
-	 */
-	public static function add_log_entry( $entry ) {
-		$entry = wp_parse_args( $entry, array(
-			'timestamp'   => current_time( 'mysql' ),
-			'source'      => 'automation',
-			'order_id'    => 0,
-			'phone'       => '',
-			'message'     => '',
-			'trigger'     => '',
-			'success'     => false,
-			'code'        => '',
-			'description' => '',
-			'jobid'       => null,
-		) );
-
-		// Normalize/sanitize before persisting.
-		$entry['source']      = sanitize_text_field( $entry['source'] );
-		$entry['order_id']    = (int) $entry['order_id'];
-		$entry['phone']       = sanitize_text_field( $entry['phone'] );
-		$entry['message']     = sanitize_textarea_field( $entry['message'] );
-		$entry['trigger']     = sanitize_text_field( $entry['trigger'] );
-		$entry['success']     = (bool) $entry['success'];
-		$entry['code']        = sanitize_text_field( (string) $entry['code'] );
-		$entry['description'] = sanitize_text_field( $entry['description'] );
-		$entry['jobid']       = $entry['jobid'] ? sanitize_text_field( $entry['jobid'] ) : null;
-
-		$logs = get_option( self::LOG_OPTION, array() );
-		if ( ! is_array( $logs ) ) {
-			$logs = array();
-		}
-
-		array_unshift( $logs, $entry );
-
-		if ( count( $logs ) > self::LOG_MAX_ENTRIES ) {
-			$logs = array_slice( $logs, 0, self::LOG_MAX_ENTRIES );
-		}
-
-		update_option( self::LOG_OPTION, $logs, false );
 	}
 
 	/**
@@ -1585,65 +1509,6 @@ class SMS_Automation {
 		}
 
 		wp_send_json_error( $payload );
-	}
-
-	/**
-	 * AJAX handler that returns the central SMS activity log.
-	 *
-	 * @return void
-	 */
-	public function ajax_get_sms_logs() {
-		check_ajax_referer( 'hezarfen_sms_settings_nonce', 'nonce' );
-
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_die( 'Unauthorized' );
-		}
-
-		$logs = get_option( self::LOG_OPTION, array() );
-		if ( ! is_array( $logs ) ) {
-			$logs = array();
-		}
-
-		$status_names = self::get_translatable_order_status_names();
-
-		// Decorate each entry with display-friendly labels.
-		$logs = array_map( function ( $entry ) use ( $status_names ) {
-			$trigger = $entry['trigger'] ?? '';
-
-			if ( 'test' === ( $entry['source'] ?? '' ) ) {
-				$trigger_label = 'Bağlantı Testi';
-			} elseif ( isset( $status_names[ $trigger ] ) ) {
-				$trigger_label = $status_names[ $trigger ];
-			} elseif ( $trigger ) {
-				$trigger_label = wc_get_order_status_name( str_replace( 'wc-', '', $trigger ) );
-			} else {
-				$trigger_label = '—';
-			}
-
-			$entry['trigger_label'] = $trigger_label;
-			$entry['source_label']  = 'test' === ( $entry['source'] ?? '' ) ? 'Test' : 'Otomasyon';
-			$entry['status_label']  = ! empty( $entry['success'] ) ? 'NetGSM\'e iletildi' : 'Başarısız';
-
-			return $entry;
-		}, $logs );
-
-		wp_send_json_success( array( 'logs' => $logs ) );
-	}
-
-	/**
-	 * AJAX handler that clears the central SMS activity log.
-	 *
-	 * @return void
-	 */
-	public function ajax_clear_sms_logs() {
-		check_ajax_referer( 'hezarfen_sms_settings_nonce', 'nonce' );
-
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_die( 'Unauthorized' );
-		}
-
-		delete_option( self::LOG_OPTION );
-		wp_send_json_success( array( 'message' => 'SMS logları temizlendi.' ) );
 	}
 }
 

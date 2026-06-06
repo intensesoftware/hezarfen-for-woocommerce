@@ -1036,131 +1036,15 @@ jQuery(document).ready(function($) {
 		const titleColor = success ? '#1e7e34' : '#8a1f1f';
 		const icon = success ? '✓' : '✕';
 
-		let rows = '';
-		if (data.code) {
-			rows += detailRow(smsStrings.label_netgsm_code || 'NetGSM code', data.code);
-		}
-		if (data.jobid) {
-			rows += detailRow(smsStrings.label_job_id || 'Job ID', data.jobid);
-		}
-		if (data.phone) {
-			rows += detailRow(smsStrings.label_sent_to || 'Sent to', data.phone);
-		}
+		// On success just confirm it was sent. On failure show the reason so the
+		// problem can be diagnosed.
+		const detail = success ? '' : (description || '');
 
 		$container.html(
 			'<div style="padding: 12px 14px; background: ' + bg + '; border: 1px solid ' + border + '; border-radius: 6px;">' +
-				'<p style="margin: 0 0 6px 0; font-weight: 600; color: ' + titleColor + ';">' + icon + ' ' + escapeHtml(title) + '</p>' +
-				(description ? '<p style="margin: 0 0 8px 0; color: #1d2327;">' + escapeHtml(description) + '</p>' : '') +
-				(rows ? '<table style="font-size: 12px; color: #50575e;">' + rows + '</table>' : '') +
+				'<p style="margin: 0; font-weight: 600; color: ' + titleColor + ';">' + icon + ' ' + escapeHtml(title) + '</p>' +
+				(detail ? '<p style="margin: 8px 0 0 0; color: #1d2327;">' + escapeHtml(detail) + '</p>' : '') +
 			'</div>'
 		).show();
 	}
-
-	function detailRow(label, value) {
-		return '<tr><td style="padding: 1px 10px 1px 0; font-weight: 600;">' + escapeHtml(label) + '</td>' +
-			'<td style="padding: 1px 0;">' + escapeHtml(value) + '</td></tr>';
-	}
-
-	// Load and render the central SMS log table.
-	function loadSmsLogs() {
-		const $body = $('#hezarfen-sms-logs-body');
-		if (!$body.length) {
-			return;
-		}
-
-		$.ajax({
-			url: hezarfen_sms_settings.ajax_url,
-			type: 'POST',
-			data: {
-				action: 'hezarfen_get_sms_logs',
-				nonce: hezarfen_sms_settings.nonce
-			},
-			success: function(response) {
-				if (!response || !response.success) {
-					$body.html(logMessageRow(smsStrings.logs_load_error || 'Failed to load SMS logs.'));
-					return;
-				}
-				renderSmsLogs(response.data.logs || []);
-			},
-			error: function() {
-				$body.html(logMessageRow(smsStrings.logs_load_error || 'Failed to load SMS logs.'));
-			}
-		});
-	}
-
-	function renderSmsLogs(logs) {
-		const $body = $('#hezarfen-sms-logs-body');
-
-		if (!logs.length) {
-			$body.html(logMessageRow(smsStrings.logs_empty || 'No SMS activity has been logged yet.'));
-			return;
-		}
-
-		const rows = logs.map(function(log) {
-			const success = !!log.success;
-			const statusColor = success ? '#1e7e34' : '#d63638';
-			const statusBg = success ? '#edfaef' : '#fcf0f1';
-			const statusLabel = log.status_label || (success
-				? (smsStrings.status_delivered || 'Delivered to NetGSM')
-				: (smsStrings.status_failed || 'Failed'));
-
-			const order = (log.order_id && parseInt(log.order_id, 10) > 0) ? ('#' + log.order_id) : '—';
-
-			let result = escapeHtml(log.description || '');
-			const meta = [];
-			if (log.code) {
-				meta.push((smsStrings.label_netgsm_code || 'NetGSM code') + ': ' + escapeHtml(log.code));
-			}
-			if (log.jobid) {
-				meta.push((smsStrings.label_job_id || 'Job ID') + ': ' + escapeHtml(log.jobid));
-			}
-			if (meta.length) {
-				result += '<br><span style="font-size: 11px; color: #787c82;">' + meta.join(' &middot; ') + '</span>';
-			}
-
-			return '<tr>' +
-				'<td>' + escapeHtml(log.timestamp || '') + '</td>' +
-				'<td>' + escapeHtml(log.source_label || log.source || '') + '</td>' +
-				'<td>' + order + '</td>' +
-				'<td>' + escapeHtml(log.phone || '') + '</td>' +
-				'<td><span style="display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600; color: ' + statusColor + '; background: ' + statusBg + ';">' + escapeHtml(statusLabel) + '</span><div style="font-size: 11px; color: #787c82; margin-top: 2px;">' + escapeHtml(log.trigger_label || '') + '</div></td>' +
-				'<td>' + result + '</td>' +
-			'</tr>';
-		});
-
-		$body.html(rows.join(''));
-	}
-
-	function logMessageRow(message) {
-		return '<tr><td colspan="6" style="text-align: center; padding: 16px; color: #646970;">' + escapeHtml(message) + '</td></tr>';
-	}
-
-	$(document).on('click', '#hezarfen-refresh-logs', function() {
-		loadSmsLogs();
-	});
-
-	$(document).on('click', '#hezarfen-clear-logs', function() {
-		if (!confirm(smsStrings.logs_clear_confirm || 'Are you sure you want to clear all SMS logs?')) {
-			return;
-		}
-
-		const $button = $(this);
-		$button.prop('disabled', true);
-
-		$.ajax({
-			url: hezarfen_sms_settings.ajax_url,
-			type: 'POST',
-			data: {
-				action: 'hezarfen_clear_sms_logs',
-				nonce: hezarfen_sms_settings.nonce
-			},
-			complete: function() {
-				$button.prop('disabled', false);
-				loadSmsLogs();
-			}
-		});
-	});
-
-	// Initial logs load.
-	loadSmsLogs();
 });
