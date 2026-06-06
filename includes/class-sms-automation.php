@@ -26,6 +26,7 @@ class SMS_Automation {
 		add_action( 'wp_ajax_hezarfen_get_netgsm_credentials', array( $this, 'ajax_get_netgsm_credentials' ) );
 		add_action( 'wp_ajax_hezarfen_get_netgsm_senders', array( $this, 'ajax_get_netgsm_senders' ) );
 		add_action( 'wp_ajax_hezarfen_test_netgsm', array( $this, 'ajax_test_netgsm' ) );
+		add_action( 'wp_ajax_hezarfen_set_netgsm_header', array( $this, 'ajax_set_netgsm_header' ) );
 	}
 
 	/**
@@ -1556,6 +1557,40 @@ class SMS_Automation {
 		}
 
 		wp_send_json_error( $payload );
+	}
+
+	/**
+	 * AJAX handler that sets the message header (sender name) on the already
+	 * stored credentials. Used when the user picks a registered sender from the
+	 * test result and confirms it, without re-entering username/password.
+	 *
+	 * @return void
+	 */
+	public function ajax_set_netgsm_header() {
+		check_ajax_referer( 'hezarfen_sms_settings_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_send_json_error( array( 'message' => 'Bu işlemi yapmaya yetkiniz yok.' ) );
+		}
+
+		$header = sanitize_text_field( wp_unslash( $_POST['msgheader'] ?? '' ) );
+		if ( empty( $header ) ) {
+			wp_send_json_error( array( 'message' => 'Lütfen bir gönderici adı seçin.' ) );
+		}
+
+		$credentials = self::get_global_netgsm_credentials();
+		if ( ! $credentials || empty( $credentials['username'] ) || empty( $credentials['password'] ) ) {
+			wp_send_json_error( array( 'message' => 'Önce NetGSM kullanıcı adı ve şifrenizi girin.' ) );
+		}
+
+		$credentials['msgheader'] = $header;
+		self::save_global_netgsm_credentials( $credentials );
+
+		wp_send_json_success( array(
+			/* translators: %s sender (message header) name */
+			'message'   => sprintf( 'Gönderici adı bağlandı: %s', $header ),
+			'msgheader' => $header,
+		) );
 	}
 }
 

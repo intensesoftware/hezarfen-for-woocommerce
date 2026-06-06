@@ -1001,6 +1001,57 @@ jQuery(document).ready(function($) {
 		});
 	});
 
+	// Pick a registered sender name from the test-result error.
+	$(document).on('click', '.hez-pick-header', function() {
+		const $list = $(this).closest('.hez-header-list');
+		$list.find('.hez-pick-header').css({ 'border-color': '#c3c4c7', 'background': '#fff', 'color': '#1d2327' });
+		$(this).css({ 'border-color': '#2271b1', 'background': '#f0f6fc', 'color': '#0a4b78' });
+
+		const $confirm = $list.parent().find('.hez-header-confirm');
+		$confirm.find('.hez-confirm-header').data('header', $(this).data('header'));
+		$confirm.show();
+	});
+
+	// Confirm and connect the picked sender name using the stored credentials.
+	$(document).on('click', '.hez-confirm-header', function() {
+		const $btn = $(this);
+		const header = $btn.data('header');
+		if (!header) {
+			return;
+		}
+
+		const originalText = $btn.text();
+		$btn.prop('disabled', true).text(hezarfen_sms_settings.strings.connecting || 'Bağlanıyor…');
+
+		$.ajax({
+			url: hezarfen_sms_settings.ajax_url,
+			type: 'POST',
+			data: {
+				action: 'hezarfen_set_netgsm_header',
+				nonce: hezarfen_sms_settings.nonce,
+				msgheader: header
+			},
+			success: function(response) {
+				if (response && response.success) {
+					$('#hezarfen-test-result').html(
+						'<div style="padding: 12px 14px; background: #edfaef; border: 1px solid #46b450; border-radius: 6px;">' +
+							'<p style="margin: 0; font-weight: 600; color: #1e7e34;">✓ ' + escapeHtml(response.data.message || 'Gönderici adı bağlandı.') + '</p>' +
+							'<p style="margin: 8px 0 0 0; color: #1d2327;">Artık yeniden test gönderebilirsiniz.</p>' +
+						'</div>'
+					).show();
+					loadNetGsmConnectionStatus();
+				} else {
+					$btn.prop('disabled', false).text(originalText);
+					alert((response && response.data && response.data.message) || 'Gönderici adı bağlanamadı.');
+				}
+			},
+			error: function() {
+				$btn.prop('disabled', false).text(originalText);
+				alert(hezarfen_sms_settings.strings.network_error_saving_credentials || 'Ağ hatası.');
+			}
+		});
+	});
+
 	function renderTestResult($container, success, description, data) {
 		const title = success
 			? (smsStrings.test_success_title || 'Test SMS sent successfully')
@@ -1028,12 +1079,15 @@ jQuery(document).ready(function($) {
 			const headers = data.registered_headers || [];
 			if (headers.length) {
 				const chips = headers.map(function(h) {
-					return '<span style="display: inline-block; padding: 2px 8px; margin: 2px 4px 2px 0; border-radius: 4px; background: #fff; border: 1px solid #c3c4c7; font-weight: 600; font-size: 12px;">' + escapeHtml(h) + '</span>';
+					return '<button type="button" class="hez-pick-header" data-header="' + escapeHtml(h) + '" style="display: inline-block; padding: 4px 10px; margin: 2px 6px 2px 0; border-radius: 4px; background: #fff; border: 1px solid #c3c4c7; font-weight: 600; font-size: 12px; cursor: pointer;">' + escapeHtml(h) + '</button>';
 				}).join('');
 				extra = '<div style="margin-top: 10px;">' +
 					'<p style="margin: 0 0 4px 0; color: #1d2327;">Sistemde kayıtlı gönderici adlarınız:</p>' +
-					'<div>' + chips + '</div>' +
-					'<p style="margin: 6px 0 0 0; font-size: 12px; color: #50575e;">Bu adlardan birini gönderici (Message Header) olarak seçin.</p>' +
+					'<div class="hez-header-list">' + chips + '</div>' +
+					'<p style="margin: 6px 0 0 0; font-size: 12px; color: #50575e;">Bir gönderici adına tıklayıp <strong>Onayla</strong> ile bağlayın.</p>' +
+					'<div class="hez-header-confirm" style="margin-top: 8px; display: none;">' +
+						'<button type="button" class="hez-confirm-header button button-primary">Onayla ve Bağla</button>' +
+					'</div>' +
 				'</div>';
 			} else {
 				extra = '<p style="margin: 10px 0 0 0; color: #1d2327;">Sistemde kayıtlı gönderici adınız bulunmuyor. NetGSM ile görüşüp bir başlık (gönderici adı) kaydı yaptırın.</p>';
