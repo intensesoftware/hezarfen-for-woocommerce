@@ -1513,17 +1513,29 @@ class SMS_Automation {
 
 		$result = $this->send_netgsm_sms( $data, $username, $password );
 
+		// On code 40 (sender name not registered) fetch the sender names that ARE
+		// registered on the account so the user can pick a valid one. An empty
+		// array means there are no registered headers at all.
+		$registered_headers = array();
+		if ( '40' === ( $result['code'] ?? '' ) ) {
+			$headers = self::fetch_netgsm_message_headers( $username, $password );
+			if ( ! is_wp_error( $headers ) && is_array( $headers ) ) {
+				$registered_headers = array_values( array_filter( array_map( 'strval', $headers ) ) );
+			}
+		}
+
 		// Test results are intentionally NOT persisted to the SMS log; they are
 		// only returned for display right below the test button. Both the NetGSM
 		// code and its description are returned so the UI can show both.
 		$payload = array(
-			'success'     => (bool) $result['success'],
-			'code'        => $result['code'] ?? '',
-			'description' => $result['description'] ?? '',
-			'jobid'       => $result['jobid'] ?? null,
-			'phone'       => $phone,
-			'message'     => $message,
-			'sender'      => $msgheader,
+			'success'            => (bool) $result['success'],
+			'code'               => $result['code'] ?? '',
+			'description'        => $result['description'] ?? '',
+			'jobid'              => $result['jobid'] ?? null,
+			'phone'              => $phone,
+			'message'            => $message,
+			'sender'             => $msgheader,
+			'registered_headers' => $registered_headers,
 		);
 
 		if ( $result['success'] ) {

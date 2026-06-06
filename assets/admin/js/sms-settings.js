@@ -1047,10 +1047,30 @@ jQuery(document).ready(function($) {
 			detail = escapeHtml(codeLabel) + ' ' + escapeHtml(data.code);
 		}
 
+		// On code 40 (sender name not registered) help the user: list the sender
+		// names that ARE registered, or tell them to register one with NetGSM.
+		let extra = '';
+		if (String(data.code) === '40') {
+			const headers = data.registered_headers || [];
+			if (headers.length) {
+				const chips = headers.map(function(h) {
+					return '<span style="display: inline-block; padding: 2px 8px; margin: 2px 4px 2px 0; border-radius: 4px; background: #fff; border: 1px solid #c3c4c7; font-weight: 600; font-size: 12px;">' + escapeHtml(h) + '</span>';
+				}).join('');
+				extra = '<div style="margin-top: 10px;">' +
+					'<p style="margin: 0 0 4px 0; color: #1d2327;">Sistemde kayıtlı gönderici adlarınız:</p>' +
+					'<div>' + chips + '</div>' +
+					'<p style="margin: 6px 0 0 0; font-size: 12px; color: #50575e;">Bu adlardan birini gönderici (Message Header) olarak seçin.</p>' +
+				'</div>';
+			} else {
+				extra = '<p style="margin: 10px 0 0 0; color: #1d2327;">Sistemde kayıtlı gönderici adınız bulunmuyor. NetGSM ile görüşüp bir başlık (gönderici adı) kaydı yaptırın.</p>';
+			}
+		}
+
 		$container.html(
 			'<div style="padding: 12px 14px; background: ' + bg + '; border: 1px solid ' + border + '; border-radius: 6px;">' +
 				'<p style="margin: 0; font-weight: 600; color: ' + titleColor + ';">' + icon + ' ' + escapeHtml(title) + '</p>' +
 				(detail ? '<p style="margin: 8px 0 0 0; color: #1d2327;">' + detail + '</p>' : '') +
+				extra +
 			'</div>'
 		).show();
 	}
