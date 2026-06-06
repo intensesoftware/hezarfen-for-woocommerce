@@ -738,7 +738,7 @@ jQuery(document).ready(function($) {
 						loadNetGsmConnectionStatus();
 					}, 1200);
 				} else {
-					showInlineAlert('Error: ' + (response.data || hezarfen_sms_settings.strings.failed_to_save_credentials), 'error');
+					showInlineAlert(response.data || hezarfen_sms_settings.strings.failed_to_save_credentials, 'error');
 				}
 			},
 			error: function() {

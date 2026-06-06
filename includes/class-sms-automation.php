@@ -1314,7 +1314,20 @@ class SMS_Automation {
 		$msgheader = sanitize_text_field( $_POST['msgheader'] ?? '' );
 
 		if ( empty( $username ) || empty( $password ) || empty( $msgheader ) ) {
-			wp_send_json_error( 'All fields are required' );
+			wp_send_json_error( 'Lütfen kullanıcı adı, şifre ve gönderici adını girin.' );
+		}
+
+		// Validate against NetGSM before marking the account as connected: the
+		// username/password must work AND the chosen header must actually be
+		// registered on the account. This guarantees we never say "connected"
+		// for credentials that would fail at send time (e.g. code 30 or 40).
+		$headers = self::fetch_netgsm_message_headers( $username, $password );
+		if ( is_wp_error( $headers ) ) {
+			wp_send_json_error( $headers->get_error_message() );
+		}
+
+		if ( ! in_array( $msgheader, array_map( 'strval', (array) $headers ), true ) ) {
+			wp_send_json_error( 'Seçtiğiniz gönderici adı NetGSM hesabınızda kayıtlı değil. Lütfen listeden kayıtlı bir ad seçin.' );
 		}
 
 		$credentials = array(
@@ -1324,9 +1337,9 @@ class SMS_Automation {
 		);
 
 		if ( self::save_global_netgsm_credentials( $credentials ) ) {
-			wp_send_json_success( 'NetGSM credentials saved successfully' );
+			wp_send_json_success( 'NetGSM bağlantısı doğrulandı ve kuruldu.' );
 		} else {
-			wp_send_json_error( 'Failed to save NetGSM credentials' );
+			wp_send_json_error( 'NetGSM bilgileri kaydedilemedi.' );
 		}
 	}
 

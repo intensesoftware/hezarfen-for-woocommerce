@@ -1625,7 +1625,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					'found_senders_multiple' => __( 'Found %d senders available', 'hezarfen-for-woocommerce' ),
 					'credentials_required' => __( 'Username and password are required', 'hezarfen-for-woocommerce' ),
 					'select_message_header' => __( 'Please select a message header', 'hezarfen-for-woocommerce' ),
-					'credentials_saved_successfully' => __( 'NetGSM credentials saved successfully!', 'hezarfen-for-woocommerce' ),
+					'credentials_saved_successfully' => 'NetGSM bağlantısı doğrulandı ve kuruldu!',
 					'failed_to_save_credentials' => __( 'Failed to save credentials', 'hezarfen-for-woocommerce' ),
 					'network_error_saving_credentials' => __( 'Network error occurred while saving credentials', 'hezarfen-for-woocommerce' ),
 					'password_min_length' => __( 'Password must be at least 6 characters', 'hezarfen-for-woocommerce' ),
