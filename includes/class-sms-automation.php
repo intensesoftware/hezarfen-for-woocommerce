@@ -25,6 +25,43 @@ class SMS_Automation {
 		add_action( 'wp_ajax_hezarfen_save_netgsm_credentials', array( $this, 'ajax_save_netgsm_credentials' ) );
 		add_action( 'wp_ajax_hezarfen_get_netgsm_credentials', array( $this, 'ajax_get_netgsm_credentials' ) );
 		add_action( 'wp_ajax_hezarfen_get_netgsm_senders', array( $this, 'ajax_get_netgsm_senders' ) );
+		add_action( 'wp_ajax_hezarfen_test_netgsm', array( $this, 'ajax_test_netgsm' ) );
+		add_action( 'wp_ajax_hezarfen_set_netgsm_header', array( $this, 'ajax_set_netgsm_header' ) );
+		add_action( 'wp_ajax_hezarfen_set_sms_provider', array( $this, 'ajax_set_sms_provider' ) );
+	}
+
+	/**
+	 * Get the selected SMS provider for the connection screen.
+	 *
+	 * This is a UI preference for which provider's connection settings are shown.
+	 * Actual sending is still decided per rule (action_type).
+	 *
+	 * @return string
+	 */
+	public static function get_sms_provider() {
+		$provider = get_option( 'hezarfen_sms_provider', 'netgsm' );
+		return in_array( $provider, array( 'netgsm', 'pandasms' ), true ) ? $provider : 'netgsm';
+	}
+
+	/**
+	 * AJAX handler that stores the selected SMS provider.
+	 *
+	 * @return void
+	 */
+	public function ajax_set_sms_provider() {
+		check_ajax_referer( 'hezarfen_sms_settings_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'hezarfen-for-woocommerce' ) ) );
+		}
+
+		$provider = sanitize_text_field( wp_unslash( $_POST['provider'] ?? '' ) );
+		if ( ! in_array( $provider, array( 'netgsm', 'pandasms' ), true ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid provider.', 'hezarfen-for-woocommerce' ) ) );
+		}
+
+		update_option( 'hezarfen_sms_provider', $provider );
+		wp_send_json_success( array( 'provider' => $provider ) );
 	}
 
 	/**
@@ -884,7 +921,13 @@ class SMS_Automation {
 	 * @param array $data SMS data
 	 * @param string $username NetGSM username
 	 * @param string $password NetGSM password
-	 * @return array Array with 'success' (bool) and 'jobid' (string|null)
+	 * @return array {
+	 *     @type bool        $success     Whether the SMS was accepted by NetGSM.
+	 *     @type string|null $jobid       NetGSM job id when available.
+	 *     @type string      $code        NetGSM response code (or 'HTTP_xxx'/'WP_ERROR').
+	 *     @type string      $description Human readable description of the result.
+	 *     @type int|null    $http_code   HTTP status code returned by the API.
+	 * }
 	 */
 	private function send_netgsm_sms( $data, $username, $password ) {
 		$url = 'https://api.netgsm.com.tr/sms/rest/v2/send';
@@ -902,88 +945,165 @@ class SMS_Automation {
 		$response = wp_remote_post( $url, $args );
 
 		if ( is_wp_error( $response ) ) {
-			return array( 'success' => false, 'jobid' => null );
+			$wp_error_description = sprintf( __( 'Could not connect to the NetGSM server: %s', 'hezarfen-for-woocommerce' ), $response->get_error_message() );
+			return self::netgsm_result( false, 'WP_ERROR', null, $wp_error_description, null );
 		}
 
 		$response_code = wp_remote_retrieve_response_code( $response );
 		$response_body = wp_remote_retrieve_body( $response );
 
-		// Handle HTTP status codes
-		if ( $response_code === 406 ) {
-			return array( 'success' => false, 'jobid' => null );
-		} elseif ( $response_code !== 200 ) {
-			return array( 'success' => false, 'jobid' => null );
+		// NetGSM's v2 API can return a meaningful code in the body even with a
+		// non-200 HTTP status (e.g. 406 + {"code":"40"} for an invalid header).
+		// Prefer that code so the user sees the precise reason; only fall back to
+		// a generic HTTP-level message when the body carries no usable code.
+		if ( $response_code !== 200 ) {
+			$json = json_decode( trim( (string) $response_body ), true );
+			if ( json_last_error() === JSON_ERROR_NONE && is_array( $json ) && isset( $json['code'] ) ) {
+				return $this->handle_netgsm_json_response( $json, $response_code );
+			}
+
+			$http_description = $response_code === 406
+				? __( 'NetGSM rejected the request (HTTP 406). Your credentials, sender name or message content may be invalid.', 'hezarfen-for-woocommerce' )
+				: sprintf( __( 'NetGSM API returned an unexpected HTTP status: %d', 'hezarfen-for-woocommerce' ), $response_code );
+
+			return self::netgsm_result( false, 'HTTP_' . $response_code, null, $http_description, $response_code );
 		}
 
 		// Parse and handle NetGSM response codes
-		return $this->handle_netgsm_response( $response_body );
+		return $this->handle_netgsm_response( $response_body, $response_code );
+	}
+
+	/**
+	 * Build a normalized NetGSM result array.
+	 *
+	 * @param bool        $success     Whether the call succeeded.
+	 * @param string      $code        NetGSM response code.
+	 * @param string|null $jobid       Job id, if any.
+	 * @param string      $description Human readable description. Falls back to the code map when empty.
+	 * @param int|null    $http_code   HTTP status code.
+	 * @return array
+	 */
+	private static function netgsm_result( $success, $code, $jobid, $api_description = '', $http_code = 200 ) {
+		$code = (string) $code;
+		$map  = self::netgsm_code_messages();
+
+		// Prefer our documented Turkish description for known codes. NetGSM's own
+		// "description" field is terse/technical (e.g. "queued", "invalidHeader"),
+		// so it is only used as a fallback for codes we don't have a message for.
+		if ( isset( $map[ $code ] ) ) {
+			$description = $map[ $code ];
+		} elseif ( '' !== $api_description ) {
+			$description = $api_description;
+		} else {
+			$description = sprintf( __( 'NetGSM returned an unknown response (Code: %s).', 'hezarfen-for-woocommerce' ), $code );
+		}
+
+		return array(
+			'success'     => $success,
+			'jobid'       => $jobid,
+			'code'        => $code,
+			'description' => $description,
+			'http_code'   => $http_code,
+		);
+	}
+
+	/**
+	 * Map a NetGSM response code to a human readable (Turkish) message.
+	 *
+	 * @param string $code NetGSM response code.
+	 * @return string
+	 */
+	public static function get_netgsm_code_message( $code ) {
+		$map  = self::netgsm_code_messages();
+		$code = (string) $code;
+
+		return $map[ $code ] ?? sprintf( __( 'NetGSM returned an unknown response (Code: %s).', 'hezarfen-for-woocommerce' ), $code );
+	}
+
+	/**
+	 * NetGSM SMS sending response code => human readable (Turkish) description.
+	 *
+	 * Descriptions follow the official NetGSM SMS sending documentation
+	 * (netgsm.com.tr/dokuman). Messages are always Turkish since the provider
+	 * and its documentation are Turkish.
+	 *
+	 * @return array<string, string>
+	 */
+	private static function netgsm_code_messages() {
+		return array(
+			// Success codes.
+			'00'  => __( 'Task created successfully.', 'hezarfen-for-woocommerce' ),
+			'01'  => __( 'Task created; the start date had an error so it was processed with the system date.', 'hezarfen-for-woocommerce' ),
+			'02'  => __( 'Task created; the end date had an error so it was processed with the system date.', 'hezarfen-for-woocommerce' ),
+			// Error codes (descriptions from the official NetGSM documentation).
+			'20'  => __( 'Could not be sent due to a problem in the message text, or you exceeded the standard maximum character count.', 'hezarfen-for-woocommerce' ),
+			'30'  => __( 'Invalid username, password or no API access permission. If you set an IP restriction for API access, sending from another IP also returns this code.', 'hezarfen-for-woocommerce' ),
+			'40'  => __( 'Your message header (sender name) is not registered in the system. You can check your sender names via the API.', 'hezarfen-for-woocommerce' ),
+			'50'  => __( 'IYS-controlled sending cannot be done with your subscriber account.', 'hezarfen-for-woocommerce' ),
+			'51'  => __( 'No IYS brand information is defined for your subscription.', 'hezarfen-for-woocommerce' ),
+			'70'  => __( 'Invalid query. One of the parameters you sent is wrong, or a required field is missing.', 'hezarfen-for-woocommerce' ),
+			'80'  => __( 'Sending limit exceeded.', 'hezarfen-for-woocommerce' ),
+			'85'  => __( 'Duplicate sending limit exceeded. You cannot create more than 20 tasks for the same number within 1 minute.', 'hezarfen-for-woocommerce' ),
+			'100' => __( 'System error. Please try again later.', 'hezarfen-for-woocommerce' ),
+			'101' => __( 'System error. Please try again later.', 'hezarfen-for-woocommerce' ),
+		);
 	}
 
 	/**
 	 * Handle NetGSM API response codes
 	 *
 	 * @param string $response_body Response body from NetGSM API
-	 * @return array Array with 'success' (bool) and 'jobid' (string|null)
+	 * @param int    $http_code     HTTP status code.
+	 * @return array Normalized result array (see send_netgsm_sms()).
 	 */
-	private function handle_netgsm_response( $response_body ) {
+	private function handle_netgsm_response( $response_body, $http_code = 200 ) {
 		$response_body = trim( $response_body );
-		
+
 		// Try to parse as JSON first
 		$json_response = json_decode( $response_body, true );
 		if ( json_last_error() === JSON_ERROR_NONE && is_array( $json_response ) ) {
-			return $this->handle_netgsm_json_response( $json_response );
+			return $this->handle_netgsm_json_response( $json_response, $http_code );
 		}
-		
+
 		// Fallback to plain text response handling
-		return $this->handle_netgsm_plain_response( $response_body );
+		return $this->handle_netgsm_plain_response( $response_body, $http_code );
 	}
 
 	/**
 	 * Handle NetGSM JSON response format
 	 *
-	 * @param array $response JSON decoded response
-	 * @return array Array with 'success' (bool) and 'jobid' (string|null)
+	 * @param array $response  JSON decoded response
+	 * @param int   $http_code HTTP status code.
+	 * @return array Normalized result array (see send_netgsm_sms()).
 	 */
-	private function handle_netgsm_json_response( $response ) {
-		$code = $response['code'] ?? '';
+	private function handle_netgsm_json_response( $response, $http_code = 200 ) {
+		$code = (string) ( $response['code'] ?? '' );
 		$jobid = $response['jobid'] ?? null;
 		$description = $response['description'] ?? '';
-		
-		// Handle success codes
-		switch ( $code ) {
-			case '00':
-				return array( 'success' => true, 'jobid' => $jobid );
-			case '01':
-				return array( 'success' => true, 'jobid' => $jobid );
-			case '02':
-				return array( 'success' => true, 'jobid' => $jobid );
-		}
-		
-		// Handle error codes - all return false
-		return array( 'success' => false, 'jobid' => null );
+
+		$success = in_array( $code, array( '00', '01', '02' ), true );
+
+		return self::netgsm_result( $success, $code, $success ? $jobid : null, $description, $http_code );
 	}
 
 	/**
 	 * Handle NetGSM plain text response format (fallback)
 	 *
 	 * @param string $response_body Plain text response
-	 * @return array Array with 'success' (bool) and 'jobid' (string|null)
+	 * @param int    $http_code     HTTP status code.
+	 * @return array Normalized result array (see send_netgsm_sms()).
 	 */
-	private function handle_netgsm_plain_response( $response_body ) {
+	private function handle_netgsm_plain_response( $response_body, $http_code = 200 ) {
 		// Check for success responses
-		if ( $response_body === '00' ) {
-			return array( 'success' => true, 'jobid' => null );
-		} elseif ( $response_body === '01' ) {
-			return array( 'success' => true, 'jobid' => null );
-		} elseif ( $response_body === '02' ) {
-			return array( 'success' => true, 'jobid' => null );
+		if ( in_array( $response_body, array( '00', '01', '02' ), true ) ) {
+			return self::netgsm_result( true, $response_body, null, '', $http_code );
 		} elseif ( is_numeric( $response_body ) && strlen( $response_body ) > 10 ) {
 			// Job ID response (long numeric string)
-			return array( 'success' => true, 'jobid' => $response_body );
+			return self::netgsm_result( true, '00', $response_body, '', $http_code );
 		}
 
-		// Handle error codes - all return false
-		return array( 'success' => false, 'jobid' => null );
+		// Handle error codes - the body usually contains the NetGSM code itself.
+		return self::netgsm_result( false, $response_body, null, '', $http_code );
 	}
 
 	/**
@@ -999,7 +1119,7 @@ class SMS_Automation {
 	private function log_sms_attempt( $order, $rule, $phone, $message, $sms_result ) {
 		$success = $sms_result['success'] ?? false;
 		$jobid = $sms_result['jobid'] ?? null;
-		
+
 		$log_entry = array(
 			'timestamp' => current_time( 'mysql' ),
 			'order_id' => $order->get_id(),
@@ -1168,6 +1288,14 @@ class SMS_Automation {
 				'iys_status' => sanitize_text_field( $rule['iys_status'] ?? '0' ),
 			);
 
+			// PandaSMS (legacy) only works with the "Order Shipped" trigger; it always
+			// sends the "Sipariş kargoya verildiğinde" template regardless of the chosen
+			// condition. Reject any other combination so we don't store a misfiring rule.
+			if ( 'pandasms_legacy' === $sanitized_rule['action_type'] && 'hezarfen_order_shipped' !== $sanitized_rule['condition_status'] ) {
+				wp_send_json_error( __( 'PandaSMS yalnızca "Sipariş kargoya verildiğinde" tetikleyicisiyle kullanılabilir. Diğer sipariş durumları için SMS\'i doğrudan PandaSMS eklentisinden ayarlayın.', 'hezarfen-for-woocommerce' ) );
+				return;
+			}
+
 			// NetGSM credentials are now stored globally, no need to save with individual rules
 
 			$sanitized_rules[] = $sanitized_rule;
@@ -1229,7 +1357,20 @@ class SMS_Automation {
 		$msgheader = sanitize_text_field( $_POST['msgheader'] ?? '' );
 
 		if ( empty( $username ) || empty( $password ) || empty( $msgheader ) ) {
-			wp_send_json_error( 'All fields are required' );
+			wp_send_json_error( __( 'Please enter the username, password and sender name.', 'hezarfen-for-woocommerce' ) );
+		}
+
+		// Validate against NetGSM before marking the account as connected: the
+		// username/password must work AND the chosen header must actually be
+		// registered on the account. This guarantees we never say "connected"
+		// for credentials that would fail at send time (e.g. code 30 or 40).
+		$headers = self::fetch_netgsm_message_headers( $username, $password );
+		if ( is_wp_error( $headers ) ) {
+			wp_send_json_error( $headers->get_error_message() );
+		}
+
+		if ( ! in_array( $msgheader, array_map( 'strval', (array) $headers ), true ) ) {
+			wp_send_json_error( __( 'The sender name you selected is not registered in your NetGSM account. Please choose a registered name from the list.', 'hezarfen-for-woocommerce' ) );
 		}
 
 		$credentials = array(
@@ -1239,9 +1380,9 @@ class SMS_Automation {
 		);
 
 		if ( self::save_global_netgsm_credentials( $credentials ) ) {
-			wp_send_json_success( 'NetGSM credentials saved successfully' );
+			wp_send_json_success( __( 'NetGSM connection verified and established.', 'hezarfen-for-woocommerce' ) );
 		} else {
-			wp_send_json_error( 'Failed to save NetGSM credentials' );
+			wp_send_json_error( 'NetGSM bilgileri kaydedilemedi.' );
 		}
 	}
 
@@ -1260,12 +1401,17 @@ class SMS_Automation {
 		$credentials = self::get_global_netgsm_credentials();
 		$is_connected = self::is_netgsm_connected();
 
+		// Return stored credentials whenever a username exists, even if the
+		// connection is incomplete (e.g. the message header was cleared after a
+		// failed test). This lets the inline form prefill what we already have.
+		$has_credentials = $credentials && ! empty( $credentials['username'] );
+
 		wp_send_json_success( array(
 			'is_connected' => $is_connected,
-			'credentials' => $is_connected ? array(
-				'username' => $credentials['username'],
-				'password' => $credentials['password'],
-				'msgheader' => $credentials['msgheader'],
+			'credentials' => $has_credentials ? array(
+				'username' => $credentials['username'] ?? '',
+				'password' => $credentials['password'] ?? '',
+				'msgheader' => $credentials['msgheader'] ?? '',
 			) : null,
 		) );
 	}
@@ -1379,6 +1525,127 @@ class SMS_Automation {
 
 		wp_send_json_success( array(
 			'senders' => $message_headers,
+		) );
+	}
+
+	/**
+	 * AJAX handler that sends a test SMS so the admin can verify the NetGSM
+	 * connection. The message body is generated automatically; the admin only
+	 * provides the destination phone number.
+	 *
+	 * @return void
+	 */
+	public function ajax_test_netgsm() {
+		check_ajax_referer( 'hezarfen_sms_settings_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'hezarfen-for-woocommerce' ) ) );
+		}
+
+		$phone = sanitize_text_field( wp_unslash( $_POST['phone'] ?? '' ) );
+		if ( empty( $phone ) ) {
+			wp_send_json_error( array( 'message' => __( 'Enter a phone number to send the test SMS.', 'hezarfen-for-woocommerce' ) ) );
+		}
+
+		$credentials = self::get_global_netgsm_credentials();
+		$username  = $credentials['username'] ?? '';
+		$password  = $credentials['password'] ?? '';
+		$msgheader = $credentials['msgheader'] ?? '';
+
+		if ( empty( $username ) || empty( $password ) || empty( $msgheader ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'NetGSM is not connected yet. Please connect your NetGSM account before testing.', 'hezarfen-for-woocommerce' ),
+			) );
+		}
+
+		$message = sprintf( __( 'Hezarfen for WooCommerce: This is a NetGSM test message. Your SMS integration is working. (Sender: %s)', 'hezarfen-for-woocommerce' ), $msgheader );
+
+		$data = array(
+			'msgheader'   => $msgheader,
+			'messages'    => array(
+				array(
+					'msg' => $message,
+					'no'  => $phone,
+				),
+			),
+			'encoding'    => 'TR',
+			'iysfilter'   => '0',
+			'partnercode' => 'F335A6CA',
+		);
+
+		$result = $this->send_netgsm_sms( $data, $username, $password );
+
+		// On code 40 (sender name not registered) fetch the sender names that ARE
+		// registered on the account so the user can pick a valid one, and clear
+		// the stored (invalid) header so it is no longer used until reselected.
+		$registered_headers = array();
+		$header_reset        = false;
+		if ( '40' === ( $result['code'] ?? '' ) ) {
+			$headers = self::fetch_netgsm_message_headers( $username, $password );
+			if ( ! is_wp_error( $headers ) && is_array( $headers ) ) {
+				$registered_headers = array_values( array_filter( array_map( 'strval', $headers ) ) );
+			}
+
+			if ( '' !== ( $credentials['msgheader'] ?? '' ) ) {
+				$credentials['msgheader'] = '';
+				self::save_global_netgsm_credentials( $credentials );
+				$header_reset = true;
+			}
+		}
+
+		// Test results are intentionally NOT persisted to the SMS log; they are
+		// only returned for display right below the test button. Both the NetGSM
+		// code and its description are returned so the UI can show both.
+		$payload = array(
+			'success'            => (bool) $result['success'],
+			'code'               => $result['code'] ?? '',
+			'description'        => $result['description'] ?? '',
+			'jobid'              => $result['jobid'] ?? null,
+			'phone'              => $phone,
+			'message'            => $message,
+			'sender'             => $msgheader,
+			'registered_headers' => $registered_headers,
+			'header_reset'       => $header_reset,
+		);
+
+		if ( $result['success'] ) {
+			wp_send_json_success( $payload );
+		}
+
+		wp_send_json_error( $payload );
+	}
+
+	/**
+	 * AJAX handler that sets the message header (sender name) on the already
+	 * stored credentials. Used when the user picks a registered sender from the
+	 * test result and confirms it, without re-entering username/password.
+	 *
+	 * @return void
+	 */
+	public function ajax_set_netgsm_header() {
+		check_ajax_referer( 'hezarfen_sms_settings_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'hezarfen-for-woocommerce' ) ) );
+		}
+
+		$header = sanitize_text_field( wp_unslash( $_POST['msgheader'] ?? '' ) );
+		if ( empty( $header ) ) {
+			wp_send_json_error( array( 'message' => __( 'Please select a sender name.', 'hezarfen-for-woocommerce' ) ) );
+		}
+
+		$credentials = self::get_global_netgsm_credentials();
+		if ( ! $credentials || empty( $credentials['username'] ) || empty( $credentials['password'] ) ) {
+			wp_send_json_error( array( 'message' => __( 'Please enter your NetGSM username and password first.', 'hezarfen-for-woocommerce' ) ) );
+		}
+
+		$credentials['msgheader'] = $header;
+		self::save_global_netgsm_credentials( $credentials );
+
+		wp_send_json_success( array(
+			/* translators: %s sender (message header) name */
+			'message'   => sprintf( __( 'Sender name connected: %s', 'hezarfen-for-woocommerce' ), $header ),
+			'msgheader' => $header,
 		) );
 	}
 }

@@ -121,10 +121,15 @@ class Pandasms extends MST_Notification_Provider {
 
 	/**
 	 * Checks if the PandaSMS plugin is ready to be used as a notification provider.
-	 * 
+	 *
+	 * The PandaSMS send function is the authoritative signal that the plugin is
+	 * loaded and usable; we also keep the basename check so the standard install
+	 * is detected early (before the function is defined). This makes detection
+	 * work even when the plugin folder is non-standard (e.g. version-suffixed).
+	 *
 	 * @return bool
 	 */
 	public static function is_plugin_ready() {
-		return Hezarfen_Helper::is_plugin_active( self::$plugin_basename );
+		return function_exists( 'pandasms_wc_siparis_bildirimi' ) || Hezarfen_Helper::is_plugin_active( self::$plugin_basename );
 	}
 }

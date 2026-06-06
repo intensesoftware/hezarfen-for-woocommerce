@@ -12,7 +12,324 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Loco-Version: 2.8.0; wp-6.9.4; php-8.2.27"
+
+msgid "Task created successfully."
+msgstr "Görev başarıyla oluşturuldu."
+
+msgid ""
+"Task created; the start date had an error so it was processed with the "
+"system date."
+msgstr ""
+"Görev oluşturuldu; mesaj gönderim başlangıç tarihinde hata olduğu için "
+"sistem tarihiyle işleme alındı."
+
+msgid ""
+"Task created; the end date had an error so it was processed with the system "
+"date."
+msgstr ""
+"Görev oluşturuldu; mesaj gönderim bitiş tarihinde hata olduğu için sistem "
+"tarihiyle işleme alındı."
+
+msgid ""
+"Could not be sent due to a problem in the message text, or you exceeded the "
+"standard maximum character count."
+msgstr ""
+"Mesaj metnindeki problemden dolayı gönderilemedi veya standart maksimum "
+"mesaj karakter sayısını geçtiniz."
+
+msgid ""
+"Invalid username, password or no API access permission. If you set an IP "
+"restriction for API access, sending from another IP also returns this code."
+msgstr ""
+"Geçersiz kullanıcı adı, şifre veya API erişim izniniz yok. API erişiminizde "
+"IP sınırlaması varsa, sınırladığınız IP dışından gönderimde de bu kodu "
+"alırsınız."
+
+msgid ""
+"Your message header (sender name) is not registered in the system. You can "
+"check your sender names via the API."
+msgstr ""
+"Mesaj başlığınız (gönderici adınız) sistemde tanımlı değil. Gönderici "
+"adlarınızı API ile sorgulayarak kontrol edebilirsiniz."
+
+msgid "IYS-controlled sending cannot be done with your subscriber account."
+msgstr "Abone hesabınız ile İYS kontrollü gönderimler yapılamamaktadır."
+
+msgid "No IYS brand information is defined for your subscription."
+msgstr "Aboneliğinize tanımlı İYS Marka bilgisi bulunamadı."
+
+msgid ""
+"Invalid query. One of the parameters you sent is wrong, or a required field "
+"is missing."
+msgstr ""
+"Hatalı sorgulama. Gönderdiğiniz parametrelerden biri hatalı veya zorunlu "
+"alanlardan biri eksik."
+
+msgid "Sending limit exceeded."
+msgstr "Gönderim sınır aşımı."
+
+msgid ""
+"Duplicate sending limit exceeded. You cannot create more than 20 tasks for "
+"the same number within 1 minute."
+msgstr ""
+"Mükerrer gönderim sınır aşımı. Aynı numaraya 1 dakika içerisinde 20'den "
+"fazla görev oluşturulamaz."
+
+msgid "System error. Please try again later."
+msgstr "Sistem hatası. Lütfen daha sonra tekrar deneyin."
+
+msgid "Could not connect to the NetGSM server: %s"
+msgstr "NetGSM sunucusuna bağlanılamadı: %s"
+
+msgid ""
+"NetGSM rejected the request (HTTP 406). Your credentials, sender name or "
+"message content may be invalid."
+msgstr ""
+"NetGSM isteği reddetti (HTTP 406). Kullanıcı bilgileriniz, gönderici adınız "
+"veya mesaj içeriği geçersiz olabilir."
+
+msgid "NetGSM API returned an unexpected HTTP status: %d"
+msgstr "NetGSM API beklenmeyen bir HTTP durumu döndürdü: %d"
+
+msgid "NetGSM returned an unknown response (Code: %s)."
+msgstr "NetGSM bilinmeyen bir yanıt döndürdü (Kod: %s)."
+
+msgid "You do not have permission to perform this action."
+msgstr "Bu işlemi yapmaya yetkiniz yok."
+
+msgid "Invalid provider."
+msgstr "Geçersiz sağlayıcı."
+
+msgid "Please enter the username, password and sender name."
+msgstr "Lütfen kullanıcı adı, şifre ve gönderici adını girin."
+
+msgid ""
+"The sender name you selected is not registered in your NetGSM account. "
+"Please choose a registered name from the list."
+msgstr ""
+"Seçtiğiniz gönderici adı NetGSM hesabınızda kayıtlı değil. Lütfen listeden "
+"kayıtlı bir ad seçin."
+
+msgid "NetGSM connection verified and established."
+msgstr "NetGSM bağlantısı doğrulandı ve kuruldu."
+
+msgid "Enter a phone number to send the test SMS."
+msgstr "Test SMS göndermek için bir telefon numarası girin."
+
+msgid ""
+"NetGSM is not connected yet. Please connect your NetGSM account before "
+"testing."
+msgstr "NetGSM henüz bağlı değil. Test öncesi NetGSM hesabınızı bağlayın."
+
+msgid ""
+"Hezarfen for WooCommerce: This is a NetGSM test message. Your SMS "
+"integration is working. (Sender: %s)"
+msgstr ""
+"Hezarfen for WooCommerce: Bu bir NetGSM test mesajıdır. SMS entegrasyonunuz "
+"çalışıyor. (Gönderici: %s)"
+
+msgid "Please select a sender name."
+msgstr "Lütfen bir gönderici adı seçin."
+
+msgid "Please enter your NetGSM username and password first."
+msgstr "Önce NetGSM kullanıcı adı ve şifrenizi girin."
+
+msgid "Sender name connected: %s"
+msgstr "Gönderici adı bağlandı: %s"
+
+msgid "SMS Provider"
+msgstr "SMS Sağlayıcısı"
+
+msgid "Choose the SMS company you want to use and set up its connection."
+msgstr "SMS göndermek istediğiniz firmayı seçin ve bağlantısını kurun."
+
+msgid "SMS Company"
+msgstr "SMS Firması"
+
+msgid "NetGSM Connection"
+msgstr "NetGSM Bağlantısı"
+
+msgid "Your NetGSM account connection status"
+msgstr "NetGSM hesabınızın bağlantı durumu"
+
+msgid "Test Sending"
+msgstr "Test Gönderimi"
+
+msgid "Verify your NetGSM connection by sending a test SMS."
+msgstr "Bir test SMS göndererek NetGSM bağlantınızı doğrulayın."
+
+msgid ""
+"Send a test SMS to verify your NetGSM connection. The message content is "
+"generated automatically."
+msgstr ""
+"NetGSM bağlantınızı doğrulamak için test SMS gönderin. Mesaj içeriği "
+"otomatik oluşturulur."
+
+msgid "SMS Template / Message Settings"
+msgstr "SMS Şablon/Mesaj Ayarları"
+
+msgid "Enter your NetGSM credentials to enable SMS sending."
+msgstr "SMS gönderimini etkinleştirmek için NetGSM bilgilerinizi girin."
+
+msgid "NetGSM Username"
+msgstr "NetGSM Kullanıcı Adı"
+
+msgid "850xxxxxxx, 312XXXXXXX etc."
+msgstr "850xxxxxxx, 312XXXXXXX vb."
+
+msgid "NetGSM Password"
+msgstr "NetGSM Şifre"
+
+msgid "Your API password"
+msgstr "API şifreniz"
+
+msgid "Toggle password visibility"
+msgstr "Şifreyi göster/gizle"
+
+msgid "Message Header"
+msgstr "Gönderici Adı (Başlık)"
+
+msgid "First enter username and password above"
+msgstr "Önce yukarıya kullanıcı adı ve şifre girin"
+
+msgid "Available sender names from your NetGSM account"
+msgstr "NetGSM hesabınızda kayıtlı gönderici adları"
+
+msgid "Connect"
+msgstr "Bağlan"
+
+msgid "Cancel"
+msgstr "Vazgeç"
+
+msgid "will be removed soon"
+msgstr "yakında kaldırılacak"
+
+msgid "Select the SMS company you want to use."
+msgstr "Kullanmak istediğiniz SMS firmasını seçin."
+
+msgid ""
+"The PandaSMS integration will be removed soon. We recommend using NetGSM."
+msgstr ""
+"PandaSMS entegrasyonu yakında kaldırılacaktır. NetGSM kullanmanızı öneririz."
+
+msgid "PandaSMS Configuration"
+msgstr "PandaSMS Yapılandırması"
+
+msgid "PandaSMS message content is configured in the PandaSMS plugin settings."
+msgstr "PandaSMS mesaj içeriği, PandaSMS eklenti ayarlarından yapılandırılır."
+
+msgid "Warning: PandaSMS plugin is not active!"
+msgstr "Uyarı: PandaSMS eklentisi aktif değil!"
+
+msgid ""
+"Please install and activate the PandaSMS plugin to use this SMS integration."
+msgstr ""
+"Bu SMS entegrasyonunu kullanmak için PandaSMS eklentisini yükleyip "
+"etkinleştirin."
+
+msgid "Connect your NetGSM account above before sending a test SMS."
+msgstr "Test SMS göndermeden önce yukarıdan NetGSM hesabınızı bağlayın."
+
+msgid "Destination phone number"
+msgstr "Hedef telefon numarası"
+
+msgid "Send Test SMS"
+msgstr "Test SMS Gönder"
+
+msgid ""
+"A standard charge from your NetGSM account applies for the test message."
+msgstr "Test mesajı için NetGSM hesabınızdan standart ücret alınır."
+
+msgid "NetGSM connection verified and established!"
+msgstr "NetGSM bağlantısı doğrulandı ve kuruldu!"
+
+msgid "Connected to NetGSM"
+msgstr "NetGSM'e Bağlandı"
+
+msgid "Change Credentials"
+msgstr "Bilgileri Değiştir"
+
+msgid "Username"
+msgstr "Kullanıcı Adı"
+
+msgid "Sender"
+msgstr "Gönderici"
+
+msgid "Enter a phone number for the test SMS."
+msgstr "Test SMS için bir telefon numarası girin."
+
+msgid "Sending test SMS…"
+msgstr "Test SMS gönderiliyor…"
+
+msgid "Test SMS sent successfully"
+msgstr "Test SMS başarıyla gönderildi"
+
+msgid "Test SMS could not be sent"
+msgstr "Test SMS gönderilemedi"
+
+msgid "A network error occurred while sending the test SMS."
+msgstr "Test SMS gönderilirken bir ağ hatası oluştu."
+
+msgid "Result"
+msgstr "Sonuç"
+
+msgid "NetGSM code"
+msgstr "NetGSM kodu"
+
+msgid "Job ID"
+msgstr "Görev No"
+
+msgid "Sent to"
+msgstr "Gönderilen numara"
+
+msgid "Message sent to the recipient."
+msgstr "Mesaj alıcıya gönderildi."
+
+msgid "Your registered sender names:"
+msgstr "Sistemde kayıtlı gönderici adlarınız:"
+
+msgid "Click a sender name and connect it with the Confirm button."
+msgstr "Bir gönderici adına tıklayıp Onayla ile bağlayın."
+
+msgid "Confirm & Connect"
+msgstr "Onayla ve Bağla"
+
+msgid ""
+"You have no registered sender names. Please contact NetGSM to register a "
+"sender name (header)."
+msgstr ""
+"Sistemde kayıtlı gönderici adınız bulunmuyor. NetGSM ile görüşüp bir başlık "
+"(gönderici adı) kaydı yaptırın."
+
+msgid "Sender name connected."
+msgstr "Gönderici adı bağlandı."
+
+msgid "You can run the test again now."
+msgstr "Artık yeniden test gönderebilirsiniz."
+
+msgid "Could not connect the sender name."
+msgstr "Gönderici adı bağlanamadı."
+
+msgid "Network error."
+msgstr "Ağ hatası."
+
+msgid "Connecting…"
+msgstr "Bağlanıyor…"
+
+msgid "NetGSM Account Not Connected"
+msgstr "NetGSM Hesabı Bağlı Değil"
+
+msgid ""
+"Fill in the form below to connect your NetGSM account and enable SMS sending."
+msgstr ""
+"Aşağıdaki formu doldurarak NetGSM hesabınızı bağlayın ve SMS gönderimini "
+"etkinleştirin"
+
+msgid "Not a NetGSM member?"
+msgstr "NetGSM Üyesi Değil misiniz?"
+
+msgid "Click here to sign up for NetGSM →"
+msgstr "Buraya tıklayarak NetGSM'e üye olabilirsiniz →"
 
 #: includes/admin/class-admin-menu.php:648
 msgid "\"Kargoya Verildi\" durumunda otomatik SMS bildirimi"
@@ -52,10 +369,6 @@ msgstr ""
 msgid "23 farklı kargo firması için kargo takip desteği"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1350
-msgid "850xxxxxxx, 312XXXXXXX etc."
-msgstr "850xxxxxxx, 312XXXXXXX vb."
-
 #. 1: plugin name, 2: minimum WooCommerce version, 3: current WooCommerce version
 #: hezarfen-for-woocommerce.php:83
 #, php-format
@@ -85,8 +398,8 @@ msgid ""
 "<strong>İlçe/mahalle seçimi zaten düzgün çalışıyorsa bu uyarıyı görmezden "
 "gelebilirsiniz.</strong> Woodmart teması tespit edildi. Woodmart'ın "
 "\"Checkout fields\" (Ödeme Alanları) özelliği aktif olduğunda, Hezarfen'in "
-"ilçe/mahalle seçimleri sayfa yenilenmeden düzgün çalışamaz. Hezarfen "
-"ilçe/mahalle özelliğini sorunsuz kullanmak için lütfen Woodmart ayarlarından "
+"ilçe/mahalle seçimleri sayfa yenilenmeden düzgün çalışamaz. Hezarfen ilçe/"
+"mahalle özelliğini sorunsuz kullanmak için lütfen Woodmart ayarlarından "
 "\"Checkout fields\" modülünü devre dışı bırakın."
 msgstr ""
 
@@ -237,10 +550,6 @@ msgstr "Ödeme formundaki alanlar otomatik olarak sıralansın mı?"
 #, fuzzy
 msgid "Automatic Updates"
 msgstr "Otomatik Güncellemeler"
-
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1386
-msgid "Available sender names from your NetGSM account"
-msgstr "NetGSM hesabınızdaki kullanılabilir gönderici adları"
 
 #: includes/class-sms-automation.php:509
 #: includes/contracts/admin/class-contracts-settings.php:114
@@ -406,11 +715,11 @@ msgid ""
 "target='_blank' href='https://woocommerce.com/document/cart-checkout-blocks-"
 "status/#reverting-to-shortcodes-with-woocommerce-8-3'>these instructions</a>."
 msgstr ""
-"Woocommerce Ödeme Blokları özelliği sitenizde aktif olduğu için, <strong>"
-"Hezarfen for Woocommerce</strong> eklentisi ödeme ekranında çalışmamaktadır. "
-"<a target='_blank' href='https://youtu.be/vFvAxlEIAKc'>https://youtu."
-"be/vFvAxlEIAKc</a> uygulayarak kolaylıkla eski ödeme sayfası sistemini aktif "
-"edebilirsiniz."
+"Woocommerce Ödeme Blokları özelliği sitenizde aktif olduğu için, "
+"<strong>Hezarfen for Woocommerce</strong> eklentisi ödeme ekranında "
+"çalışmamaktadır. <a target='_blank' href='https://youtu.be/"
+"vFvAxlEIAKc'>https://youtu.be/vFvAxlEIAKc</a> uygulayarak kolaylıkla eski "
+"ödeme sayfası sistemini aktif edebilirsiniz."
 
 #: packages/manual-shipment-tracking/includes/class-hepsijet-bulk-barcode.php:243
 msgid "Bekliyor..."
@@ -529,16 +838,6 @@ msgstr "Ön Bellek Yönetimi"
 #: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:143
 msgid "Campaign ended"
 msgstr "Kampanya sona erdi"
-
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:761
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1395
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1525
-#: packages/manual-shipment-tracking/includes/admin/class-admin-orders.php:139
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:835
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:885
-#: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:991
-msgid "Cancel"
-msgstr "İptal"
 
 #: includes/class-sms-automation.php:603
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:768
@@ -730,10 +1029,6 @@ msgstr "Sipariş durumu değişiklikleri için SMS bildirimlerini yapılandırı
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:481
 msgid "Configure SMS rules for different order status changes"
 msgstr "Farklı sipariş durumu değişiklikleri için SMS kuralları yapılandırın"
-
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1398
-msgid "Connect"
-msgstr "Bağla"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1329
 msgid "Connect to NetGSM"
@@ -1290,10 +1585,6 @@ msgstr "Veri çekiliyor.."
 msgid "Fill Form Details"
 msgstr "Form Detaylarını Doldurun"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1377
-msgid "First enter username and password above"
-msgstr "Lütfen öncelikle kullanıcı adı ve şifrenizi yukarıya giriniz"
-
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:574
 msgid "First Name"
 msgstr "Ad"
@@ -1580,8 +1871,8 @@ msgstr ""
 "kullandığınız Intense Kargo Takip Eklentisi veya Kargo Takip Türkiye "
 "eklentisini daha sonra devre dışı bıraksanız bile bu veriler Hezarfen'de "
 "erişilebilir kalır. Bunu Hezarfen Ayarlar ekranından yapmaya "
-"başlayabilirsiniz. Hezarfen Manuel Kargo Takip Ayarları -> Gelişmiş Ayarlar -"
-"> Üçüncü taraf eklentilerin verilerini algıla -> Algılama tipi -> "
+"başlayabilirsiniz. Hezarfen Manuel Kargo Takip Ayarları -> Gelişmiş Ayarlar "
+"-> Üçüncü taraf eklentilerin verilerini algıla -> Algılama tipi -> "
 "'Desteklenen eklentilerin verilerini algıla: (Intense Kargo Takip, Kargo "
 "Takip Turkiye)' seçeneğine tıklayın."
 
@@ -1720,8 +2011,8 @@ msgstr ""
 #: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:136
 #: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:145
 msgid ""
-"If you want to send the shipment notification email to additional recipients,"
-" type the emails separated with comma."
+"If you want to send the shipment notification email to additional "
+"recipients, type the emails separated with comma."
 msgstr ""
 "Ürün kargoya verildiğinde; müşterinize gönderilen 'kargoya verildi' "
 "bildirimini başka alıcılara da göndermek istiyorsanız araya virgül koyarak "
@@ -1747,14 +2038,14 @@ msgstr ""
 #: includes/class-hezarfen.php:138
 msgid ""
 "In order to <strong>Hezarfen for WooCommerce</strong> plugin work, please "
-"remove the <strong>Intense Türkiye İl İlçe Eklentisi For WooCommerce</strong>"
-" plugin. The <strong>Hezarfen</strong> plugin already has province, district "
-"and neighborhood data in it."
+"remove the <strong>Intense Türkiye İl İlçe Eklentisi For WooCommerce</"
+"strong> plugin. The <strong>Hezarfen</strong> plugin already has province, "
+"district and neighborhood data in it."
 msgstr ""
 "<strong>Hezarfen for WooCommerce</strong> eklentisinin sağıklı çalışabilmesi "
 "için <strong>Intense Türkiye İl İlçe Eklentisi For WooCommerce</strong> "
-"eklentisini siliniz. <strong>Hezarfen</strong> eklentisi zaten bünyesinde İl,"
-" ilçe ve mahalle verilerini barındırmaktadır."
+"eklentisini siliniz. <strong>Hezarfen</strong> eklentisi zaten bünyesinde "
+"İl, ilçe ve mahalle verilerini barındırmaktadır."
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:115
 msgid ""
@@ -1836,9 +2127,9 @@ msgstr "Geçersiz bakiye yanıtı"
 #: includes/class-sms-automation.php:1331
 msgid "Invalid request parameters. Please check your credentials."
 msgstr ""
-"Geçersiz istek parametreleri. Lütfen kimlik bilgilerinizi kontrol edin."
-"Geçersiz istek parametreleri. Lütfen kimlik bilgilerinizi kontrol edin."
-"Geçersiz istek parametreleri. Lütfen kimlik bilgilerinizi kontrol edin."
+"Geçersiz istek parametreleri. Lütfen kimlik bilgilerinizi kontrol "
+"edin.Geçersiz istek parametreleri. Lütfen kimlik bilgilerinizi kontrol "
+"edin.Geçersiz istek parametreleri. Lütfen kimlik bilgilerinizi kontrol edin."
 
 #: includes/class-sms-automation.php:1330
 msgid ""
@@ -2107,10 +2398,6 @@ msgstr "Takip Numaraları"
 msgid "Manuel takip numarası girildiğinde:"
 msgstr ""
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1373
-msgid "Message Header"
-msgstr "Mesaj Başlığı"
-
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:737
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1565
 #, fuzzy
@@ -2176,10 +2463,6 @@ msgstr "NetGSM API hatası (Kod: %s)"
 msgid "NetGSM Configuration"
 msgstr "NetGSM Yapılandırması"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:466
-msgid "NetGSM Connection"
-msgstr ""
-
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1534
 msgid "NetGSM credentials saved successfully!"
 msgstr "NetGSM bilgileriniz başarıyla kaydedildi!"
@@ -2198,18 +2481,10 @@ msgstr "NetGSM Ayarları (Yakında Kullanımdan Kaldırılacak)"
 msgid "NetGSM Official Plugin (Legacy)"
 msgstr "NetGSM Resmi Eklentisi"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1355
-msgid "NetGSM Password"
-msgstr "NetGSM Şifre"
-
 #: includes/class-sms-automation.php:1332
 #: includes/class-sms-automation.php:1333
 msgid "NetGSM system error. Please try again later."
 msgstr "NetGSM sistem hatası. Lütfen daha sonra tekrar deneyiniz."
-
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1348
-msgid "NetGSM Username"
-msgstr "NetGSM Kullanıcı Adı"
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1528
 msgid "Network error occurred while loading senders"
@@ -2439,10 +2714,6 @@ msgstr ""
 msgid "PackUpp"
 msgstr "PackUpp"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:702
-msgid "PandaSMS Configuration"
-msgstr "PandaSMS Ayarları"
-
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:705
 msgid ""
 "PandaSMS message content is configured in the PandaSMS plugin settings. This "
@@ -2477,8 +2748,8 @@ msgstr "Kağıt boyutu"
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:383
 msgid ""
-"Page size used when generating the PDF label. A4 places the label in the "
-"top-left of the sheet; 100mm sizes match common thermal label printers."
+"Page size used when generating the PDF label. A4 places the label in the top-"
+"left of the sheet; 100mm sizes match common thermal label printers."
 msgstr ""
 "PDF etiketi oluşturulurken kullanılacak sayfa boyutu. A4 etiketi sayfanın "
 "sol üst köşesine yerleştirir; 100mm boyutlar yaygın termal etiket "
@@ -2555,13 +2826,6 @@ msgid ""
 "Please install and activate the NetGSM plugin to use this SMS integration."
 msgstr ""
 "Bu SMS entegrasyonunu kullanmak için lütfen NetGSM eklentisini yükleyip "
-"etkinleştirin."
-
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:713
-msgid ""
-"Please install and activate the PandaSMS plugin to use this SMS integration."
-msgstr ""
-"Bu SMS entegrasyonunu kullanmak için lütfen PandaSMS eklentisini yükleyip "
 "etkinleştirin."
 
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1426
@@ -3137,8 +3401,8 @@ msgstr ""
 #: includes/class-sms-automation.php:1072
 #, php-format
 msgid ""
-"SMS notification sent via NetGSM for %1$s status to %2$s phone: %3$s (Job ID:"
-" %4$s)"
+"SMS notification sent via NetGSM for %1$s status to %2$s phone: %3$s (Job "
+"ID: %4$s)"
 msgstr ""
 "%1$s durumu için %2$s telefonuna NetGSM ile SMS bildirimi gönderildi: %3$s "
 "(İş ID: %4$s)"
@@ -3380,10 +3644,6 @@ msgstr "TNT"
 msgid "Today's date"
 msgstr "Bugünün tarihi"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1359
-msgid "Toggle password visibility"
-msgstr "Şifre görünülürlüğü"
-
 #: packages/manual-shipment-tracking/includes/views/hepsijet-bulk-barcode-page.php:16
 msgid "Toplu Koli / Desi Girişi"
 msgstr ""
@@ -3566,10 +3826,6 @@ msgstr "Uyarı:"
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:656
 msgid "Warning: NetGSM plugin is not active!"
 msgstr "Uyarı: NetGSM eklentisi aktif değil!"
-
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:710
-msgid "Warning: PandaSMS plugin is not active!"
-msgstr "Uyarı: PandaSMS eklentisi aktif değil!"
 
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:670
 #, fuzzy
@@ -3788,10 +4044,6 @@ msgstr ""
 msgid "You can use your free WordPress.org account to write a review."
 msgstr "Yorum yazmak için ücretsiz WordPress.org hesabınızı kullanabilirsiniz."
 
-#: packages/manual-shipment-tracking/includes/admin/class-settings.php:707
-msgid "You do not have permission to perform this action."
-msgstr ""
-
 #: includes/contracts/core/class-contract-validator.php:74
 msgid "You must accept the agreements."
 msgstr "Sözleşmeleri kabul etmelisiniz."
@@ -3808,10 +4060,6 @@ msgstr "Adresiniz"
 msgid "Your Agreements"
 msgstr "Sözleşmeleriniz"
 
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:1358
-msgid "Your API password"
-msgstr "API şifreniz"
-
 #: includes/class-hezarfen.php:261
 #, php-format
 msgid ""
@@ -3820,10 +4068,6 @@ msgid ""
 msgstr ""
 "Eski SMS ayarlarınız otomatik olarak yeni SMS otomasyon sistemine aktarıldı "
 "ve SMS otomasyonu etkinleştirildi. %sSMS Ayarlarını Görüntüle%s"
-
-#: includes/admin/settings/class-hezarfen-settings-hezarfen.php:468
-msgid "Your NetGSM account connection status"
-msgstr ""
 
 #: packages/manual-shipment-tracking/includes/email/class-email-order-shipped.php:44
 msgid "Your Order Has Been Shipped"

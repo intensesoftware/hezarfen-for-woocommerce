@@ -14,9 +14,74 @@ jQuery(document).ready(function($) {
 
     	// Load existing rules from server
 	loadSmsRules();
-	
+
 	// Load NetGSM connection status
 	loadNetGsmConnectionStatus();
+
+	// Sub-tabs (NetGSM Connection / Test Gönderimi / SMS Şablon-Mesaj Ayarları)
+	initSmsSubTabs();
+
+	// SMS provider (company) selector
+	initSmsProvider();
+
+	function initSmsProvider() {
+		const $select = $('#hezarfen-sms-provider');
+		if (!$select.length) {
+			return;
+		}
+
+		function apply(provider) {
+			$('.hez-provider-row').hide();
+			$('.hez-provider-row[data-provider="' + provider + '"]').show();
+		}
+
+		apply($select.val());
+
+		$select.on('change', function() {
+			const provider = $(this).val();
+			apply(provider);
+			$.ajax({
+				url: hezarfen_sms_settings.ajax_url,
+				type: 'POST',
+				data: {
+					action: 'hezarfen_set_sms_provider',
+					nonce: hezarfen_sms_settings.nonce,
+					provider: provider
+				}
+			});
+		});
+	}
+
+	function initSmsSubTabs() {
+		const $tabs = $('.hezarfen-sms-tab');
+		if (!$tabs.length) {
+			return;
+		}
+
+		const $saveButton = $('button.woocommerce-save-button').closest('p.submit');
+
+		function activate(key) {
+			$tabs.removeClass('nav-tab-active');
+			$tabs.filter('[data-tab="' + key + '"]').addClass('nav-tab-active');
+			$('.hezarfen-sms-tab-panel').hide();
+			$('.hezarfen-sms-tab-panel[data-tab="' + key + '"]').show();
+			// Only the template tab has WooCommerce-saved fields.
+			if ($saveButton.length) {
+				$saveButton.toggle(key === 'template');
+			}
+			try { localStorage.setItem('hezarfen_sms_active_tab', key); } catch (e) {}
+		}
+
+		$tabs.on('click', function(e) {
+			e.preventDefault();
+			activate($(this).data('tab'));
+		});
+
+		let saved = null;
+		try { saved = localStorage.getItem('hezarfen_sms_active_tab'); } catch (e) {}
+		const initial = (saved && $tabs.filter('[data-tab="' + saved + '"]').length) ? saved : $tabs.first().data('tab');
+		activate(initial);
+	}
 
     // Add SMS Rule button click
     $('#hezarfen-add-sms-rule').on('click', function(e) {
@@ -78,7 +143,44 @@ jQuery(document).ready(function($) {
             $('#pandasms-legacy-settings').show();
             // Don't show sms-content-settings for legacy - message is configured in PandaSMS plugin
         }
+
+        // PandaSMS only works with the "Order Shipped" trigger. NetGSM is never affected.
+        updatePandasmsLegacyGuard();
     });
+
+    // Re-check the PandaSMS guard whenever the trigger condition changes.
+    // Note: the trigger condition is chosen before the action type, so this must
+    // also run on condition changes (not only on action-type changes).
+    $(document).on('change', '#condition-status', function() {
+        updatePandasmsLegacyGuard();
+    });
+
+    // PandaSMS (legacy) can only be used with the "Order Shipped" trigger
+    // (it always sends the "Sipariş kargoya verildiğinde" template). For any
+    // other trigger condition we block saving and explain where to configure it.
+    // NetGSM and other action types are never restricted by this guard.
+    function updatePandasmsLegacyGuard() {
+        var actionType = $('#action-type').val();
+        var conditionStatus = $('#condition-status').val();
+        var $save = $('#save-sms-rule');
+
+        if (actionType !== 'pandasms_legacy') {
+            $('#pandasms-legacy-condition-warning').hide();
+            $('#pandasms-legacy-info').show();
+            $save.prop('disabled', false);
+            return;
+        }
+
+        if (conditionStatus && conditionStatus !== 'hezarfen_order_shipped') {
+            $('#pandasms-legacy-info').hide();
+            $('#pandasms-legacy-condition-warning').show();
+            $save.prop('disabled', true);
+        } else {
+            $('#pandasms-legacy-condition-warning').hide();
+            $('#pandasms-legacy-info').show();
+            $save.prop('disabled', false);
+        }
+    }
 
     // Functions
     function loadSmsRules() {
@@ -149,7 +251,10 @@ jQuery(document).ready(function($) {
                 $('#netgsm-settings').hide();
                 $('#sms-content-settings').hide();
             }
-            
+
+            // Re-evaluate the PandaSMS guard for the current selection
+            updatePandasmsLegacyGuard();
+
             // Scroll to the form
             $('html, body').animate({
                 scrollTop: $('#hezarfen-sms-rule-form-container').offset().top - 50
@@ -169,7 +274,13 @@ jQuery(document).ready(function($) {
         // Hide settings sections
         $('#netgsm-settings').hide();
         $('#sms-content-settings').hide();
-        
+        $('#pandasms-legacy-settings').hide();
+
+        // Reset the PandaSMS guard state so the Save button is never left disabled
+        $('#pandasms-legacy-condition-warning').hide();
+        $('#pandasms-legacy-info').show();
+        $('#save-sms-rule').prop('disabled', false);
+
         currentRuleIndex = null;
     }
 
@@ -207,6 +318,13 @@ jQuery(document).ready(function($) {
         if (!actionType) {
             alert('Please select an action type.');
             $('#action-type').focus();
+            return;
+        }
+
+        // PandaSMS (legacy) only works with the "Order Shipped" trigger.
+        if (actionType === 'pandasms_legacy' && conditionStatus !== 'hezarfen_order_shipped') {
+            alert('PandaSMS yalnızca "Sipariş kargoya verildiğinde" tetikleyicisiyle kullanılabilir. Diğer sipariş durumları için SMS\'i doğrudan PandaSMS eklentisinden ayarlayın.');
+            $('#condition-status').focus();
             return;
         }
         
@@ -432,14 +550,15 @@ jQuery(document).ready(function($) {
 			}
 		});
 
-	// NetGSM Credentials Modal Handlers
-	$(document).on('click', '#netgsm-connect-btn', function() {
-		// Load current credentials and open modal with them
-		loadCredentialsAndOpenModal();
+	// NetGSM Credentials inline form handlers
+	$(document).on('click', '#netgsm-connect-btn, #netgsm-edit-creds', function() {
+		// Reveal the inline form, prefilled with current credentials.
+		showCredentialsForm();
 	});
 
-	$(document).on('click', '.netgsm-modal-close, .netgsm-modal-cancel', function() {
-		closeNetGsmCredentialsModal();
+	$(document).on('click', '#netgsm-cancel-creds', function() {
+		hideCredentialsForm();
+		loadNetGsmConnectionStatus();
 	});
 
 	$(document).on('click', '#netgsm-save-credentials', function() {
@@ -502,13 +621,6 @@ jQuery(document).ready(function($) {
 		}, 1500);
 	});
 
-	// Close modal when clicking outside
-	$(document).on('click', '#netgsm-credentials-modal', function(e) {
-		if (e.target === this) {
-			closeNetGsmCredentialsModal();
-		}
-	});
-
 	// Functions for NetGSM Connection Management
 	function loadNetGsmConnectionStatus() {
 		$.ajax({
@@ -531,7 +643,9 @@ jQuery(document).ready(function($) {
 		});
 	}
 
-	function loadCredentialsAndOpenModal() {
+	// Reveal the inline credentials form (prefilled). Used by the "Bağla" and
+	// "Bilgileri Değiştir" buttons.
+	function showCredentialsForm() {
 		$.ajax({
 			url: hezarfen_sms_settings.ajax_url,
 			type: 'POST',
@@ -540,58 +654,59 @@ jQuery(document).ready(function($) {
 				nonce: hezarfen_sms_settings.nonce
 			},
 			success: function(response) {
-				if (response.success && response.data.is_connected && response.data.credentials) {
-					// Open modal with existing credentials
-					openNetGsmCredentialsModal(response.data.credentials);
-				} else {
-					// Open modal without credentials (new connection)
-					openNetGsmCredentialsModal(null);
-				}
+				const creds = (response.success && response.data.credentials) ? response.data.credentials : null;
+				prefillCredentialsForm(creds);
+				// Show "Cancel" only when editing an existing connection.
+				$('#netgsm-cancel-creds').toggle(!!(response.success && response.data.is_connected));
+				$('#netgsm-credentials-inline').show();
 			},
 			error: function() {
-				console.error('Failed to load NetGSM credentials');
-				// Open modal anyway without credentials
-				openNetGsmCredentialsModal(null);
+				prefillCredentialsForm(null);
+				$('#netgsm-cancel-creds').hide();
+				$('#netgsm-credentials-inline').show();
 			}
 		});
+	}
+
+	function hideCredentialsForm() {
+		$('#netgsm-credentials-inline').hide();
 	}
 
 	function updateNetGsmConnectionUI(isConnected, credentials) {
 		const $statusContainer = $('#netgsm-connection-status');
 		const $statusContainerMain = $('#netgsm-connection-status-main');
-		
+
 		const notConnectedHtml = `
-			<div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #fff2cd; border: 1px solid #f39c12; border-radius: 4px;">
-				<div style="display: flex; align-items: center;">
-					<svg style="width: 20px; height: 20px; color: #f39c12; margin-right: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-					</svg>
-					<div>
-						<strong style="color: #856404;">NetGSM Hesabı Bağlı Değil</strong>
-						<p style="margin: 0; font-size: 12px; color: #856404;">NetGSM hesabınızı bağlayarak SMS gönderimini etkinleştirin</p>
-					</div>
+			<div style="display: flex; align-items: center; padding: 12px; background: #fff2cd; border: 1px solid #f39c12; border-radius: 4px;">
+				<svg style="width: 20px; height: 20px; color: #f39c12; margin-right: 8px; flex-shrink: 0;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+				</svg>
+				<div>
+					<strong style="color: #856404;">${smsStrings.not_connected_title || 'NetGSM Account Not Connected'}</strong>
+					<p style="margin: 0; font-size: 12px; color: #856404;">${smsStrings.not_connected_desc || ''}</p>
 				</div>
-				<button type="button" id="netgsm-connect-btn" class="button button-primary">
-					Bağla
-				</button>
 			</div>
 			<div style="margin-top: 10px; padding: 10px; background: #e7f3ff; border-left: 4px solid #2271b1; border-radius: 4px;">
 				<p style="margin: 0; font-size: 13px; color: #1d2327;">
-					<strong>📱 NetGSM Üyesi Değil misiniz?</strong><br>
+					<strong>📱 ${smsStrings.not_member_title || 'Not a NetGSM member?'}</strong><br>
 					<a href="http://intense.com.tr/netgsm-abonelik" target="_blank" rel="noopener noreferrer" style="color: #2271b1; text-decoration: none; font-weight: 500;">
-						Buraya tıklayarak NetGSM'e üye olabilirsiniz →
+						${smsStrings.not_member_link || 'Click here to sign up for NetGSM →'}
 					</a>
 				</p>
 			</div>
 		`;
 		
-		// If not connected or credentials are invalid, show not connected state
-		if (!isConnected || !credentials || !credentials.username) {
+		// If not connected (or msgheader missing/invalid), show the not-connected
+		// note AND the inline form directly so the user can connect right away.
+		if (!isConnected) {
 			$statusContainer.html(notConnectedHtml);
 			$statusContainerMain.html(notConnectedHtml);
+			prefillCredentialsForm((credentials && credentials.username) ? credentials : null);
+			$('#netgsm-cancel-creds').hide();
+			$('#netgsm-credentials-inline').show();
 			return;
 		}
-		
+
 		// Connected state - credentials are valid
 		const connectedHtml = `
 			<div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #d1edff; border: 1px solid #0073aa; border-radius: 4px;">
@@ -604,87 +719,61 @@ jQuery(document).ready(function($) {
 						<p style="margin: 0; font-size: 12px; color: #0073aa;">${hezarfen_sms_settings.strings.username_label}: ${credentials.username} | ${hezarfen_sms_settings.strings.sender_label}: ${credentials.msgheader}</p>
 					</div>
 				</div>
-				<button type="button" id="netgsm-connect-btn" class="button button-secondary" style="background: #0073aa; color: white; border-color: #0073aa;">
+				<button type="button" id="netgsm-edit-creds" class="button button-secondary" style="background: #0073aa; color: white; border-color: #0073aa;">
 					${hezarfen_sms_settings.strings.change_credentials}
 				</button>
 			</div>
 		`;
-		
+
 		$statusContainer.html(connectedHtml);
 		$statusContainerMain.html(connectedHtml);
+		// Hide the inline form while connected; it reopens via "Bilgileri Değiştir".
+		hideCredentialsForm();
 	}
 
-	function openNetGsmCredentialsModal(credentials = null) {
-		const $modal = $('#netgsm-credentials-modal');
-		const $content = $modal.find('.hez-modal-content');
-		
-		$modal.removeClass('hidden').css('display', 'flex');
-		
-		// Animate modal appearance
-		setTimeout(function() {
-			$content.css({
-				'transform': 'scale(1)',
-				'opacity': '1'
-			});
-		}, 10);
-		
-		// Clear form first
-		$('#netgsm-credentials-form')[0].reset();
-		
+	// Prefill the inline credentials form with the given credentials (or reset it).
+	function prefillCredentialsForm(credentials) {
+		const $form = $('#netgsm-credentials-form');
+		if ($form.length) {
+			$form[0].reset();
+		}
+
 		// Reset password visibility to hidden state
 		$('#netgsm-modal-password').attr('type', 'password');
 		$('#netgsm-eye-closed').show();
 		$('#netgsm-eye-open').hide();
-		
-		// If credentials are provided, prefill the form
-		if (credentials && credentials.username && credentials.msgheader) {
+
+		if (credentials && credentials.username) {
 			$('#netgsm-modal-username').val(credentials.username);
-			
-			// Prefill password if available
+
 			if (credentials.password) {
 				$('#netgsm-modal-password').val(credentials.password);
 			}
-			
-			$('#netgsm-modal-msgheader').html(`<option value="${credentials.msgheader}" selected>${credentials.msgheader}</option>`);
-			$('#netgsm-modal-msgheader').prop('disabled', false);
-			$('#netgsm-load-senders').show();
-			
-			// Focus msgheader field for easy editing
-			$('#netgsm-modal-msgheader').focus();
-		} else {
-			// Reset sender dropdown for new connection
-			const $senderSelect = $('#netgsm-modal-msgheader');
-			$senderSelect.prop('disabled', true).html('<option value="">First enter username and password above</option>');
-			$('#netgsm-load-senders').hide();
-			
-			// Focus first input
-			$('#netgsm-modal-username').focus();
-		}
-	}
 
-	function closeNetGsmCredentialsModal() {
-		const $modal = $('#netgsm-credentials-modal');
-		const $content = $modal.find('.hez-modal-content');
-		
-		// Clear any pending timeouts and intervals
-		if (senderLoadTimeout) {
-			clearTimeout(senderLoadTimeout);
-			senderLoadTimeout = null;
+			if (credentials.msgheader) {
+				// Known header → preselect it.
+				$('#netgsm-modal-msgheader')
+					.html(`<option value="${credentials.msgheader}" selected>${credentials.msgheader}</option>`)
+					.prop('disabled', false);
+				$('#netgsm-load-senders').show();
+			} else {
+				// Username/password present but header missing (e.g. cleared after a
+				// failed test) → auto-load the registered senders to reselect.
+				$('#netgsm-modal-msgheader')
+					.prop('disabled', true)
+					.html('<option value="">' + (hezarfen_sms_settings.strings.loading_senders_auto || 'Loading senders...') + '</option>');
+				$('#netgsm-load-senders').show();
+				if (credentials.password && credentials.password.length >= 6) {
+					loadNetGsmSenders();
+				}
+			}
+		} else {
+			// New connection → empty form.
+			$('#netgsm-modal-msgheader')
+				.prop('disabled', true)
+				.html('<option value="">' + (hezarfen_sms_settings.strings.enter_username || 'First enter username and password above') + '</option>');
+			$('#netgsm-load-senders').hide();
 		}
-		if (countdownInterval) {
-			clearInterval(countdownInterval);
-			countdownInterval = null;
-		}
-		
-		// Animate modal disappearance
-		$content.css({
-			'transform': 'scale(0.95)',
-			'opacity': '0'
-		});
-		
-		setTimeout(function() {
-			$modal.addClass('hidden').css('display', 'none');
-		}, 300);
 	}
 
 	function saveNetGsmCredentials() {
@@ -724,18 +813,16 @@ jQuery(document).ready(function($) {
 			},
 			success: function(response) {
 				if (response.success) {
-					// Show success message before closing modal
+					// Show success message before hiding the form
 					showInlineAlert(hezarfen_sms_settings.strings.credentials_saved_successfully, 'success');
-					
-					// Close modal after a brief delay to show the success message
+
+					// Hide the inline form after a brief delay, then refresh status
 					setTimeout(function() {
-						closeNetGsmCredentialsModal();
-						
-						// Reload connection status
+						hideCredentialsForm();
 						loadNetGsmConnectionStatus();
-					}, 1500);
+					}, 1200);
 				} else {
-					showInlineAlert('Error: ' + (response.data || hezarfen_sms_settings.strings.failed_to_save_credentials), 'error');
+					showInlineAlert(response.data || hezarfen_sms_settings.strings.failed_to_save_credentials, 'error');
 				}
 			},
 			error: function() {
@@ -980,4 +1067,162 @@ jQuery(document).ready(function($) {
 			}
 		}
 	});
+
+	/* ------------------------------------------------------------------ *
+	 * Test SMS + SMS Logs
+	 * ------------------------------------------------------------------ */
+
+	const smsStrings = hezarfen_sms_settings.strings || {};
+
+	function escapeHtml(value) {
+		return $('<div>').text(value == null ? '' : String(value)).html();
+	}
+
+	// Send a test SMS and render the human readable result.
+	$(document).on('click', '#hezarfen-send-test-sms', function() {
+		const $button = $(this);
+		const $result = $('#hezarfen-test-result');
+		const phone = ($('#hezarfen-test-phone').val() || '').trim();
+
+		if (!phone) {
+			renderTestResult($result, false, smsStrings.enter_test_phone || 'Please enter a phone number.', {});
+			return;
+		}
+
+		const originalText = $button.text();
+		$button.prop('disabled', true).text(smsStrings.sending_test || 'Sending test SMS…');
+
+		$.ajax({
+			url: hezarfen_sms_settings.ajax_url,
+			type: 'POST',
+			data: {
+				action: 'hezarfen_test_netgsm',
+				nonce: hezarfen_sms_settings.nonce,
+				phone: phone
+			},
+			success: function(response) {
+				const data = (response && response.data) ? response.data : {};
+				const ok = !!(response && response.success && data.success);
+				renderTestResult($result, ok, data.description || '', data);
+				// On a sender-name error the stored header was cleared server-side;
+				// refresh the connection UI so the form reopens for reselection.
+				if (data.header_reset) {
+					loadNetGsmConnectionStatus();
+				}
+			},
+			error: function() {
+				renderTestResult($result, false, smsStrings.test_network_error || 'A network error occurred.', {});
+			},
+			complete: function() {
+				$button.prop('disabled', false).text(originalText);
+			}
+		});
+	});
+
+	// Pick a registered sender name from the test-result error.
+	$(document).on('click', '.hez-pick-header', function() {
+		const $list = $(this).closest('.hez-header-list');
+		$list.find('.hez-pick-header').css({ 'border-color': '#c3c4c7', 'background': '#fff', 'color': '#1d2327' });
+		$(this).css({ 'border-color': '#2271b1', 'background': '#f0f6fc', 'color': '#0a4b78' });
+
+		const $confirm = $list.parent().find('.hez-header-confirm');
+		$confirm.find('.hez-confirm-header').data('header', $(this).data('header'));
+		$confirm.show();
+	});
+
+	// Confirm and connect the picked sender name using the stored credentials.
+	$(document).on('click', '.hez-confirm-header', function() {
+		const $btn = $(this);
+		const header = $btn.data('header');
+		if (!header) {
+			return;
+		}
+
+		const originalText = $btn.text();
+		$btn.prop('disabled', true).text(smsStrings.connecting_short || 'Connecting…');
+
+		$.ajax({
+			url: hezarfen_sms_settings.ajax_url,
+			type: 'POST',
+			data: {
+				action: 'hezarfen_set_netgsm_header',
+				nonce: hezarfen_sms_settings.nonce,
+				msgheader: header
+			},
+			success: function(response) {
+				if (response && response.success) {
+					$('#hezarfen-test-result').html(
+						'<div style="padding: 12px 14px; background: #edfaef; border: 1px solid #46b450; border-radius: 6px;">' +
+							'<p style="margin: 0; font-weight: 600; color: #1e7e34;">✓ ' + escapeHtml(response.data.message || smsStrings.sender_connected || 'Sender name connected.') + '</p>' +
+							'<p style="margin: 8px 0 0 0; color: #1d2327;">' + escapeHtml(smsStrings.test_again_hint || 'You can run the test again now.') + '</p>' +
+						'</div>'
+					).show();
+					loadNetGsmConnectionStatus();
+				} else {
+					$btn.prop('disabled', false).text(originalText);
+					alert((response && response.data && response.data.message) || smsStrings.sender_connect_failed || 'Could not connect the sender name.');
+				}
+			},
+			error: function() {
+				$btn.prop('disabled', false).text(originalText);
+				alert(smsStrings.network_error || 'Network error.');
+			}
+		});
+	});
+
+	function renderTestResult($container, success, description, data) {
+		const title = success
+			? (smsStrings.test_success_title || 'Test SMS sent successfully')
+			: (smsStrings.test_failed_title || 'Test SMS could not be sent');
+		const bg = success ? '#edfaef' : '#fcf0f1';
+		const border = success ? '#46b450' : '#d63638';
+		const titleColor = success ? '#1e7e34' : '#8a1f1f';
+		const icon = success ? '✓' : '✕';
+
+		// On success the green title ("Test SMS başarıyla gönderildi") is enough.
+		// On failure show the NetGSM code and its description for diagnosis.
+		let detail = '';
+		if (success) {
+			detail = escapeHtml(smsStrings.message_sent_recipient || 'Message sent to the recipient.');
+		} else {
+			const codeLabel = smsStrings.label_netgsm_code || 'NetGSM code';
+			if (data.code && description) {
+				detail = escapeHtml(codeLabel) + ' ' + escapeHtml(data.code) + ' — ' + escapeHtml(description);
+			} else if (description) {
+				detail = escapeHtml(description);
+			} else if (data.code) {
+				detail = escapeHtml(codeLabel) + ' ' + escapeHtml(data.code);
+			}
+		}
+
+		// On code 40 (sender name not registered) help the user: list the sender
+		// names that ARE registered, or tell them to register one with NetGSM.
+		let extra = '';
+		if (String(data.code) === '40') {
+			const headers = data.registered_headers || [];
+			if (headers.length) {
+				const chips = headers.map(function(h) {
+					return '<button type="button" class="hez-pick-header" data-header="' + escapeHtml(h) + '" style="display: inline-block; padding: 4px 10px; margin: 2px 6px 2px 0; border-radius: 4px; background: #fff; border: 1px solid #c3c4c7; font-weight: 600; font-size: 12px; cursor: pointer;">' + escapeHtml(h) + '</button>';
+				}).join('');
+				extra = '<div style="margin-top: 10px;">' +
+					'<p style="margin: 0 0 4px 0; color: #1d2327;">' + escapeHtml(smsStrings.registered_senders || 'Your registered sender names:') + '</p>' +
+					'<div class="hez-header-list">' + chips + '</div>' +
+					'<p style="margin: 6px 0 0 0; font-size: 12px; color: #50575e;">' + escapeHtml(smsStrings.pick_sender_hint || 'Click a sender name and connect it with the Confirm button.') + '</p>' +
+					'<div class="hez-header-confirm" style="margin-top: 8px; display: none;">' +
+						'<button type="button" class="hez-confirm-header button button-primary">' + escapeHtml(smsStrings.confirm_and_connect || 'Confirm & Connect') + '</button>' +
+					'</div>' +
+				'</div>';
+			} else {
+				extra = '<p style="margin: 10px 0 0 0; color: #1d2327;">' + escapeHtml(smsStrings.no_registered_senders || 'You have no registered sender names. Please contact NetGSM to register a sender name (header).') + '</p>';
+			}
+		}
+
+		$container.html(
+			'<div style="padding: 12px 14px; background: ' + bg + '; border: 1px solid ' + border + '; border-radius: 6px;">' +
+				'<p style="margin: 0; font-weight: 600; color: ' + titleColor + ';">' + icon + ' ' + escapeHtml(title) + '</p>' +
+				(detail ? '<p style="margin: 8px 0 0 0; color: #1d2327;">' + detail + '</p>' : '') +
+				extra +
+			'</div>'
+		).show();
+	}
 });

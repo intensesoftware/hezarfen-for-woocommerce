@@ -28,7 +28,11 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		$this->label = 'Hezarfen';
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_and_styles' ) );
+		add_action( 'woocommerce_admin_field_sms_provider_select', array( $this, 'output_sms_provider_select' ) );
+		add_action( 'woocommerce_admin_field_netgsm_connection_status', array( $this, 'output_netgsm_connection_status' ) );
+		add_action( 'woocommerce_admin_field_pandasms_connection_info', array( $this, 'output_pandasms_connection_info' ) );
 		add_action( 'woocommerce_admin_field_sms_rules_button', array( $this, 'output_sms_rules_button' ) );
+		add_action( 'woocommerce_admin_field_netgsm_test_connection', array( $this, 'output_netgsm_test_connection' ) );
 		add_action( 'woocommerce_admin_field_roadmap_voting', array( $this, 'output_roadmap_voting' ) );
 		// Note: AJAX action is registered in main Hezarfen class to ensure it's always available
 
@@ -455,18 +459,90 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 * @return array<array<string, string>>
 	 */
 	protected function get_settings_for_sms_settings_section() {
-		$fields = array(
+		// All three tab groups merged; save_fields() needs the full set.
+		return array_merge(
+			$this->get_sms_connection_fields(),
+			$this->get_sms_test_fields(),
+			$this->get_sms_template_fields()
+		);
+	}
+
+	/**
+	 * Tab 1 fields: NetGSM connection.
+	 *
+	 * @return array<array<string, mixed>>
+	 */
+	private function get_sms_connection_fields() {
+		return array(
 			array(
-				'title' => __( 'SMS Automation Settings', 'hezarfen-for-woocommerce' ),
+				'title' => __( 'SMS Provider', 'hezarfen-for-woocommerce' ),
 				'type'  => 'title',
-				'desc'  => __( 'Configure SMS notifications for order status changes.', 'hezarfen-for-woocommerce' ),
-				'id'    => 'hezarfen_sms_settings_title',
+				'desc'  => __( 'Choose the SMS company you want to use and set up its connection.', 'hezarfen-for-woocommerce' ),
+				'id'    => 'hezarfen_sms_provider_card',
+			),
+			array(
+				'title' => __( 'SMS Company', 'hezarfen-for-woocommerce' ),
+				'type'  => 'sms_provider_select',
+				'desc'  => '',
+				'id'    => 'hezarfen_sms_provider',
 			),
 			array(
 				'title'   => __( 'NetGSM Connection', 'hezarfen-for-woocommerce' ),
 				'type'    => 'netgsm_connection_status',
 				'desc'    => __( 'Your NetGSM account connection status', 'hezarfen-for-woocommerce' ),
 				'id'      => 'hezarfen_netgsm_connection_status',
+			),
+			array(
+				'title'   => 'PandaSMS',
+				'type'    => 'pandasms_connection_info',
+				'desc'    => '',
+				'id'      => 'hezarfen_pandasms_connection_info',
+			),
+			array(
+				'type' => 'sectionend',
+				'id'   => 'hezarfen_sms_provider_card_end',
+			),
+		);
+	}
+
+	/**
+	 * Tab 2 fields: Test sending.
+	 *
+	 * @return array<array<string, mixed>>
+	 */
+	private function get_sms_test_fields() {
+		return array(
+			array(
+				'title' => __( 'Test Sending', 'hezarfen-for-woocommerce' ),
+				'type'  => 'title',
+				'desc'  => __( 'Verify your NetGSM connection by sending a test SMS.', 'hezarfen-for-woocommerce' ),
+				'id'    => 'hezarfen_netgsm_test_card',
+			),
+			array(
+				'title'   => __( 'Test SMS', 'hezarfen-for-woocommerce' ),
+				'type'    => 'netgsm_test_connection',
+				'desc'    => __( 'Send a test SMS to verify your NetGSM connection. The message content is generated automatically.', 'hezarfen-for-woocommerce' ),
+				'id'      => 'hezarfen_netgsm_test_connection',
+			),
+			array(
+				'type' => 'sectionend',
+				'id'   => 'hezarfen_netgsm_test_card_end',
+			),
+		);
+	}
+
+	/**
+	 * Tab 3 fields: SMS template / message settings (automation rules).
+	 *
+	 * @return array<array<string, mixed>>
+	 */
+	private function get_sms_template_fields() {
+		return array(
+			array(
+				'title' => __( 'SMS Template / Message Settings', 'hezarfen-for-woocommerce' ),
+				'type'  => 'title',
+				'desc'  => __( 'Configure SMS notifications for order status changes.', 'hezarfen-for-woocommerce' ),
+				'id'    => 'hezarfen_sms_settings_title',
 			),
 			array(
 				'title'   => __( 'Enable SMS Automation', 'hezarfen-for-woocommerce' ),
@@ -486,8 +562,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				'id'   => 'hezarfen_sms_settings_section_end',
 			),
 		);
-
-		return $fields;
 	}
 
 
@@ -499,19 +573,192 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 */
 	public function output_netgsm_connection_status( $value ) {
 		?>
-		<tr valign="top">
+		<tr valign="top" class="hez-provider-row" data-provider="netgsm">
 			<th scope="row" class="titledesc">
 				<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 			</th>
 			<td class="forminp">
 				<div id="netgsm-connection-status-main">
-					<!-- This will be populated by JavaScript -->
+					<!-- Connected status box is populated by JavaScript -->
+				</div>
+
+				<!-- Inline credentials form (replaces the old modal; shown when not
+				     connected, or when "Bilgileri Değiştir" is clicked). -->
+				<div id="netgsm-credentials-inline" style="display:none; max-width: 480px; margin-top: 12px; border: 1px solid #c3c4c7; border-radius: 6px; padding: 16px; background: #fff;">
+					<form id="netgsm-credentials-form">
+						<p style="margin: 0 0 12px 0; color: #50575e; font-size: 13px;">
+							<?php esc_html_e( 'Enter your NetGSM credentials to enable SMS sending.', 'hezarfen-for-woocommerce' ); ?>
+						</p>
+						<div class="mb-4" style="margin-bottom: 12px;">
+							<label for="netgsm-modal-username" style="display:block; font-weight:600; font-size:13px; margin-bottom:4px;">
+								<?php esc_html_e( 'NetGSM Username', 'hezarfen-for-woocommerce' ); ?>
+							</label>
+							<input type="text" id="netgsm-modal-username" name="username" class="regular-text" placeholder="<?php esc_attr_e( '850xxxxxxx, 312XXXXXXX etc.', 'hezarfen-for-woocommerce' ); ?>" style="width:100%;" />
+						</div>
+						<div class="mb-4" style="margin-bottom: 12px;">
+							<label for="netgsm-modal-password" style="display:block; font-weight:600; font-size:13px; margin-bottom:4px;">
+								<?php esc_html_e( 'NetGSM Password', 'hezarfen-for-woocommerce' ); ?>
+							</label>
+							<div style="position: relative;">
+								<input type="password" id="netgsm-modal-password" name="password" class="regular-text" placeholder="<?php esc_attr_e( 'Your API password', 'hezarfen-for-woocommerce' ); ?>" style="width:100%; padding-right:36px;" />
+								<button type="button" id="netgsm-toggle-password" tabindex="-1" aria-label="<?php esc_attr_e( 'Toggle password visibility', 'hezarfen-for-woocommerce' ); ?>" style="position:absolute; right:6px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#646970; padding:4px;">
+									<svg id="netgsm-eye-closed" style="width:16px; height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path></svg>
+									<svg id="netgsm-eye-open" style="width:16px; height:16px; display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+								</button>
+							</div>
+						</div>
+						<div class="mb-4" style="margin-bottom: 12px;">
+							<label for="netgsm-modal-msgheader" style="display:block; font-weight:600; font-size:13px; margin-bottom:4px;">
+								<?php esc_html_e( 'Message Header', 'hezarfen-for-woocommerce' ); ?>
+							</label>
+							<div style="position: relative;">
+								<select id="netgsm-modal-msgheader" name="msgheader" class="regular-text" style="width:100%;" disabled>
+									<option value=""><?php esc_html_e( 'First enter username and password above', 'hezarfen-for-woocommerce' ); ?></option>
+								</select>
+								<button type="button" id="netgsm-load-senders" style="display:none; position:absolute; right:6px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#2271b1;">
+									<svg style="width:16px; height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+								</button>
+							</div>
+							<p style="font-size:12px; color:#646970; margin:4px 0 0;">
+								<?php esc_html_e( 'Available sender names from your NetGSM account', 'hezarfen-for-woocommerce' ); ?>
+							</p>
+						</div>
+					</form>
+					<p style="margin: 0;">
+						<button type="button" id="netgsm-save-credentials" class="button button-primary"><?php esc_html_e( 'Connect', 'hezarfen-for-woocommerce' ); ?></button>
+						<button type="button" id="netgsm-cancel-creds" class="button" style="display:none;"><?php esc_html_e( 'Cancel', 'hezarfen-for-woocommerce' ); ?></button>
+					</p>
+				</div>
+
+				<p class="description"><?php echo esc_html( $value['desc'] ?? '' ); ?></p>
+			</td>
+		</tr>
+		<?php
+	}
+
+	/**
+	 * Output the SMS provider (company) selector.
+	 *
+	 * @param array $value Field data.
+	 * @return void
+	 */
+	public function output_sms_provider_select( $value ) {
+		$provider = class_exists( 'SMS_Automation' ) ? SMS_Automation::get_sms_provider() : 'netgsm';
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label for="hezarfen-sms-provider"><?php echo esc_html( $value['title'] ); ?></label>
+			</th>
+			<td class="forminp">
+				<select id="hezarfen-sms-provider" style="min-width: 260px;">
+					<option value="netgsm" <?php selected( $provider, 'netgsm' ); ?>>NetGSM</option>
+					<option value="pandasms" <?php selected( $provider, 'pandasms' ); ?>>PandaSMS (<?php esc_html_e( 'will be removed soon', 'hezarfen-for-woocommerce' ); ?>)</option>
+				</select>
+				<p class="description"><?php esc_html_e( 'Select the SMS company you want to use.', 'hezarfen-for-woocommerce' ); ?></p>
+			</td>
+		</tr>
+		<?php
+	}
+
+	/**
+	 * Output the PandaSMS info row (legacy provider, configured via its own plugin).
+	 * Kept intentionally simple, like before, plus a deprecation notice.
+	 *
+	 * @param array $value Field data.
+	 * @return void
+	 */
+	public function output_pandasms_connection_info( $value ) {
+		$is_ready = \Hezarfen\ManualShipmentTracking\Pandasms::is_plugin_ready();
+		?>
+		<tr valign="top" class="hez-provider-row" data-provider="pandasms">
+			<th scope="row" class="titledesc">
+				<label><?php echo esc_html( $value['title'] ); ?></label>
+			</th>
+			<td class="forminp">
+				<div style="background: #fff2cd; border: 1px solid #f39c12; border-radius: 4px; padding: 12px; margin-bottom: 15px; max-width: 560px;">
+					<p style="margin: 0; color: #856404; font-weight: 600;">
+						⚠️ <?php esc_html_e( 'The PandaSMS integration will be removed soon. We recommend using NetGSM.', 'hezarfen-for-woocommerce' ); ?>
+					</p>
+				</div>
+				<div style="max-width: 560px; padding: 15px; background: #fff; border: 1px solid <?php echo $is_ready ? '#0073aa' : '#d63638'; ?>; border-radius: 6px;">
+					<h4 style="margin: 0 0 15px 0; color: <?php echo $is_ready ? '#0073aa' : '#d63638'; ?>;"><?php esc_html_e( 'PandaSMS Configuration', 'hezarfen-for-woocommerce' ); ?></h4>
+					<?php if ( $is_ready ) : ?>
+						<div class="description" style="margin-top: 10px; line-height: 1.6;">
+							<p style="margin: 0 0 6px 0;"><strong><?php esc_html_e( '"Kargoya verildi" SMS\'i için:', 'hezarfen-for-woocommerce' ); ?></strong></p>
+							<ol style="margin: 0 0 12px 18px;">
+								<li><?php esc_html_e( 'PandaSMS eklentisinde (PandaSMS → Mesaj Şablonları) "Sipariş kargoya verildiğinde" için bir mesaj oluşturun.', 'hezarfen-for-woocommerce' ); ?></li>
+								<li><?php esc_html_e( 'Hezarfen\'de yukarıdaki "SMS Şablon / Mesaj Ayarları" sekmesine geçip yeni bir kural ekleyin: Tetikleyici Koşul = "Sipariş kargoya verildiğinde", Gönderim Yöntemi = "PandaSMS ile gönder".', 'hezarfen-for-woocommerce' ); ?></li>
+								<li><?php esc_html_e( 'Siparişe kargo takip bilgisini girdiğinizde SMS otomatik gönderilir.', 'hezarfen-for-woocommerce' ); ?></li>
+							</ol>
+							<p style="margin: 0;">
+								<strong><?php esc_html_e( 'Diğer sipariş durumları için (hazırlanıyor, tamamlandı vb.):', 'hezarfen-for-woocommerce' ); ?></strong>
+								<?php esc_html_e( 'Hezarfen gerekmez. Doğrudan PandaSMS eklentisinde (PandaSMS → Mesaj Şablonları) ilgili durumu seçerek bir mesaj oluşturun.', 'hezarfen-for-woocommerce' ); ?>
+							</p>
+						</div>
+					<?php else : ?>
+						<div style="background: #fff2cd; border: 1px solid #f39c12; border-radius: 4px; padding: 12px;">
+							<p style="margin: 0; color: #856404; font-weight: 500;">
+								⚠️ <?php esc_html_e( 'Warning: PandaSMS plugin is not active!', 'hezarfen-for-woocommerce' ); ?>
+							</p>
+							<p style="margin: 8px 0 0 0; color: #856404;">
+								<?php esc_html_e( 'Please install and activate the PandaSMS plugin to use this SMS integration.', 'hezarfen-for-woocommerce' ); ?>
+							</p>
+						</div>
+					<?php endif; ?>
+				</div>
+			</td>
+		</tr>
+		<?php
+	}
+
+	/**
+	 * Output the "Test SMS" panel.
+	 *
+	 * Lets the admin send an automatically generated test SMS to a phone number
+	 * of their choice and renders the NetGSM result in a human readable way.
+	 *
+	 * @param array $value Field data.
+	 * @return void
+	 */
+	public function output_netgsm_test_connection( $value ) {
+		$is_connected = class_exists( 'SMS_Automation' ) && SMS_Automation::is_netgsm_connected();
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label><?php echo esc_html( $value['title'] ); ?></label>
+			</th>
+			<td class="forminp">
+				<div id="hezarfen-netgsm-test" style="max-width: 560px; border: 1px solid #dcdcde; border-radius: 6px; padding: 16px; background: #fff;">
+					<?php if ( ! $is_connected ) : ?>
+						<div style="padding: 10px 12px; background: #fcf0f1; border-left: 4px solid #d63638; border-radius: 4px;">
+							<p style="margin: 0; color: #8a1f1f;">
+								<?php esc_html_e( 'Connect your NetGSM account above before sending a test SMS.', 'hezarfen-for-woocommerce' ); ?>
+							</p>
+						</div>
+					<?php else : ?>
+						<div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-end;">
+							<div style="flex: 1; min-width: 220px;">
+								<label for="hezarfen-test-phone" style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px;">
+									<?php esc_html_e( 'Destination phone number', 'hezarfen-for-woocommerce' ); ?>
+								</label>
+								<input type="tel" id="hezarfen-test-phone" class="regular-text" placeholder="5XXXXXXXXX" style="width: 100%;" />
+							</div>
+							<button type="button" id="hezarfen-send-test-sms" class="button button-primary">
+								<?php esc_html_e( 'Send Test SMS', 'hezarfen-for-woocommerce' ); ?>
+							</button>
+						</div>
+						<p class="description" style="margin-top: 8px;">
+							<?php esc_html_e( 'A standard charge from your NetGSM account applies for the test message.', 'hezarfen-for-woocommerce' ); ?>
+						</p>
+						<div id="hezarfen-test-result" style="margin-top: 12px; display: none;"></div>
+					<?php endif; ?>
 				</div>
 				<p class="description"><?php echo esc_html( $value['desc'] ?? '' ); ?></p>
 			</td>
 		</tr>
 		<?php
 	}
+
 
 	/**
 	 * Output SMS rules button field
@@ -701,9 +948,41 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 						<div id="pandasms-legacy-settings" style="display: none; margin-top: 20px; padding: 15px; background: #fff; border: 1px solid <?php echo \Hezarfen\ManualShipmentTracking\Pandasms::is_plugin_ready() ? '#0073aa' : '#d63638'; ?>; border-radius: 6px;">
 							<h4 style="margin: 0 0 15px 0; color: <?php echo \Hezarfen\ManualShipmentTracking\Pandasms::is_plugin_ready() ? '#0073aa' : '#d63638'; ?>;"><?php esc_html_e( 'PandaSMS Configuration', 'hezarfen-for-woocommerce' ); ?></h4>
 							<?php if ( \Hezarfen\ManualShipmentTracking\Pandasms::is_plugin_ready() ) : ?>
-								<p class="description" style="margin-top: 10px;">
-									<?php esc_html_e( 'PandaSMS message content is configured in the PandaSMS plugin settings. This integration will use the trigger "Sipariş kargoya verildiğinde" with shipment variables.', 'hezarfen-for-woocommerce' ); ?>
-								</p>
+								<div id="pandasms-legacy-info" class="description" style="margin-top: 10px; line-height: 1.6;">
+									<p style="margin: 0 0 10px 0;">
+										<?php esc_html_e( 'PandaSMS mesaj içeriği, bu ekrandan değil, PandaSMS eklentisinin kendi ayarlarından düzenlenir. Bu entegrasyon kargo bildirimi için "Sipariş kargoya verildiğinde" tetikleyicisini kullanır.', 'hezarfen-for-woocommerce' ); ?>
+									</p>
+									<p style="margin: 0 0 10px 0;">
+										<?php esc_html_e( 'Nasıl çalışır: Siparişe kargo takip bilgisini girdiğinizde Hezarfen bu olayı başlatır, PandaSMS de bu tetikleyiciye bağladığınız mesaj şablonunu müşteriye gönderir.', 'hezarfen-for-woocommerce' ); ?>
+									</p>
+									<p style="margin: 10px 0 6px 0;"><strong><?php esc_html_e( 'Kurulum adımları:', 'hezarfen-for-woocommerce' ); ?></strong></p>
+									<ol style="margin: 0 0 12px 18px;">
+										<li><?php esc_html_e( 'WooCommerce → PandaSMS → Mesaj Şablonları bölümüne gidin.', 'hezarfen-for-woocommerce' ); ?></li>
+										<li><?php esc_html_e( 'Yeni bir şablon oluşturun ve tetikleyici olarak "Sipariş kargoya verildiğinde" seçeneğini işaretleyin.', 'hezarfen-for-woocommerce' ); ?></li>
+										<li><?php esc_html_e( 'Mesaj metnini yazıp kaydedin.', 'hezarfen-for-woocommerce' ); ?></li>
+									</ol>
+									<p style="margin: 0 0 6px 0;"><?php esc_html_e( 'Mesajınızda kullanabileceğiniz gönderi değişkenleri:', 'hezarfen-for-woocommerce' ); ?></p>
+									<ul style="margin: 0 0 12px 18px;">
+										<li><code>{kargoFirmasi}</code> &ndash; <?php esc_html_e( 'Kargo firması', 'hezarfen-for-woocommerce' ); ?></li>
+										<li><code>{kargoTakipNo}</code> &ndash; <?php esc_html_e( 'Kargo takip numarası', 'hezarfen-for-woocommerce' ); ?></li>
+										<li><code>{kargoTakipLinki}</code> &ndash; <?php esc_html_e( 'Kargo takip linki', 'hezarfen-for-woocommerce' ); ?></li>
+									</ul>
+									<p style="margin: 0;">
+										<strong><?php esc_html_e( 'Önemli:', 'hezarfen-for-woocommerce' ); ?></strong>
+										<?php esc_html_e( '"Sipariş kargoya verildiğinde" tetikleyicisine bağlı aktif bir şablon yoksa kargo SMS\'i gönderilmez. Diğer sipariş durumları (örn. hazırlanıyor, tamamlandı) için SMS\'i doğrudan PandaSMS eklentisinden ayarlayabilirsiniz.', 'hezarfen-for-woocommerce' ); ?>
+									</p>
+								</div>
+								<div id="pandasms-legacy-condition-warning" style="display: none; margin-top: 10px; background: #fbeaea; border: 1px solid #d63638; border-radius: 4px; padding: 12px; line-height: 1.6;">
+									<p style="margin: 0; color: #842029; font-weight: 600;">
+										⚠️ <?php esc_html_e( 'Bu tetikleyici PandaSMS ile kullanılamaz.', 'hezarfen-for-woocommerce' ); ?>
+									</p>
+									<p style="margin: 8px 0 0 0; color: #842029;">
+										<?php esc_html_e( 'PandaSMS entegrasyonu yalnızca "Sipariş kargoya verildiğinde" bildirimi için kullanılır. Tamamlandı, hazırlanıyor gibi diğer sipariş durumları için SMS\'i doğrudan PandaSMS eklentisinden ayarlayın; bunun için Hezarfen\'de kural oluşturmanıza gerek yoktur.', 'hezarfen-for-woocommerce' ); ?>
+									</p>
+									<p style="margin: 8px 0 0 0; color: #842029;">
+										<?php esc_html_e( 'Devam etmek için tetikleyici koşulunu "Sipariş kargoya verildiğinde" olarak seçin veya gönderim yöntemini değiştirin.', 'hezarfen-for-woocommerce' ); ?>
+									</p>
+								</div>
 							<?php else : ?>
 								<div style="background: #fff2cd; border: 1px solid #f39c12; border-radius: 4px; padding: 12px; margin-bottom: 15px;">
 									<p style="margin: 0; color: #856404; font-weight: 500;">
@@ -807,15 +1086,49 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		} elseif ( 'system_report' === $current_section ) {
 			$hide_save_button = true;
 			do_action( 'hezarfen_system_report_output' );
+		} elseif ( 'sms_settings' === $current_section ) {
+			$this->output_sms_settings_tabs();
 		} else {
 			$settings = $this->get_settings_for_section( $current_section );
 			WC_Admin_Settings::output_fields( $settings );
-			
-			// Add NetGSM credentials modal for SMS settings section
-			if ( 'sms_settings' === $current_section ) {
-				$this->output_netgsm_credentials_modal();
-			}
 		}
+	}
+
+	/**
+	 * Render the SMS settings section as three sub-tabs:
+	 * NetGSM connection, Test sending and SMS template/message settings.
+	 *
+	 * Each tab is a normal WooCommerce settings card; only one panel is visible
+	 * at a time (toggled by JS). Saving still works because every field stays in
+	 * get_settings_for_sms_settings_section().
+	 *
+	 * @return void
+	 */
+	private function output_sms_settings_tabs() {
+		$tabs = array(
+			'connection' => __( 'SMS Provider', 'hezarfen-for-woocommerce' ),
+			'template'   => __( 'SMS Template / Message Settings', 'hezarfen-for-woocommerce' ),
+		);
+		?>
+		<h2 class="nav-tab-wrapper hezarfen-sms-tabs" style="margin-bottom: 16px;">
+			<?php $first = true; foreach ( $tabs as $key => $label ) : ?>
+				<a href="#" class="nav-tab<?php echo $first ? ' nav-tab-active' : ''; ?> hezarfen-sms-tab" data-tab="<?php echo esc_attr( $key ); ?>">
+					<?php echo esc_html( $label ); ?>
+				</a>
+			<?php $first = false; endforeach; ?>
+		</h2>
+
+		<div class="hezarfen-sms-tab-panel" data-tab="connection">
+			<?php WC_Admin_Settings::output_fields( $this->get_sms_connection_fields() ); ?>
+			<?php // Test sending is NetGSM-only; shown at the bottom of the provider screen and toggled with the provider selector. ?>
+			<div class="hez-provider-row" data-provider="netgsm">
+				<?php WC_Admin_Settings::output_fields( $this->get_sms_test_fields() ); ?>
+			</div>
+		</div>
+		<div class="hezarfen-sms-tab-panel" data-tab="template" style="display:none;">
+			<?php WC_Admin_Settings::output_fields( $this->get_sms_template_fields() ); ?>
+		</div>
+		<?php
 	}
 
 	/**
@@ -1305,104 +1618,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			return '';
 		}
 	}
-
-	/**
-	 * Output NetGSM credentials modal
-	 *
-	 * @return void
-	 */
-	private function output_netgsm_credentials_modal() {
-		?>
-		<!-- NetGSM Credentials Modal -->
-		<div id="netgsm-credentials-modal" class="hez-modal-overlay hidden inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="netgsm-modal-title" aria-describedby="netgsm-modal-description" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: none; align-items: center; justify-content: center; z-index: 9999;">
-			<div class="hez-modal-content bg-white rounded-lg shadow-xl max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" style="background: white; border-radius: 8px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); max-width: 28rem; width: 100%; margin: 0 1rem; transform: scale(0.95); opacity: 0; transition: all 0.3s;">
-				<div class="p-6" style="padding: 1.5rem;">
-					<!-- Modal Header -->
-					<div class="flex items-center mb-4" style="display: flex; align-items: center; margin-bottom: 1rem;">
-						<div class="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3" style="flex-shrink: 0; width: 2.5rem; height: 2.5rem; background-color: #dbeafe; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 0.75rem;">
-							<svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1.5rem; height: 1.5rem; color: #2563eb;">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path>
-							</svg>
-						</div>
-						<div class="flex-1" style="flex: 1;">
-							<h3 id="netgsm-modal-title" class="text-lg font-semibold text-gray-900" style="font-size: 1.125rem; font-weight: 600; color: #111827;">
-								<?php esc_html_e('Connect to NetGSM', 'hezarfen-for-woocommerce'); ?>
-							</h3>
-						</div>
-						<button type="button" class="netgsm-modal-close text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md p-1" aria-label="<?php esc_attr_e('Close modal', 'hezarfen-for-woocommerce'); ?>" style="color: #9ca3af; padding: 0.25rem; border-radius: 0.375rem;">
-							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" style="width: 1.25rem; height: 1.25rem;">
-								<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-							</svg>
-						</button>
-					</div>
-					
-					<!-- Modal Body -->
-					<div class="mb-6" style="margin-bottom: 1.5rem;">
-						<p id="netgsm-modal-description" class="text-sm text-gray-600 leading-relaxed mb-4" style="font-size: 0.875rem; color: #4b5563; line-height: 1.625; margin-bottom: 1rem;">
-							<?php esc_html_e('Enter your NetGSM credentials to enable SMS functionality across all features.', 'hezarfen-for-woocommerce'); ?>
-						</p>
-						
-						<form id="netgsm-credentials-form">
-							<div class="mb-4" style="margin-bottom: 1rem;">
-								<label for="netgsm-modal-username" class="block text-sm font-medium text-gray-700 mb-1" style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.25rem;">
-									<?php esc_html_e('NetGSM Username', 'hezarfen-for-woocommerce'); ?>
-								</label>
-								<input type="text" id="netgsm-modal-username" name="username" placeholder="<?php esc_attr_e('850xxxxxxx, 312XXXXXXX etc.', 'hezarfen-for-woocommerce'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem;" required>
-							</div>
-							
-							<div class="mb-4" style="margin-bottom: 1rem;">
-								<label for="netgsm-modal-password" class="block text-sm font-medium text-gray-700 mb-1" style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.25rem;">
-									<?php esc_html_e('NetGSM Password', 'hezarfen-for-woocommerce'); ?>
-								</label>
-								<div style="position: relative;">
-									<input type="password" id="netgsm-modal-password" name="password" placeholder="<?php esc_attr_e('Your API password', 'hezarfen-for-woocommerce'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" style="width: 100%; padding: 0.5rem 2.5rem 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem;" required>
-									<button type="button" id="netgsm-toggle-password" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600" style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); color: #9ca3af; padding: 0.25rem; border: none; background: none; cursor: pointer;" tabindex="-1" aria-label="<?php esc_attr_e('Toggle password visibility', 'hezarfen-for-woocommerce'); ?>">
-										<svg id="netgsm-eye-closed" class="w-4 h-4" style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
-										</svg>
-										<svg id="netgsm-eye-open" class="w-4 h-4" style="width: 16px; height: 16px; display: none;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-										</svg>
-									</button>
-								</div>
-							</div>
-							
-							<div class="mb-4" style="margin-bottom: 1rem;">
-								<label for="netgsm-modal-msgheader" class="block text-sm font-medium text-gray-700 mb-1" style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.25rem;">
-									<?php esc_html_e('Message Header', 'hezarfen-for-woocommerce'); ?>
-								</label>
-								<div style="position: relative;">
-									<select id="netgsm-modal-msgheader" name="msgheader" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem;" required disabled>
-										<option value=""><?php esc_html_e('First enter username and password above', 'hezarfen-for-woocommerce'); ?></option>
-									</select>
-									<button type="button" id="netgsm-load-senders" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600 hover:text-blue-800 focus:outline-none" style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); color: #2563eb; display: none;">
-										<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 1rem; height: 1rem;">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-										</svg>
-									</button>
-								</div>
-								<p class="text-xs text-gray-500 mt-1" style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">
-									<?php esc_html_e('Available sender names from your NetGSM account', 'hezarfen-for-woocommerce'); ?>
-								</p>
-							</div>
-						</form>
-					</div>
-					
-					<!-- Modal Actions -->
-					<div class="flex flex-col sm:flex-row gap-3 sm:gap-2 sm:justify-end" style="display: flex; flex-direction: column; gap: 0.75rem;">
-						<button type="button" class="netgsm-modal-cancel w-full sm:w-auto px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200" style="width: 100%; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; color: #374151; background-color: white; border: 1px solid #d1d5db; border-radius: 0.375rem;">
-							<?php esc_html_e('Cancel', 'hezarfen-for-woocommerce'); ?>
-						</button>
-						<button type="button" id="netgsm-save-credentials" class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200" style="width: 100%; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; color: white; background-color: #2563eb; border: 1px solid transparent; border-radius: 0.375rem;">
-							<?php esc_html_e('Connect', 'hezarfen-for-woocommerce'); ?>
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<?php
-	}
 	
 	/**
 	 * Save
@@ -1531,7 +1746,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					'found_senders_multiple' => __( 'Found %d senders available', 'hezarfen-for-woocommerce' ),
 					'credentials_required' => __( 'Username and password are required', 'hezarfen-for-woocommerce' ),
 					'select_message_header' => __( 'Please select a message header', 'hezarfen-for-woocommerce' ),
-					'credentials_saved_successfully' => __( 'NetGSM credentials saved successfully!', 'hezarfen-for-woocommerce' ),
+					'credentials_saved_successfully' => __( 'NetGSM connection verified and established!', 'hezarfen-for-woocommerce' ),
 					'failed_to_save_credentials' => __( 'Failed to save credentials', 'hezarfen-for-woocommerce' ),
 					'network_error_saving_credentials' => __( 'Network error occurred while saving credentials', 'hezarfen-for-woocommerce' ),
 					'password_min_length' => __( 'Password must be at least 6 characters', 'hezarfen-for-woocommerce' ),
@@ -1567,11 +1782,36 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					'iys_info' => __( 'Information (0)', 'hezarfen-for-woocommerce' ),
 					'iys_commercial' => __( 'Commercial (11)', 'hezarfen-for-woocommerce' ),
 					'available_variables' => __( 'Available Variables: {order_number}, {customer_name}, {order_status}, {order_total}', 'hezarfen-for-woocommerce' ),
-					// NetGSM Connection Status strings - Force Turkish for now
-					'connected_to_netgsm' => 'NetGSM\'e Bağlandı',
-					'change_credentials' => 'Bilgileri Değiştir',
-					'username_label' => 'Kullanıcı Adı',
-					'sender_label' => 'Gönderici',
+					// NetGSM Connection Status strings
+					'connected_to_netgsm' => __( 'Connected to NetGSM', 'hezarfen-for-woocommerce' ),
+					'change_credentials' => __( 'Change Credentials', 'hezarfen-for-woocommerce' ),
+					'username_label' => __( 'Username', 'hezarfen-for-woocommerce' ),
+					'sender_label' => __( 'Sender', 'hezarfen-for-woocommerce' ),
+					// Test SMS strings
+					'enter_test_phone'      => __( 'Enter a phone number for the test SMS.', 'hezarfen-for-woocommerce' ),
+					'sending_test'          => __( 'Sending test SMS…', 'hezarfen-for-woocommerce' ),
+					'test_success_title'    => __( 'Test SMS sent successfully', 'hezarfen-for-woocommerce' ),
+					'test_failed_title'     => __( 'Test SMS could not be sent', 'hezarfen-for-woocommerce' ),
+					'test_network_error'    => __( 'A network error occurred while sending the test SMS.', 'hezarfen-for-woocommerce' ),
+					'label_result'          => __( 'Result', 'hezarfen-for-woocommerce' ),
+					'label_netgsm_code'     => __( 'NetGSM code', 'hezarfen-for-woocommerce' ),
+					'label_job_id'          => __( 'Job ID', 'hezarfen-for-woocommerce' ),
+					'label_sent_to'         => __( 'Sent to', 'hezarfen-for-woocommerce' ),
+					'message_sent_recipient'=> __( 'Message sent to the recipient.', 'hezarfen-for-woocommerce' ),
+					'registered_senders'    => __( 'Your registered sender names:', 'hezarfen-for-woocommerce' ),
+					'pick_sender_hint'      => __( 'Click a sender name and connect it with the Confirm button.', 'hezarfen-for-woocommerce' ),
+					'confirm_and_connect'   => __( 'Confirm & Connect', 'hezarfen-for-woocommerce' ),
+					'no_registered_senders' => __( 'You have no registered sender names. Please contact NetGSM to register a sender name (header).', 'hezarfen-for-woocommerce' ),
+					'sender_connected'      => __( 'Sender name connected.', 'hezarfen-for-woocommerce' ),
+					'test_again_hint'       => __( 'You can run the test again now.', 'hezarfen-for-woocommerce' ),
+					'sender_connect_failed' => __( 'Could not connect the sender name.', 'hezarfen-for-woocommerce' ),
+					'network_error'         => __( 'Network error.', 'hezarfen-for-woocommerce' ),
+					'connecting_short'      => __( 'Connecting…', 'hezarfen-for-woocommerce' ),
+					// Connection status box
+					'not_connected_title'   => __( 'NetGSM Account Not Connected', 'hezarfen-for-woocommerce' ),
+					'not_connected_desc'    => __( 'Fill in the form below to connect your NetGSM account and enable SMS sending.', 'hezarfen-for-woocommerce' ),
+					'not_member_title'      => __( 'Not a NetGSM member?', 'hezarfen-for-woocommerce' ),
+					'not_member_link'       => __( 'Click here to sign up for NetGSM →', 'hezarfen-for-woocommerce' ),
 				)
 			) );
 		}
