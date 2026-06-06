@@ -28,7 +28,10 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		$this->label = 'Hezarfen';
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_and_styles' ) );
+		add_action( 'woocommerce_admin_field_netgsm_connection_status', array( $this, 'output_netgsm_connection_status' ) );
 		add_action( 'woocommerce_admin_field_sms_rules_button', array( $this, 'output_sms_rules_button' ) );
+		add_action( 'woocommerce_admin_field_netgsm_test_connection', array( $this, 'output_netgsm_test_connection' ) );
+		add_action( 'woocommerce_admin_field_sms_logs_viewer', array( $this, 'output_sms_logs_viewer' ) );
 		add_action( 'woocommerce_admin_field_roadmap_voting', array( $this, 'output_roadmap_voting' ) );
 		// Note: AJAX action is registered in main Hezarfen class to ensure it's always available
 
@@ -482,6 +485,18 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				'id'      => 'hezarfen_sms_rules',
 			),
 			array(
+				'title'   => __( 'Test SMS', 'hezarfen-for-woocommerce' ),
+				'type'    => 'netgsm_test_connection',
+				'desc'    => __( 'Send a test SMS to verify your NetGSM connection. The message content is generated automatically.', 'hezarfen-for-woocommerce' ),
+				'id'      => 'hezarfen_netgsm_test_connection',
+			),
+			array(
+				'title'   => __( 'SMS Logs', 'hezarfen-for-woocommerce' ),
+				'type'    => 'sms_logs_viewer',
+				'desc'    => __( 'Detailed log of every SMS sending attempt and its NetGSM result.', 'hezarfen-for-woocommerce' ),
+				'id'      => 'hezarfen_sms_logs_viewer',
+			),
+			array(
 				'type' => 'sectionend',
 				'id'   => 'hezarfen_sms_settings_section_end',
 			),
@@ -506,6 +521,107 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			<td class="forminp">
 				<div id="netgsm-connection-status-main">
 					<!-- This will be populated by JavaScript -->
+				</div>
+				<p class="description"><?php echo esc_html( $value['desc'] ?? '' ); ?></p>
+			</td>
+		</tr>
+		<?php
+	}
+
+	/**
+	 * Output the "Test SMS" panel.
+	 *
+	 * Lets the admin send an automatically generated test SMS to a phone number
+	 * of their choice and renders the NetGSM result in a human readable way.
+	 *
+	 * @param array $value Field data.
+	 * @return void
+	 */
+	public function output_netgsm_test_connection( $value ) {
+		$is_connected = class_exists( 'SMS_Automation' ) && SMS_Automation::is_netgsm_connected();
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label><?php echo esc_html( $value['title'] ); ?></label>
+			</th>
+			<td class="forminp">
+				<div id="hezarfen-netgsm-test" style="max-width: 560px; border: 1px solid #dcdcde; border-radius: 6px; padding: 16px; background: #fff;">
+					<?php if ( ! $is_connected ) : ?>
+						<div style="padding: 10px 12px; background: #fcf0f1; border-left: 4px solid #d63638; border-radius: 4px;">
+							<p style="margin: 0; color: #8a1f1f;">
+								<?php esc_html_e( 'Connect your NetGSM account above before sending a test SMS.', 'hezarfen-for-woocommerce' ); ?>
+							</p>
+						</div>
+					<?php else : ?>
+						<div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-end;">
+							<div style="flex: 1; min-width: 220px;">
+								<label for="hezarfen-test-phone" style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px;">
+									<?php esc_html_e( 'Destination phone number', 'hezarfen-for-woocommerce' ); ?>
+								</label>
+								<input type="tel" id="hezarfen-test-phone" class="regular-text" placeholder="5XXXXXXXXX" style="width: 100%;" />
+							</div>
+							<button type="button" id="hezarfen-send-test-sms" class="button button-primary">
+								<?php esc_html_e( 'Send Test SMS', 'hezarfen-for-woocommerce' ); ?>
+							</button>
+						</div>
+						<p class="description" style="margin-top: 8px;">
+							<?php esc_html_e( 'A standard charge from your NetGSM account applies for the test message.', 'hezarfen-for-woocommerce' ); ?>
+						</p>
+						<div id="hezarfen-test-result" style="margin-top: 12px; display: none;"></div>
+					<?php endif; ?>
+				</div>
+				<p class="description"><?php echo esc_html( $value['desc'] ?? '' ); ?></p>
+			</td>
+		</tr>
+		<?php
+	}
+
+	/**
+	 * Output the "SMS Logs" viewer panel.
+	 *
+	 * The table body is populated via AJAX so it always reflects the latest
+	 * sending attempts without reloading the settings page.
+	 *
+	 * @param array $value Field data.
+	 * @return void
+	 */
+	public function output_sms_logs_viewer( $value ) {
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label><?php echo esc_html( $value['title'] ); ?></label>
+			</th>
+			<td class="forminp">
+				<div id="hezarfen-sms-logs" style="max-width: 900px;">
+					<div style="display: flex; gap: 8px; margin-bottom: 10px;">
+						<button type="button" id="hezarfen-refresh-logs" class="button">
+							<span class="dashicons dashicons-update" style="margin-top: 3px;"></span>
+							<?php esc_html_e( 'Refresh', 'hezarfen-for-woocommerce' ); ?>
+						</button>
+						<button type="button" id="hezarfen-clear-logs" class="button">
+							<span class="dashicons dashicons-trash" style="margin-top: 3px;"></span>
+							<?php esc_html_e( 'Clear Logs', 'hezarfen-for-woocommerce' ); ?>
+						</button>
+					</div>
+					<table class="widefat striped" style="border-radius: 6px; overflow: hidden;">
+						<thead>
+							<tr>
+								<th style="width: 150px;"><?php esc_html_e( 'Date', 'hezarfen-for-woocommerce' ); ?></th>
+								<th style="width: 90px;"><?php esc_html_e( 'Type', 'hezarfen-for-woocommerce' ); ?></th>
+								<th style="width: 90px;"><?php esc_html_e( 'Order', 'hezarfen-for-woocommerce' ); ?></th>
+								<th style="width: 120px;"><?php esc_html_e( 'Phone', 'hezarfen-for-woocommerce' ); ?></th>
+								<th style="width: 110px;"><?php esc_html_e( 'Status', 'hezarfen-for-woocommerce' ); ?></th>
+								<th><?php esc_html_e( 'NetGSM Result', 'hezarfen-for-woocommerce' ); ?></th>
+							</tr>
+						</thead>
+						<tbody id="hezarfen-sms-logs-body">
+							<tr>
+								<td colspan="6" style="text-align: center; padding: 16px; color: #646970;">
+									<?php esc_html_e( 'Loading logs…', 'hezarfen-for-woocommerce' ); ?>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 				<p class="description"><?php echo esc_html( $value['desc'] ?? '' ); ?></p>
 			</td>
@@ -1572,6 +1688,23 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 					'change_credentials' => 'Bilgileri Değiştir',
 					'username_label' => 'Kullanıcı Adı',
 					'sender_label' => 'Gönderici',
+					// Test SMS strings
+					'enter_test_phone'      => __( 'Please enter a phone number for the test SMS.', 'hezarfen-for-woocommerce' ),
+					'sending_test'          => __( 'Sending test SMS…', 'hezarfen-for-woocommerce' ),
+					'test_success_title'    => __( 'Test SMS sent successfully', 'hezarfen-for-woocommerce' ),
+					'test_failed_title'     => __( 'Test SMS could not be sent', 'hezarfen-for-woocommerce' ),
+					'test_network_error'    => __( 'A network error occurred while sending the test SMS.', 'hezarfen-for-woocommerce' ),
+					'label_result'          => __( 'Result', 'hezarfen-for-woocommerce' ),
+					'label_netgsm_code'     => __( 'NetGSM code', 'hezarfen-for-woocommerce' ),
+					'label_job_id'          => __( 'Job ID', 'hezarfen-for-woocommerce' ),
+					'label_sent_to'         => __( 'Sent to', 'hezarfen-for-woocommerce' ),
+					// SMS Logs strings
+					'logs_loading'          => __( 'Loading logs…', 'hezarfen-for-woocommerce' ),
+					'logs_empty'            => __( 'No SMS activity has been logged yet.', 'hezarfen-for-woocommerce' ),
+					'logs_load_error'       => __( 'Failed to load SMS logs.', 'hezarfen-for-woocommerce' ),
+					'logs_clear_confirm'    => __( 'Are you sure you want to clear all SMS logs?', 'hezarfen-for-woocommerce' ),
+					'status_delivered'      => __( 'Delivered to NetGSM', 'hezarfen-for-woocommerce' ),
+					'status_failed'         => __( 'Failed', 'hezarfen-for-woocommerce' ),
 				)
 			) );
 		}
