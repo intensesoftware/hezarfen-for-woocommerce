@@ -683,9 +683,18 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				<div style="max-width: 560px; padding: 15px; background: #fff; border: 1px solid <?php echo $is_ready ? '#0073aa' : '#d63638'; ?>; border-radius: 6px;">
 					<h4 style="margin: 0 0 15px 0; color: <?php echo $is_ready ? '#0073aa' : '#d63638'; ?>;"><?php esc_html_e( 'PandaSMS Configuration', 'hezarfen-for-woocommerce' ); ?></h4>
 					<?php if ( $is_ready ) : ?>
-						<p class="description" style="margin-top: 10px;">
-							<?php esc_html_e( 'PandaSMS message content is configured in the PandaSMS plugin settings.', 'hezarfen-for-woocommerce' ); ?>
-						</p>
+						<div class="description" style="margin-top: 10px; line-height: 1.6;">
+							<p style="margin: 0 0 6px 0;"><strong><?php esc_html_e( '"Kargoya verildi" SMS\'i için:', 'hezarfen-for-woocommerce' ); ?></strong></p>
+							<ol style="margin: 0 0 12px 18px;">
+								<li><?php esc_html_e( 'PandaSMS eklentisinde (PandaSMS → Mesaj Şablonları) "Sipariş kargoya verildiğinde" için bir mesaj oluşturun.', 'hezarfen-for-woocommerce' ); ?></li>
+								<li><?php esc_html_e( 'Hezarfen\'de yukarıdaki "SMS Şablon / Mesaj Ayarları" sekmesine geçip yeni bir kural ekleyin: Tetikleyici Koşul = "Sipariş kargoya verildiğinde", Gönderim Yöntemi = "PandaSMS ile gönder".', 'hezarfen-for-woocommerce' ); ?></li>
+								<li><?php esc_html_e( 'Siparişe kargo takip bilgisini girdiğinizde SMS otomatik gönderilir.', 'hezarfen-for-woocommerce' ); ?></li>
+							</ol>
+							<p style="margin: 0;">
+								<strong><?php esc_html_e( 'Diğer sipariş durumları için (hazırlanıyor, tamamlandı vb.):', 'hezarfen-for-woocommerce' ); ?></strong>
+								<?php esc_html_e( 'Hezarfen gerekmez. Doğrudan PandaSMS eklentisinde (PandaSMS → Mesaj Şablonları) ilgili durumu seçerek bir mesaj oluşturun.', 'hezarfen-for-woocommerce' ); ?>
+							</p>
+						</div>
 					<?php else : ?>
 						<div style="background: #fff2cd; border: 1px solid #f39c12; border-radius: 4px; padding: 12px;">
 							<p style="margin: 0; color: #856404; font-weight: 500;">
@@ -939,9 +948,41 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 						<div id="pandasms-legacy-settings" style="display: none; margin-top: 20px; padding: 15px; background: #fff; border: 1px solid <?php echo \Hezarfen\ManualShipmentTracking\Pandasms::is_plugin_ready() ? '#0073aa' : '#d63638'; ?>; border-radius: 6px;">
 							<h4 style="margin: 0 0 15px 0; color: <?php echo \Hezarfen\ManualShipmentTracking\Pandasms::is_plugin_ready() ? '#0073aa' : '#d63638'; ?>;"><?php esc_html_e( 'PandaSMS Configuration', 'hezarfen-for-woocommerce' ); ?></h4>
 							<?php if ( \Hezarfen\ManualShipmentTracking\Pandasms::is_plugin_ready() ) : ?>
-								<p class="description" style="margin-top: 10px;">
-									<?php esc_html_e( 'PandaSMS message content is configured in the PandaSMS plugin settings. This integration will use the trigger "Sipariş kargoya verildiğinde" with shipment variables.', 'hezarfen-for-woocommerce' ); ?>
-								</p>
+								<div id="pandasms-legacy-info" class="description" style="margin-top: 10px; line-height: 1.6;">
+									<p style="margin: 0 0 10px 0;">
+										<?php esc_html_e( 'PandaSMS mesaj içeriği, bu ekrandan değil, PandaSMS eklentisinin kendi ayarlarından düzenlenir. Bu entegrasyon kargo bildirimi için "Sipariş kargoya verildiğinde" tetikleyicisini kullanır.', 'hezarfen-for-woocommerce' ); ?>
+									</p>
+									<p style="margin: 0 0 10px 0;">
+										<?php esc_html_e( 'Nasıl çalışır: Siparişe kargo takip bilgisini girdiğinizde Hezarfen bu olayı başlatır, PandaSMS de bu tetikleyiciye bağladığınız mesaj şablonunu müşteriye gönderir.', 'hezarfen-for-woocommerce' ); ?>
+									</p>
+									<p style="margin: 10px 0 6px 0;"><strong><?php esc_html_e( 'Kurulum adımları:', 'hezarfen-for-woocommerce' ); ?></strong></p>
+									<ol style="margin: 0 0 12px 18px;">
+										<li><?php esc_html_e( 'WooCommerce → PandaSMS → Mesaj Şablonları bölümüne gidin.', 'hezarfen-for-woocommerce' ); ?></li>
+										<li><?php esc_html_e( 'Yeni bir şablon oluşturun ve tetikleyici olarak "Sipariş kargoya verildiğinde" seçeneğini işaretleyin.', 'hezarfen-for-woocommerce' ); ?></li>
+										<li><?php esc_html_e( 'Mesaj metnini yazıp kaydedin.', 'hezarfen-for-woocommerce' ); ?></li>
+									</ol>
+									<p style="margin: 0 0 6px 0;"><?php esc_html_e( 'Mesajınızda kullanabileceğiniz gönderi değişkenleri:', 'hezarfen-for-woocommerce' ); ?></p>
+									<ul style="margin: 0 0 12px 18px;">
+										<li><code>{kargoFirmasi}</code> &ndash; <?php esc_html_e( 'Kargo firması', 'hezarfen-for-woocommerce' ); ?></li>
+										<li><code>{kargoTakipNo}</code> &ndash; <?php esc_html_e( 'Kargo takip numarası', 'hezarfen-for-woocommerce' ); ?></li>
+										<li><code>{kargoTakipLinki}</code> &ndash; <?php esc_html_e( 'Kargo takip linki', 'hezarfen-for-woocommerce' ); ?></li>
+									</ul>
+									<p style="margin: 0;">
+										<strong><?php esc_html_e( 'Önemli:', 'hezarfen-for-woocommerce' ); ?></strong>
+										<?php esc_html_e( '"Sipariş kargoya verildiğinde" tetikleyicisine bağlı aktif bir şablon yoksa kargo SMS\'i gönderilmez. Diğer sipariş durumları (örn. hazırlanıyor, tamamlandı) için SMS\'i doğrudan PandaSMS eklentisinden ayarlayabilirsiniz.', 'hezarfen-for-woocommerce' ); ?>
+									</p>
+								</div>
+								<div id="pandasms-legacy-condition-warning" style="display: none; margin-top: 10px; background: #fbeaea; border: 1px solid #d63638; border-radius: 4px; padding: 12px; line-height: 1.6;">
+									<p style="margin: 0; color: #842029; font-weight: 600;">
+										⚠️ <?php esc_html_e( 'Bu tetikleyici PandaSMS ile kullanılamaz.', 'hezarfen-for-woocommerce' ); ?>
+									</p>
+									<p style="margin: 8px 0 0 0; color: #842029;">
+										<?php esc_html_e( 'PandaSMS entegrasyonu yalnızca "Sipariş kargoya verildiğinde" bildirimi için kullanılır. Tamamlandı, hazırlanıyor gibi diğer sipariş durumları için SMS\'i doğrudan PandaSMS eklentisinden ayarlayın; bunun için Hezarfen\'de kural oluşturmanıza gerek yoktur.', 'hezarfen-for-woocommerce' ); ?>
+									</p>
+									<p style="margin: 8px 0 0 0; color: #842029;">
+										<?php esc_html_e( 'Devam etmek için tetikleyici koşulunu "Sipariş kargoya verildiğinde" olarak seçin veya gönderim yöntemini değiştirin.', 'hezarfen-for-woocommerce' ); ?>
+									</p>
+								</div>
 							<?php else : ?>
 								<div style="background: #fff2cd; border: 1px solid #f39c12; border-radius: 4px; padding: 12px; margin-bottom: 15px;">
 									<p style="margin: 0; color: #856404; font-weight: 500;">
@@ -1066,7 +1107,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	private function output_sms_settings_tabs() {
 		$tabs = array(
 			'connection' => __( 'SMS Provider', 'hezarfen-for-woocommerce' ),
-			'test'       => __( 'Test Sending', 'hezarfen-for-woocommerce' ),
 			'template'   => __( 'SMS Template / Message Settings', 'hezarfen-for-woocommerce' ),
 		);
 		?>
@@ -1080,9 +1120,10 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 
 		<div class="hezarfen-sms-tab-panel" data-tab="connection">
 			<?php WC_Admin_Settings::output_fields( $this->get_sms_connection_fields() ); ?>
-		</div>
-		<div class="hezarfen-sms-tab-panel" data-tab="test" style="display:none;">
-			<?php WC_Admin_Settings::output_fields( $this->get_sms_test_fields() ); ?>
+			<?php // Test sending is NetGSM-only; shown at the bottom of the provider screen and toggled with the provider selector. ?>
+			<div class="hez-provider-row" data-provider="netgsm">
+				<?php WC_Admin_Settings::output_fields( $this->get_sms_test_fields() ); ?>
+			</div>
 		</div>
 		<div class="hezarfen-sms-tab-panel" data-tab="template" style="display:none;">
 			<?php WC_Admin_Settings::output_fields( $this->get_sms_template_fields() ); ?>

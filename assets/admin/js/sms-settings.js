@@ -143,7 +143,44 @@ jQuery(document).ready(function($) {
             $('#pandasms-legacy-settings').show();
             // Don't show sms-content-settings for legacy - message is configured in PandaSMS plugin
         }
+
+        // PandaSMS only works with the "Order Shipped" trigger. NetGSM is never affected.
+        updatePandasmsLegacyGuard();
     });
+
+    // Re-check the PandaSMS guard whenever the trigger condition changes.
+    // Note: the trigger condition is chosen before the action type, so this must
+    // also run on condition changes (not only on action-type changes).
+    $(document).on('change', '#condition-status', function() {
+        updatePandasmsLegacyGuard();
+    });
+
+    // PandaSMS (legacy) can only be used with the "Order Shipped" trigger
+    // (it always sends the "Sipariş kargoya verildiğinde" template). For any
+    // other trigger condition we block saving and explain where to configure it.
+    // NetGSM and other action types are never restricted by this guard.
+    function updatePandasmsLegacyGuard() {
+        var actionType = $('#action-type').val();
+        var conditionStatus = $('#condition-status').val();
+        var $save = $('#save-sms-rule');
+
+        if (actionType !== 'pandasms_legacy') {
+            $('#pandasms-legacy-condition-warning').hide();
+            $('#pandasms-legacy-info').show();
+            $save.prop('disabled', false);
+            return;
+        }
+
+        if (conditionStatus && conditionStatus !== 'hezarfen_order_shipped') {
+            $('#pandasms-legacy-info').hide();
+            $('#pandasms-legacy-condition-warning').show();
+            $save.prop('disabled', true);
+        } else {
+            $('#pandasms-legacy-condition-warning').hide();
+            $('#pandasms-legacy-info').show();
+            $save.prop('disabled', false);
+        }
+    }
 
     // Functions
     function loadSmsRules() {
@@ -214,7 +251,10 @@ jQuery(document).ready(function($) {
                 $('#netgsm-settings').hide();
                 $('#sms-content-settings').hide();
             }
-            
+
+            // Re-evaluate the PandaSMS guard for the current selection
+            updatePandasmsLegacyGuard();
+
             // Scroll to the form
             $('html, body').animate({
                 scrollTop: $('#hezarfen-sms-rule-form-container').offset().top - 50
@@ -234,7 +274,13 @@ jQuery(document).ready(function($) {
         // Hide settings sections
         $('#netgsm-settings').hide();
         $('#sms-content-settings').hide();
-        
+        $('#pandasms-legacy-settings').hide();
+
+        // Reset the PandaSMS guard state so the Save button is never left disabled
+        $('#pandasms-legacy-condition-warning').hide();
+        $('#pandasms-legacy-info').show();
+        $('#save-sms-rule').prop('disabled', false);
+
         currentRuleIndex = null;
     }
 
@@ -272,6 +318,13 @@ jQuery(document).ready(function($) {
         if (!actionType) {
             alert('Please select an action type.');
             $('#action-type').focus();
+            return;
+        }
+
+        // PandaSMS (legacy) only works with the "Order Shipped" trigger.
+        if (actionType === 'pandasms_legacy' && conditionStatus !== 'hezarfen_order_shipped') {
+            alert('PandaSMS yalnızca "Sipariş kargoya verildiğinde" tetikleyicisiyle kullanılabilir. Diğer sipariş durumları için SMS\'i doğrudan PandaSMS eklentisinden ayarlayın.');
+            $('#condition-status').focus();
             return;
         }
         

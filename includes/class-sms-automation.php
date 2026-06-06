@@ -1288,6 +1288,14 @@ class SMS_Automation {
 				'iys_status' => sanitize_text_field( $rule['iys_status'] ?? '0' ),
 			);
 
+			// PandaSMS (legacy) only works with the "Order Shipped" trigger; it always
+			// sends the "Sipariş kargoya verildiğinde" template regardless of the chosen
+			// condition. Reject any other combination so we don't store a misfiring rule.
+			if ( 'pandasms_legacy' === $sanitized_rule['action_type'] && 'hezarfen_order_shipped' !== $sanitized_rule['condition_status'] ) {
+				wp_send_json_error( __( 'PandaSMS yalnızca "Sipariş kargoya verildiğinde" tetikleyicisiyle kullanılabilir. Diğer sipariş durumları için SMS\'i doğrudan PandaSMS eklentisinden ayarlayın.', 'hezarfen-for-woocommerce' ) );
+				return;
+			}
+
 			// NetGSM credentials are now stored globally, no need to save with individual rules
 
 			$sanitized_rules[] = $sanitized_rule;
