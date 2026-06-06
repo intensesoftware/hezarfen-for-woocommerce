@@ -1344,12 +1344,17 @@ class SMS_Automation {
 		$credentials = self::get_global_netgsm_credentials();
 		$is_connected = self::is_netgsm_connected();
 
+		// Return stored credentials whenever a username exists, even if the
+		// connection is incomplete (e.g. the message header was cleared after a
+		// failed test). This lets the inline form prefill what we already have.
+		$has_credentials = $credentials && ! empty( $credentials['username'] );
+
 		wp_send_json_success( array(
 			'is_connected' => $is_connected,
-			'credentials' => $is_connected ? array(
-				'username' => $credentials['username'],
-				'password' => $credentials['password'],
-				'msgheader' => $credentials['msgheader'],
+			'credentials' => $has_credentials ? array(
+				'username' => $credentials['username'] ?? '',
+				'password' => $credentials['password'] ?? '',
+				'msgheader' => $credentials['msgheader'] ?? '',
 			) : null,
 		) );
 	}
@@ -1514,13 +1519,20 @@ class SMS_Automation {
 		$result = $this->send_netgsm_sms( $data, $username, $password );
 
 		// On code 40 (sender name not registered) fetch the sender names that ARE
-		// registered on the account so the user can pick a valid one. An empty
-		// array means there are no registered headers at all.
+		// registered on the account so the user can pick a valid one, and clear
+		// the stored (invalid) header so it is no longer used until reselected.
 		$registered_headers = array();
+		$header_reset        = false;
 		if ( '40' === ( $result['code'] ?? '' ) ) {
 			$headers = self::fetch_netgsm_message_headers( $username, $password );
 			if ( ! is_wp_error( $headers ) && is_array( $headers ) ) {
 				$registered_headers = array_values( array_filter( array_map( 'strval', $headers ) ) );
+			}
+
+			if ( '' !== ( $credentials['msgheader'] ?? '' ) ) {
+				$credentials['msgheader'] = '';
+				self::save_global_netgsm_credentials( $credentials );
+				$header_reset = true;
 			}
 		}
 
@@ -1536,6 +1548,7 @@ class SMS_Automation {
 			'message'            => $message,
 			'sender'             => $msgheader,
 			'registered_headers' => $registered_headers,
+			'header_reset'       => $header_reset,
 		);
 
 		if ( $result['success'] ) {
