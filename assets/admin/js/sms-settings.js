@@ -14,9 +14,43 @@ jQuery(document).ready(function($) {
 
     	// Load existing rules from server
 	loadSmsRules();
-	
+
 	// Load NetGSM connection status
 	loadNetGsmConnectionStatus();
+
+	// Sub-tabs (NetGSM Connection / Test Gönderimi / SMS Şablon-Mesaj Ayarları)
+	initSmsSubTabs();
+
+	function initSmsSubTabs() {
+		const $tabs = $('.hezarfen-sms-tab');
+		if (!$tabs.length) {
+			return;
+		}
+
+		const $saveButton = $('button.woocommerce-save-button').closest('p.submit');
+
+		function activate(key) {
+			$tabs.removeClass('nav-tab-active');
+			$tabs.filter('[data-tab="' + key + '"]').addClass('nav-tab-active');
+			$('.hezarfen-sms-tab-panel').hide();
+			$('.hezarfen-sms-tab-panel[data-tab="' + key + '"]').show();
+			// Only the template tab has WooCommerce-saved fields.
+			if ($saveButton.length) {
+				$saveButton.toggle(key === 'template');
+			}
+			try { localStorage.setItem('hezarfen_sms_active_tab', key); } catch (e) {}
+		}
+
+		$tabs.on('click', function(e) {
+			e.preventDefault();
+			activate($(this).data('tab'));
+		});
+
+		let saved = null;
+		try { saved = localStorage.getItem('hezarfen_sms_active_tab'); } catch (e) {}
+		const initial = (saved && $tabs.filter('[data-tab="' + saved + '"]').length) ? saved : $tabs.first().data('tab');
+		activate(initial);
+	}
 
     // Add SMS Rule button click
     $('#hezarfen-add-sms-rule').on('click', function(e) {

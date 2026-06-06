@@ -457,12 +457,25 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 	 * @return array<array<string, string>>
 	 */
 	protected function get_settings_for_sms_settings_section() {
-		$fields = array(
-			// --- Card 1: NetGSM connection + test SMS (separate from the rules) ---
+		// All three tab groups merged; save_fields() needs the full set.
+		return array_merge(
+			$this->get_sms_connection_fields(),
+			$this->get_sms_test_fields(),
+			$this->get_sms_template_fields()
+		);
+	}
+
+	/**
+	 * Tab 1 fields: NetGSM connection.
+	 *
+	 * @return array<array<string, mixed>>
+	 */
+	private function get_sms_connection_fields() {
+		return array(
 			array(
-				'title' => 'NetGSM Bağlantısı & Test',
+				'title' => 'NetGSM Bağlantısı',
 				'type'  => 'title',
-				'desc'  => 'NetGSM hesabınızı bağlayın ve bir test SMS göndererek bağlantıyı doğrulayın.',
+				'desc'  => 'NetGSM hesabınızı bağlayarak SMS gönderimini etkinleştirin.',
 				'id'    => 'hezarfen_netgsm_connection_card',
 			),
 			array(
@@ -472,6 +485,26 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				'id'      => 'hezarfen_netgsm_connection_status',
 			),
 			array(
+				'type' => 'sectionend',
+				'id'   => 'hezarfen_netgsm_connection_card_end',
+			),
+		);
+	}
+
+	/**
+	 * Tab 2 fields: Test sending.
+	 *
+	 * @return array<array<string, mixed>>
+	 */
+	private function get_sms_test_fields() {
+		return array(
+			array(
+				'title' => 'Test Gönderimi',
+				'type'  => 'title',
+				'desc'  => 'Bir test SMS göndererek NetGSM bağlantınızı doğrulayın.',
+				'id'    => 'hezarfen_netgsm_test_card',
+			),
+			array(
 				'title'   => 'Test SMS',
 				'type'    => 'netgsm_test_connection',
 				'desc'    => 'NetGSM bağlantınızı doğrulamak için test SMS gönderin. Mesaj içeriği otomatik oluşturulur.',
@@ -479,12 +512,20 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 			),
 			array(
 				'type' => 'sectionend',
-				'id'   => 'hezarfen_netgsm_connection_card_end',
+				'id'   => 'hezarfen_netgsm_test_card_end',
 			),
+		);
+	}
 
-			// --- Card 2: SMS automation rules ---
+	/**
+	 * Tab 3 fields: SMS template / message settings (automation rules).
+	 *
+	 * @return array<array<string, mixed>>
+	 */
+	private function get_sms_template_fields() {
+		return array(
 			array(
-				'title' => __( 'SMS Automation Settings', 'hezarfen-for-woocommerce' ),
+				'title' => 'SMS Şablon/Mesaj Ayarları',
 				'type'  => 'title',
 				'desc'  => __( 'Configure SMS notifications for order status changes.', 'hezarfen-for-woocommerce' ),
 				'id'    => 'hezarfen_sms_settings_title',
@@ -507,8 +548,6 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				'id'   => 'hezarfen_sms_settings_section_end',
 			),
 		);
-
-		return $fields;
 	}
 
 
@@ -926,10 +965,49 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 		} elseif ( 'system_report' === $current_section ) {
 			$hide_save_button = true;
 			do_action( 'hezarfen_system_report_output' );
+		} elseif ( 'sms_settings' === $current_section ) {
+			$this->output_sms_settings_tabs();
 		} else {
 			$settings = $this->get_settings_for_section( $current_section );
 			WC_Admin_Settings::output_fields( $settings );
 		}
+	}
+
+	/**
+	 * Render the SMS settings section as three sub-tabs:
+	 * NetGSM connection, Test sending and SMS template/message settings.
+	 *
+	 * Each tab is a normal WooCommerce settings card; only one panel is visible
+	 * at a time (toggled by JS). Saving still works because every field stays in
+	 * get_settings_for_sms_settings_section().
+	 *
+	 * @return void
+	 */
+	private function output_sms_settings_tabs() {
+		$tabs = array(
+			'connection' => 'NetGSM Bağlantısı',
+			'test'       => 'Test Gönderimi',
+			'template'   => 'SMS Şablon/Mesaj Ayarları',
+		);
+		?>
+		<h2 class="nav-tab-wrapper hezarfen-sms-tabs" style="margin-bottom: 16px;">
+			<?php $first = true; foreach ( $tabs as $key => $label ) : ?>
+				<a href="#" class="nav-tab<?php echo $first ? ' nav-tab-active' : ''; ?> hezarfen-sms-tab" data-tab="<?php echo esc_attr( $key ); ?>">
+					<?php echo esc_html( $label ); ?>
+				</a>
+			<?php $first = false; endforeach; ?>
+		</h2>
+
+		<div class="hezarfen-sms-tab-panel" data-tab="connection">
+			<?php WC_Admin_Settings::output_fields( $this->get_sms_connection_fields() ); ?>
+		</div>
+		<div class="hezarfen-sms-tab-panel" data-tab="test" style="display:none;">
+			<?php WC_Admin_Settings::output_fields( $this->get_sms_test_fields() ); ?>
+		</div>
+		<div class="hezarfen-sms-tab-panel" data-tab="template" style="display:none;">
+			<?php WC_Admin_Settings::output_fields( $this->get_sms_template_fields() ); ?>
+		</div>
+		<?php
 	}
 
 	/**
