@@ -492,6 +492,30 @@ class Admin_Ajax {
 	}
 
 	/**
+	 * Largest font size in [$min, $base] at which $text fits within $max_width.
+	 *
+	 * Keeps a column header from overflowing its column (and bleeding into the
+	 * neighbouring column) regardless of how long the translated string is.
+	 *
+	 * @param TCPDF  $pdf       PDF instance.
+	 * @param string $text      Text to measure (already UTF-8).
+	 * @param float  $max_width Available width in user units.
+	 * @param string $style     Font style (e.g. 'B').
+	 * @param int    $base      Preferred (largest) font size.
+	 * @param int    $min       Smallest acceptable font size.
+	 * @return int Font size that fits, or $min if none do.
+	 */
+	private static function fit_font_size( $pdf, $text, $max_width, $style, $base, $min ) {
+		for ( $size = $base; $size > $min; $size-- ) {
+			$pdf->SetFont( 'dejavusans', $style, $size );
+			if ( $pdf->GetStringWidth( $text ) <= $max_width ) {
+				return $size;
+			}
+		}
+		return $min;
+	}
+
+	/**
 	 * Format price with proper Turkish Lira symbol for PDF.
 	 * 
 	 * @param float $amount Price amount.
@@ -834,10 +858,13 @@ class Admin_Ajax {
 
 			// === LEFT COLUMN: ORDER INFORMATION ===
 
-			// Order Information Header
+			// Order Information Header (shrink to fit the narrow info column so
+			// it can't overflow into the Order Details column).
+			$info_header      = self::ensure_utf8( __( 'Order Information', 'hezarfen-for-woocommerce' ) );
+			$info_header_size = self::fit_font_size( $pdf, $info_header, $info_col_width, 'B', 10, 7 );
 			$pdf->SetXY( $info_col_x, $section_start_y );
-			$pdf->SetFont( 'dejavusans', 'B', 10 );
-			$pdf->Cell( $info_col_width, 5, self::ensure_utf8( __( 'Order Information', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
+			$pdf->SetFont( 'dejavusans', 'B', $info_header_size );
+			$pdf->Cell( $info_col_width, 5, $info_header, 0, 1, 'L' );
 			$pdf->SetX( $info_col_x );
 			$pdf->Line( $info_col_x, $pdf->GetY(), $info_col_x + $info_col_width, $pdf->GetY() );
 			$pdf->Ln( 2 );
@@ -899,10 +926,12 @@ class Admin_Ajax {
 			// lists fit. Filterable for installs that want roomier rows.
 			$details_row_h = (float) apply_filters( 'hezarfen_hepsijet_label_row_height', 3.6, $order );
 
-			// Order Details Header
+			// Order Details Header (shrink to fit its column for consistency).
+			$details_header      = self::ensure_utf8( __( 'Order Details', 'hezarfen-for-woocommerce' ) );
+			$details_header_size = self::fit_font_size( $pdf, $details_header, $details_col_width, 'B', 10, 7 );
 			$pdf->SetXY( $details_col_x, $section_start_y );
-			$pdf->SetFont( 'dejavusans', 'B', 10 );
-			$pdf->Cell( $details_col_width, 5, self::ensure_utf8( __( 'Order Details', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
+			$pdf->SetFont( 'dejavusans', 'B', $details_header_size );
+			$pdf->Cell( $details_col_width, 5, $details_header, 0, 1, 'L' );
 			$pdf->SetX( $details_col_x );
 			$pdf->Line( $details_col_x, $pdf->GetY(), $details_col_x + $details_col_width, $pdf->GetY() );
 			$pdf->Ln( 2 );
