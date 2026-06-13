@@ -647,6 +647,11 @@ class Admin_Ajax {
 		$content_width = min( 100, $usable_width );
 		$content_x     = $margins['left'];
 
+		// Vertical breathing room placed below the barcode so the order
+		// details / products block never butts up against (or visually
+		// overlaps) the barcode's bottom edge and its tracking-number text.
+		$barcode_bottom_gap = 6;
+
 		// === BARCODE AT TOP ===
 
 		// Add barcode image at the top
@@ -695,7 +700,7 @@ class Admin_Ajax {
 						$pdf->Image( $temp_file, 0, $image_offset_y, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
 						$pdf->StopTransform();
 
-						$pdf->SetY( $current_y + $display_width );
+						$pdf->SetY( $current_y + $display_width + $barcode_bottom_gap );
 					} else {
 						// Flat layout: render the barcode in its natural orientation
 						// inside the 100mm content column. No rotation is applied.
@@ -706,7 +711,7 @@ class Admin_Ajax {
 
 						$pdf->Image( $temp_file, $content_x, $current_y, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
 
-						$pdf->SetY( $current_y + $display_height );
+						$pdf->SetY( $current_y + $display_height + $barcode_bottom_gap );
 					}
 				}
 
