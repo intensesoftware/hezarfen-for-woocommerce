@@ -400,6 +400,13 @@ class Settings {
 				'desc'    => __( 'Show item totals and the order totals section on the PDF label.', 'hezarfen-for-woocommerce' ),
 			),
 			array(
+				'title'   => __( 'Show order note', 'hezarfen-for-woocommerce' ),
+				'type'    => 'checkbox',
+				'id'      => 'hezarfen_hepsijet_show_order_note_on_label',
+				'default' => 'yes',
+				'desc'    => __( 'Show the customer order note section on the PDF label.', 'hezarfen-for-woocommerce' ),
+			),
+			array(
 				'type' => 'sectionend',
 				'id' => 'hezarfen_hepsijet_label_settings'
 			),
@@ -741,12 +748,12 @@ class Settings {
 		<script>
 		jQuery(function ($) {
 			var $parent = $('#hezarfen_hepsijet_show_order_details_on_label');
-			var $childRow = $('#hezarfen_hepsijet_show_prices_on_label').closest('tr');
-			if (!$parent.length || !$childRow.length) {
+			var $childRows = $('#hezarfen_hepsijet_show_prices_on_label, #hezarfen_hepsijet_show_order_note_on_label').closest('tr');
+			if (!$parent.length || !$childRows.length) {
 				return;
 			}
 			var sync = function () {
-				$childRow.toggle($parent.is(':checked'));
+				$childRows.toggle($parent.is(':checked'));
 			};
 			$parent.on('change', sync);
 			sync();

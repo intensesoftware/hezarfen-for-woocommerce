@@ -635,6 +635,7 @@ class Admin_Ajax {
 		// are rendered next to it. Without order details, the barcode is shown flat.
 		$show_order_details = get_option( 'hezarfen_hepsijet_show_order_details_on_label', 'yes' ) === 'yes';
 		$show_prices        = get_option( 'hezarfen_hepsijet_show_prices_on_label', 'yes' ) === 'yes';
+		$show_order_note    = get_option( 'hezarfen_hepsijet_show_order_note_on_label', 'yes' ) === 'yes';
 
 		// All content (barcode + 2-column block + order note) is constrained to a
 		// 100mm-wide column anchored to the left margin so the output prints at
@@ -1036,25 +1037,27 @@ class Admin_Ajax {
 			$pdf->SetY( max( $info_col_end_y, $details_col_end_y ) + 3 );
 
 			// === ORDER NOTE SECTION ===
-			$order_note = $order->get_customer_note();
-			$pdf->Ln( 5 );
+			if ( $show_order_note ) {
+				$order_note = $order->get_customer_note();
+				$pdf->Ln( 5 );
 
-			// Order Note Header (constrained to the 100mm content column)
-			$pdf->SetX( $content_x );
-			$pdf->SetFont( 'dejavusans', 'B', 10 );
-			$pdf->Cell( $content_width, 5, self::ensure_utf8( __( 'Order Note', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
-			$pdf->SetX( $content_x );
-			$pdf->Line( $content_x, $pdf->GetY(), $content_x + $content_width, $pdf->GetY() );
-			$pdf->Ln( 3 );
+				// Order Note Header (constrained to the 100mm content column)
+				$pdf->SetX( $content_x );
+				$pdf->SetFont( 'dejavusans', 'B', 10 );
+				$pdf->Cell( $content_width, 5, self::ensure_utf8( __( 'Order Note', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
+				$pdf->SetX( $content_x );
+				$pdf->Line( $content_x, $pdf->GetY(), $content_x + $content_width, $pdf->GetY() );
+				$pdf->Ln( 3 );
 
-			// Order Note Content (show dash if empty)
-			$pdf->SetX( $content_x );
-			$pdf->SetFont( 'dejavusans', '', 8.5 );
-			$note_content = ! empty( $order_note ) ? $order_note : '-';
-			$pdf->MultiCell( $content_width, 4, self::ensure_utf8( $note_content ), 0, 'L' );
-			$pdf->Ln( 3 );
-			
-			$pdf->Ln( 3 );
+				// Order Note Content (show dash if empty)
+				$pdf->SetX( $content_x );
+				$pdf->SetFont( 'dejavusans', '', 8.5 );
+				$note_content = ! empty( $order_note ) ? $order_note : '-';
+				$pdf->MultiCell( $content_width, 4, self::ensure_utf8( $note_content ), 0, 'L' );
+				$pdf->Ln( 3 );
+
+				$pdf->Ln( 3 );
+			}
 		}
 
 
