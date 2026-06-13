@@ -1071,9 +1071,12 @@ class Admin_Ajax {
 			$pdf->SetY( max( $info_col_end_y, $details_col_end_y ) + 3 );
 
 			// === ORDER NOTE SECTION ===
-			if ( $show_order_note ) {
-				$order_note = $order->get_customer_note();
-				$pdf->Ln( 5 );
+			// Only render when there is an actual note. Printing an empty
+			// "Order Note: -" block just wastes vertical space and, on small
+			// thermal labels, can push content onto a second page.
+			$order_note = trim( (string) $order->get_customer_note() );
+			if ( $show_order_note && '' !== $order_note ) {
+				$pdf->Ln( 3 );
 
 				// Order Note Header (constrained to the 100mm content column)
 				$pdf->SetX( $content_x );
@@ -1081,16 +1084,12 @@ class Admin_Ajax {
 				$pdf->Cell( $content_width, 5, self::ensure_utf8( __( 'Order Note', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
 				$pdf->SetX( $content_x );
 				$pdf->Line( $content_x, $pdf->GetY(), $content_x + $content_width, $pdf->GetY() );
-				$pdf->Ln( 3 );
+				$pdf->Ln( 2 );
 
-				// Order Note Content (show dash if empty)
+				// Order Note Content
 				$pdf->SetX( $content_x );
 				$pdf->SetFont( 'dejavusans', '', 8.5 );
-				$note_content = ! empty( $order_note ) ? $order_note : '-';
-				$pdf->MultiCell( $content_width, 4, self::ensure_utf8( $note_content ), 0, 'L' );
-				$pdf->Ln( 3 );
-
-				$pdf->Ln( 3 );
+				$pdf->MultiCell( $content_width, 4, self::ensure_utf8( $order_note ), 0, 'L' );
 			}
 		}
 
