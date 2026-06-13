@@ -895,10 +895,10 @@ class Admin_Ajax {
 			$pdf->SetFont( 'dejavusans', 'B', 9 );
 			$pdf->SetX( $details_col_x );
 			if ( $show_prices ) {
-				$pdf->Cell( $product_col_width, $details_row_h,self::ensure_utf8( __( 'Product', 'hezarfen-for-woocommerce' ) ), 1, 0, 'L' );
-				$pdf->Cell( $total_col_width, $details_row_h,self::ensure_utf8( __( 'Total', 'hezarfen-for-woocommerce' ) ), 1, 1, 'R' );
+				$pdf->Cell( $product_col_width, $details_row_h, self::ensure_utf8( __( 'Product', 'hezarfen-for-woocommerce' ) ), 1, 0, 'L' );
+				$pdf->Cell( $total_col_width, $details_row_h, self::ensure_utf8( __( 'Total', 'hezarfen-for-woocommerce' ) ), 1, 1, 'R' );
 			} else {
-				$pdf->Cell( $product_col_width, $details_row_h,self::ensure_utf8( __( 'Product', 'hezarfen-for-woocommerce' ) ), 1, 1, 'L' );
+				$pdf->Cell( $product_col_width, $details_row_h, self::ensure_utf8( __( 'Product', 'hezarfen-for-woocommerce' ) ), 1, 1, 'L' );
 			}
 
 			// Order items
@@ -1006,31 +1006,31 @@ class Admin_Ajax {
 				// Items Subtotal
 				$pdf->SetFont( 'dejavusans', '', 8 );
 				$pdf->SetX( $details_col_x );
-				$pdf->Cell( $product_col_width, $details_row_h,self::ensure_utf8( __( 'Items Subtotal:', 'woocommerce' ) ), 1, 0, 'R' );
-				$pdf->Cell( $total_col_width, $details_row_h,self::format_price_for_pdf( $order->get_subtotal() ), 1, 1, 'R' );
+				$pdf->Cell( $product_col_width, $details_row_h, self::ensure_utf8( __( 'Items Subtotal:', 'woocommerce' ) ), 1, 0, 'R' );
+				$pdf->Cell( $total_col_width, $details_row_h, self::format_price_for_pdf( $order->get_subtotal() ), 1, 1, 'R' );
 
 				// Coupon(s) - if discount > 0
 				if ( $order->get_total_discount() > 0 ) {
 					$pdf->SetFont( 'dejavusans', '', 8 );
 					$pdf->SetX( $details_col_x );
-					$pdf->Cell( $product_col_width, $details_row_h,self::ensure_utf8( __( 'Coupon(s):', 'woocommerce' ) ), 1, 0, 'R' );
-					$pdf->Cell( $total_col_width, $details_row_h,self::format_price_for_pdf( -$order->get_total_discount() ), 1, 1, 'R' );
+					$pdf->Cell( $product_col_width, $details_row_h, self::ensure_utf8( __( 'Coupon(s):', 'woocommerce' ) ), 1, 0, 'R' );
+					$pdf->Cell( $total_col_width, $details_row_h, self::format_price_for_pdf( -$order->get_total_discount() ), 1, 1, 'R' );
 				}
 
 				// Fees - if total fees > 0
 				if ( $order->get_total_fees() > 0 ) {
 					$pdf->SetFont( 'dejavusans', '', 8 );
 					$pdf->SetX( $details_col_x );
-					$pdf->Cell( $product_col_width, $details_row_h,self::ensure_utf8( __( 'Fees:', 'woocommerce' ) ), 1, 0, 'R' );
-					$pdf->Cell( $total_col_width, $details_row_h,self::format_price_for_pdf( $order->get_total_fees() ), 1, 1, 'R' );
+					$pdf->Cell( $product_col_width, $details_row_h, self::ensure_utf8( __( 'Fees:', 'woocommerce' ) ), 1, 0, 'R' );
+					$pdf->Cell( $total_col_width, $details_row_h, self::format_price_for_pdf( $order->get_total_fees() ), 1, 1, 'R' );
 				}
 
 				// Shipping - if shipping methods exist
 				if ( $order->get_shipping_methods() ) {
 					$pdf->SetFont( 'dejavusans', '', 8 );
 					$pdf->SetX( $details_col_x );
-					$pdf->Cell( $product_col_width, $details_row_h,self::ensure_utf8( __( 'Shipping:', 'woocommerce' ) ), 1, 0, 'R' );
-					$pdf->Cell( $total_col_width, $details_row_h,self::format_price_for_pdf( $order->get_shipping_total() ), 1, 1, 'R' );
+					$pdf->Cell( $product_col_width, $details_row_h, self::ensure_utf8( __( 'Shipping:', 'woocommerce' ) ), 1, 0, 'R' );
+					$pdf->Cell( $total_col_width, $details_row_h, self::format_price_for_pdf( $order->get_shipping_total() ), 1, 1, 'R' );
 				}
 
 				// Tax - if tax enabled
@@ -1038,16 +1038,16 @@ class Admin_Ajax {
 					foreach ( $order->get_tax_totals() as $code => $tax_total ) {
 						$pdf->SetFont( 'dejavusans', '', 8 );
 						$pdf->SetX( $details_col_x );
-						$pdf->Cell( $product_col_width, $details_row_h,self::ensure_utf8( $tax_total->label . ':' ), 1, 0, 'R' );
-						$pdf->Cell( $total_col_width, $details_row_h,self::format_price_for_pdf( wc_round_tax_total( $tax_total->amount ) ), 1, 1, 'R' );
+						$pdf->Cell( $product_col_width, $details_row_h, self::ensure_utf8( $tax_total->label . ':' ), 1, 0, 'R' );
+						$pdf->Cell( $total_col_width, $details_row_h, self::format_price_for_pdf( wc_round_tax_total( $tax_total->amount ) ), 1, 1, 'R' );
 					}
 				}
 
 				// Order Total
 				$pdf->SetFont( 'dejavusans', 'B', 8 );
 				$pdf->SetX( $details_col_x );
-				$pdf->Cell( $product_col_width, $details_row_h,self::ensure_utf8( __( 'Order Total', 'woocommerce' ) . ':' ), 1, 0, 'R' );
-				$pdf->Cell( $total_col_width, $details_row_h,self::format_price_for_pdf( $order->get_total() ), 1, 1, 'R' );
+				$pdf->Cell( $product_col_width, $details_row_h, self::ensure_utf8( __( 'Order Total', 'woocommerce' ) . ':' ), 1, 0, 'R' );
+				$pdf->Cell( $total_col_width, $details_row_h, self::format_price_for_pdf( $order->get_total() ), 1, 1, 'R' );
 			}
 
 			// Move to the end of the longer column before the Order Note section
