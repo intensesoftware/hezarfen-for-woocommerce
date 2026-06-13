@@ -410,7 +410,7 @@ class Settings {
 				'title'             => __( 'Barcode max height (mm)', 'hezarfen-for-woocommerce' ),
 				'type'              => 'number',
 				'id'                => 'hezarfen_hepsijet_label_barcode_max_height',
-				'default'           => '40',
+				'default'           => '60',
 				'desc'              => __( 'Maximum barcode height when order details are shown. Lower values leave more room for the product list so more items fit on the label. The barcode keeps full width for scanning.', 'hezarfen-for-woocommerce' ),
 				'desc_tip'          => true,
 				'custom_attributes' => array(

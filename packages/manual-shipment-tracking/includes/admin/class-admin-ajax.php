@@ -639,9 +639,9 @@ class Admin_Ajax {
 
 		// Cap the barcode's visible height so the product list gets the rest of
 		// the page. Keeps full width for scanning; lower values fit more items.
-		$barcode_max_height = (float) get_option( 'hezarfen_hepsijet_label_barcode_max_height', 40 );
+		$barcode_max_height = (float) get_option( 'hezarfen_hepsijet_label_barcode_max_height', 60 );
 		if ( $barcode_max_height <= 0 ) {
-			$barcode_max_height = 40;
+			$barcode_max_height = 60;
 		}
 
 		// All content (barcode + 2-column block + order note) is constrained to a
@@ -694,12 +694,19 @@ class Admin_Ajax {
 						$display_height = 163 * $scale; // becomes visible width after rotation
 						$image_offset_y = -30 * $scale; // pre-rotation y offset of the image
 
-						// When the barcode's visible height exceeds the configured
+						// Effective cap is the configured value, additionally bound
+						// to the available page height (minus room reserved for the
+						// content) so the barcode can't crowd out the product list
+						// on small thermal labels such as 100x100.
+						$usable_height = $pdf->GetPageHeight() - $margins['top'] - $margins['bottom'];
+						$effective_cap = min( $barcode_max_height, max( 20, $usable_height - 55 ) );
+
+						// When the barcode's visible height exceeds the effective
 						// cap, uniformly shrink the whole construction (height,
 						// width and offset together) so the product list gets more
 						// room WITHOUT distorting the barcode's aspect ratio.
-						if ( $barcode_max_height > 0 && $display_width > $barcode_max_height ) {
-							$shrink          = $barcode_max_height / $display_width;
+						if ( $effective_cap > 0 && $display_width > $effective_cap ) {
+							$shrink          = $effective_cap / $display_width;
 							$display_width  *= $shrink;
 							$display_height *= $shrink;
 							$image_offset_y *= $shrink;
