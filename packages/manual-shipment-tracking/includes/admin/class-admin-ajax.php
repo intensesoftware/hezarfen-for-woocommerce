@@ -690,11 +690,20 @@ class Admin_Ajax {
 						// Visible footprint is $content_width wide; original
 						// proportions are preserved by scaling 130×163 / 163.
 						$scale          = $content_width / 163;
-						// Visible height after rotation, capped so the product list
-						// below the barcode gets the rest of the page.
-						$display_width  = min( $barcode_max_height, 130 * $scale );
+						$display_width  = 130 * $scale; // becomes visible height after rotation
 						$display_height = 163 * $scale; // becomes visible width after rotation
 						$image_offset_y = -30 * $scale; // pre-rotation y offset of the image
+
+						// When the barcode's visible height exceeds the configured
+						// cap, uniformly shrink the whole construction (height,
+						// width and offset together) so the product list gets more
+						// room WITHOUT distorting the barcode's aspect ratio.
+						if ( $barcode_max_height > 0 && $display_width > $barcode_max_height ) {
+							$shrink          = $barcode_max_height / $display_width;
+							$display_width  *= $shrink;
+							$display_height *= $shrink;
+							$image_offset_y *= $shrink;
+						}
 
 						// Rotation pivot is chosen so that after -90° the visible
 						// image's left edge lands exactly on $content_x. The
