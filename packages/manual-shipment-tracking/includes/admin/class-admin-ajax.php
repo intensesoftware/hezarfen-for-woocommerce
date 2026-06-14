@@ -610,11 +610,27 @@ class Admin_Ajax {
 			// Resolve the page format from the admin-selected paper size.
 			$paper_size = get_option( 'hezarfen_hepsijet_label_paper_size', 'a4' );
 			switch ( $paper_size ) {
+				case 'a5':
+					$format = 'A5';
+					break;
+				case 'a6':
+					$format = 'A6';
+					break;
 				case '100x150':
 					$format = array( 100, 150 );
 					break;
 				case '100x100':
 					$format = array( 100, 100 );
+					break;
+				case '80x100':
+					$format = array( 80, 100 );
+					break;
+				case 'custom':
+					// Clamp to the same bounds the settings inputs allow so a bad
+					// value can't produce an unusable page.
+					$custom_w = min( 300, max( 40, (float) get_option( 'hezarfen_hepsijet_label_custom_width', 100 ) ) );
+					$custom_h = min( 400, max( 40, (float) get_option( 'hezarfen_hepsijet_label_custom_height', 150 ) ) );
+					$format   = array( $custom_w, $custom_h );
 					break;
 				case 'a4':
 				default:
@@ -936,19 +952,39 @@ class Admin_Ajax {
 			$pdf->Line( $details_col_x, $pdf->GetY(), $details_col_x + $details_col_width, $pdf->GetY() );
 			$pdf->Ln( 2 );
 
-			// Items table headers (no Qty column)
-			$pdf->SetFont( 'dejavusans', 'B', 9 );
-			$pdf->SetX( $details_col_x );
-			if ( $show_prices ) {
-				$pdf->Cell( $product_col_width, $details_row_h, self::ensure_utf8( __( 'Product', 'hezarfen-for-woocommerce' ) ), 1, 0, 'L' );
-				$pdf->Cell( $total_col_width, $details_row_h, self::ensure_utf8( __( 'Total', 'hezarfen-for-woocommerce' ) ), 1, 1, 'R' );
+			// Hide the product list when the order has more items than the
+			// configured maximum; show a short note instead so large orders
+			// still fit on a single label.
+			$order_items      = $order->get_items();
+			$item_count       = count( $order_items );
+			$max_product_rows = (int) get_option( 'hezarfen_hepsijet_label_max_product_rows', 0 );
+			$products_fit     = ! ( $max_product_rows > 0 && $item_count > $max_product_rows );
+
+			if ( $products_fit ) {
+				// Items table headers (no Qty column)
+				$pdf->SetFont( 'dejavusans', 'B', 9 );
+				$pdf->SetX( $details_col_x );
+				if ( $show_prices ) {
+					$pdf->Cell( $product_col_width, $details_row_h, self::ensure_utf8( __( 'Product', 'hezarfen-for-woocommerce' ) ), 1, 0, 'L' );
+					$pdf->Cell( $total_col_width, $details_row_h, self::ensure_utf8( __( 'Total', 'hezarfen-for-woocommerce' ) ), 1, 1, 'R' );
+				} else {
+					$pdf->Cell( $product_col_width, $details_row_h, self::ensure_utf8( __( 'Product', 'hezarfen-for-woocommerce' ) ), 1, 1, 'L' );
+				}
 			} else {
-				$pdf->Cell( $product_col_width, $details_row_h, self::ensure_utf8( __( 'Product', 'hezarfen-for-woocommerce' ) ), 1, 1, 'L' );
+				// Too many products to fit on the label.
+				$pdf->SetX( $details_col_x );
+				$pdf->SetFont( 'dejavusans', '', 8 );
+				$too_many_msg = sprintf(
+					/* translators: %d: number of products in the order */
+					__( '%d ürün bulunduğu için ürün detayları etikete sığmıyor ve gösterilemiyor.', 'hezarfen-for-woocommerce' ),
+					$item_count
+				);
+				$pdf->MultiCell( $details_col_width, $details_row_h, self::ensure_utf8( $too_many_msg ), 1, 'L' );
 			}
 
 			// Order items
 			$pdf->SetFont( 'dejavusans', '', 8 );
-			foreach ( $order->get_items() as $item ) {
+			foreach ( ( $products_fit ? $order_items : array() ) as $item ) {
 				$product_name = $item->get_name();
 				$quantity = $item->get_quantity();
 				
