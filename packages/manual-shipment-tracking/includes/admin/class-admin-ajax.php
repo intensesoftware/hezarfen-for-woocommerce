@@ -699,6 +699,12 @@ class Admin_Ajax {
 		// overlaps) the barcode's bottom edge and its tracking-number text.
 		$barcode_bottom_gap = 6;
 
+		// Captured barcode geometry so the order info / details blocks can be
+		// laid out around it (filled in while the barcode is drawn below).
+		$barcode_top_y     = $pdf->GetY();
+		$barcode_bottom_y  = $barcode_top_y;
+		$barcode_visible_w = 0;
+
 		// === BARCODE AT TOP ===
 
 		// Add barcode image at the top
@@ -765,6 +771,10 @@ class Admin_Ajax {
 						$pdf->Image( $temp_file, 0, $image_offset_y, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
 						$pdf->StopTransform();
 
+						$barcode_top_y     = $current_y;
+						$barcode_bottom_y  = $current_y + $display_width;
+						$barcode_visible_w = $display_height;
+
 						$pdf->SetY( $current_y + $display_width + $barcode_bottom_gap );
 					} else {
 						// Flat layout: render the barcode in its natural orientation
@@ -775,6 +785,10 @@ class Admin_Ajax {
 						$display_height = $display_width / $image_aspect_ratio;
 
 						$pdf->Image( $temp_file, $content_x, $current_y, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
+
+						$barcode_top_y     = $current_y;
+						$barcode_bottom_y  = $current_y + $display_height;
+						$barcode_visible_w = $display_width;
 
 						$pdf->SetY( $current_y + $display_height + $barcode_bottom_gap );
 					}
@@ -847,22 +861,39 @@ class Admin_Ajax {
 		}
 		
 		
-		// === 2-COLUMN LAYOUT ===
+		// === ORDER INFORMATION + ORDER DETAILS LAYOUT ===
 		// $show_order_details and $show_prices are resolved above, alongside the
 		// barcode rendering decision.
 		//
-		// Order Information sits on the left (~30mm). Order Details sits next
-		// to it, taking the remaining ~67mm of the 100mm content column.
-		// Inside the Order Details table the Total column is sized just for
-		// the price text so the Product column gets as much room as possible.
+		// When the (aspect-correct) barcode leaves enough empty space to its
+		// right, Order Information is placed there and Order Details spans the
+		// full width below the barcode — this fills the otherwise-blank top-right
+		// area and gives the product list the whole page width. Otherwise the
+		// classic side-by-side columns below the barcode are used.
 
 		$column_gap         = 3;
-		$info_col_x         = $content_x;
-		$info_col_width     = $content_width * 0.30;
-		$details_col_x      = $info_col_x + $info_col_width + $column_gap;
-		$details_col_width  = $content_width - $info_col_width - $column_gap;
 		$line_height        = 4;
-		$section_start_y    = $pdf->GetY();
+
+		$right_of_barcode_w  = $content_width - $barcode_visible_w - $column_gap;
+		$info_beside_barcode = ( $show_order_details && $barcode_visible_w > 0 && $right_of_barcode_w >= 38 );
+
+		if ( $info_beside_barcode ) {
+			$info_col_x        = $content_x + $barcode_visible_w + $column_gap;
+			$info_col_width    = $right_of_barcode_w;
+			$info_start_y      = $barcode_top_y;
+
+			$details_col_x     = $content_x;
+			$details_col_width = $content_width;
+			$details_start_y   = $barcode_bottom_y + $barcode_bottom_gap;
+		} else {
+			$info_col_x        = $content_x;
+			$info_col_width    = $content_width * 0.30;
+			$info_start_y      = $pdf->GetY();
+
+			$details_col_x     = $info_col_x + $info_col_width + $column_gap;
+			$details_col_width = $content_width - $info_col_width - $column_gap;
+			$details_start_y   = $info_start_y;
+		}
 
 		if ( $show_order_details ) {
 			// Label/value widths inside the 30mm info column. Value cells are
@@ -878,7 +909,7 @@ class Admin_Ajax {
 			// it can't overflow into the Order Details column).
 			$info_header      = self::ensure_utf8( __( 'Order Information', 'hezarfen-for-woocommerce' ) );
 			$info_header_size = self::fit_font_size( $pdf, $info_header, $info_col_width, 'B', 10, 7 );
-			$pdf->SetXY( $info_col_x, $section_start_y );
+			$pdf->SetXY( $info_col_x, $info_start_y );
 			$pdf->SetFont( 'dejavusans', 'B', $info_header_size );
 			$pdf->Cell( $info_col_width, 5, $info_header, 0, 1, 'L' );
 			$pdf->SetX( $info_col_x );
@@ -926,7 +957,13 @@ class Admin_Ajax {
 			// Store left column end position
 			$info_col_end_y = $pdf->GetY();
 
-			// === RIGHT COLUMN: ORDER DETAILS ===
+			// When Order Information sits beside the barcode, keep the full-width
+			// Order Details block clear of both the barcode and a tall info block.
+			if ( $info_beside_barcode ) {
+				$details_start_y = max( $details_start_y, $info_col_end_y );
+			}
+
+			// === ORDER DETAILS ===
 
 			// Items/totals column widths inside the details column. Total is
 			// sized just for the price text so Product gets the rest.
@@ -945,7 +982,7 @@ class Admin_Ajax {
 			// Order Details Header (shrink to fit its column for consistency).
 			$details_header      = self::ensure_utf8( __( 'Order Details', 'hezarfen-for-woocommerce' ) );
 			$details_header_size = self::fit_font_size( $pdf, $details_header, $details_col_width, 'B', 10, 7 );
-			$pdf->SetXY( $details_col_x, $section_start_y );
+			$pdf->SetXY( $details_col_x, $details_start_y );
 			$pdf->SetFont( 'dejavusans', 'B', $details_header_size );
 			$pdf->Cell( $details_col_width, 5, $details_header, 0, 1, 'L' );
 			$pdf->SetX( $details_col_x );
