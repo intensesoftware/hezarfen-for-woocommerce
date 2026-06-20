@@ -684,6 +684,13 @@ class Admin_Ajax {
 			$barcode_max_height = 60;
 		}
 
+		// On thermal/label stock the barcode spans the full label width — the
+		// small page is dominated by the shipping barcode. The height cap (and,
+		// with it, the "info beside barcode" layout) applies only to sheet sizes
+		// such as A4/A5/A6 where there is room to leave for the order details.
+		$paper_size       = get_option( 'hezarfen_hepsijet_label_paper_size', 'a4' );
+		$is_thermal_label = in_array( $paper_size, array( '100x150', '100x100', '80x100', 'custom' ), true );
+
 		// All content (barcode + 2-column block + order note) is constrained to a
 		// 100mm-wide column anchored to the left margin so the output prints at
 		// the same physical size on either an A4 sheet (top-left corner) or a
@@ -740,22 +747,24 @@ class Admin_Ajax {
 						$display_height = 163 * $scale; // becomes visible width after rotation
 						$image_offset_y = -30 * $scale; // pre-rotation y offset of the image
 
-						// Effective cap is the configured value, additionally bound
-						// to the available page height (minus room reserved for the
-						// content) so the barcode can't crowd out the product list
-						// on small thermal labels such as 100x100.
-						$usable_height = $pdf->GetPageHeight() - $margins['top'] - $margins['bottom'];
-						$effective_cap = min( $barcode_max_height, max( 20, $usable_height - 55 ) );
+						// Sheet sizes (A4/A5/A6) cap the barcode height so the order
+						// details get room; thermal labels keep the barcode at full
+						// width. The effective cap is also bound to the available
+						// page height (minus a content reserve).
+						if ( ! $is_thermal_label ) {
+							$usable_height = $pdf->GetPageHeight() - $margins['top'] - $margins['bottom'];
+							$effective_cap = min( $barcode_max_height, max( 20, $usable_height - 55 ) );
 
-						// When the barcode's visible height exceeds the effective
-						// cap, uniformly shrink the whole construction (height,
-						// width and offset together) so the product list gets more
-						// room WITHOUT distorting the barcode's aspect ratio.
-						if ( $effective_cap > 0 && $display_width > $effective_cap ) {
-							$shrink          = $effective_cap / $display_width;
-							$display_width  *= $shrink;
-							$display_height *= $shrink;
-							$image_offset_y *= $shrink;
+							// When the barcode's visible height exceeds the effective
+							// cap, uniformly shrink the whole construction (height,
+							// width and offset together) so the product list gets more
+							// room WITHOUT distorting the barcode's aspect ratio.
+							if ( $effective_cap > 0 && $display_width > $effective_cap ) {
+								$shrink          = $effective_cap / $display_width;
+								$display_width  *= $shrink;
+								$display_height *= $shrink;
+								$image_offset_y *= $shrink;
+							}
 						}
 
 						// Rotation pivot is chosen so that after -90° the visible
