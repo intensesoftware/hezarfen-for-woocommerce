@@ -886,6 +886,15 @@ class Admin_Ajax {
 		$right_of_barcode_w  = $content_width - $barcode_visible_w - $column_gap;
 		$info_beside_barcode = ( $show_order_details && $barcode_visible_w > 0 && $right_of_barcode_w >= 38 );
 
+		// On thermal stock the full-width barcode can leave too little room for
+		// the order details. When that happens hide them (the barcode image
+		// already carries the address) and print a short note instead.
+		$details_fit_on_label = true;
+		if ( $is_thermal_label && $show_order_details ) {
+			$room_below_barcode   = ( $pdf->GetPageHeight() - $margins['bottom'] ) - ( $barcode_bottom_y + $barcode_bottom_gap );
+			$details_fit_on_label = ( $room_below_barcode >= 40 );
+		}
+
 		if ( $info_beside_barcode ) {
 			$info_col_x        = $content_x + $barcode_visible_w + $column_gap;
 			$info_col_width    = $right_of_barcode_w;
@@ -904,7 +913,7 @@ class Admin_Ajax {
 			$details_start_y   = $info_start_y;
 		}
 
-		if ( $show_order_details ) {
+		if ( $show_order_details && $details_fit_on_label ) {
 			// Label/value widths inside the 30mm info column. Value cells are
 			// bounded to $info_col_width minus the label so long phone numbers
 			// or order numbers can't bleed into the details column.
@@ -1202,6 +1211,13 @@ class Admin_Ajax {
 				$pdf->SetFont( 'dejavusans', '', 8.5 );
 				$pdf->MultiCell( $content_width, 4, self::ensure_utf8( $order_note ), 0, 'L' );
 			}
+		} elseif ( $show_order_details && ! $details_fit_on_label ) {
+			// Order details were requested but the full-width barcode leaves no
+			// room for them on this label, so show a short note in their place.
+			$pdf->SetY( $barcode_bottom_y + $barcode_bottom_gap );
+			$pdf->SetX( $content_x );
+			$pdf->SetFont( 'dejavusans', '', 8 );
+			$pdf->MultiCell( $content_width, 4, self::ensure_utf8( __( 'Sipariş detayları etikete sığmadığı için gösterilmiyor.', 'hezarfen-for-woocommerce' ) ), 0, 'L' );
 		}
 
 
