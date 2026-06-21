@@ -738,53 +738,61 @@ class Admin_Ajax {
 				$image_info = getimagesizefromstring( $image_data );
 				if ( $image_info ) {
 					if ( $show_order_details ) {
-						// Rotated layout: barcode sits at the top of the 100mm
+						// Rotated layout: the barcode sits at the top of the
 						// content column so order details can render below it.
-						// Visible footprint is $content_width wide; original
-						// proportions are preserved by scaling 130×163 / 163.
-						$scale          = $content_width / 163;
-						$display_width  = 130 * $scale; // becomes visible height after rotation
-						$display_height = 163 * $scale; // becomes visible width after rotation
-						$image_offset_y = -30 * $scale; // pre-rotation y offset of the image
+						//
+						// The image is rotated 90° clockwise with GD and then
+						// drawn as a normal image. Pre-rotating the pixels (rather
+						// than rotating inside the PDF) lets us size the result to
+						// the content width exactly, so the barcode never gets
+						// clipped by the page edge or shifted off the column.
+						$rotated_file = $temp_file;
+						$rot_w        = $image_info[1]; // dims after a 90° rotation
+						$rot_h        = $image_info[0];
+
+						$src_gd = function_exists( 'imagecreatefromstring' ) ? @imagecreatefromstring( $image_data ) : false;
+						if ( $src_gd ) {
+							$rotated_gd = imagerotate( $src_gd, 270, imagecolorallocate( $src_gd, 255, 255, 255 ) );
+							imagedestroy( $src_gd );
+							if ( $rotated_gd ) {
+								$rot_w        = imagesx( $rotated_gd );
+								$rot_h        = imagesy( $rotated_gd );
+								$rotated_file = wp_tempnam( 'hepsijet_barcode_rot_' . $delivery_no . '.png' );
+								imagepng( $rotated_gd, $rotated_file );
+								imagedestroy( $rotated_gd );
+							}
+						}
+
+						// Full content width, preserving the rotated aspect ratio.
+						$draw_width  = $content_width;
+						$draw_height = $content_width * $rot_h / max( 1, $rot_w );
 
 						// Sheet sizes (A4/A5/A6) cap the barcode height so the order
-						// details get room; thermal labels keep the barcode at full
-						// width. The effective cap is also bound to the available
-						// page height (minus a content reserve).
+						// details get room; thermal labels keep it at full size.
+						// Shrinking width and height together keeps the barcode
+						// left-aligned and aspect-correct.
 						if ( ! $is_thermal_label ) {
 							$usable_height = $pdf->GetPageHeight() - $margins['top'] - $margins['bottom'];
 							$effective_cap = min( $barcode_max_height, max( 20, $usable_height - 55 ) );
 
-							// When the barcode's visible height exceeds the effective
-							// cap, uniformly shrink the whole construction (height,
-							// width and offset together) so the product list gets more
-							// room WITHOUT distorting the barcode's aspect ratio.
-							if ( $effective_cap > 0 && $display_width > $effective_cap ) {
-								$shrink          = $effective_cap / $display_width;
-								$display_width  *= $shrink;
-								$display_height *= $shrink;
-								$image_offset_y *= $shrink;
+							if ( $effective_cap > 0 && $draw_height > $effective_cap ) {
+								$shrink       = $effective_cap / $draw_height;
+								$draw_width  *= $shrink;
+								$draw_height *= $shrink;
 							}
 						}
 
-						// Rotation pivot is chosen so that after -90° the visible
-						// image's left edge lands exactly on $content_x. The
-						// -90° transform maps (x, y) to (tx - y, ty + x), so the
-						// leftmost visible point ends up at
-						// tx - ($image_offset_y + $display_height). Solving for
-						// tx with that point set to $content_x gives the offset
-						// below.
-						$pdf->StartTransform();
-						$pdf->Translate( $content_x + $display_height + $image_offset_y, $current_y );
-						$pdf->Rotate( -90 );
-						$pdf->Image( $temp_file, 0, $image_offset_y, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
-						$pdf->StopTransform();
+						$pdf->Image( $rotated_file, $content_x, $current_y, $draw_width, $draw_height, '', '', '', false, 300, '', false, false, 0, false, false, false );
+
+						if ( $rotated_file !== $temp_file ) {
+							@unlink( $rotated_file );
+						}
 
 						$barcode_top_y     = $current_y;
-						$barcode_bottom_y  = $current_y + $display_width;
-						$barcode_visible_w = $display_height;
+						$barcode_bottom_y  = $current_y + $draw_height;
+						$barcode_visible_w = $draw_width;
 
-						$pdf->SetY( $current_y + $display_width + $barcode_bottom_gap );
+						$pdf->SetY( $current_y + $draw_height + $barcode_bottom_gap );
 					} else {
 						// Flat layout: render the barcode in its natural orientation
 						// inside the 100mm content column. No rotation is applied.
