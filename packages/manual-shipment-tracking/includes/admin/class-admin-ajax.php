@@ -1025,6 +1025,10 @@ class Admin_Ajax {
 			$max_product_rows = (int) get_option( 'hezarfen_hepsijet_label_max_product_rows', 0 );
 			$products_fit     = ! ( $max_product_rows > 0 && $item_count > $max_product_rows );
 
+			// Which product fields to print in each row (name / SKU).
+			$show_product_name = get_option( 'hezarfen_hepsijet_show_product_name_on_label', 'yes' ) === 'yes';
+			$show_product_sku  = get_option( 'hezarfen_hepsijet_show_product_sku_on_label', 'no' ) === 'yes';
+
 			if ( $products_fit ) {
 				// Items table headers (no Qty column)
 				$pdf->SetFont( 'dejavusans', 'B', 9 );
@@ -1052,6 +1056,8 @@ class Admin_Ajax {
 			foreach ( ( $products_fit ? $order_items : array() ) as $item ) {
 				$product_name = $item->get_name();
 				$quantity = $item->get_quantity();
+				$line_product = $item->get_product();
+				$product_sku  = $line_product ? (string) $line_product->get_sku() : '';
 				
 				// Get product variants/attributes
 				$meta_data = $item->get_meta_data();
@@ -1116,8 +1122,23 @@ class Admin_Ajax {
 					$variants[] = $display_key . ': ' . $clean_value;
 				}
 			
-				// Build complete product text with variants on new lines
-				$product_text = $product_name . ' x ' . $quantity;
+				// Build the product title from the selected fields (name / SKU).
+				// Always fall back to the name so a row is never empty.
+				if ( $show_product_name ) {
+					$product_title = $product_name;
+				} elseif ( $show_product_sku && '' !== $product_sku ) {
+					$product_title = $product_sku;
+				} else {
+					$product_title = $product_name;
+				}
+
+				$product_text = $product_title . ' x ' . $quantity;
+
+				// SKU on its own line when shown alongside the name.
+				if ( $show_product_sku && '' !== $product_sku && $show_product_name ) {
+					$product_text .= "\n  " . sprintf( __( 'SKU: %s', 'hezarfen-for-woocommerce' ), $product_sku );
+				}
+
 				if ( ! empty( $variants ) ) {
 					foreach ( $variants as $variant ) {
 						$product_text .= "\n  " . $variant;

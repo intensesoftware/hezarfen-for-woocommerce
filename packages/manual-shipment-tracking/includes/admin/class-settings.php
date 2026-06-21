@@ -430,6 +430,20 @@ class Settings {
 				'desc'    => __( 'Show item totals and the order totals section on the PDF label.', 'hezarfen-for-woocommerce' ),
 			),
 			array(
+				'title'   => __( 'Show product name', 'hezarfen-for-woocommerce' ),
+				'type'    => 'checkbox',
+				'id'      => 'hezarfen_hepsijet_show_product_name_on_label',
+				'default' => 'yes',
+				'desc'    => __( 'Show the product name in the order details product list.', 'hezarfen-for-woocommerce' ),
+			),
+			array(
+				'title'   => __( 'Show product SKU', 'hezarfen-for-woocommerce' ),
+				'type'    => 'checkbox',
+				'id'      => 'hezarfen_hepsijet_show_product_sku_on_label',
+				'default' => 'no',
+				'desc'    => __( 'Show the product SKU in the order details product list.', 'hezarfen-for-woocommerce' ),
+			),
+			array(
 				'title'   => __( 'Show order note', 'hezarfen-for-woocommerce' ),
 				'type'    => 'checkbox',
 				'id'      => 'hezarfen_hepsijet_show_order_note_on_label',
@@ -803,7 +817,7 @@ class Settings {
 		<script>
 		jQuery(function ($) {
 			var $parent = $('#hezarfen_hepsijet_show_order_details_on_label');
-			var $childRows = $('#hezarfen_hepsijet_show_prices_on_label, #hezarfen_hepsijet_show_order_note_on_label, #hezarfen_hepsijet_label_barcode_max_height, #hezarfen_hepsijet_label_max_product_rows').closest('tr');
+			var $childRows = $('#hezarfen_hepsijet_show_prices_on_label, #hezarfen_hepsijet_show_order_note_on_label, #hezarfen_hepsijet_label_barcode_max_height, #hezarfen_hepsijet_label_max_product_rows, #hezarfen_hepsijet_show_product_name_on_label, #hezarfen_hepsijet_show_product_sku_on_label').closest('tr');
 			if (!$parent.length || !$childRows.length) {
 				return;
 			}
