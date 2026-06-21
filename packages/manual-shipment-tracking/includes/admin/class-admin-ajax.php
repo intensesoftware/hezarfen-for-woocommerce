@@ -942,27 +942,29 @@ class Admin_Ajax {
 			$pdf->Line( $info_col_x, $pdf->GetY(), $info_col_x + $info_col_width, $pdf->GetY() );
 			$pdf->Ln( 2 );
 
-			// Order details - Order # on first row
+			// Order details - Order # on first row. The $stretch=1 argument
+			// shrinks an over-long value horizontally so it can never bleed past
+			// the info column into the Order Details column next to it.
 			$pdf->SetFont( 'dejavusans', '', 8 );
 			$pdf->SetX( $info_col_x );
-			$pdf->Cell( $order_no_label_w, $line_height, self::ensure_utf8( __( 'Order #:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
+			$pdf->Cell( $order_no_label_w, $line_height, self::ensure_utf8( __( 'Order #:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L', false, '', 1 );
 			$pdf->SetFont( 'dejavusans', 'B', 8 );
-			$pdf->Cell( $info_col_width - $order_no_label_w, $line_height, self::ensure_utf8( $order->get_order_number() ), 0, 1, 'L' );
+			$pdf->Cell( $info_col_width - $order_no_label_w, $line_height, self::ensure_utf8( $order->get_order_number() ), 0, 1, 'L', false, '', 1 );
 
 			// Date on second row
 			$pdf->SetFont( 'dejavusans', '', 8 );
 			$pdf->SetX( $info_col_x );
-			$pdf->Cell( $date_label_w, $line_height, self::ensure_utf8( __( 'Tarih:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
+			$pdf->Cell( $date_label_w, $line_height, self::ensure_utf8( __( 'Tarih:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L', false, '', 1 );
 			$pdf->SetFont( 'dejavusans', 'B', 8 );
-			$pdf->Cell( $info_col_width - $date_label_w, $line_height, self::ensure_utf8( $order->get_date_created()->date( 'd/m/Y' ) ), 0, 1, 'L' );
+			$pdf->Cell( $info_col_width - $date_label_w, $line_height, self::ensure_utf8( $order->get_date_created()->date( 'd/m/Y' ) ), 0, 1, 'L', false, '', 1 );
 
 			// Phone row
 			$pdf->SetFont( 'dejavusans', '', 8 );
 			$pdf->SetX( $info_col_x );
-			$pdf->Cell( $phone_label_w, $line_height, self::ensure_utf8( __( 'Phone:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L' );
+			$pdf->Cell( $phone_label_w, $line_height, self::ensure_utf8( __( 'Phone:', 'hezarfen-for-woocommerce' ) ), 0, 0, 'L', false, '', 1 );
 			$pdf->SetFont( 'dejavusans', 'B', 8 );
 			$phone = $order->get_shipping_phone() ? $order->get_shipping_phone() : $order->get_billing_phone();
-			$pdf->Cell( $info_col_width - $phone_label_w, $line_height, self::ensure_utf8( $phone ), 0, 1, 'L' );
+			$pdf->Cell( $info_col_width - $phone_label_w, $line_height, self::ensure_utf8( $phone ), 0, 1, 'L', false, '', 1 );
 
 			$pdf->Ln( 2 );
 
