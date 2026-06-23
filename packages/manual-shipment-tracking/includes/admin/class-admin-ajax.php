@@ -708,10 +708,6 @@ class Admin_Ajax {
 		// overlaps) the barcode's bottom edge and its tracking-number text.
 		$barcode_bottom_gap = 6;
 
-		// Captured barcode geometry so the order info / details blocks can be
-		// laid out around it (filled in while the barcode is drawn below).
-		$barcode_bottom_y = $pdf->GetY();
-
 		// === BARCODE AT TOP ===
 
 		// Add barcode image at the top
@@ -776,7 +772,6 @@ class Admin_Ajax {
 							@unlink( $rotated_file );
 						}
 
-						$barcode_bottom_y = $current_y + $draw_height;
 
 						$pdf->SetY( $current_y + $draw_height + $barcode_bottom_gap );
 					} else {
@@ -789,7 +784,6 @@ class Admin_Ajax {
 
 						$pdf->Image( $temp_file, $content_x, $current_y, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
 
-						$barcode_bottom_y = $current_y + $display_height;
 
 						$pdf->SetY( $current_y + $display_height + $barcode_bottom_gap );
 					}
@@ -862,6 +856,22 @@ class Admin_Ajax {
 		}
 		
 		
+		// === ORDER NOTE (printed above the order info / details) ===
+		// Courier-facing instructions sit right under the barcode so they are
+		// the first thing seen. The text was already capped to a safe length.
+		if ( '' !== $order_note_display ) {
+			$pdf->SetX( $content_x );
+			$pdf->SetFont( 'dejavusans', 'B', 10 );
+			$pdf->Cell( $content_width, 5, self::ensure_utf8( __( 'Order Note', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
+			$pdf->SetX( $content_x );
+			$pdf->Line( $content_x, $pdf->GetY(), $content_x + $content_width, $pdf->GetY() );
+			$pdf->Ln( 2 );
+			$pdf->SetX( $content_x );
+			$pdf->SetFont( 'dejavusans', '', 8.5 );
+			$pdf->MultiCell( $content_width, 4, self::ensure_utf8( $order_note_display ), 0, 'L' );
+			$pdf->Ln( 3 );
+		}
+
 		// === ORDER INFORMATION + ORDER DETAILS LAYOUT ===
 		// $show_order_details and $show_prices are resolved above. The barcode
 		// always spans the full content width, so Order Information and Order
@@ -876,8 +886,9 @@ class Admin_Ajax {
 		// already carries the address) and print a short note instead.
 		$details_fit_on_label = true;
 		if ( $is_thermal_label && $show_order_details ) {
-			$room_below_barcode   = ( $pdf->GetPageHeight() - $margins['bottom'] ) - ( $barcode_bottom_y + $barcode_bottom_gap );
-			$details_fit_on_label = ( $room_below_barcode >= 40 );
+			// Room left under the barcode and the (already printed) order note.
+			$room_for_details     = ( $pdf->GetPageHeight() - $margins['bottom'] ) - $pdf->GetY();
+			$details_fit_on_label = ( $room_for_details >= 40 );
 		}
 
 		$info_col_x        = $content_x;
@@ -997,7 +1008,8 @@ class Admin_Ajax {
 
 			$pdf->SetFont( 'dejavusans', '', 8 );
 
-			// Space the totals block and the order note will need below the list.
+			// Space the totals block will need below the list. (The order note
+			// is printed above the list, so it no longer needs reserving here.)
 			$reserve = 0;
 			if ( $show_prices ) {
 				$totals_rows = 2; // items subtotal + order total
@@ -1006,11 +1018,6 @@ class Admin_Ajax {
 				if ( $order->get_shipping_methods() ) { $totals_rows++; }
 				if ( wc_tax_enabled() ) { $totals_rows += count( $order->get_tax_totals() ); }
 				$reserve += $totals_rows * $details_row_h;
-			}
-			if ( '' !== $order_note_display ) {
-				$pdf->SetFont( 'dejavusans', '', 8.5 );
-				$reserve += 10 + $pdf->getStringHeight( $content_width, self::ensure_utf8( $order_note_display ) );
-				$pdf->SetFont( 'dejavusans', '', 8 );
 			}
 
 			// Height available for the table (column header + product rows), with
@@ -1232,29 +1239,11 @@ class Admin_Ajax {
 			$details_col_end_y = $pdf->GetY();
 			$pdf->SetY( max( $info_col_end_y, $details_col_end_y ) );
 		} elseif ( $show_order_details && ! $details_fit_on_label ) {
-			// Order details were requested but the full-width barcode leaves no
-			// room for them on this label, so show a short note in their place.
-			$pdf->SetY( $barcode_bottom_y + $barcode_bottom_gap );
+			// Order details were requested but there is not enough room below the
+			// barcode / note for them, so show a short note in their place.
 			$pdf->SetX( $content_x );
 			$pdf->SetFont( 'dejavusans', '', 8 );
 			$pdf->MultiCell( $content_width, 4, self::ensure_utf8( __( 'Sipariş detayları etikete sığmadığı için gösterilmiyor.', 'hezarfen-for-woocommerce' ) ), 0, 'L' );
-		}
-
-		// === ORDER NOTE SECTION ===
-		// Always printed (when present) below whatever was rendered above, so the
-		// note survives even if the products or order info did not fit. The text
-		// was already capped to a safe length earlier.
-		if ( '' !== $order_note_display ) {
-			$pdf->Ln( 3 );
-			$pdf->SetX( $content_x );
-			$pdf->SetFont( 'dejavusans', 'B', 10 );
-			$pdf->Cell( $content_width, 5, self::ensure_utf8( __( 'Order Note', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
-			$pdf->SetX( $content_x );
-			$pdf->Line( $content_x, $pdf->GetY(), $content_x + $content_width, $pdf->GetY() );
-			$pdf->Ln( 2 );
-			$pdf->SetX( $content_x );
-			$pdf->SetFont( 'dejavusans', '', 8.5 );
-			$pdf->MultiCell( $content_width, 4, self::ensure_utf8( $order_note_display ), 0, 'L' );
 		}
 
 		// If caller wants the TCPDF object back (for combined/multi-page PDFs), return it.
