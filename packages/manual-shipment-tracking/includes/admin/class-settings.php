@@ -380,10 +380,40 @@ class Settings {
 				'default' => 'a4',
 				'options' => array(
 					'a4'      => __( 'A4 (210×297mm)', 'hezarfen-for-woocommerce' ),
+					'a5'      => __( 'A5 (148×210mm)', 'hezarfen-for-woocommerce' ),
+					'a6'      => __( 'A6 (105×148mm)', 'hezarfen-for-woocommerce' ),
 					'100x150' => __( '100×150mm (thermal label)', 'hezarfen-for-woocommerce' ),
 					'100x100' => __( '100×100mm (thermal label)', 'hezarfen-for-woocommerce' ),
+					'80x100'  => __( '80×100mm (thermal label)', 'hezarfen-for-woocommerce' ),
+					'custom'  => __( 'Custom size…', 'hezarfen-for-woocommerce' ),
 				),
-				'desc'    => __( 'Page size used when generating the PDF label. A4 places the label in the top-left of the sheet; 100mm sizes match common thermal label printers.', 'hezarfen-for-woocommerce' ),
+				'desc'    => __( 'Page size used when generating the PDF label. A4/A5 place the label in the top-left of the sheet; thermal sizes match common label printers. Choose "Custom size" to enter your own width and height below.', 'hezarfen-for-woocommerce' ),
+			),
+			array(
+				'title'             => __( 'Custom width (mm)', 'hezarfen-for-woocommerce' ),
+				'type'              => 'number',
+				'id'                => 'hezarfen_hepsijet_label_custom_width',
+				'default'           => '100',
+				'desc'              => __( 'Label width in millimetres, used only when Paper size is "Custom size".', 'hezarfen-for-woocommerce' ),
+				'desc_tip'          => true,
+				'custom_attributes' => array(
+					'min'  => '40',
+					'max'  => '300',
+					'step' => '1',
+				),
+			),
+			array(
+				'title'             => __( 'Custom height (mm)', 'hezarfen-for-woocommerce' ),
+				'type'              => 'number',
+				'id'                => 'hezarfen_hepsijet_label_custom_height',
+				'default'           => '150',
+				'desc'              => __( 'Label height in millimetres, used only when Paper size is "Custom size".', 'hezarfen-for-woocommerce' ),
+				'desc_tip'          => true,
+				'custom_attributes' => array(
+					'min'  => '40',
+					'max'  => '400',
+					'step' => '1',
+				),
 			),
 			array(
 				'title'   => __( 'Show order details on label', 'hezarfen-for-woocommerce' ),
@@ -398,6 +428,27 @@ class Settings {
 				'id'      => 'hezarfen_hepsijet_show_prices_on_label',
 				'default' => 'yes',
 				'desc'    => __( 'Show item totals and the order totals section on the PDF label.', 'hezarfen-for-woocommerce' ),
+			),
+			array(
+				'title'   => __( 'Show product name', 'hezarfen-for-woocommerce' ),
+				'type'    => 'checkbox',
+				'id'      => 'hezarfen_hepsijet_show_product_name_on_label',
+				'default' => 'yes',
+				'desc'    => __( 'Show the product name in the order details product list.', 'hezarfen-for-woocommerce' ),
+			),
+			array(
+				'title'   => __( 'Show product SKU', 'hezarfen-for-woocommerce' ),
+				'type'    => 'checkbox',
+				'id'      => 'hezarfen_hepsijet_show_product_sku_on_label',
+				'default' => 'no',
+				'desc'    => __( 'Show the product SKU in the order details product list.', 'hezarfen-for-woocommerce' ),
+			),
+			array(
+				'title'   => __( 'Show order note', 'hezarfen-for-woocommerce' ),
+				'type'    => 'checkbox',
+				'id'      => 'hezarfen_hepsijet_show_order_note_on_label',
+				'default' => 'yes',
+				'desc'    => __( 'Show the customer order note section on the PDF label.', 'hezarfen-for-woocommerce' ),
 			),
 			array(
 				'type' => 'sectionend',
@@ -741,15 +792,27 @@ class Settings {
 		<script>
 		jQuery(function ($) {
 			var $parent = $('#hezarfen_hepsijet_show_order_details_on_label');
-			var $childRow = $('#hezarfen_hepsijet_show_prices_on_label').closest('tr');
-			if (!$parent.length || !$childRow.length) {
+			var $childRows = $('#hezarfen_hepsijet_show_prices_on_label, #hezarfen_hepsijet_show_order_note_on_label, #hezarfen_hepsijet_show_product_name_on_label, #hezarfen_hepsijet_show_product_sku_on_label').closest('tr');
+			if (!$parent.length || !$childRows.length) {
 				return;
 			}
 			var sync = function () {
-				$childRow.toggle($parent.is(':checked'));
+				$childRows.toggle($parent.is(':checked'));
 			};
 			$parent.on('change', sync);
 			sync();
+
+			// Show the custom width/height fields only when "Custom size" is
+			// chosen as the paper size.
+			var $paper = $('#hezarfen_hepsijet_label_paper_size');
+			var $customRows = $('#hezarfen_hepsijet_label_custom_width, #hezarfen_hepsijet_label_custom_height').closest('tr');
+			if ($paper.length && $customRows.length) {
+				var syncCustom = function () {
+					$customRows.toggle($paper.val() === 'custom');
+				};
+				$paper.on('change', syncCustom);
+				syncCustom();
+			}
 		});
 		</script>
 		<?php
