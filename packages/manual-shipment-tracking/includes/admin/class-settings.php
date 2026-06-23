@@ -468,7 +468,7 @@ class Settings {
 				'type'              => 'number',
 				'id'                => 'hezarfen_hepsijet_label_max_product_rows',
 				'default'           => '0',
-				'desc'              => __( 'Maximum number of product rows to print. 0 = automatic: as many as fit on the label are listed and the rest are summarised as "+N more". Set a number to force a fixed hard cap instead.', 'hezarfen-for-woocommerce' ),
+				'desc'              => __( 'Maximum number of product rows to print. 0 = automatic: the list is shown only if it fits on the label, otherwise it is hidden with a short note. Set a number to force a fixed item-count cap instead.', 'hezarfen-for-woocommerce' ),
 				'desc_tip'          => true,
 				'custom_attributes' => array(
 					'min'  => '0',
