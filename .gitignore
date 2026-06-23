@@ -10,3 +10,5 @@ tests/e2e/playwright-report
 
 # wp-env local/CI override (e.g. matrix-driven phpVersion)
 .wp-env.override.json
+# editor / tool backups
+*~

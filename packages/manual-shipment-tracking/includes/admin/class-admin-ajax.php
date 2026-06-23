@@ -677,6 +677,16 @@ class Admin_Ajax {
 		$show_prices        = get_option( 'hezarfen_hepsijet_show_prices_on_label', 'yes' ) === 'yes';
 		$show_order_note    = get_option( 'hezarfen_hepsijet_show_order_note_on_label', 'yes' ) === 'yes';
 
+		// The order note has priority: it is always printed below everything
+		// else (even when the products / order info don't fit). Cap it past a
+		// character limit so it can't overrun the label, appending a hint that
+		// the rest was cut. Filterable.
+		$order_note_display = $show_order_note ? trim( (string) $order->get_customer_note() ) : '';
+		$max_note_chars     = (int) apply_filters( 'hezarfen_hepsijet_label_max_note_chars', 200, $order );
+		if ( $max_note_chars > 0 && mb_strlen( $order_note_display ) > $max_note_chars ) {
+			$order_note_display = rtrim( mb_substr( $order_note_display, 0, $max_note_chars ) ) . ' … ' . __( '(notun devamı etikete sığmadı)', 'hezarfen-for-woocommerce' );
+		}
+
 		// Small label stock (thermal / custom) can be dominated by the
 		// full-width barcode; on those sizes the order details are hidden when
 		// the barcode leaves too little room below it.
@@ -997,10 +1007,9 @@ class Admin_Ajax {
 				if ( wc_tax_enabled() ) { $totals_rows += count( $order->get_tax_totals() ); }
 				$reserve += $totals_rows * $details_row_h;
 			}
-			$note_for_reserve = $show_order_note ? trim( (string) $order->get_customer_note() ) : '';
-			if ( '' !== $note_for_reserve ) {
+			if ( '' !== $order_note_display ) {
 				$pdf->SetFont( 'dejavusans', '', 8.5 );
-				$reserve += 10 + $pdf->getStringHeight( $content_width, self::ensure_utf8( $note_for_reserve ) );
+				$reserve += 10 + $pdf->getStringHeight( $content_width, self::ensure_utf8( $order_note_display ) );
 				$pdf->SetFont( 'dejavusans', '', 8 );
 			}
 
@@ -1219,31 +1228,9 @@ class Admin_Ajax {
 				$pdf->Cell( $total_col_width, $details_row_h, self::format_price_for_pdf( $order->get_total() ), 1, 1, 'R' );
 			}
 
-			// Move to the end of the longer column before the Order Note section
+			// Move the cursor below the longer of the two columns.
 			$details_col_end_y = $pdf->GetY();
-			$pdf->SetY( max( $info_col_end_y, $details_col_end_y ) + 3 );
-
-			// === ORDER NOTE SECTION ===
-			// Only render when there is an actual note. Printing an empty
-			// "Order Note: -" block just wastes vertical space and, on small
-			// thermal labels, can push content onto a second page.
-			$order_note = trim( (string) $order->get_customer_note() );
-			if ( $show_order_note && '' !== $order_note ) {
-				$pdf->Ln( 3 );
-
-				// Order Note Header (constrained to the 100mm content column)
-				$pdf->SetX( $content_x );
-				$pdf->SetFont( 'dejavusans', 'B', 10 );
-				$pdf->Cell( $content_width, 5, self::ensure_utf8( __( 'Order Note', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
-				$pdf->SetX( $content_x );
-				$pdf->Line( $content_x, $pdf->GetY(), $content_x + $content_width, $pdf->GetY() );
-				$pdf->Ln( 2 );
-
-				// Order Note Content
-				$pdf->SetX( $content_x );
-				$pdf->SetFont( 'dejavusans', '', 8.5 );
-				$pdf->MultiCell( $content_width, 4, self::ensure_utf8( $order_note ), 0, 'L' );
-			}
+			$pdf->SetY( max( $info_col_end_y, $details_col_end_y ) );
 		} elseif ( $show_order_details && ! $details_fit_on_label ) {
 			// Order details were requested but the full-width barcode leaves no
 			// room for them on this label, so show a short note in their place.
@@ -1253,8 +1240,22 @@ class Admin_Ajax {
 			$pdf->MultiCell( $content_width, 4, self::ensure_utf8( __( 'Sipariş detayları etikete sığmadığı için gösterilmiyor.', 'hezarfen-for-woocommerce' ) ), 0, 'L' );
 		}
 
-
-
+		// === ORDER NOTE SECTION ===
+		// Always printed (when present) below whatever was rendered above, so the
+		// note survives even if the products or order info did not fit. The text
+		// was already capped to a safe length earlier.
+		if ( '' !== $order_note_display ) {
+			$pdf->Ln( 3 );
+			$pdf->SetX( $content_x );
+			$pdf->SetFont( 'dejavusans', 'B', 10 );
+			$pdf->Cell( $content_width, 5, self::ensure_utf8( __( 'Order Note', 'hezarfen-for-woocommerce' ) ), 0, 1, 'L' );
+			$pdf->SetX( $content_x );
+			$pdf->Line( $content_x, $pdf->GetY(), $content_x + $content_width, $pdf->GetY() );
+			$pdf->Ln( 2 );
+			$pdf->SetX( $content_x );
+			$pdf->SetFont( 'dejavusans', '', 8.5 );
+			$pdf->MultiCell( $content_width, 4, self::ensure_utf8( $order_note_display ), 0, 'L' );
+		}
 
 		// If caller wants the TCPDF object back (for combined/multi-page PDFs), return it.
 		if ( $return_pdf_object ) {
