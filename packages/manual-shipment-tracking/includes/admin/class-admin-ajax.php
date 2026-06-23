@@ -677,17 +677,9 @@ class Admin_Ajax {
 		$show_prices        = get_option( 'hezarfen_hepsijet_show_prices_on_label', 'yes' ) === 'yes';
 		$show_order_note    = get_option( 'hezarfen_hepsijet_show_order_note_on_label', 'yes' ) === 'yes';
 
-		// Cap the barcode's visible height (sheet sizes only) so the product
-		// list gets the rest of the page. Filterable for advanced use.
-		$barcode_max_height = (float) apply_filters( 'hezarfen_hepsijet_label_barcode_max_height', 60, $order );
-		if ( $barcode_max_height <= 0 ) {
-			$barcode_max_height = 60;
-		}
-
-		// On thermal/label stock the barcode spans the full label width — the
-		// small page is dominated by the shipping barcode. The height cap (and,
-		// with it, the "info beside barcode" layout) applies only to sheet sizes
-		// such as A4/A5/A6 where there is room to leave for the order details.
+		// Small label stock (thermal / custom) can be dominated by the
+		// full-width barcode; on those sizes the order details are hidden when
+		// the barcode leaves too little room below it.
 		$paper_size       = get_option( 'hezarfen_hepsijet_label_paper_size', 'a4' );
 		$is_thermal_label = in_array( $paper_size, array( '100x150', '100x100', '80x100', 'custom' ), true );
 
@@ -708,9 +700,7 @@ class Admin_Ajax {
 
 		// Captured barcode geometry so the order info / details blocks can be
 		// laid out around it (filled in while the barcode is drawn below).
-		$barcode_top_y     = $pdf->GetY();
-		$barcode_bottom_y  = $barcode_top_y;
-		$barcode_visible_w = 0;
+		$barcode_bottom_y = $pdf->GetY();
 
 		// === BARCODE AT TOP ===
 
@@ -763,24 +753,12 @@ class Admin_Ajax {
 							}
 						}
 
-						// Full content width, preserving the rotated aspect ratio.
+						// The barcode always fills the full content width on every
+						// paper size, so its left and right edges line up exactly
+						// with the order-details table drawn below it. Height
+						// follows the rotated image's aspect ratio.
 						$draw_width  = $content_width;
 						$draw_height = $content_width * $rot_h / max( 1, $rot_w );
-
-						// Sheet sizes (A4/A5/A6) cap the barcode height so the order
-						// details get room; thermal labels keep it at full size.
-						// Shrinking width and height together keeps the barcode
-						// left-aligned and aspect-correct.
-						if ( ! $is_thermal_label ) {
-							$usable_height = $pdf->GetPageHeight() - $margins['top'] - $margins['bottom'];
-							$effective_cap = min( $barcode_max_height, max( 20, $usable_height - 55 ) );
-
-							if ( $effective_cap > 0 && $draw_height > $effective_cap ) {
-								$shrink       = $effective_cap / $draw_height;
-								$draw_width  *= $shrink;
-								$draw_height *= $shrink;
-							}
-						}
 
 						$pdf->Image( $rotated_file, $content_x, $current_y, $draw_width, $draw_height, '', '', '', false, 300, '', false, false, 0, false, false, false );
 
@@ -788,9 +766,7 @@ class Admin_Ajax {
 							@unlink( $rotated_file );
 						}
 
-						$barcode_top_y     = $current_y;
-						$barcode_bottom_y  = $current_y + $draw_height;
-						$barcode_visible_w = $draw_width;
+						$barcode_bottom_y = $current_y + $draw_height;
 
 						$pdf->SetY( $current_y + $draw_height + $barcode_bottom_gap );
 					} else {
@@ -803,9 +779,7 @@ class Admin_Ajax {
 
 						$pdf->Image( $temp_file, $content_x, $current_y, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
 
-						$barcode_top_y     = $current_y;
-						$barcode_bottom_y  = $current_y + $display_height;
-						$barcode_visible_w = $display_width;
+						$barcode_bottom_y = $current_y + $display_height;
 
 						$pdf->SetY( $current_y + $display_height + $barcode_bottom_gap );
 					}
@@ -879,20 +853,13 @@ class Admin_Ajax {
 		
 		
 		// === ORDER INFORMATION + ORDER DETAILS LAYOUT ===
-		// $show_order_details and $show_prices are resolved above, alongside the
-		// barcode rendering decision.
-		//
-		// When the (aspect-correct) barcode leaves enough empty space to its
-		// right, Order Information is placed there and Order Details spans the
-		// full width below the barcode — this fills the otherwise-blank top-right
-		// area and gives the product list the whole page width. Otherwise the
-		// classic side-by-side columns below the barcode are used.
+		// $show_order_details and $show_prices are resolved above. The barcode
+		// always spans the full content width, so Order Information and Order
+		// Details sit side by side in a column block directly below it — both
+		// edges line up with the barcode.
 
-		$column_gap         = 3;
-		$line_height        = 4;
-
-		$right_of_barcode_w  = $content_width - $barcode_visible_w - $column_gap;
-		$info_beside_barcode = ( $show_order_details && $barcode_visible_w > 0 && $right_of_barcode_w >= 38 );
+		$column_gap  = 3;
+		$line_height = 4;
 
 		// On thermal stock the full-width barcode can leave too little room for
 		// the order details. When that happens hide them (the barcode image
@@ -903,23 +870,12 @@ class Admin_Ajax {
 			$details_fit_on_label = ( $room_below_barcode >= 40 );
 		}
 
-		if ( $info_beside_barcode ) {
-			$info_col_x        = $content_x + $barcode_visible_w + $column_gap;
-			$info_col_width    = $right_of_barcode_w;
-			$info_start_y      = $barcode_top_y;
-
-			$details_col_x     = $content_x;
-			$details_col_width = $content_width;
-			$details_start_y   = $barcode_bottom_y + $barcode_bottom_gap;
-		} else {
-			$info_col_x        = $content_x;
-			$info_col_width    = $content_width * 0.30;
-			$info_start_y      = $pdf->GetY();
-
-			$details_col_x     = $info_col_x + $info_col_width + $column_gap;
-			$details_col_width = $content_width - $info_col_width - $column_gap;
-			$details_start_y   = $info_start_y;
-		}
+		$info_col_x        = $content_x;
+		$info_col_width    = $content_width * 0.30;
+		$info_start_y      = $pdf->GetY();
+		$details_col_x     = $info_col_x + $info_col_width + $column_gap;
+		$details_col_width = $content_width - $info_col_width - $column_gap;
+		$details_start_y   = $info_start_y;
 
 		if ( $show_order_details && $details_fit_on_label ) {
 			// Label/value widths inside the 30mm info column. Value cells are
@@ -984,12 +940,6 @@ class Admin_Ajax {
 
 			// Store left column end position
 			$info_col_end_y = $pdf->GetY();
-
-			// When Order Information sits beside the barcode, keep the full-width
-			// Order Details block clear of both the barcode and a tall info block.
-			if ( $info_beside_barcode ) {
-				$details_start_y = max( $details_start_y, $info_col_end_y );
-			}
 
 			// === ORDER DETAILS ===
 
