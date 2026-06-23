@@ -993,14 +993,24 @@ class Admin_Ajax {
 
 			// === ORDER DETAILS ===
 
-			// Items/totals column widths inside the details column. Total is
-			// sized just for the price text so Product gets the rest.
-			if ( $show_prices ) {
-				$total_col_width   = 18;
-				$product_col_width = $details_col_width - $total_col_width;
-			} else {
-				$product_col_width = $details_col_width;
-				$total_col_width   = 0;
+			// Which product fields to print as columns (name / SKU). Quantity is
+			// always its own column; the price column follows "Show prices".
+			$show_product_name = get_option( 'hezarfen_hepsijet_show_product_name_on_label', 'yes' ) === 'yes';
+			$show_product_sku  = get_option( 'hezarfen_hepsijet_show_product_sku_on_label', 'no' ) === 'yes';
+			if ( ! $show_product_name && ! $show_product_sku ) {
+				$show_product_name = true; // never leave a row without a label
+			}
+
+			// Product table columns: [Name] [Code] [Qty] [Total]. Qty/Total/Code
+			// take a fixed slice; Name gets whatever is left.
+			$qty_col_width   = 9;
+			$total_col_width = $show_prices ? 16 : 0;
+			$code_col_width  = $show_product_sku ? 18 : 0;
+			$name_col_width  = $details_col_width - $qty_col_width - $total_col_width - $code_col_width;
+			if ( ! $show_product_name ) {
+				// No name column — give its width to the code column instead.
+				$code_col_width += $name_col_width;
+				$name_col_width  = 0;
 			}
 
 			// Compact line height for item and totals rows so longer product
@@ -1025,19 +1035,20 @@ class Admin_Ajax {
 			$max_product_rows = (int) get_option( 'hezarfen_hepsijet_label_max_product_rows', 0 );
 			$products_fit     = ! ( $max_product_rows > 0 && $item_count > $max_product_rows );
 
-			// Which product fields to print in each row (name / SKU).
-			$show_product_name = get_option( 'hezarfen_hepsijet_show_product_name_on_label', 'yes' ) === 'yes';
-			$show_product_sku  = get_option( 'hezarfen_hepsijet_show_product_sku_on_label', 'no' ) === 'yes';
-
 			if ( $products_fit ) {
-				// Items table headers (no Qty column)
+				// Items table header row: Name | Code | Qty | Total (only the
+				// enabled columns). Quantity is always shown as its own column.
 				$pdf->SetFont( 'dejavusans', 'B', 9 );
 				$pdf->SetX( $details_col_x );
+				if ( $show_product_name ) {
+					$pdf->Cell( $name_col_width, $details_row_h, self::ensure_utf8( __( 'Ürün Adı', 'hezarfen-for-woocommerce' ) ), 1, 0, 'L' );
+				}
+				if ( $show_product_sku ) {
+					$pdf->Cell( $code_col_width, $details_row_h, self::ensure_utf8( __( 'Ürün Kodu', 'hezarfen-for-woocommerce' ) ), 1, 0, 'L', false, '', 1 );
+				}
+				$pdf->Cell( $qty_col_width, $details_row_h, self::ensure_utf8( __( 'Adet', 'hezarfen-for-woocommerce' ) ), 1, ( $show_prices ? 0 : 1 ), 'C' );
 				if ( $show_prices ) {
-					$pdf->Cell( $product_col_width, $details_row_h, self::ensure_utf8( __( 'Product', 'hezarfen-for-woocommerce' ) ), 1, 0, 'L' );
 					$pdf->Cell( $total_col_width, $details_row_h, self::ensure_utf8( __( 'Total', 'hezarfen-for-woocommerce' ) ), 1, 1, 'R' );
-				} else {
-					$pdf->Cell( $product_col_width, $details_row_h, self::ensure_utf8( __( 'Product', 'hezarfen-for-woocommerce' ) ), 1, 1, 'L' );
 				}
 			} else {
 				// Too many products to fit on the label.
@@ -1122,65 +1133,69 @@ class Admin_Ajax {
 					$variants[] = $display_key . ': ' . $clean_value;
 				}
 			
-				// Build the product title from the selected fields (name / SKU).
-				// Always fall back to the name so a row is never empty.
+				// Name column text: product name plus any variant lines. When the
+				// name column is hidden, the SKU stands in as the row label.
 				if ( $show_product_name ) {
-					$product_title = $product_name;
-				} elseif ( $show_product_sku && '' !== $product_sku ) {
-					$product_title = $product_sku;
+					$name_text = $product_name;
 				} else {
-					$product_title = $product_name;
+					$name_text = ( '' !== $product_sku ) ? $product_sku : $product_name;
 				}
-
-				$product_text = $product_title . ' x ' . $quantity;
-
-				// SKU on its own line when shown alongside the name.
-				if ( $show_product_sku && '' !== $product_sku && $show_product_name ) {
-					$product_text .= "\n  " . sprintf( __( 'SKU: %s', 'hezarfen-for-woocommerce' ), $product_sku );
-				}
-
 				if ( ! empty( $variants ) ) {
 					foreach ( $variants as $variant ) {
-						$product_text .= "\n  " . $variant;
+						$name_text .= "\n  " . $variant;
 					}
 				}
 
-				// Save current position
 				$start_x = $details_col_x;
 				$start_y = $pdf->GetY();
 
-				// Calculate actual cell height based on text content using TCPDF's getStringHeight
-				$cell_height = $pdf->getStringHeight( $product_col_width, self::ensure_utf8( $product_text ) );
-
-				// Draw product cell with border
+				// The first column is a MultiCell (it may wrap onto several
+				// lines); its final height drives the height of the sibling
+				// single-line cells so the row borders line up.
+				$first_col_width = $show_product_name ? $name_col_width : $code_col_width;
 				$pdf->SetXY( $start_x, $start_y );
-				$pdf->MultiCell( $product_col_width, $details_row_h, self::ensure_utf8( $product_text ), 1, 'L' );
+				$pdf->MultiCell( $first_col_width, $details_row_h, self::ensure_utf8( $name_text ), 1, 'L' );
+				$row_height = $pdf->GetY() - $start_y;
 
-				// Get actual height used by MultiCell
-				$actual_height = $pdf->GetY() - $start_y;
+				$x = $start_x + $first_col_width;
 
-				if ( $show_prices ) {
-					// Draw total cell with border (aligned to the right of product cell)
-					$pdf->SetXY( $start_x + $product_col_width, $start_y );
-					$pdf->Cell( $total_col_width, $actual_height, self::format_price_for_pdf( $item->get_total() ), 1, 1, 'R' );
+				// Code column (only when the name column is also shown — otherwise
+				// the SKU already became the first column above).
+				if ( $show_product_sku && $show_product_name ) {
+					$pdf->SetXY( $x, $start_y );
+					$pdf->Cell( $code_col_width, $row_height, self::ensure_utf8( $product_sku ), 1, 0, 'L', false, '', 1 );
+					$x += $code_col_width;
 				}
 
-				// Move to next row (MultiCell already moved Y position)
+				// Quantity column.
+				$pdf->SetXY( $x, $start_y );
+				$pdf->Cell( $qty_col_width, $row_height, self::ensure_utf8( (string) $quantity ), 1, 0, 'C' );
+				$x += $qty_col_width;
+
+				// Total (price) column.
+				if ( $show_prices ) {
+					$pdf->SetXY( $x, $start_y );
+					$pdf->Cell( $total_col_width, $row_height, self::format_price_for_pdf( $item->get_total() ), 1, 0, 'R' );
+				}
+
+				$pdf->SetY( $start_y + $row_height );
 			}
 
 			// === ORDER TOTALS (matching WooCommerce native format exactly) ===
+			// The label spans every column except the price column.
+			$totals_label_width = $details_col_width - $total_col_width;
 			if ( $show_prices ) {
 				// Items Subtotal
 				$pdf->SetFont( 'dejavusans', '', 8 );
 				$pdf->SetX( $details_col_x );
-				$pdf->Cell( $product_col_width, $details_row_h, self::ensure_utf8( __( 'Items Subtotal:', 'woocommerce' ) ), 1, 0, 'R' );
+				$pdf->Cell( $totals_label_width, $details_row_h, self::ensure_utf8( __( 'Items Subtotal:', 'woocommerce' ) ), 1, 0, 'R' );
 				$pdf->Cell( $total_col_width, $details_row_h, self::format_price_for_pdf( $order->get_subtotal() ), 1, 1, 'R' );
 
 				// Coupon(s) - if discount > 0
 				if ( $order->get_total_discount() > 0 ) {
 					$pdf->SetFont( 'dejavusans', '', 8 );
 					$pdf->SetX( $details_col_x );
-					$pdf->Cell( $product_col_width, $details_row_h, self::ensure_utf8( __( 'Coupon(s):', 'woocommerce' ) ), 1, 0, 'R' );
+					$pdf->Cell( $totals_label_width, $details_row_h, self::ensure_utf8( __( 'Coupon(s):', 'woocommerce' ) ), 1, 0, 'R' );
 					$pdf->Cell( $total_col_width, $details_row_h, self::format_price_for_pdf( -$order->get_total_discount() ), 1, 1, 'R' );
 				}
 
@@ -1188,7 +1203,7 @@ class Admin_Ajax {
 				if ( $order->get_total_fees() > 0 ) {
 					$pdf->SetFont( 'dejavusans', '', 8 );
 					$pdf->SetX( $details_col_x );
-					$pdf->Cell( $product_col_width, $details_row_h, self::ensure_utf8( __( 'Fees:', 'woocommerce' ) ), 1, 0, 'R' );
+					$pdf->Cell( $totals_label_width, $details_row_h, self::ensure_utf8( __( 'Fees:', 'woocommerce' ) ), 1, 0, 'R' );
 					$pdf->Cell( $total_col_width, $details_row_h, self::format_price_for_pdf( $order->get_total_fees() ), 1, 1, 'R' );
 				}
 
@@ -1196,7 +1211,7 @@ class Admin_Ajax {
 				if ( $order->get_shipping_methods() ) {
 					$pdf->SetFont( 'dejavusans', '', 8 );
 					$pdf->SetX( $details_col_x );
-					$pdf->Cell( $product_col_width, $details_row_h, self::ensure_utf8( __( 'Shipping:', 'woocommerce' ) ), 1, 0, 'R' );
+					$pdf->Cell( $totals_label_width, $details_row_h, self::ensure_utf8( __( 'Shipping:', 'woocommerce' ) ), 1, 0, 'R' );
 					$pdf->Cell( $total_col_width, $details_row_h, self::format_price_for_pdf( $order->get_shipping_total() ), 1, 1, 'R' );
 				}
 
@@ -1205,7 +1220,7 @@ class Admin_Ajax {
 					foreach ( $order->get_tax_totals() as $code => $tax_total ) {
 						$pdf->SetFont( 'dejavusans', '', 8 );
 						$pdf->SetX( $details_col_x );
-						$pdf->Cell( $product_col_width, $details_row_h, self::ensure_utf8( $tax_total->label . ':' ), 1, 0, 'R' );
+						$pdf->Cell( $totals_label_width, $details_row_h, self::ensure_utf8( $tax_total->label . ':' ), 1, 0, 'R' );
 						$pdf->Cell( $total_col_width, $details_row_h, self::format_price_for_pdf( wc_round_tax_total( $tax_total->amount ) ), 1, 1, 'R' );
 					}
 				}
@@ -1213,7 +1228,7 @@ class Admin_Ajax {
 				// Order Total
 				$pdf->SetFont( 'dejavusans', 'B', 8 );
 				$pdf->SetX( $details_col_x );
-				$pdf->Cell( $product_col_width, $details_row_h, self::ensure_utf8( __( 'Order Total', 'woocommerce' ) . ':' ), 1, 0, 'R' );
+				$pdf->Cell( $totals_label_width, $details_row_h, self::ensure_utf8( __( 'Order Total', 'woocommerce' ) . ':' ), 1, 0, 'R' );
 				$pdf->Cell( $total_col_width, $details_row_h, self::format_price_for_pdf( $order->get_total() ), 1, 1, 'R' );
 			}
 
