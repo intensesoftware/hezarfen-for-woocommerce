@@ -265,8 +265,9 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 
 == Changelog ==
 = 2.13.1 - 2026-06-23 =
-* fix(checkout): İlçe/Mahalle alanları ADP ile boş geliyor (erken get_checkout_fields yarışı)
 
+* fix(checkout): İlçe/Mahalle alanları ADP ile boş geliyor (erken get_checkout_fields yarışı)
+* i18n(tr): translate Hepsijet PDF label product/order-note settings
 = 2.13.0 - 2026-06-23 =
 * feat: etikette sipariş notu alanını opsiyonel yap
 
