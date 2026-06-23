@@ -1027,44 +1027,55 @@ class Admin_Ajax {
 			$pdf->Line( $details_col_x, $pdf->GetY(), $details_col_x + $details_col_width, $pdf->GetY() );
 			$pdf->Ln( 2 );
 
-			// Hide the product list when the order has more items than the
-			// configured maximum; show a short note instead so large orders
-			// still fit on a single label.
+			// The product rows are auto-fitted to the remaining label height: as
+			// many as fit are listed and the rest are summarised as "+N more". A
+			// manual "Max product rows" value (> 0) overrides this with a hard cap.
 			$order_items      = $order->get_items();
 			$item_count       = count( $order_items );
 			$max_product_rows = (int) get_option( 'hezarfen_hepsijet_label_max_product_rows', 0 );
-			$products_fit     = ! ( $max_product_rows > 0 && $item_count > $max_product_rows );
 
-			if ( $products_fit ) {
-				// Items table header row: Name | Code | Qty | Total (only the
-				// enabled columns). Quantity is always shown as its own column.
-				$pdf->SetFont( 'dejavusans', 'B', 9 );
-				$pdf->SetX( $details_col_x );
-				if ( $show_product_name ) {
-					$pdf->Cell( $name_col_width, $details_row_h, self::ensure_utf8( __( 'Ürün Adı', 'hezarfen-for-woocommerce' ) ), 1, 0, 'L' );
-				}
-				if ( $show_product_sku ) {
-					$pdf->Cell( $code_col_width, $details_row_h, self::ensure_utf8( __( 'Ürün Kodu', 'hezarfen-for-woocommerce' ) ), 1, 0, 'L', false, '', 1 );
-				}
-				$pdf->Cell( $qty_col_width, $details_row_h, self::ensure_utf8( __( 'Adet', 'hezarfen-for-woocommerce' ) ), 1, ( $show_prices ? 0 : 1 ), 'C' );
-				if ( $show_prices ) {
-					$pdf->Cell( $total_col_width, $details_row_h, self::ensure_utf8( __( 'Total', 'hezarfen-for-woocommerce' ) ), 1, 1, 'R' );
-				}
-			} else {
-				// Too many products to fit on the label.
-				$pdf->SetX( $details_col_x );
-				$pdf->SetFont( 'dejavusans', '', 8 );
-				$too_many_msg = sprintf(
-					/* translators: %d: number of products in the order */
-					__( '%d ürün bulunduğu için ürün detayları etikete sığmıyor ve gösterilemiyor.', 'hezarfen-for-woocommerce' ),
-					$item_count
-				);
-				$pdf->MultiCell( $details_col_width, $details_row_h, self::ensure_utf8( $too_many_msg ), 1, 'L' );
+			// Items table header row: Name | Code | Qty | Total (enabled columns).
+			$pdf->SetFont( 'dejavusans', 'B', 9 );
+			$pdf->SetX( $details_col_x );
+			if ( $show_product_name ) {
+				$pdf->Cell( $name_col_width, $details_row_h, self::ensure_utf8( __( 'Ürün Adı', 'hezarfen-for-woocommerce' ) ), 1, 0, 'L' );
+			}
+			if ( $show_product_sku ) {
+				$pdf->Cell( $code_col_width, $details_row_h, self::ensure_utf8( __( 'Ürün Kodu', 'hezarfen-for-woocommerce' ) ), 1, 0, 'L', false, '', 1 );
+			}
+			$pdf->Cell( $qty_col_width, $details_row_h, self::ensure_utf8( __( 'Adet', 'hezarfen-for-woocommerce' ) ), 1, ( $show_prices ? 0 : 1 ), 'C' );
+			if ( $show_prices ) {
+				$pdf->Cell( $total_col_width, $details_row_h, self::ensure_utf8( __( 'Total', 'hezarfen-for-woocommerce' ) ), 1, 1, 'R' );
 			}
 
 			// Order items
 			$pdf->SetFont( 'dejavusans', '', 8 );
-			foreach ( ( $products_fit ? $order_items : array() ) as $item ) {
+
+			// Height budget for the rows: space left under the header minus what
+			// the totals block and the order note will need below the list.
+			$reserve = 0;
+			if ( $show_prices ) {
+				$totals_rows = 2; // items subtotal + order total
+				if ( $order->get_total_discount() > 0 ) { $totals_rows++; }
+				if ( $order->get_total_fees() > 0 ) { $totals_rows++; }
+				if ( $order->get_shipping_methods() ) { $totals_rows++; }
+				if ( wc_tax_enabled() ) { $totals_rows += count( $order->get_tax_totals() ); }
+				$reserve += $totals_rows * $details_row_h;
+			}
+			$note_for_reserve = $show_order_note ? trim( (string) $order->get_customer_note() ) : '';
+			if ( '' !== $note_for_reserve ) {
+				$pdf->SetFont( 'dejavusans', '', 8.5 );
+				$reserve += 10 + $pdf->getStringHeight( $content_width, self::ensure_utf8( $note_for_reserve ) );
+				$pdf->SetFont( 'dejavusans', '', 8 );
+			}
+			// Small safety margin so accumulated line-height rounding over many
+			// rows can't push the totals/note onto a second page.
+			$row_budget      = ( $pdf->GetPageHeight() - $margins['bottom'] ) - $pdf->GetY() - $reserve - ( 2 * $details_row_h );
+			$first_col_width = $show_product_name ? $name_col_width : $code_col_width;
+
+			$rendered = 0;
+			$used     = 0;
+			foreach ( $order_items as $item ) {
 				$product_name = $item->get_name();
 				$quantity = $item->get_quantity();
 				$line_product = $item->get_product();
@@ -1146,13 +1157,27 @@ class Admin_Ajax {
 					}
 				}
 
+				// Stop once a manual cap is reached, or (auto mode) once this row
+				// would no longer fit while still leaving room for the "+N more"
+				// summary line. At least one row is always rendered.
+				$predicted_h = max( $details_row_h, $pdf->getNumLines( self::ensure_utf8( $name_text ), $first_col_width ) * $details_row_h );
+				if ( $max_product_rows > 0 ) {
+					if ( $rendered >= $max_product_rows ) {
+						break;
+					}
+				} elseif ( $rendered >= 1 ) {
+					$reserve_more = ( ( $item_count - $rendered ) > 1 ) ? $details_row_h : 0;
+					if ( ( $used + $predicted_h + $reserve_more ) > $row_budget ) {
+						break;
+					}
+				}
+
 				$start_x = $details_col_x;
 				$start_y = $pdf->GetY();
 
 				// The first column is a MultiCell (it may wrap onto several
 				// lines); its final height drives the height of the sibling
 				// single-line cells so the row borders line up.
-				$first_col_width = $show_product_name ? $name_col_width : $code_col_width;
 				$pdf->SetXY( $start_x, $start_y );
 				$pdf->MultiCell( $first_col_width, $details_row_h, self::ensure_utf8( $name_text ), 1, 'L' );
 				$row_height = $pdf->GetY() - $start_y;
@@ -1179,6 +1204,16 @@ class Admin_Ajax {
 				}
 
 				$pdf->SetY( $start_y + $row_height );
+				$used += $row_height;
+				$rendered++;
+			}
+
+			// Summarise any rows that did not fit.
+			$not_shown = $item_count - $rendered;
+			if ( $not_shown > 0 ) {
+				$pdf->SetX( $details_col_x );
+				$pdf->SetFont( 'dejavusans', 'I', 8 );
+				$pdf->MultiCell( $details_col_width, $details_row_h, self::ensure_utf8( sprintf( __( '+%d ürün daha', 'hezarfen-for-woocommerce' ), $not_shown ) ), 1, 'L' );
 			}
 
 			// === ORDER TOTALS (matching WooCommerce native format exactly) ===
