@@ -46,9 +46,20 @@ class Checkout {
 			add_action( 'wp', array( $this, 'hide_postcode_fields' ) );
 		}
 
-		// TODO: review the logic, if it's possible; define all fields in a single function.
-		// Register district/neighborhood fields on init to allow other plugins to filter
-		add_action( 'wp', array( $this, 'register_district_neighborhood_fields' ) );
+		// Register the district/neighborhood (and related TR address) checkout
+		// field filters as early as possible — at construction time.
+		//
+		// WC_Checkout::get_checkout_fields() memoizes its result and can be
+		// triggered any time after `init` by the Store API, blocks, or
+		// third-party plugins (e.g. Advanced Dynamic Pricing computing cart
+		// totals on `wp_loaded`). Registering on the later `wp` hook meant such
+		// an early build locked in WooCommerce's default fields before our
+		// filters ran, so the İlçe / Mahalle selects were never applied.
+		//
+		// The enable-option is now evaluated at runtime inside the callbacks
+		// (see is_district_neighborhood_enabled()) so other plugins can still
+		// filter it.
+		$this->register_district_neighborhood_fields();
 
 		add_filter(
 			'woocommerce_checkout_posted_data',
@@ -90,18 +101,18 @@ class Checkout {
 	}
 
 	/**
-	 * Register district and neighborhood fields hooks.
-	 * Called on 'init' hook to allow other plugins/themes to filter the enable option.
+	 * Register district and neighborhood field hooks.
+	 *
+	 * Filters are attached unconditionally here (from the constructor) so they
+	 * are in place before any early WC_Checkout::get_checkout_fields() build.
+	 * Whether they actually modify the fields is decided at runtime by
+	 * is_district_neighborhood_enabled(), which keeps the
+	 * `hezarfen_enable_district_neighborhood_fields` filter overridable by
+	 * other plugins.
 	 *
 	 * @return void
 	 */
 	public function register_district_neighborhood_fields() {
-		$enable_district_neighborhood = apply_filters( 'hezarfen_enable_district_neighborhood_fields', get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' ) );
-		
-		if ( 'yes' !== $enable_district_neighborhood ) {
-			return;
-		}
-
 		add_filter(
 			'woocommerce_checkout_fields',
 			array(
@@ -130,6 +141,22 @@ class Checkout {
 				$this,
 				'make_visible_address2_label',
 			),
+		);
+	}
+
+	/**
+	 * Whether the TR district/neighborhood checkout fields are enabled.
+	 *
+	 * Evaluated at runtime (when the filters fire) rather than at registration
+	 * time so the `hezarfen_enable_district_neighborhood_fields` filter can be
+	 * set by any plugin/theme that loads after this class.
+	 *
+	 * @return bool
+	 */
+	private function is_district_neighborhood_enabled() {
+		return 'yes' === apply_filters(
+			'hezarfen_enable_district_neighborhood_fields',
+			get_option( 'hezarfen_enable_district_neighborhood_fields', 'yes' )
 		);
 	}
 
@@ -170,6 +197,10 @@ class Checkout {
 	 * @return array
 	 */
 	public function update_address_2_fields_for_tr( $country_locale_settings ) {
+		if ( ! $this->is_district_neighborhood_enabled() ) {
+			return $country_locale_settings;
+		}
+
 		if ( ! array_key_exists( 'TR', $country_locale_settings ) ) {
 			return $country_locale_settings;
 		}
@@ -189,6 +220,10 @@ class Checkout {
 	 * @return array<string, mixed>
 	 */
 	public function make_visible_address2_label( $fields ) {
+		if ( ! $this->is_district_neighborhood_enabled() ) {
+			return $fields;
+		}
+
 		// Check if address_2 field exists and has label_class
 		if ( ! isset( $fields['address_2'] ) || ! isset( $fields['address_2']['label_class'] ) ) {
 			return $fields;
@@ -210,6 +245,10 @@ class Checkout {
 	 * @return array<string, mixed>
 	 */
 	public function make_address2_required_and_update_the_label( $fields ) {
+		if ( ! $this->is_district_neighborhood_enabled() ) {
+			return $fields;
+		}
+
 		// Check if billing address_2 field exists before modifying it
 		if ( isset( $fields['billing']['billing_address_2'] ) ) {
 			$fields['billing']['billing_address_2']['required']      = true;
@@ -503,6 +542,10 @@ class Checkout {
 	 * @return array<string, mixed>
 	 */
 	public function add_district_and_neighborhood_fields( $fields ) {
+		if ( ! $this->is_district_neighborhood_enabled() ) {
+			return $fields;
+		}
+
 		$types = array( 'shipping', 'billing' );
 
 		global $woocommerce;
