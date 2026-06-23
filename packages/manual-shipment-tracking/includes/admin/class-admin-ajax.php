@@ -677,9 +677,9 @@ class Admin_Ajax {
 		$show_prices        = get_option( 'hezarfen_hepsijet_show_prices_on_label', 'yes' ) === 'yes';
 		$show_order_note    = get_option( 'hezarfen_hepsijet_show_order_note_on_label', 'yes' ) === 'yes';
 
-		// Cap the barcode's visible height so the product list gets the rest of
-		// the page. Keeps full width for scanning; lower values fit more items.
-		$barcode_max_height = (float) get_option( 'hezarfen_hepsijet_label_barcode_max_height', 60 );
+		// Cap the barcode's visible height (sheet sizes only) so the product
+		// list gets the rest of the page. Filterable for advanced use.
+		$barcode_max_height = (float) apply_filters( 'hezarfen_hepsijet_label_barcode_max_height', 60, $order );
 		if ( $barcode_max_height <= 0 ) {
 			$barcode_max_height = 60;
 		}
@@ -1033,7 +1033,7 @@ class Admin_Ajax {
 			// replaces the height test with a fixed item-count cap.
 			$order_items      = $order->get_items();
 			$item_count       = count( $order_items );
-			$max_product_rows = (int) get_option( 'hezarfen_hepsijet_label_max_product_rows', 0 );
+			$max_product_rows = (int) apply_filters( 'hezarfen_hepsijet_label_max_product_rows', 0, $order );
 
 			$pdf->SetFont( 'dejavusans', '', 8 );
 

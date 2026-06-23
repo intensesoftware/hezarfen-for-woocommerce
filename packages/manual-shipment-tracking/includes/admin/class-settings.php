@@ -451,31 +451,6 @@ class Settings {
 				'desc'    => __( 'Show the customer order note section on the PDF label.', 'hezarfen-for-woocommerce' ),
 			),
 			array(
-				'title'             => __( 'Barcode max height (mm)', 'hezarfen-for-woocommerce' ),
-				'type'              => 'number',
-				'id'                => 'hezarfen_hepsijet_label_barcode_max_height',
-				'default'           => '60',
-				'desc'              => __( 'Maximum barcode height when order details are shown. Lower values leave more room for the product list so more items fit on the label. The barcode keeps full width for scanning.', 'hezarfen-for-woocommerce' ),
-				'desc_tip'          => true,
-				'custom_attributes' => array(
-					'min'  => '20',
-					'max'  => '120',
-					'step' => '1',
-				),
-			),
-			array(
-				'title'             => __( 'Max product rows', 'hezarfen-for-woocommerce' ),
-				'type'              => 'number',
-				'id'                => 'hezarfen_hepsijet_label_max_product_rows',
-				'default'           => '0',
-				'desc'              => __( 'Maximum number of product rows to print. 0 = automatic: the list is shown only if it fits on the label, otherwise it is hidden with a short note. Set a number to force a fixed item-count cap instead.', 'hezarfen-for-woocommerce' ),
-				'desc_tip'          => true,
-				'custom_attributes' => array(
-					'min'  => '0',
-					'step' => '1',
-				),
-			),
-			array(
 				'type' => 'sectionend',
 				'id' => 'hezarfen_hepsijet_label_settings'
 			),
@@ -817,7 +792,7 @@ class Settings {
 		<script>
 		jQuery(function ($) {
 			var $parent = $('#hezarfen_hepsijet_show_order_details_on_label');
-			var $childRows = $('#hezarfen_hepsijet_show_prices_on_label, #hezarfen_hepsijet_show_order_note_on_label, #hezarfen_hepsijet_label_barcode_max_height, #hezarfen_hepsijet_label_max_product_rows, #hezarfen_hepsijet_show_product_name_on_label, #hezarfen_hepsijet_show_product_sku_on_label').closest('tr');
+			var $childRows = $('#hezarfen_hepsijet_show_prices_on_label, #hezarfen_hepsijet_show_order_note_on_label, #hezarfen_hepsijet_show_product_name_on_label, #hezarfen_hepsijet_show_product_sku_on_label').closest('tr');
 			if (!$parent.length || !$childRows.length) {
 				return;
 			}
