@@ -8,6 +8,11 @@ import {
 } from './helpers/checkout';
 import { deleteMuPlugin, writeMuPlugin } from './helpers/mu-plugin';
 import { wp } from './helpers/wp-cli';
+import {
+	applyOptions,
+	restoreOptions,
+	snapshotOptions,
+} from './helpers/wp-options';
 
 /**
  * Regression: Hezarfen ↔ early checkout-fields build race.
@@ -105,5 +110,73 @@ test.describe( 'Hezarfen checkout field race (ADP-style early build)', () => {
 			.locator( '#billing_city option' )
 			.allTextContents();
 		expect( districts ).toContain( TR_SAMPLE_ADDRESS.district );
+	} );
+
+	/**
+	 * Same race, second symptom: field ORDER.
+	 *
+	 * `hezarfen_checkout_fields_auto_sort` reorders the TR billing fields
+	 * into state (il) → city (ilçe) → address_1 (mahalle) → address_2 by
+	 * attaching priority filters (woocommerce_get_country_locale /
+	 * woocommerce_billing_fields). Unlike the district/neighborhood field
+	 * transformation — which PR #174 moved to the constructor — those
+	 * priority filters are still registered on the *later* `wp` hook
+	 * (Checkout::sort_checkout_fields → Helper::sort_address_fields).
+	 *
+	 * So the ADP-style early get_checkout_fields() on `wp_loaded` builds and
+	 * memoizes the field set BEFORE the priority filters exist, and the
+	 * billing fields render in WooCommerce's default order instead of the TR
+	 * order — even though the İlçe/Mahalle selects themselves are now correct.
+	 *
+	 * Expected: FAILS against current code (state ends up after address_1),
+	 * PASSES once the sort priority filters are also registered early.
+	 */
+	test( 'billing alanları ADP erken build ile bile TR sırasında kalıyor (guest)', async ( {
+		page,
+	} ) => {
+		const snap = snapshotOptions( [ 'hezarfen_checkout_fields_auto_sort' ] );
+		applyOptions( { hezarfen_checkout_fields_auto_sort: 'yes' } );
+
+		try {
+			await page.goto( '/checkout/' );
+			await waitForCheckoutIdle( page );
+
+			await expect( page.locator( '#billing_country' ) ).toHaveValue(
+				'TR'
+			);
+
+			// Read the rendered top-to-bottom order of the TR billing
+			// fields. Canonical TR order is state → city → address_1 →
+			// address_2; under the race they fall back to WC defaults
+			// (address_1 before city/state).
+			const order = await page.evaluate( () => {
+				const ids = [
+					'billing_state_field',
+					'billing_city_field',
+					'billing_address_1_field',
+					'billing_address_2_field',
+				];
+				return ids
+					.map( ( id ) => {
+						const el = document.getElementById( id );
+						return el
+							? { id, top: el.getBoundingClientRect().top }
+							: null;
+					} )
+					.filter( Boolean ) as { id: string; top: number }[];
+			} );
+
+			expect( order.length ).toBe( 4 );
+			for ( let i = 1; i < order.length; i++ ) {
+				expect
+					.soft(
+						order[ i ].top,
+						`${ order[ i ].id } follows ${ order[ i - 1 ].id }`
+					)
+					.toBeGreaterThan( order[ i - 1 ].top );
+			}
+		} finally {
+			restoreOptions( snap );
+		}
 	} );
 } );
