@@ -3268,9 +3268,21 @@ msgstr "Daha fazla göster"
 msgid "Show order details on label"
 msgstr "Sipariş detaylarını etikette göster"
 
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:447
+msgid "Show order note"
+msgstr "Sipariş notunu göster"
+
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:381
 msgid "Show prices"
 msgstr "Fiyatları göster"
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:433
+msgid "Show product name"
+msgstr "Ürün adını göster"
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:440
+msgid "Show product SKU"
+msgstr "Ürün SKU'sunu göster"
 
 #: packages/manual-shipment-tracking/includes/admin/class-settings.php:124
 msgid "Show Shipment Tracking column on My Account > Orders page"
@@ -3279,6 +3291,18 @@ msgstr "Hesabım > Siparişler sayfasında Kargo Takip sütununu göster"
 #: includes/admin/settings/class-hezarfen-settings-hezarfen.php:328
 msgid "Show T.C. Identity Field on checkout page "
 msgstr "T.C. Kimlik Numarası Alanını Ödeme Sayfasında Göster"
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:451
+msgid "Show the customer order note section on the PDF label."
+msgstr "Müşteri sipariş notu bölümünü PDF etiketinde gösterir."
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:437
+msgid "Show the product name in the order details product list."
+msgstr "Ürün adını sipariş detayları ürün listesinde gösterir."
+
+#: packages/manual-shipment-tracking/includes/admin/class-settings.php:444
+msgid "Show the product SKU in the order details product list."
+msgstr "Ürün SKU'sunu sipariş detayları ürün listesinde gösterir."
 
 #: packages/manual-shipment-tracking/includes/views/hepsijet-bulk-barcode-page.php:40
 msgid "Sipariş"
