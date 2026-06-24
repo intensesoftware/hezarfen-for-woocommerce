@@ -113,23 +113,27 @@ test.describe( 'Hezarfen checkout field race (ADP-style early build)', () => {
 	} );
 
 	/**
-	 * Same race, second symptom: field ORDER.
+	 * Same race, second potential symptom: field ORDER.
 	 *
 	 * `hezarfen_checkout_fields_auto_sort` reorders the TR billing fields
-	 * into state (il) → city (ilçe) → address_1 (mahalle) → address_2 by
-	 * attaching priority filters (woocommerce_get_country_locale /
-	 * woocommerce_billing_fields). Unlike the district/neighborhood field
-	 * transformation — which PR #174 moved to the constructor — those
-	 * priority filters are still registered on the *later* `wp` hook
-	 * (Checkout::sort_checkout_fields → Helper::sort_address_fields).
+	 * into state (il) → city (ilçe) → address_1 (mahalle) → address_2 →
+	 * postcode by attaching priority filters (woocommerce_get_country_locale
+	 * / woocommerce_billing_fields) from Checkout::sort_checkout_fields →
+	 * Helper::sort_address_fields, on the `wp` hook.
 	 *
-	 * So the ADP-style early get_checkout_fields() on `wp_loaded` builds and
-	 * memoizes the field set BEFORE the priority filters exist, and the
-	 * billing fields render in WooCommerce's default order instead of the TR
-	 * order — even though the İlçe/Mahalle selects themselves are now correct.
+	 * Unlike the İlçe/Mahalle input→select transformation (whose memoized
+	 * result PR #174 had to register early), the sort PRIORITIES are NOT
+	 * locked in by an early WC_Checkout::get_checkout_fields() build:
+	 * WooCommerce still applies the country-locale / billing-field priority
+	 * filters when the classic checkout renders, so registering them on the
+	 * later `wp` hook is fine. Verified directly under this fixture — with
+	 * auto_sort off the billing order is WC default
+	 * (address_1, address_2, postcode, city, state); with auto_sort on it is
+	 * the canonical TR order below, even though ADP forced the early build.
 	 *
-	 * Expected: FAILS against current code (state ends up after address_1),
-	 * PASSES once the sort priority filters are also registered early.
+	 * This test is a regression guard for that: if a future change ever makes
+	 * the sort priorities susceptible to the same early-build race, the
+	 * billing fields would fall back to the WC default order and this fails.
 	 */
 	test( 'billing alanları ADP erken build ile bile TR sırasında kalıyor (guest)', async ( {
 		page,
