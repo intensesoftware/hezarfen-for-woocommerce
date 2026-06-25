@@ -262,8 +262,9 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 
 == Changelog ==
 = 2.13.2 - 2026-06-25 =
-* Hezarfen Pro reklam ve tanıtımları kaldırıldı
 
+* Hezarfen Pro reklam ve tanıtımları kaldırıldı
+* Hepsijet tanıtım fiyatı Cloudflare R2'den çekiliyor
 = 2.13.1 - 2026-06-23 =
 
 * fix(checkout): İlçe/Mahalle alanları ADP ile boş geliyor (erken get_checkout_fields yarışı)
