@@ -36,7 +36,7 @@ WooCommerce Kargo Takip eklentisi: ücretsiz Hepsijet entegrasyonu, 23 kargo fir
 = ⭐ TAMAMEN ÜCRETSİZ =
 
 **🚚 Hepsijet Ücretsiz WooCommerce Kargo Entegrasyonu**
-• 1-4 Desi 89,24TL+KDV - (Hezarfen Pro gerekmez!) Anlaşma yapmanıza gerek yok, kargokit.com'dan kayıt olun, bakiye yükleyin ve gönderime başlayın. Kargo gönderim için minimum limit yok! İster ayda 1 tane, ister 10000 tane!
+• 1-4 Desi 89,24TL+KDV - Anlaşma yapmanıza gerek yok, kargokit.com'dan kayıt olun, bakiye yükleyin ve gönderime başlayın. Kargo gönderim için minimum limit yok! İster ayda 1 tane, ister 10000 tane!
 • Ücretsiz entegrasyon (otomatik kargo takip no girişi, otomatik siparişin kargoya verildi durumuna geçmesi, otomatik siparişin tamamlandı durumuna geçmesi, otomatik müşteriye e-posta bildirimi)
 
 **🚚 Kargo Yönetimi ve WooCommerce Kargo Takip Modülü**
@@ -145,7 +145,7 @@ Hezarfen çalışmak için minimum WooCommerce 6.9.0 sürümüne ihtiyaç duyar,
 Eğitim videoları ve rehberler için [Hezarfen YouTube resmi kanalımızı](https://www.youtube.com/@hezarfenforwoocommerce) ziyaret edebilir ve abone olabilirsiniz.
 
 = Bu WooCommerce eklentisi tamamen ücretsiz mi? =
-Evet, yukarıda listelenen özellikler tamamen ücretsizdir. Intense Anlaşmalı Hepsijet Kargo Entegrasyonu (otomatik takip no girişi, otomatik sipariş durumunun kargoya verildi veya tamamlandı olması, bildirimler), 23 kargo firması için manuel takip, WooCommerce kargo takip modülü, il/ilçe/mahalle seçimi, TC kimlik no alanı gibi özellikler ücretsiz sunulmaktadır. Ayrıca, Hezarfen'in intense.com.tr üzerinde satılan Pro versiyonu mevcuttur. Pro versiyonda otomatik woocommerce kargo entegrasyonu (kendi kargo anlaşmalarınızla), Paraşüt e-arşiv/e-fatura entegrasyonu özellikleri bulunmaktadır.
+Evet, yukarıda listelenen özellikler tamamen ücretsizdir. Intense Anlaşmalı Hepsijet Kargo Entegrasyonu (otomatik takip no girişi, otomatik sipariş durumunun kargoya verildi veya tamamlandı olması, bildirimler), 23 kargo firması için manuel takip, WooCommerce kargo takip modülü, il/ilçe/mahalle seçimi, TC kimlik no alanı gibi özellikler ücretsiz sunulmaktadır.
 
 = Hangi WooCommerce sürümleriyle uyumlu? =
 WooCommerce 5.0 ve üzeri tüm sürümlerle uyumludur. HPOS (High Performance Order Storage) desteği mevcuttur.
@@ -165,11 +165,8 @@ Tüm il/ilçe/mahalle verileri eklenti içerisinde yer almaktadır. İnternet ba
 = Kurumsal ve bireysel fatura ayrımı nasıl yapılır? =
 WooCommerce > Ayarlar > Hezarfen > Ödeme Sayfası Ayarları menüsünden "Ödeme ekranında vergi alanlarını göster" seçeneğini aktifleştirdiğinizde, müşterileriniz kurumsal veya bireysel fatura seçimi yapabilir.
 
-= Pro sürüme geçiş yapmak veri kaybına neden olur mu? =
-Hayır, Pro sürüme geçiş yaptığınızda mevcut tüm verileriniz korunur. Sadece yeni özellikler eklenir.
-
 = Destek nasıl alabilirim? =
-Ücretsiz versiyonumuz için WordPress.org destek forumunu kullanabilir, Pro versiyonumuz için [intense.com.tr](https://intense.com.tr) üzerinden bizimle iletişime geçebilirsiniz.
+Ücretsiz versiyonumuz için WordPress.org destek forumunu kullanabilir, ayrıca [intense.com.tr](https://intense.com.tr) üzerinden bizimle iletişime geçebilirsiniz.
 
 = Kaybolan şifreleme anahtarını nasıl kurtarabilirim? =
 WooCommerce > Ayarlar > Hezarfen > Şifreleme Anahtarı Kurtarma bölümünden yeni anahtar oluşturabilirsiniz. Oluşturulan anahtarı wp-config.php dosyanıza eklemeniz gerekir. Detaylı bilgi için dokümantasyonu inceleyin.

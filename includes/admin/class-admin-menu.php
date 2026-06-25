@@ -131,8 +131,8 @@ class Admin_Menu {
             'admin.php?page=wc-settings&tab=hezarfen'
         );
 
-        // Only show upgrade menu if Hezarfen Pro is not installed
-        if ( ! $this->is_pro_installed() ) {
+        // Only show upgrade menu if Pro promotions are enabled and Hezarfen Pro is not installed
+        if ( hezarfen_show_pro_promotions() && ! $this->is_pro_installed() ) {
             add_submenu_page(
                 self::MENU_SLUG,
                 __( 'Yükselt', 'hezarfen-for-woocommerce' ),
@@ -154,8 +154,8 @@ class Admin_Menu {
      * @return void
      */
     public function enqueue_upgrade_styles( $hook ) {
-        // Don't add upgrade styles if Hezarfen Pro is installed
-        if ( $this->is_pro_installed() ) {
+        // Don't add upgrade styles if Pro promotions are disabled or Hezarfen Pro is installed
+        if ( ! hezarfen_show_pro_promotions() || $this->is_pro_installed() ) {
             return;
         }
 
@@ -579,6 +579,10 @@ class Admin_Menu {
      * @return void
      */
     public function render_upgrade_page() {
+        // Bail if Pro promotions are disabled or Hezarfen Pro is installed
+        if ( ! hezarfen_show_pro_promotions() || $this->is_pro_installed() ) {
+            return;
+        }
         ?>
         <div class="wrap hezarfen-upgrade-wrap">
             <h1><?php esc_html_e( 'Hezarfen Paketleri', 'hezarfen-for-woocommerce' ); ?></h1>
@@ -988,8 +992,8 @@ class Admin_Menu {
      * @return void
      */
     public function add_upgrade_button_to_settings() {
-        // Don't show if Pro is installed
-        if ( $this->is_pro_installed() ) {
+        // Don't show if Pro promotions are disabled or Pro is installed
+        if ( ! hezarfen_show_pro_promotions() || $this->is_pro_installed() ) {
             return;
         }
 
