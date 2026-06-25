@@ -174,13 +174,40 @@ class Hezarfen_Blocks_Integration implements IntegrationInterface {
 	}
 
 	/**
+	 * Returns WooCommerce's own label for the State field (used for the İl
+	 * combobox), falling back to a generic string if unavailable.
+	 *
+	 * @return string
+	 */
+	protected function get_wc_state_label() {
+		if ( function_exists( 'WC' ) && WC()->countries ) {
+			$locale = WC()->countries->get_country_locale();
+
+			if ( isset( $locale['TR']['state']['label'] ) ) {
+				return $locale['TR']['state']['label'];
+			}
+
+			$defaults = WC()->countries->get_default_address_fields();
+
+			if ( isset( $defaults['state']['label'] ) ) {
+				return $defaults['state']['label'];
+			}
+		}
+
+		return __( 'Province', 'hezarfen-for-woocommerce' );
+	}
+
+	/**
 	 * Translated labels passed to the block.
 	 *
 	 * @return array<string, string>
 	 */
 	protected function get_labels() {
 		return array(
-			'province'        => __( 'Province', 'hezarfen-for-woocommerce' ),
+			// Reuse WooCommerce's own State field label (e.g. "Şehir" for TR) so
+			// the İl combobox matches WooCommerce's language in every locale,
+			// instead of introducing a separate string that needs translating.
+			'province'        => $this->get_wc_state_label(),
 			'district'        => __( 'Town / City', 'hezarfen-for-woocommerce' ),
 			'neighborhood'    => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
 			'selectOption'    => __( 'Select an option', 'hezarfen-for-woocommerce' ),
