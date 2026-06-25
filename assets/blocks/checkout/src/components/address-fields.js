@@ -8,7 +8,7 @@
  * identical. The redundant core City / Address line 1 inputs are hidden via
  * CSS while Turkey is selected.
  */
-import { useEffect, useMemo, useState } from '@wordpress/element';
+import { useEffect, useMemo, useRef, useState } from '@wordpress/element';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { CART_STORE_KEY, VALIDATION_STORE_KEY } from '@woocommerce/block-data';
 import { settings, getDistrictsForProvince, fetchNeighborhoods } from '../settings';
@@ -16,6 +16,7 @@ import { settings, getDistrictsForProvince, fetchNeighborhoods } from '../settin
 const AddressFields = ( { addressType } ) => {
 	const [ neighborhoods, setNeighborhoods ] = useState( [] );
 	const [ loadingNeighborhoods, setLoadingNeighborhoods ] = useState( false );
+	const rootRef = useRef( null );
 
 	const address = useSelect(
 		( select ) => {
@@ -49,6 +50,52 @@ const AddressFields = ( { addressType } ) => {
 	useEffect( () => {
 		document.body.classList.toggle( 'hezarfen-tr-checkout', isTR );
 	}, [ isTR ] );
+
+	// Relocate the district/neighborhood selects to sit right after the core
+	// State (İl) field, so the visual order matches the classic checkout
+	// (İl → İlçe → Mahalle → Açık adres → Posta kodu). Our block is rendered
+	// outside the core address form, so we move it in and keep it in place with
+	// a MutationObserver in case WooCommerce rebuilds the form (e.g. on country
+	// change).
+	useEffect( () => {
+		const root = rootRef.current;
+
+		if ( ! isTR || ! root ) {
+			return;
+		}
+
+		const reposition = () => {
+			const block = root.closest( 'fieldset' );
+			const form = block?.querySelector(
+				'.wc-block-components-address-form'
+			);
+			const stateField = form?.querySelector(
+				'.wc-block-components-address-form__state'
+			);
+
+			if (
+				stateField &&
+				stateField.nextElementSibling !== root
+			) {
+				stateField.insertAdjacentElement( 'afterend', root );
+			}
+		};
+
+		reposition();
+
+		const form = root
+			.closest( 'fieldset' )
+			?.querySelector( '.wc-block-components-address-form' );
+
+		if ( ! form ) {
+			return;
+		}
+
+		const observer = new window.MutationObserver( reposition );
+		observer.observe( form, { childList: true } );
+
+		return () => observer.disconnect();
+	}, [ isTR, addressType ] );
 
 	// Load neighborhoods whenever the province or district changes.
 	useEffect( () => {
@@ -121,7 +168,10 @@ const AddressFields = ( { addressType } ) => {
 	};
 
 	return (
-		<div className="hezarfen-checkout-fields hezarfen-checkout-fields--address">
+		<div
+			ref={ rootRef }
+			className="hezarfen-checkout-fields hezarfen-checkout-fields--address"
+		>
 			<div className="hezarfen-field hezarfen-field--district">
 				<label htmlFor={ `hezarfen-${ addressType }-district` }>
 					{ settings.labels.district }
