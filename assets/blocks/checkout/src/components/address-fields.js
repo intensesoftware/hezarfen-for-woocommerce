@@ -1,18 +1,18 @@
 /**
- * District (ilçe) + neighborhood (mahalle) cascading selects for the block
- * checkout. Mounted once per address type (billing / shipping).
+ * Province (il) + district (ilçe) + neighborhood (mahalle) cascading, searchable
+ * comboboxes for the block checkout. Mounted once per address type
+ * (billing / shipping).
  *
- * The selected district is written to the core `city` field and the selected
- * neighborhood to the core `address_1` field, mirroring the classic checkout
- * so downstream order meta (`_billing_city`, `_billing_address_1`, …) is
- * identical. The redundant core City / Address line 1 inputs are hidden via
- * CSS while Turkey is selected.
+ * The selections are written to the core WooCommerce fields so downstream order
+ * meta stays identical to the classic checkout: province → `state`, district →
+ * `city`, neighborhood → `address_1`. The redundant core State / City /
+ * Address line 1 inputs are hidden via CSS while Turkey is selected.
  */
 import { useEffect, useMemo, useRef, useState } from '@wordpress/element';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { CART_STORE_KEY, VALIDATION_STORE_KEY } from '@woocommerce/block-data';
 import { settings, getDistrictsForProvince, fetchNeighborhoods } from '../settings';
-import SelectField from './select-field';
+import Combobox from './combobox';
 
 const AddressFields = ( { addressType } ) => {
 	const [ neighborhoods, setNeighborhoods ] = useState( [] );
@@ -47,42 +47,24 @@ const AddressFields = ( { addressType } ) => {
 		[ province ]
 	);
 
-	// Hide the redundant core City / Address line 1 inputs while TR is active.
+	// Hide the redundant core State / City / Address line 1 inputs while TR is
+	// active; our searchable comboboxes replace them.
 	useEffect( () => {
 		document.body.classList.toggle( 'hezarfen-tr-checkout', isTR );
 	}, [ isTR ] );
 
-	// Relocate the district/neighborhood selects to sit right after the core
-	// State (İl) field, so the visual order matches the classic checkout
-	// (İl → İlçe → Mahalle → Açık adres → Posta kodu). Our block is rendered
-	// outside the core address form, so we move it in and keep it in place with
-	// a MutationObserver in case WooCommerce rebuilds the form (e.g. on country
-	// change).
+	// Relocate our comboboxes so the visual order matches the classic checkout:
+	// İl → İlçe → Mahalle → Açık adres → Posta kodu. We anchor right before the
+	// "Açık adres" (address_2) field — a stable, always-visible field for TR —
+	// which keeps the order correct regardless of where the hidden core fields
+	// land in the DOM. A MutationObserver re-applies it if WooCommerce rebuilds
+	// the form (e.g. on a country change).
 	useEffect( () => {
 		const root = rootRef.current;
 
 		if ( ! isTR || ! root ) {
 			return;
 		}
-
-		const reposition = () => {
-			const block = root.closest( 'fieldset' );
-			const form = block?.querySelector(
-				'.wc-block-components-address-form'
-			);
-			const stateField = form?.querySelector(
-				'.wc-block-components-address-form__state'
-			);
-
-			if (
-				stateField &&
-				stateField.nextElementSibling !== root
-			) {
-				stateField.insertAdjacentElement( 'afterend', root );
-			}
-		};
-
-		reposition();
 
 		const form = root
 			.closest( 'fieldset' )
@@ -91,6 +73,22 @@ const AddressFields = ( { addressType } ) => {
 		if ( ! form ) {
 			return;
 		}
+
+		const reposition = () => {
+			const anchor =
+				form.querySelector(
+					'.wc-block-components-address-form__address_2'
+				) ||
+				form.querySelector(
+					'.wc-block-components-address-form__postcode'
+				);
+
+			if ( anchor && anchor.previousElementSibling !== root ) {
+				anchor.insertAdjacentElement( 'beforebegin', root );
+			}
+		};
+
+		reposition();
 
 		const observer = new window.MutationObserver( reposition );
 		observer.observe( form, { childList: true } );
@@ -120,70 +118,76 @@ const AddressFields = ( { addressType } ) => {
 		};
 	}, [ isTR, province, district ] );
 
-	// Surface validation errors for the required selects.
+	// Surface validation errors for the required comboboxes.
 	useEffect( () => {
-		const districtErrorId = `hezarfen-${ addressType }-district`;
-		const neighborhoodErrorId = `hezarfen-${ addressType }-neighborhood`;
+		const ids = {
+			province: `hezarfen-${ addressType }-province`,
+			district: `hezarfen-${ addressType }-district`,
+			neighborhood: `hezarfen-${ addressType }-neighborhood`,
+		};
 
 		if ( ! isTR ) {
-			clearValidationError( districtErrorId );
-			clearValidationError( neighborhoodErrorId );
+			Object.values( ids ).forEach( clearValidationError );
 			return;
 		}
 
-		if ( ! district ) {
-			setValidationErrors( {
-				[ districtErrorId ]: {
-					message: settings.labels.district,
-					hidden: true,
-				},
-			} );
-		} else {
-			clearValidationError( districtErrorId );
-		}
+		const apply = ( id, isEmpty, message ) => {
+			if ( isEmpty ) {
+				setValidationErrors( { [ id ]: { message, hidden: true } } );
+			} else {
+				clearValidationError( id );
+			}
+		};
 
-		if ( ! neighborhood ) {
-			setValidationErrors( {
-				[ neighborhoodErrorId ]: {
-					message: settings.labels.neighborhood,
-					hidden: true,
-				},
-			} );
-		} else {
-			clearValidationError( neighborhoodErrorId );
-		}
+		apply( ids.province, ! province, settings.labels.province );
+		apply( ids.district, ! district, settings.labels.district );
+		apply( ids.neighborhood, ! neighborhood, settings.labels.neighborhood );
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [ isTR, district, neighborhood, addressType ] );
+	}, [ isTR, province, district, neighborhood, addressType ] );
 
 	if ( ! settings.neighborhoodEnabled || ! isTR ) {
 		return null;
 	}
 
-	const onDistrictChange = ( event ) => {
-		// Changing the district resets the dependent neighborhood.
-		setAddress( { city: event.target.value, address_1: '' } );
-	};
+	// Changing a level resets the dependent levels below it.
+	const onProvinceChange = ( value ) =>
+		setAddress( { state: value, city: '', address_1: '' } );
 
-	const onNeighborhoodChange = ( event ) => {
-		setAddress( { address_1: event.target.value } );
-	};
+	const onDistrictChange = ( value ) =>
+		setAddress( { city: value, address_1: '' } );
+
+	const onNeighborhoodChange = ( value ) =>
+		setAddress( { address_1: value } );
 
 	return (
 		<div
 			ref={ rootRef }
 			className="hezarfen-checkout-fields hezarfen-checkout-fields--address"
 		>
-			<SelectField
+			<Combobox
+				id={ `hezarfen-${ addressType }-province` }
+				className="wc-block-components-address-form__hez-province"
+				label={ settings.labels.province }
+				value={ province }
+				onChange={ onProvinceChange }
+				options={ settings.provinces }
+				placeholder={ settings.labels.selectOption }
+				noResultsText={ settings.labels.noResults }
+			/>
+
+			<Combobox
 				id={ `hezarfen-${ addressType }-district` }
 				className="wc-block-components-address-form__hez-district"
 				label={ settings.labels.district }
 				value={ district }
 				onChange={ onDistrictChange }
 				options={ districtOptions }
+				disabled={ ! province }
 				placeholder={ settings.labels.selectOption }
+				noResultsText={ settings.labels.noResults }
 			/>
 
-			<SelectField
+			<Combobox
 				id={ `hezarfen-${ addressType }-neighborhood` }
 				className="wc-block-components-address-form__hez-neighborhood"
 				label={ settings.labels.neighborhood }
@@ -194,6 +198,7 @@ const AddressFields = ( { addressType } ) => {
 				placeholder={
 					loadingNeighborhoods ? '…' : settings.labels.selectOption
 				}
+				noResultsText={ settings.labels.noResults }
 			/>
 		</div>
 	);

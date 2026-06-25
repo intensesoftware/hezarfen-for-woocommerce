@@ -103,6 +103,7 @@ class Hezarfen_Blocks_Integration implements IntegrationInterface {
 		return array(
 			'restUrl'             => esc_url_raw( rest_url( Hezarfen_Locations_REST::REST_NAMESPACE ) ),
 			'nonce'               => wp_create_nonce( 'wp_rest' ),
+			'provinces'           => $this->get_provinces(),
 			'districts'           => $this->get_districts_map(),
 			'neighborhoodEnabled' => $neighborhood_enabled,
 			'taxFieldsEnabled'    => Helper::is_show_tax_fields(),
@@ -151,12 +152,35 @@ class Hezarfen_Blocks_Integration implements IntegrationInterface {
 	}
 
 	/**
+	 * Province (il) options as `{ value: "TRxx", label: name }`, used to replace
+	 * the core State field with a searchable combobox.
+	 *
+	 * @return array<int, array{value: string, label: string}>
+	 */
+	protected function get_provinces() {
+		$cities    = \Hezarfen\Inc\Mahalle_Local::get_cities();
+		$provinces = array();
+
+		if ( is_array( $cities ) ) {
+			foreach ( $cities as $plate => $name ) {
+				$provinces[] = array(
+					'value' => $plate,
+					'label' => $name,
+				);
+			}
+		}
+
+		return $provinces;
+	}
+
+	/**
 	 * Translated labels passed to the block.
 	 *
 	 * @return array<string, string>
 	 */
 	protected function get_labels() {
 		return array(
+			'province'        => __( 'Province', 'hezarfen-for-woocommerce' ),
 			'district'        => __( 'Town / City', 'hezarfen-for-woocommerce' ),
 			'neighborhood'    => __( 'Neighborhood', 'hezarfen-for-woocommerce' ),
 			'selectOption'    => __( 'Select an option', 'hezarfen-for-woocommerce' ),
