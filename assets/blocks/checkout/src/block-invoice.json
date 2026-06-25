@@ -1,0 +1,18 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "hezarfen/checkout-invoice-fields",
+	"version": "1.0.0",
+	"title": "Hezarfen Invoice & Tax Fields",
+	"category": "woocommerce",
+	"description": "Fatura tipi, T.C. kimlik no ve vergi alanları.",
+	"parent": [ "woocommerce/checkout-contact-information-block" ],
+	"textdomain": "hezarfen-for-woocommerce",
+	"supports": {
+		"html": false,
+		"multiple": false,
+		"reusable": false,
+		"inserter": false,
+		"lock": false
+	}
+}

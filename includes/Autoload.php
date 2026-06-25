@@ -32,9 +32,12 @@ class Autoload {
 		$this->load_assets();
 
 		add_action( 'plugins_loaded', array( $this, 'load_packages' ) );
-		
+
 		// Initialize Contracts integration immediately
 		$this->init_contracts_integration();
+
+		// Initialize block-based (Gutenberg) checkout support.
+		$this->init_checkout_blocks();
 	}
 
 	/**
@@ -159,11 +162,90 @@ class Autoload {
 
 	/**
 	 * Initialize Contracts Integration
-	 * 
+	 *
 	 * @return void
 	 */
 	public function init_contracts_integration() {
 		new \Hezarfen\Inc\Contracts\Contracts_Integration();
+	}
+
+	/**
+	 * Initialize block-based checkout (WooCommerce Cart & Checkout Blocks) support.
+	 *
+	 * Registers the React checkout block, its Store API extension (for invoice/tax
+	 * fields) and the REST controller that serves district/neighborhood data.
+	 *
+	 * @return void
+	 */
+	public function init_checkout_blocks() {
+		require_once 'blocks/class-hezarfen-locations-rest.php';
+		require_once 'blocks/class-hezarfen-store-api.php';
+		require_once 'blocks/class-hezarfen-blocks-integration.php';
+
+		new \Hezarfen\Inc\Blocks\Hezarfen_Locations_REST();
+		new \Hezarfen\Inc\Blocks\Hezarfen_Store_API();
+
+		add_action(
+			'woocommerce_blocks_checkout_block_registration',
+			function( $integration_registry ) {
+				$integration_registry->register( new \Hezarfen\Inc\Blocks\Hezarfen_Blocks_Integration() );
+			}
+		);
+
+		// Force-insert our block placeholders into the checkout so they appear
+		// without the merchant having to add them manually. This mirrors how
+		// WooCommerce injects its own checkout inner blocks at render time.
+		add_filter( 'render_block', array( $this, 'inject_checkout_block_placeholders' ), 10, 2 );
+	}
+
+	/**
+	 * Injects the Hezarfen checkout block placeholders into the relevant
+	 * WooCommerce checkout inner blocks. The WooCommerce blocks frontend mounts
+	 * any `data-block-name` placeholder whose component has been registered via
+	 * `registerCheckoutBlock`, so this makes our fields render automatically.
+	 *
+	 * @param string $block_content The rendered block HTML.
+	 * @param array  $block         The parsed block.
+	 *
+	 * @return string
+	 */
+	public function inject_checkout_block_placeholders( $block_content, $block ) {
+		if ( empty( $block['blockName'] ) ) {
+			return $block_content;
+		}
+
+		$placeholders = array(
+			'woocommerce/checkout-billing-address-block'    => 'hezarfen/checkout-billing-fields',
+			'woocommerce/checkout-shipping-address-block'   => 'hezarfen/checkout-shipping-fields',
+			'woocommerce/checkout-contact-information-block' => 'hezarfen/checkout-invoice-fields',
+		);
+
+		if ( ! isset( $placeholders[ $block['blockName'] ] ) ) {
+			return $block_content;
+		}
+
+		$block_name = $placeholders[ $block['blockName'] ];
+
+		// Avoid double injection if the block is already present in the content.
+		if ( false !== strpos( $block_content, $block_name ) ) {
+			return $block_content;
+		}
+
+		$placeholder = sprintf(
+			'<div data-block-name="%1$s" class="wp-block-%2$s"></div>',
+			esc_attr( $block_name ),
+			esc_attr( str_replace( '/', '-', $block_name ) )
+		);
+
+		// Insert just before the parent block's closing </div> so our fields
+		// render inside it.
+		$closing_pos = strrpos( $block_content, '</div>' );
+
+		if ( false === $closing_pos ) {
+			return $block_content . $placeholder;
+		}
+
+		return substr( $block_content, 0, $closing_pos ) . $placeholder . substr( $block_content, $closing_pos );
 	}
 }
 
