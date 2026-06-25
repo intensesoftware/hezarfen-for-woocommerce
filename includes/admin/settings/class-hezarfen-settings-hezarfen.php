@@ -1316,7 +1316,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				</p>
 			</div>
 
-			<div class="hezarfen-roadmap-sections" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 20px;">
+			<div class="hezarfen-roadmap-sections" style="display: grid; grid-template-columns: <?php echo hezarfen_show_pro_promotions() ? '1fr 1fr' : '1fr'; ?>; gap: 30px; margin-bottom: 20px;">
 				<!-- Free Features -->
 				<div class="hezarfen-roadmap-section">
 					<h3 style="margin-bottom: 15px; color: #0073aa;">
@@ -1334,6 +1334,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 				</div>
 
 				<!-- Pro Features -->
+				<?php if ( hezarfen_show_pro_promotions() ) : ?>
 				<div class="hezarfen-roadmap-section">
 					<h3 style="margin-bottom: 15px; color: #16a34a;">
 						<?php esc_html_e( 'Pro Paket (Ücretli Sürüm) Özellikleri', 'hezarfen-for-woocommerce' ); ?>
@@ -1374,6 +1375,7 @@ class Hezarfen_Settings_Hezarfen extends WC_Settings_Page {
 						</p>
 					</div>
 				</div>
+				<?php endif; ?>
 			</div>
 
 			<!-- Additional Details -->

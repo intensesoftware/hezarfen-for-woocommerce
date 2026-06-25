@@ -35,7 +35,28 @@ define( 'WC_HEZARFEN_UYGULAMA_YOLU', plugin_dir_path( __FILE__ ) );
 define( 'WC_HEZARFEN_UYGULAMA_URL', plugin_dir_url( __FILE__ ) );
 define( 'WC_HEZARFEN_NEIGH_API_URL', plugin_dir_url( __FILE__ ) . 'api/get-mahalle-data.php' );
 
+/**
+ * Feature flag: show Hezarfen Pro promotions.
+ *
+ * Controls every in-app Pro promotion surface (the "Yükselt" submenu, the
+ * upgrade page, the settings page upgrade badge and the roadmap Pro feature
+ * survey). Disabled by default; flip to true here (or define it in wp-config.php)
+ * to bring the Pro promotions back in a future version.
+ */
+if ( ! defined( 'HEZARFEN_SHOW_PRO_PROMOTIONS' ) ) {
+	define( 'HEZARFEN_SHOW_PRO_PROMOTIONS', false );
+}
+
 add_action( 'plugins_loaded', 'hezarfen_init_plugin', 8 );
+
+/**
+ * Whether Hezarfen Pro promotions should be displayed.
+ *
+ * @return bool
+ */
+function hezarfen_show_pro_promotions() {
+	return defined( 'HEZARFEN_SHOW_PRO_PROMOTIONS' ) && HEZARFEN_SHOW_PRO_PROMOTIONS;
+}
 
 /**
  * Initialize plugin after checking requirements
