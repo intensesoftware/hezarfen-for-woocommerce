@@ -189,6 +189,14 @@ class Autoload {
 		new \Hezarfen\Inc\Blocks\Hezarfen_Locations_REST();
 		new \Hezarfen\Inc\Blocks\Hezarfen_Store_API();
 
+		// Admin notice for stores on a WooCommerce version too old for the block
+		// checkout fields. Has no WooCommerce Blocks dependency, so it is safe to
+		// load even when the Blocks package is absent.
+		if ( is_admin() ) {
+			require_once 'blocks/class-hezarfen-block-compat-notice.php';
+			new \Hezarfen\Inc\Blocks\Hezarfen_Block_Compat_Notice();
+		}
+
 		// The integration class implements a WooCommerce Blocks interface, which
 		// PHP resolves at declaration time. Load it only inside the block
 		// registration hook, which fires exclusively when WooCommerce Blocks is
