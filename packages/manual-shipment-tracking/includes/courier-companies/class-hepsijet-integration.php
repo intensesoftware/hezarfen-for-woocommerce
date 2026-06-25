@@ -23,6 +23,9 @@ class Courier_Hepsijet_Integration {
     const UNSUPPORTED_WC_GATEWAYS = ['cod'];
     const PRICING_CACHE_DURATION = 3600; // 1 hour in seconds
 
+    // The promotional Hepsijet pricing is served from the same Cloudflare R2 bucket the upgrade page uses.
+    const PRICING_URL = 'https://hezarfen-r2.intense.com.tr/plugin-assets/pricing.json';
+
     private $relay_base_url;
     private $consumer_key;
     private $consumer_secret;
@@ -896,42 +899,85 @@ class Courier_Hepsijet_Integration {
         }
         
         
-        // Use direct WordPress HTTP request since pricing endpoint is public
-        $url = 'https://kargokit.com/wp-json/hepsijet-relay/v1/pricing';
-        
-        $response = wp_remote_get($url, array(
+        // Fetch the promotional pricing from the public Cloudflare R2 bucket (same source as the upgrade page).
+        $response = wp_remote_get(self::PRICING_URL, array(
             'timeout' => self::REQUEST_TIMEOUT
         ));
-        
+
         if (is_wp_error($response)) {
             return $response;
         }
-        
+
         $body = wp_remote_retrieve_body($response);
         $http_code = wp_remote_retrieve_response_code($response);
         $decoded = json_decode($body, true);
-        
-        
+
+
         if ($http_code >= 400) {
             $error_message = $decoded['message'] ?? 'API Error: ' . $http_code;
             return new \WP_Error('pricing_api_error', $error_message);
         }
-        
-        
+
+        // Normalize the R2 payload into the internal pricing structure consumers expect.
+        $pricing_data = $this->normalize_pricing_data($decoded);
+
+        if (is_wp_error($pricing_data)) {
+            return $pricing_data;
+        }
+
         // Calculate expiration time in GMT
         $expires_gmt = gmdate('Y-m-d H:i:s', time() + self::PRICING_CACHE_DURATION);
-        
+
         // Store pricing data and expiration in single JSON structure
         $cache_structure = array(
             'expires_gmt' => $expires_gmt,
-            'pricing_data' => $decoded,
+            'pricing_data' => $pricing_data,
             'cached_at_gmt' => gmdate('Y-m-d H:i:s')
         );
-        
+
         update_option($cache_option_key, wp_json_encode($cache_structure));
-        
-        
-        return $decoded;
+
+
+        return $pricing_data;
+    }
+
+    /**
+     * Normalize the R2 pricing.json payload into the internal pricing structure.
+     *
+     * The R2 file exposes the Hepsijet promo price under
+     * kargokit_pricing.hepsijet. It may carry a full pricing_tiers list, or just
+     * the single 0-4 desi price the upgrade page reads. Both are supported so the
+     * consumers (get_price_for_desi / get_pricing_range_info) keep working.
+     *
+     * @param mixed $decoded Decoded JSON payload.
+     * @return array|WP_Error Normalized pricing data or error.
+     */
+    private function normalize_pricing_data($decoded) {
+        $hepsijet = isset($decoded['kargokit_pricing']['hepsijet']) && is_array($decoded['kargokit_pricing']['hepsijet'])
+            ? $decoded['kargokit_pricing']['hepsijet']
+            : null;
+
+        if ($hepsijet === null) {
+            return new \WP_Error('pricing_api_error', 'Hepsijet pricing not found in pricing.json');
+        }
+
+        if (isset($hepsijet['pricing_tiers']) && is_array($hepsijet['pricing_tiers'])) {
+            $pricing_tiers = $hepsijet['pricing_tiers'];
+        } elseif (isset($hepsijet['0_4desi'])) {
+            $pricing_tiers = array(
+                array('min' => 0, 'max' => 4, 'price' => (float) $hepsijet['0_4desi'])
+            );
+        } else {
+            return new \WP_Error('pricing_api_error', 'Hepsijet pricing tiers not available');
+        }
+
+        return array(
+            'currency'      => $hepsijet['currency'] ?? 'TRY',
+            'pricing_tiers' => $pricing_tiers,
+            'notes'         => $hepsijet['notes'] ?? array(),
+            'last_updated'  => $hepsijet['last_updated'] ?? '',
+            'source'        => 'Hezarfen R2'
+        );
     }
 
     /**
