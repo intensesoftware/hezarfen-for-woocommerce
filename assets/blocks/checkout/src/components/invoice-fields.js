@@ -12,6 +12,7 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { CART_STORE_KEY, CHECKOUT_STORE_KEY } from '@woocommerce/block-data';
 import { ValidatedTextInput } from '@woocommerce/blocks-checkout';
 import { settings } from '../settings';
+import SelectField from './select-field';
 
 const onlyDigits = ( value ) => ( value || '' ).replace( /[^0-9]/g, '' );
 
@@ -54,19 +55,17 @@ const InvoiceFields = () => {
 
 	return (
 		<div className="hezarfen-checkout-fields hezarfen-checkout-fields--invoice">
-			<div className="hezarfen-field hezarfen-field--invoice-type">
-				<label htmlFor="hezarfen-invoice-type">{ labels.invoiceType }</label>
-				<select
-					id="hezarfen-invoice-type"
-					className="hezarfen-select"
-					value={ invoiceType }
-					onChange={ ( event ) => setInvoiceType( event.target.value ) }
-				>
-					<option value="">{ labels.selectOption }</option>
-					<option value="person">{ labels.invoicePerson }</option>
-					<option value="company">{ labels.invoiceCompany }</option>
-				</select>
-			</div>
+			<SelectField
+				id="hezarfen-invoice-type"
+				label={ labels.invoiceType }
+				value={ invoiceType }
+				onChange={ ( event ) => setInvoiceType( event.target.value ) }
+				options={ [
+					{ value: 'person', label: labels.invoicePerson },
+					{ value: 'company', label: labels.invoiceCompany },
+				] }
+				placeholder={ labels.selectOption }
+			/>
 
 			{ invoiceType === 'person' && settings.showIdentityField && (
 				<ValidatedTextInput

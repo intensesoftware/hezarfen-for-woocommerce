@@ -12,6 +12,7 @@ import { useEffect, useMemo, useRef, useState } from '@wordpress/element';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { CART_STORE_KEY, VALIDATION_STORE_KEY } from '@woocommerce/block-data';
 import { settings, getDistrictsForProvince, fetchNeighborhoods } from '../settings';
+import SelectField from './select-field';
 
 const AddressFields = ( { addressType } ) => {
 	const [ neighborhoods, setNeighborhoods ] = useState( [] );
@@ -133,7 +134,7 @@ const AddressFields = ( { addressType } ) => {
 		if ( ! district ) {
 			setValidationErrors( {
 				[ districtErrorId ]: {
-					message: `${ settings.labels.district } ${ requiredSuffix() }`,
+					message: settings.labels.district,
 					hidden: true,
 				},
 			} );
@@ -144,7 +145,7 @@ const AddressFields = ( { addressType } ) => {
 		if ( ! neighborhood ) {
 			setValidationErrors( {
 				[ neighborhoodErrorId ]: {
-					message: `${ settings.labels.neighborhood } ${ requiredSuffix() }`,
+					message: settings.labels.neighborhood,
 					hidden: true,
 				},
 			} );
@@ -172,55 +173,30 @@ const AddressFields = ( { addressType } ) => {
 			ref={ rootRef }
 			className="hezarfen-checkout-fields hezarfen-checkout-fields--address"
 		>
-			<div className="hezarfen-field hezarfen-field--district">
-				<label htmlFor={ `hezarfen-${ addressType }-district` }>
-					{ settings.labels.district }
-				</label>
-				<select
-					id={ `hezarfen-${ addressType }-district` }
-					className="hezarfen-select"
-					value={ district }
-					onChange={ onDistrictChange }
-				>
-					<option value="">{ settings.labels.selectOption }</option>
-					{ districtOptions.map( ( option ) => (
-						<option key={ option.value } value={ option.value }>
-							{ option.label }
-						</option>
-					) ) }
-				</select>
-			</div>
+			<SelectField
+				id={ `hezarfen-${ addressType }-district` }
+				className="wc-block-components-address-form__hez-district"
+				label={ settings.labels.district }
+				value={ district }
+				onChange={ onDistrictChange }
+				options={ districtOptions }
+				placeholder={ settings.labels.selectOption }
+			/>
 
-			<div className="hezarfen-field hezarfen-field--neighborhood">
-				<label htmlFor={ `hezarfen-${ addressType }-neighborhood` }>
-					{ settings.labels.neighborhood }
-				</label>
-				<select
-					id={ `hezarfen-${ addressType }-neighborhood` }
-					className="hezarfen-select"
-					value={ neighborhood }
-					onChange={ onNeighborhoodChange }
-					disabled={ ! district || loadingNeighborhoods }
-				>
-					<option value="">
-						{ loadingNeighborhoods ? '…' : settings.labels.selectOption }
-					</option>
-					{ neighborhoods.map( ( option ) => (
-						<option key={ option.value } value={ option.value }>
-							{ option.label }
-						</option>
-					) ) }
-				</select>
-			</div>
+			<SelectField
+				id={ `hezarfen-${ addressType }-neighborhood` }
+				className="wc-block-components-address-form__hez-neighborhood"
+				label={ settings.labels.neighborhood }
+				value={ neighborhood }
+				onChange={ onNeighborhoodChange }
+				options={ neighborhoods }
+				disabled={ ! district || loadingNeighborhoods }
+				placeholder={
+					loadingNeighborhoods ? '…' : settings.labels.selectOption
+				}
+			/>
 		</div>
 	);
 };
-
-/**
- * Localised "(required)" hint reused for both selects.
- *
- * @return {string} Required-suffix text.
- */
-const requiredSuffix = () => '*';
 
 export default AddressFields;
