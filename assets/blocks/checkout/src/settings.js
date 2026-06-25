@@ -9,6 +9,7 @@ import { getSetting } from '@woocommerce/settings';
 const defaults = {
 	restUrl: '',
 	nonce: '',
+	provinces: [],
 	districts: {},
 	neighborhoodEnabled: true,
 	taxFieldsEnabled: false,

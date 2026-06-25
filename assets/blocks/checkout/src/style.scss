@@ -22,12 +22,64 @@
 }
 
 /**
- * Hide the redundant core City / Address line 1 inputs while a Turkish address
- * is active; the district / neighborhood selects replace them.
+ * Hide the redundant core State / City / Address line 1 inputs while a Turkish
+ * address is active; our searchable comboboxes replace them.
  */
 body.hezarfen-tr-checkout {
+	.wc-block-components-address-form__state,
 	.wc-block-components-address-form__city,
 	.wc-block-components-address-form__address_1 {
 		display: none;
+	}
+}
+
+/**
+ * Searchable combobox. The input reuses WooCommerce's select look; the filtered
+ * list is a custom dropdown anchored to the field.
+ */
+.hezarfen-combobox {
+	.wc-blocks-components-select__container {
+		position: relative;
+	}
+
+	.hezarfen-combobox__input {
+		// A text input behaves like the select, but show a text caret on focus.
+		cursor: text;
+	}
+
+	&__list {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		z-index: 20;
+		margin: 2px 0 0;
+		padding: 4px 0;
+		list-style: none;
+		max-height: 260px;
+		overflow-y: auto;
+		background: #fff;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+	}
+
+	&__option {
+		padding: 8px 12px;
+		cursor: pointer;
+		line-height: 1.4;
+
+		&.is-highlighted {
+			background: #f0f0f1;
+		}
+
+		&.is-selected {
+			font-weight: 600;
+		}
+	}
+
+	&__empty {
+		padding: 8px 12px;
+		color: #767676;
 	}
 }
