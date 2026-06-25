@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 7.0
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.13.1
+Stable tag: 2.13.2
 
 WooCommerce Kargo Takip eklentisi: ücretsiz Hepsijet entegrasyonu, 23 kargo firması, NetGSM SMS, Mesafeli Satış Sözleşmesi, mahalle seçimi.
 == Description ==
@@ -261,6 +261,9 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
+= 2.13.2 - 2026-06-25 =
+* Hezarfen Pro reklam ve tanıtımları kaldırıldı
+
 = 2.13.1 - 2026-06-23 =
 
 * fix(checkout): İlçe/Mahalle alanları ADP ile boş geliyor (erken get_checkout_fields yarışı)
