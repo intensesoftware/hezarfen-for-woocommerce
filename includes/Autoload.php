@@ -178,23 +178,35 @@ class Autoload {
 	 * @return void
 	 */
 	public function init_checkout_blocks() {
+		// These classes have no class-declaration-time dependency on WooCommerce
+		// Blocks (they only reference Store API / REST classes inside method
+		// bodies), so they are safe to load unconditionally. Their hooks only
+		// ever fire for block-based (Store API) requests, never on the classic
+		// checkout.
 		require_once 'blocks/class-hezarfen-locations-rest.php';
 		require_once 'blocks/class-hezarfen-store-api.php';
-		require_once 'blocks/class-hezarfen-blocks-integration.php';
 
 		new \Hezarfen\Inc\Blocks\Hezarfen_Locations_REST();
 		new \Hezarfen\Inc\Blocks\Hezarfen_Store_API();
 
+		// The integration class implements a WooCommerce Blocks interface, which
+		// PHP resolves at declaration time. Load it only inside the block
+		// registration hook, which fires exclusively when WooCommerce Blocks is
+		// active and the interface is guaranteed to exist. This avoids any risk
+		// of a fatal error on environments where the Blocks package is absent.
 		add_action(
 			'woocommerce_blocks_checkout_block_registration',
 			function( $integration_registry ) {
+				require_once __DIR__ . '/blocks/class-hezarfen-blocks-integration.php';
 				$integration_registry->register( new \Hezarfen\Inc\Blocks\Hezarfen_Blocks_Integration() );
 			}
 		);
 
 		// Force-insert our block placeholders into the checkout so they appear
 		// without the merchant having to add them manually. This mirrors how
-		// WooCommerce injects its own checkout inner blocks at render time.
+		// WooCommerce injects its own checkout inner blocks at render time. It is
+		// a no-op for every block except the three checkout inner blocks, which
+		// only exist on the block-based checkout.
 		add_filter( 'render_block', array( $this, 'inject_checkout_block_placeholders' ), 10, 2 );
 	}
 
