@@ -21,6 +21,13 @@ const InvoiceFields = () => {
 		return data?.hezarfen?.invoice_type || '';
 	}, [] );
 
+	const companyTitle = useSelect(
+		( select ) =>
+			select( CART_STORE_KEY ).getCustomerData()?.billingAddress
+				?.company || '',
+		[]
+	);
+
 	const [ invoiceType, setInvoiceType ] = useState( initialInvoiceType );
 	const [ tcNumber, setTcNumber ] = useState( '' );
 	const [ taxNumber, setTaxNumber ] = useState( '' );
@@ -89,6 +96,7 @@ const InvoiceFields = () => {
 						id="hezarfen-company-title"
 						className="hezarfen-field hezarfen-field--company-title"
 						label={ labels.companyTitle }
+						value={ companyTitle }
 						required
 						onChange={ ( value ) =>
 							setBillingAddress( { company: value } )
