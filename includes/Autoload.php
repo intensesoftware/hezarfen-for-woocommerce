@@ -127,6 +127,7 @@ class Autoload {
 		require_once 'class-hezarfen.php';
 		require_once 'Data/Abstracts/Abstract_Encryption.php';
 		require_once 'Data/PostMetaEncryption.php';
+		require_once 'class-hezarfen-invoice-validator.php';
 		require_once 'Checkout.php';
 		require_once 'InvoiceInfo.php';
 		require_once 'class-my-account.php';
@@ -178,94 +179,8 @@ class Autoload {
 	 * @return void
 	 */
 	public function init_checkout_blocks() {
-		// These classes have no class-declaration-time dependency on WooCommerce
-		// Blocks (they only reference Store API / REST classes inside method
-		// bodies), so they are safe to load unconditionally. Their hooks only
-		// ever fire for block-based (Store API) requests, never on the classic
-		// checkout.
-		require_once 'blocks/class-hezarfen-locations-rest.php';
-		require_once 'blocks/class-hezarfen-store-api.php';
-
-		new \Hezarfen\Inc\Blocks\Hezarfen_Locations_REST();
-		new \Hezarfen\Inc\Blocks\Hezarfen_Store_API();
-
-		// Admin notice for stores on a WooCommerce version too old for the block
-		// checkout fields. Has no WooCommerce Blocks dependency, so it is safe to
-		// load even when the Blocks package is absent.
-		if ( is_admin() ) {
-			require_once 'blocks/class-hezarfen-block-compat-notice.php';
-			new \Hezarfen\Inc\Blocks\Hezarfen_Block_Compat_Notice();
-		}
-
-		// The integration class implements a WooCommerce Blocks interface, which
-		// PHP resolves at declaration time. Load it only inside the block
-		// registration hook, which fires exclusively when WooCommerce Blocks is
-		// active and the interface is guaranteed to exist. This avoids any risk
-		// of a fatal error on environments where the Blocks package is absent.
-		add_action(
-			'woocommerce_blocks_checkout_block_registration',
-			function( $integration_registry ) {
-				require_once __DIR__ . '/blocks/class-hezarfen-blocks-integration.php';
-				$integration_registry->register( new \Hezarfen\Inc\Blocks\Hezarfen_Blocks_Integration() );
-			}
-		);
-
-		// Force-insert our block placeholders into the checkout so they appear
-		// without the merchant having to add them manually. This mirrors how
-		// WooCommerce injects its own checkout inner blocks at render time. It is
-		// a no-op for every block except the three checkout inner blocks, which
-		// only exist on the block-based checkout.
-		add_filter( 'render_block', array( $this, 'inject_checkout_block_placeholders' ), 10, 2 );
-	}
-
-	/**
-	 * Injects the Hezarfen checkout block placeholders into the relevant
-	 * WooCommerce checkout inner blocks. The WooCommerce blocks frontend mounts
-	 * any `data-block-name` placeholder whose component has been registered via
-	 * `registerCheckoutBlock`, so this makes our fields render automatically.
-	 *
-	 * @param string $block_content The rendered block HTML.
-	 * @param array  $block         The parsed block.
-	 *
-	 * @return string
-	 */
-	public function inject_checkout_block_placeholders( $block_content, $block ) {
-		if ( empty( $block['blockName'] ) ) {
-			return $block_content;
-		}
-
-		$placeholders = array(
-			'woocommerce/checkout-billing-address-block'    => 'hezarfen/checkout-billing-fields',
-			'woocommerce/checkout-shipping-address-block'   => 'hezarfen/checkout-shipping-fields',
-			'woocommerce/checkout-contact-information-block' => 'hezarfen/checkout-invoice-fields',
-		);
-
-		if ( ! isset( $placeholders[ $block['blockName'] ] ) ) {
-			return $block_content;
-		}
-
-		$block_name = $placeholders[ $block['blockName'] ];
-
-		// Avoid double injection if the block is already present in the content.
-		if ( false !== strpos( $block_content, $block_name ) ) {
-			return $block_content;
-		}
-
-		$placeholder = sprintf(
-			'<div data-block-name="%1$s" class="wp-block-%2$s"></div>',
-			esc_attr( $block_name ),
-			esc_attr( str_replace( '/', '-', $block_name ) )
-		);
-
-		// Insert just before the parent block's closing </div> so our fields
-		// render inside it.
-		$closing_pos = strrpos( $block_content, '</div>' );
-
-		if ( false === $closing_pos ) {
-			return $block_content . $placeholder;
-		}
-
-		return substr( $block_content, 0, $closing_pos ) . $placeholder . substr( $block_content, $closing_pos );
+		require_once 'blocks/class-hezarfen-blocks-loader.php';
+		new \Hezarfen\Inc\Blocks\Hezarfen_Blocks_Loader();
 	}
 }
 
