@@ -317,3 +317,36 @@ export async function fillTrBlockAddress( page: Page ): Promise< void > {
 	await fillBlockField( page, 'postcode', '34000' );
 }
 
+/**
+ * Change the checkout country through the WooCommerce country field UI, so the
+ * address form actually re-renders for the new locale (which is what drives
+ * Hezarfen's TR-only AddressFields to mount/unmount).
+ *
+ * @param page        Playwright page.
+ * @param countryName The visible country label, e.g. "Germany".
+ */
+export async function setCheckoutCountry(
+	page: Page,
+	countryName: string
+): Promise< void > {
+	const field = page
+		.locator( '#shipping-country, #billing-country' )
+		.first();
+	await field.scrollIntoViewIfNeeded();
+
+	const tag = await field.evaluate( ( el ) => el.tagName.toLowerCase() );
+
+	if ( 'select' === tag ) {
+		await field.selectOption( { label: countryName } );
+		return;
+	}
+
+	// Combobox variant: type to filter, then pick the matching option.
+	await field.click();
+	await field.fill( countryName );
+	await page
+		.locator( '[role="option"]', { hasText: countryName } )
+		.first()
+		.click();
+}
+

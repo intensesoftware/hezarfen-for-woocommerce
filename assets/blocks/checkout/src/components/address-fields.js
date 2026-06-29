@@ -8,7 +8,13 @@
  * `city`, neighborhood → `address_1`. The redundant core State / City /
  * Address line 1 inputs are hidden via CSS while Turkey is selected.
  */
-import { useEffect, useMemo, useRef, useState } from '@wordpress/element';
+import {
+	createPortal,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+} from '@wordpress/element';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { CART_STORE_KEY, VALIDATION_STORE_KEY } from '@woocommerce/block-data';
 import { settings, getDistrictsForProvince, fetchNeighborhoods } from '../settings';
@@ -17,7 +23,14 @@ import Combobox from './combobox';
 const AddressFields = ( { addressType } ) => {
 	const [ neighborhoods, setNeighborhoods ] = useState( [] );
 	const [ loadingNeighborhoods, setLoadingNeighborhoods ] = useState( false );
-	const rootRef = useRef( null );
+	// The DOM node our fields are portaled into. It lives inside the core
+	// WooCommerce address form (so the fields slot into the native field order)
+	// but is created and owned by this component, never by React's own tree.
+	const [ container, setContainer ] = useState( null );
+	// A stable, always-rendered anchor in this component's real React location.
+	// We read the surrounding form from it, and because it never moves, React can
+	// always reconcile/unmount this component cleanly.
+	const anchorRef = useRef( null );
 
 	const address = useSelect(
 		( select ) => {
@@ -41,6 +54,7 @@ const AddressFields = ( { addressType } ) => {
 	const district = address?.city || '';
 	const neighborhood = address?.address_1 || '';
 	const isTR = country === 'TR';
+	const active = settings.neighborhoodEnabled && isTR;
 
 	const districtOptions = useMemo(
 		() => getDistrictsForProvince( province ),
@@ -53,29 +67,38 @@ const AddressFields = ( { addressType } ) => {
 		document.body.classList.toggle( 'hezarfen-tr-checkout', isTR );
 	}, [ isTR ] );
 
-	// Relocate our comboboxes so the visual order matches the classic checkout:
+	// Build (and keep correctly positioned) a container inside the core address
+	// form so the visual order matches the classic checkout:
 	// İl → İlçe → Mahalle → Açık adres → Posta kodu. We anchor right before the
-	// "Açık adres" (address_2) field — a stable, always-visible field for TR —
-	// which keeps the order correct regardless of where the hidden core fields
-	// land in the DOM. A MutationObserver re-applies it if WooCommerce rebuilds
-	// the form (e.g. on a country change).
+	// "Açık adres" (address_2) field — a stable, always-visible field for TR.
+	//
+	// We portal into a node we create ourselves rather than relocating this
+	// component's own React root: moving the React root would leave React
+	// tracking the original parent, so when the component later renders no fields
+	// (e.g. the shopper switches to a non-TR country) React could not remove the
+	// relocated node and it would linger orphaned in the form. The container is
+	// ours, so we remove it deterministically on cleanup.
 	useEffect( () => {
-		const root = rootRef.current;
-
-		if ( ! isTR || ! root ) {
+		if ( ! active ) {
+			setContainer( null );
 			return;
 		}
 
-		const form = root
-			.closest( 'fieldset' )
+		const anchor = anchorRef.current;
+		const form = anchor
+			?.closest( 'fieldset' )
 			?.querySelector( '.wc-block-components-address-form' );
 
 		if ( ! form ) {
 			return;
 		}
 
+		const el = document.createElement( 'div' );
+		el.className =
+			'hezarfen-checkout-fields hezarfen-checkout-fields--address';
+
 		const reposition = () => {
-			const anchor =
+			const target =
 				form.querySelector(
 					'.wc-block-components-address-form__address_2'
 				) ||
@@ -83,18 +106,28 @@ const AddressFields = ( { addressType } ) => {
 					'.wc-block-components-address-form__postcode'
 				);
 
-			if ( anchor && anchor.previousElementSibling !== root ) {
-				anchor.insertAdjacentElement( 'beforebegin', root );
+			if ( target ) {
+				if ( target.previousElementSibling !== el ) {
+					target.insertAdjacentElement( 'beforebegin', el );
+				}
+			} else if ( el.parentElement !== form ) {
+				form.appendChild( el );
 			}
 		};
 
 		reposition();
+		setContainer( el );
 
+		// Re-apply if WooCommerce rebuilds the form (e.g. on a country change).
 		const observer = new window.MutationObserver( reposition );
 		observer.observe( form, { childList: true } );
 
-		return () => observer.disconnect();
-	}, [ isTR, addressType ] );
+		return () => {
+			observer.disconnect();
+			el.remove();
+			setContainer( null );
+		};
+	}, [ active, addressType ] );
 
 	// Load neighborhoods whenever the province or district changes.
 	useEffect( () => {
@@ -145,10 +178,6 @@ const AddressFields = ( { addressType } ) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ isTR, province, district, neighborhood, addressType ] );
 
-	if ( ! settings.neighborhoodEnabled || ! isTR ) {
-		return null;
-	}
-
 	// Changing a level resets the dependent levels below it.
 	const onProvinceChange = ( value ) =>
 		setAddress( { state: value, city: '', address_1: '' } );
@@ -159,47 +188,62 @@ const AddressFields = ( { addressType } ) => {
 	const onNeighborhoodChange = ( value ) =>
 		setAddress( { address_1: value } );
 
+	const fields =
+		active && container
+			? createPortal(
+					<>
+						<Combobox
+							id={ `hezarfen-${ addressType }-province` }
+							className="wc-block-components-address-form__hez-province"
+							label={ settings.labels.province }
+							value={ province }
+							onChange={ onProvinceChange }
+							options={ settings.provinces }
+							placeholder={ settings.labels.selectOption }
+							noResultsText={ settings.labels.noResults }
+						/>
+
+						<Combobox
+							id={ `hezarfen-${ addressType }-district` }
+							className="wc-block-components-address-form__hez-district"
+							label={ settings.labels.district }
+							value={ district }
+							onChange={ onDistrictChange }
+							options={ districtOptions }
+							disabled={ ! province }
+							placeholder={ settings.labels.selectOption }
+							noResultsText={ settings.labels.noResults }
+						/>
+
+						<Combobox
+							id={ `hezarfen-${ addressType }-neighborhood` }
+							className="wc-block-components-address-form__hez-neighborhood"
+							label={ settings.labels.neighborhood }
+							value={ neighborhood }
+							onChange={ onNeighborhoodChange }
+							options={ neighborhoods }
+							disabled={ ! district || loadingNeighborhoods }
+							placeholder={
+								loadingNeighborhoods
+									? '…'
+									: settings.labels.selectOption
+							}
+							noResultsText={ settings.labels.noResults }
+						/>
+					</>,
+					container
+			  )
+			: null;
+
+	// The anchor stays put in this component's real React position so React can
+	// always reconcile/unmount it; the visible fields live in the portal above.
 	return (
 		<div
-			ref={ rootRef }
-			className="hezarfen-checkout-fields hezarfen-checkout-fields--address"
+			ref={ anchorRef }
+			className="hezarfen-checkout-fields-anchor"
+			style={ { display: 'none' } }
 		>
-			<Combobox
-				id={ `hezarfen-${ addressType }-province` }
-				className="wc-block-components-address-form__hez-province"
-				label={ settings.labels.province }
-				value={ province }
-				onChange={ onProvinceChange }
-				options={ settings.provinces }
-				placeholder={ settings.labels.selectOption }
-				noResultsText={ settings.labels.noResults }
-			/>
-
-			<Combobox
-				id={ `hezarfen-${ addressType }-district` }
-				className="wc-block-components-address-form__hez-district"
-				label={ settings.labels.district }
-				value={ district }
-				onChange={ onDistrictChange }
-				options={ districtOptions }
-				disabled={ ! province }
-				placeholder={ settings.labels.selectOption }
-				noResultsText={ settings.labels.noResults }
-			/>
-
-			<Combobox
-				id={ `hezarfen-${ addressType }-neighborhood` }
-				className="wc-block-components-address-form__hez-neighborhood"
-				label={ settings.labels.neighborhood }
-				value={ neighborhood }
-				onChange={ onNeighborhoodChange }
-				options={ neighborhoods }
-				disabled={ ! district || loadingNeighborhoods }
-				placeholder={
-					loadingNeighborhoods ? '…' : settings.labels.selectOption
-				}
-				noResultsText={ settings.labels.noResults }
-			/>
+			{ fields }
 		</div>
 	);
 };

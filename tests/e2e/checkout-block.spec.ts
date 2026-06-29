@@ -14,6 +14,7 @@ import {
 	pickComboboxFirstOption,
 	placeBlockOrder,
 	restoreCheckoutToClassic,
+	setCheckoutCountry,
 	setCheckoutToBlock,
 	waitForBlockCheckoutReady,
 } from './helpers/block-checkout';
@@ -267,5 +268,32 @@ test.describe( 'Hezarfen block (Gutenberg) checkout', () => {
 		} finally {
 			restoreOptions( countrySnapshot );
 		}
+	} );
+
+	test( 'switching away from TR at runtime removes the Hezarfen address fields', async ( {
+		page,
+	} ) => {
+		await page.goto( '/checkout/' );
+		await waitForBlockCheckoutReady( page );
+
+		// TR is the default → the İl combobox is visible.
+		await expect(
+			page.locator(
+				'.wc-block-components-address-form__hez-province .hezarfen-combobox__input:visible'
+			)
+		).toHaveCount( 1 );
+
+		// Switch the country to a non-TR one. AddressFields must unmount — the
+		// İl combobox must not linger orphaned in the form.
+		await setCheckoutCountry( page, 'Germany' );
+
+		await expect(
+			page.locator(
+				'.wc-block-components-address-form__hez-province .hezarfen-combobox__input:visible'
+			)
+		).toHaveCount( 0 );
+		await expect( page.locator( 'body' ) ).not.toHaveClass(
+			/hezarfen-tr-checkout/
+		);
 	} );
 } );
