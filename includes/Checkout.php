@@ -169,7 +169,7 @@ class Checkout {
 			// Get the actual TC number (may need to decrypt it first)
 			$tc_id_number = $value;
 			// Check if the TC number is invalid
-			if ($tc_id_number &&  (11 !== strlen($tc_id_number) || !is_numeric($tc_id_number))) {
+			if ($tc_id_number && ! Hezarfen_Invoice_Validator::is_valid_tc_number($tc_id_number)) {
 
 				// Replace the value attribute in the HTML with an empty string
 				$field = preg_replace('/value="[^"]*"/', 'value=""', $field);
@@ -498,7 +498,7 @@ class Checkout {
 				);
 			} else {
 				// do not save the T.C. identitiy fields.
-				$data['billing_hez_TC_number'] = '******';
+				$data['billing_hez_TC_number'] = Hezarfen_Invoice_Validator::MASKED_VALUE;
 			}
 		}
 
@@ -521,7 +521,7 @@ class Checkout {
 		$invoice_type = array_key_exists( 'billing_hez_invoice_type', $_POST ) ? sanitize_key( wp_unslash( $_POST['billing_hez_invoice_type'] ) ) : '';
 
 		// extend here to cover only number validaiton check for the TC ID number.
-		if ( 'person' === $invoice_type && $tc_id_number && ( 11 !== strlen( $tc_id_number ) || ! is_numeric( $tc_id_number ) ) ) {
+		if ( 'person' === $invoice_type && $tc_id_number && ! Hezarfen_Invoice_Validator::is_valid_tc_number( $tc_id_number ) ) {
 			$errors->add( 'billing_hez_TC_number_validation', '<strong>' . __( 'TC ID number is not valid', 'hezarfen-for-woocommerce' ) . '</strong>', array( 'id' => 'billing_hez_TC_number' ) );
 		}
 
@@ -529,7 +529,7 @@ class Checkout {
 			// phpcs:ignore WordPress.Security.NonceVerification.Missing
 			$tax_number = array_key_exists( 'billing_hez_tax_number', $_POST ) ? sanitize_text_field( wp_unslash( $_POST['billing_hez_tax_number'] ) ) : '';
 
-			if ( ! is_numeric( $tax_number ) || ! in_array( strlen( $tax_number ), array( 10, 11 ), true ) ) {
+			if ( ! Hezarfen_Invoice_Validator::is_valid_tax_number( $tax_number ) ) {
 				$errors->add( 'billing_hez_tax_number_validation', '<strong>' . esc_html__( 'Tax number is not valid', 'hezarfen-for-woocommerce' ) . '</strong>', array( 'id' => 'billing_hez_tax_number' ) );
 			}
 		}

@@ -33,6 +33,12 @@ class Hezarfen_Block_Compat_Notice {
 	const SWITCH_ACTION = 'hezarfen_switch_to_classic_checkout';
 
 	/**
+	 * Post meta key holding the checkout page content prior to switching it to the
+	 * classic shortcode, so the original block content can be restored.
+	 */
+	const BACKUP_META_KEY = '_hezarfen_pre_classic_checkout_content';
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
@@ -183,6 +189,15 @@ class Hezarfen_Block_Compat_Notice {
 		$status = 'error';
 
 		if ( $checkout_page_id > 0 ) {
+			// Back up the existing (block) checkout content before overwriting it,
+			// so the merchant can restore their original page if needed. This is a
+			// one-way action otherwise.
+			$previous_content = get_post_field( 'post_content', $checkout_page_id );
+
+			if ( is_string( $previous_content ) && '' !== $previous_content ) {
+				update_post_meta( $checkout_page_id, self::BACKUP_META_KEY, $previous_content );
+			}
+
 			$result = wp_update_post(
 				array(
 					'ID'           => $checkout_page_id,

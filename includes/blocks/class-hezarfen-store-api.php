@@ -10,6 +10,7 @@ namespace Hezarfen\Inc\Blocks;
 
 use Hezarfen\Inc\Helper;
 use Hezarfen\Inc\Checkout;
+use Hezarfen\Inc\Hezarfen_Invoice_Validator;
 use Hezarfen\Inc\Data\PostMetaEncryption;
 use Automattic\WooCommerce\StoreApi\Exceptions\RouteException;
 
@@ -122,6 +123,10 @@ class Hezarfen_Store_API {
 
 		$invoice_type = isset( $data['invoice_type'] ) ? sanitize_key( $data['invoice_type'] ) : '';
 
+		// On the classic checkout the invoice type is a WooCommerce field with its
+		// own required handling, so `validate_posted_data()` never re-checks it.
+		// Here it is Store API extension data with no field-level required rule, so
+		// we enforce the selection explicitly to keep the same effective behaviour.
 		if ( ! in_array( $invoice_type, array( 'person', 'company' ), true ) ) {
 			throw new RouteException(
 				'hezarfen_invoice_type_required',
@@ -155,12 +160,15 @@ class Hezarfen_Store_API {
 		$order->delete_meta_data( '_billing_hez_tax_office' );
 
 		if ( ! Checkout::is_show_identity_field_on_checkout() ) {
+			// The identity field is disabled store-wide; make sure no stale value
+			// survives from a previous order/selection.
+			$order->delete_meta_data( '_billing_hez_TC_number' );
 			return;
 		}
 
 		$tc_number = isset( $data['tc_number'] ) ? sanitize_text_field( $data['tc_number'] ) : '';
 
-		if ( $tc_number && ( 11 !== strlen( $tc_number ) || ! is_numeric( $tc_number ) ) ) {
+		if ( $tc_number && ! Hezarfen_Invoice_Validator::is_valid_tc_number( $tc_number ) ) {
 			throw new RouteException(
 				'hezarfen_tc_number_invalid',
 				esc_html__( 'TC ID number is not valid', 'hezarfen-for-woocommerce' ),
@@ -172,7 +180,7 @@ class Hezarfen_Store_API {
 			if ( Checkout::is_identity_number_field_required() ) {
 				throw new RouteException(
 					'hezarfen_tc_number_required',
-					esc_html__( 'TC ID number is not valid', 'hezarfen-for-woocommerce' ),
+					esc_html__( 'Please enter your T.C. identity number.', 'hezarfen-for-woocommerce' ),
 					400
 				);
 			}
@@ -186,7 +194,7 @@ class Hezarfen_Store_API {
 		if ( $encryption->health_check() ) {
 			$order->update_meta_data( '_billing_hez_TC_number', $encryption->encrypt( $tc_number ) );
 		} else {
-			$order->update_meta_data( '_billing_hez_TC_number', '******' );
+			$order->update_meta_data( '_billing_hez_TC_number', Hezarfen_Invoice_Validator::MASKED_VALUE );
 		}
 	}
 
@@ -207,7 +215,7 @@ class Hezarfen_Store_API {
 		$tax_number = isset( $data['tax_number'] ) ? sanitize_text_field( $data['tax_number'] ) : '';
 		$tax_office = isset( $data['tax_office'] ) ? sanitize_text_field( $data['tax_office'] ) : '';
 
-		if ( ! is_numeric( $tax_number ) || ! in_array( strlen( $tax_number ), array( 10, 11 ), true ) ) {
+		if ( ! Hezarfen_Invoice_Validator::is_valid_tax_number( $tax_number ) ) {
 			throw new RouteException(
 				'hezarfen_tax_number_invalid',
 				esc_html__( 'Tax number is not valid', 'hezarfen-for-woocommerce' ),
@@ -215,6 +223,9 @@ class Hezarfen_Store_API {
 			);
 		}
 
+		// The tax office is a required WooCommerce field on the classic checkout,
+		// so `validate_posted_data()` leaves it to field-level validation. As Store
+		// API extension data it has no such rule, so the requirement is enforced here.
 		if ( '' === $tax_office ) {
 			throw new RouteException(
 				'hezarfen_tax_office_required',
