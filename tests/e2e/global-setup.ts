@@ -207,11 +207,11 @@ function ensurePrettyPermalinks(): void {
 }
 
 /**
- * Force the /checkout/ page to use the classic shortcode. The plugin
- * does not (yet) support the WooCommerce Cart/Checkout blocks, so a
- * site that drifted onto the new block-based checkout would silently
- * break every test. We rewrite to the classic shortcode here so the
- * suite is self-healing.
+ * Force the /checkout/ page to use the classic shortcode. Hezarfen now
+ * supports the WooCommerce block checkout too, but the bulk of this suite
+ * targets the classic checkout, so we pin the page to the classic shortcode
+ * for a known baseline. The dedicated block spec (checkout-block.spec.ts)
+ * flips the page to the block checkout itself and restores it afterwards.
  */
 function ensureClassicCheckoutPage(): void {
 	const checkoutId = wp( [

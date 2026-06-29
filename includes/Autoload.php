@@ -32,9 +32,12 @@ class Autoload {
 		$this->load_assets();
 
 		add_action( 'plugins_loaded', array( $this, 'load_packages' ) );
-		
+
 		// Initialize Contracts integration immediately
 		$this->init_contracts_integration();
+
+		// Initialize block-based (Gutenberg) checkout support.
+		$this->init_checkout_blocks();
 	}
 
 	/**
@@ -124,6 +127,7 @@ class Autoload {
 		require_once 'class-hezarfen.php';
 		require_once 'Data/Abstracts/Abstract_Encryption.php';
 		require_once 'Data/PostMetaEncryption.php';
+		require_once 'class-hezarfen-invoice-validator.php';
 		require_once 'Checkout.php';
 		require_once 'InvoiceInfo.php';
 		require_once 'class-my-account.php';
@@ -159,11 +163,24 @@ class Autoload {
 
 	/**
 	 * Initialize Contracts Integration
-	 * 
+	 *
 	 * @return void
 	 */
 	public function init_contracts_integration() {
 		new \Hezarfen\Inc\Contracts\Contracts_Integration();
+	}
+
+	/**
+	 * Initialize block-based checkout (WooCommerce Cart & Checkout Blocks) support.
+	 *
+	 * Registers the React checkout block, its Store API extension (for invoice/tax
+	 * fields) and the REST controller that serves district/neighborhood data.
+	 *
+	 * @return void
+	 */
+	public function init_checkout_blocks() {
+		require_once 'blocks/class-hezarfen-blocks-loader.php';
+		new \Hezarfen\Inc\Blocks\Hezarfen_Blocks_Loader();
 	}
 }
 
