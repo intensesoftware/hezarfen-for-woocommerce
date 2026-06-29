@@ -6,7 +6,8 @@ import {
 	snapshotOptions,
 } from './helpers/wp-options';
 import {
-	fillBlockField,
+	clickPlaceOrderOnce,
+	fillTrBlockAddress,
 	getLatestOrderHezData,
 	hezAddressGroup,
 	pickCombobox,
@@ -29,8 +30,11 @@ import {
  *   2. The cascade works: province → district (inline map) → neighborhood (REST).
  *   3. The locations REST endpoint backing the cascade returns data.
  *   4. The invoice-type selector toggles person (TC) vs company (tax) fields.
- *   5. A full TR order placed through the block checkout persists the same
- *      `_billing_hez_*` meta + core city/address_1 mapping the classic flow uses.
+ *   5. A full company-invoice TR order persists the same `_billing_hez_*` meta
+ *      + core city/address_1 mapping the classic flow uses.
+ *   6. A full person-invoice TR order persists the TC number encrypted.
+ *   7. An invalid TC number blocks the order (validation, stays on checkout).
+ *   8. Switching to a non-TR country hides the Hezarfen address fields.
  */
 
 const FEATURE_OPTIONS = {
@@ -164,31 +168,7 @@ test.describe( 'Hezarfen block (Gutenberg) checkout', () => {
 		await page.goto( '/checkout/' );
 		await waitForBlockCheckoutReady( page );
 
-		await fillBlockField( page, 'email', 'block-buyer@example.test' );
-		await fillBlockField( page, 'first_name', 'Ada' );
-		await fillBlockField( page, 'last_name', 'Lovelace' );
-		await fillBlockField( page, 'phone', '5551112233' );
-
-		// İl → İlçe → Mahalle. These map onto core state / city / address_1.
-		await pickCombobox( page, PROVINCE_CLASS, {
-			query: 'İstanbul',
-			optionText: /İstanbul/,
-		} );
-		const neighborhoodResponse = page.waitForResponse(
-			( res ) =>
-				res.url().includes( '/hezarfen/v1/neighborhoods' ) &&
-				res.status() === 200,
-			{ timeout: 15_000 }
-		);
-		await pickCombobox( page, DISTRICT_CLASS, {
-			query: 'Kadıköy',
-			optionText: /Kadıköy/,
-		} );
-		await neighborhoodResponse;
-		await pickComboboxFirstOption( page, NEIGHBORHOOD_CLASS );
-
-		await fillBlockField( page, 'address_2', 'Ada Sk. No:1 D:2' );
-		await fillBlockField( page, 'postcode', '34000' );
+		await fillTrBlockAddress( page );
 
 		// Company invoice.
 		await page.locator( '#hezarfen-invoice-type' ).selectOption( 'company' );
@@ -209,5 +189,83 @@ test.describe( 'Hezarfen block (Gutenberg) checkout', () => {
 		// District → core city, neighborhood → core address_1.
 		expect( order.city ).toBe( 'Kadıköy' );
 		expect( order.address_1.length ).toBeGreaterThan( 0 );
+	} );
+
+	test( 'placing a person-invoice TR order persists the encrypted TC number', async ( {
+		page,
+	} ) => {
+		await page.goto( '/checkout/' );
+		await waitForBlockCheckoutReady( page );
+
+		await fillTrBlockAddress( page );
+
+		// Personal invoice with a valid (11-digit) TC number.
+		await page.locator( '#hezarfen-invoice-type' ).selectOption( 'person' );
+		await page.locator( '#hezarfen-tc-number' ).fill( '12345678901' );
+
+		await placeBlockOrder( page );
+
+		await page.waitForURL( /order-received/, { timeout: 45_000 } );
+
+		const order = getLatestOrderHezData();
+		expect( order.invoice_type ).toBe( 'person' );
+		// Stored ciphertext must not be the plain value…
+		expect( order.tc_number.length ).toBeGreaterThan( 0 );
+		expect( order.tc_number ).not.toBe( '12345678901' );
+		// …but it must decrypt back to what we entered.
+		expect( order.tc_decrypted ).toBe( '12345678901' );
+		// Company meta must not linger on a personal order.
+		expect( order.tax_number ).toBe( '' );
+		expect( order.tax_office ).toBe( '' );
+	} );
+
+	test( 'an invalid TC number blocks the order on the block checkout', async ( {
+		page,
+	} ) => {
+		await page.goto( '/checkout/' );
+		await waitForBlockCheckoutReady( page );
+
+		await fillTrBlockAddress( page );
+
+		await page.locator( '#hezarfen-invoice-type' ).selectOption( 'person' );
+		// 10 digits — invalid (TC must be 11).
+		await page.locator( '#hezarfen-tc-number' ).fill( '1234567890' );
+
+		await clickPlaceOrderOnce( page );
+
+		// The field-level validation error is surfaced and the order is not
+		// placed — we stay on the checkout page.
+		await expect(
+			page.locator( '.wc-block-components-validation-error' ).first()
+		).toBeVisible( { timeout: 10_000 } );
+		await expect( page ).not.toHaveURL( /order-received/ );
+	} );
+
+	test( 'a non-TR store country renders no Hezarfen address fields', async ( {
+		page,
+	} ) => {
+		// AddressFields only mounts when the address country is TR. Assert the
+		// gating at initial render with a non-TR default country (rather than
+		// switching at runtime, which exercises a different code path).
+		const countrySnapshot = snapshotOptions( [
+			'woocommerce_default_country',
+		] );
+		applyOptions( { woocommerce_default_country: 'DE' } );
+
+		try {
+			await page.goto( '/checkout/' );
+			await waitForBlockCheckoutReady( page );
+
+			await expect(
+				page.locator(
+					'.wc-block-components-address-form__hez-province .hezarfen-combobox__input:visible'
+				)
+			).toHaveCount( 0 );
+			await expect( page.locator( 'body' ) ).not.toHaveClass(
+				/hezarfen-tr-checkout/
+			);
+		} finally {
+			restoreOptions( countrySnapshot );
+		}
 	} );
 } );

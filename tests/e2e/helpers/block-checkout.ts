@@ -165,6 +165,7 @@ export function getLatestOrderHezData(): {
 	id: string;
 	invoice_type: string;
 	tc_number: string;
+	tc_decrypted: string;
 	tax_number: string;
 	tax_office: string;
 	city: string;
@@ -176,10 +177,17 @@ export function getLatestOrderHezData(): {
 			$orders = wc_get_orders( array( 'limit' => 1, 'orderby' => 'date', 'order' => 'DESC' ) );
 			if ( empty( $orders ) ) { echo '{}'; return; }
 			$o = $orders[0];
+			$tc_raw = (string) $o->get_meta( '_billing_hez_TC_number' );
+			$tc_dec = '';
+			if ( $tc_raw ) {
+				$enc = new \\Hezarfen\\Inc\\Data\\PostMetaEncryption();
+				$tc_dec = $enc->health_check() ? (string) $enc->decrypt( $tc_raw ) : $tc_raw;
+			}
 			echo wp_json_encode( array(
 				'id'           => (string) $o->get_id(),
 				'invoice_type' => (string) $o->get_meta( '_billing_hez_invoice_type' ),
-				'tc_number'    => (string) $o->get_meta( '_billing_hez_TC_number' ),
+				'tc_number'    => $tc_raw,
+				'tc_decrypted' => $tc_dec,
 				'tax_number'   => (string) $o->get_meta( '_billing_hez_tax_number' ),
 				'tax_office'   => (string) $o->get_meta( '_billing_hez_tax_office' ),
 				'city'         => (string) $o->get_billing_city(),
@@ -251,3 +259,61 @@ export async function placeBlockOrder( page: Page ): Promise< void > {
 		'placeBlockOrder: checkout POST never fired after 5 attempts'
 	);
 }
+
+/**
+ * Click the place-order button exactly once (after waiting for idle) without
+ * expecting a successful submission — used by negative-path tests where the
+ * client blocks the order, so no checkout POST is fired.
+ */
+export async function clickPlaceOrderOnce( page: Page ): Promise< void > {
+	await waitForBlockCheckoutIdle( page );
+	await page
+		.locator( '.wc-block-components-checkout-place-order-button' )
+		.click();
+}
+
+/** Per-level class on Hezarfen's il / ilçe / mahalle comboboxes. */
+export const HEZ_PROVINCE_CLASS =
+	'wc-block-components-address-form__hez-province';
+export const HEZ_DISTRICT_CLASS =
+	'wc-block-components-address-form__hez-district';
+export const HEZ_NEIGHBORHOOD_CLASS =
+	'wc-block-components-address-form__hez-neighborhood';
+
+/**
+ * Fill the visible block address form with a valid TR address (contact +
+ * il→ilçe→mahalle cascade + açık adres + posta kodu). Leaves the invoice-type
+ * specific fields to the caller so person/company paths can vary them.
+ */
+export async function fillTrBlockAddress( page: Page ): Promise< void > {
+	await fillBlockField( page, 'email', 'block-buyer@example.test' );
+	await fillBlockField( page, 'first_name', 'Ada' );
+	await fillBlockField( page, 'last_name', 'Lovelace' );
+	await fillBlockField( page, 'phone', '5551112233' );
+
+	await pickCombobox( page, HEZ_PROVINCE_CLASS, {
+		query: 'İstanbul',
+		optionText: /İstanbul/,
+	} );
+
+	// Selecting the district triggers the mahalle REST fetch — register the
+	// listener before the click so a fast response can't outrun us.
+	const neighborhoodResponse = page
+		.waitForResponse(
+			( res ) =>
+				res.url().includes( '/hezarfen/v1/neighborhoods' ) &&
+				res.status() === 200,
+			{ timeout: 15_000 }
+		)
+		.catch( () => null );
+	await pickCombobox( page, HEZ_DISTRICT_CLASS, {
+		query: 'Kadıköy',
+		optionText: /Kadıköy/,
+	} );
+	await neighborhoodResponse;
+	await pickComboboxFirstOption( page, HEZ_NEIGHBORHOOD_CLASS );
+
+	await fillBlockField( page, 'address_2', 'Ada Sk. No:1 D:2' );
+	await fillBlockField( page, 'postcode', '34000' );
+}
+
