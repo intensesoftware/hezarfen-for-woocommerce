@@ -60,12 +60,20 @@ class Hezarfen_Blocks_Integration implements IntegrationInterface {
 			true
 		);
 
-		if ( file_exists( $build_path . 'style-index.css' ) ) {
+		$style_file = $build_path . 'style-index.css';
+
+		if ( file_exists( $style_file ) ) {
+			// Version the stylesheet by its own file mtime rather than the JS
+			// asset hash: the compiled CSS can change (e.g. the legacy-checkout
+			// fallback) without the JS bundle changing, and the shared asset hash
+			// would then leave browsers on a stale cached stylesheet.
+			$style_version = (string) filemtime( $style_file );
+
 			wp_register_style(
 				self::STYLE_HANDLE,
 				$build_url . 'style-index.css',
 				array(),
-				$asset['version']
+				'' !== $style_version ? $style_version : $asset['version']
 			);
 			wp_enqueue_style( self::STYLE_HANDLE );
 		}

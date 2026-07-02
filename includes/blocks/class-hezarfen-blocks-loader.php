@@ -65,6 +65,36 @@ class Hezarfen_Blocks_Loader {
 		// a no-op for every block except the three checkout inner blocks, which
 		// only exist on the block-based checkout.
 		add_filter( 'render_block', array( $this, 'inject_checkout_block_placeholders' ), 10, 2 );
+
+		// Enable the legacy field-styling fallback on WooCommerce 8.3–9.1, where
+		// the block checkout leaves the `wc-blocks-components-select` component
+		// unstyled and our İl/İlçe/Mahalle + Invoice Type fields would otherwise
+		// render cramped. See assets/blocks/checkout/src/style.scss.
+		add_filter( 'body_class', array( $this, 'maybe_add_legacy_body_class' ) );
+	}
+
+	/**
+	 * Adds the `hezarfen-legacy-wc-checkout` body class on the checkout page when
+	 * the running WooCommerce is between 8.3 (block fields supported) and 9.2
+	 * (WooCommerce styles the select fields itself). Outside that range the class
+	 * is not added, so the fallback CSS never affects 9.2+.
+	 *
+	 * @param string[] $classes Body classes.
+	 *
+	 * @return string[]
+	 */
+	public function maybe_add_legacy_body_class( $classes ) {
+		if ( ! function_exists( 'is_checkout' ) || ! is_checkout() ) {
+			return $classes;
+		}
+
+		$version = defined( 'WC_VERSION' ) ? WC_VERSION : '0';
+
+		if ( version_compare( $version, '8.3', '>=' ) && version_compare( $version, '9.2', '<' ) ) {
+			$classes[] = 'hezarfen-legacy-wc-checkout';
+		}
+
+		return $classes;
 	}
 
 	/**

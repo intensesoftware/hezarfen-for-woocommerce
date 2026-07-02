@@ -83,3 +83,57 @@ body.hezarfen-tr-checkout {
 		color: #767676;
 	}
 }
+
+/**
+ * Legacy WooCommerce (8.3–9.1) fallback.
+ *
+ * Our İl / İlçe / Mahalle and Invoice Type fields reuse WooCommerce's own
+ * `.wc-blocks-components-select` markup so they match the native checkout fields
+ * for free. WooCommerce only shipped full styling for that component (full-width
+ * field + label above the control) in 9.2, though — on 8.3–9.1 the block
+ * checkout leaves it unstyled, so our select-based fields render as tiny,
+ * cramped inline controls. These rules restore a native-looking field on those
+ * versions only. They are scoped to the `hezarfen-legacy-wc-checkout` body
+ * class, which the plugin adds exclusively when WooCommerce is < 9.2, so 9.2+
+ * (where WooCommerce styles the fields itself) is never touched.
+ *
+ * The `.wc-block-components-text-input` fields (T.C. no, tax number/office,
+ * company title) are already styled by WooCommerce on 8.3, so they are left
+ * alone here.
+ */
+body.hezarfen-legacy-wc-checkout {
+	.hezarfen-checkout-fields .wc-blocks-components-select {
+		display: block;
+		width: 100%;
+		flex: 0 0 100%;
+		margin: 0 0 16px;
+	}
+
+	.hezarfen-checkout-fields .wc-blocks-components-select__container {
+		display: block;
+	}
+
+	.hezarfen-checkout-fields .wc-blocks-components-select__label {
+		position: static;
+		display: block;
+		margin: 0 0 4px;
+		padding: 0;
+		font-size: 0.875em;
+		line-height: 1.5;
+		transform: none;
+	}
+
+	.hezarfen-checkout-fields .wc-blocks-components-select__select {
+		display: block;
+		width: 100%;
+		min-height: 48px;
+		padding: 12px 16px;
+		font-size: 1em;
+		line-height: 1.5;
+		color: inherit;
+		background: #fff;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		box-sizing: border-box;
+	}
+}
