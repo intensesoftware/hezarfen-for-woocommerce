@@ -126,7 +126,7 @@ body.hezarfen-legacy-wc-checkout {
 	// the label stays in the floated position (like the native Country select).
 	.hezarfen-checkout-fields .wc-blocks-components-select__label {
 		position: absolute;
-		top: 0.55em;
+		top: 0.4em;
 		left: 1em;
 		margin: 0;
 		padding: 0 0.15em;
@@ -134,22 +134,38 @@ body.hezarfen-legacy-wc-checkout {
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		font-size: 0.75em;
+		// Inherit the theme's font + text colour (at reduced opacity) so the
+		// label matches the native floated labels instead of hard-coding a font
+		// or colour that only fits one theme.
+		font-family: inherit;
+		font-weight: inherit;
+		font-size: 0.85em;
 		line-height: 1.3;
-		color: rgba(0, 0, 0, 0.5);
+		letter-spacing: inherit;
+		color: inherit;
+		opacity: 0.5;
 		pointer-events: none;
 		transform: none;
 	}
 
-	// Leave room at the top of the control for the floated label.
+	// Roughly symmetric padding so the value sits vertically centred like the
+	// native fields, with the floated label overlapping the top of the control
+	// (rather than pushing the value down).
 	.hezarfen-checkout-fields .wc-blocks-components-select__select {
 		display: block;
 		width: 100%;
 		height: auto;
-		min-height: 3.4em;
-		padding: 1.6em 1em 0.5em;
+		min-height: 0;
+		padding: 1.1em 1em 0.9em;
+		// Form controls don't inherit the theme's font by default (they fall back
+		// to Arial); pull it in so the value text matches the native fields. The
+		// value weight tracks the native text inputs (normal), not the lighter
+		// label weight it would otherwise inherit.
+		font-family: inherit;
+		font-weight: normal;
 		font-size: 1em;
-		line-height: 1.5;
+		line-height: 1.4;
+		letter-spacing: inherit;
 		color: inherit;
 		background: #fff;
 		border: 1px solid #8d96a0;
