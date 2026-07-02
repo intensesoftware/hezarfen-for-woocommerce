@@ -127,9 +127,9 @@ body.hezarfen-legacy-wc-checkout {
 	.hezarfen-checkout-fields .wc-blocks-components-select__label {
 		position: absolute;
 		top: 0.5em;
-		left: 1em;
+		left: 0.6em;
 		margin: 0;
-		padding: 0 0.15em;
+		padding: 0;
 		max-width: calc(100% - 2em);
 		overflow: hidden;
 		white-space: nowrap;
@@ -156,7 +156,7 @@ body.hezarfen-legacy-wc-checkout {
 		width: 100%;
 		height: auto;
 		min-height: 3.4em;
-		padding: 1.5em 1em 0.5em;
+		padding: 1.5em 0.5em 0.5em;
 		// Form controls don't inherit the theme's font by default (they fall back
 		// to Arial); pull it in so the value text matches the native fields. The
 		// value weight tracks the native text inputs (normal), not the lighter
