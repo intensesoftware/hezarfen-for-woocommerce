@@ -126,7 +126,7 @@ body.hezarfen-legacy-wc-checkout {
 	// the label stays in the floated position (like the native Country select).
 	.hezarfen-checkout-fields .wc-blocks-components-select__label {
 		position: absolute;
-		top: 0.4em;
+		top: 0.5em;
 		left: 1em;
 		margin: 0;
 		padding: 0 0.15em;
@@ -155,8 +155,8 @@ body.hezarfen-legacy-wc-checkout {
 		display: block;
 		width: 100%;
 		height: auto;
-		min-height: 0;
-		padding: 1.1em 1em 0.9em;
+		min-height: 3.4em;
+		padding: 1.5em 1em 0.5em;
 		// Form controls don't inherit the theme's font by default (they fall back
 		// to Arial); pull it in so the value text matches the native fields. The
 		// value weight tracks the native text inputs (normal), not the lighter
@@ -164,7 +164,10 @@ body.hezarfen-legacy-wc-checkout {
 		font-family: inherit;
 		font-weight: normal;
 		font-size: 1em;
-		line-height: 1.4;
+		// Match the native filled input: a taller top padding drops the value into
+		// the lower-middle of the control, leaving the floated label a clear band
+		// at the top (no overlap).
+		line-height: 1.1;
 		letter-spacing: inherit;
 		color: inherit;
 		background: #fff;
