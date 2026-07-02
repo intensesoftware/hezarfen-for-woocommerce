@@ -34,11 +34,21 @@ const InvoiceFields = () => {
 	const [ taxNumber, setTaxNumber ] = useState( '' );
 	const [ taxOffice, setTaxOffice ] = useState( '' );
 
-	const { setExtensionData } = useDispatch( CHECKOUT_STORE_KEY );
+	const checkoutDispatch = useDispatch( CHECKOUT_STORE_KEY );
+	// `setExtensionData` is the public action on modern WooCommerce, but on
+	// WooCommerce 8.3 (our minimum) it is only exposed as the internal
+	// `__internalSetExtensionData`. Support both so the block doesn't crash with
+	// "setExtensionData is not a function" on 8.3.x.
+	const setExtensionData =
+		checkoutDispatch.setExtensionData ||
+		checkoutDispatch.__internalSetExtensionData;
 	const { setBillingAddress } = useDispatch( CART_STORE_KEY );
 
 	// Keep the server-bound extension data in sync with the local state.
 	useEffect( () => {
+		if ( ! setExtensionData ) {
+			return;
+		}
 		setExtensionData( 'hezarfen', {
 			invoice_type: invoiceType,
 			tc_number: invoiceType === 'person' ? tcNumber : '',
