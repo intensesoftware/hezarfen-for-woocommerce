@@ -106,7 +106,14 @@ body.hezarfen-legacy-wc-checkout {
 		display: block;
 		width: 100%;
 		flex: 0 0 100%;
-		margin: 0 0 16px;
+		margin: 0;
+	}
+
+	// The address form spaces each field with a top margin (not a gap), so match
+	// that model — otherwise the first Hezarfen field sits flush against the row
+	// above it and the last one double-spaces against the next native field.
+	.hezarfen-checkout-fields--address .wc-blocks-components-select {
+		margin-top: 16px;
 	}
 
 	.hezarfen-checkout-fields .wc-blocks-components-select__container {
