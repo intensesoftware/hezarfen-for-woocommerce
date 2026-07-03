@@ -167,3 +167,69 @@ jobs:
           name: playwright-test-results-php${{ matrix.php-version }}
           path: tests/e2e/test-results
           retention-days: 14
+
+  wc-version-matrix:
+    # Cross-WooCommerce-version coverage for the block checkout: swaps WooCommerce
+    # to 8.2 / 8.3 / 10.9 in place and runs the checkout flow against each. This
+    # is the opt-in `checkout-block-versions.spec.ts`, kept out of the default
+    # suite because it dirties the wp-env instance — a dedicated, fresh job runs
+    # it once and throws the environment away afterwards.
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
+
+      - name: Install composer deps (no-dev)
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Install npm deps
+        run: npm ci
+
+      - name: Build admin bundles
+        run: npm run build
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Start wp-env
+        run: npx wp-env start
+
+      - name: Run WooCommerce version matrix
+        env:
+          HEZARFEN_E2E_VERSION_MATRIX: '1'
+          HEZARFEN_E2E_USE_WP_ENV: '1'
+          HEZARFEN_E2E_BASE_URL: http://localhost:8888
+        run: npx playwright test --config=tests/e2e/playwright.config.ts checkout-block-versions.spec.ts
+
+      - name: Stop wp-env
+        if: always()
+        run: npx wp-env stop || true
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-wc-versions
+          path: tests/e2e/playwright-report
+          retention-days: 14
+
+      - name: Upload test results (failures)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results-wc-versions
+          path: tests/e2e/test-results
+          retention-days: 14
