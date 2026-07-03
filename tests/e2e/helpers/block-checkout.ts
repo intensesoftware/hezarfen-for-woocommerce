@@ -173,6 +173,7 @@ export function getLatestOrderHezData(): {
 	tc_decrypted: string;
 	tax_number: string;
 	tax_office: string;
+	company: string;
 	city: string;
 	address_1: string;
 } {
@@ -195,6 +196,7 @@ export function getLatestOrderHezData(): {
 				'tc_decrypted' => $tc_dec,
 				'tax_number'   => (string) $o->get_meta( '_billing_hez_tax_number' ),
 				'tax_office'   => (string) $o->get_meta( '_billing_hez_tax_office' ),
+				'company'      => (string) $o->get_billing_company(),
 				'city'         => (string) $o->get_billing_city(),
 				'address_1'    => (string) $o->get_billing_address_1(),
 			) );

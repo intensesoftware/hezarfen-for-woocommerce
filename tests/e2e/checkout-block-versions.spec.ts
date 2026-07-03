@@ -12,6 +12,7 @@ import {
 	snapshotOptions,
 } from './helpers/wp-options';
 import { wp, wpBash } from './helpers/wp-cli';
+import { loginAsAdmin } from './helpers/auth';
 import {
 	fillTrBlockAddress,
 	getLatestOrderHezData,
@@ -268,5 +269,44 @@ for ( const scenario of RUN_MATRIX ? SCENARIOS : [] ) {
 				restoreOptions( disabledSnapshot );
 			}
 		} );
+
+		// The "upgrade WooCommerce" compat notice only fires below 8.3.
+		if ( scenario.mode === 'classic' ) {
+			test( 'shows the compat notice in wp-admin when the checkout uses the block', async ( {
+				page,
+			} ) => {
+				// The notice fires when WC < 8.3 *and* the checkout page uses the
+				// block; `has_block` is all it checks, so a bare block placeholder
+				// is enough. Restore the classic content afterwards.
+				const checkoutId = wp( [
+					'option',
+					'get',
+					'woocommerce_checkout_page_id',
+				] ).trim();
+				wp( [
+					'post',
+					'update',
+					checkoutId,
+					'--post_content=<!-- wp:woocommerce/checkout /-->',
+				] );
+
+				try {
+					await loginAsAdmin( page );
+					await page.goto( '/wp-admin/' );
+
+					const notice = page.locator( '.notice-warning', {
+						hasText: 'Hezarfen',
+					} );
+					await expect( notice ).toBeVisible();
+					// Names the minimum version and links to the how-to video.
+					await expect( notice ).toContainText( /8\.3/ );
+					await expect(
+						notice.locator( 'a[href*="youtu"]' )
+					).toBeVisible();
+				} finally {
+					restoreCheckoutToClassic();
+				}
+			} );
+		}
 	} );
 }

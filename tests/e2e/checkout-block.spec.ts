@@ -296,4 +296,73 @@ test.describe( 'Hezarfen block (Gutenberg) checkout', () => {
 			/hezarfen-tr-checkout/
 		);
 	} );
+
+	test( 'the Store API rejects an invalid tax number server-side', async ( {
+		page,
+	} ) => {
+		await page.goto( '/checkout/' );
+		await waitForBlockCheckoutReady( page );
+
+		await fillTrBlockAddress( page );
+
+		// Fill a *valid* company invoice so the client-side validation passes and
+		// the request is actually sent.
+		await page.locator( '#hezarfen-invoice-type' ).selectOption( 'company' );
+		await page
+			.locator( '#hezarfen-company-title' )
+			.fill( 'Hezarfen Test A.Ş.' );
+		await page.locator( '#hezarfen-tax-number' ).fill( '1234567890' );
+		await page.locator( '#hezarfen-tax-office' ).fill( 'Kadıköy' );
+
+		// Tamper the checkout request in flight so the value that reaches the
+		// server is invalid — this exercises Hezarfen_Store_API's own validation,
+		// which the client would otherwise never let us reach.
+		await page.route( /\/wc\/store\/v1\/checkout/, async ( route ) => {
+			if ( route.request().method() !== 'POST' ) {
+				await route.continue();
+				return;
+			}
+			const body = route.request().postDataJSON();
+			if ( body?.extensions?.hezarfen ) {
+				body.extensions.hezarfen.tax_number = 'not-a-number';
+			}
+			await route.continue( { postData: JSON.stringify( body ) } );
+		} );
+
+		const responsePromise = page.waitForResponse(
+			( r ) =>
+				/\/wc\/store\/v1\/checkout/.test( r.url() ) &&
+				r.request().method() === 'POST'
+		);
+		await placeBlockOrder( page );
+		const response = await responsePromise;
+
+		expect( response.status() ).toBe( 400 );
+		const errorBody = await response.json();
+		expect( errorBody.code ).toBe( 'hezarfen_tax_number_invalid' );
+		await expect( page ).not.toHaveURL( /order-received/ );
+	} );
+
+	test( 'renders the Hezarfen fields on the billing form when shipping to a different address', async ( {
+		page,
+	} ) => {
+		await page.goto( '/checkout/' );
+		await waitForBlockCheckoutReady( page );
+
+		// With "use same address" on, only the shipping form carries the fields.
+		await expect(
+			page.locator( '#hezarfen-shipping-province' )
+		).toBeVisible();
+		await expect(
+			page.locator( '#hezarfen-billing-province' )
+		).toHaveCount( 0 );
+
+		// Unchecking it reveals a separate billing address form, which must get
+		// its own Hezarfen fields (the block injects into the billing block too).
+		await page.getByLabel( /use same address for billing/i ).uncheck();
+
+		await expect(
+			page.locator( '#hezarfen-billing-province' )
+		).toBeVisible();
+	} );
 } );
