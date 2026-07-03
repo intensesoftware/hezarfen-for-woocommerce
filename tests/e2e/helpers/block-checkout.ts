@@ -14,15 +14,20 @@ import { wp } from './wp-cli';
  * to. We restore exactly this so the block spec leaves the page the way every
  * other (classic) spec expects to find it.
  */
+// Core `wp:shortcode` block wrapping the classic checkout shortcode. Unlike
+// `wp:woocommerce/classic-shortcode`, this renders on every WooCommerce version
+// (the WooCommerce classic-shortcode block only exists on newer releases).
 const CLASSIC_CHECKOUT_CONTENT =
-	'<!-- wp:woocommerce/classic-shortcode {"shortcode":"checkout","className":"wc-block-checkout"} /-->';
+	'<!-- wp:shortcode -->[woocommerce_checkout]<!-- /wp:shortcode -->';
 
 /**
  * Swap the /checkout/ page over to the WooCommerce block checkout. We reuse
  * WooCommerce's own canonical block markup (the same content `WC_Install`
  * writes for a fresh install) via reflection, so the page always carries every
  * inner block — including the contact-information / shipping-address /
- * billing-address blocks Hezarfen injects its fields into.
+ * billing-address blocks Hezarfen injects its fields into. Only used on
+ * WooCommerce 8.3+, where that reflection method exists (< 8.3 uses the classic
+ * checkout).
  */
 export function setCheckoutToBlock(): void {
 	const result = wp( [
