@@ -81,6 +81,41 @@ class Hezarfen_Blocks_Loader {
 		// never affects the classic checkout.
 		add_filter( 'option_woocommerce_checkout_company_field', array( $this, 'ensure_company_field_available' ) );
 		add_filter( 'default_option_woocommerce_checkout_company_field', array( $this, 'ensure_company_field_available' ) );
+
+		// Relabel WooCommerce's company field to "Title" for Turkey, matching the
+		// classic checkout. The block reads its field labels from the country
+		// locale, so this is the same mechanism the classic checkout uses — no
+		// hard-coded string override. Scoped to the checkout page with tax fields
+		// on, so it doesn't leak to other address forms or non-Hezarfen stores.
+		add_filter( 'woocommerce_get_country_locale', array( $this, 'relabel_tr_company_field' ) );
+	}
+
+	/**
+	 * Labels the Turkish billing company field as "Title" (Ünvan) when Hezarfen's
+	 * invoice/tax fields are on and we're on the checkout — mirroring the classic
+	 * checkout's company/title field.
+	 *
+	 * @param array<string, mixed> $locale WooCommerce country locale settings.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function relabel_tr_company_field( $locale ) {
+		if (
+			! isset( $locale['TR'] )
+			|| ! function_exists( 'is_checkout' )
+			|| ! is_checkout()
+			|| ! class_exists( '\Hezarfen\Inc\Helper' )
+			|| ! \Hezarfen\Inc\Helper::is_show_tax_fields()
+		) {
+			return $locale;
+		}
+
+		$company          = isset( $locale['TR']['company'] ) ? (array) $locale['TR']['company'] : array();
+		$company['label'] = __( 'Title', 'hezarfen-for-woocommerce' );
+
+		$locale['TR']['company'] = $company;
+
+		return $locale;
 	}
 
 	/**

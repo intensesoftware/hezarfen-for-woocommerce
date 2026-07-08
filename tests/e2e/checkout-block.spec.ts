@@ -164,6 +164,13 @@ test.describe( 'Hezarfen block (Gutenberg) checkout', () => {
 		await expect( page.locator( '#hezarfen-tax-number' ) ).toBeVisible();
 		await expect( page.locator( '#hezarfen-tax-office' ) ).toBeVisible();
 		await expect( page.locator( '#shipping-company' ) ).toBeVisible();
+		// The native company field is relabelled "Title" for TR, like classic.
+		await expect(
+			page
+				.locator( '#shipping-company' )
+				.locator( 'xpath=ancestor::*[contains(@class,"wc-block-components-text-input")]//label' )
+				.first()
+		).toContainText( 'Title' );
 	} );
 
 	test( 'placing a company-invoice TR order persists Hezarfen meta', async ( {
