@@ -149,18 +149,21 @@ test.describe( 'Hezarfen block (Gutenberg) checkout', () => {
 		const invoiceType = page.locator( '#hezarfen-invoice-type' );
 		await expect( invoiceType ).toBeVisible();
 
-		// Person → TC field visible, company fields absent.
+		// Person → TC field visible, company fields absent, and WooCommerce's own
+		// company field hidden (like the classic checkout).
 		await invoiceType.selectOption( 'person' );
 		await expect( page.locator( '#hezarfen-tc-number' ) ).toBeVisible();
 		await expect( page.locator( '#hezarfen-tax-number' ) ).toHaveCount( 0 );
 		await expect( page.locator( '#hezarfen-tax-office' ) ).toHaveCount( 0 );
+		await expect( page.locator( '#shipping-company' ) ).toBeHidden();
 
-		// Company → TC absent, tax number + tax office visible. (The company name
-		// uses WooCommerce's own billing company field, not a Hezarfen field.)
+		// Company → TC absent, tax number + tax office visible, and the native
+		// company field revealed. (The company name uses WooCommerce's own field.)
 		await invoiceType.selectOption( 'company' );
 		await expect( page.locator( '#hezarfen-tc-number' ) ).toHaveCount( 0 );
 		await expect( page.locator( '#hezarfen-tax-number' ) ).toBeVisible();
 		await expect( page.locator( '#hezarfen-tax-office' ) ).toBeVisible();
+		await expect( page.locator( '#shipping-company' ) ).toBeVisible();
 	} );
 
 	test( 'placing a company-invoice TR order persists Hezarfen meta', async ( {
@@ -171,12 +174,10 @@ test.describe( 'Hezarfen block (Gutenberg) checkout', () => {
 
 		await fillTrBlockAddress( page );
 
-		// Company name goes in WooCommerce's own company field (Hezarfen makes it
-		// available on the block checkout when tax fields are on).
-		await page.locator( '#shipping-company' ).fill( 'Hezarfen Test A.Ş.' );
-
-		// Company invoice.
+		// Company invoice — this reveals WooCommerce's own company field (shown
+		// only for company invoices, like the classic checkout).
 		await page.locator( '#hezarfen-invoice-type' ).selectOption( 'company' );
+		await page.locator( '#shipping-company' ).fill( 'Hezarfen Test A.Ş.' );
 		await page.locator( '#hezarfen-tax-number' ).fill( '1234567890' );
 		await page.locator( '#hezarfen-tax-office' ).fill( 'Kadıköy' );
 

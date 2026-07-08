@@ -34,6 +34,22 @@ body.hezarfen-tr-checkout {
 }
 
 /**
+ * Match the classic checkout: WooCommerce's own company field is shown only for
+ * a company invoice. Hezarfen makes the field available when its tax fields are
+ * on; here we hide it by default and reveal it for the "company" invoice type.
+ * Everything is scoped to the `hezarfen-tax-fields` body class, so stores that
+ * use the company field independently of Hezarfen are never affected.
+ */
+body.hezarfen-tax-fields .wc-block-components-address-form__company {
+	display: none;
+}
+
+body.hezarfen-tax-fields.hezarfen-invoice-company
+	.wc-block-components-address-form__company {
+	display: block;
+}
+
+/**
  * Searchable combobox. The input reuses WooCommerce's select look; the filtered
  * list is a custom dropdown anchored to the field.
  */

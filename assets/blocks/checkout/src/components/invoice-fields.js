@@ -51,6 +51,25 @@ const InvoiceFields = () => {
 		} );
 	}, [ invoiceType, tcNumber, taxNumber, taxOffice, setExtensionData ] );
 
+	// Mirror the classic checkout, where WooCommerce's own company field is shown
+	// only for a company invoice. We surface the invoice type on the body so the
+	// stylesheet can reveal/hide the native company field accordingly (scoped to
+	// when Hezarfen's tax fields are active, so non-Hezarfen stores are untouched).
+	useEffect( () => {
+		const active = settings.taxFieldsEnabled;
+		document.body.classList.toggle( 'hezarfen-tax-fields', active );
+		document.body.classList.toggle(
+			'hezarfen-invoice-company',
+			active && invoiceType === 'company'
+		);
+		return () => {
+			document.body.classList.remove(
+				'hezarfen-tax-fields',
+				'hezarfen-invoice-company'
+			);
+		};
+	}, [ invoiceType ] );
+
 	if ( ! settings.taxFieldsEnabled ) {
 		return null;
 	}
