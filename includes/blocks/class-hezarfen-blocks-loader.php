@@ -71,6 +71,40 @@ class Hezarfen_Blocks_Loader {
 		// unstyled and our İl/İlçe/Mahalle + Invoice Type fields would otherwise
 		// render cramped. See assets/blocks/checkout/src/style.scss.
 		add_filter( 'body_class', array( $this, 'maybe_add_legacy_body_class' ) );
+
+		// A company invoice needs a company name. Rather than shipping our own
+		// company field (which the block's shipping→billing sync would wipe under
+		// "use same address"), reuse WooCommerce's native billing company field —
+		// exactly like the classic checkout. On the block checkout that field is
+		// hidden by default, so make it available whenever the invoice/tax fields
+		// are enabled. `woocommerce_checkout_company_field` is block-only, so this
+		// never affects the classic checkout.
+		add_filter( 'option_woocommerce_checkout_company_field', array( $this, 'ensure_company_field_available' ) );
+		add_filter( 'default_option_woocommerce_checkout_company_field', array( $this, 'ensure_company_field_available' ) );
+	}
+
+	/**
+	 * Ensures WooCommerce's block-checkout company field is at least optional when
+	 * Hezarfen's invoice/tax fields are on, so a company invoice's title can be
+	 * captured through the native field. Never downgrades a merchant's 'required'.
+	 *
+	 * @param mixed $value Stored/default option value.
+	 *
+	 * @return mixed
+	 */
+	public function ensure_company_field_available( $value ) {
+		if ( 'required' === $value ) {
+			return $value;
+		}
+
+		if (
+			class_exists( '\Hezarfen\Inc\Helper' )
+			&& \Hezarfen\Inc\Helper::is_show_tax_fields()
+		) {
+			return 'optional';
+		}
+
+		return $value;
 	}
 
 	/**

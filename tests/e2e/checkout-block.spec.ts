@@ -155,10 +155,10 @@ test.describe( 'Hezarfen block (Gutenberg) checkout', () => {
 		await expect( page.locator( '#hezarfen-tax-number' ) ).toHaveCount( 0 );
 		await expect( page.locator( '#hezarfen-tax-office' ) ).toHaveCount( 0 );
 
-		// Company → TC absent, company title + tax number + tax office visible.
+		// Company → TC absent, tax number + tax office visible. (The company name
+		// uses WooCommerce's own billing company field, not a Hezarfen field.)
 		await invoiceType.selectOption( 'company' );
 		await expect( page.locator( '#hezarfen-tc-number' ) ).toHaveCount( 0 );
-		await expect( page.locator( '#hezarfen-company-title' ) ).toBeVisible();
 		await expect( page.locator( '#hezarfen-tax-number' ) ).toBeVisible();
 		await expect( page.locator( '#hezarfen-tax-office' ) ).toBeVisible();
 	} );
@@ -171,11 +171,12 @@ test.describe( 'Hezarfen block (Gutenberg) checkout', () => {
 
 		await fillTrBlockAddress( page );
 
+		// Company name goes in WooCommerce's own company field (Hezarfen makes it
+		// available on the block checkout when tax fields are on).
+		await page.locator( '#shipping-company' ).fill( 'Hezarfen Test A.Ş.' );
+
 		// Company invoice.
 		await page.locator( '#hezarfen-invoice-type' ).selectOption( 'company' );
-		await page
-			.locator( '#hezarfen-company-title' )
-			.fill( 'Hezarfen Test A.Ş.' );
 		await page.locator( '#hezarfen-tax-number' ).fill( '1234567890' );
 		await page.locator( '#hezarfen-tax-office' ).fill( 'Kadıköy' );
 
@@ -187,6 +188,8 @@ test.describe( 'Hezarfen block (Gutenberg) checkout', () => {
 		expect( order.invoice_type ).toBe( 'company' );
 		expect( order.tax_number ).toBe( '1234567890' );
 		expect( order.tax_office ).toBe( 'Kadıköy' );
+		// Company name persisted natively (survives the ship→bill sync).
+		expect( order.company ).toBe( 'Hezarfen Test A.Ş.' );
 		// District → core city, neighborhood → core address_1.
 		expect( order.city ).toBe( 'Kadıköy' );
 		expect( order.address_1.length ).toBeGreaterThan( 0 );
@@ -308,9 +311,6 @@ test.describe( 'Hezarfen block (Gutenberg) checkout', () => {
 		// Fill a *valid* company invoice so the client-side validation passes and
 		// the request is actually sent.
 		await page.locator( '#hezarfen-invoice-type' ).selectOption( 'company' );
-		await page
-			.locator( '#hezarfen-company-title' )
-			.fill( 'Hezarfen Test A.Ş.' );
 		await page.locator( '#hezarfen-tax-number' ).fill( '1234567890' );
 		await page.locator( '#hezarfen-tax-office' ).fill( 'Kadıköy' );
 

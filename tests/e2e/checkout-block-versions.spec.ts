@@ -172,9 +172,6 @@ for ( const scenario of RUN_MATRIX ? SCENARIOS : [] ) {
 				await page
 					.locator( '#hezarfen-invoice-type' )
 					.selectOption( 'company' );
-				await page
-					.locator( '#hezarfen-company-title' )
-					.fill( 'Hezarfen Test A.Ş.' );
 				await page.locator( '#hezarfen-tax-number' ).fill( '1234567890' );
 				await page.locator( '#hezarfen-tax-office' ).fill( 'Kadıköy' );
 

@@ -225,8 +225,6 @@ class Hezarfen_Blocks_Integration implements IntegrationInterface {
 			'invoiceCompany'  => __( 'Company', 'hezarfen-for-woocommerce' ),
 			'tcNumber'        => __( 'T.C. Identity Number', 'hezarfen-for-woocommerce' ),
 			'tcPlaceholder'   => __( 'Enter T.C. Identity Number', 'hezarfen-for-woocommerce' ),
-			'companyTitle'    => __( 'Title', 'hezarfen-for-woocommerce' ),
-			'companyPlaceholder' => __( 'Enter invoice title', 'hezarfen-for-woocommerce' ),
 			'taxNumber'       => __( 'Tax Number', 'hezarfen-for-woocommerce' ),
 			'taxNumberPlaceholder' => __( 'Enter tax number', 'hezarfen-for-woocommerce' ),
 			'taxOffice'       => __( 'Tax Office', 'hezarfen-for-woocommerce' ),
