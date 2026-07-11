@@ -1575,4 +1575,64 @@ jQuery(document).ready(($)=>{
     }
   }
 
+  // Kargokit demand survey modals (Aras / Yurtiçi "coming soon" cards)
+  $(document).on('click', '.hez-kargokit-survey-open', function() {
+    $('#hez-kargokit-modal-' + $(this).data('carrier')).removeClass('hidden');
+  });
+
+  $(document).on('click', '.hez-kargokit-modal-close, .hez-kargokit-modal-backdrop', function() {
+    $(this).closest('.hez-kargokit-modal').addClass('hidden');
+  });
+
+  $(document).on('keydown', function(e) {
+    if (e.key === 'Escape') {
+      $('.hez-kargokit-modal').addClass('hidden');
+    }
+  });
+
+  // The survey markup is a div, not a <form>: the order edit screen is already
+  // inside the #post form and nested forms get stripped by the browser.
+  $(document).on('click', '.hez-kargokit-survey-submit', function(e) {
+    e.preventDefault();
+
+    const $form = $(this).closest('.hez-kargokit-survey-form');
+    const carrier = $form.data('carrier');
+    const usage = $form.find('input[name="kk_usage_' + carrier + '"]:checked').val();
+    const volume = $form.find('input[name="kk_volume_' + carrier + '"]:checked').val();
+    const $error = $form.find('.hez-kargokit-survey-error');
+    const $submitBtn = $(this);
+
+    if (!usage || !volume) {
+      $error.text('Lütfen iki soruyu da yanıtlayın.').removeClass('hidden');
+      return;
+    }
+
+    $error.addClass('hidden');
+    $submitBtn.prop('disabled', true).text('Gönderiliyor...');
+
+    $.post(ajaxurl, {
+      action: 'hezarfen_mst_kargokit_survey',
+      _ajax_nonce: $form.data('nonce'),
+      carrier: carrier,
+      usage: usage,
+      volume: volume,
+      comment: $form.find('.hez-kargokit-survey-comment').val() || ''
+    })
+      .done(function(response) {
+        if (response.success) {
+          const $modal = $form.closest('.hez-kargokit-modal');
+          $modal.find('.hez-kargokit-survey-body').addClass('hidden');
+          $modal.find('.hez-kargokit-survey-thanks').removeClass('hidden');
+          $('button.hez-kargokit-survey-open[data-carrier="' + carrier + '"]').text('Yanıtınız iletildi ✓');
+        } else {
+          $error.text((response.data && response.data.message) || 'Bir hata oluştu.').removeClass('hidden');
+          $submitBtn.prop('disabled', false).text('Gönder');
+        }
+      })
+      .fail(function() {
+        $error.text('Bir hata oluştu. Lütfen tekrar deneyin.').removeClass('hidden');
+        $submitBtn.prop('disabled', false).text('Gönder');
+      });
+  });
+
 });

@@ -329,3 +329,27 @@
     opacity: 1;
     transform: translateY(0);
 }
+/* Kargokit demand survey modal (tailwind 'fixed' utility is blocklisted, so plain CSS) */
+.hez-kargokit-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hez-kargokit-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.hez-kargokit-modal-dialog {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    max-height: 85vh;
+    overflow-y: auto;
+    margin: 0 16px;
+}
