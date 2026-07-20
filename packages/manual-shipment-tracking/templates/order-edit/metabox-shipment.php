@@ -84,17 +84,6 @@ $kargokit_survey_carriers = apply_filters(
                 __( '3 Desi/Kg', 'hezarfen-for-woocommerce' ) => __( '123,87 TL + KDV', 'hezarfen-for-woocommerce' ),
             ),
         ),
-        // Yurtiçi kartı yalnızca geniş ekranlarda gösterilir (Aras kartındaki tanıtım metninin yerine).
-        'yurtici' => array(
-            'title'            => __( 'Yurtiçi Kargo', 'hezarfen-for-woocommerce' ),
-            'logo'             => Helper::get_courier_class( 'yurtici' )::$logo,
-            'price_line'       => __( '1 Desi · Tüm Türkiye · 125 TL + KDV', 'hezarfen-for-woocommerce' ),
-            'modal_price_line' => __( 'Tüm Türkiye · 125 TL + KDV = 150 TL her şey dahil', 'hezarfen-for-woocommerce' ),
-            'card_class'       => 'hidden 3xl:flex',
-            'pricing_tiers'    => array(
-                __( '1 Desi/Kg', 'hezarfen-for-woocommerce' ) => __( '125,00 TL + KDV', 'hezarfen-for-woocommerce' ),
-            ),
-        ),
     )
 );
 
