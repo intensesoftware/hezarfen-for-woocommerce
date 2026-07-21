@@ -115,8 +115,7 @@ class Admin_Ajax {
 		}
 
 		$carriers = array(
-			'aras'    => __( 'Aras Kargo', 'hezarfen-for-woocommerce' ),
-			'yurtici' => __( 'Yurtiçi Kargo', 'hezarfen-for-woocommerce' ),
+			'aras' => __( 'Aras Kargo', 'hezarfen-for-woocommerce' ),
 		);
 
 		$usage_options = array(
