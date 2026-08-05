@@ -65,45 +65,6 @@ if ( $has_hepsijet_credentials ) {
         $warehouse_error = $e->getMessage();
     }
 }
-
-// Kargokit talep anketi kartları.
-$kargokit_survey_active = version_compare( WC_HEZARFEN_VERSION, '2.20', '<' ) || current_time( 'timestamp' ) < strtotime( '2026-08-01' );
-
-$kargokit_survey_carriers = apply_filters(
-    'hezarfen_mst_kargokit_survey_carriers',
-    array(
-        'aras' => array(
-            'title'            => __( 'Aras Kargo', 'hezarfen-for-woocommerce' ),
-            'logo'             => Helper::get_courier_class( 'aras' )::$logo,
-            'price_line'       => __( '1 Desi · Tüm Türkiye · 100 TL + KDV', 'hezarfen-for-woocommerce' ),
-            'modal_price_line' => __( 'Tüm Türkiye · 100 TL + KDV = 120 TL her şey dahil', 'hezarfen-for-woocommerce' ),
-            'card_class'       => 'flex',
-            'pricing_tiers'    => array(
-                __( '1 Desi/Kg', 'hezarfen-for-woocommerce' ) => __( '100,00 TL + KDV', 'hezarfen-for-woocommerce' ),
-                __( '2 Desi/Kg', 'hezarfen-for-woocommerce' ) => __( '110,87 TL + KDV', 'hezarfen-for-woocommerce' ),
-                __( '3 Desi/Kg', 'hezarfen-for-woocommerce' ) => __( '123,87 TL + KDV', 'hezarfen-for-woocommerce' ),
-            ),
-        ),
-    )
-);
-
-if ( ! $kargokit_survey_active ) {
-    $kargokit_survey_carriers = array();
-}
-
-$kargokit_survey_nonce   = wp_create_nonce( 'hezarfen_mst_kargokit_survey' );
-$kargokit_volume_options = array(
-    '1-25'     => '1–25 /ay',
-    '26-100'   => '26–100 /ay',
-    '101-500'  => '101–500 /ay',
-    '501-2000' => '501–2.000 /ay',
-    '2000+'    => '2.000+ /ay',
-);
-$kargokit_usage_options  = array(
-    'duzenli'   => __( 'Evet, düzenli kullanırdım', 'hezarfen-for-woocommerce' ),
-    'bazen'     => __( 'Evet, bazı gönderilerimde kullanırdım', 'hezarfen-for-woocommerce' ),
-    'kullanmam' => __( 'Kullanmazdım', 'hezarfen-for-woocommerce' ),
-);
 ?>
 <style>
 @keyframes pulse {
@@ -178,53 +139,7 @@ $kargokit_usage_options  = array(
                         <div class="mb-2">
                             <label class="sr-only" id="hez-courier-select-label"><?php esc_html_e('Select a Courier Company', 'hezarfen-for-woocommerce'); ?></label>
 
-                            <ul id="shipping-companies" aria-labelledby="hez-courier-select-label" class="max-h-40 grid grid-flow-row-dense w-full gap-2 grid-cols-2 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 5xl:grid-cols-7 6xl:grid-cols-8 overflow-hidden transition-all duration-300">
-                                <?php foreach ( $kargokit_survey_carriers as $kk_carrier_id => $kk_carrier ) :
-                                    $kk_submitted = (bool) get_option( 'hezarfen_kargokit_survey_' . $kk_carrier_id, false );
-                                    ?>
-                                <li class="<?php echo esc_attr( isset( $kk_carrier['card_class'] ) ? $kk_carrier['card_class'] : 'flex' ); ?> justify-center col-span-2 xl:col-span-2 2xl:col-span-3 3xl:col-span-2">
-                                    <div class="hez-kargokit-survey-open relative flex flex-col w-full h-16 bg-gradient-to-r from-amber-50 to-amber-100
-                                                border border-amber-300 rounded-xl shadow-sm overflow-hidden cursor-pointer
-                                                transition-all duration-150 hover:shadow-md hover:border-amber-400"
-                                            data-carrier="<?php echo esc_attr( $kk_carrier_id ); ?>">
-                                        <div class="bg-amber-500 text-white text-[11px] font-semibold text-center py-0.5 px-2 whitespace-nowrap overflow-hidden">
-                                            <?php echo esc_html( $kk_carrier['price_line'] ); ?>
-                                        </div>
-                                        <div class="flex items-center justify-between gap-2 px-3 flex-1 min-h-0">
-                                            <div class="flex flex-col items-center justify-center flex-shrink-0">
-                                                <img class="max-h-5 w-auto"
-                                                    src="<?php echo esc_url( HEZARFEN_MST_COURIER_LOGO_URL . $kk_carrier['logo'] ); ?>"
-                                                    loading="lazy"
-                                                    alt="<?php echo esc_attr( $kk_carrier['title'] ); ?>">
-                                                <span class="text-[8px] text-gray-500 font-medium leading-none mt-0.5">kargokit.com</span>
-                                            </div>
-                                            <span class="block flex-1 min-w-0 text-[11px] font-medium text-gray-700 text-right leading-tight line-clamp-2">
-                                                <?php esc_html_e( 'Kargokit bu fiyatlara hizmet sunsun mu?', 'hezarfen-for-woocommerce' ); ?>
-                                            </span>
-                                            <button type="button"
-                                                    class="hez-kargokit-survey-open flex-shrink-0 px-3 py-1 bg-amber-500 text-white text-[11px] leading-tight text-center font-medium rounded-lg shadow-sm hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-300 whitespace-nowrap"
-                                                    data-carrier="<?php echo esc_attr( $kk_carrier_id ); ?>">
-                                                <?php echo $kk_submitted ? esc_html__( 'Yanıtınız iletildi ✓', 'hezarfen-for-woocommerce' ) : esc_html__( 'Görüş belirt', 'hezarfen-for-woocommerce' ); ?>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </li>
-                                <?php endforeach; ?>
-
-                                <?php
-                                // Yurtiçi'nin normal kartı, banner satırındaki boş hücreyi doldurması için öne alınır.
-                                $kk_courier_options = Helper::courier_company_options();
-                                if ( isset( $kk_courier_options['yurtici'] ) ) :
-                                    ?>
-                                <li class="relative flex justify-center">
-                                    <input type="radio" id="courier-company-select-yurtici" name="courier-company-select" value="yurtici" class="hidden peer" />
-                                    <label for="courier-company-select-yurtici" class="flex justify-center h-16 items-center w-full p-3 text-gray-3 bg-white border border-gray-2 rounded-lg cursor-pointer transition-all duration-150 dark:hover:text-gray-300 dark:border-gray-3 dark:peer-checked:text-blue-500 peer-checked:bg-orange-1 peer-checked:border-2 peer-checked:border-orange-2 peer-checked:text-blue-600 peer-checked:shadow-md hover:text-gray-600 hover:border-orange-2 hover:bg-orange-1/40 hover:shadow-sm dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-                                        <img style="max-height: 36px !important;" class="max-h-8" src="<?php echo esc_attr( HEZARFEN_MST_COURIER_LOGO_URL . Helper::get_courier_class( 'yurtici' )::$logo ); ?>" loading="lazy" alt="<?php echo esc_attr( $kk_courier_options['yurtici'] ); ?>" />
-                                    </label>
-                                    <span class="hidden peer-checked:flex pointer-events-none absolute top-1 right-1 w-4 h-4 bg-orange-2 text-white rounded-full items-center justify-center text-[10px] font-bold leading-none shadow">✓</span>
-                                </li>
-                                <?php endif; ?>
-
+                            <ul id="shipping-companies" aria-labelledby="hez-courier-select-label" class="max-h-40 grid w-full gap-2 grid-cols-2 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 5xl:grid-cols-7 6xl:grid-cols-8 overflow-hidden transition-all duration-300">
                                 <li class="flex justify-center col-span-2 xl:col-span-2 2xl:col-span-3">
                                     <input type="radio" id="courier-company-select-hepsijet-entegrasyon"
                                             name="courier-company-select" value="hepsijet-entegrasyon"
@@ -311,7 +226,7 @@ $kargokit_usage_options  = array(
                                 </li>
 
 
-                                <?php foreach (Helper::courier_company_options() as $courier_id => $courier_label) : if (empty($courier_id) || 'yurtici' === $courier_id) {
+                                <?php foreach (Helper::courier_company_options() as $courier_id => $courier_label) : if (empty($courier_id)) {
                                         continue;
                                     } ?>
                                     <li class="relative flex justify-center">
@@ -323,132 +238,6 @@ $kargokit_usage_options  = array(
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
-
-                            <?php foreach ( $kargokit_survey_carriers as $kk_carrier_id => $kk_carrier ) :
-                                $kk_submitted = (bool) get_option( 'hezarfen_kargokit_survey_' . $kk_carrier_id, false );
-                                ?>
-                            <div id="hez-kargokit-modal-<?php echo esc_attr( $kk_carrier_id ); ?>" class="hez-kargokit-modal hidden">
-                                <div class="hez-kargokit-modal-backdrop"></div>
-                                <div class="hez-kargokit-modal-dialog bg-white rounded-xl shadow-lg">
-                                    <div class="flex items-start justify-between px-5 py-4 border-b border-gray-200">
-                                        <div>
-                                            <h3 class="text-base font-semibold text-gray-800 m-0"><?php echo esc_html( $kk_carrier['title'] ); ?></h3>
-                                            <p class="text-xs text-gray-600 m-0 mt-1"><?php echo esc_html( ! empty( $kk_carrier['modal_price_line'] ) ? $kk_carrier['modal_price_line'] : $kk_carrier['price_line'] ); ?></p>
-                                            <span class="inline-block text-[10px] bg-green-500 text-white px-2 py-0.5 rounded-full shadow-sm font-medium mt-1.5 whitespace-nowrap">
-                                                <?php esc_html_e( 'Kargokit aylık/yıllık platform ücreti yok', 'hezarfen-for-woocommerce' ); ?>
-                                            </span>
-                                            <p class="text-[10px] text-gray-500 m-0 mt-1.5"><?php esc_html_e( 'kargokit.com aracılığıyla · Minimum taahhüt yok · Kredi kartı ile komisyonsuz bakiye yükleme · Ücretsiz adresten alım', 'hezarfen-for-woocommerce' ); ?></p>
-                                        </div>
-                                        <button type="button" class="hez-kargokit-modal-close text-gray-400 hover:text-gray-700 text-xl leading-none bg-transparent border-0 cursor-pointer p-1" aria-label="<?php esc_attr_e( 'Kapat', 'hezarfen-for-woocommerce' ); ?>">&times;</button>
-                                    </div>
-                                    <div class="px-5 py-4">
-                                        <?php if ( ! empty( $kk_carrier['pricing_tiers'] ) ) : ?>
-                                        <div class="mb-4 bg-amber-50 border border-amber-200 rounded-lg overflow-hidden">
-                                            <div class="px-3 py-1.5 bg-amber-100 text-[11px] font-semibold text-gray-700 border-b border-amber-200">
-                                                <?php
-                                                /* translators: %s: courier company name */
-                                                printf( esc_html__( 'kargokit.com aracılığıyla %s gönderim fiyatları', 'hezarfen-for-woocommerce' ), esc_html( $kk_carrier['title'] ) );
-                                                ?>
-                                            </div>
-                                            <?php foreach ( $kk_carrier['pricing_tiers'] as $kk_tier_label => $kk_tier_price ) : ?>
-                                            <div class="flex items-center justify-between px-3 py-1.5 text-xs border-b border-amber-100 last:border-b-0">
-                                                <span class="text-gray-600"><?php echo esc_html( $kk_tier_label ); ?></span>
-                                                <span class="font-semibold text-gray-800"><?php echo esc_html( $kk_tier_price ); ?></span>
-                                            </div>
-                                            <?php endforeach; ?>
-                                        </div>
-                                        <?php endif; ?>
-
-                                        <div class="grid grid-cols-2 gap-x-3 gap-y-1.5 mb-4">
-                                            <?php
-                                            $kk_features = array(
-                                                array( '💸', __( 'Entegrasyon ücretsiz', 'hezarfen-for-woocommerce' ) ),
-                                                array( '🏷️', __( 'Barkod, sipariş ekranından oluşturulur', 'hezarfen-for-woocommerce' ) ),
-                                                array( '🔢', __( 'Takip no siparişe otomatik girilir', 'hezarfen-for-woocommerce' ) ),
-                                                array( '🔄', __( 'Sipariş durumu otomatik güncellenir', 'hezarfen-for-woocommerce' ) ),
-                                                array( '📩', __( 'Müşteriye otomatik e-posta/SMS bildirimi', 'hezarfen-for-woocommerce' ) ),
-                                                array( '📦', __( 'Ücretsiz adresten alım', 'hezarfen-for-woocommerce' ) ),
-                                            );
-                                            foreach ( $kk_features as $kk_feature ) :
-                                                ?>
-                                            <div class="flex items-start gap-1.5">
-                                                <span class="text-xs leading-4 flex-shrink-0"><?php echo esc_html( $kk_feature[0] ); ?></span>
-                                                <span class="text-[11px] leading-4 text-gray-600"><?php echo esc_html( $kk_feature[1] ); ?></span>
-                                            </div>
-                                            <?php endforeach; ?>
-                                        </div>
-
-                                        <div class="hez-kargokit-survey-body <?php echo $kk_submitted ? 'hidden' : ''; ?>">
-                                            <?php // Nested <form> is invalid inside the order edit screen's #post form and gets stripped by the browser, so this is a div. ?>
-                                            <div class="hez-kargokit-survey-form" data-carrier="<?php echo esc_attr( $kk_carrier_id ); ?>" data-nonce="<?php echo esc_attr( $kargokit_survey_nonce ); ?>">
-                                                <p class="text-sm font-medium text-gray-800 mb-2">
-                                                    <?php
-                                                    /* translators: %s: courier company name */
-                                                    printf( esc_html__( 'Bu fiyatlarla, kargokit.com aracılığıyla %s hizmetini kullanır mıydınız?', 'hezarfen-for-woocommerce' ), esc_html( $kk_carrier['title'] ) );
-                                                    ?>
-                                                </p>
-                                                <div class="flex flex-col gap-1.5 mb-4">
-                                                    <?php foreach ( $kargokit_usage_options as $kk_usage_value => $kk_usage_label ) : ?>
-                                                    <div>
-                                                        <input type="radio" id="kk-<?php echo esc_attr( $kk_carrier_id ); ?>-usage-<?php echo esc_attr( $kk_usage_value ); ?>" name="kk_usage_<?php echo esc_attr( $kk_carrier_id ); ?>" value="<?php echo esc_attr( $kk_usage_value ); ?>" class="hidden peer">
-                                                        <label for="kk-<?php echo esc_attr( $kk_carrier_id ); ?>-usage-<?php echo esc_attr( $kk_usage_value ); ?>"
-                                                                class="block w-full px-3 py-2 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg cursor-pointer transition-all duration-150 hover:border-amber-300 hover:bg-amber-50 peer-checked:bg-amber-100 peer-checked:border-amber-500 peer-checked:text-gray-900 peer-checked:font-medium">
-                                                            <?php echo esc_html( $kk_usage_label ); ?>
-                                                        </label>
-                                                    </div>
-                                                    <?php endforeach; ?>
-                                                </div>
-
-                                                <p class="text-sm font-medium text-gray-800 mb-1">
-                                                    <?php
-                                                    /* translators: %s: courier company name */
-                                                    printf( wp_kses( __( '<strong>Aylık</strong> yaklaşık kaç gönderinizi %s ile gönderirdiniz?', 'hezarfen-for-woocommerce' ), array( 'strong' => array() ) ), esc_html( $kk_carrier['title'] ) );
-                                                    ?>
-                                                </p>
-                                                <p class="text-xs text-gray-500 mt-0 mb-2"><?php esc_html_e( 'Günlük değil, aylık toplam gönderi adedinizi seçin.', 'hezarfen-for-woocommerce' ); ?></p>
-                                                <div class="flex flex-wrap gap-1.5 mb-4">
-                                                    <?php foreach ( $kargokit_volume_options as $kk_volume_value => $kk_volume_label ) : ?>
-                                                    <div>
-                                                        <input type="radio" id="kk-<?php echo esc_attr( $kk_carrier_id ); ?>-volume-<?php echo esc_attr( sanitize_html_class( $kk_volume_value ) ); ?>" name="kk_volume_<?php echo esc_attr( $kk_carrier_id ); ?>" value="<?php echo esc_attr( $kk_volume_value ); ?>" class="hidden peer">
-                                                        <label for="kk-<?php echo esc_attr( $kk_carrier_id ); ?>-volume-<?php echo esc_attr( sanitize_html_class( $kk_volume_value ) ); ?>"
-                                                                class="inline-block px-3 py-1.5 text-xs text-gray-700 bg-gray-50 border border-gray-200 rounded-full cursor-pointer transition-all duration-150 hover:border-amber-300 hover:bg-amber-50 peer-checked:bg-amber-100 peer-checked:border-amber-500 peer-checked:text-gray-900 peer-checked:font-medium whitespace-nowrap">
-                                                            <?php echo esc_html( $kk_volume_label ); ?>
-                                                        </label>
-                                                    </div>
-                                                    <?php endforeach; ?>
-                                                </div>
-
-                                                <label class="block text-sm font-medium text-gray-800 mb-1" for="kk-<?php echo esc_attr( $kk_carrier_id ); ?>-comment">
-                                                    <?php esc_html_e( 'Yorumlarınız', 'hezarfen-for-woocommerce' ); ?>
-                                                    <span class="font-normal text-gray-500 text-xs"><?php esc_html_e( '(opsiyonel)', 'hezarfen-for-woocommerce' ); ?></span>
-                                                </label>
-                                                <textarea id="kk-<?php echo esc_attr( $kk_carrier_id ); ?>-comment"
-                                                        class="hez-kargokit-survey-comment w-full bg-gray-50 border border-gray-200 rounded-lg p-2 text-sm text-gray-700 mb-4"
-                                                        rows="2"
-                                                        maxlength="1000"
-                                                        placeholder="<?php esc_attr_e( 'Başka kargo taleplerinizi vb. buradan iletebilirsiniz…', 'hezarfen-for-woocommerce' ); ?>"></textarea>
-
-                                                <p class="hez-kargokit-survey-error hidden text-xs text-red-600 mb-2"></p>
-
-                                                <button type="button" class="hez-kargokit-survey-submit w-full px-4 py-2 bg-amber-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-300 border-0 cursor-pointer">
-                                                    <?php esc_html_e( 'Gönder', 'hezarfen-for-woocommerce' ); ?>
-                                                </button>
-                                                <p class="text-[10px] text-gray-500 mt-2 mb-0">
-                                                    <?php esc_html_e( 'Yanıtlarınız, sitenizin e-posta altyapısı kullanılarak info@intense.com.tr adresine gönderilir. Paylaşılan veriler: anket yanıtlarınız, site adresiniz ve yönetici e-posta adresiniz.', 'hezarfen-for-woocommerce' ); ?>
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="hez-kargokit-survey-thanks <?php echo $kk_submitted ? '' : 'hidden'; ?> text-center py-4">
-                                            <span class="text-2xl">✅</span>
-                                            <p class="text-sm font-medium text-gray-800 mt-2 mb-0"><?php esc_html_e( 'Teşekkürler! Yanıtınız iletildi.', 'hezarfen-for-woocommerce' ); ?></p>
-                                        </div>
-                                        <p class="text-[11px] text-gray-500 leading-snug mt-4 mb-0 pt-3 border-t border-gray-100">
-                                            <?php esc_html_e( 'Bilgilendirme: Bu anket, Kargokit üzerinden sunulabilecek kargo hizmetlerine yönelik talebi ölçmek amacıyla yapılmaktadır. Belirtilen fiyatlar temsilidir ve herhangi bir fiyat garantisi, teklif veya hizmet taahhüdü oluşturmaz. Anket sonuçları hizmet planlamasında kullanılacaktır. Kargokit bir Intense servisidir.', 'hezarfen-for-woocommerce' ); ?>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php endforeach; ?>
                         </div>
 
                         <div class="flex justify-center">

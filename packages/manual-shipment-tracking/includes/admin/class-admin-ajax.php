@@ -41,9 +41,6 @@ class Admin_Ajax {
 	const GET_HEPSIJET_PRICING_NONCE  = 'hezarfen_mst_get_hepsijet_pricing';
 	const GET_KARGOGATE_BALANCE_ACTION = 'hezarfen_mst_get_kargogate_balance';
 	const GET_KARGOGATE_BALANCE_NONCE  = 'hezarfen_mst_get_kargogate_balance';
-	const KARGOKIT_SURVEY_ACTION = 'hezarfen_mst_kargokit_survey';
-	const KARGOKIT_SURVEY_NONCE  = 'hezarfen_mst_kargokit_survey';
-
 	const DATA_ARRAY_KEY         = 'hezarfen_mst_shipment_data';
 	const COURIER_HTML_NAME      = 'courier_company';
 	const TRACKING_NUM_HTML_NAME = 'tracking_number';
@@ -67,8 +64,6 @@ class Admin_Ajax {
 		add_action( 'wp_ajax_' . self::GENERATE_HEPSIJET_PDF_ACTION, array( __CLASS__, 'generate_hepsijet_pdf' ) );
 		add_action( 'wp_ajax_' . self::GET_HEPSIJET_BARCODE_PDF_ACTION, array( __CLASS__, 'get_hepsijet_barcode_pdf' ) );
 		add_action( 'wp_ajax_' . self::GET_KARGOGATE_BALANCE_ACTION, array( __CLASS__, 'get_kargogate_balance' ) );
-		
-		add_action( 'wp_ajax_' . self::KARGOKIT_SURVEY_ACTION, array( __CLASS__, 'kargokit_survey' ) );
 
 		add_action( 'wp_ajax_hezarfen_mst_get_return_dates', array( __CLASS__, 'get_return_dates' ) );
 		add_action( 'wp_ajax_hepsijet_get_warehouses', array( __CLASS__, 'get_hepsijet_warehouses' ) );
@@ -97,86 +92,6 @@ class Admin_Ajax {
 		wp_send_json_success(
 			Helper::get_all_shipment_data( intval( $_GET['order_id'] ) )
 		);
-	}
-
-	/**
-	 * Handles the Kargokit carrier demand survey submission.
-	 *
-	 * Sends the answers to info@intense.com.tr via the site's own mail
-	 * infrastructure (wp_mail) and remembers the submission per carrier.
-	 *
-	 * @return void
-	 */
-	public static function kargokit_survey() {
-		check_ajax_referer( self::KARGOKIT_SURVEY_NONCE );
-
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Yetkiniz yok.', 'hezarfen-for-woocommerce' ) ), 403 );
-		}
-
-		$carriers = array(
-			'aras' => __( 'Aras Kargo', 'hezarfen-for-woocommerce' ),
-		);
-
-		$usage_options = array(
-			'duzenli'   => __( 'Evet, düzenli kullanırdım', 'hezarfen-for-woocommerce' ),
-			'bazen'     => __( 'Evet, bazı gönderilerimde kullanırdım', 'hezarfen-for-woocommerce' ),
-			'kullanmam' => __( 'Kullanmazdım', 'hezarfen-for-woocommerce' ),
-		);
-
-		$volume_options = array(
-			'1-25'     => '1–25',
-			'26-100'   => '26–100',
-			'101-500'  => '101–500',
-			'501-2000' => '501–2.000',
-			'2000+'    => '2.000+',
-		);
-
-		$carrier = isset( $_POST['carrier'] ) ? sanitize_key( wp_unslash( $_POST['carrier'] ) ) : '';
-		$usage   = isset( $_POST['usage'] ) ? sanitize_key( wp_unslash( $_POST['usage'] ) ) : '';
-		$volume  = isset( $_POST['volume'] ) ? sanitize_text_field( wp_unslash( $_POST['volume'] ) ) : '';
-		$comment = isset( $_POST['comment'] ) ? mb_substr( sanitize_textarea_field( wp_unslash( $_POST['comment'] ) ), 0, 1000 ) : '';
-
-		if ( ! isset( $carriers[ $carrier ] ) || ! isset( $usage_options[ $usage ] ) || ! isset( $volume_options[ $volume ] ) ) {
-			wp_send_json_error( array( 'message' => __( 'Lütfen iki soruyu da yanıtlayın.', 'hezarfen-for-woocommerce' ) ), 400 );
-		}
-
-		$admin_email = get_option( 'admin_email' );
-
-		$subject = sprintf( '[Kargokit Anket] %s', $carriers[ $carrier ] );
-		$message = sprintf(
-			"Kargokit kargo hizmeti anketine yeni yanıt geldi:\n\n" .
-			"Kargo firması: %s\n" .
-			"Bu fiyatla kullanır mıydınız?: %s\n" .
-			"Aylık tahmini gönderi adedi: %s\n" .
-			"Site: %s\n" .
-			"Yönetici e-postası: %s",
-			$carriers[ $carrier ],
-			$usage_options[ $usage ],
-			$volume_options[ $volume ],
-			home_url(),
-			$admin_email
-		);
-
-		if ( '' !== $comment ) {
-			$message .= "\nYorum: " . $comment;
-		}
-
-		$headers = array(
-			'Content-Type: text/plain; charset=UTF-8',
-			'Reply-To: ' . $admin_email,
-		);
-
-		$sent = wp_mail( 'info@intense.com.tr', $subject, $message, $headers );
-
-		if ( $sent ) {
-			// Only a flag; the answers themselves live in the e-mail, not in the DB.
-			update_option( 'hezarfen_kargokit_survey_' . $carrier, 'yes', false );
-
-			wp_send_json_success( array( 'message' => __( 'Teşekkürler! Yanıtınız iletildi.', 'hezarfen-for-woocommerce' ) ) );
-		}
-
-		wp_send_json_error( array( 'message' => __( 'E-posta gönderilemedi. Lütfen daha sonra tekrar deneyin.', 'hezarfen-for-woocommerce' ) ), 500 );
 	}
 
 	/**
