@@ -1,0 +1,18 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "hezarfen/checkout-billing-fields",
+	"version": "1.0.0",
+	"title": "Hezarfen Billing District & Neighborhood",
+	"category": "woocommerce",
+	"description": "İlçe ve mahalle alanları (fatura adresi).",
+	"parent": [ "woocommerce/checkout-billing-address-block" ],
+	"textdomain": "hezarfen-for-woocommerce",
+	"supports": {
+		"html": false,
+		"multiple": false,
+		"reusable": false,
+		"inserter": false,
+		"lock": false
+	}
+}

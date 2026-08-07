@@ -206,3 +206,34 @@ export function wpJson< T = unknown >(
 	if ( ! out ) return null as unknown as T;
 	return JSON.parse( out ) as T;
 }
+
+/**
+ * Run a bash script against the WordPress runtime. Under wp-env it runs inside
+ * the `cli` container; on LocalWP it runs on the host. The version-matrix spec
+ * uses this to swap WooCommerce's plugin directory *in place* — under wp-env the
+ * plugin is a bind mount that `wp plugin install` can't remove, so we replace
+ * its contents instead.
+ */
+export function wpBash( script: string ): void {
+	if ( USE_WP_ENV ) {
+		const wpEnvBin = path.resolve(
+			__dirname,
+			'..',
+			'..',
+			'..',
+			'node_modules',
+			'.bin',
+			'wp-env'
+		);
+		execFileSync( wpEnvBin, [ 'run', 'cli', '--', 'bash', '-c', script ], {
+			encoding: 'utf8',
+			stdio: [ 'ignore', 'ignore', 'pipe' ],
+		} );
+		return;
+	}
+	execFileSync( 'bash', [ '-c', script ], {
+		cwd: WP_PUBLIC_ROOT,
+		encoding: 'utf8',
+		stdio: [ 'ignore', 'ignore', 'pipe' ],
+	} );
+}

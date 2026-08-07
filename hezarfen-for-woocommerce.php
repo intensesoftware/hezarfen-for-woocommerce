@@ -140,12 +140,13 @@ function hezarfen_add_settings_link( $links ) {
 // Add settings link to plugins page
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'hezarfen_add_settings_link' );
 
-// Declare our plugin compatible with the Woocommerce HPOS feature.
+// Declare our plugin compatible with the WooCommerce HPOS and Cart & Checkout Blocks features.
 add_action(
 	'before_woocommerce_init',
 	function() {
 		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
 			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, true );
 		}
-	} 
+	}
 );

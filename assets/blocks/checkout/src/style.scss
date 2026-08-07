@@ -1,0 +1,194 @@
+/**
+ * Frontend styles for the Hezarfen checkout block fields.
+ */
+
+/**
+ * The district/neighborhood block is relocated into the core address form grid.
+ * `display: contents` removes its own box so each select participates directly
+ * in the grid as a full-width row, exactly like the native fields. The selects
+ * themselves reuse WooCommerce's own `.wc-blocks-components-select` markup, so
+ * no custom field styling is needed.
+ */
+.hezarfen-checkout-fields--address {
+	display: contents;
+}
+
+/* The invoice/tax block lives outside the address grid; keep simple spacing. */
+.hezarfen-checkout-fields--invoice {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	margin-top: 16px;
+}
+
+/**
+ * Hide the redundant core State / City / Address line 1 inputs while a Turkish
+ * address is active; our searchable comboboxes replace them.
+ */
+body.hezarfen-tr-checkout {
+	.wc-block-components-address-form__state,
+	.wc-block-components-address-form__city,
+	.wc-block-components-address-form__address_1 {
+		display: none;
+	}
+}
+
+/**
+ * Match the classic checkout: WooCommerce's own company field is shown only for
+ * a company invoice. Hezarfen makes the field available when its tax fields are
+ * on; here we hide it by default and reveal it for the "company" invoice type.
+ * Everything is scoped to the `hezarfen-tax-fields` body class, so stores that
+ * use the company field independently of Hezarfen are never affected.
+ */
+body.hezarfen-tax-fields .wc-block-components-address-form__company {
+	display: none;
+}
+
+body.hezarfen-tax-fields.hezarfen-invoice-company
+	.wc-block-components-address-form__company {
+	display: block;
+}
+
+/**
+ * Searchable combobox. The input reuses WooCommerce's select look; the filtered
+ * list is a custom dropdown anchored to the field.
+ */
+.hezarfen-combobox {
+	.wc-blocks-components-select__container {
+		position: relative;
+	}
+
+	.hezarfen-combobox__input {
+		// A text input behaves like the select, but show a text caret on focus.
+		cursor: text;
+	}
+
+	&__list {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		z-index: 20;
+		margin: 2px 0 0;
+		padding: 4px 0;
+		list-style: none;
+		max-height: 260px;
+		overflow-y: auto;
+		background: #fff;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+	}
+
+	&__option {
+		padding: 8px 12px;
+		cursor: pointer;
+		line-height: 1.4;
+
+		&.is-highlighted {
+			background: #f0f0f1;
+		}
+
+		&.is-selected {
+			font-weight: 600;
+		}
+	}
+
+	&__empty {
+		padding: 8px 12px;
+		color: #767676;
+	}
+}
+
+/**
+ * Legacy WooCommerce (8.3–9.1) fallback.
+ *
+ * Our İl / İlçe / Mahalle and Invoice Type fields reuse WooCommerce's own
+ * `.wc-blocks-components-select` markup so they match the native checkout fields
+ * for free. WooCommerce only shipped full styling for that component (full-width
+ * field + label above the control) in 9.2, though — on 8.3–9.1 the block
+ * checkout leaves it unstyled, so our select-based fields render as tiny,
+ * cramped inline controls. These rules restore a native-looking field on those
+ * versions only. They are scoped to the `hezarfen-legacy-wc-checkout` body
+ * class, which the plugin adds exclusively when WooCommerce is < 9.2, so 9.2+
+ * (where WooCommerce styles the fields itself) is never touched.
+ *
+ * The `.wc-block-components-text-input` fields (T.C. no, tax number/office,
+ * company title) are already styled by WooCommerce on 8.3, so they are left
+ * alone here.
+ */
+body.hezarfen-legacy-wc-checkout {
+	.hezarfen-checkout-fields .wc-blocks-components-select {
+		display: block;
+		width: 100%;
+		flex: 0 0 100%;
+		margin: 0;
+	}
+
+	// The address form spaces each field with a top margin (not a gap), so match
+	// that model — otherwise the first Hezarfen field sits flush against the row
+	// above it and the last one double-spaces against the next native field.
+	.hezarfen-checkout-fields--address .wc-blocks-components-select {
+		margin-top: 16px;
+	}
+
+	.hezarfen-checkout-fields .wc-blocks-components-select__container {
+		position: relative;
+		display: block;
+	}
+
+	// Match the native fields' floating label: the label sits inside the field,
+	// shifted up and shrunk. Our fields always carry a value or a placeholder, so
+	// the label stays in the floated position (like the native Country select).
+	.hezarfen-checkout-fields .wc-blocks-components-select__label {
+		position: absolute;
+		top: 0.5em;
+		left: 0.6em;
+		margin: 0;
+		padding: 0;
+		max-width: calc(100% - 2em);
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		// Inherit the theme's font + text colour (at reduced opacity) so the
+		// label matches the native floated labels instead of hard-coding a font
+		// or colour that only fits one theme.
+		font-family: inherit;
+		font-weight: inherit;
+		font-size: 0.85em;
+		line-height: 1.3;
+		letter-spacing: inherit;
+		color: inherit;
+		opacity: 0.5;
+		pointer-events: none;
+		transform: none;
+	}
+
+	// Roughly symmetric padding so the value sits vertically centred like the
+	// native fields, with the floated label overlapping the top of the control
+	// (rather than pushing the value down).
+	.hezarfen-checkout-fields .wc-blocks-components-select__select {
+		display: block;
+		width: 100%;
+		height: auto;
+		min-height: 3.4em;
+		padding: 1.5em 0.5em 0.5em;
+		// Form controls don't inherit the theme's font by default (they fall back
+		// to Arial); pull it in so the value text matches the native fields. The
+		// value weight tracks the native text inputs (normal), not the lighter
+		// label weight it would otherwise inherit.
+		font-family: inherit;
+		font-weight: normal;
+		font-size: 1em;
+		// Match the native filled input: a taller top padding drops the value into
+		// the lower-middle of the control, leaving the floated label a clear band
+		// at the top (no overlap).
+		line-height: 1.1;
+		letter-spacing: inherit;
+		color: inherit;
+		background: #fff;
+		border: 1px solid #8d96a0;
+		border-radius: 4px;
+		box-sizing: border-box;
+	}
+}

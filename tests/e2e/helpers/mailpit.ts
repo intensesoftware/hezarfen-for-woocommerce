@@ -4,7 +4,7 @@
  * Mailpit binds an SMTP listener on :1025 and an HTTP API on :8025.
  * In CI the workflow connects the Mailpit container to wp-env's
  * docker network and tells WP via a `wp config set` constant; the
- * mu-plugin in `tests/e2e/fixtures/mailpit-mu-plugin.php` then
+ * mu-plugin in `tests/e2e/fixtures/mu-plugins/hezarfen-e2e-mailpit.php` then
  * routes `wp_mail` through SMTP. From the runner host (where
  * Playwright runs) the HTTP API is reachable on `localhost:8025` —
  * we read it via this helper.
