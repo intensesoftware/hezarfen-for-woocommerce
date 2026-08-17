@@ -277,6 +277,7 @@ class My_Account_Returns {
 				'requests'    => $requests,
 				'returnable'  => $returnable,
 				'access'      => $this->access,
+				'deadline'    => $returnable ? $this->module->eligibility()->get_order_deadline( $order ) : 0,
 				'request_url' => wc_get_endpoint_url( self::get_request_endpoint(), (string) $order->get_id(), wc_get_page_permalink( 'myaccount' ) ),
 			)
 		);

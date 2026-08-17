@@ -834,9 +834,26 @@
 /* --------------------------------------------------------------- order panel */
 
 .hez-returns--order-panel {
-	margin-top: 28px;
-	padding-top: 20px;
-	border-top: 1px solid var(--hez-border);
+	margin: 28px 0;
+	padding: 20px;
+	border: 1px solid var(--hez-border);
+	border-radius: var(--hez-radius);
+	background: var(--hez-bg-muted);
+}
+
+.hez-returns--order-panel .hez-returns__title {
+	margin-bottom: 10px;
+	font-size: 20px;
+}
+
+.hez-returns--order-panel .hez-returns__subtitle,
+.hez-returns--order-panel .hez-returns__deadline {
+	margin-top: 0;
+	margin-bottom: 14px;
+}
+
+.hez-returns--order-panel .hez-cards {
+	margin-bottom: 14px;
 }
 
 /* ------------------------------------------------------------- responsive */
