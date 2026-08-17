@@ -16,8 +16,8 @@ defined( 'ABSPATH' ) || exit();
  * Adds the "İadelerim" area to the WooCommerce account pages.
  *
  * Owns two endpoints — the request list (which doubles as the detail view
- * when it carries an ID) and the request form — plus the entry points that
- * lead customers there from their order pages.
+ * when it carries an ID) and the request form — plus the panel on the
+ * order detail page, which is the only place a return starts from.
  */
 class My_Account_Returns {
 
@@ -60,8 +60,7 @@ class My_Account_Returns {
 		add_action( 'woocommerce_account_' . self::get_list_endpoint() . '_endpoint', array( $this, 'render_list_or_detail' ) );
 		add_action( 'woocommerce_account_' . self::get_request_endpoint() . '_endpoint', array( $this, 'render_request_form' ) );
 
-		add_filter( 'woocommerce_my_account_my_orders_actions', array( $this, 'add_order_action' ), 10, 2 );
-		add_action( 'woocommerce_order_details_after_order_table', array( $this, 'render_order_page_notice' ), 20 );
+		add_action( 'woocommerce_order_details_after_order_table', array( $this, 'render_order_panel' ), 20 );
 	}
 
 	/**
@@ -201,10 +200,9 @@ class My_Account_Returns {
 		hezarfen_returns_get_template(
 			'returns/my-account-list.php',
 			array(
-				'requests'         => $requests,
-				'access'           => $this->access,
-				'eligible_orders'  => $this->get_eligible_orders( $customer_id ),
-				'request_base_url' => wc_get_endpoint_url( self::get_request_endpoint(), '', wc_get_page_permalink( 'myaccount' ) ),
+				'requests'   => $requests,
+				'access'     => $this->access,
+				'orders_url' => wc_get_endpoint_url( 'orders', '', wc_get_page_permalink( 'myaccount' ) ),
 			)
 		);
 	}
@@ -226,14 +224,12 @@ class My_Account_Returns {
 				'shipping_method' => $this->module->shipping()->get_for_request( $request ),
 				'progress_steps'  => Return_Status::get_progress_steps(),
 				'back_url'        => wc_get_endpoint_url( self::get_list_endpoint(), '', wc_get_page_permalink( 'myaccount' ) ),
-				'is_guest_view'   => false,
 			)
 		);
 	}
 
 	/**
-	 * Renders the request form for an order, or the order picker when no
-	 * order was given.
+	 * Renders the request form for the customer's own order.
 	 *
 	 * @param string $value Endpoint value, expected to be an order ID.
 	 *
@@ -269,31 +265,9 @@ class My_Account_Returns {
 				'reasons'         => $this->module->reasons(),
 				'shipping_method' => $this->module->shipping()->get_active_method(),
 				'deadline'        => $this->module->eligibility()->get_order_deadline( $order ),
-				'cancel_url'      => wc_get_endpoint_url( self::get_list_endpoint(), '', wc_get_page_permalink( 'myaccount' ) ),
-				'access_token'    => '',
+				'cancel_url'      => $order->get_view_order_url(),
 			)
 		);
-	}
-
-	/**
-	 * Adds an "İade et" button to the orders table.
-	 *
-	 * @param array<string, array<string, string>> $actions Row actions.
-	 * @param \WC_Order                            $order   Order.
-	 *
-	 * @return array<string, array<string, string>>
-	 */
-	public function add_order_action( $actions, $order ) {
-		if ( ! $this->module->eligibility()->is_order_returnable( $order ) ) {
-			return $actions;
-		}
-
-		$actions['hezarfen-return'] = array(
-			'url'  => wc_get_endpoint_url( self::get_request_endpoint(), (string) $order->get_id(), wc_get_page_permalink( 'myaccount' ) ),
-			'name' => __( 'İade et', 'hezarfen-for-woocommerce' ),
-		);
-
-		return $actions;
 	}
 
 	/**
@@ -304,7 +278,7 @@ class My_Account_Returns {
 	 *
 	 * @return void
 	 */
-	public function render_order_page_notice( $order ) {
+	public function render_order_panel( $order ) {
 		if ( ! is_account_page() || ! $order instanceof \WC_Order ) {
 			return;
 		}
@@ -358,37 +332,5 @@ class My_Account_Returns {
 		$request = $this->module->repository()->get( $return_id );
 
 		return ( $request && $this->access->can_view( $request ) ) ? $request : null;
-	}
-
-	/**
-	 * The customer's orders that still accept a return request.
-	 *
-	 * @param int $customer_id Customer user ID.
-	 *
-	 * @return \WC_Order[]
-	 */
-	private function get_eligible_orders( $customer_id ) {
-		if ( ! $customer_id ) {
-			return array();
-		}
-
-		$orders = wc_get_orders(
-			array(
-				'customer_id' => $customer_id,
-				'status'      => \Hezarfen\Inc\Returns\Core\Return_Settings::get_eligible_order_statuses(),
-				'limit'       => 20,
-				'orderby'     => 'date',
-				'order'       => 'DESC',
-			)
-		);
-
-		return array_values(
-			array_filter(
-				$orders,
-				function ( $order ) {
-					return $this->module->eligibility()->is_order_returnable( $order );
-				}
-			)
-		);
 	}
 }

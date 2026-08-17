@@ -12,11 +12,9 @@
  * @var \Hezarfen\Inc\Returns\Shipping\Return_Shipping_Method_Interface $shipping_method Active shipping method.
  * @var int                                                   $deadline        Return window deadline as a Unix timestamp.
  * @var string                                                $cancel_url      Where the cancel link goes.
- * @var string                                                $access_token    Guest order token, empty for logged-in customers.
  */
 
 use Hezarfen\Inc\Returns\Core\Return_Settings;
-use Hezarfen\Inc\Returns\Frontend\Return_Access;
 use Hezarfen\Inc\Returns\Frontend\Return_Form_Handler;
 
 defined( 'ABSPATH' ) || exit();
@@ -55,9 +53,6 @@ $hez_reason_choices = $reasons->get_choices();
 		<?php wp_nonce_field( 'hezarfen_returns_' . Return_Form_Handler::ACTION_CREATE, Return_Form_Handler::NONCE_FIELD ); ?>
 		<input type="hidden" name="<?php echo esc_attr( Return_Form_Handler::ACTION_FIELD ); ?>" value="<?php echo esc_attr( Return_Form_Handler::ACTION_CREATE ); ?>">
 		<input type="hidden" name="order_id" value="<?php echo esc_attr( $order->get_id() ); ?>">
-		<?php if ( $access_token ) : ?>
-			<input type="hidden" name="<?php echo esc_attr( Return_Access::QUERY_KEY ); ?>" value="<?php echo esc_attr( $access_token ); ?>">
-		<?php endif; ?>
 
 		<section class="hez-step" aria-labelledby="hez-step-items">
 			<div class="hez-step__head">

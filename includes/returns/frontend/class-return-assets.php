@@ -8,7 +8,6 @@
 namespace Hezarfen\Inc\Returns\Frontend;
 
 use Hezarfen\Inc\Returns\Core\Return_Reasons;
-use Hezarfen\Inc\Returns\Core\Return_Settings;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -74,18 +73,6 @@ class Return_Assets {
 	 * @return bool
 	 */
 	private function should_load() {
-		if ( function_exists( 'is_account_page' ) && is_account_page() ) {
-			return true;
-		}
-
-		$page_id = Return_Settings::get_page_id();
-
-		if ( $page_id && is_page( $page_id ) ) {
-			return true;
-		}
-
-		$post = get_post();
-
-		return $post && has_shortcode( (string) $post->post_content, Guest_Returns::SHORTCODE );
+		return function_exists( 'is_account_page' ) && is_account_page();
 	}
 }

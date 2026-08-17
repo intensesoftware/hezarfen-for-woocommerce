@@ -230,12 +230,6 @@ $hez_action_keys = array(
 							<strong><?php echo esc_html( hezarfen_returns_format_datetime( $request->get_created_at() ) ); ?></strong>
 						</li>
 						<li>
-							<span><?php esc_html_e( 'Kaynak', 'hezarfen-for-woocommerce' ); ?></span>
-							<strong>
-								<?php echo 'guest' === $request->get_created_via() ? esc_html__( 'Üyeliksiz', 'hezarfen-for-woocommerce' ) : esc_html__( 'Hesabım', 'hezarfen-for-woocommerce' ); ?>
-							</strong>
-						</li>
-						<li>
 							<span><?php esc_html_e( 'Gönderim', 'hezarfen-for-woocommerce' ); ?></span>
 							<strong><?php echo esc_html( $shipping_method->get_label() ); ?></strong>
 						</li>

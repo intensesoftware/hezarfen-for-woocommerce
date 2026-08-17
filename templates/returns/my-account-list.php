@@ -6,10 +6,9 @@
  *
  * @package Hezarfen\Inc\Returns
  *
- * @var \Hezarfen\Inc\Returns\Core\Return_Request[] $requests         Customer's requests.
- * @var \Hezarfen\Inc\Returns\Frontend\Return_Access $access          Access helper.
- * @var WC_Order[]                                  $eligible_orders  Orders that still accept a request.
- * @var string                                      $request_base_url Base URL of the request form endpoint.
+ * @var \Hezarfen\Inc\Returns\Core\Return_Request[]  $requests   Customer's requests.
+ * @var \Hezarfen\Inc\Returns\Frontend\Return_Access $access     Access helper.
+ * @var string                                       $orders_url Link to the orders list.
  */
 
 defined( 'ABSPATH' ) || exit();
@@ -45,35 +44,17 @@ defined( 'ABSPATH' ) || exit();
 	<?php else : ?>
 		<div class="hez-empty">
 			<p class="hez-empty__title"><?php esc_html_e( 'Henüz bir iade talebiniz yok.', 'hezarfen-for-woocommerce' ); ?></p>
-			<p class="hez-empty__text"><?php esc_html_e( 'İade etmek istediğiniz bir ürün varsa aşağıdaki siparişlerinizden başlayabilirsiniz.', 'hezarfen-for-woocommerce' ); ?></p>
+			<p class="hez-empty__text"><?php esc_html_e( 'İade talebini, iade etmek istediğiniz ürünün bulunduğu siparişin detay sayfasından oluşturabilirsiniz.', 'hezarfen-for-woocommerce' ); ?></p>
 		</div>
 	<?php endif; ?>
 
-	<?php if ( $eligible_orders ) : ?>
-		<section class="hez-panel hez-panel--eligible">
-			<h3 class="hez-panel__title"><?php esc_html_e( 'İade edilebilir siparişleriniz', 'hezarfen-for-woocommerce' ); ?></h3>
-
-			<ul class="hez-order-list">
-				<?php foreach ( $eligible_orders as $hez_order ) : ?>
-					<li class="hez-order-list__item">
-						<span class="hez-order-list__info">
-							<span class="hez-order-list__number">
-								<?php
-								printf(
-									/* translators: %s: order number. */
-									esc_html__( 'Sipariş %s', 'hezarfen-for-woocommerce' ),
-									esc_html( $hez_order->get_order_number() )
-								);
-								?>
-							</span>
-							<span class="hez-order-list__date"><?php echo esc_html( wc_format_datetime( $hez_order->get_date_created() ) ); ?></span>
-						</span>
-						<a class="hez-btn hez-btn--small" href="<?php echo esc_url( trailingslashit( $request_base_url ) . $hez_order->get_id() ); ?>">
-							<?php esc_html_e( 'İade et', 'hezarfen-for-woocommerce' ); ?>
-						</a>
-					</li>
-				<?php endforeach; ?>
-			</ul>
-		</section>
-	<?php endif; ?>
+	<p class="hez-returns__footnote">
+		<?php
+		printf(
+			/* translators: %s: orders page link. */
+			wp_kses_post( __( 'Yeni bir iade talebi için <a href="%s">siparişlerinizden</a> ilgili siparişi açın.', 'hezarfen-for-woocommerce' ) ),
+			esc_url( $orders_url )
+		);
+		?>
+	</p>
 </div>

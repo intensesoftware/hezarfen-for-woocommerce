@@ -76,10 +76,8 @@ Plugin'in yazdığı/okuduğu tüm option key'leri, order meta'ları ve özel ta
 | `hezarfen_returns_window_days` | int | returns | Global iade süresi; `0` = sınırsız |
 | `hezarfen_returns_window_reference` | completed\|paid\|created | returns | Sürenin sayılacağı sipariş tarihi |
 | `hezarfen_returns_eligible_order_statuses` | array | returns | İade açılabilecek sipariş durumları (`wc-` önekli saklanır) |
-| `hezarfen_returns_guest_enabled` | yes/no | returns | Üyeliksiz iade talebi |
 | `hezarfen_returns_shipping_method` | string | returns | Aktif iade gönderim yöntemi anahtarı |
 | `hezarfen_returns_instructions` | string | returns | Onay sonrası müşteriye gösterilen yönerge |
-| `hezarfen_returns_page_id` | int | returns | `[hezarfen_iade]` kısa kodunu barındıran sayfanın ID'si |
 | `hezarfen_returns_endpoints_version` | string | returns | Endpoint imzası; değişince rewrite flush tetiklenir |
 | `hezarfen_returns_address_label` | string | returns | İade adresi başlığı |
 | `hezarfen_returns_address_contact` | string | returns | İade adresi yetkili/firma adı |
@@ -188,9 +186,6 @@ CREATE TABLE wp_hezarfen_returns (
   customer_note     TEXT NULL,
   refund_amount     DECIMAL(19,4) NOT NULL DEFAULT 0.0000,
   currency          VARCHAR(10)  NOT NULL DEFAULT '',
-  access_token      VARCHAR(64)  NOT NULL DEFAULT '',
-  created_via       VARCHAR(32)  NOT NULL DEFAULT 'account',
-  ip_address        VARCHAR(45)  NOT NULL DEFAULT '',
   created_at        DATETIME NOT NULL,
   updated_at        DATETIME NOT NULL,
   PRIMARY KEY (id),

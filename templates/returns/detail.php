@@ -1,6 +1,6 @@
 <?php
 /**
- * Return request detail view, shared by the account area and the guest page.
+ * Return request detail view in the account area.
  *
  * Override at yourtheme/hezarfen/returns/detail.php.
  *
@@ -11,14 +11,12 @@
  * @var \Hezarfen\Inc\Returns\Core\Return_Reasons  $reasons         Reason registry.
  * @var \Hezarfen\Inc\Returns\Shipping\Return_Shipping_Method_Interface $shipping_method Shipping method.
  * @var string[]                                   $progress_steps  Ordered progress statuses.
- * @var string                                     $back_url        Link back to the list, empty for guests.
- * @var bool                                       $is_guest_view   Whether the guest page is rendering.
+ * @var string                                     $back_url        Link back to the list.
  */
 
 use Hezarfen\Inc\Returns\Core\Return_Event;
 use Hezarfen\Inc\Returns\Core\Return_Settings;
 use Hezarfen\Inc\Returns\Core\Return_Status;
-use Hezarfen\Inc\Returns\Frontend\Return_Access;
 use Hezarfen\Inc\Returns\Frontend\Return_Form_Handler;
 
 defined( 'ABSPATH' ) || exit();
@@ -26,7 +24,6 @@ defined( 'ABSPATH' ) || exit();
 $hez_status       = $request->get_status();
 $hez_is_derailed  = in_array( $hez_status, array( Return_Status::REJECTED, Return_Status::CANCELLED ), true );
 $hez_current_step = array_search( $hez_status, $progress_steps, true );
-$hez_token        = $is_guest_view ? $request->get_access_token() : '';
 $hez_info_pending = Return_Status::INFO_REQUIRED === $hez_status;
 $hez_order        = $request->get_order();
 $hez_order_number = $hez_order ? $hez_order->get_order_number() : (string) $request->get_order_id();
@@ -102,9 +99,6 @@ $hez_order_number = $hez_order ? $hez_order->get_order_number() : (string) $requ
 				<?php wp_nonce_field( 'hezarfen_returns_' . Return_Form_Handler::ACTION_INFO, Return_Form_Handler::NONCE_FIELD ); ?>
 				<input type="hidden" name="<?php echo esc_attr( Return_Form_Handler::ACTION_FIELD ); ?>" value="<?php echo esc_attr( Return_Form_Handler::ACTION_INFO ); ?>">
 				<input type="hidden" name="return_id" value="<?php echo esc_attr( $request->get_id() ); ?>">
-				<?php if ( $hez_token ) : ?>
-					<input type="hidden" name="<?php echo esc_attr( Return_Access::QUERY_KEY ); ?>" value="<?php echo esc_attr( $hez_token ); ?>">
-				<?php endif; ?>
 
 				<p class="hez-field">
 					<label for="hez-info-response"><?php esc_html_e( 'Yanıtınız', 'hezarfen-for-woocommerce' ); ?></label>
@@ -139,9 +133,6 @@ $hez_order_number = $hez_order ? $hez_order->get_order_number() : (string) $requ
 					<?php wp_nonce_field( 'hezarfen_returns_' . Return_Form_Handler::ACTION_TRACKING, Return_Form_Handler::NONCE_FIELD ); ?>
 					<input type="hidden" name="<?php echo esc_attr( Return_Form_Handler::ACTION_FIELD ); ?>" value="<?php echo esc_attr( Return_Form_Handler::ACTION_TRACKING ); ?>">
 					<input type="hidden" name="return_id" value="<?php echo esc_attr( $request->get_id() ); ?>">
-					<?php if ( $hez_token ) : ?>
-						<input type="hidden" name="<?php echo esc_attr( Return_Access::QUERY_KEY ); ?>" value="<?php echo esc_attr( $hez_token ); ?>">
-					<?php endif; ?>
 
 					<p class="hez-field">
 						<label for="hez-courier"><?php esc_html_e( 'Kargo firması', 'hezarfen-for-woocommerce' ); ?></label>
@@ -243,9 +234,6 @@ $hez_order_number = $hez_order ? $hez_order->get_order_number() : (string) $requ
 			<?php wp_nonce_field( 'hezarfen_returns_' . Return_Form_Handler::ACTION_CANCEL, Return_Form_Handler::NONCE_FIELD ); ?>
 			<input type="hidden" name="<?php echo esc_attr( Return_Form_Handler::ACTION_FIELD ); ?>" value="<?php echo esc_attr( Return_Form_Handler::ACTION_CANCEL ); ?>">
 			<input type="hidden" name="return_id" value="<?php echo esc_attr( $request->get_id() ); ?>">
-			<?php if ( $hez_token ) : ?>
-				<input type="hidden" name="<?php echo esc_attr( Return_Access::QUERY_KEY ); ?>" value="<?php echo esc_attr( $hez_token ); ?>">
-			<?php endif; ?>
 
 			<button type="submit" class="hez-btn hez-btn--danger-ghost"><?php esc_html_e( 'Talebi iptal et', 'hezarfen-for-woocommerce' ); ?></button>
 		</form>

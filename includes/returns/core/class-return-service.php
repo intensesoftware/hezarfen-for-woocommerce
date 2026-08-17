@@ -79,8 +79,7 @@ class Return_Service {
 	 * @param array<string, mixed> $input Sanitised input: `lines` keyed by
 	 *                                    order item ID with `quantity`,
 	 *                                    `reason` and `note`, plus an
-	 *                                    optional `customer_note` and
-	 *                                    `created_via`.
+	 *                                    optional `customer_note`.
 	 *
 	 * @return Return_Request|\WP_Error
 	 */
@@ -108,14 +107,11 @@ class Return_Service {
 				'return_address_id' => 'default',
 				'customer_note'     => isset( $input['customer_note'] ) ? (string) $input['customer_note'] : '',
 				'currency'          => $order->get_currency(),
-				'created_via'       => isset( $input['created_via'] ) ? (string) $input['created_via'] : 'account',
-				'ip_address'        => isset( $input['ip_address'] ) ? (string) $input['ip_address'] : '',
 			)
 		);
 
 		$request->set_items( $items );
 		$request->set_refund_amount( $this->calculate_refund_amount( $items ) );
-		$request->set_access_token( $this->generate_access_token() );
 		$request->set_return_number( $this->generate_return_number( $order ) );
 
 		$saved = $this->repository->save( $request );
@@ -532,15 +528,6 @@ class Return_Service {
 		 * @param \WC_Order $order  Parent order.
 		 */
 		return (string) apply_filters( 'hezarfen_returns_return_number', $number, $order );
-	}
-
-	/**
-	 * Generates the token that lets a guest open the request from a link.
-	 *
-	 * @return string
-	 */
-	private function generate_access_token() {
-		return wp_generate_password( 32, false, false );
 	}
 
 	/**

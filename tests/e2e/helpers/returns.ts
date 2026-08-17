@@ -1,3 +1,4 @@
+import { expect, type Page } from '@playwright/test';
 import { wp } from './wp-cli';
 
 /**
@@ -6,6 +7,9 @@ import { wp } from './wp-cli';
  * Everything that seeds state goes through `wp eval` and the module's own
  * service layer rather than through raw SQL, so a spec can never assert
  * against a row shape the plugin would never actually write.
+ *
+ * Returns are account-only: every seeded order belongs to the customer
+ * below, because an order with no customer can never reach the return form.
  */
 
 export const RETURNS_CUSTOMER = {
@@ -16,7 +20,6 @@ export const RETURNS_CUSTOMER = {
 
 export const RETURNS_OPTIONS = {
 	hezarfen_returns_enabled: 'yes',
-	hezarfen_returns_guest_enabled: 'yes',
 	hezarfen_returns_window_days: '14',
 	hezarfen_returns_window_reference: 'completed',
 	hezarfen_returns_shipping_method: 'customer-ships',
@@ -66,11 +69,15 @@ function lastLine( output: string ): string {
 }
 
 /**
- * Turn the module on and make sure the tables, the public page and the
- * account endpoints exist. Idempotent, so a spec can call it in
- * `beforeAll` without caring about ordering.
+ * Turn the module on and make sure the tables and the account endpoints
+ * exist. Idempotent, so a spec can call it in `beforeAll` without caring
+ * about ordering.
  */
 export function enableReturns(): void {
+	// Before anything logs in: the first call resets the customer's password
+	// and would otherwise drop a live session mid-test.
+	ensureReturnsCustomer();
+
 	for ( const [ key, value ] of Object.entries( RETURNS_OPTIONS ) ) {
 		setOption( key, value );
 	}
@@ -80,7 +87,6 @@ export function enableReturns(): void {
 		'eval',
 		`
 			\\Hezarfen\\Inc\\Returns\\Core\\Returns_Schema::install();
-			\\Hezarfen\\Inc\\Returns\\Frontend\\Guest_Returns::ensure_page();
 			delete_option( 'hezarfen_returns_endpoints_version' );
 		`,
 	] );
@@ -94,22 +100,21 @@ export function disableReturns(): void {
 	setOption( 'hezarfen_returns_enabled', 'no' );
 }
 
-/**
- * Permalink of the public (guest) return page.
- */
-export function getReturnsPageUrl(): string {
-	return lastLine(
-		wp( [
-			'eval',
-			`echo get_permalink( (int) get_option( 'hezarfen_returns_page_id' ) );`,
-		] )
-	);
-}
+let cachedCustomerId: string | null = null;
 
 /**
  * Create (or reset) the customer the returns specs log in as.
+ *
+ * Memoized per worker on purpose: resetting a password destroys that user's
+ * WordPress sessions, so calling this again mid-test would silently log the
+ * browser out and every later assertion would be made against the login
+ * form. `enableReturns()` calls it during setup, before anyone logs in.
  */
 export function ensureReturnsCustomer(): string {
+	if ( cachedCustomerId ) {
+		return cachedCustomerId;
+	}
+
 	const existing = wp(
 		[ 'user', 'get', RETURNS_CUSTOMER.username, '--field=ID' ],
 		{ allowFailure: true }
@@ -122,10 +127,13 @@ export function ensureReturnsCustomer(): string {
 			existing,
 			`--user_pass=${ RETURNS_CUSTOMER.password }`,
 		] );
-		return existing;
+
+		cachedCustomerId = existing;
+
+		return cachedCustomerId;
 	}
 
-	return wp( [
+	cachedCustomerId = wp( [
 		'user',
 		'create',
 		RETURNS_CUSTOMER.username,
@@ -136,15 +144,40 @@ export function ensureReturnsCustomer(): string {
 		'--last_name=Lovelace',
 		'--porcelain',
 	] ).trim();
+
+	return cachedCustomerId;
+}
+
+/**
+ * Log the returns customer in, reusing an existing session when there is
+ * one.
+ */
+export async function loginAsReturnsCustomer( page: Page ): Promise< void > {
+	await page.goto( '/my-account/' );
+
+	const alreadyIn = await page
+		.locator( 'nav.woocommerce-MyAccount-navigation' )
+		.isVisible()
+		.catch( () => false );
+
+	if ( alreadyIn ) return;
+
+	await page.locator( '#username' ).fill( RETURNS_CUSTOMER.username );
+	await page.locator( '#password' ).fill( RETURNS_CUSTOMER.password );
+	await page.locator( 'button[name="login"]' ).click();
+	await expect(
+		page.locator( 'nav.woocommerce-MyAccount-navigation' )
+	).toBeVisible();
 }
 
 /**
  * A product with a non-zero price, so the specs can assert on money.
  */
 export function ensurePricedProduct(): string {
-	return lastLine( wp( [
-		'eval',
-		`
+	return lastLine(
+		wp( [
+			'eval',
+			`
 			$existing = get_page_by_path( 'hezarfen-e2e-returns-product', OBJECT, 'product' );
 			if ( $existing ) { echo $existing->ID; return; }
 			$product = new WC_Product_Simple();
@@ -154,7 +187,8 @@ export function ensurePricedProduct(): string {
 			$product->set_status( 'publish' );
 			echo $product->save();
 		`,
-	] ) );
+		] )
+	);
 }
 
 export interface SeedReturnableOrderOptions {
@@ -162,10 +196,8 @@ export interface SeedReturnableOrderOptions {
 	quantity?: number;
 	/** Order status, defaults to `completed`. */
 	status?: string;
-	/** Customer user ID; 0 (default) creates a guest order. */
+	/** Customer user ID; defaults to the returns customer. */
 	customerId?: string;
-	/** Billing e-mail, defaults to the returns customer's address. */
-	email?: string;
 	/** How many days ago the order was completed. */
 	completedDaysAgo?: number;
 }
@@ -179,18 +211,18 @@ export function seedReturnableOrder(
 	const productId = ensurePricedProduct();
 	const quantity = opts.quantity ?? 2;
 	const status = opts.status ?? 'completed';
-	const customerId = opts.customerId ?? '0';
-	const email = opts.email ?? RETURNS_CUSTOMER.email;
+	const customerId = opts.customerId ?? ensureReturnsCustomer();
 	const daysAgo = opts.completedDaysAgo ?? 0;
 
-	const out = lastLine( wp( [
-		'eval',
-		`
+	const out = lastLine(
+		wp( [
+			'eval',
+			`
 			$order = wc_create_order( array( 'status' => '${ status }', 'customer_id' => ${ customerId } ) );
 			$order->add_product( wc_get_product( ${ productId } ), ${ quantity } );
 			$order->set_billing_first_name( 'Ada' );
 			$order->set_billing_last_name( 'Lovelace' );
-			$order->set_billing_email( '${ email }' );
+			$order->set_billing_email( '${ RETURNS_CUSTOMER.email }' );
 			$order->set_billing_country( 'TR' );
 			$order->set_billing_state( 'TR06' );
 			$order->set_billing_city( 'Çankaya' );
@@ -201,13 +233,83 @@ export function seedReturnableOrder(
 			$order->save();
 			echo $order->get_id();
 		`,
-	] ) );
+		] )
+	);
 
 	if ( ! /^\d+$/.test( out ) ) {
 		throw new Error( `seedReturnableOrder failed: ${ out }` );
 	}
 
 	return out;
+}
+
+/**
+ * Seed a completed order whose only line is a virtual + downloadable
+ * product. The store-wide policy refuses to offer those for return.
+ */
+export function seedDigitalOrder(): string {
+	const customerId = ensureReturnsCustomer();
+
+	const out = lastLine(
+		wp( [
+			'eval',
+			`
+			$existing = get_page_by_path( 'hezarfen-e2e-returns-digital', OBJECT, 'product' );
+			if ( $existing ) {
+				$product_id = $existing->ID;
+			} else {
+				$product = new WC_Product_Simple();
+				$product->set_name( 'Hezarfen E2E Dijital Ürün' );
+				$product->set_slug( 'hezarfen-e2e-returns-digital' );
+				$product->set_regular_price( 50 );
+				$product->set_virtual( true );
+				$product->set_downloadable( true );
+				$product->set_status( 'publish' );
+				$product_id = $product->save();
+			}
+
+			$order = wc_create_order( array( 'status' => 'completed', 'customer_id' => ${ customerId } ) );
+			$order->add_product( wc_get_product( $product_id ), 1 );
+			$order->set_billing_email( '${ RETURNS_CUSTOMER.email }' );
+			$order->calculate_totals();
+			$order->set_date_completed( time() );
+			$order->save();
+			echo $order->get_id();
+		`,
+		] )
+	);
+
+	if ( ! /^\d+$/.test( out ) ) {
+		throw new Error( `seedDigitalOrder failed: ${ out }` );
+	}
+
+	return out;
+}
+
+/**
+ * Refund part of an order's first line through WooCommerce itself, so a
+ * spec can prove the returns module respects refunds it did not create.
+ */
+export function refundFirstLine( orderId: string, quantity: number ): void {
+	wp( [
+		'eval',
+		`
+			$order = wc_get_order( ${ orderId } );
+			$items = $order->get_items();
+			$item  = reset( $items );
+			$unit  = (float) $order->get_line_total( $item, true, false ) / max( 1, $item->get_quantity() );
+			wc_create_refund( array(
+				'order_id'   => ${ orderId },
+				'amount'     => $unit * ${ quantity },
+				'line_items' => array(
+					$item->get_id() => array(
+						'qty'          => ${ quantity },
+						'refund_total' => $unit * ${ quantity },
+					),
+				),
+			) );
+		`,
+	] );
 }
 
 export interface SeedReturnOptions {
@@ -222,7 +324,6 @@ export interface SeedReturnOptions {
 export interface SeededReturn {
 	id: string;
 	number: string;
-	token: string;
 }
 
 /**
@@ -234,9 +335,10 @@ export function seedReturn( opts: SeedReturnOptions ): SeededReturn {
 	const reason = opts.reason ?? 'defective';
 	const note = opts.note ?? '';
 
-	const out = lastLine( wp( [
-		'eval',
-		`
+	const out = lastLine(
+		wp( [
+			'eval',
+			`
 			$module = \\Hezarfen\\Inc\\Returns\\Returns_Module::instance();
 			$order  = wc_get_order( ${ opts.orderId } );
 			$lines  = $module->eligibility()->get_returnable_lines( $order );
@@ -257,10 +359,10 @@ export function seedReturn( opts: SeedReturnOptions ): SeededReturn {
 			echo wp_json_encode( array(
 				'id'     => (string) $request->get_id(),
 				'number' => $request->get_return_number(),
-				'token'  => $request->get_access_token(),
 			) );
 		`,
-	] ) );
+		] )
+	);
 
 	if ( out.startsWith( 'ERR:' ) ) {
 		throw new Error( `seedReturn failed: ${ out }` );
@@ -300,16 +402,18 @@ export function countReturnEvents( returnId: string ): number {
 }
 
 /**
- * The guest token that unlocks the return form for an order.
+ * Account URL of the return form for an order.
  */
-export function getOrderToken( orderId: string ): string {
-	return lastLine( wp( [
-		'eval',
-		`
-			$access = new \\Hezarfen\\Inc\\Returns\\Frontend\\Return_Access();
-			echo $access->get_order_token( wc_get_order( ${ orderId } ) );
-		`,
-	] ) );
+export function requestFormUrl( orderId: string ): string {
+	return `/my-account/iade-talebi/${ orderId }/`;
+}
+
+/**
+ * Account URL of the order's own detail page — the only entry point into
+ * the return flow.
+ */
+export function viewOrderUrl( orderId: string ): string {
+	return `/my-account/view-order/${ orderId }/`;
 }
 
 /**
@@ -324,73 +428,6 @@ export function clearReturns(): void {
 			foreach ( array( 'hezarfen_return_events', 'hezarfen_return_items', 'hezarfen_returns' ) as $table ) {
 				$wpdb->query( 'TRUNCATE TABLE ' . $wpdb->prefix . $table );
 			}
-		`,
-	] );
-}
-
-/**
- * Seed a completed order whose only line is a virtual + downloadable
- * product. The store-wide policy refuses to offer those for return.
- */
-export function seedDigitalOrder( email: string ): string {
-	const out = lastLine(
-		wp( [
-			'eval',
-			`
-			$existing = get_page_by_path( 'hezarfen-e2e-returns-digital', OBJECT, 'product' );
-			if ( $existing ) {
-				$product_id = $existing->ID;
-			} else {
-				$product = new WC_Product_Simple();
-				$product->set_name( 'Hezarfen E2E Dijital Ürün' );
-				$product->set_slug( 'hezarfen-e2e-returns-digital' );
-				$product->set_regular_price( 50 );
-				$product->set_virtual( true );
-				$product->set_downloadable( true );
-				$product->set_status( 'publish' );
-				$product_id = $product->save();
-			}
-
-			$order = wc_create_order( array( 'status' => 'completed' ) );
-			$order->add_product( wc_get_product( $product_id ), 1 );
-			$order->set_billing_email( '${ email }' );
-			$order->calculate_totals();
-			$order->set_date_completed( time() );
-			$order->save();
-			echo $order->get_id();
-		`,
-		] )
-	);
-
-	if ( ! /^\d+$/.test( out ) ) {
-		throw new Error( `seedDigitalOrder failed: ${ out }` );
-	}
-
-	return out;
-}
-
-/**
- * Refund part of an order's first line through WooCommerce itself, so a
- * spec can prove the returns module respects refunds it did not create.
- */
-export function refundFirstLine( orderId: string, quantity: number ): void {
-	wp( [
-		'eval',
-		`
-			$order = wc_get_order( ${ orderId } );
-			$items = $order->get_items();
-			$item  = reset( $items );
-			$unit  = (float) $order->get_line_total( $item, true, false ) / max( 1, $item->get_quantity() );
-			wc_create_refund( array(
-				'order_id'   => ${ orderId },
-				'amount'     => $unit * ${ quantity },
-				'line_items' => array(
-					$item->get_id() => array(
-						'qty'          => ${ quantity },
-						'refund_total' => $unit * ${ quantity },
-					),
-				),
-			) );
 		`,
 	] );
 }

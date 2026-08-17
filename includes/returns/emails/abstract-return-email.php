@@ -152,9 +152,9 @@ abstract class Abstract_Return_Email extends \WC_Email {
 
 		$access = new Return_Access();
 
-		// Guests only have the token link; account holders get the token
-		// too so the mail keeps working if they are logged out.
-		return $access->get_request_url( $this->return_request, true );
+		// Account-only area: a logged-out customer following this link lands
+		// on the login screen and is returned here afterwards.
+		return $access->get_request_url( $this->return_request );
 	}
 
 	/**

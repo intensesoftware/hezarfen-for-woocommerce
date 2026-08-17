@@ -21,10 +21,8 @@ class Return_Settings {
 	const OPTION_WINDOW_DAYS       = 'hezarfen_returns_window_days';
 	const OPTION_WINDOW_REFERENCE  = 'hezarfen_returns_window_reference';
 	const OPTION_ELIGIBLE_STATUSES = 'hezarfen_returns_eligible_order_statuses';
-	const OPTION_GUEST_ENABLED     = 'hezarfen_returns_guest_enabled';
 	const OPTION_SHIPPING_METHOD   = 'hezarfen_returns_shipping_method';
 	const OPTION_INSTRUCTIONS      = 'hezarfen_returns_instructions';
-	const OPTION_PAGE_ID           = 'hezarfen_returns_page_id';
 
 	const OPTION_ADDRESS_LABEL        = 'hezarfen_returns_address_label';
 	const OPTION_ADDRESS_CONTACT      = 'hezarfen_returns_address_contact';
@@ -51,15 +49,6 @@ class Return_Settings {
 		 * @param bool $enabled Whether returns are enabled.
 		 */
 		return (bool) apply_filters( 'hezarfen_returns_enabled', 'yes' === get_option( self::OPTION_ENABLED, 'no' ) );
-	}
-
-	/**
-	 * Whether customers without an account can open a request.
-	 *
-	 * @return bool
-	 */
-	public static function is_guest_enabled() {
-		return 'yes' === get_option( self::OPTION_GUEST_ENABLED, 'yes' );
 	}
 
 	/**
@@ -130,32 +119,6 @@ class Return_Settings {
 	 */
 	public static function get_instructions() {
 		return (string) get_option( self::OPTION_INSTRUCTIONS, '' );
-	}
-
-	/**
-	 * ID of the page that hosts the guest return form.
-	 *
-	 * @return int
-	 */
-	public static function get_page_id() {
-		return (int) get_option( self::OPTION_PAGE_ID, 0 );
-	}
-
-	/**
-	 * Permalink of the guest return page, empty when unset.
-	 *
-	 * @return string
-	 */
-	public static function get_page_url() {
-		$page_id = self::get_page_id();
-
-		if ( ! $page_id ) {
-			return '';
-		}
-
-		$permalink = get_permalink( $page_id );
-
-		return $permalink ? $permalink : '';
 	}
 
 	/**

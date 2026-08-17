@@ -9,7 +9,6 @@ entry_files:
   - includes/returns/core/class-return-service.php
   - includes/returns/core/class-return-eligibility.php
   - includes/returns/frontend/class-my-account-returns.php
-  - includes/returns/frontend/class-guest-returns.php
   - includes/returns/admin/class-returns-admin.php
 depends_on: [woocommerce]
 optional_deps: [manual-shipment-tracking]
@@ -19,17 +18,22 @@ related: [my-account, shipment-tracking, admin-menu]
 ## Amaç
 
 Müşterinin satın aldığı ürünü iade etmek için mağazaya e-posta atması ya da telefon
-etmesi gerekmesin. Müşteri hesabından (veya üye değilse sipariş no + e-posta ile)
-iade talebi açar, süreci adım adım takip eder; mağaza da talepleri tek bir ekrandan
-onaylar, reddeder, ek bilgi ister ve kargo bilgisini görür.
+etmesi gerekmesin. Müşteri, hesabındaki siparişin detay sayfasından iade talebi
+açar ve süreci adım adım takip eder; mağaza da talepleri tek bir ekrandan onaylar,
+reddeder, ek bilgi ister ve kargo bilgisini görür.
+
+Akış **hesaba bağlıdır**: talep yalnızca siparişin sahibi olan müşteri
+tarafından, kendi sipariş detay sayfasından açılabilir. Bu, Amazon ve
+Trendyol gibi pazaryerlerinin izlediği yolla aynıdır; üyeliksiz sorgulama
+bilerek yoktur.
 
 Modül **varsayılan olarak kapalıdır**; WooCommerce → Ayarlar → Hezarfen → İade
 Yönetimi bölümünden açılır.
 
 ## Kapsam
 
-- Hesabım altında "İadelerim" listesi ve talep detayı (`includes/returns/frontend/class-my-account-returns.php`)
-- Üyeliksiz (guest) iade: sipariş no + fatura e-postası doğrulaması (`includes/returns/frontend/class-guest-returns.php`)
+- Tek giriş noktası: Hesabım → Siparişler → sipariş detayındaki iade paneli (`includes/returns/frontend/class-my-account-returns.php`)
+- Hesabım altında "İadelerim" listesi ve talep detayı
 - Ürün/adet seçimi ve kısmi iade (`includes/returns/core/class-return-eligibility.php`)
 - Hazır iade sebepleri + "Diğer" seçeneğinde zorunlu açıklama (`includes/returns/core/class-default-reason-provider.php`)
 - Global iade süresi ve süre başlangıcı ayarı (`includes/returns/core/class-global-return-policy-provider.php`)
@@ -44,6 +48,7 @@ Aşağıdakiler bu modülde **yoktur**; modül bunlar için hazır uzantı nokta
 sunar (bkz. "Uzantı Noktaları"), böylece bir eklenti çekirdek koda dokunmadan
 ekleyebilir:
 
+- Üyeliksiz (guest) iade talebi
 - Mağazanın kendi tanımladığı iade sebepleri
 - Talebe fotoğraf/video ekleme ve kanıt kuralları
 - E-posta içeriği özelleştirme
@@ -64,8 +69,7 @@ artmadan da kurulabilsin diye `hezarfen_db_version`'a bağlı değildir
 - `{prefix}hezarfen_returns` — talep başlığı. `return_number`, `order_id`,
   `customer_id`, `customer_email`, `status`, `shipping_method`, `courier`,
   `tracking_number`, `return_address_id`, `customer_note`, `refund_amount`,
-  `currency`, `access_token`, `created_via`, `ip_address`, `created_at`,
-  `updated_at`.
+  `currency`, `created_at`, `updated_at`.
 - `{prefix}hezarfen_return_items` — talebe dahil satırlar. `return_id`,
   `order_item_id`, `product_id`, `variation_id`, `product_name`, `sku`,
   `quantity`, `line_total`, `reason_key`, `reason_note`.
@@ -92,10 +96,10 @@ adedi geri bırakır; diğer tüm durumlar adedi tutar.
 
 ## Davranışlar
 
-### Senaryo: Hesabı olan müşteri kısmi iade talebi açar
+### Senaryo: Müşteri kısmi iade talebi açar
 - **Given** modül açık ve siparişin durumu izinli durumlar arasında
 - **And** iade süresi dolmamış
-- **When** müşteri Hesabım → İadelerim → İade et yolunu izleyip bir satırdan 2 adetten 1'ini seçer, sebep belirtir ve formu gönderir
+- **When** müşteri Hesabım → Siparişler → sipariş detayı → "İade talebi oluştur" yolunu izleyip bir satırdan 2 adetten 1'ini seçer, sebep belirtir ve formu gönderir
 - **Then** `pending` durumunda bir talep oluşur, `IADE-{sipariş no}-{sıra}` referansı atanır
 - **And** müşteriye onay, mağazaya bilgi e-postası gider
 - **And** aynı satır için kalan 1 adet hâlâ iade edilebilir görünür
@@ -106,16 +110,15 @@ adedi geri bırakır; diğer tüm durumlar adedi tutar.
 - **Then** talep oluşmaz ve "açıklama yazmanız gerekiyor" hatası gösterilir
 - **And** bu kural JavaScript kapalıyken de sunucu tarafında uygulanır
 
-### Senaryo: Üyeliksiz müşteri siparişini sorgular
-- **Given** üyeliksiz iade açık
-- **When** müşteri iade sayfasında sipariş numarası ve fatura e-postasını girer
-- **Then** eşleşme varsa sipariş anahtarından türetilmiş bir token ile iade formuna yönlendirilir
-- **And** eşleşme yoksa her hata için aynı genel mesaj gösterilir (sipariş var mı yok mu sızdırılmaz)
+### Senaryo: Başka bir müşterinin siparişi denenir
+- **Given** giriş yapmış bir müşteri
+- **When** kendisine ait olmayan bir siparişin iade formu URL'i açılır
+- **Then** form render edilmez, "iade talebi oluşturamazsınız" hatası gösterilir
 
-### Senaryo: Üyeliksiz erişim tokensiz denenir
-- **Given** var olan bir iade talebi
-- **When** iade sayfası `?hezarfen_return={id}` ile tokensiz veya yanlış tokenla açılır
-- **Then** talep detayı gösterilmez, sorgulama formuna düşülür
+### Senaryo: Üye olmayan ziyaretçi
+- **Given** oturum açmamış bir ziyaretçi
+- **When** iade formu veya talep detayı URL'i açılır
+- **Then** WooCommerce hesabım akışı devreye girer; giriş yapılmadan hiçbir talep görülemez
 
 ### Senaryo: İade süresi dolmuş sipariş
 - **Given** global iade süresi 14 gün ve sipariş 30 gün önce tamamlanmış
@@ -159,11 +162,11 @@ adedi geri bırakır; diğer tüm durumlar adedi tutar.
 - **Dijital ürünler**: sanal/indirilebilir satırlar iade listesine hiç girmez.
 - **WooCommerce iadesi**: mağaza WC üzerinden adet iade ettiyse, o adet iade
   edilebilir miktardan düşülür.
-- **Sayfa/endpoint çakışması**: herkese açık sayfanın slug'ı (`iade`) endpoint
-  slug'larından (`iadelerim`, `iade-talebi`) farklıdır; aynı olsaydı `EP_ROOT`
-  rewrite kuralı sayfayı gölgeleyip 404 üretirdi.
-- **Guest bildirimi**: sepete hiç dokunmamış bir ziyaretçinin WooCommerce oturum
-  çerezi yoktur; bildirim kaybolmasın diye çerez yönlendirmeden önce zorlanır.
+- **Sayfa/endpoint çakışması**: `iadelerim` ve `iade-talebi` endpoint'leri
+  `EP_ROOT` ile kaydedilir; aynı slug'a sahip bir sayfa bu kural tarafından
+  gölgelenip 404 verir.
+- **Sahiplik**: talep, siparişin `customer_id`'sine bağlıdır. Müşterisi olmayan
+  (üyeliksiz ödeme ile açılmış) siparişler için iade talebi açılamaz.
 - **Süre 0**: iade süresi 0 girilirse zaman sınırı uygulanmaz.
 - **Şema kurulumu**: tablolar `hezarfen_returns_db_version` ile ayrı sürümlenir,
   plugin sürümü artmasa da kurulur.
@@ -174,10 +177,9 @@ adedi geri bırakır; diğer tüm durumlar adedi tutar.
   WooCommerce → Ayarlar → Hezarfen → İade Yönetimi; sipariş düzenleme ekranında
   "Hezarfen İade Talepleri" kutusu; WooCommerce → Ayarlar → E-postalar altında
   altı bildirim.
-- **Frontend**: Hesabım → İadelerim (`/{hesabım}/iadelerim/`, detay için
-  `/{hesabım}/iadelerim/{id}/`); iade formu `/{hesabım}/iade-talebi/{sipariş id}/`;
-  herkese açık sayfa `[hezarfen_iade]` kısa koduyla; sipariş detay sayfasının
-  altında iade paneli.
+- **Frontend**: sipariş detay sayfasının altındaki iade paneli (tek giriş
+  noktası); iade formu `/{hesabım}/iade-talebi/{sipariş id}/`; Hesabım →
+  İadelerim (`/{hesabım}/iadelerim/`, detay için `/{hesabım}/iadelerim/{id}/`).
 
 ## Uzantı Noktaları
 
@@ -204,9 +206,9 @@ Tam liste için `specs/shared/hooks.md`. Öne çıkanlar:
 
 ## Sınama Notları
 
-- E2E: `tests/e2e/returns-my-account.spec.ts`, `returns-guest.spec.ts`,
-  `returns-admin.spec.ts`, `returns-eligibility.spec.ts`,
-  `returns-settings.spec.ts`, `returns-emails.spec.ts`.
+- E2E: `tests/e2e/returns-my-account.spec.ts`, `returns-admin.spec.ts`,
+  `returns-eligibility.spec.ts`, `returns-settings.spec.ts`,
+  `returns-emails.spec.ts`.
 - Manuel: modülü açtıktan sonra kalıcı bağlantıları bir kez yenileyin
   (endpoint'ler `hezarfen_returns_endpoints_version` değişince otomatik flush olur).
 - HPOS açık/kapalı matrisinde sipariş düzenleme kutusu ayrı doğrulanmalı.

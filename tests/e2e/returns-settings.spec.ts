@@ -19,7 +19,6 @@ const SETTINGS_URL =
 
 const OPTION_KEYS = [
 	'hezarfen_returns_enabled',
-	'hezarfen_returns_guest_enabled',
 	'hezarfen_returns_window_days',
 	'hezarfen_returns_window_reference',
 	'hezarfen_returns_eligible_order_statuses',
@@ -28,7 +27,6 @@ const OPTION_KEYS = [
 	'hezarfen_returns_address_contact',
 	'hezarfen_returns_address_line',
 	'hezarfen_returns_address_city',
-	'hezarfen_returns_page_id',
 ];
 
 let optionSnapshot: Record< string, string >;
@@ -118,28 +116,4 @@ test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
 		).toHaveValue( '21' );
 	} );
 
-	test( 'özellik açıkken herkese açık iade sayfası mevcut', async () => {
-		const pageId = wp( [
-			'option',
-			'get',
-			'hezarfen_returns_page_id',
-		] ).trim();
-
-		expect( pageId ).toMatch( /^\d+$/ );
-		expect( parseInt( pageId, 10 ) ).toBeGreaterThan( 0 );
-
-		const status = wp( [
-			'eval',
-			`echo get_post_status( ${ pageId } );`,
-		] ).trim();
-		expect( status ).toBe( 'publish' );
-
-		const content = wp( [
-			'post',
-			'get',
-			pageId,
-			'--field=post_content',
-		] );
-		expect( content ).toContain( '[hezarfen_iade]' );
-	} );
 } );

@@ -8,7 +8,6 @@
 namespace Hezarfen\Inc\Returns\Admin;
 
 use Hezarfen\Inc\Returns\Core\Return_Settings;
-use Hezarfen\Inc\Returns\Frontend\Guest_Returns;
 use Hezarfen\Inc\Returns\Shipping\Return_Shipping_Registry;
 
 defined( 'ABSPATH' ) || exit();
@@ -74,12 +73,12 @@ class Returns_Settings {
 			array(
 				'title' => __( 'İade Yönetimi', 'hezarfen-for-woocommerce' ),
 				'type'  => 'title',
-				'desc'  => __( 'Müşterileriniz hesabım sayfasından iade talebi oluşturabilir, siz de talepleri Hezarfen &rarr; İadeler ekranından yönetebilirsiniz.', 'hezarfen-for-woocommerce' ),
+				'desc'  => __( 'Müşterileriniz Hesabım &rarr; Siparişler &rarr; sipariş detayından iade talebi oluşturabilir, siz de talepleri Hezarfen &rarr; İadeler ekranından yönetebilirsiniz.', 'hezarfen-for-woocommerce' ),
 				'id'    => 'hezarfen_returns_settings_title',
 			),
 			array(
 				'title'   => __( 'İade talebi özelliğini aç', 'hezarfen-for-woocommerce' ),
-				'desc'    => __( 'Açıldığında "İade Talebi" sayfası otomatik oluşturulur ve hesabım menüsüne "İadelerim" eklenir.', 'hezarfen-for-woocommerce' ),
+				'desc'    => __( 'Açıldığında müşteriler sipariş detay sayfasından iade talebi oluşturabilir ve hesabım menüsüne "İadelerim" eklenir.', 'hezarfen-for-woocommerce' ),
 				'type'    => 'checkbox',
 				'id'      => Return_Settings::OPTION_ENABLED,
 				'default' => 'no',
@@ -115,13 +114,6 @@ class Returns_Settings {
 				'id'       => Return_Settings::OPTION_ELIGIBLE_STATUSES,
 				'default'  => array( 'wc-completed' ),
 				'options'  => wc_get_order_statuses(),
-			),
-			array(
-				'title'   => __( 'Üyeliksiz iade talebi', 'hezarfen-for-woocommerce' ),
-				'desc'    => __( 'Hesabı olmayan müşteriler sipariş numarası ve e-posta ile iade talebi oluşturabilsin.', 'hezarfen-for-woocommerce' ),
-				'type'    => 'checkbox',
-				'id'      => Return_Settings::OPTION_GUEST_ENABLED,
-				'default' => 'yes',
 			),
 			array(
 				'title'    => __( 'İade gönderim yöntemi', 'hezarfen-for-woocommerce' ),
@@ -217,8 +209,8 @@ class Returns_Settings {
 	}
 
 	/**
-	 * Creates the public page and refreshes the rewrite rules the first
-	 * time the feature is switched on.
+	 * Rebuilds the account endpoints the first time the feature is switched
+	 * on, so "İadelerim" resolves without a manual permalink flush.
 	 *
 	 * @return void
 	 */
@@ -230,10 +222,8 @@ class Returns_Settings {
 			return;
 		}
 
-		Guest_Returns::ensure_page();
-
-		// The account endpoints are registered on `init`, which already ran
-		// for this request, so the rules have to be rebuilt explicitly.
+		// The endpoints are registered on `init`, which already ran for this
+		// request, so the rules have to be rebuilt on the next one.
 		delete_option( \Hezarfen\Inc\Returns\Frontend\My_Account_Returns::ENDPOINT_VERSION_OPTION );
 	}
 }

@@ -3,6 +3,7 @@ import { deleteOrder } from './helpers/orders';
 import {
 	clearReturns,
 	enableReturns,
+	RETURNS_CUSTOMER,
 	seedReturn,
 	seedReturnableOrder,
 } from './helpers/returns';
@@ -21,12 +22,9 @@ import { wp } from './helpers/wp-cli';
 
 const OPTION_KEYS = [
 	'hezarfen_returns_enabled',
-	'hezarfen_returns_guest_enabled',
 	'hezarfen_returns_window_days',
 	'hezarfen_returns_eligible_order_statuses',
 ];
-
-const CUSTOMER_EMAIL = 'hezarfen-e2e-mail@example.test';
 
 let optionSnapshot: Record< string, string >;
 const seededOrders: string[] = [];
@@ -90,7 +88,7 @@ function triggerEmail( emailId: string, returnId: string ): CapturedMail {
 }
 
 function seedRequest( status?: string ): { id: string; number: string } {
-	const orderId = seedReturnableOrder( { email: CUSTOMER_EMAIL } );
+	const orderId = seedReturnableOrder();
 	seededOrders.push( orderId );
 
 	return seedReturn( { orderId, reason: 'defective', status } );
@@ -142,7 +140,7 @@ test.describe( 'Hezarfen iade — standart e-postalar', () => {
 		const seeded = seedRequest();
 		const mail = triggerEmail( 'hezarfen_return_received_customer', seeded.id );
 
-		expect( mail.to ).toBe( CUSTOMER_EMAIL );
+		expect( mail.to ).toBe( RETURNS_CUSTOMER.email );
 		expect( mail.subject ).toContain( seeded.number );
 		expect( mail.body ).toContain( 'Hezarfen E2E İade Ürünü' );
 		expect( mail.body ).toContain( 'Ürün arızalı' );
@@ -167,18 +165,19 @@ test.describe( 'Hezarfen iade — standart e-postalar', () => {
 		const seeded = seedRequest( 'approved' );
 		const mail = triggerEmail( 'hezarfen_return_approved', seeded.id );
 
-		expect( mail.to ).toBe( CUSTOMER_EMAIL );
+		expect( mail.to ).toBe( RETURNS_CUSTOMER.email );
 		expect( mail.subject ).toContain( seeded.number );
 		expect( mail.body ).toContain( 'Talebiniz onaylandı' );
 	} );
 
-	test( 'red e-postası talebe bağlanıyor', () => {
+	test( 'red e-postası müşteriyi kendi talep sayfasına bağlıyor', () => {
 		const seeded = seedRequest( 'rejected' );
 		const mail = triggerEmail( 'hezarfen_return_rejected', seeded.id );
 
-		expect( mail.to ).toBe( CUSTOMER_EMAIL );
+		expect( mail.to ).toBe( RETURNS_CUSTOMER.email );
 		expect( mail.subject ).toContain( seeded.number );
-		expect( mail.body ).toContain( 'hezarfen_return=' );
+		// Account-only area: the link goes to the customer's own view.
+		expect( mail.body ).toContain( `iadelerim/${ seeded.id }` );
 	} );
 
 	test( 'durum değişince e-posta otomatik tetikleniyor', () => {

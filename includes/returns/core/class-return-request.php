@@ -114,27 +114,6 @@ class Return_Request {
 	protected $currency = '';
 
 	/**
-	 * Random token that lets a guest open this request from an email link.
-	 *
-	 * @var string
-	 */
-	protected $access_token = '';
-
-	/**
-	 * Where the request originated (account, guest, admin).
-	 *
-	 * @var string
-	 */
-	protected $created_via = 'account';
-
-	/**
-	 * Requester IP, kept for abuse investigation.
-	 *
-	 * @var string
-	 */
-	protected $ip_address = '';
-
-	/**
 	 * Creation timestamp in MySQL format (site time).
 	 *
 	 * @var string
@@ -185,9 +164,6 @@ class Return_Request {
 		$this->return_address_id = $this->string_prop( $data, 'return_address_id', $this->return_address_id );
 		$this->customer_note     = $this->string_prop( $data, 'customer_note', $this->customer_note );
 		$this->currency          = $this->string_prop( $data, 'currency', $this->currency );
-		$this->access_token      = $this->string_prop( $data, 'access_token', $this->access_token );
-		$this->created_via       = $this->string_prop( $data, 'created_via', $this->created_via );
-		$this->ip_address        = $this->string_prop( $data, 'ip_address', $this->ip_address );
 		$this->created_at        = $this->string_prop( $data, 'created_at', $this->created_at );
 		$this->updated_at        = $this->string_prop( $data, 'updated_at', $this->updated_at );
 	}
@@ -408,44 +384,6 @@ class Return_Request {
 	}
 
 	/**
-	 * Guest access token.
-	 *
-	 * @return string
-	 */
-	public function get_access_token() {
-		return $this->access_token;
-	}
-
-	/**
-	 * Sets the guest access token.
-	 *
-	 * @param string $access_token Token.
-	 *
-	 * @return void
-	 */
-	public function set_access_token( $access_token ) {
-		$this->access_token = (string) $access_token;
-	}
-
-	/**
-	 * Origin of the request.
-	 *
-	 * @return string
-	 */
-	public function get_created_via() {
-		return $this->created_via;
-	}
-
-	/**
-	 * Requester IP.
-	 *
-	 * @return string
-	 */
-	public function get_ip_address() {
-		return $this->ip_address;
-	}
-
-	/**
 	 * Creation timestamp in MySQL format.
 	 *
 	 * @return string
@@ -545,9 +483,6 @@ class Return_Request {
 			'customer_note'     => $this->customer_note,
 			'refund_amount'     => $this->refund_amount,
 			'currency'          => $this->currency,
-			'access_token'      => $this->access_token,
-			'created_via'       => $this->created_via,
-			'ip_address'        => $this->ip_address,
 		);
 	}
 }

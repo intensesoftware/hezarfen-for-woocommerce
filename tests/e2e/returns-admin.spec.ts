@@ -25,7 +25,6 @@ const ROWS = '#the-list';
 
 const OPTION_KEYS = [
 	'hezarfen_returns_enabled',
-	'hezarfen_returns_guest_enabled',
 	'hezarfen_returns_window_days',
 	'hezarfen_returns_eligible_order_statuses',
 	'hezarfen_returns_shipping_method',

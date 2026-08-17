@@ -88,15 +88,7 @@ class Returns_Module {
 
 		Returns_Schema::maybe_install();
 
-		// The public page is what guests and e-mail links point at, so it
-		// has to exist as soon as the feature is on — not only when the
-		// merchant happens to re-save the settings.
-		if ( ! Return_Settings::get_page_id() ) {
-			Frontend\Guest_Returns::ensure_page();
-		}
-
 		new Frontend\My_Account_Returns( $this );
-		new Frontend\Guest_Returns( $this );
 		new Frontend\Return_Form_Handler( $this );
 		new Frontend\Return_Assets();
 		new Emails\Return_Emails();
@@ -170,7 +162,6 @@ class Returns_Module {
 			'frontend/class-return-access.php',
 			'frontend/class-return-form-handler.php',
 			'frontend/class-my-account-returns.php',
-			'frontend/class-guest-returns.php',
 			// The e-mail classes extend WC_Email, which WooCommerce only
 			// loads once the mailer boots, so they are required inside the
 			// `woocommerce_email_classes` filter instead of here.
