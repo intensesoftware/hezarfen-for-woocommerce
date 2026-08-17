@@ -13,11 +13,13 @@ use Hezarfen\Inc\Returns\Returns_Module;
 defined( 'ABSPATH' ) || exit();
 
 /**
- * Adds the "İadelerim" area to the WooCommerce account pages.
+ * Wires the return flow into the WooCommerce account pages.
  *
- * Owns two endpoints — the request list (which doubles as the detail view
- * when it carries an ID) and the request form — plus the panel on the
- * order detail page, which is the only place a return starts from.
+ * There is deliberately no "İadelerim" menu entry: a return belongs to an
+ * order, so both starting one and following it happen on that order's
+ * detail page. The two endpoints exist only as destinations — the request
+ * form, and the request's own view that the order panel and the customer
+ * e-mails link to.
  */
 class My_Account_Returns {
 
@@ -53,11 +55,11 @@ class My_Account_Returns {
 		$this->register_endpoints();
 
 		add_filter( 'woocommerce_get_query_vars', array( $this, 'add_query_vars' ) );
-		add_filter( 'woocommerce_account_menu_items', array( $this, 'add_menu_item' ), 20 );
-		add_filter( 'woocommerce_endpoint_' . self::get_list_endpoint() . '_title', array( $this, 'get_list_title' ) );
+		add_filter( 'woocommerce_endpoint_' . self::get_list_endpoint() . '_title', array( $this, 'get_detail_title' ) );
 		add_filter( 'woocommerce_endpoint_' . self::get_request_endpoint() . '_title', array( $this, 'get_request_title' ) );
 
-		add_action( 'woocommerce_account_' . self::get_list_endpoint() . '_endpoint', array( $this, 'render_list_or_detail' ) );
+		add_action( 'template_redirect', array( $this, 'redirect_bare_detail_endpoint' ) );
+		add_action( 'woocommerce_account_' . self::get_list_endpoint() . '_endpoint', array( $this, 'render_detail' ) );
 		add_action( 'woocommerce_account_' . self::get_request_endpoint() . '_endpoint', array( $this, 'render_request_form' ) );
 
 		add_action( 'woocommerce_order_details_after_order_table', array( $this, 'render_order_panel' ), 20 );
@@ -129,38 +131,12 @@ class My_Account_Returns {
 	}
 
 	/**
-	 * Inserts the menu item right after "Siparişler".
-	 *
-	 * @param array<string, string> $items Menu items.
-	 *
-	 * @return array<string, string>
-	 */
-	public function add_menu_item( $items ) {
-		$new      = array();
-		$endpoint = self::get_list_endpoint();
-
-		foreach ( $items as $key => $label ) {
-			$new[ $key ] = $label;
-
-			if ( 'orders' === $key ) {
-				$new[ $endpoint ] = __( 'İadelerim', 'hezarfen-for-woocommerce' );
-			}
-		}
-
-		if ( ! isset( $new[ $endpoint ] ) ) {
-			$new[ $endpoint ] = __( 'İadelerim', 'hezarfen-for-woocommerce' );
-		}
-
-		return $new;
-	}
-
-	/**
-	 * Page title of the list endpoint.
+	 * Page title of the request detail endpoint.
 	 *
 	 * @return string
 	 */
-	public function get_list_title() {
-		return $this->get_current_return() ? __( 'İade talebi', 'hezarfen-for-woocommerce' ) : __( 'İadelerim', 'hezarfen-for-woocommerce' );
+	public function get_detail_title() {
+		return __( 'İade talebi', 'hezarfen-for-woocommerce' );
 	}
 
 	/**
@@ -173,48 +149,50 @@ class My_Account_Returns {
 	}
 
 	/**
-	 * Renders either the customer's request list or one request's detail.
+	 * Sends a bare `/iadelerim/` hit back to the orders list.
 	 *
-	 * @param string $value Endpoint value.
+	 * The endpoint only ever addresses a single request, so without an ID
+	 * there is nothing to render. A request ID that the visitor may not see
+	 * is left alone on purpose: WooCommerce then shows its own login form on
+	 * that URL, and the customer lands back on the request afterwards.
 	 *
 	 * @return void
 	 */
-	public function render_list_or_detail( $value = '' ) {
-		$request = $this->get_current_return( $value );
+	public function redirect_bare_detail_endpoint() {
+		global $wp;
 
-		if ( $request ) {
-			$this->render_detail( $request );
+		$endpoint = self::get_list_endpoint();
 
+		if ( ! isset( $wp->query_vars[ $endpoint ] ) ) {
 			return;
 		}
 
-		$customer_id = get_current_user_id();
+		if ( '' !== trim( (string) $wp->query_vars[ $endpoint ] ) ) {
+			return;
+		}
 
-		$requests = $this->module->repository()->query(
-			array(
-				'customer_id' => $customer_id,
-				'limit'       => 50,
-			)
-		);
-
-		hezarfen_returns_get_template(
-			'returns/my-account-list.php',
-			array(
-				'requests'   => $requests,
-				'access'     => $this->access,
-				'orders_url' => wc_get_endpoint_url( 'orders', '', wc_get_page_permalink( 'myaccount' ) ),
-			)
-		);
+		wp_safe_redirect( wc_get_endpoint_url( 'orders', '', wc_get_page_permalink( 'myaccount' ) ) );
+		exit;
 	}
 
 	/**
 	 * Renders one request's detail view.
 	 *
-	 * @param \Hezarfen\Inc\Returns\Core\Return_Request $request The request.
+	 * @param string $value Endpoint value, expected to be a request ID.
 	 *
 	 * @return void
 	 */
-	private function render_detail( $request ) {
+	public function render_detail( $value = '' ) {
+		$request = $this->get_current_return( $value );
+
+		if ( ! $request ) {
+			wc_print_notice( __( 'İade talebi bulunamadı.', 'hezarfen-for-woocommerce' ), 'error' );
+
+			return;
+		}
+
+		$order = $request->get_order();
+
 		hezarfen_returns_get_template(
 			'returns/detail.php',
 			array(
@@ -223,7 +201,7 @@ class My_Account_Returns {
 				'reasons'         => $this->module->reasons(),
 				'shipping_method' => $this->module->shipping()->get_for_request( $request ),
 				'progress_steps'  => Return_Status::get_progress_steps(),
-				'back_url'        => wc_get_endpoint_url( self::get_list_endpoint(), '', wc_get_page_permalink( 'myaccount' ) ),
+				'back_url'        => $order ? $order->get_view_order_url() : '',
 			)
 		);
 	}
@@ -242,8 +220,6 @@ class My_Account_Returns {
 		if ( ! $order || ! $this->access->can_request_for_order( $order ) ) {
 			wc_print_notice( __( 'Bu sipariş için iade talebi oluşturamazsınız.', 'hezarfen-for-woocommerce' ), 'error' );
 
-			$this->render_list_or_detail();
-
 			return;
 		}
 
@@ -251,8 +227,6 @@ class My_Account_Returns {
 
 		if ( is_wp_error( $eligible ) ) {
 			wc_print_notice( $eligible->get_error_message(), 'error' );
-
-			$this->render_list_or_detail();
 
 			return;
 		}

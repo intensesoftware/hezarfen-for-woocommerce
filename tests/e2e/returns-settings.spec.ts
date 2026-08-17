@@ -21,7 +21,6 @@ const OPTION_KEYS = [
 	'hezarfen_returns_enabled',
 	'hezarfen_returns_window_days',
 	'hezarfen_returns_window_reference',
-	'hezarfen_returns_eligible_order_statuses',
 	'hezarfen_returns_shipping_method',
 	'hezarfen_returns_instructions',
 	'hezarfen_returns_address_contact',

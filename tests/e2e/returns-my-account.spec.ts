@@ -31,7 +31,6 @@ const OPTION_KEYS = [
 	'hezarfen_returns_enabled',
 	'hezarfen_returns_window_days',
 	'hezarfen_returns_window_reference',
-	'hezarfen_returns_eligible_order_statuses',
 	'hezarfen_returns_shipping_method',
 	'hezarfen_returns_address_contact',
 	'hezarfen_returns_address_line',
@@ -97,25 +96,23 @@ test.describe( 'Hezarfen iade — Hesabım akışı', () => {
 		);
 	} );
 
-	test( '"İadelerim" menü öğesi ve boş durum görünüyor', async ( {
-		page,
-	} ) => {
-		seedOrder();
+	test( 'hesabım menüsüne iade sekmesi eklenmiyor', async ( { page } ) => {
 		await loginAsReturnsCustomer( page );
 
+		// Returns live on the order, not in their own account tab.
 		await expect(
 			page.locator( 'nav.woocommerce-MyAccount-navigation' )
-		).toContainText( 'İadelerim' );
+		).not.toContainText( 'İade' );
+	} );
+
+	test( 'ID taşımayan talep adresi siparişlere yönleniyor', async ( {
+		page,
+	} ) => {
+		await loginAsReturnsCustomer( page );
 
 		await page.goto( '/my-account/iadelerim/' );
 
-		await expect( page.locator( '.hez-empty__title' ) ).toContainText(
-			'Henüz bir iade talebiniz yok'
-		);
-		// The empty state has to say where a request is started instead.
-		await expect( page.locator( '.hez-returns__footnote' ) ).toContainText(
-			'siparişlerinizden'
-		);
+		await expect( page ).toHaveURL( /\/my-account\/orders\/?$/ );
 	} );
 
 	test( 'kısmi iade talebi oluşturulabiliyor ve kalan adet düşüyor', async ( {
@@ -221,26 +218,28 @@ test.describe( 'Hezarfen iade — Hesabım akışı', () => {
 		);
 	} );
 
-	test( 'talep listede görünüyor ve detayında durum takibi var', async ( {
-		page,
-	} ) => {
+	test( 'talep detayında durum takibi ve geçmiş var', async ( { page } ) => {
 		const orderId = seedOrder();
 		const seeded = seedReturn( { orderId } );
 
 		await loginAsReturnsCustomer( page );
-		await page.goto( '/my-account/iadelerim/' );
+		await page.goto( viewOrderUrl( orderId ) );
 
-		await expect( page.locator( '.hez-card__number' ) ).toContainText(
-			seeded.number
-		);
-
+		// The order panel is how a customer reaches their request.
 		await page.locator( '.hez-card__link' ).first().click();
 
+		await expect( page.locator( '.hez-returns__title' ) ).toContainText(
+			seeded.number
+		);
 		await expect( page.locator( '.hez-progress' ) ).toBeVisible();
 		await expect(
 			page.locator( '.hez-progress__step--current' )
 		).toContainText( 'Talebiniz alındı' );
 		await expect( page.locator( '.hez-timeline__item' ) ).toHaveCount( 1 );
+
+		// And back to the order it belongs to.
+		await page.locator( '.hez-returns__back' ).click();
+		await expect( page ).toHaveURL( new RegExp( `view-order/${ orderId }` ) );
 	} );
 
 	test( 'açık talep sipariş detayında da listeleniyor', async ( { page } ) => {
@@ -306,18 +305,19 @@ test.describe( 'Hezarfen iade — Hesabım akışı', () => {
 		expect( countReturnEvents( seeded.id ) ).toBeGreaterThan( 2 );
 	} );
 
-	test( 'özellik kapalıyken hesabım menüsünde iade sekmesi yok', async ( {
+	test( 'özellik kapalıyken sipariş detayında iade paneli yok', async ( {
 		page,
 	} ) => {
+		const orderId = seedOrder();
 		disableReturns();
 
 		try {
 			await loginAsReturnsCustomer( page );
-			await page.goto( '/my-account/' );
+			await page.goto( viewOrderUrl( orderId ) );
 
 			await expect(
-				page.locator( 'nav.woocommerce-MyAccount-navigation' )
-			).not.toContainText( 'İadelerim' );
+				page.locator( '.hez-returns--order-panel' )
+			).toHaveCount( 0 );
 		} finally {
 			enableReturns();
 		}

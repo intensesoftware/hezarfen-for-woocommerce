@@ -78,7 +78,7 @@ class Returns_Settings {
 			),
 			array(
 				'title'   => __( 'İade talebi özelliğini aç', 'hezarfen-for-woocommerce' ),
-				'desc'    => __( 'Açıldığında müşteriler sipariş detay sayfasından iade talebi oluşturabilir ve hesabım menüsüne "İadelerim" eklenir.', 'hezarfen-for-woocommerce' ),
+				'desc'    => __( 'Açıldığında müşteriler Hesabım &rarr; Siparişler &rarr; sipariş detay sayfasından iade talebi oluşturabilir.', 'hezarfen-for-woocommerce' ),
 				'type'    => 'checkbox',
 				'id'      => Return_Settings::OPTION_ENABLED,
 				'default' => 'no',
@@ -210,7 +210,7 @@ class Returns_Settings {
 
 	/**
 	 * Rebuilds the account endpoints the first time the feature is switched
-	 * on, so "İadelerim" resolves without a manual permalink flush.
+	 * on, so the return pages resolve without a manual permalink flush.
 	 *
 	 * @return void
 	 */

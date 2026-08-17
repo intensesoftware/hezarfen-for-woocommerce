@@ -11,7 +11,7 @@
  * @var \Hezarfen\Inc\Returns\Core\Return_Reasons  $reasons         Reason registry.
  * @var \Hezarfen\Inc\Returns\Shipping\Return_Shipping_Method_Interface $shipping_method Shipping method.
  * @var string[]                                   $progress_steps  Ordered progress statuses.
- * @var string                                     $back_url        Link back to the list.
+ * @var string                                     $back_url        Link back to the related order.
  */
 
 use Hezarfen\Inc\Returns\Core\Return_Event;
@@ -32,7 +32,7 @@ $hez_order_number = $hez_order ? $hez_order->get_order_number() : (string) $requ
 
 	<header class="hez-returns__header">
 		<?php if ( $back_url ) : ?>
-			<a class="hez-returns__back" href="<?php echo esc_url( $back_url ); ?>">&larr; <?php esc_html_e( 'İadelerim', 'hezarfen-for-woocommerce' ); ?></a>
+			<a class="hez-returns__back" href="<?php echo esc_url( $back_url ); ?>">&larr; <?php esc_html_e( 'Siparişe dön', 'hezarfen-for-woocommerce' ); ?></a>
 		<?php endif; ?>
 
 		<div class="hez-returns__headline">

@@ -23,7 +23,6 @@ import { wp } from './helpers/wp-cli';
 const OPTION_KEYS = [
 	'hezarfen_returns_enabled',
 	'hezarfen_returns_window_days',
-	'hezarfen_returns_eligible_order_statuses',
 ];
 
 let optionSnapshot: Record< string, string >;

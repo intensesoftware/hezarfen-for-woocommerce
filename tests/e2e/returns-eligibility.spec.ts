@@ -25,11 +25,12 @@ import { restoreOptions, snapshotOptions } from './helpers/wp-options';
  * not on an internal return value.
  */
 
+// `hezarfen_returns_eligible_order_statuses` is an array option and cannot
+// round-trip through snapshotOptions(), so it is reset explicitly instead.
 const OPTION_KEYS = [
 	'hezarfen_returns_enabled',
 	'hezarfen_returns_window_days',
 	'hezarfen_returns_window_reference',
-	'hezarfen_returns_eligible_order_statuses',
 ];
 
 let optionSnapshot: Record< string, string >;
@@ -54,6 +55,7 @@ test.describe( 'Hezarfen iade — iade edilebilirlik kuralları', () => {
 			deleteOrder( orderId );
 		}
 		clearReturns();
+		setEligibleStatuses( [ 'wc-completed' ] );
 		restoreOptions( optionSnapshot );
 	} );
 

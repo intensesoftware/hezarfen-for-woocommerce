@@ -27,13 +27,16 @@ tarafından, kendi sipariş detay sayfasından açılabilir. Bu, Amazon ve
 Trendyol gibi pazaryerlerinin izlediği yolla aynıdır; üyeliksiz sorgulama
 bilerek yoktur.
 
+Hesabım menüsüne ayrı bir "İadelerim" sekmesi **eklenmez**: iade siparişe
+aittir, dolayısıyla hem başlatma hem takip o siparişin sayfasında olur.
+
 Modül **varsayılan olarak kapalıdır**; WooCommerce → Ayarlar → Hezarfen → İade
 Yönetimi bölümünden açılır.
 
 ## Kapsam
 
-- Tek giriş noktası: Hesabım → Siparişler → sipariş detayındaki iade paneli (`includes/returns/frontend/class-my-account-returns.php`)
-- Hesabım altında "İadelerim" listesi ve talep detayı
+- Tek giriş noktası: Hesabım → Siparişler → sipariş detayındaki iade paneli; aynı panel o siparişin açık taleplerini de listeler (`includes/returns/frontend/class-my-account-returns.php`)
+- Talep detayı ve durum takibi (`/{hesabım}/iadelerim/{talep id}/`)
 - Ürün/adet seçimi ve kısmi iade (`includes/returns/core/class-return-eligibility.php`)
 - Hazır iade sebepleri + "Diğer" seçeneğinde zorunlu açıklama (`includes/returns/core/class-default-reason-provider.php`)
 - Global iade süresi ve süre başlangıcı ayarı (`includes/returns/core/class-global-return-policy-provider.php`)
@@ -178,8 +181,9 @@ adedi geri bırakır; diğer tüm durumlar adedi tutar.
   "Hezarfen İade Talepleri" kutusu; WooCommerce → Ayarlar → E-postalar altında
   altı bildirim.
 - **Frontend**: sipariş detay sayfasının altındaki iade paneli (tek giriş
-  noktası); iade formu `/{hesabım}/iade-talebi/{sipariş id}/`; Hesabım →
-  İadelerim (`/{hesabım}/iadelerim/`, detay için `/{hesabım}/iadelerim/{id}/`).
+  noktası); iade formu `/{hesabım}/iade-talebi/{sipariş id}/`; talep detayı
+  `/{hesabım}/iadelerim/{talep id}/`. ID taşımayan `/{hesabım}/iadelerim/`
+  adresi siparişler sayfasına yönlenir.
 
 ## Uzantı Noktaları
 
