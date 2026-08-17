@@ -1,0 +1,212 @@
+/**
+ * Hezarfen returns — admin screen styles.
+ *
+ * Deliberately thin: the screen leans on core's .postbox / .widefat chrome
+ * so it keeps looking native across WordPress versions and admin colour
+ * schemes. Only the pieces core has no equivalent for are styled here.
+ */
+
+.hez-admin-badge {
+	display: inline-block;
+	padding: 2px 9px;
+	border-radius: 999px;
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 1.8;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
+.hez-admin-badge--success {
+	background: #dcfce7;
+	color: #14532d;
+}
+
+.hez-admin-badge--warning {
+	background: #fef3c7;
+	color: #78350f;
+}
+
+.hez-admin-badge--danger {
+	background: #fee2e2;
+	color: #7f1d1d;
+}
+
+.hez-admin-badge--info {
+	background: #dbeafe;
+	color: #1e3a8a;
+}
+
+.hez-admin-badge--neutral {
+	background: #f1f5f9;
+	color: #334155;
+}
+
+/* ---------------------------------------------------------------- layout */
+
+.hez-admin-grid {
+	display: grid;
+	grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+	gap: 20px;
+	align-items: start;
+	margin-top: 16px;
+}
+
+@media (max-width: 960px) {
+	.hez-admin-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+.hez-returns-admin .postbox {
+	margin-bottom: 20px;
+}
+
+.hez-admin-note {
+	margin: 12px 0 0;
+	padding: 10px 12px;
+	background: #f6f7f7;
+	border-left: 3px solid #c3c4c7;
+}
+
+/* -------------------------------------------------------------- actions */
+
+.hez-admin-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.hez-admin-actions form {
+	margin: 0;
+}
+
+.hez-admin-form p {
+	margin: 0 0 10px;
+}
+
+.hez-admin-form label {
+	display: block;
+	margin-bottom: 4px;
+}
+
+/* -------------------------------------------------------------- summary */
+
+.hez-admin-summary {
+	margin: 0;
+	list-style: none;
+}
+
+.hez-admin-summary li {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	margin: 0;
+	padding: 7px 0;
+	border-bottom: 1px solid #f0f0f1;
+}
+
+.hez-admin-summary li:last-child {
+	border-bottom: 0;
+}
+
+.hez-admin-summary span {
+	color: #646970;
+}
+
+.hez-admin-tracking {
+	margin: 0 0 12px;
+}
+
+.hez-admin-tracking strong {
+	font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.hez-admin-tracking .description {
+	display: block;
+}
+
+/* ------------------------------------------------------------- timeline */
+
+.hez-admin-timeline {
+	margin: 0 0 18px;
+	padding: 0 0 0 4px;
+	list-style: none;
+}
+
+.hez-admin-timeline__item {
+	position: relative;
+	padding: 0 0 14px 20px;
+	border-left: 2px solid #dcdcde;
+}
+
+.hez-admin-timeline__item:last-child {
+	padding-bottom: 0;
+	border-left-color: transparent;
+}
+
+.hez-admin-timeline__item::before {
+	content: "";
+	position: absolute;
+	top: 5px;
+	left: -6px;
+	width: 10px;
+	height: 10px;
+	border: 2px solid #fff;
+	border-radius: 50%;
+	background: #8c8f94;
+}
+
+.hez-admin-timeline__item--success::before {
+	background: #00a32a;
+}
+
+.hez-admin-timeline__item--warning::before {
+	background: #dba617;
+}
+
+.hez-admin-timeline__item--danger::before {
+	background: #d63638;
+}
+
+.hez-admin-timeline__item--info::before {
+	background: #2271b1;
+}
+
+.hez-admin-timeline__item.is-internal .hez-admin-timeline__message {
+	background: #fcf9e8;
+}
+
+.hez-admin-timeline__head {
+	margin: 0;
+}
+
+.hez-admin-timeline__meta {
+	display: block;
+	color: #646970;
+	font-size: 12px;
+}
+
+.hez-admin-timeline__message {
+	margin: 5px 0 0;
+	padding: 8px 10px;
+	background: #f6f7f7;
+	border-radius: 3px;
+	white-space: pre-line;
+}
+
+/* --------------------------------------------------------- order metabox */
+
+.hez-order-returns {
+	margin: 0;
+	list-style: none;
+}
+
+.hez-order-returns li {
+	padding: 8px 0;
+	border-bottom: 1px solid #f0f0f1;
+}
+
+.hez-order-returns li:last-child {
+	border-bottom: 0;
+}

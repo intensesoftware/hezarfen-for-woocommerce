@@ -82,14 +82,19 @@ let cachedEnv: Record< string, string > | null = null;
 function wpEnv(): Record< string, string > {
 	if ( cachedEnv ) return cachedEnv;
 	const sshEntry = findSshEntry( WP_PUBLIC_ROOT );
-	if ( ! sshEntry ) {
-		throw new Error(
-			`Could not find LocalWP ssh-entry script for ${ WP_PUBLIC_ROOT }. ` +
-				'Set HEZARFEN_E2E_WP_ROOT to the WordPress public root, ' +
-				'or run the tests inside a LocalWP site.'
-		);
+	if ( sshEntry ) {
+		cachedEnv = envFromSshEntry( sshEntry );
+		return cachedEnv;
 	}
-	cachedEnv = envFromSshEntry( sshEntry );
+
+	// Not a LocalWP site. Any checkout that sits inside a WordPress
+	// install a system-wide wp-cli can reach — a plain nginx/PHP-FPM
+	// vhost, for instance — works just as well, so fall back to the
+	// ambient environment instead of refusing to run.
+	cachedEnv = {
+		PATH: process.env.PATH || '',
+		HOME: process.env.HOME || homedir(),
+	};
 	return cachedEnv;
 }
 
