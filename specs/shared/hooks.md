@@ -25,6 +25,7 @@ WP/WC core hook'larına `add_filter`/`add_action` yapan ama kendi adıyla yeni b
 | `hezarfen_return_created` | returns | Yeni iade talebi kaydedildikten sonra | `(Return_Request $request, WC_Order $order)` |
 | `hezarfen_return_status_changed` | returns | Talep durumu değiştiğinde | `(Return_Request $request, string $old_status, string $new_status)` |
 | `hezarfen_return_status_{status}` | returns | Talep belirli bir duruma geçtiğinde (ör. `hezarfen_return_status_approved`) | `(Return_Request $request, string $old_status)` |
+| `hezarfen_return_shipment_booked` | returns | Müşteri iade kargo randevusunu aldığında (barkod ve alım günü talebe yazılmış olur) | `(Return_Request $request, string $choice)` |
 | `hezarfen_returns_event_added` | returns | Timeline'a kayıt eklendiğinde | `(int $event_id, Return_Event $event)` |
 
 ### HTTP / Webhook entry
@@ -75,10 +76,14 @@ Modül, ek yeteneklerin koda dokunmadan takılabilmesi için sağlayıcı tabanl
 | `hezarfen_returns_repository` | `Return_Repository` | `(Return_Repository_Interface $repository)` | Alternatif depolama katmanı |
 | `hezarfen_returns_statuses` | 8 durum | `(array $statuses)` | Yeni talep durumu tanımla |
 | `hezarfen_returns_status_transitions` | geçiş haritası | `(array $transitions)` | İzinli durum geçişlerini değiştir |
+| `hezarfen_returns_releasing_statuses` | `rejected`, `cancelled` | `(string[] $statuses)` | Ayrılan adedi geri bırakan durumlar |
 | `hezarfen_returns_progress_steps` | 5 adım | `(string[] $steps)` | Müşteriye gösterilen ilerleme adımları |
+| `hezarfen_returns_progress_aliases` | `info-required` → `pending` | `(array $aliases)` | İlerleme çubuğunda başka adımı ödünç alan durumlar |
 | `hezarfen_returns_order_eligibility` | `true` | `(true\|WP_Error $result, WC_Order $order)` | Sipariş düzeyinde ek kural |
 | `hezarfen_returns_returnable_lines` | hesaplanan satırlar | `(array $lines, WC_Order $order)` | İade edilebilir satırları filtrele |
 | `hezarfen_returns_is_cancellable_by_customer` | `pending`/`info-required` | `(bool $cancellable, Return_Request $request)` | Müşteri iptal hakkını değiştir |
+| `hezarfen_returns_is_tracking_editable_by_customer` | `approved`/`shipped` | `(bool $editable, Return_Request $request)` | Müşterinin kargo bilgisi girebildiği durumlar |
+| `hezarfen_returns_is_bookable_by_customer` | `approved` ve barkodsuz | `(bool $bookable, Return_Request $request)` | Müşterinin kargo randevusu alabildiği durumlar |
 | `hezarfen_returns_return_address` | tek adres | `(array $address)` | Çoklu depo desteği |
 | `hezarfen_returns_return_number` | `IADE-{sipariş}-{n}` | `(string $number, WC_Order $order)` | Talep referans formatı |
 | `hezarfen_returns_list_endpoint` | `iadelerim` | `(string $slug)` | Hesabım endpoint slug'ı |
@@ -147,8 +152,6 @@ Tüm AJAX endpoint'leri WordPress `wp_ajax_{action}` (auth gerekli) ve gerekiyor
 | `woocommerce_after_save_address_validation` | my-account |
 | `woocommerce_my_account_my_orders_columns` | shipment-tracking |
 | `woocommerce_order_details_after_order_table` | shipment-tracking, sales-contract, returns |
-| `woocommerce_account_menu_items` | returns |
-| `woocommerce_my_account_my_orders_actions` | returns |
 | `woocommerce_get_sections_hezarfen` / `woocommerce_get_settings_hezarfen` | returns |
 | `woocommerce_email_classes` | shipment-tracking, returns |
 | `woocommerce_thankyou` | sales-contract |

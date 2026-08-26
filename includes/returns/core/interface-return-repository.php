@@ -70,11 +70,13 @@ interface Return_Repository_Interface {
 	 * Total quantity already requested per order line for an order.
 	 *
 	 * Requests in a closed-negative state (rejected, cancelled) do not
-	 * consume quantity, so their lines are excluded.
+	 * consume quantity, so their lines are excluded by default.
 	 *
-	 * @param int $order_id Order ID.
+	 * @param int           $order_id Order ID.
+	 * @param string[]|null $statuses Count only requests in these statuses;
+	 *                                null keeps the default behaviour.
 	 *
 	 * @return array<int, int> Quantities keyed by order item ID.
 	 */
-	public function get_requested_quantities( $order_id );
+	public function get_requested_quantities( $order_id, $statuses = null );
 }

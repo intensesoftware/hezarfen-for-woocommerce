@@ -70,6 +70,28 @@ if ( ! function_exists( 'hezarfen_returns_format_datetime' ) ) {
 	}
 }
 
+if ( ! function_exists( 'hezarfen_returns_format_date' ) ) {
+	/**
+	 * Formats a calendar day for display.
+	 *
+	 * A pickup day is a day, not a moment: the timestamp is anchored at
+	 * noon UTC so no site offset can push it onto the day before or after.
+	 *
+	 * @param string $date Day in `Y-m-d`.
+	 *
+	 * @return string
+	 */
+	function hezarfen_returns_format_date( $date ) {
+		$timestamp = $date ? strtotime( $date . ' 12:00:00 UTC' ) : false;
+
+		if ( ! $timestamp ) {
+			return '';
+		}
+
+		return wp_date( get_option( 'date_format' ), $timestamp );
+	}
+}
+
 if ( ! function_exists( 'hezarfen_returns_event_icon' ) ) {
 	/**
 	 * Maps a timeline entry to the tone token its marker uses.

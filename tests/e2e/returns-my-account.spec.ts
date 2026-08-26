@@ -4,6 +4,7 @@ import { NOTICE_ERROR, NOTICE_SUCCESS } from './helpers/notices';
 import {
 	clearReturns,
 	countReturnEvents,
+	customerTrackingError,
 	disableReturns,
 	enableReturns,
 	getReturnStatus,
@@ -303,6 +304,39 @@ test.describe( 'Hezarfen iade — Hesabım akışı', () => {
 		// Handing the parcel over moves the request on by itself.
 		expect( getReturnStatus( seeded.id ) ).toBe( 'shipped' );
 		expect( countReturnEvents( seeded.id ) ).toBeGreaterThan( 2 );
+	} );
+
+	test( 'ek bilgi beklenen talepte ilerleme çubuğu sıfırlanmıyor', async ( {
+		page,
+	} ) => {
+		const orderId = seedOrder();
+		const seeded = seedReturn( { orderId, status: 'info-required' } );
+
+		await loginAsReturnsCustomer( page );
+		await page.goto( `/my-account/iadelerim/${ seeded.id }/` );
+
+		// Waiting for an answer is a pause, not a reset: the step the
+		// request was parked at stays lit.
+		await expect(
+			page.locator( '.hez-progress__step--current' )
+		).toHaveCount( 1 );
+		await expect(
+			page.locator( '.hez-progress__step' ).first()
+		).toHaveClass( /hez-progress__step--current/ );
+		await expect(
+			page.locator( '.hez-panel--action' )
+		).toContainText( 'Sizden ek bilgi bekleniyor' );
+	} );
+
+	test( 'onaylanmamış talebe kargo bilgisi yazılamıyor', async () => {
+		const orderId = seedOrder();
+		const seeded = seedReturn( { orderId } );
+
+		// The form is not on screen for a pending request; a crafted POST
+		// must not get any further than the missing form does.
+		expect(
+			customerTrackingError( seeded.id, 'Yurtiçi Kargo', 'E2E-TRACK-9' )
+		).toBe( 'hezarfen_returns_tracking_not_editable' );
 	} );
 
 	test( 'özellik kapalıyken sipariş detayında iade paneli yok', async ( {

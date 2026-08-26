@@ -26,13 +26,6 @@ defined( 'ABSPATH' ) || exit();
 class Return_Repository implements Return_Repository_Interface {
 
 	/**
-	 * Statuses that release the quantity they had reserved on the order.
-	 *
-	 * @var string[]
-	 */
-	private $releasing_statuses = array( Return_Status::REJECTED, Return_Status::CANCELLED );
-
-	/**
 	 * Inserts or updates a request together with its lines.
 	 *
 	 * @param Return_Request $request Request to persist.
@@ -60,6 +53,17 @@ class Return_Repository implements Return_Repository_Interface {
 			$result = $wpdb->insert( $table, $row );
 
 			if ( false === $result ) {
+				// `return_number` is unique, and two requests racing on the
+				// same order compute the same reference; the loser of that
+				// race must be told its request already exists rather than
+				// that the database broke.
+				if ( false !== stripos( (string) $wpdb->last_error, 'duplicate entry' ) ) {
+					return new \WP_Error(
+						'hezarfen_returns_duplicate_number',
+						__( 'Bu sipariş için bir iade talebi az önce oluşturuldu.', 'hezarfen-for-woocommerce' )
+					);
+				}
+
 				return new \WP_Error( 'hezarfen_returns_db_error', __( 'İade talebi kaydedilemedi.', 'hezarfen-for-woocommerce' ) );
 			}
 
@@ -218,11 +222,14 @@ class Return_Repository implements Return_Repository_Interface {
 	/**
 	 * Total quantity already requested per order line for an order.
 	 *
-	 * @param int $order_id Order ID.
+	 * @param int           $order_id Order ID.
+	 * @param string[]|null $statuses Count only requests in these statuses.
+	 *                                Null counts every status that still
+	 *                                holds its reserved quantity.
 	 *
 	 * @return array<int, int>
 	 */
-	public function get_requested_quantities( $order_id ) {
+	public function get_requested_quantities( $order_id, $statuses = null ) {
 		global $wpdb;
 
 		$order_id = (int) $order_id;
@@ -234,16 +241,27 @@ class Return_Repository implements Return_Repository_Interface {
 		$returns = Returns_Schema::table( Returns_Schema::TABLE_RETURNS );
 		$items   = Returns_Schema::table( Returns_Schema::TABLE_ITEMS );
 
-		$excluded     = $this->releasing_statuses;
-		$placeholders = implode( ', ', array_fill( 0, count( $excluded ), '%s' ) );
+		if ( null === $statuses ) {
+			$operator = 'NOT IN';
+			$compared = Return_Status::get_releasing_statuses();
+		} else {
+			$operator = 'IN';
+			$compared = array_values( (array) $statuses );
+
+			if ( ! $compared ) {
+				return array();
+			}
+		}
+
+		$placeholders = implode( ', ', array_fill( 0, count( $compared ), '%s' ) );
 
 		$sql = $wpdb->prepare(
 			"SELECT i.order_item_id, SUM(i.quantity) AS total
 			FROM {$items} AS i
 			INNER JOIN {$returns} AS r ON r.id = i.return_id
-			WHERE r.order_id = %d AND r.status NOT IN ( {$placeholders} )
+			WHERE r.order_id = %d AND r.status {$operator} ( {$placeholders} )
 			GROUP BY i.order_item_id",
-			array_merge( array( $order_id ), $excluded )
+			array_merge( array( $order_id ), $compared )
 		);
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared

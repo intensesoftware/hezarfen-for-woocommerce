@@ -194,6 +194,40 @@ class Return_Status {
 	}
 
 	/**
+	 * Status keys that hand the quantity they had reserved back to the order.
+	 *
+	 * @return string[]
+	 */
+	public static function get_releasing_statuses() {
+		/**
+		 * Filters the statuses that release their reserved quantity.
+		 *
+		 * @param string[] $statuses Status keys.
+		 */
+		return (array) apply_filters(
+			'hezarfen_returns_releasing_statuses',
+			array( self::REJECTED, self::CANCELLED )
+		);
+	}
+
+	/**
+	 * Status keys of requests that are done with the goods: the quantity
+	 * left the order for good and is normally settled with a WooCommerce
+	 * refund as well.
+	 *
+	 * @return string[]
+	 */
+	public static function get_settled_statuses() {
+		return array_values(
+			array_diff(
+				array_keys( self::get_statuses() ),
+				self::get_open_statuses(),
+				self::get_releasing_statuses()
+			)
+		);
+	}
+
+	/**
 	 * Allowed transitions, keyed by the current status.
 	 *
 	 * @return array<string, string[]>
@@ -266,5 +300,43 @@ class Return_Status {
 			'hezarfen_returns_progress_steps',
 			array( self::PENDING, self::APPROVED, self::SHIPPED, self::RECEIVED, self::COMPLETED )
 		);
+	}
+
+	/**
+	 * Where a status sits on the customer facing progress bar.
+	 *
+	 * A status can be a detour rather than a milestone: waiting for extra
+	 * information parks a request without undoing what it already reached.
+	 * Such statuses map onto the step they were parked at, so the bar keeps
+	 * showing the progress made so far instead of resetting to "upcoming".
+	 *
+	 * @param string        $status Status key.
+	 * @param string[]|null $steps  Bar to look in; defaults to
+	 *                              get_progress_steps().
+	 *
+	 * @return int|false Index within the steps, false when the status has no
+	 *                   place on the bar.
+	 */
+	public static function get_progress_index( $status, $steps = null ) {
+		$steps = null === $steps ? self::get_progress_steps() : (array) $steps;
+		$index = array_search( $status, $steps, true );
+
+		if ( false === $index ) {
+			/**
+			 * Filters the statuses that borrow another status' progress step.
+			 *
+			 * @param array<string, string> $aliases Step status keyed by the borrowing status.
+			 */
+			$aliases = (array) apply_filters(
+				'hezarfen_returns_progress_aliases',
+				array( self::INFO_REQUIRED => self::PENDING )
+			);
+
+			if ( isset( $aliases[ $status ] ) ) {
+				$index = array_search( $aliases[ $status ], $steps, true );
+			}
+		}
+
+		return false === $index ? false : (int) $index;
 	}
 }

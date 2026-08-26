@@ -41,7 +41,7 @@ Yönetimi bölümünden açılır.
 - Hazır iade sebepleri + "Diğer" seçeneğinde zorunlu açıklama (`includes/returns/core/class-default-reason-provider.php`)
 - Global iade süresi ve süre başlangıcı ayarı (`includes/returns/core/class-global-return-policy-provider.php`)
 - Tek iade adresi (`includes/returns/core/class-return-settings.php`)
-- Gönderim yöntemi: müşteri kendi gönderir (manuel takip no) veya Kargokit otomatik iade barkodu (`includes/returns/shipping/`)
+- Gönderim yöntemi: müşteri kendi gönderir (manuel takip no) veya Kargokit iade barkodu — müşteri onaydan sonra kargo alım gününü kendi seçer (`includes/returns/shipping/`)
 - Admin liste + detay, manuel onay/red, basit ek bilgi isteme, dahili/müşteriye açık notlar (`includes/returns/admin/`)
 - Temel timeline ve standart WooCommerce e-postaları (`includes/returns/emails/`)
 
@@ -71,8 +71,8 @@ artmadan da kurulabilsin diye `hezarfen_db_version`'a bağlı değildir
 
 - `{prefix}hezarfen_returns` — talep başlığı. `return_number`, `order_id`,
   `customer_id`, `customer_email`, `status`, `shipping_method`, `courier`,
-  `tracking_number`, `return_address_id`, `customer_note`, `refund_amount`,
-  `currency`, `created_at`, `updated_at`.
+  `tracking_number`, `pickup_date`, `return_address_id`, `customer_note`,
+  `refund_amount`, `currency`, `created_at`, `updated_at`.
 - `{prefix}hezarfen_return_items` — talebe dahil satırlar. `return_id`,
   `order_item_id`, `product_id`, `variation_id`, `product_name`, `sku`,
   `quantity`, `line_total`, `reason_key`, `reason_note`.
@@ -86,7 +86,7 @@ artmadan da kurulabilsin diye `hezarfen_db_version`'a bağlı değildir
 |---|---|---|
 | `pending` | Beklemede | Yeni talep, inceleme bekliyor |
 | `info-required` | Ek bilgi bekleniyor | Mağaza müşteriden ayrıntı istedi |
-| `approved` | Onaylandı | Ürünlerin yola çıkması bekleniyor |
+| `approved` | Onaylandı | Ürünlerin yola çıkması bekleniyor; kurye ile alım yapılan yöntemlerde müşterinin alım günü seçmesi beklenir |
 | `shipped` | Kargoya verildi | Takip numarası girildi |
 | `received` | Tarafımıza ulaştı | Ürünler mağazaya ulaştı |
 | `completed` | Tamamlandı | Süreç kapandı (terminal) |
@@ -133,7 +133,8 @@ adedi geri bırakır; diğer tüm durumlar adedi tutar.
 - **When** yönetici Hezarfen → İadeler → talep detayında "Onayla" der
 - **Then** durum `approved` olur, timeline'a yönetici aktörlü bir kayıt düşer
 - **And** müşteriye onay e-postası gider
-- **And** gönderim yöntemi Kargokit ise iade barkodu oluşturulmaya çalışılır
+- **And** gönderim yöntemi Kargokit ise barkod **oluşturulmaz**; onay yalnızca
+  müşterinin randevu almasını açar
 
 ### Senaryo: Mağaza ek bilgi ister
 - **Given** `pending` veya `info-required` dışı bir açık talep
@@ -143,17 +144,48 @@ adedi geri bırakır; diğer tüm durumlar adedi tutar.
 - **When** müşteri talep sayfasındaki formdan yanıt yazar
 - **Then** yanıt `info-response` olarak kaydedilir ve durum `pending`'e döner
 
+### Senaryo: Müşteri iade kargo randevusunu alır
+- **Given** gönderim yöntemi Kargokit ve talep `approved`, henüz barkodu yok
+- **When** müşteri talep detayında Kargokit'in sunduğu günlerden birini seçip
+  "İade kargomu oluştur" der
+- **Then** seçilen gün için iade barkodu oluşturulur, barkod no ve alım günü
+  talebe yazılır, timeline'a müşteriye açık bir `shipping` kaydı düşer
+- **And** durum `approved` kalır: kargo, kurye ürünü teslim aldığında
+  `shipped` olur
+- **And** müşteri kargo kodunu ve alım gününü talep detayında görür
+
+### Senaryo: Müşterinin seçtiği gün artık müsait değil
+- **Given** müşteri formu açtıktan sonra kontenjan dolmuş bir gün gönderir
+- **When** form gönderilir
+- **Then** barkod oluşturulmaz, "seçtiğiniz gün artık müsait değil" hatası
+  gösterilir ve güncel gün listesiyle form yeniden çizilir
+
+### Senaryo: Randevusu alınmış bir talebe ikinci randevu denenir
+- **Given** talebin barkodu zaten var **veya** talep `approved` değil
+- **When** forma ait bir POST elle gönderilir
+- **Then** kayıt reddedilir; mevcut barkod ve alım günü değişmez
+
 ### Senaryo: Müşteri kargo bilgisini girer
 - **Given** gönderim yöntemi "müşteri kendi gönderir" ve talep `approved`
 - **When** müşteri kargo firması ve takip numarasını kaydeder
 - **Then** bilgi talebe yazılır, timeline'a `shipping` kaydı düşer
 - **And** durum otomatik olarak `shipped` olur
 
+### Senaryo: Müşteri kargo bilgisini giremeyeceği bir talebe yazmaya çalışır
+- **Given** talep `pending`/`rejected`/`cancelled` durumda **veya** gönderim
+  yöntemi takip numarasını mağaza adına üretiyor (Kargokit)
+- **When** forma ait bir POST elle gönderilir
+- **Then** kayıt reddedilir; mevcut takip numarası/barkod değişmez
+
 ### Senaryo: Kargokit iade barkodu oluşturulamaz
-- **Given** gönderim yöntemi Kargokit ve entegrasyon eksik/hatalı
-- **When** yönetici talebi onaylar
-- **Then** onay geri alınmaz; hata yalnızca mağazanın gördüğü bir timeline kaydına yazılır
-- **And** mağaza manuel takip numarası girerek devam edebilir
+- **Given** gönderim yöntemi Kargokit ve entegrasyon eksik/hatalı, ya da
+  siparişin Kargokit gönderi kaydı yok
+- **When** müşteri gün seçip randevu almaya çalışır
+- **Then** talep `approved` kalır ve barkodsuz kalır; hata müşteriye anlaşılır
+  bir mesajla gösterilir, ayrıntısı yalnızca mağazanın gördüğü bir timeline
+  kaydına yazılır
+- **And** müsait gün listesi hiç alınamıyorsa form yerine aynı mesaj çıkar
+- **And** mağaza talebe manuel takip numarası girerek devam edebilir
 
 ### Senaryo: Müşteri talebini iptal eder
 - **Given** `pending` veya `info-required` durumda bir talep
@@ -164,7 +196,14 @@ adedi geri bırakır; diğer tüm durumlar adedi tutar.
 
 - **Dijital ürünler**: sanal/indirilebilir satırlar iade listesine hiç girmez.
 - **WooCommerce iadesi**: mağaza WC üzerinden adet iade ettiyse, o adet iade
-  edilebilir miktardan düşülür.
+  edilebilir miktardan düşülür. Tamamlanmış bir talep zaten aynı adedi
+  düşürdüğü için ikisi toplanmaz; büyük olan geçerlidir. Açık talepler
+  bunun üzerine ayrıca rezerve eder.
+- **İlerleme çubuğu**: `info-required` bir milat değil, mola; çubukta
+  park edildiği adımı (`pending`) ödünç alır, o ana kadarki ilerleme silinmez.
+- **Çift gönderim**: `return_number` benzersiz indekslidir; aynı sipariş için
+  yarışan iki gönderimden yalnızca biri kaydolur, ikincisi "talebiniz az önce
+  oluşturuldu" hatası alır.
 - **Sayfa/endpoint çakışması**: `iadelerim` ve `iade-talebi` endpoint'leri
   `EP_ROOT` ile kaydedilir; aynı slug'a sahip bir sayfa bu kural tarafından
   gölgelenip 404 verir.
@@ -194,7 +233,7 @@ sunar:
 |---|---|---|
 | `Return_Reason_Provider_Interface` | `core/interface-return-reason-provider.php` | Mağazaya özel iade sebepleri |
 | `Return_Policy_Provider_Interface` | `core/interface-return-policy-provider.php` | Ürün/kategori bazlı iade politikaları |
-| `Return_Shipping_Method_Interface` | `shipping/interface-return-shipping-method.php` | Kendi kargo anlaşmasıyla otomatik barkod |
+| `Return_Shipping_Method_Interface` | `shipping/interface-return-shipping-method.php` | Kendi kargo anlaşmasıyla otomatik barkod; `requires_customer_booking()` + `get_booking_options()` + `book()` ile müşterinin randevu seçtiği akış |
 | `Return_Repository_Interface` | `core/interface-return-repository.php` | Alternatif depolama |
 
 ## Hooks
@@ -204,6 +243,7 @@ Tam liste için `specs/shared/hooks.md`. Öne çıkanlar:
 - action: `hezarfen_return_created` — talep kaydedildikten sonra `(Return_Request $request, WC_Order $order)`
 - action: `hezarfen_return_status_changed` — durum değişince `(Return_Request $request, string $old, string $new)`
 - action: `hezarfen_return_status_{status}` — belirli bir duruma geçince `(Return_Request $request, string $old)`
+- action: `hezarfen_return_shipment_booked` — müşteri iade kargo randevusunu alınca `(Return_Request $request, string $choice)`
 - action: `hezarfen_returns_loaded` — modül ayağa kalkınca; sağlayıcılar burada kaydedilir `(Returns_Module $module)`
 - filter: `hezarfen_returns_reason_providers` / `..._policy_providers` / `..._shipping_methods`
 - filter: `hezarfen_returns_return_address` — talebin gönderileceği adres
@@ -214,7 +254,11 @@ Tam liste için `specs/shared/hooks.md`. Öne çıkanlar:
   `returns-eligibility.spec.ts`, `returns-settings.spec.ts`,
   `returns-emails.spec.ts`.
 - Manuel: modülü açtıktan sonra kalıcı bağlantıları bir kez yenileyin
-  (endpoint'ler `hezarfen_returns_endpoints_version` değişince otomatik flush olur).
+  (endpoint'ler `hezarfen_returns_endpoints_version` değişince otomatik flush
+  olur; flush `shutdown`'a ertelenir, böylece geç kaydedilen kuralları düşürmez).
 - HPOS açık/kapalı matrisinde sipariş düzenleme kutusu ayrı doğrulanmalı.
 - Kargokit iade barkodu yalnızca hepsiJET entegrasyonu yapılandırılmış ve siparişin
   gönderi kaydı varken denenir; yapılandırma yoksa yöntem seçeneklerde çıkmaz.
+- Müsait gün listesi il/ilçe başına 30 dakika transient'te tutulur
+  (`hezarfen_returns_pickup_*`); randevu alındığında o ilçenin listesi düşürülür.
+  Kargokit'i gerçekten çağıran testlerde bu transient'i temizlemek gerekir.

@@ -2,9 +2,11 @@ import { expect, test } from '@playwright/test';
 import { deleteOrder } from './helpers/orders';
 import { NOTICE_ERROR } from './helpers/notices';
 import {
+	advanceReturn,
 	clearReturns,
 	enableReturns,
 	loginAsReturnsCustomer,
+	orderEligibilityError,
 	refundFirstLine,
 	requestFormUrl,
 	seedDigitalOrder,
@@ -186,5 +188,34 @@ test.describe( 'Hezarfen iade — iade edilebilirlik kuralları', () => {
 		await expect(
 			page.locator( '[data-hez-item] .hez-item__meta' ).first()
 		).toContainText( '2 adet' );
+	} );
+
+	test( 'tamamlanan talebin adedi WC iadesiyle iki kez düşülmüyor', async ( {
+		page,
+	} ) => {
+		const orderId = seedOrder( { quantity: 3 } );
+		const seeded = seedReturn( { orderId, quantity: 1 } );
+
+		advanceReturn( seeded.id, [ 'approved', 'received', 'completed' ] );
+
+		// Settling a finished return in WooCommerce describes the same unit
+		// the request already accounted for, not a second one.
+		refundFirstLine( orderId, 1 );
+
+		await page.goto( requestFormUrl( orderId ) );
+
+		await expect(
+			page.locator( '[data-hez-item] .hez-item__meta' ).first()
+		).toContainText( '2 adet' );
+	} );
+
+	test( 'müşterisi olmayan sipariş iade talebine kapalı', async () => {
+		const orderId = seedOrder( { customerId: '0' } );
+
+		// Nothing about the flow works without an account: no one could open,
+		// view or follow such a request afterwards.
+		expect( orderEligibilityError( orderId ) ).toBe(
+			'hezarfen_returns_guest_order'
+		);
 	} );
 } );

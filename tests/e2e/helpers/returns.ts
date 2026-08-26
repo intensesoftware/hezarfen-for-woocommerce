@@ -372,6 +372,94 @@ export function seedReturn( opts: SeedReturnOptions ): SeededReturn {
 }
 
 /**
+ * Walk a request through a chain of statuses, one allowed transition at a
+ * time. `seedReturn` can only reach statuses that are one hop from
+ * `pending`, so anything further along (a completed return, say) has to be
+ * driven the same way a merchant would.
+ */
+export function advanceReturn( returnId: string, statuses: string[] ): void {
+	const phpList = statuses.map( ( status ) => `'${ status }'` ).join( ', ' );
+
+	const out = lastLine(
+		wp( [
+			'eval',
+			`
+			$module  = \\Hezarfen\\Inc\\Returns\\Returns_Module::instance();
+			$request = $module->repository()->get( ${ returnId } );
+			foreach ( array( ${ phpList } ) as $status ) {
+				$result = $module->service()->change_status( $request, $status );
+				if ( is_wp_error( $result ) ) { echo 'ERR:' . $result->get_error_message(); return; }
+			}
+			echo 'OK';
+		`,
+		] )
+	);
+
+	if ( out !== 'OK' ) {
+		throw new Error( `advanceReturn failed: ${ out }` );
+	}
+}
+
+/**
+ * Drive "ask the customer for more information" directly. Returns the
+ * WP_Error code, or an empty string on success.
+ */
+export function requestInfoError( returnId: string, message: string ): string {
+	return lastLine(
+		wp( [
+			'eval',
+			`
+			$module  = \\Hezarfen\\Inc\\Returns\\Returns_Module::instance();
+			$request = $module->repository()->get( ${ returnId } );
+			$result  = $module->service()->request_info( $request, '${ message }' );
+			echo is_wp_error( $result ) ? $result->get_error_code() : '';
+		`,
+		] )
+	);
+}
+
+/**
+ * Ask the eligibility service what it makes of an order, without a browser
+ * in the way. Returns the WP_Error code, or an empty string when the order
+ * is returnable.
+ */
+export function orderEligibilityError( orderId: string ): string {
+	return lastLine(
+		wp( [
+			'eval',
+			`
+			$module = \\Hezarfen\\Inc\\Returns\\Returns_Module::instance();
+			$result = $module->eligibility()->check_order( wc_get_order( ${ orderId } ) );
+			echo is_wp_error( $result ) ? $result->get_error_code() : '';
+		`,
+		] )
+	);
+}
+
+/**
+ * Drive the customer's tracking entry point directly, the way a crafted
+ * POST would once the nonce and the ownership check have passed. Returns
+ * the WP_Error code, or an empty string on success.
+ */
+export function customerTrackingError(
+	returnId: string,
+	courier: string,
+	number: string
+): string {
+	return lastLine(
+		wp( [
+			'eval',
+			`
+			$module  = \\Hezarfen\\Inc\\Returns\\Returns_Module::instance();
+			$request = $module->repository()->get( ${ returnId } );
+			$result  = $module->service()->set_tracking_by_customer( $request, '${ courier }', '${ number }' );
+			echo is_wp_error( $result ) ? $result->get_error_code() : '';
+		`,
+		] )
+	);
+}
+
+/**
  * Read a request's current status straight from the repository.
  */
 export function getReturnStatus( returnId: string ): string {
@@ -399,6 +487,58 @@ export function countReturnEvents( returnId: string ): number {
 		),
 		10
 	);
+}
+
+/**
+ * Drive the customer's own booking directly, skipping the browser.
+ * Returns the WP_Error code, or an empty string on success.
+ */
+export function customerBookingError(
+	returnId: string,
+	choice: string
+): string {
+	return lastLine(
+		wp( [
+			'eval',
+			`
+			$module  = \\Hezarfen\\Inc\\Returns\\Returns_Module::instance();
+			$request = $module->repository()->get( ${ returnId } );
+			$result  = $module->service()->book_shipment_by_customer( $request, '${ choice }' );
+			echo is_wp_error( $result ) ? $result->get_error_code() : '';
+		`,
+		] )
+	);
+}
+
+/**
+ * The shipment details stored on a request: the carrier's tracking number
+ * and the day it collects the parcel.
+ */
+export function getReturnShipment( returnId: string ): {
+	tracking: string;
+	pickup: string;
+} {
+	const out = lastLine(
+		wp( [
+			'eval',
+			`
+			$request = \\Hezarfen\\Inc\\Returns\\Returns_Module::instance()->repository()->get( ${ returnId } );
+			echo wp_json_encode( array(
+				'tracking' => $request ? $request->get_tracking_number() : '',
+				'pickup'   => $request ? $request->get_pickup_date() : '',
+			) );
+		`,
+		] )
+	);
+
+	return JSON.parse( out ) as { tracking: string; pickup: string };
+}
+
+/**
+ * Account URL of a single request's detail page.
+ */
+export function returnDetailUrl( returnId: string ): string {
+	return `/my-account/iadelerim/${ returnId }/`;
 }
 
 /**

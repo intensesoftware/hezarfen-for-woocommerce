@@ -7,6 +7,8 @@
 
 namespace Hezarfen\Inc\Returns\Emails;
 
+use Hezarfen\Inc\Returns\Returns_Module;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -47,9 +49,17 @@ class Email_Return_Approved extends Abstract_Return_Email {
 	/**
 	 * Opening paragraph.
 	 *
+	 * Approval is only half of what the customer has to do when the carrier
+	 * collects the parcel: the pickup day is theirs to pick, so the mail
+	 * that announces the approval is also what asks them for it.
+	 *
 	 * @return string
 	 */
 	public function get_intro() {
+		if ( $this->return_request && Returns_Module::instance()->shipping()->get_for_request( $this->return_request )->requires_customer_booking() ) {
+			return __( 'İade talebiniz onaylandı. Kargonuzun adresinizden alınmasını istediğiniz günü seçerek iade kargo kodunuzu oluşturabilirsiniz.', 'hezarfen-for-woocommerce' );
+		}
+
 		return __( 'İade talebiniz onaylandı. Gönderim adımlarını aşağıda bulabilirsiniz.', 'hezarfen-for-woocommerce' );
 	}
 }

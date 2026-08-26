@@ -2,9 +2,12 @@ import { expect, test } from '@playwright/test';
 import { loginAsAdmin } from './helpers/auth';
 import { deleteOrder } from './helpers/orders';
 import {
+	advanceReturn,
 	clearReturns,
+	countReturnEvents,
 	enableReturns,
 	getReturnStatus,
+	requestInfoError,
 	seedReturn,
 	seedReturnableOrder,
 } from './helpers/returns';
@@ -177,6 +180,22 @@ test.describe( 'Hezarfen iade — yönetim ekranı', () => {
 		await expect( page.locator( '.hez-admin-timeline' ) ).toContainText(
 			'fotoğrafını paylaşır mısınız'
 		);
+	} );
+
+	test( 'kapanmış talepte ek bilgi isteği hiç yazılmıyor', async () => {
+		const orderId = seedOrder();
+		const seeded = seedReturn( { orderId } );
+
+		advanceReturn( seeded.id, [ 'rejected' ] );
+
+		const before = countReturnEvents( seeded.id );
+
+		// The question is customer visible: a rejected transition must not
+		// leave them with something they can never answer.
+		expect( requestInfoError( seeded.id, 'Fatura numarası nedir?' ) ).toBe(
+			'hezarfen_returns_invalid_transition'
+		);
+		expect( countReturnEvents( seeded.id ) ).toBe( before );
 	} );
 
 	test( 'dahili not müşteriye kapalı işaretleniyor', async ( { page } ) => {

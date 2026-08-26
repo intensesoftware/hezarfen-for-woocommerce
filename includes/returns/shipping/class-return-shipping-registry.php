@@ -116,6 +116,17 @@ class Return_Shipping_Registry {
 			return $method;
 		}
 
+		return $this->get_fallback_method();
+	}
+
+	/**
+	 * The method to fall back on when an automated one is missing or fails
+	 * mid-flight: the customer ships the parcel themselves, which needs
+	 * nothing but a return address.
+	 *
+	 * @return Return_Shipping_Method_Interface
+	 */
+	public function get_fallback_method() {
 		$fallback = $this->get( Customer_Ships_Method::KEY );
 
 		return $fallback ? $fallback : new Customer_Ships_Method();

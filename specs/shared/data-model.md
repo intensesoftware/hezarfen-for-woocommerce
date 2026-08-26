@@ -101,6 +101,7 @@ Plugin'in yazdığı/okuduğu tüm option key'leri, order meta'ları ve özel ta
 |---|---|---|---|
 | `hezarfen_benefit` | 24h | feature-status | "Eklenti aktif olarak kullanılıyor mu" cache'i |
 | HepsiJET barcode bulk cache | per request | shipment-tracking | Toplu barkod üretimi geçici cache |
+| `hezarfen_returns_pickup_{hash}` | 30dk | returns | Bir il/ilçe için Kargokit'in sunduğu iade alım günleri; hash il+ilçe+bugün |
 
 ---
 
@@ -182,6 +183,7 @@ CREATE TABLE wp_hezarfen_returns (
   shipping_method   VARCHAR(32)  NOT NULL DEFAULT '',
   courier           VARCHAR(64)  NOT NULL DEFAULT '',
   tracking_number   VARCHAR(100) NOT NULL DEFAULT '',
+  pickup_date       VARCHAR(10)  NOT NULL DEFAULT '',
   return_address_id VARCHAR(64)  NOT NULL DEFAULT '',
   customer_note     TEXT NULL,
   refund_amount     DECIMAL(19,4) NOT NULL DEFAULT 0.0000,
@@ -191,7 +193,7 @@ CREATE TABLE wp_hezarfen_returns (
   PRIMARY KEY (id),
   KEY order_id (order_id), KEY customer_id (customer_id),
   KEY status (status), KEY created_at (created_at),
-  KEY customer_email (customer_email), KEY return_number (return_number)
+  KEY customer_email (customer_email), UNIQUE KEY return_number (return_number)
 );
 
 CREATE TABLE wp_hezarfen_return_items (

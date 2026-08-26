@@ -55,6 +55,16 @@ class Return_Eligibility {
 			return new \WP_Error( 'hezarfen_returns_invalid_order', __( 'Sipariş bulunamadı.', 'hezarfen-for-woocommerce' ) );
 		}
 
+		// The whole flow hangs off the account: a request with no owner
+		// could never be opened, viewed or followed by anyone but the
+		// merchant, so it must not be created in the first place.
+		if ( ! $order->get_customer_id() ) {
+			return new \WP_Error(
+				'hezarfen_returns_guest_order',
+				__( 'Üyeliksiz verilen siparişler için mağaza üzerinden iade talebi oluşturulamaz.', 'hezarfen-for-woocommerce' )
+			);
+		}
+
 		if ( ! in_array( $order->get_status(), Return_Settings::get_eligible_order_statuses(), true ) ) {
 			return new \WP_Error(
 				'hezarfen_returns_order_status',
@@ -158,7 +168,8 @@ class Return_Eligibility {
 			return array();
 		}
 
-		$requested = $this->repository->get_requested_quantities( $order->get_id() );
+		$reserved  = $this->repository->get_requested_quantities( $order->get_id(), Return_Status::get_open_statuses() );
+		$settled   = $this->repository->get_requested_quantities( $order->get_id(), Return_Status::get_settled_statuses() );
 		$reference = $this->policy_resolver->get_window_reference_timestamp( $order );
 		$now       = time();
 		$lines     = array();
@@ -170,10 +181,16 @@ class Return_Eligibility {
 				continue;
 			}
 
-			$ordered  = (int) $item->get_quantity();
-			$already  = isset( $requested[ $item_id ] ) ? (int) $requested[ $item_id ] : 0;
-			$refunded = (int) abs( $order->get_qty_refunded_for_item( $item_id ) );
-			$max_qty  = $ordered - $already - $refunded;
+			$ordered   = (int) $item->get_quantity();
+			$open      = isset( $reserved[ $item_id ] ) ? (int) $reserved[ $item_id ] : 0;
+			$completed = isset( $settled[ $item_id ] ) ? (int) $settled[ $item_id ] : 0;
+			$refunded  = (int) abs( $order->get_qty_refunded_for_item( $item_id ) );
+
+			// A completed return is normally settled with a WooCommerce
+			// refund for the same units, so adding the two together would
+			// consume the line twice. The wider of the two is what really
+			// left the order; an open request reserves on top of that.
+			$max_qty = $ordered - $open - max( $completed, $refunded );
 
 			if ( $max_qty < 1 ) {
 				continue;
