@@ -231,141 +231,6 @@ class Courier_Hepsijet_Integration {
     }
 
     /**
-     * Create return barcode
-     */
-    public function api_create_return_barcode( $order_id, $delivery_date_original ) {
-        $order = wc_get_order($order_id);
-        if ( ! $order ) {
-            return new \WP_Error( 'hepsijet_error', 'Order not found' );
-        }
-
-        $delivery_barcode_no = $this->delivery_barcode_uret();
-        $shipping_details = new Shipping_Details( $order_id );
-
-        $customerCompanyAddressId = sprintf('%s-%s', $order->get_id(), wp_generate_uuid4());
-        $customerCompanyCustomerId = sprintf('%s-%s', $order->get_id(), wp_generate_uuid4());
-
-        // Get shipments to get package count and desi
-        $shipments_data = Helper::get_all_shipment_data( $order->get_id() );
-        
-        if( count( $shipments_data ) < 1 ) {
-            return false;
-        }
-
-        // Use data from first shipment
-        $package_count = 1; // Default value
-        $desi = 1; // Default value
-
-        $params = array(
-            'company' => [
-                'name' => $this->get_setting( 'sender_company_name', '' ),
-                'abbreviationCode' => $this->get_setting( 'company_abbreviation_code', '' ),
-            ],
-            'delivery'=>[
-                'customerDeliveryNo' => $delivery_barcode_no,
-                'customerOrderId' => $order->get_order_number(),
-                'totalParcels'       => $package_count,
-                'desi'       => $desi,
-                'deliverySlotOriginal'=>"0",
-                'deliveryDateOriginal'=>$delivery_date_original,
-                'deliveryType'       => 'RETURNED',
-                'receiver'=>[
-                    'companyCustomerId'=>$customerCompanyCustomerId,
-                    'phone1'=>$this->get_setting( 'sender_company_phone', '' ),
-                ],
-                'product'=>[
-                    'productCode'=>'HX_STD'
-                ],
-                'senderAddress'=>[
-                    'companyAddressID'=>$customerCompanyAddressId,
-                    'country'=>[
-                        'name'=>'Türkiye'
-                    ],
-                    'city'=>[
-                        'name'=>$shipping_details->get_city()
-                    ],
-                    'town'=>[
-                        'name'=>$shipping_details->get_district()
-                    ],
-                    'district'=>[
-                        'name'=>$shipping_details->get_neighborhood()
-                    ],
-                    'addressLine1'=>$shipping_details->get_address()
-                ],
-                'recipientAddress'=>[
-                    'companyAddressId'=>$this->get_setting( 'sender_company_address_id', '' ),
-                    'country'=>[
-                        'name'=>'Türkiye'
-                    ],
-                    'city'=>[
-                        'name'=>$this->get_setting('sender_company_city', '')
-                    ],
-                    'town'=>[
-                        'name'=>$this->get_setting('sender_company_district', '')
-                    ],
-                    'district'=>[
-                        'name'=>$this->get_setting('sender_company_neighborhood', '')
-                    ],
-                    'addressLine1'=>$this->get_setting( 'sender_company_address', '' ),
-                ],
-                'recipientPerson'=>$this->get_setting( 'authorized_person_fullname', '' ),
-                'recipientPersonPhone1'=>$this->get_setting( 'authorized_person_phone', '' ),
-
-            ]
-        );
-
-        $share_email = 'yes' === $this->get_setting( 'share_customer_email_with_hepsijet', 'no' );
-        if ( $share_email ) {
-            $params['delivery']['receiver']['email'] = $shipping_details->get_email();
-        }
-
-        $response = $this->send_request(
-            'delivery/sendDeliveryOrderEnhanced',
-            $params
-        );
-
-        if ( is_wp_error( $response ) || !array_key_exists('status', $response) || $response['status'] !== "OK" ) {
-            return new \WP_Error( 'hepsijet_error', is_wp_error( $response ) ? $response->get_error_message() : 'API Error' );
-        }
-
-        if( ! array_key_exists('data', $response) ) {
-            return new \WP_Error( 'hepsijet_error', 'Bilinmeyen Hata' );
-        }
-
-        $response_data = $response['data'];
-
-        // Save return shipment data
-        $shipment_data = Helper::new_order_shipment_data(
-            $order,
-            null,
-            'hepsijet-entegrasyon',
-            $response_data['customerDeliveryNo']
-        );
-
-        // Save return shipment response data to order meta
-        if ( isset( $response_data['zplBarcodeDTOList'] ) && is_array( $response_data['zplBarcodeDTOList'] ) && count( $response_data['zplBarcodeDTOList'] ) > 0 ) {
-            $barcode_data = $response_data['zplBarcodeDTOList'][0];
-            
-            // Save return shipment data with suffix
-            $order->update_meta_data( '_hezarfen_hepsijet_return_barcode_no', $response_data['customerDeliveryNo'] );
-            
-            if ( isset( $barcode_data['barcodePrintDate'] ) ) {
-                $mysql_date = $this->convert_turkish_date_to_mysql( $barcode_data['barcodePrintDate'] );
-                $order->update_meta_data( '_hezarfen_hepsijet_return_barcode_print_date', $mysql_date );
-            }
-            
-            if ( isset( $barcode_data['zplBarcode'] ) ) {
-                $order->update_meta_data( '_hezarfen_hepsijet_return_zpl_barcode', $barcode_data['zplBarcode'] );
-            }
-            
-            $order->update_meta_data( '_hezarfen_hepsijet_return_complete_response', $response_data );
-            $order->save_meta_data();
-        }
-
-        return true;
-    }
-
-    /**
      * Register domain and get webhook secret
      */
     private function register_domain_and_get_webhook_secret() {
@@ -689,44 +554,45 @@ class Courier_Hepsijet_Integration {
     }
 
     /**
-     * Get available dates for return shipments
+     * Get available dates for return shipments.
+     *
+     * The relay owns the carrier call and already reduces the response to
+     * the days that still have return capacity, keyed by cross-dock, so
+     * this method only forwards the query and guards the shape.
+     *
+     * @param string $start_date First day to look at, `Y-m-d`.
+     * @param string $end_date   Last day to look at, `Y-m-d`.
+     * @param string $city       City name.
+     * @param string $district   District name.
+     *
+     * @return array<string, string[]>|\WP_Error Days keyed by cross-dock name.
      */
     public function get_available_dates_for_return($start_date, $end_date, $city, $district) {
-        $params = array(
-            'startDate' => $start_date,
-            'endDate' => $end_date,
-            'deliveryType' => 'RETURNED',
-            'city' => $city,
-            'town' => $district
-        );
+        $response = $this->make_relay_request_for_return_dates( array(
+            'start_date' => $start_date,
+            'end_date'   => $end_date,
+            'city'       => $city,
+            'district'   => $district,
+        ) );
 
-        $response = $this->send_request( add_query_arg( $params, '/rest/delivery/findAvailableDeliveryDatesV2' ), array(), 'GET' );
+        if ( is_wp_error( $response ) ) {
+            return $response;
+        }
 
+        if ( ! is_array( $response ) ) {
+            return new \WP_Error( 'unknown_error', esc_html__( 'Available dates cannot be queried', 'hezarfen-for-woocommerce' ) );
+        }
+
+        // A relay that answers 200 with an error payload instead of a map of
+        // cross-docks must not be read as "no days available".
         if ( array_key_exists( 'message', $response ) ) {
             return new \WP_Error( 'error', $response['message'] );
-        }else if ( ! array_key_exists( 'data', $response ) ) {
-            return new \WP_Error( 'unknown_error', esc_html( 'Available dates cannot be queried', 'hezarfen-for-woocommerce' ) );
         }
 
         $available_dates = array();
 
-        foreach( $response['data'] as $city_response ) {
-            foreach( $city_response['towns'] as $town_response ) {
-                foreach( $town_response['xDock'] as $xdock_details ) {
-                    $xdock_name = $xdock_details['xDockName'];
-                    $days = $xdock_details['days'];
-
-                    if( ! array_key_exists( $xdock_name, $available_dates ) ) {
-                        $available_dates[$xdock_name] = array();
-                    }
-
-                    foreach($days as $day_args) {
-                        if( $day_args['returnedLimit'] > 0 ) {
-                            $available_dates[$xdock_name][] = $day_args['date'];
-                        }
-                    }
-                }
-            }
+        foreach ( $response as $xdock_name => $days ) {
+            $available_dates[ (string) $xdock_name ] = array_values( array_filter( array_map( 'strval', (array) $days ) ) );
         }
 
         return $available_dates;

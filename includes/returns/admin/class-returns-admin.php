@@ -42,6 +42,7 @@ class Returns_Admin {
 		$this->module = $module;
 
 		add_action( 'admin_menu', array( $this, 'register_menu' ), 12 );
+		add_filter( 'parent_file', array( $this, 'keep_parent_menu' ) );
 		add_action( 'admin_init', array( $this, 'handle_actions' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 	}
@@ -60,12 +61,17 @@ class Returns_Admin {
 	/**
 	 * Adds the submenu entry with a pending counter.
 	 *
+	 * The same screen is listed under both Hezarfen and WooCommerce, because
+	 * that is where a shop manager looks for order paperwork. Both entries
+	 * point at one slug, so there is still a single screen behind them.
+	 *
 	 * @return void
 	 */
 	public function register_menu() {
 		$pending = $this->module->repository()->count( array( 'status' => Return_Status::get_open_statuses() ) );
 
-		$label = __( 'İadeler', 'hezarfen-for-woocommerce' );
+		$title = __( 'İadeler', 'hezarfen-for-woocommerce' );
+		$label = $title;
 
 		if ( $pending ) {
 			$label .= sprintf(
@@ -76,12 +82,62 @@ class Returns_Admin {
 
 		add_submenu_page(
 			'hezarfen',
-			__( 'İadeler', 'hezarfen-for-woocommerce' ),
+			$title,
 			$label,
 			self::CAPABILITY,
 			self::PAGE_SLUG,
 			array( $this, 'render' )
 		);
+
+		add_submenu_page(
+			'woocommerce',
+			$title,
+			$label,
+			self::CAPABILITY,
+			self::PAGE_SLUG,
+			array( $this, 'render' )
+		);
+	}
+
+	/**
+	 * Keeps the screen highlighted under Hezarfen, whichever entry was
+	 * clicked.
+	 *
+	 * Without this WordPress picks the parent it happens to find first in
+	 * the submenu registry, so the highlight would drift between the two
+	 * menus for no reason the merchant can see.
+	 *
+	 * @param string $parent_file Parent menu slug WordPress resolved.
+	 *
+	 * @return string
+	 */
+	public function keep_parent_menu( $parent_file ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading the current screen, not acting on it.
+		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+
+		if ( self::PAGE_SLUG === $page ) {
+			return 'hezarfen';
+		}
+
+		return $parent_file;
+	}
+
+	/**
+	 * The Hezarfen wordmark shown in the corner of the module's screens.
+	 *
+	 * The list and the detail view are plain WordPress chrome, so without a
+	 * mark of their own nothing tells the merchant which plugin these pages
+	 * came from.
+	 *
+	 * @return void
+	 */
+	public static function render_brand() {
+		?>
+		<div class="hez-admin-brand">
+			<span class="hez-admin-brand__name">Hezarfen</span>
+			<span class="hez-admin-brand__tag"><?php esc_html_e( 'İade Yönetimi', 'hezarfen-for-woocommerce' ); ?></span>
+		</div>
+		<?php
 	}
 
 	/**
@@ -100,7 +156,7 @@ class Returns_Admin {
 			'hezarfen-returns-admin',
 			HEZARFEN_RETURNS_ASSETS_URL . 'css/returns-admin.css',
 			array(),
-			WC_HEZARFEN_VERSION
+			\Hezarfen\Inc\Returns\Frontend\Return_Assets::asset_version( 'css/returns-admin.css' )
 		);
 	}
 
@@ -128,6 +184,7 @@ class Returns_Admin {
 		$table->prepare_items();
 		?>
 		<div class="wrap hez-returns-admin">
+			<?php self::render_brand(); ?>
 			<h1 class="wp-heading-inline"><?php esc_html_e( 'İade Talepleri', 'hezarfen-for-woocommerce' ); ?></h1>
 			<hr class="wp-header-end">
 

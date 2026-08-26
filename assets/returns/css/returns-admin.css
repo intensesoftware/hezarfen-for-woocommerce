@@ -46,10 +46,10 @@
 
 .hez-admin-grid {
 	display: grid;
-	grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+	grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);
 	gap: 20px;
 	align-items: start;
-	margin-top: 16px;
+	margin-top: 20px;
 }
 
 @media (max-width: 960px) {
@@ -58,8 +58,64 @@
 	}
 }
 
+/*
+ * Core only pads a metabox header through `.metabox-holder h2.hndle`, a
+ * chain that needs both a wrapper and a class this screen has no reason to
+ * carry — it is not a drag-sortable metabox. Without them the heading sits
+ * flush against the box edge and `.inside` keeps its `padding-top: 0`,
+ * which is what makes the boxes look unpadded. Both are set here instead of
+ * borrowing core's selector, so the screen cannot lose its padding again
+ * when core reworks the editor chrome.
+ */
+
 .hez-returns-admin .postbox {
 	margin-bottom: 20px;
+	border-radius: 4px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.hez-returns-admin .postbox-header {
+	padding: 0 16px;
+	border-bottom: 1px solid #dcdcde;
+	background: #fbfbfc;
+	border-radius: 4px 4px 0 0;
+}
+
+.hez-returns-admin .postbox-header h2 {
+	margin: 0;
+	padding: 12px 0;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1.4;
+	color: #1d2327;
+}
+
+.hez-returns-admin .postbox .inside {
+	margin: 0;
+	padding: 16px;
+}
+
+/* A table fills the box edge to edge, so it brings its own inset instead of
+   sitting inside the padding and doubling it. */
+.hez-returns-admin .postbox .inside > .widefat:only-child {
+	margin: -16px;
+	width: calc(100% + 32px);
+	border: 0;
+	box-shadow: none;
+}
+
+.hez-returns-admin .postbox .inside > .widefat:only-child th,
+.hez-returns-admin .postbox .inside > .widefat:only-child td {
+	padding-left: 16px;
+	padding-right: 16px;
+}
+
+.hez-returns-admin .postbox .inside > *:first-child {
+	margin-top: 0;
+}
+
+.hez-returns-admin .postbox .inside > *:last-child {
+	margin-bottom: 0;
 }
 
 .hez-admin-note {
@@ -67,6 +123,15 @@
 	padding: 10px 12px;
 	background: #f6f7f7;
 	border-left: 3px solid #c3c4c7;
+	border-radius: 0 3px 3px 0;
+}
+
+/* -------------------------------------------------------------- heading */
+
+.hez-returns-admin .wp-heading-inline {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
 }
 
 /* -------------------------------------------------------------- actions */
@@ -75,6 +140,12 @@
 	display: flex;
 	flex-wrap: wrap;
 	gap: 8px;
+}
+
+.hez-admin-actions .button {
+	flex: 1 1 auto;
+	justify-content: center;
+	text-align: center;
 }
 
 .hez-admin-actions form {
@@ -99,11 +170,16 @@
 
 .hez-admin-summary li {
 	display: flex;
+	align-items: baseline;
 	justify-content: space-between;
-	gap: 12px;
+	gap: 16px;
 	margin: 0;
-	padding: 7px 0;
+	padding: 9px 0;
 	border-bottom: 1px solid #f0f0f1;
+}
+
+.hez-admin-summary li:first-child {
+	padding-top: 0;
 }
 
 .hez-admin-summary li:last-child {
@@ -111,7 +187,12 @@
 }
 
 .hez-admin-summary span {
+	flex: 0 0 auto;
 	color: #646970;
+}
+
+.hez-admin-summary li > :last-child {
+	text-align: right;
 }
 
 .hez-admin-tracking {
@@ -209,4 +290,60 @@
 
 .hez-order-returns li:last-child {
 	border-bottom: 0;
+}
+
+/* ---------------------------------------------------------------- brand */
+
+/*
+ * Sits in the corner of the module's own screens, anchored to .wrap rather
+ * than floated so it can never push core's heading or the notice slot
+ * around. Below the admin's tablet breakpoint it drops into the flow,
+ * where there is no room beside the title.
+ */
+
+.hez-returns-admin {
+	position: relative;
+}
+
+.hez-admin-brand {
+	position: absolute;
+	top: 2px;
+	right: 0;
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+	line-height: 1.4;
+	user-select: none;
+}
+
+.hez-admin-brand__name {
+	background: linear-gradient(90deg, #d6452b, #f5a623);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: #d6452b;
+	font-size: 17px;
+	font-weight: 700;
+	letter-spacing: 0.01em;
+}
+
+/* Painting the gradient into the glyphs needs a transparent fill, which
+   would hide the text outright where background-clip is unsupported. */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+	.hez-admin-brand__name {
+		-webkit-text-fill-color: transparent;
+	}
+}
+
+.hez-admin-brand__tag {
+	padding-left: 8px;
+	border-left: 1px solid #dcdcde;
+	color: #646970;
+	font-size: 12px;
+}
+
+@media screen and (max-width: 782px) {
+	.hez-admin-brand {
+		position: static;
+		margin: 0 0 10px;
+	}
 }

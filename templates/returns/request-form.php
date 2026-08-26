@@ -12,6 +12,7 @@
  * @var \Hezarfen\Inc\Returns\Shipping\Return_Shipping_Method_Interface $shipping_method Active shipping method.
  * @var int                                                   $deadline        Return window deadline as a Unix timestamp.
  * @var string                                                $cancel_url      Where the cancel link goes.
+ * @var array<string, string>                                 $pickup_address  Pickup address prefilled from the order.
  */
 
 use Hezarfen\Inc\Returns\Core\Return_Settings;
@@ -163,6 +164,15 @@ $hez_reason_choices = $reasons->get_choices();
 					</div>
 				<?php endif; ?>
 			</div>
+
+			<?php if ( $shipping_method->requires_pickup_address() ) : ?>
+				<div class="hez-returns__pickup">
+					<p class="hez-returns__pickup-title"><?php esc_html_e( 'Kargo alım adresi', 'hezarfen-for-woocommerce' ); ?></p>
+					<p class="hez-returns__pickup-hint"><?php esc_html_e( 'Kurye ürünleri bu adresten teslim alacak. Sipariş adresiniz hazır geldi; farklı bir adresten alınmasını isterseniz değiştirin.', 'hezarfen-for-woocommerce' ); ?></p>
+
+					<?php hezarfen_returns_get_template( 'returns/pickup-address-fields.php', array( 'address' => $pickup_address ) ); ?>
+				</div>
+			<?php endif; ?>
 		</section>
 
 		<section class="hez-step" aria-labelledby="hez-step-note">

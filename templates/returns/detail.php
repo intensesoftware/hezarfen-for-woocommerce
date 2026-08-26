@@ -10,11 +10,14 @@
  * @var \Hezarfen\Inc\Returns\Core\Return_Event[]  $events          Customer visible timeline.
  * @var \Hezarfen\Inc\Returns\Core\Return_Reasons  $reasons         Reason registry.
  * @var \Hezarfen\Inc\Returns\Shipping\Return_Shipping_Method_Interface $shipping_method Shipping method.
+ * @var array{needed: bool, options: array<string, string>, error: string} $booking Pickup day picker state.
+ * @var array<string, string>                     $pickup_address  Address the courier collects from.
  * @var string[]                                   $progress_steps  Ordered progress statuses.
  * @var string                                     $back_url        Link back to the related order.
  */
 
 use Hezarfen\Inc\Returns\Core\Return_Event;
+use Hezarfen\Inc\Returns\Core\Return_Pickup_Address;
 use Hezarfen\Inc\Returns\Core\Return_Settings;
 use Hezarfen\Inc\Returns\Core\Return_Status;
 use Hezarfen\Inc\Returns\Frontend\Return_Form_Handler;
@@ -23,7 +26,7 @@ defined( 'ABSPATH' ) || exit();
 
 $hez_status       = $request->get_status();
 $hez_is_derailed  = in_array( $hez_status, array( Return_Status::REJECTED, Return_Status::CANCELLED ), true );
-$hez_current_step = array_search( $hez_status, $progress_steps, true );
+$hez_current_step = Return_Status::get_progress_index( $hez_status, $progress_steps );
 $hez_info_pending = Return_Status::INFO_REQUIRED === $hez_status;
 $hez_order        = $request->get_order();
 $hez_order_number = $hez_order ? $hez_order->get_order_number() : (string) $request->get_order_id();
@@ -124,10 +127,140 @@ $hez_order_number = $hez_order ? $hez_order->get_order_number() : (string) $requ
 			<?php endif; ?>
 
 			<?php if ( $request->get_tracking_number() ) : ?>
-				<p class="hez-tracking">
-					<span class="hez-tracking__label"><?php esc_html_e( 'Kargo takip numarası', 'hezarfen-for-woocommerce' ); ?></span>
-					<span class="hez-tracking__value"><?php echo esc_html( $request->get_tracking_number() ); ?></span>
-				</p>
+				<?php
+				$hez_cancel_deadline = $request->get_booking_cancel_deadline();
+				$hez_can_unbook      = $request->is_booking_cancellable_by_customer();
+				?>
+				<div class="hez-code">
+					<div class="hez-code__head">
+						<span class="hez-code__label"><?php esc_html_e( 'İade kargo kodunuz', 'hezarfen-for-woocommerce' ); ?></span>
+						<span class="hez-return-badge hez-return-badge--<?php echo $hez_can_unbook ? 'info' : 'success'; ?>">
+							<?php
+							echo $hez_can_unbook
+								? esc_html__( 'Randevu alındı', 'hezarfen-for-woocommerce' )
+								: esc_html__( 'Kurye yolda', 'hezarfen-for-woocommerce' );
+							?>
+						</span>
+					</div>
+
+					<div class="hez-code__row">
+						<code class="hez-code__value" data-hez-copy-source><?php echo esc_html( $request->get_tracking_number() ); ?></code>
+						<button
+							type="button"
+							class="hez-btn hez-btn--ghost hez-btn--small hez-code__copy"
+							data-hez-copy
+							aria-label="<?php esc_attr_e( 'İade kargo kodunu kopyala', 'hezarfen-for-woocommerce' ); ?>"
+						><?php esc_html_e( 'Kopyala', 'hezarfen-for-woocommerce' ); ?></button>
+					</div>
+
+					<p class="hez-code__hint">
+						<?php esc_html_e( 'Kurye geldiğinde bu kodu görevliye söyleyin. Yazdırmanıza veya etiket çıkarmanıza gerek yok.', 'hezarfen-for-woocommerce' ); ?>
+					</p>
+
+					<?php if ( $request->get_pickup_date() ) : ?>
+						<p class="hez-code__meta">
+							<?php
+							printf(
+								/* translators: %s: pickup date. */
+								esc_html__( 'Kargonuz %s tarihinde adresinizden teslim alınacak.', 'hezarfen-for-woocommerce' ),
+								'<strong>' . esc_html( hezarfen_returns_format_date( $request->get_pickup_date() ) ) . '</strong>'
+							);
+							?>
+						</p>
+					<?php endif; ?>
+
+					<?php if ( $hez_can_unbook ) : ?>
+						<form method="post" class="hez-code__cancel" data-hez-confirm-unbook>
+							<?php wp_nonce_field( 'hezarfen_returns_' . Return_Form_Handler::ACTION_UNBOOK, Return_Form_Handler::NONCE_FIELD ); ?>
+							<input type="hidden" name="<?php echo esc_attr( Return_Form_Handler::ACTION_FIELD ); ?>" value="<?php echo esc_attr( Return_Form_Handler::ACTION_UNBOOK ); ?>">
+							<input type="hidden" name="return_id" value="<?php echo esc_attr( $request->get_id() ); ?>">
+
+							<button type="submit" class="hez-btn hez-btn--danger-ghost hez-btn--small">
+								<?php esc_html_e( 'Kargo randevusunu iptal et', 'hezarfen-for-woocommerce' ); ?>
+							</button>
+							<span class="hez-code__cancel-hint">
+								<?php
+								printf(
+									/* translators: %s: last moment the pickup can be called off. */
+									esc_html__( '%s tarihine kadar iptal edip başka bir gün seçebilirsiniz.', 'hezarfen-for-woocommerce' ),
+									esc_html( wp_date( get_option( 'date_format' ) . ' H:i', $hez_cancel_deadline ) )
+								);
+								?>
+							</span>
+						</form>
+					<?php elseif ( $hez_cancel_deadline ) : ?>
+						<p class="hez-code__cancel-hint hez-code__cancel-hint--closed">
+							<?php esc_html_e( 'Alım günü geldiği için randevu artık iptal edilemiyor. Kurye ile ilgili bir sorun olursa mağazayla iletişime geçin.', 'hezarfen-for-woocommerce' ); ?>
+						</p>
+					<?php endif; ?>
+				</div>
+			<?php elseif ( $booking['needed'] ) : ?>
+				<?php
+				// The day list is fetched for this address's district, so it
+				// is shown next to the picker rather than somewhere further
+				// down: a customer who corrects the district has to see the
+				// days change with it.
+				$hez_address_open = ! Return_Pickup_Address::is_complete( $pickup_address );
+				?>
+				<details class="hez-pickup-address" <?php echo $hez_address_open ? 'open' : ''; ?>>
+					<summary class="hez-pickup-address__summary">
+						<span class="hez-pickup-address__label"><?php esc_html_e( 'Kargo alım adresi', 'hezarfen-for-woocommerce' ); ?></span>
+						<span class="hez-pickup-address__value">
+							<?php
+							echo $hez_address_open
+								? esc_html__( 'Adresinizi tamamlayın', 'hezarfen-for-woocommerce' )
+								: esc_html( str_replace( "\n", ' · ', Return_Pickup_Address::format( $pickup_address ) ) );
+							?>
+						</span>
+						<span class="hez-pickup-address__toggle"><?php esc_html_e( 'Değiştir', 'hezarfen-for-woocommerce' ); ?></span>
+					</summary>
+
+					<form method="post" class="hez-pickup-address__form">
+						<?php wp_nonce_field( 'hezarfen_returns_' . Return_Form_Handler::ACTION_ADDRESS, Return_Form_Handler::NONCE_FIELD ); ?>
+						<input type="hidden" name="<?php echo esc_attr( Return_Form_Handler::ACTION_FIELD ); ?>" value="<?php echo esc_attr( Return_Form_Handler::ACTION_ADDRESS ); ?>">
+						<input type="hidden" name="return_id" value="<?php echo esc_attr( $request->get_id() ); ?>">
+
+						<?php hezarfen_returns_get_template( 'returns/pickup-address-fields.php', array( 'address' => $pickup_address ) ); ?>
+
+						<button type="submit" class="hez-btn hez-btn--ghost hez-btn--small"><?php esc_html_e( 'Adresi kaydet', 'hezarfen-for-woocommerce' ); ?></button>
+					</form>
+				</details>
+
+				<?php if ( $hez_address_open ) : ?>
+					<div class="hez-callout hez-callout--info">
+						<p><?php esc_html_e( 'Kargo alım gününü seçebilmeniz için önce alım adresinizi tamamlayın.', 'hezarfen-for-woocommerce' ); ?></p>
+					</div>
+				<?php elseif ( $booking['options'] ) : ?>
+					<form method="post" class="hez-inline-form hez-inline-form--booking">
+						<?php wp_nonce_field( 'hezarfen_returns_' . Return_Form_Handler::ACTION_BOOKING, Return_Form_Handler::NONCE_FIELD ); ?>
+						<input type="hidden" name="<?php echo esc_attr( Return_Form_Handler::ACTION_FIELD ); ?>" value="<?php echo esc_attr( Return_Form_Handler::ACTION_BOOKING ); ?>">
+						<input type="hidden" name="return_id" value="<?php echo esc_attr( $request->get_id() ); ?>">
+
+						<p class="hez-field">
+							<label for="hez-pickup-date"><?php esc_html_e( 'Kargonuzun alınacağı gün', 'hezarfen-for-woocommerce' ); ?></label>
+							<select id="hez-pickup-date" name="pickup_date" class="hez-input hez-select" required>
+								<option value=""><?php esc_html_e( 'Gün seçin', 'hezarfen-for-woocommerce' ); ?></option>
+								<?php foreach ( $booking['options'] as $hez_value => $hez_label ) : ?>
+									<option value="<?php echo esc_attr( $hez_value ); ?>"><?php echo esc_html( $hez_label ); ?></option>
+								<?php endforeach; ?>
+							</select>
+						</p>
+
+						<button type="submit" class="hez-btn hez-btn--primary"><?php esc_html_e( 'İade kargomu oluştur', 'hezarfen-for-woocommerce' ); ?></button>
+					</form>
+				<?php else : ?>
+					<div class="hez-callout hez-callout--warning">
+						<p>
+							<?php
+							echo esc_html(
+								$booking['error']
+									? $booking['error']
+									: __( 'Şu an uygun bir kargo alım günü bulunamadı. Lütfen daha sonra tekrar deneyin.', 'hezarfen-for-woocommerce' )
+							);
+							?>
+						</p>
+					</div>
+				<?php endif; ?>
 			<?php elseif ( $shipping_method->requires_customer_tracking() ) : ?>
 				<form method="post" class="hez-inline-form hez-inline-form--tracking">
 					<?php wp_nonce_field( 'hezarfen_returns_' . Return_Form_Handler::ACTION_TRACKING, Return_Form_Handler::NONCE_FIELD ); ?>

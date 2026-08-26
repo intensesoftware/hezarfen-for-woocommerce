@@ -7,6 +7,7 @@
 
 namespace Hezarfen\Inc\Returns\Frontend;
 
+use Hezarfen\Inc\Returns\Core\Return_Pickup_Address;
 use Hezarfen\Inc\Returns\Core\Return_Status;
 use Hezarfen\Inc\Returns\Returns_Module;
 
@@ -35,6 +36,13 @@ class My_Account_Returns {
 	 * @var Returns_Module
 	 */
 	private $module;
+
+	/**
+	 * Endpoint signature waiting to be written once the rules are rebuilt.
+	 *
+	 * @var string
+	 */
+	private $pending_endpoint_signature = '';
 
 	/**
 	 * Access checker.
@@ -106,14 +114,42 @@ class My_Account_Returns {
 
 		$signature = self::ENDPOINT_VERSION . '|' . self::get_list_endpoint() . '|' . self::get_request_endpoint();
 
-		if ( get_option( self::ENDPOINT_VERSION_OPTION ) !== $signature ) {
-			update_option( self::ENDPOINT_VERSION_OPTION, $signature );
-			// One-shot: the signature is stored first, so this runs once per
-			// endpoint change rather than on every request. Without it the
-			// account pages 404 until the merchant re-saves permalinks.
-			// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.flush_rewrite_rules_flush_rewrite_rules
-			flush_rewrite_rules( false );
+		if ( get_option( self::ENDPOINT_VERSION_OPTION ) === $signature ) {
+			return;
 		}
+
+		$this->pending_endpoint_signature = $signature;
+
+		// Deferred on purpose: this module boots on `init`, and flushing
+		// there would persist a rule set that misses everything other
+		// plugins register later in `init` or on `wp_loaded` — their URLs
+		// would 404 until permalinks are saved by hand.
+		add_action( 'shutdown', array( $this, 'flush_endpoint_rules' ) );
+	}
+
+	/**
+	 * Rebuilds the rewrite rules once every plugin has registered its own.
+	 *
+	 * The signature is stored only after the flush, so a request that dies
+	 * before shutdown leaves the work to the next one instead of marking it
+	 * done. Without this the account pages 404 until the merchant re-saves
+	 * permalinks.
+	 *
+	 * @return void
+	 */
+	public function flush_endpoint_rules() {
+		if ( '' === $this->pending_endpoint_signature ) {
+			return;
+		}
+
+		$signature = $this->pending_endpoint_signature;
+
+		$this->pending_endpoint_signature = '';
+
+		// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.flush_rewrite_rules_flush_rewrite_rules
+		flush_rewrite_rules( false );
+
+		update_option( self::ENDPOINT_VERSION_OPTION, $signature );
 	}
 
 	/**
@@ -191,7 +227,8 @@ class My_Account_Returns {
 			return;
 		}
 
-		$order = $request->get_order();
+		$order  = $request->get_order();
+		$method = $this->module->shipping()->get_for_request( $request );
 
 		hezarfen_returns_get_template(
 			'returns/detail.php',
@@ -199,11 +236,51 @@ class My_Account_Returns {
 				'request'         => $request,
 				'events'          => $this->module->events()->get_for_return( $request->get_id(), true ),
 				'reasons'         => $this->module->reasons(),
-				'shipping_method' => $this->module->shipping()->get_for_request( $request ),
+				'shipping_method' => $method,
+				'booking'         => $this->get_booking_view( $request, $method ),
+				'pickup_address'  => $request->has_pickup_address() ? $request->get_pickup_address() : ( $order ? Return_Pickup_Address::from_order( $order ) : Return_Pickup_Address::empty_address() ),
 				'progress_steps'  => Return_Status::get_progress_steps(),
 				'back_url'        => $order ? $order->get_view_order_url() : '',
 			)
 		);
+	}
+
+	/**
+	 * What the detail view needs to render the pickup day picker.
+	 *
+	 * The carrier is only asked when there is actually a booking to make,
+	 * so viewing a finished request never waits on the relay. A lookup
+	 * failure comes back as a message rather than an exception: the request
+	 * is fine, it is the carrier that is momentarily unreachable, and the
+	 * customer should see why the picker is missing.
+	 *
+	 * @param \Hezarfen\Inc\Returns\Core\Return_Request                  $request The request.
+	 * @param \Hezarfen\Inc\Returns\Shipping\Return_Shipping_Method_Interface $method  Its shipping method.
+	 *
+	 * @return array{needed: bool, options: array<string, string>, error: string}
+	 */
+	private function get_booking_view( $request, $method ) {
+		$view = array(
+			'needed'  => $method->requires_customer_booking() && $request->is_bookable_by_customer(),
+			'options' => array(),
+			'error'   => '',
+		);
+
+		if ( ! $view['needed'] ) {
+			return $view;
+		}
+
+		$options = $method->get_booking_options( $request );
+
+		if ( is_wp_error( $options ) ) {
+			$view['error'] = $options->get_error_message();
+
+			return $view;
+		}
+
+		$view['options'] = (array) $options;
+
+		return $view;
 	}
 
 	/**
@@ -240,6 +317,7 @@ class My_Account_Returns {
 				'shipping_method' => $this->module->shipping()->get_active_method(),
 				'deadline'        => $this->module->eligibility()->get_order_deadline( $order ),
 				'cancel_url'      => $order->get_view_order_url(),
+				'pickup_address'  => Return_Pickup_Address::from_order( $order ),
 			)
 		);
 	}
@@ -277,6 +355,7 @@ class My_Account_Returns {
 				'requests'    => $requests,
 				'returnable'  => $returnable,
 				'access'      => $this->access,
+				'shipping'    => $this->module->shipping(),
 				'deadline'    => $returnable ? $this->module->eligibility()->get_order_deadline( $order ) : 0,
 				'request_url' => wc_get_endpoint_url( self::get_request_endpoint(), (string) $order->get_id(), wc_get_page_permalink( 'myaccount' ) ),
 			)

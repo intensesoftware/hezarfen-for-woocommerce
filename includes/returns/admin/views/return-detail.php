@@ -14,6 +14,7 @@
 
 use Hezarfen\Inc\Returns\Admin\Returns_Admin;
 use Hezarfen\Inc\Returns\Core\Return_Event;
+use Hezarfen\Inc\Returns\Core\Return_Pickup_Address;
 use Hezarfen\Inc\Returns\Core\Return_Status;
 
 defined( 'ABSPATH' ) || exit();
@@ -37,6 +38,8 @@ $hez_action_keys = array(
 );
 ?>
 <div class="wrap hez-returns-admin hez-returns-admin--detail">
+
+	<?php Returns_Admin::render_brand(); ?>
 
 	<h1 class="wp-heading-inline">
 		<?php echo esc_html( $request->get_return_number() ); ?>
@@ -246,6 +249,29 @@ $hez_action_keys = array(
 							<?php if ( $request->get_courier() ) : ?>
 								<span class="description"><?php echo esc_html( $request->get_courier() ); ?></span>
 							<?php endif; ?>
+						</p>
+					<?php endif; ?>
+
+					<?php if ( $request->get_pickup_date() ) : ?>
+						<p class="hez-admin-pickup">
+							<?php
+							printf(
+								/* translators: %s: pickup date the customer picked. */
+								esc_html__( 'Müşterinin seçtiği kargo alım günü: %s', 'hezarfen-for-woocommerce' ),
+								'<strong>' . esc_html( hezarfen_returns_format_date( $request->get_pickup_date() ) ) . '</strong>'
+							);
+							?>
+						</p>
+					<?php elseif ( $shipping_method->requires_customer_booking() && Return_Status::APPROVED === $request->get_status() ) : ?>
+						<p class="hez-admin-pickup description">
+							<?php esc_html_e( 'Müşteri henüz kargo alım günü seçmedi; iade barkodu seçimden sonra oluşturulur.', 'hezarfen-for-woocommerce' ); ?>
+						</p>
+					<?php endif; ?>
+
+					<?php if ( $shipping_method->requires_pickup_address() && $request->has_pickup_address() ) : ?>
+						<p class="hez-admin-pickup-address">
+							<span class="description"><?php esc_html_e( 'Kargo alım adresi (müşterinin onayladığı):', 'hezarfen-for-woocommerce' ); ?></span><br>
+							<?php echo nl2br( esc_html( Return_Pickup_Address::format( $request->get_pickup_address() ) ) ); ?>
 						</p>
 					<?php endif; ?>
 

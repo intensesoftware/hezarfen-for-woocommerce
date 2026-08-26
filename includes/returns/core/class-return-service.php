@@ -78,8 +78,10 @@ class Return_Service {
 	 * @param \WC_Order            $order Order being returned from.
 	 * @param array<string, mixed> $input Sanitised input: `lines` keyed by
 	 *                                    order item ID with `quantity`,
-	 *                                    `reason` and `note`, plus an
-	 *                                    optional `customer_note`.
+	 *                                    `reason` and `note`, an optional
+	 *                                    `customer_note`, and the
+	 *                                    `pickup_address` parts when the
+	 *                                    active method collects the parcel.
 	 *
 	 * @return Return_Request|\WP_Error
 	 */
@@ -97,14 +99,27 @@ class Return_Service {
 			return $items;
 		}
 
+		$method         = $this->shipping->get_active_method();
+		$pickup_address = array();
+
+		if ( $method->requires_pickup_address() ) {
+			$pickup_address = isset( $input['pickup_address'] ) ? Return_Pickup_Address::normalize( $input['pickup_address'] ) : array();
+			$valid          = Return_Pickup_Address::validate( $pickup_address );
+
+			if ( is_wp_error( $valid ) ) {
+				return $valid;
+			}
+		}
+
 		$request = new Return_Request(
 			array(
 				'order_id'          => $order->get_id(),
 				'customer_id'       => (int) $order->get_customer_id(),
 				'customer_email'    => $order->get_billing_email(),
 				'status'            => Return_Status::PENDING,
-				'shipping_method'   => $this->shipping->get_active_method()->get_key(),
+				'shipping_method'   => $method->get_key(),
 				'return_address_id' => 'default',
+				'pickup_address'    => $pickup_address,
 				'customer_note'     => isset( $input['customer_note'] ) ? (string) $input['customer_note'] : '',
 				'currency'          => $order->get_currency(),
 			)
@@ -117,6 +132,17 @@ class Return_Service {
 		$saved = $this->repository->save( $request );
 
 		if ( is_wp_error( $saved ) ) {
+			// Two submits racing on the same order build the same reference,
+			// and the unique index lets exactly one of them through. The
+			// other is a duplicate of a request that now exists, not a
+			// failure the customer should retry.
+			if ( 'hezarfen_returns_duplicate_number' === $saved->get_error_code() ) {
+				return new \WP_Error(
+					'hezarfen_returns_duplicate_request',
+					__( 'Bu sipariş için iade talebiniz az önce oluşturuldu. Talebi hesabınızdaki sipariş detayından görebilirsiniz.', 'hezarfen-for-woocommerce' )
+				);
+			}
+
 			return $saved;
 		}
 
@@ -149,17 +175,10 @@ class Return_Service {
 	 */
 	public function change_status( $request, $new_status, $context = array() ) {
 		$old_status = $request->get_status();
+		$allowed    = $this->check_transition( $old_status, $new_status );
 
-		if ( ! Return_Status::can_transition( $old_status, $new_status ) ) {
-			return new \WP_Error(
-				'hezarfen_returns_invalid_transition',
-				sprintf(
-					/* translators: 1: current status label, 2: target status label. */
-					__( '"%1$s" durumundan "%2$s" durumuna geçilemez.', 'hezarfen-for-woocommerce' ),
-					Return_Status::get_label( $old_status ),
-					Return_Status::get_label( $new_status )
-				)
-			);
+		if ( is_wp_error( $allowed ) ) {
+			return $allowed;
 		}
 
 		$request->set_status( $new_status );
@@ -171,6 +190,13 @@ class Return_Service {
 
 			if ( is_wp_error( $result ) ) {
 				$shipping_error = $result;
+
+				// The approval stands, but the promise the failed method
+				// made to the customer ("we will collect the parcel") no
+				// longer holds. Handing the request to the manual method
+				// gives them a return address and a tracking form instead
+				// of a pickup that is never coming.
+				$request->set_shipping_method( $this->shipping->get_fallback_method()->get_key() );
 			}
 		}
 
@@ -246,6 +272,15 @@ class Return_Service {
 			);
 		}
 
+		// Checked up front: the question below is customer visible, and an
+		// invalid transition would leave them staring at something they can
+		// never answer.
+		$allowed = $this->check_transition( $request->get_status(), Return_Status::INFO_REQUIRED );
+
+		if ( is_wp_error( $allowed ) ) {
+			return $allowed;
+		}
+
 		$this->log(
 			$request,
 			Return_Event::TYPE_INFO_REQUEST,
@@ -293,6 +328,218 @@ class Return_Service {
 			Return_Status::PENDING,
 			array( 'actor' => $this->customer_actor( $request ) )
 		);
+	}
+
+	/**
+	 * Cancels the carrier appointment the customer booked.
+	 *
+	 * Only the booking goes away — the request stays approved, so the
+	 * customer lands back on the day picker instead of having to open a
+	 * whole new request.
+	 *
+	 * @param Return_Request $request Booked request.
+	 *
+	 * @return true|\WP_Error
+	 */
+	public function cancel_booking_by_customer( $request ) {
+		if ( ! $request->is_booking_cancellable_by_customer() ) {
+			return new \WP_Error(
+				'hezarfen_returns_booking_not_cancellable',
+				__( 'Bu kargo randevusu artık iptal edilemez.', 'hezarfen-for-woocommerce' )
+			);
+		}
+
+		$method    = $this->shipping->get_for_request( $request );
+		$cancelled = $method->cancel_booking( $request );
+
+		if ( is_wp_error( $cancelled ) ) {
+			return $cancelled;
+		}
+
+		$saved = $this->repository->save( $request );
+
+		if ( is_wp_error( $saved ) ) {
+			return $saved;
+		}
+
+		$this->log(
+			$request,
+			Return_Event::TYPE_SHIPPING,
+			__( 'Müşteri kargo randevusunu iptal etti.', 'hezarfen-for-woocommerce' ),
+			array( 'actor' => $this->customer_actor( $request ) )
+		);
+
+		return true;
+	}
+
+	/**
+	 * Replaces the address the carrier will collect the parcel from.
+	 *
+	 * Allowed only while the shipment is still unbooked: once the carrier
+	 * holds an appointment, the address it holds is the one the courier
+	 * drives to, and changing it here would only disagree with them.
+	 *
+	 * @param Return_Request        $request The request.
+	 * @param array<string, string> $address Address parts.
+	 *
+	 * @return true|\WP_Error
+	 */
+	public function update_pickup_address( $request, $address ) {
+		if ( ! $request->is_bookable_by_customer() ) {
+			return new \WP_Error(
+				'hezarfen_returns_address_locked',
+				__( 'Kargo randevunuz alındığı için alım adresi artık değiştirilemez.', 'hezarfen-for-woocommerce' )
+			);
+		}
+
+		$valid = Return_Pickup_Address::validate( $address );
+
+		if ( is_wp_error( $valid ) ) {
+			return $valid;
+		}
+
+		$request->set_pickup_address( $address );
+
+		$saved = $this->repository->save( $request );
+
+		if ( is_wp_error( $saved ) ) {
+			return $saved;
+		}
+
+		$this->log(
+			$request,
+			Return_Event::TYPE_SHIPPING,
+			__( 'Müşteri kargo alım adresini güncelledi.', 'hezarfen-for-woocommerce' ),
+			array( 'actor' => $this->customer_actor( $request ) )
+		);
+
+		return true;
+	}
+
+	/**
+	 * Books the return shipment for the day the customer picked.
+	 *
+	 * The carrier call and the option list belong to the shipping method;
+	 * what this class owns is when a booking may happen at all — an
+	 * approved request whose method expects one and that has no label yet.
+	 * Without that guard a crafted POST could book a second pickup, or one
+	 * for a request the merchant already rejected.
+	 *
+	 * The request deliberately stays approved afterwards: the parcel is not
+	 * on its way until the courier has actually collected it, and that is
+	 * what moves it to "shipped".
+	 *
+	 * @param Return_Request $request Approved request.
+	 * @param string         $choice  Value of the picked option.
+	 *
+	 * @return true|\WP_Error
+	 */
+	public function book_shipment_by_customer( $request, $choice ) {
+		$method = $this->shipping->get_for_request( $request );
+
+		if ( ! $method->requires_customer_booking() ) {
+			return new \WP_Error(
+				'hezarfen_returns_booking_not_expected',
+				__( 'Bu talebin kargo gönderimi mağaza tarafından yönetiliyor.', 'hezarfen-for-woocommerce' )
+			);
+		}
+
+		if ( ! $request->is_bookable_by_customer() ) {
+			return new \WP_Error(
+				'hezarfen_returns_not_bookable',
+				__( 'Bu talep için kargo randevusu alınamaz.', 'hezarfen-for-woocommerce' )
+			);
+		}
+
+		$choice = trim( (string) $choice );
+
+		if ( '' === $choice ) {
+			return new \WP_Error(
+				'hezarfen_returns_empty_booking_choice',
+				__( 'Lütfen kargonuzun alınmasını istediğiniz günü seçin.', 'hezarfen-for-woocommerce' )
+			);
+		}
+
+		$booked = $method->book( $request, $choice );
+
+		if ( is_wp_error( $booked ) ) {
+			// Nothing was written: the request is still an approved one
+			// waiting for a booking, so the customer can simply try again.
+			$this->log(
+				$request,
+				Return_Event::TYPE_SHIPPING,
+				$booked->get_error_message(),
+				array(
+					'actor'               => $this->system_actor(),
+					'is_customer_visible' => false,
+				)
+			);
+
+			return $booked;
+		}
+
+		$saved = $this->repository->save( $request );
+
+		if ( is_wp_error( $saved ) ) {
+			return $saved;
+		}
+
+		$this->log(
+			$request,
+			Return_Event::TYPE_SHIPPING,
+			sprintf(
+				/* translators: 1: pickup date, 2: return shipment tracking number. */
+				__( 'İade kargo randevusu alındı: %1$s. Kargo kodu: %2$s', 'hezarfen-for-woocommerce' ),
+				hezarfen_returns_format_date( $request->get_pickup_date() ),
+				$request->get_tracking_number()
+			),
+			array( 'actor' => $this->customer_actor( $request ) )
+		);
+
+		/**
+		 * Fires after the customer booked the return shipment.
+		 *
+		 * @param Return_Request $request The request, with its tracking
+		 *                                details and pickup date filled in.
+		 * @param string         $choice  Value of the picked option.
+		 */
+		do_action( 'hezarfen_return_shipment_booked', $request, $choice );
+
+		return true;
+	}
+
+	/**
+	 * Stores the tracking details the customer entered themselves.
+	 *
+	 * Separate from set_tracking() because the merchant may correct the
+	 * shipping details of any request, while the customer may only fill in
+	 * the one the store is actually waiting on: a request that has been
+	 * approved and whose shipping method asks them for a tracking number.
+	 * Without that guard a crafted POST could overwrite a carrier issued
+	 * barcode, or attach a number to a rejected request.
+	 *
+	 * @param Return_Request $request Request.
+	 * @param string         $courier Carrier name.
+	 * @param string         $number  Tracking number.
+	 *
+	 * @return true|\WP_Error
+	 */
+	public function set_tracking_by_customer( $request, $courier, $number ) {
+		if ( ! $this->shipping->get_for_request( $request )->requires_customer_tracking() ) {
+			return new \WP_Error(
+				'hezarfen_returns_tracking_not_expected',
+				__( 'Bu talebin kargo bilgisi mağaza tarafından yönetiliyor.', 'hezarfen-for-woocommerce' )
+			);
+		}
+
+		if ( ! $request->is_tracking_editable_by_customer() ) {
+			return new \WP_Error(
+				'hezarfen_returns_tracking_not_editable',
+				__( 'Bu talep için kargo bilgisi girilemez.', 'hezarfen-for-woocommerce' )
+			);
+		}
+
+		return $this->set_tracking( $request, $courier, $number, $this->customer_actor( $request ) );
 	}
 
 	/**
@@ -510,7 +757,36 @@ class Return_Service {
 	}
 
 	/**
+	 * Whether a status change is allowed, as a WP_Error when it is not.
+	 *
+	 * @param string $from Current status.
+	 * @param string $to   Target status.
+	 *
+	 * @return true|\WP_Error
+	 */
+	private function check_transition( $from, $to ) {
+		if ( Return_Status::can_transition( $from, $to ) ) {
+			return true;
+		}
+
+		return new \WP_Error(
+			'hezarfen_returns_invalid_transition',
+			sprintf(
+				/* translators: 1: current status label, 2: target status label. */
+				__( '"%1$s" durumundan "%2$s" durumuna geçilemez.', 'hezarfen-for-woocommerce' ),
+				Return_Status::get_label( $from ),
+				Return_Status::get_label( $to )
+			)
+		);
+	}
+
+	/**
 	 * Builds the human readable reference of a new request.
+	 *
+	 * The counter is read outside a transaction on purpose: `return_number`
+	 * carries a unique index, so two submits racing on the same order build
+	 * the same reference and the database lets exactly one of them through.
+	 * The guard against a double submit is that index, not this count.
 	 *
 	 * @param \WC_Order $order Parent order.
 	 *

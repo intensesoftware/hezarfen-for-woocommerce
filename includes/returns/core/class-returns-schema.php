@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit();
  */
 class Returns_Schema {
 
-	const DB_VERSION     = '1.0.0';
+	const DB_VERSION     = '1.3.0';
 	const VERSION_OPTION = 'hezarfen_returns_db_version';
 
 	const TABLE_RETURNS = 'hezarfen_returns';
@@ -69,7 +69,46 @@ class Returns_Schema {
 			dbDelta( $sql );
 		}
 
+		self::upgrade_return_number_index();
+
 		update_option( self::VERSION_OPTION, self::DB_VERSION );
+	}
+
+	/**
+	 * Turns the pre-1.1.0 plain index on `return_number` into a unique one.
+	 *
+	 * `dbDelta` adds missing indexes but never rewrites an existing one, so
+	 * a site created on 1.0.0 would keep the non-unique key — and with it
+	 * the double-submit window where two requests share a reference. The
+	 * swap runs as a single ALTER so the column is never left unindexed,
+	 * and is skipped when duplicates already exist rather than failing
+	 * loudly on every request.
+	 *
+	 * @return void
+	 */
+	private static function upgrade_return_number_index() {
+		global $wpdb;
+
+		$table = self::table( self::TABLE_RETURNS );
+
+		// The table name is built from $wpdb->prefix and cannot be bound as a
+		// parameter; none of these statements carry user input. Schema work is
+		// what this class is for.
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
+		$index = $wpdb->get_row( "SHOW INDEX FROM {$table} WHERE Key_name = 'return_number'", ARRAY_A );
+
+		if ( ! $index || ! (int) $index['Non_unique'] ) {
+			return;
+		}
+
+		$duplicates = (int) $wpdb->get_var( "SELECT COUNT(*) FROM ( SELECT return_number FROM {$table} GROUP BY return_number HAVING COUNT(*) > 1 ) AS d" );
+
+		if ( $duplicates ) {
+			return;
+		}
+
+		$wpdb->query( "ALTER TABLE {$table} DROP INDEX return_number, ADD UNIQUE KEY return_number (return_number)" );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 	/**
@@ -99,7 +138,9 @@ class Returns_Schema {
 			shipping_method varchar(32) NOT NULL DEFAULT '',
 			courier varchar(64) NOT NULL DEFAULT '',
 			tracking_number varchar(100) NOT NULL DEFAULT '',
+			pickup_date varchar(10) NOT NULL DEFAULT '',
 			return_address_id varchar(64) NOT NULL DEFAULT '',
+			pickup_address text NULL,
 			customer_note text NULL,
 			refund_amount decimal(19,4) NOT NULL DEFAULT 0.0000,
 			currency varchar(10) NOT NULL DEFAULT '',
@@ -111,7 +152,7 @@ class Returns_Schema {
 			KEY status (status),
 			KEY created_at (created_at),
 			KEY customer_email (customer_email),
-			KEY return_number (return_number)
+			UNIQUE KEY return_number (return_number)
 		) {$charset_collate};";
 
 		$definitions[] = "CREATE TABLE {$items} (

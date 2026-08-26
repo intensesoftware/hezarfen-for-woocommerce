@@ -91,6 +91,7 @@ class Returns_Module {
 		new Frontend\My_Account_Returns( $this );
 		new Frontend\Return_Form_Handler( $this );
 		new Frontend\Return_Assets();
+		new Frontend\Return_Address_Ajax();
 		new Emails\Return_Emails();
 
 		if ( is_admin() ) {
@@ -139,6 +140,7 @@ class Returns_Module {
 			'core/class-return-settings.php',
 			'core/class-return-status.php',
 			'core/trait-hydrates-props.php',
+			'core/class-return-pickup-address.php',
 			'core/class-return-item.php',
 			'core/class-return-event.php',
 			'core/class-return-request.php',
@@ -160,12 +162,14 @@ class Returns_Module {
 			'shipping/class-return-shipping-registry.php',
 			'frontend/class-return-assets.php',
 			'frontend/class-return-access.php',
+			'frontend/class-return-address-ajax.php',
 			'frontend/class-return-form-handler.php',
 			'frontend/class-my-account-returns.php',
 			// The e-mail classes extend WC_Email, which WooCommerce only
 			// loads once the mailer boots, so they are required inside the
 			// `woocommerce_email_classes` filter instead of here.
 			'emails/class-return-emails.php',
+			'admin/class-returns-pro-teasers.php',
 			'admin/class-returns-settings.php',
 			'template-functions.php',
 		);

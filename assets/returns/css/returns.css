@@ -28,6 +28,8 @@
 	--hez-radius: 10px;
 	--hez-radius-sm: 6px;
 	--hez-gap: 16px;
+	--hez-panel-space: 32px;
+	--hez-panel-padding: 20px;
 
 	color: var(--hez-text);
 	font-size: 15px;
@@ -421,7 +423,16 @@
 	font-weight: 600;
 }
 
-.hez-input {
+/*
+ * Two class names deep on purpose. Themes style form controls by input
+ * type — Storefront paints input[type=text] and textarea grey but leaves
+ * select alone — and a single class loses to that attribute selector, so
+ * the fields of one form end up in different colours. Matching on
+ * .hez-returns .hez-input outranks the theme and keeps every control in
+ * the module looking like the same control.
+ */
+
+.hez-returns .hez-input {
 	width: 100%;
 	padding: 9px 11px;
 	border: 1px solid var(--hez-border-strong);
@@ -430,10 +441,23 @@
 	color: var(--hez-text);
 	font-size: 14px;
 	line-height: 1.4;
+	box-shadow: none;
+	-webkit-appearance: none;
+	appearance: none;
 }
 
-.hez-input:focus {
+.hez-returns select.hez-input {
+	/* The reset above strips the native arrow, so it is drawn back on. */
+	padding-right: 34px;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%2364748b' d='M1.4 0 6 4.6 10.6 0 12 1.4 6 7.4 0 1.4z'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 12px center;
+	background-size: 10px 7px;
+}
+
+.hez-returns .hez-input:focus {
 	border-color: var(--hez-accent);
+	background-color: var(--hez-bg);
 	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
 	outline: none;
 }
@@ -489,6 +513,16 @@
 .hez-card__meta {
 	color: var(--hez-text-muted);
 	font-size: 13px;
+}
+
+/* The nudge sits on its own line under the card's summary, whatever the
+   card's other columns are doing. */
+.hez-card__hint {
+	grid-column: 1 / -1;
+	margin-top: 4px;
+	color: var(--hez-accent);
+	font-size: 13px;
+	font-weight: 600;
 }
 
 .hez-card__total {
@@ -696,6 +730,13 @@
 	font-weight: 700;
 }
 
+/* A date is prose, not a code the customer reads out character by
+   character, so it drops the monospace treatment the barcode needs. */
+.hez-tracking__value--plain {
+	font-family: inherit;
+	font-weight: 600;
+}
+
 /* ------------------------------------------------------- shipping card */
 
 .hez-shipping-card {
@@ -731,6 +772,10 @@
 
 .hez-inline-form--tracking button {
 	grid-column: 1 / -1;
+	justify-self: start;
+}
+
+.hez-inline-form--booking button {
 	justify-self: start;
 }
 
@@ -833,17 +878,49 @@
 
 /* --------------------------------------------------------------- order panel */
 
-.hez-returns--order-panel {
-	margin: 28px 0;
-	padding: 20px;
+/*
+ * The panel is printed inside whatever markup the active theme wraps the
+ * order table in, so it defends its own box: the two-class selectors beat
+ * a theme's `section`/`h2`/`p` resets, the logical margins survive RTL and
+ * the float/width resets keep it from being sucked into a floated or
+ * grid parent. Spacing stays in custom properties, so a theme only has to
+ * redefine --hez-panel-space / --hez-panel-padding to retune it.
+ */
+
+.hez-returns.hez-returns--order-panel {
+	display: block;
+	float: none;
+	clear: both;
+	width: auto;
+	max-width: 100%;
+	margin: var(--hez-panel-space) 0; /* fallback for browsers without logical shorthands */
+	margin-block: var(--hez-panel-space);
+	margin-inline: 0;
+	padding: var(--hez-panel-padding);
 	border: 1px solid var(--hez-border);
 	border-radius: var(--hez-radius);
 	background: var(--hez-bg-muted);
 }
 
+.hez-returns.hez-returns--order-panel::before,
+.hez-returns.hez-returns--order-panel::after {
+	content: none;
+}
+
+.hez-returns .hez-returns__panel-header {
+	margin: 0 0 12px;
+}
+
+.hez-returns .hez-returns__panel-body > *:last-child {
+	margin-bottom: 0;
+}
+
 .hez-returns--order-panel .hez-returns__title {
-	margin-bottom: 10px;
+	margin: 0;
+	padding: 0;
 	font-size: 20px;
+	line-height: 1.3;
+	text-transform: none;
 }
 
 .hez-returns--order-panel .hez-returns__subtitle,
@@ -852,13 +929,304 @@
 	margin-bottom: 14px;
 }
 
-.hez-returns--order-panel .hez-cards {
-	margin-bottom: 14px;
+.hez-returns--order-panel .hez-returns__requests {
+	margin: 0 0 14px;
+}
+
+.hez-returns .hez-returns__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin: 0;
+	padding: 0;
+}
+
+.hez-cards--compact {
+	gap: 8px;
+}
+
+.hez-cards--compact .hez-card__link {
+	padding: 12px 14px;
+}
+
+
+/* ------------------------------------------------------ pickup address */
+
+.hez-returns__pickup {
+	margin-top: 16px;
+	padding-top: 16px;
+	border-top: 1px solid var(--hez-border);
+}
+
+.hez-returns__pickup-title {
+	margin: 0 0 4px;
+	font-weight: 700;
+}
+
+.hez-returns__pickup-hint {
+	margin: 0 0 14px;
+	color: var(--hez-text-muted);
+	font-size: 14px;
+}
+
+.hez-address-fields {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 12px;
+}
+
+.hez-address-fields .hez-field--address {
+	grid-column: 1 / -1;
+}
+
+.hez-field__hint {
+	display: block;
+	margin-top: 4px;
+	color: var(--hez-text-muted);
+	font-size: 12px;
+}
+
+/* The address the day list was fetched for, foldable so it stays a detail
+   until the customer needs to correct it. */
+
+.hez-pickup-address {
+	margin: 0 0 16px;
+	border: 1px solid var(--hez-border);
+	border-radius: var(--hez-radius-sm);
+	background: var(--hez-bg-muted);
+}
+
+.hez-pickup-address__summary {
+	display: flex;
+	align-items: baseline;
+	flex-wrap: wrap;
+	gap: 4px 10px;
+	padding: 12px 14px;
+	cursor: pointer;
+	list-style: none;
+}
+
+.hez-pickup-address__summary::-webkit-details-marker {
+	display: none;
+}
+
+.hez-pickup-address__label {
+	color: var(--hez-text-muted);
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.hez-pickup-address__value {
+	flex: 1 1 240px;
+	font-size: 14px;
+}
+
+.hez-pickup-address__toggle {
+	color: var(--hez-accent);
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.hez-pickup-address[open] .hez-pickup-address__toggle {
+	color: var(--hez-text-muted);
+}
+
+.hez-pickup-address__form {
+	padding: 0 14px 14px;
+}
+
+.hez-pickup-address__form .hez-btn {
+	margin-top: 12px;
+}
+
+
+
+/* ---------------------------------------------------------- return code */
+
+/*
+ * The code is what the customer hands the courier, so it is the loudest
+ * thing on the page: big, monospaced, selectable, and with the copy button
+ * next to it rather than under it.
+ */
+
+.hez-code {
+	margin: 0;
+	padding: 16px;
+	border: 1px solid var(--hez-border);
+	border-radius: var(--hez-radius);
+	background: var(--hez-bg-muted);
+}
+
+.hez-code__head {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 8px 10px;
+	margin-bottom: 8px;
+}
+
+.hez-code__label {
+	color: var(--hez-text-muted);
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.hez-code__row {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+.hez-code__value {
+	padding: 0;
+	background: none;
+	color: var(--hez-info);
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-size: clamp(24px, 6vw, 32px);
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	line-height: 1.2;
+	/* The whole code selects as one word on a long press. */
+	user-select: all;
+	word-break: break-all;
+}
+
+.hez-code__copy.is-copied {
+	border-color: var(--hez-success);
+	color: var(--hez-success);
+}
+
+.hez-code__hint {
+	margin: 10px 0 0;
+	color: var(--hez-text-muted);
+	font-size: 14px;
+}
+
+.hez-code__meta {
+	margin: 8px 0 0;
+	font-size: 14px;
+}
+
+.hez-code__cancel {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 8px 12px;
+	margin-top: 16px;
+	padding-top: 14px;
+	border-top: 1px solid var(--hez-border);
+}
+
+.hez-code__cancel-hint {
+	color: var(--hez-text-muted);
+	font-size: 13px;
+}
+
+.hez-code__cancel-hint--closed {
+	display: block;
+	margin: 16px 0 0;
+	padding-top: 14px;
+	border-top: 1px solid var(--hez-border);
+}
+
+/* ------------------------------------------------------------- select2 */
+
+/*
+ * selectWoo replaces the select with its own markup, so the field has to be
+ * restyled rather than inherited. The dropdown is appended to <body>, out
+ * of .hez-returns and therefore out of reach of its tokens, which is why
+ * the panel carries its own colours through a class of its own.
+ */
+
+.hez-returns .select2-container--default .select2-selection--single {
+	height: auto;
+	padding: 8px 11px;
+	border: 1px solid var(--hez-border-strong);
+	border-radius: var(--hez-radius-sm);
+	background: var(--hez-bg);
+}
+
+.hez-returns .select2-container--default .select2-selection--single .select2-selection__rendered {
+	padding: 0;
+	color: var(--hez-text);
+	font-size: 14px;
+	line-height: 1.4;
+}
+
+.hez-returns .select2-container--default .select2-selection--single .select2-selection__placeholder {
+	color: var(--hez-text-muted);
+}
+
+.hez-returns .select2-container--default .select2-selection--single .select2-selection__arrow {
+	top: 50%;
+	right: 8px;
+	transform: translateY(-50%);
+}
+
+.hez-returns .select2-container--default.select2-container--focus .select2-selection--single,
+.hez-returns .select2-container--default.select2-container--open .select2-selection--single {
+	border-color: var(--hez-accent);
+	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+}
+
+.hez-select2-dropdown {
+	border-color: #cbd5e1;
+	border-radius: var(--hez-radius-sm, 6px);
+	font-size: 14px;
+}
+
+.hez-select2-dropdown .select2-search__field {
+	padding: 7px 9px;
+	border: 1px solid #cbd5e1;
+	border-radius: 4px;
+}
+
+.hez-select2-dropdown .select2-results__option--highlighted[aria-selected] {
+	background: #2563eb;
+}
+
+@media (prefers-color-scheme: dark) {
+	.hez-select2-dropdown {
+		border-color: #475569;
+		background: #0f172a;
+		color: #e2e8f0;
+	}
+
+	.hez-select2-dropdown .select2-results__option {
+		background: #0f172a;
+		color: #e2e8f0;
+	}
+
+	.hez-select2-dropdown .select2-search__field {
+		border-color: #475569;
+		background: #1e293b;
+		color: #e2e8f0;
+	}
+
+	.hez-select2-dropdown .select2-results__option--highlighted[aria-selected] {
+		background: #1d4ed8;
+	}
 }
 
 /* ------------------------------------------------------------- responsive */
 
 @media (max-width: 600px) {
+	.hez-address-fields {
+		grid-template-columns: 1fr;
+	}
+
+	.hez-returns.hez-returns--order-panel {
+		--hez-panel-space: 24px;
+		--hez-panel-padding: 16px;
+	}
+
+	.hez-returns .hez-returns__actions .hez-btn {
+		width: 100%;
+	}
+
 	.hez-item__details {
 		grid-template-columns: 1fr;
 		padding-left: 12px;

@@ -7,6 +7,7 @@
 
 namespace Hezarfen\Inc\Returns\Frontend;
 
+use Hezarfen\Inc\Returns\Core\Return_Pickup_Address;
 use Hezarfen\Inc\Returns\Returns_Module;
 
 defined( 'ABSPATH' ) || exit();
@@ -26,6 +27,9 @@ class Return_Form_Handler {
 	const ACTION_CREATE   = 'create';
 	const ACTION_CANCEL   = 'cancel';
 	const ACTION_TRACKING = 'tracking';
+	const ACTION_BOOKING  = 'booking';
+	const ACTION_ADDRESS  = 'address';
+	const ACTION_UNBOOK   = 'unbook';
 	const ACTION_INFO     = 'info';
 
 	/**
@@ -87,6 +91,15 @@ class Return_Form_Handler {
 			case self::ACTION_TRACKING:
 				$this->handle_tracking();
 				break;
+			case self::ACTION_BOOKING:
+				$this->handle_booking();
+				break;
+			case self::ACTION_ADDRESS:
+				$this->handle_address();
+				break;
+			case self::ACTION_UNBOOK:
+				$this->handle_unbook();
+				break;
 			case self::ACTION_INFO:
 				$this->handle_info();
 				break;
@@ -113,8 +126,9 @@ class Return_Form_Handler {
 		$request = $this->module->service()->create(
 			$order,
 			array(
-				'lines'         => $this->read_submitted_lines(),
-				'customer_note' => $this->read_textarea( 'customer_note' ),
+				'lines'          => $this->read_submitted_lines(),
+				'customer_note'  => $this->read_textarea( 'customer_note' ),
+				'pickup_address' => $this->read_pickup_address(),
 			)
 		);
 
@@ -179,7 +193,7 @@ class Return_Form_Handler {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$number = isset( $_POST['tracking_number'] ) ? sanitize_text_field( wp_unslash( $_POST['tracking_number'] ) ) : '';
 
-		$result = $this->module->service()->set_tracking( $request, $courier, $number );
+		$result = $this->module->service()->set_tracking_by_customer( $request, $courier, $number );
 
 		if ( is_wp_error( $result ) ) {
 			wc_add_notice( $result->get_error_message(), 'error' );
@@ -190,6 +204,111 @@ class Return_Form_Handler {
 		wc_add_notice( __( 'Kargo bilginiz kaydedildi. Teşekkürler!', 'hezarfen-for-woocommerce' ), 'success' );
 
 		$this->redirect( $this->access->get_request_url( $request ) );
+	}
+
+	/**
+	 * Books the return shipment for the day the customer picked.
+	 *
+	 * @return void
+	 */
+	private function handle_booking() {
+		$request = $this->read_authorised_request();
+
+		if ( ! $request ) {
+			return;
+		}
+
+		// Nonce verified in handle().
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$choice = isset( $_POST['pickup_date'] ) ? sanitize_text_field( wp_unslash( $_POST['pickup_date'] ) ) : '';
+
+		$result = $this->module->service()->book_shipment_by_customer( $request, $choice );
+
+		if ( is_wp_error( $result ) ) {
+			// No redirect: the detail page re-renders with a freshly
+			// fetched day list, so a customer whose slot was taken picks
+			// another one right away instead of a stale list.
+			wc_add_notice( $result->get_error_message(), 'error' );
+
+			return;
+		}
+
+		wc_add_notice(
+			sprintf(
+				/* translators: %s: pickup date. */
+				__( 'İade kargo randevunuz alındı. Kargonuz %s tarihinde adresinizden teslim alınacak.', 'hezarfen-for-woocommerce' ),
+				hezarfen_returns_format_date( $request->get_pickup_date() )
+			),
+			'success'
+		);
+
+		$this->redirect( $this->access->get_request_url( $request ) );
+	}
+
+	/**
+	 * Calls off the carrier appointment the customer booked.
+	 *
+	 * @return void
+	 */
+	private function handle_unbook() {
+		$request = $this->read_authorised_request();
+
+		if ( ! $request ) {
+			return;
+		}
+
+		$result = $this->module->service()->cancel_booking_by_customer( $request );
+
+		if ( is_wp_error( $result ) ) {
+			wc_add_notice( $result->get_error_message(), 'error' );
+
+			return;
+		}
+
+		wc_add_notice( __( 'Kargo randevunuz iptal edildi. Dilerseniz yeni bir alım günü seçebilirsiniz.', 'hezarfen-for-woocommerce' ), 'success' );
+
+		$this->redirect( $this->access->get_request_url( $request ) );
+	}
+
+	/**
+	 * Stores a corrected pickup address for an approved request.
+	 *
+	 * @return void
+	 */
+	private function handle_address() {
+		$request = $this->read_authorised_request();
+
+		if ( ! $request ) {
+			return;
+		}
+
+		$result = $this->module->service()->update_pickup_address( $request, $this->read_pickup_address() );
+
+		if ( is_wp_error( $result ) ) {
+			wc_add_notice( $result->get_error_message(), 'error' );
+
+			return;
+		}
+
+		wc_add_notice( __( 'Kargo alım adresiniz güncellendi.', 'hezarfen-for-woocommerce' ), 'success' );
+
+		// A redirect, so the day list is rebuilt for the new district
+		// instead of the one the page was rendered with.
+		$this->redirect( $this->access->get_request_url( $request ) );
+	}
+
+	/**
+	 * Reads the pickup address fields out of the submission.
+	 *
+	 * @return array<string, string>
+	 */
+	private function read_pickup_address() {
+		// Nonce verified in handle(); Return_Pickup_Address sanitises every
+		// part it reads.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$input = isset( $_POST['pickup_address'] ) && is_array( $_POST['pickup_address'] ) ? $_POST['pickup_address'] : array();
+
+		return Return_Pickup_Address::from_input( $input );
 	}
 
 	/**

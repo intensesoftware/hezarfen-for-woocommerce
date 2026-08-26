@@ -84,6 +84,15 @@ class Return_Request {
 	protected $tracking_number = '';
 
 	/**
+	 * Day the carrier collects the return parcel from the customer, in
+	 * `Y-m-d`. Empty when the method needs no appointment or none was made
+	 * yet.
+	 *
+	 * @var string
+	 */
+	protected $pickup_date = '';
+
+	/**
 	 * Identifier of the return address the parcel is headed to. This module
 	 * ships everything to the single configured address; an add-on can point
 	 * different requests at different warehouses.
@@ -91,6 +100,14 @@ class Return_Request {
 	 * @var string
 	 */
 	protected $return_address_id = '';
+
+	/**
+	 * The address the carrier collects the parcel from, as the parts
+	 * Return_Pickup_Address defines. Empty for methods that need no pickup.
+	 *
+	 * @var array<string, string>
+	 */
+	protected $pickup_address = array();
 
 	/**
 	 * Optional note the customer added to the whole request.
@@ -161,7 +178,15 @@ class Return_Request {
 		$this->shipping_method   = $this->string_prop( $data, 'shipping_method', $this->shipping_method );
 		$this->courier           = $this->string_prop( $data, 'courier', $this->courier );
 		$this->tracking_number   = $this->string_prop( $data, 'tracking_number', $this->tracking_number );
+		$this->pickup_date       = $this->string_prop( $data, 'pickup_date', $this->pickup_date );
 		$this->return_address_id = $this->string_prop( $data, 'return_address_id', $this->return_address_id );
+
+		if ( array_key_exists( 'pickup_address', $data ) ) {
+			// Arrives as an array from the form and as the stored JSON from
+			// a database row.
+			$this->set_pickup_address( $data['pickup_address'] );
+		}
+
 		$this->customer_note     = $this->string_prop( $data, 'customer_note', $this->customer_note );
 		$this->currency          = $this->string_prop( $data, 'currency', $this->currency );
 		$this->created_at        = $this->string_prop( $data, 'created_at', $this->created_at );
@@ -326,6 +351,71 @@ class Return_Request {
 	}
 
 	/**
+	 * Day the carrier collects the parcel, `Y-m-d`.
+	 *
+	 * @return string
+	 */
+	public function get_pickup_date() {
+		return $this->pickup_date;
+	}
+
+	/**
+	 * Sets the pickup day.
+	 *
+	 * @param string $pickup_date Day in `Y-m-d`.
+	 *
+	 * @return void
+	 */
+	public function set_pickup_date( $pickup_date ) {
+		$this->pickup_date = (string) $pickup_date;
+	}
+
+	/**
+	 * The address the carrier collects the parcel from.
+	 *
+	 * @return array<string, string> Empty parts when none was captured.
+	 */
+	public function get_pickup_address() {
+		return $this->pickup_address ? $this->pickup_address : Return_Pickup_Address::empty_address();
+	}
+
+	/**
+	 * Whether a usable pickup address is stored on the request.
+	 *
+	 * @return bool
+	 */
+	public function has_pickup_address() {
+		return (bool) $this->pickup_address;
+	}
+
+	/**
+	 * Sets the pickup address.
+	 *
+	 * @param array<string, string>|string $pickup_address Address parts, or
+	 *                                                     the stored JSON.
+	 *
+	 * @return void
+	 */
+	public function set_pickup_address( $pickup_address ) {
+		if ( is_string( $pickup_address ) ) {
+			$decoded        = json_decode( $pickup_address, true );
+			$pickup_address = is_array( $decoded ) ? $decoded : array();
+		}
+
+		if ( ! is_array( $pickup_address ) || ! $pickup_address ) {
+			$this->pickup_address = array();
+
+			return;
+		}
+
+		$normalized = Return_Pickup_Address::normalize( $pickup_address );
+
+		// An address whose every part is empty is no address; storing it
+		// would make has_pickup_address() lie to the booking flow.
+		$this->pickup_address = array_filter( $normalized ) ? $normalized : array();
+	}
+
+	/**
 	 * Return address identifier.
 	 *
 	 * @return string
@@ -464,6 +554,103 @@ class Return_Request {
 	}
 
 	/**
+	 * Whether the customer may still fill in the return shipment's tracking
+	 * details: the store approved the request and is waiting for the parcel.
+	 *
+	 * @return bool
+	 */
+	public function is_tracking_editable_by_customer() {
+		$editable = in_array(
+			$this->status,
+			array( Return_Status::APPROVED, Return_Status::SHIPPED ),
+			true
+		);
+
+		/**
+		 * Filters whether the customer can enter the return tracking details.
+		 *
+		 * @param bool           $editable Whether entering tracking is allowed.
+		 * @param Return_Request $request  The request.
+		 */
+		return (bool) apply_filters( 'hezarfen_returns_is_tracking_editable_by_customer', $editable, $this );
+	}
+
+	/**
+	 * Whether the customer may still book the return shipment: the store
+	 * approved the request and no label has been produced for it yet.
+	 *
+	 * A booked appointment is a promise the carrier made to a person's
+	 * calendar, so a second one must not silently replace the first —
+	 * changing it is a support conversation, not a form submit.
+	 *
+	 * @return bool
+	 */
+	public function is_bookable_by_customer() {
+		$bookable = Return_Status::APPROVED === $this->status && '' === $this->tracking_number;
+
+		/**
+		 * Filters whether the customer can book the return shipment.
+		 *
+		 * @param bool           $bookable Whether booking is allowed.
+		 * @param Return_Request $request  The request.
+		 */
+		return (bool) apply_filters( 'hezarfen_returns_is_bookable_by_customer', $bookable, $this );
+	}
+
+	/**
+	 * The moment the customer loses the right to call off the pickup: the
+	 * end of the day before the courier comes.
+	 *
+	 * A courier's round is planned the evening before, so a cancellation
+	 * that lands on the morning of the pickup does not reach the driver.
+	 * The cut-off is read in the shop's own timezone, because that is the
+	 * day the customer was promised.
+	 *
+	 * @return int Unix timestamp, or zero when no pickup day is booked.
+	 */
+	public function get_booking_cancel_deadline() {
+		if ( '' === $this->pickup_date ) {
+			return 0;
+		}
+
+		$pickup = date_create_immutable( $this->pickup_date . ' 00:00:00', wp_timezone() );
+
+		if ( ! $pickup ) {
+			return 0;
+		}
+
+		// One second before the pickup day starts, i.e. 23:59:59 the day
+		// before.
+		return $pickup->getTimestamp() - 1;
+	}
+
+	/**
+	 * Whether the customer may still call off the carrier appointment.
+	 *
+	 * Bound to the approved status — once the parcel is on its way or has
+	 * arrived there is no pickup left to call off — and to the cut-off
+	 * above.
+	 *
+	 * @return bool
+	 */
+	public function is_booking_cancellable_by_customer() {
+		$deadline = $this->get_booking_cancel_deadline();
+
+		$cancellable = Return_Status::APPROVED === $this->status
+			&& '' !== $this->tracking_number
+			&& $deadline
+			&& time() <= $deadline;
+
+		/**
+		 * Filters whether the customer can cancel their carrier booking.
+		 *
+		 * @param bool           $cancellable Whether cancelling is allowed.
+		 * @param Return_Request $request     The request.
+		 */
+		return (bool) apply_filters( 'hezarfen_returns_is_booking_cancellable_by_customer', $cancellable, $this );
+	}
+
+	/**
 	 * Serializes the entity into a DB row shape. The ID and timestamps are
 	 * managed by the repository and therefore excluded.
 	 *
@@ -479,7 +666,9 @@ class Return_Request {
 			'shipping_method'   => $this->shipping_method,
 			'courier'           => $this->courier,
 			'tracking_number'   => $this->tracking_number,
+			'pickup_date'       => $this->pickup_date,
 			'return_address_id' => $this->return_address_id,
+			'pickup_address'    => $this->pickup_address ? wp_json_encode( $this->pickup_address ) : '',
 			'customer_note'     => $this->customer_note,
 			'refund_amount'     => $this->refund_amount,
 			'currency'          => $this->currency,

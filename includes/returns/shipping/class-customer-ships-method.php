@@ -67,6 +67,72 @@ class Customer_Ships_Method implements Return_Shipping_Method_Interface {
 	}
 
 	/**
+	 * There is nothing to book: the customer walks into the carrier branch
+	 * of their choice whenever it suits them.
+	 *
+	 * @return bool
+	 */
+	public function requires_customer_booking() {
+		return false;
+	}
+
+	/**
+	 * The customer takes the parcel to the carrier, so nobody collects it
+	 * from an address.
+	 *
+	 * @return bool
+	 */
+	public function requires_pickup_address() {
+		return false;
+	}
+
+	/**
+	 * No booking, no options.
+	 *
+	 * @param \Hezarfen\Inc\Returns\Core\Return_Request $request Approved request.
+	 *
+	 * @return array<string, string>
+	 */
+	public function get_booking_options( $request ) {
+		unset( $request );
+
+		return array();
+	}
+
+	/**
+	 * Nothing to book.
+	 *
+	 * @param \Hezarfen\Inc\Returns\Core\Return_Request $request Approved request.
+	 * @param string                                    $choice  Picked option.
+	 *
+	 * @return \WP_Error
+	 */
+	public function book( $request, $choice ) {
+		unset( $request, $choice );
+
+		return new \WP_Error(
+			'hezarfen_returns_booking_not_supported',
+			__( 'Bu iade yöntemi için kargo randevusu alınmaz.', 'hezarfen-for-woocommerce' )
+		);
+	}
+
+	/**
+	 * Nothing was ever booked, so nothing can be cancelled.
+	 *
+	 * @param \Hezarfen\Inc\Returns\Core\Return_Request $request The request.
+	 *
+	 * @return \WP_Error
+	 */
+	public function cancel_booking( $request ) {
+		unset( $request );
+
+		return new \WP_Error(
+			'hezarfen_returns_no_booking',
+			__( 'Bu iade yönteminde iptal edilecek bir kargo randevusu yok.', 'hezarfen-for-woocommerce' )
+		);
+	}
+
+	/**
 	 * Nothing to do on approval.
 	 *
 	 * @param \Hezarfen\Inc\Returns\Core\Return_Request $request Approved request.

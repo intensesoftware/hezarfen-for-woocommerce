@@ -27,6 +27,8 @@ class Returns_Settings {
 	 * Constructor.
 	 */
 	public function __construct() {
+		new Returns_Pro_Teasers();
+
 		add_filter( 'woocommerce_get_sections_hezarfen', array( $this, 'add_section' ) );
 		add_filter( 'woocommerce_get_settings_hezarfen', array( $this, 'add_settings' ), 10, 2 );
 		add_action( 'woocommerce_update_options_hezarfen', array( $this, 'after_save' ), 20 );
@@ -69,7 +71,7 @@ class Returns_Settings {
 	private function get_general_fields() {
 		$registry = new Return_Shipping_Registry();
 
-		return array(
+		$fields = array(
 			array(
 				'title' => __( 'İade Yönetimi', 'hezarfen-for-woocommerce' ),
 				'type'  => 'title',
@@ -136,6 +138,50 @@ class Returns_Settings {
 				'id'   => 'hezarfen_returns_settings_end',
 			),
 		);
+
+		return $this->splice_locked_fields( $fields );
+	}
+
+	/**
+	 * Drops the Pro-only rows in beside the settings they belong to.
+	 *
+	 * Placed by neighbouring option rather than by index, so reordering the
+	 * section above cannot silently move a locked row somewhere it makes no
+	 * sense.
+	 *
+	 * @param array<int, array<string, mixed>> $fields Section fields.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function splice_locked_fields( $fields ) {
+		if ( ! Returns_Pro_Teasers::should_show() ) {
+			return $fields;
+		}
+
+		// "What may come back and why" belongs next to the eligibility
+		// rules; the photo row belongs next to what the customer is told.
+		$after = array(
+			Return_Settings::OPTION_ELIGIBLE_STATUSES => array( 'products', 'reasons' ),
+			Return_Settings::OPTION_INSTRUCTIONS      => array( 'photos' ),
+		);
+
+		$merged = array();
+
+		foreach ( $fields as $field ) {
+			$merged[] = $field;
+
+			$id = isset( $field['id'] ) ? $field['id'] : '';
+
+			if ( ! isset( $after[ $id ] ) ) {
+				continue;
+			}
+
+			foreach ( $after[ $id ] as $placement ) {
+				$merged = array_merge( $merged, Returns_Pro_Teasers::get_fields( $placement ) );
+			}
+		}
+
+		return $merged;
 	}
 
 	/**
