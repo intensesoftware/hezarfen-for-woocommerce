@@ -108,3 +108,29 @@ if ( ! function_exists( 'hezarfen_returns_event_icon' ) ) {
 		return 'neutral';
 	}
 }
+
+if ( ! function_exists( 'hezarfen_returns_form_enctype' ) ) {
+	/**
+	 * Prints the multipart encoding attribute when something on the form
+	 * needs to carry a file.
+	 *
+	 * The attribute is not printed unconditionally: it belongs on a form only
+	 * when an add-on has actually put a file input on it, and an add-on cannot
+	 * reach the form tag the template owns.
+	 *
+	 * @param string $context Which form is being rendered: `request` or `info`.
+	 *
+	 * @return void
+	 */
+	function hezarfen_returns_form_enctype( $context ) {
+		/**
+		 * Filters whether a returns form must accept file uploads.
+		 *
+		 * @param bool   $accepts Whether the form carries a file input.
+		 * @param string $context Form being rendered.
+		 */
+		if ( apply_filters( 'hezarfen_returns_form_accepts_uploads', false, $context ) ) {
+			echo ' enctype="multipart/form-data"';
+		}
+	}
+}

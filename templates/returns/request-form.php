@@ -50,7 +50,7 @@ $hez_reason_choices = $reasons->get_choices();
 		<?php endif; ?>
 	</header>
 
-	<form method="post" class="hez-return-form" data-hez-return-form>
+	<form method="post" class="hez-return-form" data-hez-return-form<?php hezarfen_returns_form_enctype( 'request' ); ?>>
 		<?php wp_nonce_field( 'hezarfen_returns_' . Return_Form_Handler::ACTION_CREATE, Return_Form_Handler::NONCE_FIELD ); ?>
 		<input type="hidden" name="<?php echo esc_attr( Return_Form_Handler::ACTION_FIELD ); ?>" value="<?php echo esc_attr( Return_Form_Handler::ACTION_CREATE ); ?>">
 		<input type="hidden" name="order_id" value="<?php echo esc_attr( $order->get_id() ); ?>">
@@ -192,6 +192,15 @@ $hez_reason_choices = $reasons->get_choices();
 					placeholder="<?php esc_attr_e( 'İsteğe bağlı. Talebinizle ilgili eklemek istediğiniz bir şey varsa yazabilirsiniz.', 'hezarfen-for-woocommerce' ); ?>"
 				></textarea>
 			</p>
+
+			<?php
+			/**
+			 * Fires inside the request form, after the customer's note.
+			 *
+			 * @param WC_Order $order Order being returned from.
+			 */
+			do_action( 'hezarfen_returns_request_form_fields', $order );
+			?>
 		</section>
 
 		<div class="hez-return-form__footer">

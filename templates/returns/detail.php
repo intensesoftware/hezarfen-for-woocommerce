@@ -98,7 +98,7 @@ $hez_order_number = $hez_order ? $hez_order->get_order_number() : (string) $requ
 				<blockquote class="hez-quote"><?php echo esc_html( $hez_info_event->get_message() ); ?></blockquote>
 			<?php endif; ?>
 
-			<form method="post" class="hez-inline-form">
+			<form method="post" class="hez-inline-form"<?php hezarfen_returns_form_enctype( 'info' ); ?>>
 				<?php wp_nonce_field( 'hezarfen_returns_' . Return_Form_Handler::ACTION_INFO, Return_Form_Handler::NONCE_FIELD ); ?>
 				<input type="hidden" name="<?php echo esc_attr( Return_Form_Handler::ACTION_FIELD ); ?>" value="<?php echo esc_attr( Return_Form_Handler::ACTION_INFO ); ?>">
 				<input type="hidden" name="return_id" value="<?php echo esc_attr( $request->get_id() ); ?>">
@@ -107,6 +107,15 @@ $hez_order_number = $hez_order ? $hez_order->get_order_number() : (string) $requ
 					<label for="hez-info-response"><?php esc_html_e( 'Yanıtınız', 'hezarfen-for-woocommerce' ); ?></label>
 					<textarea id="hez-info-response" name="info_response" class="hez-input hez-textarea" rows="3" maxlength="1000" required></textarea>
 				</p>
+
+				<?php
+				/**
+				 * Fires inside the information response form.
+				 *
+				 * @param \Hezarfen\Inc\Returns\Core\Return_Request $request The request.
+				 */
+				do_action( 'hezarfen_returns_info_form_fields', $request );
+				?>
 
 				<button type="submit" class="hez-btn hez-btn--primary"><?php esc_html_e( 'Gönder', 'hezarfen-for-woocommerce' ); ?></button>
 			</form>
@@ -361,6 +370,15 @@ $hez_order_number = $hez_order ? $hez_order->get_order_number() : (string) $requ
 			<?php endforeach; ?>
 		</ol>
 	</section>
+
+	<?php
+	/**
+	 * Fires after the request's own sections, before the cancel form.
+	 *
+	 * @param \Hezarfen\Inc\Returns\Core\Return_Request $request The request.
+	 */
+	do_action( 'hezarfen_returns_detail_sections', $request );
+	?>
 
 	<?php if ( $request->is_cancellable_by_customer() ) : ?>
 		<form method="post" class="hez-returns__cancel" data-hez-confirm-cancel>

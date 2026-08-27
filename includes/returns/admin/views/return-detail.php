@@ -107,6 +107,16 @@ $hez_action_keys = array(
 				</div>
 			</div>
 
+			<?php
+			/**
+			 * Fires in the main column, between the returned items and the
+			 * timeline.
+			 *
+			 * @param \Hezarfen\Inc\Returns\Core\Return_Request $request The request.
+			 */
+			do_action( 'hezarfen_returns_admin_detail_sections', $request );
+			?>
+
 			<div class="postbox">
 				<div class="postbox-header"><h2><?php esc_html_e( 'Talep geçmişi', 'hezarfen-for-woocommerce' ); ?></h2></div>
 				<div class="inside">

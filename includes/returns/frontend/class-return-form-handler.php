@@ -331,6 +331,17 @@ class Return_Form_Handler {
 			return;
 		}
 
+		/**
+		 * Fires after the customer's answer was stored, while the submission
+		 * is still in hand.
+		 *
+		 * Add-ons that put fields on the response form read them here; after
+		 * the redirect below there is nothing left to read.
+		 *
+		 * @param \Hezarfen\Inc\Returns\Core\Return_Request $request The request.
+		 */
+		do_action( 'hezarfen_returns_info_response_saved', $request );
+
 		wc_add_notice( __( 'Yanıtınız iletildi.', 'hezarfen-for-woocommerce' ), 'success' );
 
 		$this->redirect( $this->access->get_request_url( $request ) );
