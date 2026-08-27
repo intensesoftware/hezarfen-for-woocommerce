@@ -23,8 +23,12 @@ defined( 'ABSPATH' ) || exit();
  * at the position their real setting belongs to, and Pro swaps the ones it
  * implements for working fields — which is why every returns setting stays on
  * this one screen instead of scattering across two plugins' settings pages.
- * A placeholder nobody claimed renders as the locked upsell, or as nothing at
- * all when promotions are off.
+ * A placeholder nobody claimed renders as a locked row: greyed out, with a
+ * lock and a Pro badge, and a disabled preview of the control it stands for.
+ * It is shown whether or not Pro promotions are enabled — a setting that
+ * silently disappears is worse than one the merchant is told they cannot
+ * reach. The promotions flag only decides whether the upgrade link rides
+ * along.
  *
  * They are flagged `is_option => false` so WooCommerce skips them when the
  * section is saved; whatever replaces one brings its own storage.
@@ -38,20 +42,23 @@ class Returns_Pro_Teasers {
 	 */
 	public function __construct() {
 		add_action( 'woocommerce_admin_field_' . self::FIELD_TYPE, array( $this, 'render_field' ) );
+		add_action( 'admin_print_styles', array( $this, 'print_styles' ) );
 	}
 
 	/**
-	 * Whether the locked rows should be rendered at all.
+	 * Whether the upgrade link may ride along with a locked row.
+	 *
+	 * The row itself is never gated on this: the merchant is told the setting
+	 * exists either way. Only the sales pitch answers to the promotions flag,
+	 * and only while Pro is absent.
 	 *
 	 * @return bool
 	 */
-	public static function should_show() {
+	public static function may_promote() {
 		if ( ! function_exists( 'hezarfen_show_pro_promotions' ) || ! hezarfen_show_pro_promotions() ) {
 			return false;
 		}
 
-		// The same signal the upgrade menu uses, so a site with Pro never
-		// sees a locked row next to the working setting Pro just added.
 		return false === get_option( 'hezarfen_pro_db_version', false );
 	}
 
@@ -132,41 +139,35 @@ class Returns_Pro_Teasers {
 	 * @return void
 	 */
 	public function render_field( $field ) {
-		// Reaching the renderer means no add-on claimed this placeholder. With
-		// promotions off there is nothing to say about it, so the row is left
-		// out entirely rather than drawn as a dead box.
-		if ( ! self::should_show() ) {
-			return;
-		}
-
 		$examples = isset( $field['examples'] ) ? (array) $field['examples'] : array();
 
-		$this->print_styles_once();
 		?>
 		<tr valign="top" class="hez-locked-row">
 			<th scope="row" class="titledesc">
 				<label>
+					<span class="hez-locked-icon" aria-hidden="true">&#128274;</span>
 					<?php echo esc_html( $field['title'] ); ?>
-					<span class="hez-locked-badge">
-						<span aria-hidden="true">&#128274;</span> <?php esc_html_e( 'Pro', 'hezarfen-for-woocommerce' ); ?>
-					</span>
+					<span class="hez-locked-badge"><?php esc_html_e( 'Pro', 'hezarfen-for-woocommerce' ); ?></span>
 				</label>
 			</th>
 			<td class="forminp">
 				<div class="hez-locked">
-					<p class="hez-locked__desc"><?php echo esc_html( $field['desc'] ); ?></p>
-
 					<?php if ( $examples ) : ?>
-						<ul class="hez-locked__examples">
+						<?php // A dead replica of the real control, so the row reads as a setting that is switched off rather than as an advert. ?>
+						<select class="hez-locked__preview" disabled aria-hidden="true" tabindex="-1">
 							<?php foreach ( $examples as $example ) : ?>
-								<li><?php echo esc_html( $example ); ?></li>
+								<option><?php echo esc_html( $example ); ?></option>
 							<?php endforeach; ?>
-						</ul>
+						</select>
 					<?php endif; ?>
 
-					<a class="button hez-locked__cta" href="<?php echo esc_url( admin_url( 'admin.php?page=hezarfen-upgrade' ) ); ?>">
-						<?php esc_html_e( 'Hezarfen Pro ile açın', 'hezarfen-for-woocommerce' ); ?>
-					</a>
+					<p class="hez-locked__desc"><?php echo esc_html( $field['desc'] ); ?></p>
+
+					<?php if ( self::may_promote() ) : ?>
+						<a class="hez-locked__cta" href="<?php echo esc_url( admin_url( 'admin.php?page=hezarfen-upgrade' ) ); ?>">
+							<?php esc_html_e( 'Hezarfen Pro ile açın', 'hezarfen-for-woocommerce' ); ?>
+						</a>
+					<?php endif; ?>
 				</div>
 			</td>
 		</tr>
@@ -174,26 +175,33 @@ class Returns_Pro_Teasers {
 	}
 
 	/**
-	 * Prints the row styles the first time a row is rendered.
+	 * Prints the row styles in the document head.
 	 *
-	 * The section can hold several locked rows and there is no stylesheet
-	 * enqueued on WooCommerce's settings screen for this module, so the CSS
-	 * rides along with the markup — once, not once per row.
+	 * Not from inside the field renderer: WooCommerce calls that while the
+	 * settings `<table>` is open, and a `<style>` element dropped straight
+	 * into a table is invalid markup the browser hoists back out, dragging
+	 * the layout with it.
 	 *
 	 * @return void
 	 */
-	private function print_styles_once() {
-		static $printed = false;
-
-		if ( $printed ) {
+	public function print_styles() {
+		if ( ! $this->is_returns_section() ) {
 			return;
 		}
 
-		$printed = true;
 		?>
 		<style>
+			/* The row reads as a switched-off setting: same shape as its
+			   neighbours, drained of colour and interaction. */
 			.hez-locked-row .titledesc label {
-				color: #646970;
+				color: #8c8f94;
+				font-weight: 400;
+			}
+
+			.hez-locked-icon {
+				margin-right: 4px;
+				opacity: 0.65;
+				font-size: 12px;
 			}
 
 			.hez-locked-badge {
@@ -210,41 +218,48 @@ class Returns_Pro_Teasers {
 			}
 
 			.hez-locked {
-				max-width: 520px;
-				padding: 14px 16px;
-				border: 1px dashed #c3c4c7;
-				border-radius: 6px;
-				background: #f6f7f7;
+				max-width: 420px;
+			}
+
+			.hez-locked__preview {
+				width: 100%;
+				max-width: 400px;
+				margin-bottom: 6px;
+				background: #f0f0f1;
+				color: #8c8f94;
+				/* pointer-events off as well as disabled: the select must not
+				   even show a "not-allowed" cursor fight on some browsers. */
+				pointer-events: none;
 			}
 
 			.hez-locked__desc {
 				margin: 0;
-				color: #50575e;
-			}
-
-			.hez-locked__examples {
-				margin: 10px 0 0;
-				padding: 0;
-				list-style: none;
-				display: flex;
-				flex-wrap: wrap;
-				gap: 6px;
-			}
-
-			.hez-locked__examples li {
-				margin: 0;
-				padding: 3px 10px;
-				border-radius: 999px;
-				background: #fff;
-				border: 1px solid #dcdcde;
-				color: #646970;
-				font-size: 12px;
+				color: #8c8f94;
+				font-size: 13px;
+				font-style: italic;
 			}
 
 			.hez-locked__cta {
-				margin-top: 14px !important;
+				display: inline-block;
+				margin-top: 8px;
+				font-size: 13px;
 			}
 		</style>
 		<?php
+	}
+
+	/**
+	 * Whether the returns settings section is the screen being drawn.
+	 *
+	 * @return bool
+	 */
+	private function is_returns_section() {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Reading which screen is open, not acting on it.
+		$page    = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+		$tab     = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
+		$section = isset( $_GET['section'] ) ? sanitize_key( wp_unslash( $_GET['section'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		return 'wc-settings' === $page && 'hezarfen' === $tab && 'returns' === $section;
 	}
 }
