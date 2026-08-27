@@ -25,6 +25,9 @@ interface Return_Reason_Provider_Interface {
 	 * Each entry is keyed by a stable reason key and holds:
 	 *  - label         : customer facing text.
 	 *  - requires_note : whether a free text explanation is mandatory.
+	 *  - is_hidden     : optional; keeps the reason registered so old
+	 *                    requests still render its wording, but drops it
+	 *                    from the list the customer picks from.
 	 *
 	 * @return array<string, array<string, mixed>>
 	 */

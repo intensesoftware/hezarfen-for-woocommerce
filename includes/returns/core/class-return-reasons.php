@@ -69,6 +69,16 @@ class Return_Reasons {
 		$choices = array();
 
 		foreach ( $this->get_reasons() as $key => $reason ) {
+			// A hidden reason stays registered but leaves the customer's
+			// list. A reason cannot simply be dropped: the request stores
+			// only the key and the label is resolved live, so removing it
+			// would make every past request show the raw key instead of its
+			// wording. This is how an add-on replaces the preset list
+			// without rewriting history.
+			if ( ! empty( $reason['is_hidden'] ) ) {
+				continue;
+			}
+
 			$choices[ $key ] = $reason['label'];
 		}
 
