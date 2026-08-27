@@ -73,38 +73,22 @@ class Returns_Pro_Teasers {
 	public static function get_fields( $placement ) {
 		$fields = array(
 			'statuses' => array(
-				'title'    => __( 'İade edilebilir sipariş durumları', 'hezarfen-for-woocommerce' ),
-				'desc'     => __( 'Hangi durumdaki siparişler için iade talebi açılabileceğini seçin. Ücretsiz sürümde yalnızca tamamlanmış siparişler iade edilebilir.', 'hezarfen-for-woocommerce' ),
-				'examples' => array(
-					__( 'Tamamlandı', 'hezarfen-for-woocommerce' ),
-					__( 'İşleniyor', 'hezarfen-for-woocommerce' ),
-				),
-			),
-			'reasons'  => array(
-				'title'    => __( 'İade sebepleri', 'hezarfen-for-woocommerce' ),
-				'desc'     => __( 'Kendi iade sebeplerinizi tanımlayın, sıralayın ve hangi sebepte müşteriden açıklama isteneceğini belirleyin.', 'hezarfen-for-woocommerce' ),
-				'examples' => array(
-					__( 'Beden uymadı', 'hezarfen-for-woocommerce' ),
-					__( 'Üründe hasar var', 'hezarfen-for-woocommerce' ),
-					__( 'Yanlış ürün gönderildi', 'hezarfen-for-woocommerce' ),
-				),
+				'title' => __( 'İade edilebilir sipariş durumları', 'hezarfen-for-woocommerce' ),
+				// Tek cümle, somut sonuç: özellik listesi değil, mağazanın
+				// bugün yaşadığı kısıt.
+				'desc'  => __( 'Ücretsiz sürümde yalnızca tamamlanmış siparişler iade edilebilir. Kargoya verilmiş bir siparişte müşteri talep açamaz.', 'hezarfen-for-woocommerce' ),
 			),
 			'products' => array(
-				'title'    => __( 'İade edilebilir ürünler', 'hezarfen-for-woocommerce' ),
-				'desc'     => __( 'Hangi ürün ve kategorilerin iade edilebileceğini seçin; iade edilemeyen ürünler müşteriye hiç gösterilmez.', 'hezarfen-for-woocommerce' ),
-				'examples' => array(
-					__( 'Kategori bazlı iade kapatma', 'hezarfen-for-woocommerce' ),
-					__( 'Ürün bazlı istisna', 'hezarfen-for-woocommerce' ),
-					__( 'Ürüne özel iade süresi', 'hezarfen-for-woocommerce' ),
-				),
+				'title' => __( 'İade edilebilir ürünler', 'hezarfen-for-woocommerce' ),
+				'desc'  => __( 'İç giyim, kozmetik gibi iade alınamayan ürünler de müşteriye iade edilebilir görünür; talep açıldıktan sonra reddetmek zorunda kalırsınız.', 'hezarfen-for-woocommerce' ),
+			),
+			'reasons'  => array(
+				'title' => __( 'İade sebepleri', 'hezarfen-for-woocommerce' ),
+				'desc'  => __( 'Sebep listesi sabittir. Kendi sebeplerinizi yazamaz, sıralayamaz, hangi sebepte açıklama isteneceğini belirleyemezsiniz.', 'hezarfen-for-woocommerce' ),
 			),
 			'photos'   => array(
-				'title'    => __( 'Fotoğraflı iade talebi', 'hezarfen-for-woocommerce' ),
-				'desc'     => __( 'Müşteri iade talebine ürünün fotoğrafını ekleyebilsin. Hasar tartışmasını mesajlaşmaya taşımadan, talebin kendi geçmişinde çözün.', 'hezarfen-for-woocommerce' ),
-				'examples' => array(
-					__( 'Talep formunda fotoğraf yükleme', 'hezarfen-for-woocommerce' ),
-					__( 'Bilgi isteğine fotoğrafla yanıt', 'hezarfen-for-woocommerce' ),
-				),
+				'title' => __( 'Fotoğraflı iade talebi', 'hezarfen-for-woocommerce' ),
+				'desc'  => __( 'Müşteri hasarın fotoğrafını ekleyemez. Kusurlu ürün tartışması WhatsApp’a taşınır ve talebin geçmişinde iz bırakmaz.', 'hezarfen-for-woocommerce' ),
 			),
 		);
 
@@ -124,7 +108,7 @@ class Returns_Pro_Teasers {
 				'is_option' => false,
 				'title'     => $field['title'],
 				'desc'      => $field['desc'],
-				'examples'  => $field['examples'],
+				'placement' => $placement,
 			),
 		);
 	}
@@ -139,38 +123,154 @@ class Returns_Pro_Teasers {
 	 * @return void
 	 */
 	public function render_field( $field ) {
-		$examples = isset( $field['examples'] ) ? (array) $field['examples'] : array();
+		$placement = isset( $field['placement'] ) ? $field['placement'] : '';
 
 		?>
 		<tr valign="top" class="hez-locked-row">
 			<th scope="row" class="titledesc">
 				<label>
-					<span class="hez-locked-icon" aria-hidden="true">&#128274;</span>
 					<?php echo esc_html( $field['title'] ); ?>
 					<span class="hez-locked-badge"><?php esc_html_e( 'Pro', 'hezarfen-for-woocommerce' ); ?></span>
 				</label>
 			</th>
 			<td class="forminp">
 				<div class="hez-locked">
-					<?php if ( $examples ) : ?>
-						<?php // A dead replica of the real control, so the row reads as a setting that is switched off rather than as an advert. ?>
-						<select class="hez-locked__preview" disabled aria-hidden="true" tabindex="-1">
-							<?php foreach ( $examples as $example ) : ?>
-								<option><?php echo esc_html( $example ); ?></option>
-							<?php endforeach; ?>
-						</select>
-					<?php endif; ?>
+					<?php
+					// Rozet ve madde listesi yerine ÖZELLİĞİN KENDİSİ devre dışı
+					// gösteriliyor: mağaza neyi kaçırdığını okuyarak değil
+					// görerek anlıyor, üstelik açtığında karşılaşacağı ekranın
+					// aynısını görüyor.
+					$this->render_preview( $placement );
+					?>
 
 					<p class="hez-locked__desc"><?php echo esc_html( $field['desc'] ); ?></p>
 
 					<?php if ( self::may_promote() ) : ?>
-						<a class="hez-locked__cta" href="<?php echo esc_url( admin_url( 'admin.php?page=hezarfen-upgrade' ) ); ?>">
+						<a class="button button-primary hez-locked__cta" href="<?php echo esc_url( admin_url( 'admin.php?page=hezarfen-upgrade' ) ); ?>">
 							<?php esc_html_e( 'Hezarfen Pro ile açın', 'hezarfen-for-woocommerce' ); ?>
 						</a>
 					<?php endif; ?>
 				</div>
 			</td>
 		</tr>
+		<?php
+	}
+
+	/**
+	 * The disabled preview of the setting this row stands for.
+	 *
+	 * @param string $placement Which row is being drawn.
+	 *
+	 * @return void
+	 */
+	private function render_preview( $placement ) {
+		echo '<div class="hez-locked__preview" aria-hidden="true">';
+
+		switch ( $placement ) {
+			case 'statuses':
+				$this->render_chip_preview(
+					array(
+						__( 'Tamamlandı', 'hezarfen-for-woocommerce' ),
+						__( 'İşleniyor', 'hezarfen-for-woocommerce' ),
+						__( 'Beklemede', 'hezarfen-for-woocommerce' ),
+					),
+					array( 0 )
+				);
+				break;
+
+			case 'products':
+				$this->render_product_preview();
+				break;
+
+			case 'reasons':
+				$this->render_reason_preview();
+				break;
+
+			case 'photos':
+				$this->render_photo_preview();
+				break;
+		}
+
+		echo '</div>';
+	}
+
+	/**
+	 * Seçili ve seçilebilir durumları çip olarak gösterir.
+	 *
+	 * @param string[] $labels   Etiketler.
+	 * @param int[]    $selected Seçili olanların dizinleri.
+	 *
+	 * @return void
+	 */
+	private function render_chip_preview( $labels, $selected ) {
+		echo '<div class="hez-locked__chips">';
+
+		foreach ( $labels as $index => $label ) {
+			printf(
+				'<span class="hez-locked__chip%1$s">%2$s</span>',
+				in_array( $index, $selected, true ) ? ' is-on' : '',
+				esc_html( $label )
+			);
+		}
+
+		echo '</div>';
+	}
+
+	/**
+	 * Ürün ekranındaki iade kuralının küçük bir kopyası.
+	 *
+	 * @return void
+	 */
+	private function render_product_preview() {
+		?>
+		<div class="hez-locked__line">
+			<span class="hez-locked__line-label"><?php esc_html_e( 'İç Giyim', 'hezarfen-for-woocommerce' ); ?></span>
+			<span class="hez-locked__pill is-off"><?php esc_html_e( 'İade edilemez', 'hezarfen-for-woocommerce' ); ?></span>
+		</div>
+		<div class="hez-locked__line">
+			<span class="hez-locked__line-label"><?php esc_html_e( 'Kışlık Mont', 'hezarfen-for-woocommerce' ); ?></span>
+			<span class="hez-locked__pill"><?php esc_html_e( '30 gün', 'hezarfen-for-woocommerce' ); ?></span>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Pro'daki sebep listesinin devre dışı kopyası.
+	 *
+	 * @return void
+	 */
+	private function render_reason_preview() {
+		$rows = array(
+			array( __( 'Beden uymadı', 'hezarfen-for-woocommerce' ), false ),
+			array( __( 'Üründe hasar var', 'hezarfen-for-woocommerce' ), true ),
+		);
+
+		foreach ( $rows as $row ) {
+			?>
+			<div class="hez-locked__row">
+				<span class="hez-locked__grip">&#8942;&#8942;</span>
+				<span class="hez-locked__input"><?php echo esc_html( $row[0] ); ?></span>
+				<span class="hez-locked__check">
+					<input type="checkbox" disabled <?php checked( $row[1] ); ?>>
+					<?php esc_html_e( 'Açıklama iste', 'hezarfen-for-woocommerce' ); ?>
+				</span>
+			</div>
+			<?php
+		}
+	}
+
+	/**
+	 * Müşterinin ekleyeceği fotoğrafın küçük bir temsili.
+	 *
+	 * @return void
+	 */
+	private function render_photo_preview() {
+		?>
+		<div class="hez-locked__thumbs">
+			<span class="hez-locked__thumb"></span>
+			<span class="hez-locked__thumb"></span>
+			<span class="hez-locked__thumb is-add">+</span>
+		</div>
 		<?php
 	}
 
@@ -191,18 +291,9 @@ class Returns_Pro_Teasers {
 
 		?>
 		<style>
-			/* The row reads as a switched-off setting: same shape as its
-			   neighbours, drained of colour and interaction. */
-			.hez-locked-row .titledesc label {
-				color: #8c8f94;
-				font-weight: 400;
-			}
-
-			.hez-locked-icon {
-				margin-right: 4px;
-				opacity: 0.65;
-				font-size: 12px;
-			}
+			/* Satır, kapatılmış bir ayar gibi okunur: komşularıyla aynı şekil,
+			   rengi çekilmiş, etkileşimi alınmış. */
+			.hez-locked-row .titledesc label { color: #50575e; }
 
 			.hez-locked-badge {
 				display: inline-block;
@@ -217,33 +308,106 @@ class Returns_Pro_Teasers {
 				white-space: nowrap;
 			}
 
-			.hez-locked {
-				max-width: 420px;
-			}
+			.hez-locked { max-width: 460px; }
 
+			/* Önizleme: Pro'daki gerçek ekranın küçültülmüş, dokunulamaz hâli. */
 			.hez-locked__preview {
-				width: 100%;
-				max-width: 400px;
-				margin-bottom: 6px;
-				background: #f0f0f1;
-				color: #8c8f94;
-				/* pointer-events off as well as disabled: the select must not
-				   even show a "not-allowed" cursor fight on some browsers. */
+				padding: 10px 12px;
+				border: 1px solid #e0e0e1;
+				border-radius: 4px;
+				background: #fbfbfc;
+				user-select: none;
 				pointer-events: none;
 			}
 
-			.hez-locked__desc {
-				margin: 0;
+			.hez-locked__chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+			.hez-locked__chip {
+				padding: 3px 10px;
+				border: 1px solid #dcdcde;
+				border-radius: 999px;
+				background: #fff;
 				color: #8c8f94;
-				font-size: 13px;
-				font-style: italic;
+				font-size: 12px;
 			}
 
-			.hez-locked__cta {
-				display: inline-block;
-				margin-top: 8px;
-				font-size: 13px;
+			.hez-locked__chip.is-on {
+				border-color: #c3dcf0;
+				background: #f0f6fc;
+				color: #2271b1;
 			}
+
+			.hez-locked__row,
+			.hez-locked__line {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				padding: 5px 0;
+			}
+
+			.hez-locked__row + .hez-locked__row,
+			.hez-locked__line + .hez-locked__line { border-top: 1px solid #f0f0f1; }
+
+			.hez-locked__grip { color: #c3c4c7; font-size: 11px; letter-spacing: -2px; }
+
+			.hez-locked__input {
+				flex: 1 1 auto;
+				padding: 4px 8px;
+				border: 1px solid #dcdcde;
+				border-radius: 3px;
+				background: #fff;
+				color: #646970;
+				font-size: 12px;
+			}
+
+			.hez-locked__check {
+				display: flex;
+				align-items: center;
+				gap: 4px;
+				color: #8c8f94;
+				font-size: 11px;
+				white-space: nowrap;
+			}
+
+			.hez-locked__line-label { flex: 1 1 auto; color: #646970; font-size: 12px; }
+
+			.hez-locked__pill {
+				padding: 2px 8px;
+				border-radius: 3px;
+				background: #f0f0f1;
+				color: #646970;
+				font-size: 11px;
+			}
+
+			.hez-locked__pill.is-off { background: #fcf0f1; color: #b32d2e; }
+
+			.hez-locked__thumbs { display: flex; gap: 6px; }
+
+			.hez-locked__thumb {
+				width: 44px;
+				height: 44px;
+				border: 1px solid #dcdcde;
+				border-radius: 3px;
+				background: #f0f0f1;
+			}
+
+			.hez-locked__thumb.is-add {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border-style: dashed;
+				background: #fff;
+				color: #c3c4c7;
+				font-size: 18px;
+			}
+
+			.hez-locked__desc {
+				margin: 8px 0 0;
+				color: #646970;
+				font-size: 12px;
+			}
+
+			.hez-locked__cta { margin-top: 10px !important; }
 		</style>
 		<?php
 	}
