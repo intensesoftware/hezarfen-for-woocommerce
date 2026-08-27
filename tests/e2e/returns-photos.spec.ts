@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { deleteOrder } from './helpers/orders';
 import {
 	clearReturns,
@@ -37,6 +37,27 @@ const PIXEL = Buffer.from(
 	'base64'
 );
 
+/**
+ * Bir ürün seçip iade sebebini doldurur.
+ *
+ * Sebep dizinle seçilmiyor: hazır listenin ilk sırası açıklama zorunlu bir
+ * sebep olabiliyor ve o zaman ücretsiz tarafın doğrulaması gönderimi haklı
+ * olarak engelliyor. Sebep seçildikten sonra açıklama alanı görünürse
+ * dolduruluyor, böylece test sebep sırasına bağımlı kalmıyor.
+ */
+async function fillFirstLine( page: Page ): Promise< void > {
+	await page.locator( '[data-hez-item-toggle]' ).first().check();
+
+	const item = page.locator( '[data-hez-item]' ).first();
+	await item.locator( '[data-hez-reason]' ).selectOption( { index: 1 } );
+
+	const note = item.locator( 'textarea[name*="[note]"]' );
+
+	if ( await note.isVisible() ) {
+		await note.fill( 'Test açıklaması' );
+	}
+}
+
 function proReturnsActive(): boolean {
 	const out = wp( [ 'plugin', 'list', '--field=name', '--status=active' ] );
 
@@ -67,7 +88,11 @@ test.describe( 'iade fotoğrafları', () => {
 			await page.goto( requestFormUrl( orderId ) );
 
 			const upload = page.locator( 'input[name="hezarfen_pro_return_photos[]"]' );
-			await expect( upload, 'Talep formunda fotoğraf alanı bulunmalı.' ).toBeVisible();
+			await expect( upload, 'Dosya alanı formda bulunmalı.' ).toBeAttached();
+			await expect(
+				page.locator( '[data-hez-photos-drop]' ),
+				'Sürükleme alanı görünmeli.'
+			).toBeVisible();
 
 			// Alan gerçekten bir dosya taşıyabilmeli: form etiketi multipart
 			// kodlamasını ücretsiz taraftan almalı.
@@ -76,8 +101,7 @@ test.describe( 'iade fotoğrafları', () => {
 				'multipart/form-data'
 			);
 
-			await page.locator( '[data-hez-item-toggle]' ).first().check();
-			await page.locator( '[data-hez-reason]' ).first().selectOption( { index: 1 } );
+			await fillFirstLine( page );
 			await upload.setInputFiles( { name: 'kusur.png', mimeType: 'image/png', buffer: PIXEL } );
 			await page.getByRole( 'button', { name: /İade talebini gönder/i } ).click();
 
@@ -102,6 +126,52 @@ test.describe( 'iade fotoğrafları', () => {
 		}
 	} );
 
+	test( 'sürükle-bırak önizleme üretir, kaldırma listeden düşürür', async ( { page } ) => {
+		test.skip( ! proReturnsActive(), 'Fotoğraf özelliği Hezarfen Pro gerektiriyor.' );
+
+		const orderId = seedReturnableOrder();
+
+		try {
+			await loginAsReturnsCustomer( page );
+			await page.goto( requestFormUrl( orderId ) );
+
+			const zone = page.locator( '[data-hez-photos-drop]' );
+			await expect( zone, 'Sürükleme alanı görünmeli.' ).toBeVisible();
+
+			// Gerçek bir bırakma olayı: dosya DataTransfer ile taşınıyor.
+			await page.evaluate( ( pixel ) => {
+				const bytes = Uint8Array.from( atob( pixel ), ( c ) => c.charCodeAt( 0 ) );
+				const file = new File( [ bytes ], 'kusur.png', { type: 'image/png' } );
+				const dt = new DataTransfer();
+				dt.items.add( file );
+
+				const drop = document.querySelector( '[data-hez-photos-drop]' );
+				drop.dispatchEvent( new DragEvent( 'dragenter', { bubbles: true, dataTransfer: dt } ) );
+				drop.dispatchEvent( new DragEvent( 'drop', { bubbles: true, dataTransfer: dt } ) );
+			}, PIXEL.toString( 'base64' ) );
+
+			// Bırakılan dosya hem önizlemede hem de gerçekten girdide olmalı;
+			// önizleme doğru ama girdi boşsa form boş gönderilirdi.
+			await expect( page.locator( '.hez-photos__item' ) ).toHaveCount( 1 );
+			await expect( page.locator( '.hez-photos__thumb' ) ).toBeVisible();
+
+			const inputCount = await page.evaluate(
+				() => document.querySelector( '.hez-photos__input' ).files.length
+			);
+			expect( inputCount, 'Bırakılan dosya girdiye yazılmalı.' ).toBe( 1 );
+
+			await page.locator( '.hez-photos__remove' ).click();
+
+			await expect( page.locator( '.hez-photos__item' ) ).toHaveCount( 0 );
+			expect(
+				await page.evaluate( () => document.querySelector( '.hez-photos__input' ).files.length ),
+				'Kaldırılan dosya girdiden de düşmeli.'
+			).toBe( 0 );
+		} finally {
+			deleteOrder( orderId );
+		}
+	} );
+
 	test( 'oturumu olmayan ziyaretçi fotoğrafa erişemez', async ( { page, browser } ) => {
 		test.skip( ! proReturnsActive(), 'Fotoğraf özelliği Hezarfen Pro gerektiriyor.' );
 
@@ -111,8 +181,7 @@ test.describe( 'iade fotoğrafları', () => {
 			await loginAsReturnsCustomer( page );
 			await page.goto( requestFormUrl( orderId ) );
 
-			await page.locator( '[data-hez-item-toggle]' ).first().check();
-			await page.locator( '[data-hez-reason]' ).first().selectOption( { index: 1 } );
+			await fillFirstLine( page );
 			await page
 				.locator( 'input[name="hezarfen_pro_return_photos[]"]' )
 				.setInputFiles( { name: 'kusur.png', mimeType: 'image/png', buffer: PIXEL } );
@@ -144,8 +213,7 @@ test.describe( 'iade fotoğrafları', () => {
 			await loginAsReturnsCustomer( page );
 			await page.goto( requestFormUrl( orderId ) );
 
-			await page.locator( '[data-hez-item-toggle]' ).first().check();
-			await page.locator( '[data-hez-reason]' ).first().selectOption( { index: 1 } );
+			await fillFirstLine( page );
 			await page
 				.locator( 'input[name="hezarfen_pro_return_photos[]"]' )
 				.setInputFiles( { name: 'kusur.png', mimeType: 'image/png', buffer: PIXEL } );
