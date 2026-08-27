@@ -1,10 +1,39 @@
 /**
  * Hezarfen returns — customer facing styles.
  *
- * Scoped under .hez-returns so the module never leaks into the theme, and
- * built on custom properties so a theme can retint everything by
- * redefining the tokens on that one selector.
+ * TASARIM SİSTEMİ KURALLARI
+ *
+ * 1. KAPSAM. Her şey `.hez-returns` kökünün altında yaşar; modül temaya
+ *    sızmaz. Kök dışında yaşayan tek istisna `.hez-select2-dropdown`, çünkü
+ *    selectWoo açılır paneli <body>'ye taşınıyor.
+ *
+ * 2. ÖZGÜLLÜK ÇAPASI. Bileşen seçicileri `.hez-returns:not(#\9)` ile başlar.
+ *    `#\9` kaçırılmış bir sekme karakteridir; hiçbir öğenin kimliği bu
+ *    olamaz, dolayısıyla seçici HİÇBİR ŞEYİ dışlamaz -- ama seçiciye bir
+ *    kimlik ağırlığı kazandırır.
+ *
+ *    Neden gerekli: tema kuralları sıradan sınıf zincirlerimizi rahatça
+ *    yeniyordu. Storefront içerik bağlantılarını `.hentry .entry-content a`
+ *    (0,2,1) ile çiziyor ve yalnızca kendi `a.button` sınıfını muaf tutuyor;
+ *    bizim bağlantı butonlarımız altı çizili çıkıyordu. Aynı şekilde
+ *    `input[type=text]` (0,1,1) tek sınıfımızı yenip alanları farklı renge
+ *    boyuyordu. Çapa bu yarışı özgüllük düzeyinde ve öngörülebilir biçimde
+ *    bitiriyor; `!important` yağmuruna gerek kalmıyor.
+ *
+ *    Kendi kurallarımızın hepsi aynı ağırlığı aldığı için modül içindeki
+ *    sıralama bozulmaz: aramızdaki kazananı yine kaynak sırası belirler.
+ *
+ * 3. TOKEN'LAR BİLİNÇLİ OLARAK ÇAPASIZ. Renk ve ölçü değişkenleri düz
+ *    `.hez-returns` üzerinde tanımlanır ki tema `.hez-returns { --hez-accent:
+ *    ... }` yazarak modülü kendi paletine boyayabilsin. Sistemin dışarıya
+ *    açık tek yüzeyi burasıdır; görsel özellikler değil, değişkenler
+ *    ezilmelidir.
+ *
+ * 4. YENİ KURAL EKLERKEN. Seçiciyi `.hez-returns:not(#\9) .hez-yeni-sinif`
+ *    biçiminde yaz. Çapasız bırakılan her kural, ilk agresif temada kırılır.
  */
+
+/* Token'lar: tema bunları ezebilir (bkz. kural 3). */
 
 .hez-returns {
 	--hez-bg: #ffffff;
@@ -14,6 +43,7 @@
 	--hez-text: #0f172a;
 	--hez-text-muted: #64748b;
 	--hez-accent: #2563eb;
+	--hez-accent-strong: #1d4ed8;
 	--hez-accent-contrast: #ffffff;
 	--hez-success: #15803d;
 	--hez-success-bg: #dcfce7;
@@ -31,9 +61,66 @@
 	--hez-panel-space: 32px;
 	--hez-panel-padding: 20px;
 
+	/* Boşluk ölçeği: modüldeki her aralık bu basamaklardan biridir.
+	   Ara değer yazmak yerine basamak eklemek gerekir. */
+	--hez-space-1: 4px;
+	--hez-space-2: 8px;
+	--hez-space-3: 12px;
+	--hez-space-4: 16px;
+	--hez-space-5: 24px;
+	--hez-space-6: 32px;
+}
+
+/* Görsel özellikler çapalı: bunlar tema tarafından ezilmemeli. */
+.hez-returns:not(#\9) {
 	color: var(--hez-text);
 	font-size: 15px;
 	line-height: 1.55;
+}
+
+/*
+ * SIFIRLAMA KATMANI (bkz. başlıktaki kural 2).
+ *
+ * Çapa yalnızca BİZİM yazdığımız özellikleri korur; hiç tanımlamadığımız bir
+ * özelliği tema dayattığında içeri sızar. Storefront benzeri temalarda
+ * `.entry-content h2 { text-transform: uppercase }` ya da
+ * `.entry-content ul li { list-style: square }` tam olarak böyle geçiyordu.
+ *
+ * Bu yüzden kökün altındaki her öğede, tema yazı tipografisinin sık dayattığı
+ * özellikler nötrleniyor. `:where()` özgüllük eklemediği için seçicinin
+ * ağırlığı çapadan gelir; kendi kurallarımız daha sonra geldiğinden onları
+ * ezmez.
+ */
+
+.hez-returns:not(#\9) :where(*) {
+	color: inherit;
+	text-transform: none;
+	letter-spacing: normal;
+	text-shadow: none;
+	font-variant: normal;
+	float: none;
+}
+
+/* `li` de listede: `list-style` kalıtımla iniyor ama temanın doğrudan `li`
+   hedefleyen kuralı kalıtılan değeri eziyor. */
+.hez-returns:not(#\9) :where(ul, ol, li) {
+	list-style: none;
+}
+
+/*
+ * BOŞLUK SIFIRLAMASI. Temaların tipografi marjları modülün ritmini bozan asıl
+ * kaynak: her tema `p`, `h2`, `ul` için kendi `margin`ini dayatıyor ve bu
+ * değerler temadan temaya değiştiği için aynı panel her sitede farklı
+ * görünüyordu. Akış öğelerinin marjı sıfırlanıp aralıklar aşağıda ölçekten
+ * yeniden kuruluyor; böylece modül her temada aynı ritmi taşıyor.
+ */
+.hez-returns:not(#\9) :where(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, dd, figure, blockquote, fieldset, pre) {
+	margin: 0;
+	padding: 0;
+}
+
+.hez-returns:not(#\9) :where(h1, h2, h3, h4, h5, h6) {
+	font-family: inherit;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -45,6 +132,7 @@
 		--hez-text: #e2e8f0;
 		--hez-text-muted: #94a3b8;
 		--hez-accent: #60a5fa;
+		--hez-accent-strong: #93c5fd;
 		--hez-accent-contrast: #0f172a;
 		--hez-success: #86efac;
 		--hez-success-bg: #14532d;
@@ -59,19 +147,19 @@
 	}
 }
 
-.hez-returns *,
-.hez-returns *::before,
-.hez-returns *::after {
+.hez-returns:not(#\9) *,
+.hez-returns:not(#\9) *::before,
+.hez-returns:not(#\9) *::after {
 	box-sizing: border-box;
 }
 
 /* ---------------------------------------------------------------- header */
 
-.hez-returns__header {
+.hez-returns__header:not(#\9) {
 	margin-bottom: 24px;
 }
 
-.hez-returns__back {
+.hez-returns__back:not(#\9) {
 	display: inline-block;
 	margin-bottom: 8px;
 	color: var(--hez-text-muted);
@@ -79,43 +167,43 @@
 	text-decoration: none;
 }
 
-.hez-returns__back:hover,
-.hez-returns__back:focus {
+.hez-returns__back:hover:not(#\9),
+.hez-returns__back:focus:not(#\9) {
 	color: var(--hez-accent);
 }
 
-.hez-returns__headline {
+.hez-returns__headline:not(#\9) {
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
 	gap: 12px;
 }
 
-.hez-returns__title {
+.hez-returns__title:not(#\9) {
 	margin: 0;
 	font-size: 22px;
 	line-height: 1.3;
 }
 
-.hez-returns__title--small {
+.hez-returns__title--small:not(#\9) {
 	font-size: 18px;
 }
 
-.hez-returns__subtitle,
-.hez-returns__deadline,
-.hez-returns__footnote {
+.hez-returns__subtitle:not(#\9),
+.hez-returns__deadline:not(#\9),
+.hez-returns__footnote:not(#\9) {
 	margin: 6px 0 0;
 	color: var(--hez-text-muted);
 	font-size: 14px;
 }
 
-.hez-returns__deadline {
+.hez-returns__deadline:not(#\9) {
 	font-weight: 600;
 }
 
 /* ---------------------------------------------------------------- badges */
 
-.hez-return-badge {
+.hez-returns:not(#\9) .hez-return-badge {
 	display: inline-block;
 	padding: 3px 10px;
 	border-radius: 999px;
@@ -125,63 +213,63 @@
 	white-space: nowrap;
 }
 
-.hez-return-badge--success {
+.hez-returns:not(#\9) .hez-return-badge--success {
 	background: var(--hez-success-bg);
 	color: var(--hez-success);
 }
 
-.hez-return-badge--warning {
+.hez-returns:not(#\9) .hez-return-badge--warning {
 	background: var(--hez-warning-bg);
 	color: var(--hez-warning);
 }
 
-.hez-return-badge--danger {
+.hez-returns:not(#\9) .hez-return-badge--danger {
 	background: var(--hez-danger-bg);
 	color: var(--hez-danger);
 }
 
-.hez-return-badge--info {
+.hez-returns:not(#\9) .hez-return-badge--info {
 	background: var(--hez-info-bg);
 	color: var(--hez-info);
 }
 
-.hez-return-badge--neutral {
+.hez-returns:not(#\9) .hez-return-badge--neutral {
 	background: var(--hez-neutral-bg);
 	color: var(--hez-neutral);
 }
 
 /* ------------------------------------------------------------- callouts */
 
-.hez-callout {
+.hez-returns:not(#\9) .hez-callout {
 	margin: 0 0 20px;
 	padding: 14px 16px;
 	border-radius: var(--hez-radius);
 	border-left: 4px solid currentColor;
 }
 
-.hez-callout p {
+.hez-returns:not(#\9) .hez-callout p {
 	margin: 0;
 	font-weight: 600;
 }
 
-.hez-callout--danger {
+.hez-returns:not(#\9) .hez-callout--danger {
 	background: var(--hez-danger-bg);
 	color: var(--hez-danger);
 }
 
-.hez-callout--neutral {
+.hez-returns:not(#\9) .hez-callout--neutral {
 	background: var(--hez-neutral-bg);
 	color: var(--hez-neutral);
 }
 
-.hez-callout--info {
+.hez-returns:not(#\9) .hez-callout--info {
 	background: var(--hez-info-bg);
 	color: var(--hez-info);
 }
 
 /* --------------------------------------------------------------- panels */
 
-.hez-panel {
+.hez-returns:not(#\9) .hez-panel {
 	margin: 0 0 20px;
 	padding: 18px;
 	border: 1px solid var(--hez-border);
@@ -189,28 +277,28 @@
 	background: var(--hez-bg);
 }
 
-.hez-panel--action {
+.hez-returns:not(#\9) .hez-panel--action {
 	border-color: var(--hez-warning);
 	background: var(--hez-warning-bg);
 }
 
-.hez-panel__title {
+.hez-returns:not(#\9) .hez-panel__title {
 	margin: 0 0 12px;
 	font-size: 16px;
 	font-weight: 700;
 }
 
-.hez-panel__prose p:last-child {
+.hez-returns:not(#\9) .hez-panel__prose p:last-child {
 	margin-bottom: 0;
 }
 
-.hez-panel__note {
+.hez-returns:not(#\9) .hez-panel__note {
 	margin: 12px 0 0;
 	color: var(--hez-text-muted);
 	font-size: 14px;
 }
 
-.hez-quote {
+.hez-returns:not(#\9) .hez-quote {
 	margin: 0 0 14px;
 	padding: 10px 14px;
 	border-left: 3px solid currentColor;
@@ -220,7 +308,7 @@
 
 /* -------------------------------------------------------------- progress */
 
-.hez-progress {
+.hez-returns:not(#\9) .hez-progress {
 	display: flex;
 	margin: 0 0 24px;
 	padding: 0;
@@ -228,7 +316,7 @@
 	counter-reset: hez-step;
 }
 
-.hez-progress__step {
+.hez-returns:not(#\9) .hez-progress__step {
 	position: relative;
 	flex: 1 1 0;
 	padding-top: 26px;
@@ -237,7 +325,7 @@
 	font-size: 13px;
 }
 
-.hez-progress__step::before {
+.hez-returns:not(#\9) .hez-progress__step::before {
 	content: "";
 	position: absolute;
 	top: 7px;
@@ -247,21 +335,21 @@
 	background: var(--hez-border);
 }
 
-.hez-progress__step:first-child::before {
+.hez-returns:not(#\9) .hez-progress__step:first-child::before {
 	left: 50%;
 	width: 50%;
 }
 
-.hez-progress__step:last-child::before {
+.hez-returns:not(#\9) .hez-progress__step:last-child::before {
 	width: 50%;
 }
 
-.hez-progress__step--done::before,
-.hez-progress__step--current::before {
+.hez-returns:not(#\9) .hez-progress__step--done::before,
+.hez-returns:not(#\9) .hez-progress__step--current::before {
 	background: var(--hez-accent);
 }
 
-.hez-progress__dot {
+.hez-returns:not(#\9) .hez-progress__dot {
 	position: absolute;
 	top: 0;
 	left: 50%;
@@ -273,24 +361,24 @@
 	background: var(--hez-bg);
 }
 
-.hez-progress__step--done .hez-progress__dot,
-.hez-progress__step--current .hez-progress__dot {
+.hez-returns:not(#\9) .hez-progress__step--done .hez-progress__dot,
+.hez-returns:not(#\9) .hez-progress__step--current .hez-progress__dot {
 	border-color: var(--hez-accent);
 	background: var(--hez-accent);
 }
 
-.hez-progress__step--current {
+.hez-returns:not(#\9) .hez-progress__step--current {
 	color: var(--hez-text);
 	font-weight: 700;
 }
 
-.hez-progress__step--current .hez-progress__dot {
+.hez-returns:not(#\9) .hez-progress__step--current .hez-progress__dot {
 	box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.18);
 }
 
 /* --------------------------------------------------------------- steps */
 
-.hez-step {
+.hez-returns:not(#\9) .hez-step {
 	margin: 0 0 22px;
 	padding: 18px;
 	border: 1px solid var(--hez-border);
@@ -298,14 +386,14 @@
 	background: var(--hez-bg);
 }
 
-.hez-step__head {
+.hez-returns:not(#\9) .hez-step__head {
 	display: flex;
 	align-items: center;
 	gap: 10px;
 	margin-bottom: 14px;
 }
 
-.hez-step__num {
+.hez-returns:not(#\9) .hez-step__num {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -318,7 +406,7 @@
 	font-weight: 700;
 }
 
-.hez-step__title {
+.hez-returns:not(#\9) .hez-step__title {
 	margin: 0;
 	font-size: 16px;
 	font-weight: 700;
@@ -326,13 +414,13 @@
 
 /* --------------------------------------------------------------- items */
 
-.hez-items {
+.hez-returns:not(#\9) .hez-items {
 	margin: 0;
 	padding: 0;
 	list-style: none;
 }
 
-.hez-item {
+.hez-returns:not(#\9) .hez-item {
 	border: 1px solid var(--hez-border);
 	border-radius: var(--hez-radius-sm);
 	margin-bottom: 10px;
@@ -340,26 +428,26 @@
 	transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.hez-item.is-selected {
+.hez-returns:not(#\9) .hez-item.is-selected {
 	border-color: var(--hez-accent);
 	box-shadow: 0 0 0 1px var(--hez-accent);
 }
 
-.hez-item__row {
+.hez-returns:not(#\9) .hez-item__row {
 	display: flex;
 	align-items: flex-start;
 	gap: 12px;
 	padding: 12px;
 }
 
-.hez-item__checkbox {
+.hez-returns:not(#\9) .hez-item__checkbox {
 	flex: 0 0 auto;
 	width: 18px;
 	height: 18px;
 	margin: 3px 0 0;
 }
 
-.hez-item__label {
+.hez-returns:not(#\9) .hez-item__label {
 	display: flex;
 	flex: 1 1 auto;
 	align-items: center;
@@ -367,7 +455,7 @@
 	cursor: pointer;
 }
 
-.hez-item__thumb img {
+.hez-returns:not(#\9) .hez-item__thumb img {
 	display: block;
 	width: 52px;
 	height: 52px;
@@ -375,47 +463,47 @@
 	object-fit: cover;
 }
 
-.hez-item__text {
+.hez-returns:not(#\9) .hez-item__text {
 	display: flex;
 	flex-direction: column;
 	gap: 2px;
 }
 
-.hez-item__name {
+.hez-returns:not(#\9) .hez-item__name {
 	font-weight: 600;
 }
 
-.hez-item__meta {
+.hez-returns:not(#\9) .hez-item__meta {
 	color: var(--hez-text-muted);
 	font-size: 13px;
 }
 
-.hez-item__price {
+.hez-returns:not(#\9) .hez-item__price {
 	margin-left: 8px;
 }
 
-.hez-item__details {
+.hez-returns:not(#\9) .hez-item__details {
 	display: grid;
 	grid-template-columns: 110px 1fr;
 	gap: 12px;
 	padding: 0 12px 14px 42px;
 }
 
-.hez-item__details .hez-field--note {
+.hez-returns:not(#\9) .hez-item__details .hez-field--note {
 	grid-column: 1 / -1;
 }
 
-.hez-item__details[hidden] {
+.hez-returns:not(#\9) .hez-item__details[hidden] {
 	display: none;
 }
 
 /* --------------------------------------------------------------- fields */
 
-.hez-field {
+.hez-returns:not(#\9) .hez-field {
 	margin: 0;
 }
 
-.hez-field label {
+.hez-returns:not(#\9) .hez-field label {
 	display: block;
 	margin-bottom: 4px;
 	color: var(--hez-text-muted);
@@ -432,7 +520,7 @@
  * the module looking like the same control.
  */
 
-.hez-returns .hez-input {
+.hez-returns:not(#\9) .hez-input {
 	width: 100%;
 	padding: 9px 11px;
 	border: 1px solid var(--hez-border-strong);
@@ -446,7 +534,7 @@
 	appearance: none;
 }
 
-.hez-returns select.hez-input {
+.hez-returns:not(#\9) select.hez-input {
 	/* The reset above strips the native arrow, so it is drawn back on. */
 	padding-right: 34px;
 	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%2364748b' d='M1.4 0 6 4.6 10.6 0 12 1.4 6 7.4 0 1.4z'/%3E%3C/svg%3E");
@@ -455,24 +543,24 @@
 	background-size: 10px 7px;
 }
 
-.hez-returns .hez-input:focus {
+.hez-returns:not(#\9) .hez-input:focus {
 	border-color: var(--hez-accent);
 	background-color: var(--hez-bg);
 	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
 	outline: none;
 }
 
-.hez-textarea {
+.hez-returns:not(#\9) .hez-textarea {
 	resize: vertical;
 }
 
-.hez-input--qty {
+.hez-returns:not(#\9) .hez-input--qty {
 	max-width: 110px;
 }
 
 /* --------------------------------------------------------------- cards */
 
-.hez-cards {
+.hez-returns:not(#\9) .hez-cards {
 	margin: 0 0 20px;
 	padding: 0;
 	list-style: none;
@@ -480,18 +568,18 @@
 	gap: 10px;
 }
 
-.hez-card {
+.hez-returns:not(#\9) .hez-card {
 	border: 1px solid var(--hez-border);
 	border-radius: var(--hez-radius);
 	background: var(--hez-bg);
 	transition: border-color 0.15s ease;
 }
 
-.hez-card:hover {
+.hez-returns:not(#\9) .hez-card:hover {
 	border-color: var(--hez-accent);
 }
 
-.hez-card__link {
+.hez-returns:not(#\9) .hez-card__link {
 	display: grid;
 	grid-template-columns: 1fr auto;
 	gap: 4px 16px;
@@ -500,24 +588,24 @@
 	text-decoration: none;
 }
 
-.hez-card__head {
+.hez-returns:not(#\9) .hez-card__head {
 	display: flex;
 	align-items: center;
 	gap: 10px;
 }
 
-.hez-card__number {
+.hez-returns:not(#\9) .hez-card__number {
 	font-weight: 700;
 }
 
-.hez-card__meta {
+.hez-returns:not(#\9) .hez-card__meta {
 	color: var(--hez-text-muted);
 	font-size: 13px;
 }
 
 /* The nudge sits on its own line under the card's summary, whatever the
    card's other columns are doing. */
-.hez-card__hint {
+.hez-returns:not(#\9) .hez-card__hint {
 	grid-column: 1 / -1;
 	margin-top: 4px;
 	color: var(--hez-accent);
@@ -525,7 +613,7 @@
 	font-weight: 600;
 }
 
-.hez-card__total {
+.hez-returns:not(#\9) .hez-card__total {
 	grid-row: 1 / 3;
 	grid-column: 2;
 	align-self: center;
@@ -534,13 +622,13 @@
 
 /* ---------------------------------------------------------- order list */
 
-.hez-order-list {
+.hez-returns:not(#\9) .hez-order-list {
 	margin: 0;
 	padding: 0;
 	list-style: none;
 }
 
-.hez-order-list__item {
+.hez-returns:not(#\9) .hez-order-list__item {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -549,40 +637,40 @@
 	border-bottom: 1px solid var(--hez-border);
 }
 
-.hez-order-list__item:last-child {
+.hez-returns:not(#\9) .hez-order-list__item:last-child {
 	border-bottom: 0;
 }
 
-.hez-order-list__info {
+.hez-returns:not(#\9) .hez-order-list__info {
 	display: flex;
 	flex-direction: column;
 }
 
-.hez-order-list__number {
+.hez-returns:not(#\9) .hez-order-list__number {
 	font-weight: 600;
 }
 
-.hez-order-list__date {
+.hez-returns:not(#\9) .hez-order-list__date {
 	color: var(--hez-text-muted);
 	font-size: 13px;
 }
 
 /* --------------------------------------------------------------- empty */
 
-.hez-empty {
+.hez-returns:not(#\9) .hez-empty {
 	padding: 28px 20px;
 	border: 1px dashed var(--hez-border-strong);
 	border-radius: var(--hez-radius);
 	text-align: center;
 }
 
-.hez-empty__title {
+.hez-returns:not(#\9) .hez-empty__title {
 	margin: 0 0 6px;
 	font-size: 16px;
 	font-weight: 700;
 }
 
-.hez-empty__text {
+.hez-returns:not(#\9) .hez-empty__text {
 	margin: 0;
 	color: var(--hez-text-muted);
 	font-size: 14px;
@@ -590,34 +678,34 @@
 
 /* --------------------------------------------------------------- table */
 
-.hez-table {
+.hez-returns:not(#\9) .hez-table {
 	width: 100%;
 	border-collapse: collapse;
 	font-size: 14px;
 }
 
-.hez-table th,
-.hez-table td {
+.hez-returns:not(#\9) .hez-table th,
+.hez-returns:not(#\9) .hez-table td {
 	padding: 10px 8px;
 	border-bottom: 1px solid var(--hez-border);
 	text-align: left;
 	vertical-align: top;
 }
 
-.hez-table thead th {
+.hez-returns:not(#\9) .hez-table thead th {
 	color: var(--hez-text-muted);
 	font-size: 12px;
 	letter-spacing: 0.02em;
 	text-transform: uppercase;
 }
 
-.hez-table tfoot th,
-.hez-table tfoot td {
+.hez-returns:not(#\9) .hez-table tfoot th,
+.hez-returns:not(#\9) .hez-table tfoot td {
 	border-bottom: 0;
 	font-weight: 700;
 }
 
-.hez-table__note {
+.hez-returns:not(#\9) .hez-table__note {
 	display: block;
 	margin-top: 3px;
 	color: var(--hez-text-muted);
@@ -626,24 +714,24 @@
 
 /* ------------------------------------------------------------ timeline */
 
-.hez-timeline {
+.hez-returns:not(#\9) .hez-timeline {
 	margin: 0;
 	padding: 0 0 0 6px;
 	list-style: none;
 }
 
-.hez-timeline__item {
+.hez-returns:not(#\9) .hez-timeline__item {
 	position: relative;
 	padding: 0 0 18px 22px;
 	border-left: 2px solid var(--hez-border);
 }
 
-.hez-timeline__item:last-child {
+.hez-returns:not(#\9) .hez-timeline__item:last-child {
 	border-left-color: transparent;
 	padding-bottom: 0;
 }
 
-.hez-timeline__dot {
+.hez-returns:not(#\9) .hez-timeline__dot {
 	position: absolute;
 	top: 3px;
 	left: -7px;
@@ -654,34 +742,34 @@
 	background: var(--hez-neutral);
 }
 
-.hez-timeline__item--success .hez-timeline__dot {
+.hez-returns:not(#\9) .hez-timeline__item--success .hez-timeline__dot {
 	background: var(--hez-success);
 }
 
-.hez-timeline__item--warning .hez-timeline__dot {
+.hez-returns:not(#\9) .hez-timeline__item--warning .hez-timeline__dot {
 	background: var(--hez-warning);
 }
 
-.hez-timeline__item--danger .hez-timeline__dot {
+.hez-returns:not(#\9) .hez-timeline__item--danger .hez-timeline__dot {
 	background: var(--hez-danger);
 }
 
-.hez-timeline__item--info .hez-timeline__dot {
+.hez-returns:not(#\9) .hez-timeline__item--info .hez-timeline__dot {
 	background: var(--hez-info);
 }
 
-.hez-timeline__title {
+.hez-returns:not(#\9) .hez-timeline__title {
 	margin: 0;
 	font-weight: 600;
 }
 
-.hez-timeline__message {
+.hez-returns:not(#\9) .hez-timeline__message {
 	margin: 3px 0 0;
 	color: var(--hez-text-muted);
 	font-size: 14px;
 }
 
-.hez-timeline__time {
+.hez-returns:not(#\9) .hez-timeline__time {
 	display: block;
 	margin-top: 3px;
 	color: var(--hez-text-muted);
@@ -690,14 +778,14 @@
 
 /* -------------------------------------------------------------- address */
 
-.hez-address {
+.hez-returns:not(#\9) .hez-address {
 	margin-top: 14px;
 	padding: 12px 14px;
 	border-radius: var(--hez-radius-sm);
 	background: var(--hez-bg-muted);
 }
 
-.hez-address__label {
+.hez-returns:not(#\9) .hez-address__label {
 	display: block;
 	margin-bottom: 4px;
 	color: var(--hez-text-muted);
@@ -707,51 +795,51 @@
 	text-transform: uppercase;
 }
 
-.hez-address__body {
+.hez-returns:not(#\9) .hez-address__body {
 	margin: 0;
 	font-style: normal;
 	line-height: 1.5;
 }
 
-.hez-tracking {
+.hez-returns:not(#\9) .hez-tracking {
 	display: flex;
 	align-items: baseline;
 	gap: 8px;
 	margin: 14px 0 0;
 }
 
-.hez-tracking__label {
+.hez-returns:not(#\9) .hez-tracking__label {
 	color: var(--hez-text-muted);
 	font-size: 13px;
 }
 
-.hez-tracking__value {
+.hez-returns:not(#\9) .hez-tracking__value {
 	font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 	font-weight: 700;
 }
 
 /* A date is prose, not a code the customer reads out character by
    character, so it drops the monospace treatment the barcode needs. */
-.hez-tracking__value--plain {
+.hez-returns:not(#\9) .hez-tracking__value--plain {
 	font-family: inherit;
 	font-weight: 600;
 }
 
 /* ------------------------------------------------------- shipping card */
 
-.hez-shipping-card {
+.hez-returns:not(#\9) .hez-shipping-card {
 	padding: 14px 16px;
 	border: 1px solid var(--hez-border);
 	border-radius: var(--hez-radius-sm);
 	background: var(--hez-bg-muted);
 }
 
-.hez-shipping-card__title {
+.hez-returns:not(#\9) .hez-shipping-card__title {
 	margin: 0 0 4px;
 	font-weight: 700;
 }
 
-.hez-shipping-card__desc {
+.hez-returns:not(#\9) .hez-shipping-card__desc {
 	margin: 0;
 	color: var(--hez-text-muted);
 	font-size: 14px;
@@ -759,27 +847,27 @@
 
 /* --------------------------------------------------------------- forms */
 
-.hez-inline-form {
+.hez-returns:not(#\9) .hez-inline-form {
 	display: grid;
 	gap: 12px;
 	max-width: 420px;
 	margin-top: 14px;
 }
 
-.hez-inline-form--tracking {
+.hez-returns:not(#\9) .hez-inline-form--tracking {
 	grid-template-columns: 1fr 1fr;
 }
 
-.hez-inline-form--tracking button {
+.hez-returns:not(#\9) .hez-inline-form--tracking button {
 	grid-column: 1 / -1;
 	justify-self: start;
 }
 
-.hez-inline-form--booking button {
+.hez-returns:not(#\9) .hez-inline-form--booking button {
 	justify-self: start;
 }
 
-.hez-lookup-form {
+.hez-returns:not(#\9) .hez-lookup-form {
 	display: grid;
 	gap: 14px;
 	max-width: 420px;
@@ -789,7 +877,7 @@
 	background: var(--hez-bg);
 }
 
-.hez-return-form__footer {
+.hez-returns:not(#\9) .hez-return-form__footer {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -798,26 +886,42 @@
 	padding-top: 4px;
 }
 
-.hez-return-form__summary {
+.hez-returns:not(#\9) .hez-return-form__summary {
 	margin: 0;
 	color: var(--hez-text-muted);
 	font-size: 14px;
 	font-weight: 600;
 }
 
-.hez-return-form__actions {
+.hez-returns:not(#\9) .hez-return-form__actions {
 	display: flex;
 	align-items: center;
 	gap: 10px;
 }
 
-.hez-returns__cancel {
+.hez-returns__cancel:not(#\9) {
 	margin-top: 8px;
 }
 
 /* ------------------------------------------------------------- buttons */
 
-.hez-btn {
+/*
+ * Butonlar tema saldırısına en açık parça. Storefront içerik bağlantılarını
+ * `.hentry .entry-content a { text-decoration: underline }` ile çiziyor ve
+ * yalnızca KENDİ `a.button` sınıfını muaf tutuyor; bizim bağlantı butonumuz
+ * altı çizili çıkıyor, hover'da da çizgi kaybolarak zıplıyordu. O seçicinin
+ * özgüllüğü (0,2,1) sınıf zincirimizle eşitlendiği için sonucu kaynak sırası
+ * belirlerdi -- temadan temaya değişen bir kumar. Alt çizgi bu yüzden
+ * `!important` ile kapatılıyor; dar ve tek bir özellik için.
+ *
+ * Renkler her durum için (link, visited, hover, focus, active) açıkça
+ * yazılıyor: temanın bağlantı rengi sızdığında zemin sabit kalıp yazı rengi
+ * değiştiği için kontrast bozuluyordu.
+ */
+
+.hez-returns:not(#\9) .hez-btn,
+.hez-returns:not(#\9) a.hez-btn,
+.hez-returns:not(#\9) button.hez-btn {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -829,49 +933,93 @@
 	font-size: 14px;
 	font-weight: 600;
 	line-height: 1.2;
-	text-decoration: none;
+	text-decoration: none !important;
+	box-shadow: none;
 	cursor: pointer;
-	transition: background-color 0.15s ease, border-color 0.15s ease;
+	transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
-.hez-btn--small {
+.hez-returns:not(#\9) .hez-btn:hover,
+.hez-returns:not(#\9) .hez-btn:focus,
+.hez-returns:not(#\9) .hez-btn:active,
+.hez-returns:not(#\9) .hez-btn:visited {
+	text-decoration: none !important;
+}
+
+.hez-returns:not(#\9) .hez-btn--small {
 	padding: 7px 13px;
 	font-size: 13px;
 }
 
-.hez-btn--primary {
+.hez-returns:not(#\9) .hez-btn--primary,
+.hez-returns:not(#\9) a.hez-btn--primary,
+.hez-returns:not(#\9) button.hez-btn--primary {
 	background: var(--hez-accent);
+	border-color: var(--hez-accent);
 	color: var(--hez-accent-contrast);
 }
 
-.hez-btn--primary:hover,
-.hez-btn--primary:focus {
-	filter: brightness(0.94);
+/*
+ * Koyulaştırma `filter: brightness()` ile yapılıyordu; filtre yazıyı da
+ * karartıp kontrastı düşürüyor. Hover artık kendi zemin tonunu kullanıyor,
+* yazı rengi sabit kalıyor.
+ */
+.hez-returns:not(#\9) .hez-btn--primary:hover,
+.hez-returns:not(#\9) .hez-btn--primary:focus,
+.hez-returns:not(#\9) .hez-btn--primary:active,
+.hez-returns:not(#\9) .hez-btn--primary:visited,
+.hez-returns:not(#\9) a.hez-btn--primary:hover,
+.hez-returns:not(#\9) a.hez-btn--primary:focus,
+.hez-returns:not(#\9) a.hez-btn--primary:active,
+.hez-returns:not(#\9) a.hez-btn--primary:visited {
+	background: var(--hez-accent-strong);
+	border-color: var(--hez-accent-strong);
 	color: var(--hez-accent-contrast);
 }
 
-.hez-btn--ghost {
+.hez-returns:not(#\9) .hez-btn--ghost,
+.hez-returns:not(#\9) a.hez-btn--ghost,
+.hez-returns:not(#\9) button.hez-btn--ghost {
 	border-color: var(--hez-border-strong);
+	background: var(--hez-bg);
 	color: var(--hez-text-muted);
 }
 
-.hez-btn--ghost:hover,
-.hez-btn--ghost:focus {
+.hez-returns:not(#\9) .hez-btn--ghost:hover,
+.hez-returns:not(#\9) .hez-btn--ghost:focus,
+.hez-returns:not(#\9) .hez-btn--ghost:active,
+.hez-returns:not(#\9) .hez-btn--ghost:visited,
+.hez-returns:not(#\9) a.hez-btn--ghost:hover,
+.hez-returns:not(#\9) a.hez-btn--ghost:focus,
+.hez-returns:not(#\9) a.hez-btn--ghost:active,
+.hez-returns:not(#\9) a.hez-btn--ghost:visited {
 	border-color: var(--hez-text-muted);
+	background: var(--hez-bg);
 	color: var(--hez-text);
 }
 
-.hez-btn--danger-ghost {
+.hez-returns:not(#\9) .hez-btn--danger-ghost,
+.hez-returns:not(#\9) a.hez-btn--danger-ghost,
+.hez-returns:not(#\9) button.hez-btn--danger-ghost {
 	border-color: var(--hez-border-strong);
+	background: var(--hez-bg);
 	color: var(--hez-danger);
 }
 
-.hez-btn--danger-ghost:hover,
-.hez-btn--danger-ghost:focus {
+.hez-returns:not(#\9) .hez-btn--danger-ghost:hover,
+.hez-returns:not(#\9) .hez-btn--danger-ghost:focus,
+.hez-returns:not(#\9) .hez-btn--danger-ghost:active,
+.hez-returns:not(#\9) .hez-btn--danger-ghost:visited,
+.hez-returns:not(#\9) a.hez-btn--danger-ghost:hover,
+.hez-returns:not(#\9) a.hez-btn--danger-ghost:focus,
+.hez-returns:not(#\9) a.hez-btn--danger-ghost:active,
+.hez-returns:not(#\9) a.hez-btn--danger-ghost:visited {
 	border-color: var(--hez-danger);
+	background: var(--hez-danger-bg);
+	color: var(--hez-danger);
 }
 
-.hez-btn:focus-visible {
+.hez-returns:not(#\9) .hez-btn:focus-visible {
 	outline: 2px solid var(--hez-accent);
 	outline-offset: 2px;
 }
@@ -879,21 +1027,23 @@
 /* --------------------------------------------------------------- order panel */
 
 /*
- * The panel is printed inside whatever markup the active theme wraps the
- * order table in, so it defends its own box: the two-class selectors beat
- * a theme's `section`/`h2`/`p` resets, the logical margins survive RTL and
- * the float/width resets keep it from being sucked into a floated or
- * grid parent. Spacing stays in custom properties, so a theme only has to
- * redefine --hez-panel-space / --hez-panel-padding to retune it.
+ * Panel, temanın sipariş tablosunu sardığı işaretlemenin içine basılıyor, bu
+ * yüzden kendi kutusunu savunuyor: mantıksal marjlar RTL'de de çalışır,
+ * float/genişlik sıfırlamaları paneli float'lı ya da grid bir ebeveynin
+ * içine kapılmaktan korur.
+ *
+ * İç ritim TEK YÖNLÜ: her parça yalnızca altına boşluk bırakır, sonuncusu
+ * onu da bırakmaz. Böylece parçalar eklenip çıkarıldığında alt padding hep
+ * eşit kalır ve marj çakışmasıyla uğraşmak gerekmez.
  */
 
-.hez-returns.hez-returns--order-panel {
+.hez-returns:not(#\9).hez-returns--order-panel {
 	display: block;
 	float: none;
 	clear: both;
 	width: auto;
 	max-width: 100%;
-	margin: var(--hez-panel-space) 0; /* fallback for browsers without logical shorthands */
+	margin: var(--hez-panel-space) 0; /* mantıksal kısayolu desteklemeyen tarayıcılar için */
 	margin-block: var(--hez-panel-space);
 	margin-inline: 0;
 	padding: var(--hez-panel-padding);
@@ -902,20 +1052,20 @@
 	background: var(--hez-bg-muted);
 }
 
-.hez-returns.hez-returns--order-panel::before,
-.hez-returns.hez-returns--order-panel::after {
+.hez-returns:not(#\9).hez-returns--order-panel::before,
+.hez-returns:not(#\9).hez-returns--order-panel::after {
 	content: none;
 }
 
-.hez-returns .hez-returns__panel-header {
-	margin: 0 0 12px;
+.hez-returns:not(#\9) .hez-returns__panel-header {
+	display: flex;
+	align-items: baseline;
+	flex-wrap: wrap;
+	gap: var(--hez-space-2);
+	margin: 0 0 var(--hez-space-3);
 }
 
-.hez-returns .hez-returns__panel-body > *:last-child {
-	margin-bottom: 0;
-}
-
-.hez-returns--order-panel .hez-returns__title {
+.hez-returns:not(#\9).hez-returns--order-panel .hez-returns__title {
 	margin: 0;
 	padding: 0;
 	font-size: 20px;
@@ -923,63 +1073,73 @@
 	text-transform: none;
 }
 
-.hez-returns--order-panel .hez-returns__subtitle,
-.hez-returns--order-panel .hez-returns__deadline {
+/* Panel gövdesinin ritmi tek yerden: her doğrudan çocuk altına bir basamak
+   boşluk bırakır. */
+.hez-returns:not(#\9) .hez-returns__panel-body > * {
+	margin-bottom: var(--hez-space-4);
+}
+
+.hez-returns:not(#\9) .hez-returns__panel-body > *:last-child {
+	margin-bottom: 0;
+}
+
+/* Açıklama ile son tarih tek bir blok gibi okunsun: aralarındaki boşluk
+   panel ritminden dar. */
+.hez-returns:not(#\9) .hez-returns__panel-body > .hez-returns__subtitle {
+	margin-bottom: var(--hez-space-2);
+}
+
+.hez-returns:not(#\9).hez-returns--order-panel .hez-returns__subtitle,
+.hez-returns:not(#\9).hez-returns--order-panel .hez-returns__deadline {
 	margin-top: 0;
-	margin-bottom: 14px;
 }
 
-.hez-returns--order-panel .hez-returns__requests {
-	margin: 0 0 14px;
-}
-
-.hez-returns .hez-returns__actions {
+.hez-returns:not(#\9) .hez-returns__actions {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 10px;
+	gap: var(--hez-space-2);
 	margin: 0;
 	padding: 0;
 }
 
-.hez-cards--compact {
-	gap: 8px;
+.hez-returns:not(#\9) .hez-cards--compact {
+	gap: var(--hez-space-2);
 }
 
-.hez-cards--compact .hez-card__link {
-	padding: 12px 14px;
+.hez-returns:not(#\9) .hez-cards--compact .hez-card__link {
+	padding: var(--hez-space-3) var(--hez-space-4);
 }
-
 
 /* ------------------------------------------------------ pickup address */
 
-.hez-returns__pickup {
+.hez-returns__pickup:not(#\9) {
 	margin-top: 16px;
 	padding-top: 16px;
 	border-top: 1px solid var(--hez-border);
 }
 
-.hez-returns__pickup-title {
+.hez-returns__pickup-title:not(#\9) {
 	margin: 0 0 4px;
 	font-weight: 700;
 }
 
-.hez-returns__pickup-hint {
+.hez-returns__pickup-hint:not(#\9) {
 	margin: 0 0 14px;
 	color: var(--hez-text-muted);
 	font-size: 14px;
 }
 
-.hez-address-fields {
+.hez-returns:not(#\9) .hez-address-fields {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 12px;
 }
 
-.hez-address-fields .hez-field--address {
+.hez-returns:not(#\9) .hez-address-fields .hez-field--address {
 	grid-column: 1 / -1;
 }
 
-.hez-field__hint {
+.hez-returns:not(#\9) .hez-field__hint {
 	display: block;
 	margin-top: 4px;
 	color: var(--hez-text-muted);
@@ -989,14 +1149,14 @@
 /* The address the day list was fetched for, foldable so it stays a detail
    until the customer needs to correct it. */
 
-.hez-pickup-address {
+.hez-returns:not(#\9) .hez-pickup-address {
 	margin: 0 0 16px;
 	border: 1px solid var(--hez-border);
 	border-radius: var(--hez-radius-sm);
 	background: var(--hez-bg-muted);
 }
 
-.hez-pickup-address__summary {
+.hez-returns:not(#\9) .hez-pickup-address__summary {
 	display: flex;
 	align-items: baseline;
 	flex-wrap: wrap;
@@ -1006,40 +1166,38 @@
 	list-style: none;
 }
 
-.hez-pickup-address__summary::-webkit-details-marker {
+.hez-returns:not(#\9) .hez-pickup-address__summary::-webkit-details-marker {
 	display: none;
 }
 
-.hez-pickup-address__label {
+.hez-returns:not(#\9) .hez-pickup-address__label {
 	color: var(--hez-text-muted);
 	font-size: 13px;
 	font-weight: 600;
 }
 
-.hez-pickup-address__value {
+.hez-returns:not(#\9) .hez-pickup-address__value {
 	flex: 1 1 240px;
 	font-size: 14px;
 }
 
-.hez-pickup-address__toggle {
+.hez-returns:not(#\9) .hez-pickup-address__toggle {
 	color: var(--hez-accent);
 	font-size: 13px;
 	font-weight: 600;
 }
 
-.hez-pickup-address[open] .hez-pickup-address__toggle {
+.hez-returns:not(#\9) .hez-pickup-address[open] .hez-pickup-address__toggle {
 	color: var(--hez-text-muted);
 }
 
-.hez-pickup-address__form {
+.hez-returns:not(#\9) .hez-pickup-address__form {
 	padding: 0 14px 14px;
 }
 
-.hez-pickup-address__form .hez-btn {
+.hez-returns:not(#\9) .hez-pickup-address__form .hez-btn {
 	margin-top: 12px;
 }
-
-
 
 /* ---------------------------------------------------------- return code */
 
@@ -1049,7 +1207,7 @@
  * next to it rather than under it.
  */
 
-.hez-code {
+.hez-returns:not(#\9) .hez-code {
 	margin: 0;
 	padding: 16px;
 	border: 1px solid var(--hez-border);
@@ -1057,7 +1215,7 @@
 	background: var(--hez-bg-muted);
 }
 
-.hez-code__head {
+.hez-returns:not(#\9) .hez-code__head {
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
@@ -1065,7 +1223,7 @@
 	margin-bottom: 8px;
 }
 
-.hez-code__label {
+.hez-returns:not(#\9) .hez-code__label {
 	color: var(--hez-text-muted);
 	font-size: 12px;
 	font-weight: 700;
@@ -1073,14 +1231,14 @@
 	text-transform: uppercase;
 }
 
-.hez-code__row {
+.hez-returns:not(#\9) .hez-code__row {
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
 	gap: 12px;
 }
 
-.hez-code__value {
+.hez-returns:not(#\9) .hez-code__value {
 	padding: 0;
 	background: none;
 	color: var(--hez-info);
@@ -1094,23 +1252,27 @@
 	word-break: break-all;
 }
 
-.hez-code__copy.is-copied {
+/* Hover kuralları da bu özgüllükte olduğu için "Kopyalandı" geri bildirimi
+   fare düğmenin üzerindeyken kaybolmasın diye durum eşit seviyede yazılıyor. */
+.hez-returns:not(#\9) .hez-code__copy.is-copied,
+.hez-returns:not(#\9) .hez-code__copy.is-copied:hover,
+.hez-returns:not(#\9) .hez-code__copy.is-copied:focus {
 	border-color: var(--hez-success);
 	color: var(--hez-success);
 }
 
-.hez-code__hint {
+.hez-returns:not(#\9) .hez-code__hint {
 	margin: 10px 0 0;
 	color: var(--hez-text-muted);
 	font-size: 14px;
 }
 
-.hez-code__meta {
+.hez-returns:not(#\9) .hez-code__meta {
 	margin: 8px 0 0;
 	font-size: 14px;
 }
 
-.hez-code__cancel {
+.hez-returns:not(#\9) .hez-code__cancel {
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
@@ -1120,12 +1282,12 @@
 	border-top: 1px solid var(--hez-border);
 }
 
-.hez-code__cancel-hint {
+.hez-returns:not(#\9) .hez-code__cancel-hint {
 	color: var(--hez-text-muted);
 	font-size: 13px;
 }
 
-.hez-code__cancel-hint--closed {
+.hez-returns:not(#\9) .hez-code__cancel-hint--closed {
 	display: block;
 	margin: 16px 0 0;
 	padding-top: 14px;
@@ -1141,7 +1303,7 @@
  * the panel carries its own colours through a class of its own.
  */
 
-.hez-returns .select2-container--default .select2-selection--single {
+.hez-returns:not(#\9) .select2-container--default .select2-selection--single {
 	height: auto;
 	padding: 8px 11px;
 	border: 1px solid var(--hez-border-strong);
@@ -1149,64 +1311,64 @@
 	background: var(--hez-bg);
 }
 
-.hez-returns .select2-container--default .select2-selection--single .select2-selection__rendered {
+.hez-returns:not(#\9) .select2-container--default .select2-selection--single .select2-selection__rendered {
 	padding: 0;
 	color: var(--hez-text);
 	font-size: 14px;
 	line-height: 1.4;
 }
 
-.hez-returns .select2-container--default .select2-selection--single .select2-selection__placeholder {
+.hez-returns:not(#\9) .select2-container--default .select2-selection--single .select2-selection__placeholder {
 	color: var(--hez-text-muted);
 }
 
-.hez-returns .select2-container--default .select2-selection--single .select2-selection__arrow {
+.hez-returns:not(#\9) .select2-container--default .select2-selection--single .select2-selection__arrow {
 	top: 50%;
 	right: 8px;
 	transform: translateY(-50%);
 }
 
-.hez-returns .select2-container--default.select2-container--focus .select2-selection--single,
-.hez-returns .select2-container--default.select2-container--open .select2-selection--single {
+.hez-returns:not(#\9) .select2-container--default.select2-container--focus .select2-selection--single,
+.hez-returns:not(#\9) .select2-container--default.select2-container--open .select2-selection--single {
 	border-color: var(--hez-accent);
 	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
 }
 
-.hez-select2-dropdown {
+.hez-select2-dropdown:not(#\9) {
 	border-color: #cbd5e1;
 	border-radius: var(--hez-radius-sm, 6px);
 	font-size: 14px;
 }
 
-.hez-select2-dropdown .select2-search__field {
+.hez-select2-dropdown:not(#\9) .select2-search__field {
 	padding: 7px 9px;
 	border: 1px solid #cbd5e1;
 	border-radius: 4px;
 }
 
-.hez-select2-dropdown .select2-results__option--highlighted[aria-selected] {
+.hez-select2-dropdown:not(#\9) .select2-results__option--highlighted[aria-selected] {
 	background: #2563eb;
 }
 
 @media (prefers-color-scheme: dark) {
-	.hez-select2-dropdown {
+	.hez-select2-dropdown:not(#\9) {
 		border-color: #475569;
 		background: #0f172a;
 		color: #e2e8f0;
 	}
 
-	.hez-select2-dropdown .select2-results__option {
+	.hez-select2-dropdown:not(#\9) .select2-results__option {
 		background: #0f172a;
 		color: #e2e8f0;
 	}
 
-	.hez-select2-dropdown .select2-search__field {
+	.hez-select2-dropdown:not(#\9) .select2-search__field {
 		border-color: #475569;
 		background: #1e293b;
 		color: #e2e8f0;
 	}
 
-	.hez-select2-dropdown .select2-results__option--highlighted[aria-selected] {
+	.hez-select2-dropdown:not(#\9) .select2-results__option--highlighted[aria-selected] {
 		background: #1d4ed8;
 	}
 }
@@ -1214,88 +1376,88 @@
 /* ------------------------------------------------------------- responsive */
 
 @media (max-width: 600px) {
-	.hez-address-fields {
+	.hez-returns:not(#\9) .hez-address-fields {
 		grid-template-columns: 1fr;
 	}
 
-	.hez-returns.hez-returns--order-panel {
+	.hez-returns.hez-returns--order-panel:not(#\9) {
 		--hez-panel-space: 24px;
 		--hez-panel-padding: 16px;
 	}
 
-	.hez-returns .hez-returns__actions .hez-btn {
+	.hez-returns:not(#\9) .hez-returns__actions .hez-btn {
 		width: 100%;
 	}
 
-	.hez-item__details {
+	.hez-returns:not(#\9) .hez-item__details {
 		grid-template-columns: 1fr;
 		padding-left: 12px;
 	}
 
-	.hez-inline-form--tracking {
+	.hez-returns:not(#\9) .hez-inline-form--tracking {
 		grid-template-columns: 1fr;
 	}
 
-	.hez-progress {
+	.hez-returns:not(#\9) .hez-progress {
 		flex-direction: column;
 		gap: 10px;
 	}
 
-	.hez-progress__step {
+	.hez-returns:not(#\9) .hez-progress__step {
 		padding: 0 0 0 26px;
 		text-align: left;
 	}
 
-	.hez-progress__step::before {
+	.hez-returns:not(#\9) .hez-progress__step::before {
 		top: 0;
 		left: 7px;
 		width: 2px;
 		height: 100%;
 	}
 
-	.hez-progress__step:first-child::before,
-	.hez-progress__step:last-child::before {
+	.hez-returns:not(#\9) .hez-progress__step:first-child::before,
+.hez-returns:not(#\9) .hez-progress__step:last-child::before {
 		left: 7px;
 		width: 2px;
 		height: 100%;
 	}
 
-	.hez-progress__dot {
+	.hez-returns:not(#\9) .hez-progress__dot {
 		top: 2px;
 		left: 0;
 		margin-left: 0;
 	}
 
-	.hez-card__link {
+	.hez-returns:not(#\9) .hez-card__link {
 		grid-template-columns: 1fr;
 	}
 
-	.hez-card__total {
+	.hez-returns:not(#\9) .hez-card__total {
 		grid-row: auto;
 		grid-column: 1;
 		justify-self: start;
 	}
 
-	.hez-table thead {
+	.hez-returns:not(#\9) .hez-table thead {
 		display: none;
 	}
 
-	.hez-table,
-	.hez-table tbody,
-	.hez-table tfoot,
-	.hez-table tr,
-	.hez-table th,
-	.hez-table td {
+	.hez-returns:not(#\9) .hez-table,
+.hez-returns:not(#\9) .hez-table tbody,
+.hez-returns:not(#\9) .hez-table tfoot,
+.hez-returns:not(#\9) .hez-table tr,
+.hez-returns:not(#\9) .hez-table th,
+.hez-returns:not(#\9) .hez-table td {
 		display: block;
 		width: 100%;
 	}
 
-	.hez-table tr {
+	.hez-returns:not(#\9) .hez-table tr {
 		padding: 8px 0;
 		border-bottom: 1px solid var(--hez-border);
 	}
 
-	.hez-table td {
+	.hez-returns:not(#\9) .hez-table td {
 		display: flex;
 		justify-content: space-between;
 		gap: 12px;
@@ -1303,7 +1465,7 @@
 		padding: 4px 0;
 	}
 
-	.hez-table td::before {
+	.hez-returns:not(#\9) .hez-table td::before {
 		content: attr(data-label);
 		color: var(--hez-text-muted);
 		font-size: 13px;
