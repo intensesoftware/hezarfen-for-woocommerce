@@ -109,15 +109,6 @@ class Returns_Settings {
 				),
 			),
 			array(
-				'title'    => __( 'İade edilebilir sipariş durumları', 'hezarfen-for-woocommerce' ),
-				'desc_tip' => __( 'Yalnızca bu durumlardaki siparişler için iade talebi oluşturulabilir.', 'hezarfen-for-woocommerce' ),
-				'type'     => 'multiselect',
-				'class'    => 'wc-enhanced-select',
-				'id'       => Return_Settings::OPTION_ELIGIBLE_STATUSES,
-				'default'  => array( 'wc-completed' ),
-				'options'  => wc_get_order_statuses(),
-			),
-			array(
 				'title'    => __( 'İade gönderim yöntemi', 'hezarfen-for-woocommerce' ),
 				'desc_tip' => __( 'Onaylanan taleplerde ürünlerin size nasıl ulaşacağı.', 'hezarfen-for-woocommerce' ),
 				'type'     => 'select',
@@ -143,26 +134,20 @@ class Returns_Settings {
 	}
 
 	/**
-	 * Drops the Pro-only rows in beside the settings they belong to.
-	 *
-	 * Placed by neighbouring option rather than by index, so reordering the
-	 * section above cannot silently move a locked row somewhere it makes no
-	 * sense.
+	 * Drops the Pro-backed placeholders in beside the settings they belong to.
 	 *
 	 * @param array<int, array<string, mixed>> $fields Section fields.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
 	private function splice_locked_fields( $fields ) {
-		if ( ! Returns_Pro_Teasers::should_show() ) {
-			return $fields;
-		}
-
-		// "What may come back and why" belongs next to the eligibility
-		// rules; the photo row belongs next to what the customer is told.
+		// Anchored on the setting each placeholder sits beside, not on an
+		// index, so reordering the section above cannot silently move one
+		// somewhere it makes no sense. The eligibility trio goes together:
+		// which orders, which products, and why.
 		$after = array(
-			Return_Settings::OPTION_ELIGIBLE_STATUSES => array( 'products', 'reasons' ),
-			Return_Settings::OPTION_INSTRUCTIONS      => array( 'photos' ),
+			Return_Settings::OPTION_WINDOW_REFERENCE => array( 'statuses', 'products', 'reasons' ),
+			Return_Settings::OPTION_INSTRUCTIONS     => array( 'photos' ),
 		);
 
 		$merged = array();

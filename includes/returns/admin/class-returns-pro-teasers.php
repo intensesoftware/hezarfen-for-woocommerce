@@ -19,9 +19,15 @@ defined( 'ABSPATH' ) || exit();
  * answering, and answering it with silence reads as "the plugin cannot do
  * this at all".
  *
- * The rows are inert: they are flagged `is_option => false` so WooCommerce
- * skips them when the section is saved, and they disappear entirely once
- * Pro is installed or when the promotions constant is off.
+ * The rows double as PLACEHOLDERS. They are always emitted into the section,
+ * at the position their real setting belongs to, and Pro swaps the ones it
+ * implements for working fields — which is why every returns setting stays on
+ * this one screen instead of scattering across two plugins' settings pages.
+ * A placeholder nobody claimed renders as the locked upsell, or as nothing at
+ * all when promotions are off.
+ *
+ * They are flagged `is_option => false` so WooCommerce skips them when the
+ * section is saved; whatever replaces one brings its own storage.
  */
 class Returns_Pro_Teasers {
 
@@ -52,17 +58,21 @@ class Returns_Pro_Teasers {
 	/**
 	 * The locked rows, ready to be merged into the section's fields.
 	 *
-	 * @param string $placement Which group of rows to return: `reasons`,
-	 *                          `products` or `photos`.
+	 * @param string $placement Which row to return: `statuses`, `products`,
+	 *                          `reasons` or `photos`.
 	 *
-	 * @return array<int, array<string, mixed>> Empty when Pro is present.
+	 * @return array<int, array<string, mixed>> Empty for an unknown placement.
 	 */
 	public static function get_fields( $placement ) {
-		if ( ! self::should_show() ) {
-			return array();
-		}
-
 		$fields = array(
+			'statuses' => array(
+				'title'    => __( 'İade edilebilir sipariş durumları', 'hezarfen-for-woocommerce' ),
+				'desc'     => __( 'Hangi durumdaki siparişler için iade talebi açılabileceğini seçin. Ücretsiz sürümde yalnızca tamamlanmış siparişler iade edilebilir.', 'hezarfen-for-woocommerce' ),
+				'examples' => array(
+					__( 'Tamamlandı', 'hezarfen-for-woocommerce' ),
+					__( 'İşleniyor', 'hezarfen-for-woocommerce' ),
+				),
+			),
 			'reasons'  => array(
 				'title'    => __( 'İade sebepleri', 'hezarfen-for-woocommerce' ),
 				'desc'     => __( 'Kendi iade sebeplerinizi tanımlayın, sıralayın ve hangi sebepte müşteriden açıklama isteneceğini belirleyin.', 'hezarfen-for-woocommerce' ),
@@ -122,6 +132,13 @@ class Returns_Pro_Teasers {
 	 * @return void
 	 */
 	public function render_field( $field ) {
+		// Reaching the renderer means no add-on claimed this placeholder. With
+		// promotions off there is nothing to say about it, so the row is left
+		// out entirely rather than drawn as a dead box.
+		if ( ! self::should_show() ) {
+			return;
+		}
+
 		$examples = isset( $field['examples'] ) ? (array) $field['examples'] : array();
 
 		$this->print_styles_once();

@@ -36,7 +36,7 @@ class Customer_Ships_Method implements Return_Shipping_Method_Interface {
 	 * @return string
 	 */
 	public function get_label() {
-		return __( 'Müşteri kendi gönderir', 'hezarfen-for-woocommerce' );
+		return __( 'Müşteri kargo takip bilgisini kendi girer', 'hezarfen-for-woocommerce' );
 	}
 
 	/**
