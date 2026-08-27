@@ -67,6 +67,27 @@ Plugin'in yazdığı/okuduğu tüm option key'leri, order meta'ları ve özel ta
 | `hezarfen_mst_tracking_num_custom_meta` | string | shipment-tracking | Üçüncü-parti takip no meta key'i |
 | `hezarfen_mst_disabled_couriers` | array | shipment-tracking | Listeden gizlenecek courier id'ler |
 
+### İade Yönetimi (returns)
+
+| Option | Tip | Modül | Açıklama |
+|---|---|---|---|
+| `hezarfen_returns_enabled` | yes/no | returns | İade modülü master switch (varsayılan `no`) |
+| `hezarfen_returns_db_version` | string | returns | İade tablolarının şema sürümü (plugin sürümünden bağımsız) |
+| `hezarfen_returns_window_days` | int | returns | Global iade süresi; `0` = sınırsız |
+| `hezarfen_returns_window_reference` | completed\|paid\|created | returns | Sürenin sayılacağı sipariş tarihi |
+| `hezarfen_returns_eligible_order_statuses` | array | returns | İade açılabilecek sipariş durumları (`wc-` önekli saklanır) |
+| `hezarfen_returns_shipping_method` | string | returns | Aktif iade gönderim yöntemi anahtarı |
+| `hezarfen_returns_instructions` | string | returns | Onay sonrası müşteriye gösterilen yönerge |
+| `hezarfen_returns_endpoints_version` | string | returns | Endpoint imzası; değişince rewrite flush tetiklenir |
+| `hezarfen_returns_address_label` | string | returns | İade adresi başlığı |
+| `hezarfen_returns_address_contact` | string | returns | İade adresi yetkili/firma adı |
+| `hezarfen_returns_address_phone` | string | returns | İade adresi telefonu |
+| `hezarfen_returns_address_line` | string | returns | İade adresi açık adres |
+| `hezarfen_returns_address_neighborhood` | string | returns | İade adresi mahalle |
+| `hezarfen_returns_address_district` | string | returns | İade adresi ilçe |
+| `hezarfen_returns_address_city` | string | returns | İade adresi il |
+| `hezarfen_returns_address_postcode` | string | returns | İade adresi posta kodu |
+
 ### Notice & feedback state
 
 | Option | Tip | Modül | Açıklama |
@@ -80,6 +101,7 @@ Plugin'in yazdığı/okuduğu tüm option key'leri, order meta'ları ve özel ta
 |---|---|---|---|
 | `hezarfen_benefit` | 24h | feature-status | "Eklenti aktif olarak kullanılıyor mu" cache'i |
 | HepsiJET barcode bulk cache | per request | shipment-tracking | Toplu barkod üretimi geçici cache |
+| `hezarfen_returns_pickup_{hash}` | 30dk | returns | Bir il/ilçe için Kargokit'in sunduğu iade alım günleri; hash il+ilçe+bugün |
 
 ---
 
@@ -145,6 +167,67 @@ CREATE TABLE wp_hezarfen_contracts (
 ```
 
 **Yaşam döngüsü**: Sipariş işlendiğinde insert; KVKK uyumu için manuel silme dışında otomatik purge yok. Müşteri ve admin görüntüler.
+
+### `wp_hezarfen_returns` / `wp_hezarfen_return_items` / `wp_hezarfen_return_events`
+
+Modül: returns. `includes/returns/core/class-returns-schema.php` içinde `dbDelta` ile oluşturulur; `hezarfen_returns_db_version` option'ı ile ayrı sürümlenir.
+
+```sql
+CREATE TABLE wp_hezarfen_returns (
+  id                BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  return_number     VARCHAR(32)  NOT NULL DEFAULT '',
+  order_id          BIGINT UNSIGNED NOT NULL,
+  customer_id       BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  customer_email    VARCHAR(190) NOT NULL DEFAULT '',
+  status            VARCHAR(32)  NOT NULL DEFAULT 'pending',
+  shipping_method   VARCHAR(32)  NOT NULL DEFAULT '',
+  courier           VARCHAR(64)  NOT NULL DEFAULT '',
+  tracking_number   VARCHAR(100) NOT NULL DEFAULT '',
+  pickup_date       VARCHAR(10)  NOT NULL DEFAULT '',
+  return_address_id VARCHAR(64)  NOT NULL DEFAULT '',
+  customer_note     TEXT NULL,
+  refund_amount     DECIMAL(19,4) NOT NULL DEFAULT 0.0000,
+  currency          VARCHAR(10)  NOT NULL DEFAULT '',
+  created_at        DATETIME NOT NULL,
+  updated_at        DATETIME NOT NULL,
+  PRIMARY KEY (id),
+  KEY order_id (order_id), KEY customer_id (customer_id),
+  KEY status (status), KEY created_at (created_at),
+  KEY customer_email (customer_email), UNIQUE KEY return_number (return_number)
+);
+
+CREATE TABLE wp_hezarfen_return_items (
+  id            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  return_id     BIGINT UNSIGNED NOT NULL,
+  order_item_id BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  product_id    BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  variation_id  BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  product_name  VARCHAR(255) NOT NULL DEFAULT '',
+  sku           VARCHAR(100) NOT NULL DEFAULT '',
+  quantity      INT(11) NOT NULL DEFAULT 0,
+  line_total    DECIMAL(19,4) NOT NULL DEFAULT 0.0000,
+  reason_key    VARCHAR(64) NOT NULL DEFAULT '',
+  reason_note   TEXT NULL,
+  PRIMARY KEY (id), KEY return_id (return_id), KEY order_item_id (order_item_id)
+);
+
+CREATE TABLE wp_hezarfen_return_events (
+  id                  BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  return_id           BIGINT UNSIGNED NOT NULL,
+  type                VARCHAR(32) NOT NULL DEFAULT 'note',
+  actor_type          VARCHAR(20) NOT NULL DEFAULT 'system',
+  actor_id            BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  actor_name          VARCHAR(190) NOT NULL DEFAULT '',
+  from_status         VARCHAR(32) NOT NULL DEFAULT '',
+  to_status           VARCHAR(32) NOT NULL DEFAULT '',
+  message             TEXT NULL,
+  is_customer_visible TINYINT(1) NOT NULL DEFAULT 1,
+  created_at          DATETIME NOT NULL,
+  PRIMARY KEY (id), KEY return_id (return_id), KEY created_at (created_at)
+);
+```
+
+**Yaşam döngüsü**: Müşteri talep açtığında insert; satırlar değişmez, timeline append-only. Deaktivasyon tabloları silmez.
 
 ---
 

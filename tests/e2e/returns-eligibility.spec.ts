@@ -1,0 +1,221 @@
+import { expect, test } from '@playwright/test';
+import { deleteOrder } from './helpers/orders';
+import { NOTICE_ERROR } from './helpers/notices';
+import {
+	advanceReturn,
+	clearReturns,
+	enableReturns,
+	loginAsReturnsCustomer,
+	orderEligibilityError,
+	refundFirstLine,
+	requestFormUrl,
+	seedDigitalOrder,
+	seedReturn,
+	seedReturnableOrder,
+	setEligibleStatuses,
+	setOption,
+} from './helpers/returns';
+import { restoreOptions, snapshotOptions } from './helpers/wp-options';
+
+/**
+ * What may be returned, and how much of it.
+ *
+ * The rules live in
+ * [Return_Eligibility](../../includes/returns/core/class-return-eligibility.php)
+ * and the store-wide policy provider; these specs drive them through the
+ * account form so the assertion is on what a customer is actually offered,
+ * not on an internal return value.
+ */
+
+// `hezarfen_returns_eligible_order_statuses` is an array option and cannot
+// round-trip through snapshotOptions(), so it is reset explicitly instead.
+const OPTION_KEYS = [
+	'hezarfen_returns_enabled',
+	'hezarfen_returns_window_days',
+	'hezarfen_returns_window_reference',
+];
+
+let optionSnapshot: Record< string, string >;
+const seededOrders: string[] = [];
+
+function seedOrder(
+	opts: Parameters< typeof seedReturnableOrder >[ 0 ] = {}
+): string {
+	const orderId = seedReturnableOrder( opts );
+	seededOrders.push( orderId );
+	return orderId;
+}
+
+test.describe( 'Hezarfen iade — iade edilebilirlik kuralları', () => {
+	test.beforeAll( () => {
+		optionSnapshot = snapshotOptions( OPTION_KEYS );
+		enableReturns();
+	} );
+
+	test.afterAll( () => {
+		for ( const orderId of seededOrders ) {
+			deleteOrder( orderId );
+		}
+		clearReturns();
+		setEligibleStatuses( [ 'wc-completed' ] );
+		restoreOptions( optionSnapshot );
+	} );
+
+	test.beforeEach( async ( { page } ) => {
+		clearReturns();
+		await loginAsReturnsCustomer( page );
+	} );
+
+	test( 'iade süresi dolmuş sipariş reddediliyor', async ( { page } ) => {
+		setOption( 'hezarfen_returns_window_days', '14' );
+		const orderId = seedOrder( { completedDaysAgo: 30 } );
+
+		await page.goto( requestFormUrl( orderId ) );
+
+		await expect( page.locator( NOTICE_ERROR ) ).toContainText(
+			'iade süresi'
+		);
+		await expect( page.locator( '.hez-return-form' ) ).toHaveCount( 0 );
+	} );
+
+	test( 'süre içindeki sipariş kabul ediliyor ve son tarih gösteriliyor', async ( {
+		page,
+	} ) => {
+		setOption( 'hezarfen_returns_window_days', '14' );
+		const orderId = seedOrder( { completedDaysAgo: 3 } );
+
+		await page.goto( requestFormUrl( orderId ) );
+
+		await expect( page.locator( '.hez-return-form' ) ).toBeVisible();
+		await expect( page.locator( '.hez-returns__deadline' ) ).toContainText(
+			'son iade tarihi'
+		);
+	} );
+
+	test( 'süre 0 iken zaman sınırı uygulanmıyor', async ( { page } ) => {
+		setOption( 'hezarfen_returns_window_days', '0' );
+		const orderId = seedOrder( { completedDaysAgo: 400 } );
+
+		try {
+			await page.goto( requestFormUrl( orderId ) );
+
+			await expect( page.locator( '.hez-return-form' ) ).toBeVisible();
+			// No window means no deadline line to show.
+			await expect(
+				page.locator( '.hez-returns__deadline' )
+			).toHaveCount( 0 );
+		} finally {
+			setOption( 'hezarfen_returns_window_days', '14' );
+		}
+	} );
+
+	test( 'uygun olmayan sipariş durumu iade talebini engelliyor', async ( {
+		page,
+	} ) => {
+		const orderId = seedOrder( { status: 'processing' } );
+
+		await page.goto( requestFormUrl( orderId ) );
+
+		await expect( page.locator( NOTICE_ERROR ) ).toContainText(
+			'durumu iade talebine uygun değil'
+		);
+	} );
+
+	test( 'ayarlarda izin verilen durum eklenince talep açılabiliyor', async ( {
+		page,
+	} ) => {
+		const orderId = seedOrder( { status: 'processing' } );
+
+		setEligibleStatuses( [ 'wc-completed', 'wc-processing' ] );
+
+		try {
+			await page.goto( requestFormUrl( orderId ) );
+			await expect( page.locator( '.hez-return-form' ) ).toBeVisible();
+		} finally {
+			setEligibleStatuses( [ 'wc-completed' ] );
+		}
+	} );
+
+	test( 'tamamen iade edilmiş siparişte seçilecek ürün kalmıyor', async ( {
+		page,
+	} ) => {
+		const orderId = seedOrder( { quantity: 2 } );
+		seedReturn( { orderId, quantity: 2 } );
+
+		await page.goto( requestFormUrl( orderId ) );
+
+		await expect( page.locator( NOTICE_ERROR ) ).toContainText(
+			'iade edilebilecek ürün kalmadı'
+		);
+	} );
+
+	test( 'reddedilen talep ayırdığı adedi geri bırakıyor', async ( {
+		page,
+	} ) => {
+		const orderId = seedOrder( { quantity: 2 } );
+		seedReturn( { orderId, quantity: 2, status: 'rejected' } );
+
+		await page.goto( requestFormUrl( orderId ) );
+
+		// A rejected request must not keep the units locked forever.
+		await expect( page.locator( '.hez-return-form' ) ).toBeVisible();
+		await expect(
+			page.locator( '[data-hez-item] .hez-item__meta' ).first()
+		).toContainText( '2 adet' );
+	} );
+
+	test( 'dijital ürünler iade listesinde yer almıyor', async ( { page } ) => {
+		const orderId = seedDigitalOrder();
+		seededOrders.push( orderId );
+
+		await page.goto( requestFormUrl( orderId ) );
+
+		await expect( page.locator( NOTICE_ERROR ) ).toContainText(
+			'iade edilebilecek ürün kalmadı'
+		);
+	} );
+
+	test( 'WooCommerce üzerinden iade edilen adet düşülüyor', async ( {
+		page,
+	} ) => {
+		const orderId = seedOrder( { quantity: 3 } );
+
+		// The returns module has to respect a refund it did not create.
+		refundFirstLine( orderId, 1 );
+
+		await page.goto( requestFormUrl( orderId ) );
+
+		await expect(
+			page.locator( '[data-hez-item] .hez-item__meta' ).first()
+		).toContainText( '2 adet' );
+	} );
+
+	test( 'tamamlanan talebin adedi WC iadesiyle iki kez düşülmüyor', async ( {
+		page,
+	} ) => {
+		const orderId = seedOrder( { quantity: 3 } );
+		const seeded = seedReturn( { orderId, quantity: 1 } );
+
+		advanceReturn( seeded.id, [ 'approved', 'received', 'completed' ] );
+
+		// Settling a finished return in WooCommerce describes the same unit
+		// the request already accounted for, not a second one.
+		refundFirstLine( orderId, 1 );
+
+		await page.goto( requestFormUrl( orderId ) );
+
+		await expect(
+			page.locator( '[data-hez-item] .hez-item__meta' ).first()
+		).toContainText( '2 adet' );
+	} );
+
+	test( 'müşterisi olmayan sipariş iade talebine kapalı', async () => {
+		const orderId = seedOrder( { customerId: '0' } );
+
+		// Nothing about the flow works without an account: no one could open,
+		// view or follow such a request afterwards.
+		expect( orderEligibilityError( orderId ) ).toBe(
+			'hezarfen_returns_guest_order'
+		);
+	} );
+} );
