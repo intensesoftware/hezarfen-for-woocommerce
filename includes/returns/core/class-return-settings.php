@@ -101,7 +101,26 @@ class Return_Settings {
 			)
 		);
 
-		return $statuses ? $statuses : array( 'completed' );
+		$statuses = $statuses ? $statuses : array( 'completed' );
+
+		/**
+		 * Filters the order statuses whose orders may be returned.
+		 *
+		 * The free plugin stores this as a single option and renders a locked
+		 * preview of the field; Pro (or a site) can drive the value at runtime
+		 * here without depending on the option's stored shape. Values are
+		 * status keys without the `wc-` prefix.
+		 *
+		 * @param string[] $statuses Eligible status keys.
+		 */
+		$filtered = array_values(
+			array_filter( array_map( 'strval', (array) apply_filters( 'hezarfen_returns_eligible_order_statuses', $statuses ) ) )
+		);
+
+		// Never let the filter collapse to an empty list: an empty value reads
+		// downstream as "no status is eligible", which would silently make
+		// every order non-returnable. Fall back to the stored statuses.
+		return $filtered ? $filtered : $statuses;
 	}
 
 	/**

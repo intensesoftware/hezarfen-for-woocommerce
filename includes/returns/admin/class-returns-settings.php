@@ -226,7 +226,26 @@ class Returns_Settings {
 			}
 
 			foreach ( $after[ $id ] as $placement ) {
-				$merged = array_merge( $merged, Returns_Pro_Teasers::get_fields( $placement ) );
+				/**
+				 * Filters the settings fields rendered for one Pro-backed
+				 * placement.
+				 *
+				 * The free plugin renders a single disabled preview row per
+				 * placement (`statuses`, `products`, `reasons`, `photos`). Pro
+				 * replaces a placement it implements by returning its own real
+				 * setting fields here — or an empty array to drop the row
+				 * entirely — so the swap needs no change to the free plugin.
+				 *
+				 * @param array<int, array<string, mixed>> $fields    Default locked preview row.
+				 * @param string                           $placement Placement key.
+				 */
+				$placement_fields = apply_filters(
+					'hezarfen_returns_setting_fields',
+					Returns_Pro_Teasers::get_fields( $placement ),
+					$placement
+				);
+
+				$merged = array_merge( $merged, (array) $placement_fields );
 			}
 		}
 

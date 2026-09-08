@@ -345,6 +345,8 @@ Tam liste için `specs/shared/hooks.md`. Öne çıkanlar:
 - action: `hezarfen_hepsijet_shipment_cancelled` — hepsiJET gönderisi iptal edilince; modül bunu dinleyip talebin randevusunu serbest bırakır `(int $order_id, string $delivery_no)`
 - action: `hezarfen_returns_loaded` — modül ayağa kalkınca; sağlayıcılar burada kaydedilir `(Returns_Module $module)`
 - filter: `hezarfen_returns_reason_providers` / `..._policy_providers` / `..._shipping_methods`
+- filter: `hezarfen_returns_eligible_order_statuses` — iade edilebilir sipariş durumlarını çalışma anında belirle (Pro seam'i; boş dönerse yok sayılır)
+- filter: `hezarfen_returns_setting_fields` — bir Pro placement'ının kilitli önizleme satırını gerçek ayar alanıyla değiştir ya da kaldır `(array $fields, string $placement)`
 - filter: `hezarfen_returns_return_address` — talebin gönderileceği adres
 
 ## Sınama Notları

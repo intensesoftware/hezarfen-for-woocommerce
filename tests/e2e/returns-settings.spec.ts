@@ -46,6 +46,20 @@ if ( ! defined( 'HEZARFEN_SHOW_PRO_PROMOTIONS' ) ) {
 const LOCKED_STATUSES_ROW =
 	'tr.hez-locked-row:has-text("İade edilebilir sipariş durumları")';
 
+const LOCKED_REASONS_ROW = 'tr.hez-locked-row:has-text("İade sebepleri")';
+
+/**
+ * Stands in for a Pro that implements one placement: the `hezarfen_returns_setting_fields`
+ * seam lets it drop a locked preview row (here, reasons) without any change to
+ * the free plugin.
+ */
+const SWAP_SLUG = 'hezarfen-e2e-returns-setting-fields';
+const SWAP_PHP = `<?php
+add_filter( 'hezarfen_returns_setting_fields', function ( $fields, $placement ) {
+	return 'reasons' === $placement ? array() : $fields;
+}, 10, 2 );
+`;
+
 let optionSnapshot: Record< string, string >;
 
 test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
@@ -134,6 +148,26 @@ test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
 					`var_export( get_option( '${ id }', 'MISSING' ) );`,
 				] ).trim()
 			).toBe( "'MISSING'" );
+		}
+	} );
+
+	test( 'Pro placement filtresi kilitli satırı değiştirebiliyor', async ( {
+		page,
+	} ) => {
+		writeMuPlugin( SWAP_SLUG, SWAP_PHP );
+
+		try {
+			await page.goto( SETTINGS_URL );
+
+			// The seam a future Pro relies on: it returns its own fields (or an
+			// empty array) for a placement it implements, and the locked
+			// preview goes away — here the reasons row is dropped while the
+			// others stay. A regression on the splice filter would silently
+			// block Pro from ever replacing these rows.
+			await expect( page.locator( LOCKED_REASONS_ROW ) ).toHaveCount( 0 );
+			await expect( page.locator( LOCKED_STATUSES_ROW ) ).toBeVisible();
+		} finally {
+			deleteMuPlugin( SWAP_SLUG );
 		}
 	} );
 
