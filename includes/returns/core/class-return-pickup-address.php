@@ -132,12 +132,37 @@ class Return_Pickup_Address {
 		foreach ( self::FIELDS as $field ) {
 			$value = isset( $address[ $field ] ) && is_scalar( $address[ $field ] ) ? (string) $address[ $field ] : '';
 
-			$clean[ $field ] = trim( $value );
+			$clean[ $field ] = self::compose( trim( $value ) );
 		}
 
 		$clean['address'] = preg_replace( '/\s*\R\s*/u', ' ', $clean['address'] );
 
 		return $clean;
+	}
+
+	/**
+	 * Recomposes a string to Unicode NFC.
+	 *
+	 * The official district/neighbourhood lists are NFC, but a value that
+	 * reached us from a macOS client — a pre-filled order address, say — can be
+	 * NFD, where "ş"/"İ" arrive as a base letter plus a combining mark. Byte
+	 * for byte that never matches the list, so an otherwise-correct district
+	 * would be rejected at the barcode step. Normalising here makes the match
+	 * encoding-insensitive. The intl extension is optional (the plugin floor is
+	 * PHP 7.0), so this is a no-op when Normalizer is absent.
+	 *
+	 * @param string $value String to recompose.
+	 *
+	 * @return string
+	 */
+	private static function compose( $value ) {
+		if ( '' === $value || ! class_exists( 'Normalizer' ) ) {
+			return $value;
+		}
+
+		$composed = \Normalizer::normalize( $value, \Normalizer::FORM_C );
+
+		return false === $composed ? $value : $composed;
 	}
 
 	/**

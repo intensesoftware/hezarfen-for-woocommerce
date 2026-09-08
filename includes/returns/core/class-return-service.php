@@ -1059,6 +1059,16 @@ class Return_Service {
 	 * be taken within a few seconds the caller is told the request is busy
 	 * rather than left to race.
 	 *
+	 * The lock is connection-scoped. On a standard single-connection wpdb it
+	 * fully serialises the two requests. Behind a connection-splitting drop-in
+	 * (HyperDB/LudicrousDB) the lock query can land on a read replica while the
+	 * write runs on the primary, so there it degrades to the in-callback
+	 * fresh-reload guard — which still stops the ordinary sequential
+	 * double-click (the second request reloads and sees the first's write), but
+	 * not two genuinely simultaneous ones. The name is qualified with the
+	 * database so installs sharing a MySQL server do not serialise against each
+	 * other on a shared return id.
+	 *
 	 * @param Return_Request $request  Request to lock on.
 	 * @param callable       $callback Work to run under the lock.
 	 *
@@ -1075,10 +1085,24 @@ class Return_Service {
 			return $callback();
 		}
 
-		$key    = 'hezarfen_return_' . $id;
-		$locked = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, %d)', $key, 5 ) );
+		// GET_LOCK names are server-global (not schema-scoped), so the key is
+		// qualified with the database and prefix; hashed to stay within the
+		// 64-char name limit.
+		$key = 'hezret_' . md5( $wpdb->dbname . '|' . $wpdb->prefix . '|' . $id );
+		$got = $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, %d)', $key, 5 ) );
 
-		if ( 1 !== $locked ) {
+		// GET_LOCK returns '1' when acquired, '0' on wait timeout, and NULL on
+		// error — including databases/proxies where it is unsupported. Only a
+		// timeout means genuine contention (another request is mid-operation on
+		// this very request); NULL must degrade to running WITHOUT the mutex
+		// rather than blocking a legitimate action forever. The in-callback
+		// fresh-reload guards still hold either way, just without cross-request
+		// serialisation.
+		if ( null === $got ) {
+			return $callback();
+		}
+
+		if ( '1' !== (string) $got ) {
 			return new \WP_Error(
 				'hezarfen_returns_busy',
 				__( 'Bu talep üzerinde başka bir işlem sürüyor. Lütfen birkaç saniye sonra tekrar deneyin.', 'hezarfen-for-woocommerce' )
