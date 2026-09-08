@@ -102,6 +102,15 @@ class Return_Request {
 	protected $return_address_id = '';
 
 	/**
+	 * ID of the WooCommerce refund this return was settled with, or 0 while
+	 * none has been recorded. Kept on the request so completing it twice
+	 * cannot refund the same units twice.
+	 *
+	 * @var int
+	 */
+	protected $refund_id = 0;
+
+	/**
 	 * The address the carrier collects the parcel from, as the parts
 	 * Return_Pickup_Address defines. Empty for methods that need no pickup.
 	 *
@@ -180,6 +189,7 @@ class Return_Request {
 		$this->tracking_number   = $this->string_prop( $data, 'tracking_number', $this->tracking_number );
 		$this->pickup_date       = $this->string_prop( $data, 'pickup_date', $this->pickup_date );
 		$this->return_address_id = $this->string_prop( $data, 'return_address_id', $this->return_address_id );
+		$this->refund_id         = $this->int_prop( $data, 'refund_id', $this->refund_id );
 
 		if ( array_key_exists( 'pickup_address', $data ) ) {
 			// Arrives as an array from the form and as the stored JSON from
@@ -436,6 +446,26 @@ class Return_Request {
 	}
 
 	/**
+	 * ID of the WooCommerce refund this return was settled with.
+	 *
+	 * @return int Zero when none has been recorded.
+	 */
+	public function get_refund_id() {
+		return $this->refund_id;
+	}
+
+	/**
+	 * Records the WooCommerce refund this return was settled with.
+	 *
+	 * @param int $refund_id Refund post ID.
+	 *
+	 * @return void
+	 */
+	public function set_refund_id( $refund_id ) {
+		$this->refund_id = max( 0, (int) $refund_id );
+	}
+
+	/**
 	 * Customer note.
 	 *
 	 * @return string
@@ -668,6 +698,7 @@ class Return_Request {
 			'tracking_number'   => $this->tracking_number,
 			'pickup_date'       => $this->pickup_date,
 			'return_address_id' => $this->return_address_id,
+			'refund_id'         => $this->refund_id,
 			'pickup_address'    => $this->pickup_address ? wp_json_encode( $this->pickup_address ) : '',
 			'customer_note'     => $this->customer_note,
 			'refund_amount'     => $this->refund_amount,

@@ -3,8 +3,10 @@ import { deleteOrder } from './helpers/orders';
 import { deleteMuPlugin, writeMuPlugin } from './helpers/mu-plugin';
 import { NOTICE_SUCCESS } from './helpers/notices';
 import {
+	announceCarrierCancellation,
 	clearReturns,
 	customerBookingError,
+	customerUnbookError,
 	enableReturns,
 	getReturnShipment,
 	getReturnStatus,
@@ -74,6 +76,10 @@ add_action( 'hezarfen_returns_loaded', function () {
 				return true;
 			}
 
+			public function requires_pickup_address() {
+				return false;
+			}
+
 			public function get_booking_options( $request ) {
 				return array(
 					'2099-01-05' => '5 Ocak 2099',
@@ -91,6 +97,14 @@ add_action( 'hezarfen_returns_loaded', function () {
 				$request->set_tracking_number( 'E2E-BARKOD-' . $request->get_id() );
 				$request->set_courier( 'e2e-kargo' );
 				$request->set_pickup_date( $choice );
+
+				return true;
+			}
+
+			public function cancel_booking( $request ) {
+				$request->set_tracking_number( '' );
+				$request->set_courier( '' );
+				$request->set_pickup_date( '' );
 
 				return true;
 			}
@@ -123,11 +137,15 @@ const OPTION_KEYS = [
 let optionSnapshot: Record< string, string >;
 const seededOrders: string[] = [];
 
-function seedApprovedReturn(): { id: string; number: string } {
+function seedApprovedReturn(): {
+	id: string;
+	number: string;
+	orderId: string;
+} {
 	const orderId = seedReturnableOrder();
 	seededOrders.push( orderId );
 
-	return seedReturn( { orderId, status: 'approved' } );
+	return { ...seedReturn( { orderId, status: 'approved' } ), orderId };
 }
 
 test.describe( 'Hezarfen iade — müşteri kargo randevusu', () => {
@@ -177,8 +195,11 @@ test.describe( 'Hezarfen iade — müşteri kargo randevusu', () => {
 
 		// The barcode and the day are what the customer came for, so they
 		// have to be on the page — not only in the database.
+		// The carrier's barcode is a code the courier reads out, so it lands
+		// in the code card — not in the tracking pair the "customer ships it"
+		// flow prints.
 		await expect(
-			page.locator( '.hez-tracking__value' ).first()
+			page.locator( '.hez-code__value' ).first()
 		).toContainText( `E2E-BARKOD-${ request.id }` );
 		await expect( page.locator( '.hez-panel' ) ).toContainText( '2099' );
 
@@ -230,5 +251,53 @@ test.describe( 'Hezarfen iade — müşteri kargo randevusu', () => {
 			'e2e_slot_taken'
 		);
 		expect( getReturnShipment( request.id ).tracking ).toBe( '' );
+	} );
+
+	test( 'randevu iptal edilince gün seçici geri gelir', async ( {
+		page,
+	} ) => {
+		const request = seedApprovedReturn();
+
+		expect( customerBookingError( request.id, OFFERED_DAY ) ).toBe( '' );
+		expect( customerUnbookError( request.id ) ).toBe( '' );
+
+		// Nothing of the booking survives: a half cleared request would
+		// leave the customer looking at a pickup day with no barcode.
+		const shipment = getReturnShipment( request.id );
+		expect( shipment.tracking ).toBe( '' );
+		expect( shipment.pickup ).toBe( '' );
+
+		// Cancelling is not withdrawing: the request is still approved and
+		// the picker is back, so another day can be chosen right away.
+		expect( getReturnStatus( request.id ) ).toBe( 'approved' );
+
+		await loginAsReturnsCustomer( page );
+		await page.goto( returnDetailUrl( request.id ) );
+		await expect( page.locator( '#hez-pickup-date' ) ).toBeVisible();
+	} );
+
+	test( 'mağaza kargoyu iptal edince talep de randevusuz kalır', async ( {
+		page,
+	} ) => {
+		const request = seedApprovedReturn();
+
+		expect( customerBookingError( request.id, OFFERED_DAY ) ).toBe( '' );
+
+		const booked = getReturnShipment( request.id );
+		expect( booked.tracking ).not.toBe( '' );
+
+		// The order screen cancels the shipment without knowing a return is
+		// attached to it. A request left holding that barcode would have the
+		// customer waiting at home for a courier that was called off.
+		announceCarrierCancellation( request.orderId, booked.tracking );
+
+		const after = getReturnShipment( request.id );
+		expect( after.tracking ).toBe( '' );
+		expect( after.pickup ).toBe( '' );
+		expect( getReturnStatus( request.id ) ).toBe( 'approved' );
+
+		await loginAsReturnsCustomer( page );
+		await page.goto( returnDetailUrl( request.id ) );
+		await expect( page.locator( '#hez-pickup-date' ) ).toBeVisible();
 	} );
 } );

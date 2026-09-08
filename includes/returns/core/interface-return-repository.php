@@ -39,8 +39,9 @@ interface Return_Repository_Interface {
 	/**
 	 * Queries requests.
 	 *
-	 * Supported arguments: order_id, customer_id, customer_email, status
-	 * (string or array), search, orderby, order, limit, offset.
+	 * Supported arguments: order_id, customer_id, customer_email,
+	 * tracking_number, status (string or array), search, orderby, order,
+	 * limit, offset.
 	 *
 	 * @param array<string, mixed> $args Query arguments.
 	 *

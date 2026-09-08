@@ -220,12 +220,19 @@ class Return_Service {
 		);
 
 		if ( $shipping_error ) {
-			// Approval still stands; the merchant just has to fall back to
-			// a manual label, so the failure is recorded internally.
+			// Approval still stands; the request just moved to the manual
+			// method, so the reason and the consequence are recorded
+			// together — the merchant reads one line and knows the customer
+			// will now be shown a return address instead of a pickup.
 			$this->log(
 				$request,
 				Return_Event::TYPE_SHIPPING,
-				$shipping_error->get_error_message(),
+				sprintf(
+					/* translators: 1: reason the carrier declined, 2: label of the method the request fell back to. */
+					__( '%1$s Talep "%2$s" yöntemine aktarıldı.', 'hezarfen-for-woocommerce' ),
+					$shipping_error->get_error_message(),
+					$this->shipping->get_fallback_method()->get_label()
+				),
 				array(
 					'actor'               => $this->system_actor(),
 					'is_customer_visible' => false,
@@ -249,6 +256,101 @@ class Return_Service {
 		 * @param string         $old_status Previous status.
 		 */
 		do_action( 'hezarfen_return_status_' . $new_status, $request, $old_status );
+
+		return true;
+	}
+
+	/**
+	 * Marks a request completed and, when asked, records the refund.
+	 *
+	 * The two are separate steps on purpose. Completion is the merchant
+	 * saying the return is settled; the refund is a WooCommerce record of
+	 * money leaving the order, and a store that already refunded by hand
+	 * must not have it recorded twice. So a failed refund never rolls the
+	 * completion back — it is reported instead, and the merchant refunds
+	 * from the order screen.
+	 *
+	 * @param Return_Request       $request Request to complete.
+	 * @param array<string, mixed> $context Optional `message`, `actor` and
+	 *                                      `refund` (bool, defaults to the
+	 *                                      store setting).
+	 *
+	 * @return true|\WP_Error
+	 */
+	public function complete( $request, $context = array() ) {
+		$changed = $this->change_status( $request, Return_Status::COMPLETED, $context );
+
+		if ( is_wp_error( $changed ) ) {
+			return $changed;
+		}
+
+		$refund = array_key_exists( 'refund', $context )
+			? (bool) $context['refund']
+			: Return_Settings::auto_refund_enabled();
+
+		if ( ! $refund ) {
+			return true;
+		}
+
+		$created = ( new Return_Refunds() )->create_for_request( $request, Return_Settings::restock_enabled() );
+
+		if ( is_wp_error( $created ) ) {
+			$this->log(
+				$request,
+				Return_Event::TYPE_NOTE,
+				sprintf(
+					/* translators: %s: reason the refund could not be recorded. */
+					__( 'WooCommerce iade kaydı oluşturulamadı: %s', 'hezarfen-for-woocommerce' ),
+					$created->get_error_message()
+				),
+				array(
+					'actor'               => $this->system_actor(),
+					'is_customer_visible' => false,
+				)
+			);
+
+			// The goods came back and the request is closed; only the
+			// bookkeeping is missing. Saying so plainly keeps the merchant
+			// from re-running an action that already succeeded.
+			return new \WP_Error(
+				$created->get_error_code(),
+				sprintf(
+					/* translators: %s: why the refund could not be recorded. */
+					__( 'Talep tamamlandı, ancak WooCommerce iade kaydı oluşturulamadı: %s', 'hezarfen-for-woocommerce' ),
+					$created->get_error_message()
+				)
+			);
+		}
+
+		$request->set_refund_id( $created->get_id() );
+
+		$saved = $this->repository->save( $request );
+
+		if ( is_wp_error( $saved ) ) {
+			return $saved;
+		}
+
+		$this->log(
+			$request,
+			Return_Event::TYPE_NOTE,
+			sprintf(
+				/* translators: %s: refunded amount, formatted. */
+				__( 'Siparişe %s tutarında WooCommerce iade kaydı işlendi. Para transferini kendiniz yapmanız gerekir.', 'hezarfen-for-woocommerce' ),
+				wp_strip_all_tags( wc_price( $created->get_amount(), array( 'currency' => $request->get_currency() ) ) )
+			),
+			array(
+				'actor'               => isset( $context['actor'] ) ? $context['actor'] : null,
+				'is_customer_visible' => false,
+			)
+		);
+
+		/**
+		 * Fires after a completed return was recorded as a WooCommerce refund.
+		 *
+		 * @param Return_Request   $request The request.
+		 * @param \WC_Order_Refund $created The refund that was written.
+		 */
+		do_action( 'hezarfen_return_refund_created', $request, $created );
 
 		return true;
 	}
@@ -367,6 +469,51 @@ class Return_Service {
 			Return_Event::TYPE_SHIPPING,
 			__( 'Müşteri kargo randevusunu iptal etti.', 'hezarfen-for-woocommerce' ),
 			array( 'actor' => $this->customer_actor( $request ) )
+		);
+
+		return true;
+	}
+
+	/**
+	 * Forgets a booking that no longer exists at the carrier.
+	 *
+	 * The carrier is not called: this is the path for a shipment that was
+	 * already released somewhere else — the merchant cancelling it from the
+	 * order screen, or the carrier dropping it — where the only thing left
+	 * to do is stop showing the customer a barcode and a pickup day that
+	 * nobody will honour. The request stays approved, so they can simply
+	 * book another day.
+	 *
+	 * @param Return_Request $request Request holding the stale booking.
+	 * @param string         $message What to write on the timeline.
+	 *
+	 * @return true|\WP_Error
+	 */
+	public function release_booking( $request, $message = '' ) {
+		if ( '' === $request->get_tracking_number() ) {
+			return new \WP_Error(
+				'hezarfen_returns_no_booking',
+				__( 'Bu talebe bağlı bir kargo randevusu yok.', 'hezarfen-for-woocommerce' )
+			);
+		}
+
+		$request->set_tracking_number( '' );
+		$request->set_courier( '' );
+		$request->set_pickup_date( '' );
+
+		$saved = $this->repository->save( $request );
+
+		if ( is_wp_error( $saved ) ) {
+			return $saved;
+		}
+
+		$this->log(
+			$request,
+			Return_Event::TYPE_SHIPPING,
+			'' !== $message
+				? $message
+				: __( 'Kargo randevusu iptal edildi. Dilerseniz yeni bir alım günü seçebilirsiniz.', 'hezarfen-for-woocommerce' ),
+			array( 'actor' => $this->system_actor() )
 		);
 
 		return true;

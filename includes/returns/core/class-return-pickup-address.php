@@ -86,25 +86,33 @@ class Return_Pickup_Address {
 	 * belong to the code would be rejected downstream with nothing pointing
 	 * back at the form that caused it.
 	 *
-	 * @param array<string, mixed> $input Raw `$_POST` slice.
+	 * @param mixed $input Raw `$_POST` slice, whatever the request carried.
 	 *
 	 * @return array<string, string>
 	 */
 	public static function from_input( $input ) {
-		$input = is_array( $input ) ? $input : array();
+		$input = is_array( $input ) ? wp_unslash( $input ) : array();
 
-		$city_code = isset( $input['city_code'] ) ? sanitize_text_field( wp_unslash( $input['city_code'] ) ) : '';
+		$read = function ( $field ) use ( $input ) {
+			return isset( $input[ $field ] ) && is_scalar( $input[ $field ] )
+				? sanitize_text_field( (string) $input[ $field ] )
+				: '';
+		};
+
+		$city_code = $read( 'city_code' );
 
 		return self::normalize(
 			array(
-				'first_name'   => isset( $input['first_name'] ) ? sanitize_text_field( wp_unslash( $input['first_name'] ) ) : '',
-				'last_name'    => isset( $input['last_name'] ) ? sanitize_text_field( wp_unslash( $input['last_name'] ) ) : '',
-				'phone'        => isset( $input['phone'] ) ? sanitize_text_field( wp_unslash( $input['phone'] ) ) : '',
+				'first_name'   => $read( 'first_name' ),
+				'last_name'    => $read( 'last_name' ),
+				'phone'        => $read( 'phone' ),
 				'city_code'    => $city_code,
 				'city'         => Mahalle_Local::get_city_name_by_plate_num( $city_code ),
-				'district'     => isset( $input['district'] ) ? sanitize_text_field( wp_unslash( $input['district'] ) ) : '',
-				'neighborhood' => isset( $input['neighborhood'] ) ? sanitize_text_field( wp_unslash( $input['neighborhood'] ) ) : '',
-				'address'      => isset( $input['address'] ) ? sanitize_textarea_field( wp_unslash( $input['address'] ) ) : '',
+				'district'     => $read( 'district' ),
+				'neighborhood' => $read( 'neighborhood' ),
+				'address'      => isset( $input['address'] ) && is_scalar( $input['address'] )
+					? sanitize_textarea_field( (string) $input['address'] )
+					: '',
 			)
 		);
 	}
@@ -112,7 +120,8 @@ class Return_Pickup_Address {
 	/**
 	 * Trims every part and keeps only the canonical keys.
 	 *
-	 * @param array<string, mixed> $address Address parts.
+	 * @param mixed $address Address parts; also the decoded JSON of a stored
+	 *                       address, which is why the shape is not assumed.
 	 *
 	 * @return array<string, string>
 	 */
@@ -121,7 +130,9 @@ class Return_Pickup_Address {
 		$clean   = self::empty_address();
 
 		foreach ( self::FIELDS as $field ) {
-			$clean[ $field ] = isset( $address[ $field ] ) ? trim( (string) $address[ $field ] ) : '';
+			$value = isset( $address[ $field ] ) && is_scalar( $address[ $field ] ) ? (string) $address[ $field ] : '';
+
+			$clean[ $field ] = trim( $value );
 		}
 
 		$clean['address'] = preg_replace( '/\s*\R\s*/u', ' ', $clean['address'] );

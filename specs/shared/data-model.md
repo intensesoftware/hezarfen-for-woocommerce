@@ -75,8 +75,10 @@ Plugin'in yazdığı/okuduğu tüm option key'leri, order meta'ları ve özel ta
 | `hezarfen_returns_db_version` | string | returns | İade tablolarının şema sürümü (plugin sürümünden bağımsız) |
 | `hezarfen_returns_window_days` | int | returns | Global iade süresi; `0` = sınırsız |
 | `hezarfen_returns_window_reference` | completed\|paid\|created | returns | Sürenin sayılacağı sipariş tarihi |
-| `hezarfen_returns_eligible_order_statuses` | array | returns | İade açılabilecek sipariş durumları (`wc-` önekli saklanır) |
+| `hezarfen_returns_eligible_order_statuses` | array | returns | İade açılabilecek sipariş durumları (`wc-` önekli saklanır). Ücretsiz sürümde ayar ekranında yok; varsayılan `completed`, Pro yazar |
 | `hezarfen_returns_shipping_method` | string | returns | Aktif iade gönderim yöntemi anahtarı |
+| `hezarfen_returns_auto_refund` | yes/no | returns | Talep tamamlanınca WooCommerce iade kaydı oluştur (varsayılan `no`) |
+| `hezarfen_returns_restock` | yes/no | returns | O iade kaydında stoğu geri ekle (varsayılan `no`) |
 | `hezarfen_returns_instructions` | string | returns | Onay sonrası müşteriye gösterilen yönerge |
 | `hezarfen_returns_endpoints_version` | string | returns | Endpoint imzası; değişince rewrite flush tetiklenir |
 | `hezarfen_returns_address_label` | string | returns | İade adresi başlığı |
@@ -185,6 +187,8 @@ CREATE TABLE wp_hezarfen_returns (
   tracking_number   VARCHAR(100) NOT NULL DEFAULT '',
   pickup_date       VARCHAR(10)  NOT NULL DEFAULT '',
   return_address_id VARCHAR(64)  NOT NULL DEFAULT '',
+  refund_id         BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  pickup_address    TEXT NULL,
   customer_note     TEXT NULL,
   refund_amount     DECIMAL(19,4) NOT NULL DEFAULT 0.0000,
   currency          VARCHAR(10)  NOT NULL DEFAULT '',

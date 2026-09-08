@@ -23,6 +23,8 @@ class Return_Settings {
 	const OPTION_ELIGIBLE_STATUSES = 'hezarfen_returns_eligible_order_statuses';
 	const OPTION_SHIPPING_METHOD   = 'hezarfen_returns_shipping_method';
 	const OPTION_INSTRUCTIONS      = 'hezarfen_returns_instructions';
+	const OPTION_AUTO_REFUND       = 'hezarfen_returns_auto_refund';
+	const OPTION_RESTOCK           = 'hezarfen_returns_restock';
 
 	const OPTION_ADDRESS_LABEL        = 'hezarfen_returns_address_label';
 	const OPTION_ADDRESS_CONTACT      = 'hezarfen_returns_address_contact';
@@ -100,6 +102,28 @@ class Return_Settings {
 		);
 
 		return $statuses ? $statuses : array( 'completed' );
+	}
+
+	/**
+	 * Whether completing a request should record a WooCommerce refund.
+	 *
+	 * Off by default, and deliberately so: a store that already refunds by
+	 * hand in WooCommerce would end up with the same money recorded twice,
+	 * and a refund is not something to undo casually.
+	 *
+	 * @return bool
+	 */
+	public static function auto_refund_enabled() {
+		return 'yes' === get_option( self::OPTION_AUTO_REFUND, 'no' );
+	}
+
+	/**
+	 * Whether that refund should also put the units back in stock.
+	 *
+	 * @return bool
+	 */
+	public static function restock_enabled() {
+		return 'yes' === get_option( self::OPTION_RESTOCK, 'no' );
 	}
 
 	/**

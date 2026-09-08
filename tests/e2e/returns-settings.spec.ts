@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { loginAsAdmin } from './helpers/auth';
+import { deleteMuPlugin, writeMuPlugin } from './helpers/mu-plugin';
 import { enableReturns } from './helpers/returns';
 import { restoreOptions, snapshotOptions } from './helpers/wp-options';
 import { wp } from './helpers/wp-cli';
@@ -23,10 +24,27 @@ const OPTION_KEYS = [
 	'hezarfen_returns_window_reference',
 	'hezarfen_returns_shipping_method',
 	'hezarfen_returns_instructions',
+	'hezarfen_returns_auto_refund',
+	'hezarfen_returns_restock',
 	'hezarfen_returns_address_contact',
 	'hezarfen_returns_address_line',
 	'hezarfen_returns_address_city',
 ];
+
+/**
+ * The promotions flag is a constant, not an option, so a mu-plugin is the
+ * only way to flip it from a spec.
+ */
+const PROMO_SLUG = 'hezarfen-e2e-returns-promotions';
+const PROMO_PHP = `<?php
+if ( ! defined( 'HEZARFEN_SHOW_PRO_PROMOTIONS' ) ) {
+	define( 'HEZARFEN_SHOW_PRO_PROMOTIONS', true );
+}
+`;
+
+/** The locked row of a Pro-backed setting, found by the setting's own name. */
+const LOCKED_STATUSES_ROW =
+	'tr.hez-locked-row:has-text("İade edilebilir sipariş durumları")';
 
 let optionSnapshot: Record< string, string >;
 
@@ -67,14 +85,65 @@ test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
 			page.locator( '#hezarfen_returns_window_reference' )
 		).toBeVisible();
 		await expect(
-			page.locator( '#hezarfen_returns_eligible_order_statuses' )
-		).toBeAttached();
-		await expect(
 			page.locator( '#hezarfen_returns_shipping_method' )
+		).toBeVisible();
+		await expect(
+			page.locator( '#hezarfen_returns_auto_refund' )
+		).toBeVisible();
+		await expect(
+			page.locator( '#hezarfen_returns_restock' )
 		).toBeVisible();
 		await expect(
 			page.locator( '#hezarfen_returns_address_line' )
 		).toBeVisible();
+
+		// Which order statuses may be returned is a Pro setting, so the free
+		// section shows the locked row in its place. Asserting on the field
+		// would go green the day someone ships the Pro setting for free.
+		await expect(
+			page.locator( '#hezarfen_returns_eligible_order_statuses' )
+		).toHaveCount( 0 );
+		await expect( page.locator( LOCKED_STATUSES_ROW ) ).toBeVisible();
+	} );
+
+	test( 'kilitli satır kaydetmede boş option yazmıyor', async ( {
+		page,
+	} ) => {
+		await page.goto( SETTINGS_URL );
+		await page.locator( 'button[name="save"]' ).click();
+		await expect( page.locator( '#message.updated.inline' ) ).toBeVisible();
+
+		// The row is marked `is_option => false` precisely so WooCommerce's
+		// default save branch does not write an empty option for it. An empty
+		// value would read back as "no status is eligible", and every order
+		// would quietly stop being returnable.
+		expect(
+			wp( [
+				'eval',
+				`var_export( get_option( 'hezarfen_returns_eligible_order_statuses', 'MISSING' ) );`,
+			] ).trim()
+		).toBe( "'MISSING'" );
+	} );
+
+	test( 'satış bağlantısı yalnızca promosyonlar açıkken çıkıyor', async ( {
+		page,
+	} ) => {
+		// Promotions off, which is the plugin's own default: the merchant
+		// still sees that the setting exists, but is not sold anything.
+		await page.goto( SETTINGS_URL );
+		await expect( page.locator( LOCKED_STATUSES_ROW ) ).toBeVisible();
+		await expect( page.locator( '.hez-locked__cta' ) ).toHaveCount( 0 );
+
+		writeMuPlugin( PROMO_SLUG, PROMO_PHP );
+
+		try {
+			await page.goto( SETTINGS_URL );
+			await expect(
+				page.locator( `${ LOCKED_STATUSES_ROW } .hez-locked__cta` )
+			).toBeVisible();
+		} finally {
+			deleteMuPlugin( PROMO_SLUG );
+		}
 	} );
 
 	test( 'ayarlar kaydediliyor ve option değerleri güncelleniyor', async ( {
@@ -89,6 +158,7 @@ test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
 		await page
 			.locator( '#hezarfen_returns_address_contact' )
 			.fill( 'E2E Ayar Depo' );
+		await page.locator( '#hezarfen_returns_auto_refund' ).check();
 		await page
 			.locator( '#hezarfen_returns_instructions' )
 			.fill( 'Ürünü orijinal kutusunda gönderin.' );
@@ -107,6 +177,9 @@ test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
 		expect(
 			wp( [ 'option', 'get', 'hezarfen_returns_address_contact' ] ).trim()
 		).toBe( 'E2E Ayar Depo' );
+		expect(
+			wp( [ 'option', 'get', 'hezarfen_returns_auto_refund' ] ).trim()
+		).toBe( 'yes' );
 
 		// The saved values survive a reload of the section.
 		await page.goto( SETTINGS_URL );

@@ -141,6 +141,18 @@ class Kargokit_Return_Method implements Return_Shipping_Method_Interface {
 			);
 		}
 
+		$unsupported = $this->check_order_supported( $order );
+
+		if ( is_wp_error( $unsupported ) ) {
+			// Requests approved before the carrier's limits were checked at
+			// approval time can still land here. The customer gets the fact
+			// plus the only thing they can act on.
+			return new \WP_Error(
+				$unsupported->get_error_code(),
+				$unsupported->get_error_message() . ' ' . __( 'Bu talep için mağazayla iletişime geçin.', 'hezarfen-for-woocommerce' )
+			);
+		}
+
 		$pickup   = $this->get_pickup_address( $request );
 		$city     = $pickup['city'];
 		$district = $pickup['district'];
@@ -161,8 +173,8 @@ class Kargokit_Return_Method implements Return_Shipping_Method_Interface {
 		$integration = new \Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration();
 
 		$dates = $integration->get_available_dates_for_return(
-			gmdate( 'Y-m-d' ),
-			gmdate( 'Y-m-d', time() + ( self::PICKUP_SEARCH_DAYS * DAY_IN_SECONDS ) ),
+			self::today(),
+			wp_date( 'Y-m-d', time() + ( self::PICKUP_SEARCH_DAYS * DAY_IN_SECONDS ) ),
 			$city,
 			$district
 		);
@@ -306,6 +318,21 @@ class Kargokit_Return_Method implements Return_Shipping_Method_Interface {
 			return $cancelled;
 		}
 
+		// The shipment also lives on the order as meta, and the order screen
+		// reads its status from there. Left untouched it would keep showing
+		// this pickup as active, with a "Cancel" button that can now only
+		// fail at the carrier. Carrier_Sync stands down for this one write:
+		// the request it would free is the one being freed right here.
+		Carrier_Sync::without_sync(
+			function () use ( $integration, $request, $tracking ) {
+				$integration->mark_shipment_cancelled(
+					$request->get_order_id(),
+					$tracking,
+					__( 'Müşteri randevuyu iptal etti', 'hezarfen-for-woocommerce' )
+				);
+			}
+		);
+
 		$request->set_tracking_number( '' );
 		$request->set_courier( '' );
 		$request->set_pickup_date( '' );
@@ -321,12 +348,44 @@ class Kargokit_Return_Method implements Return_Shipping_Method_Interface {
 	 * Approval alone books nothing — the customer picks the pickup day
 	 * afterwards, from their account.
 	 *
+	 * The one thing that has to be settled here is whether the carrier will
+	 * take this order at all. Kargokit refuses cash-on-delivery orders, and
+	 * finding that out at approval time hands the request to the manual
+	 * method (Return_Service does that with the error below) while the
+	 * merchant is still looking at it. Left until booking, the customer
+	 * would pick a pickup day and only then be told the carrier will not
+	 * come — with no other way to send the parcel back.
+	 *
 	 * @param \Hezarfen\Inc\Returns\Core\Return_Request $request Approved request.
 	 *
-	 * @return true
+	 * @return true|\WP_Error
 	 */
 	public function handle_approved( $request ) {
-		unset( $request );
+		$order = $request->get_order();
+
+		if ( ! $order ) {
+			return true;
+		}
+
+		$unsupported = $this->check_order_supported( $order );
+
+		return is_wp_error( $unsupported ) ? $unsupported : true;
+	}
+
+	/**
+	 * Whether Kargokit will issue a return label for this order at all.
+	 *
+	 * @param \WC_Order $order Order being returned from.
+	 *
+	 * @return true|\WP_Error
+	 */
+	private function check_order_supported( $order ) {
+		if ( 'cod' === $order->get_payment_method() ) {
+			return new \WP_Error(
+				'hezarfen_returns_kargokit_cod',
+				__( 'hepsiJET (Kargokit) kapıda ödemeli siparişler için iade barkodu oluşturmuyor.', 'hezarfen-for-woocommerce' )
+			);
+		}
 
 		return true;
 	}
@@ -402,7 +461,7 @@ class Kargokit_Return_Method implements Return_Shipping_Method_Interface {
 	 * @return string
 	 */
 	private function get_options_cache_key( $city, $district ) {
-		return self::OPTIONS_CACHE_PREFIX . md5( $city . '|' . $district . '|' . gmdate( 'Y-m-d' ) );
+		return self::OPTIONS_CACHE_PREFIX . md5( $city . '|' . $district . '|' . self::today() );
 	}
 
 	/**
@@ -417,7 +476,7 @@ class Kargokit_Return_Method implements Return_Shipping_Method_Interface {
 	 * @return string[] Ordered `Y-m-d` days.
 	 */
 	private function flatten_dates( $dates ) {
-		$today = gmdate( 'Y-m-d' );
+		$today = self::today();
 		$days  = array();
 
 		foreach ( (array) $dates as $slots ) {
@@ -435,6 +494,20 @@ class Kargokit_Return_Method implements Return_Shipping_Method_Interface {
 		ksort( $days );
 
 		return array_values( $days );
+	}
+
+	/**
+	 * Today in the store's own timezone.
+	 *
+	 * The whole flow is dated in store time — the cancellation cut-off, the
+	 * day labels, the day the courier actually turns up — so the day list
+	 * has to be too. UTC would shift the cache key and the "not in the past"
+	 * filter by one day for the first three hours of every Turkish morning.
+	 *
+	 * @return string `Y-m-d`.
+	 */
+	private static function today() {
+		return wp_date( 'Y-m-d' );
 	}
 
 	/**

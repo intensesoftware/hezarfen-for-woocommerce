@@ -152,6 +152,35 @@
 	margin: 0;
 }
 
+/* The "complete" action carries a decision with it, so its form takes the
+   full row rather than sitting shoulder to shoulder with the plain buttons
+   — a checkbox squeezed into a 1/3 column reads as decoration. */
+.hez-admin-actions form:has( .hez-admin-refund-toggle ) {
+	flex: 1 1 100%;
+	padding: 10px 12px;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	background: #f6f7f7;
+}
+
+.hez-admin-refund-toggle {
+	display: flex;
+	align-items: flex-start;
+	gap: 6px;
+	font-weight: 600;
+}
+
+.hez-admin-refund-hint {
+	margin: 4px 0 10px 22px;
+}
+
+.hez-admin-refund {
+	margin: 12px 0 0;
+	padding: 10px 12px;
+	border-left: 3px solid #2271b1;
+	background: #f0f6fc;
+}
+
 .hez-admin-form p {
 	margin: 0 0 10px;
 }

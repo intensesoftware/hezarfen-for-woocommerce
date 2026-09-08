@@ -16,8 +16,11 @@ defined( 'ABSPATH' ) || exit();
  *
  * The checkout's own endpoint answers a different question — it reacts to a
  * chosen neighbourhood and refreshes the cart — so the address form gets a
- * plain read-only lookup of its own instead. Guests reach it too: a return
- * can be opened from an order key without an account.
+ * plain read-only lookup of its own instead.
+ *
+ * Logged in visitors only: returns hang off the account, so an order placed
+ * without one can never open a request (Return_Eligibility rejects it) and
+ * nobody without a session ever renders the form this feeds.
  */
 class Return_Address_Ajax {
 
@@ -29,7 +32,6 @@ class Return_Address_Ajax {
 	 */
 	public function __construct() {
 		add_action( 'wp_ajax_' . self::ACTION, array( $this, 'respond' ) );
-		add_action( 'wp_ajax_nopriv_' . self::ACTION, array( $this, 'respond' ) );
 	}
 
 	/**

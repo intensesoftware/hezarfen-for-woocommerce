@@ -15,11 +15,13 @@
 use Hezarfen\Inc\Returns\Admin\Returns_Admin;
 use Hezarfen\Inc\Returns\Core\Return_Event;
 use Hezarfen\Inc\Returns\Core\Return_Pickup_Address;
+use Hezarfen\Inc\Returns\Core\Return_Settings;
 use Hezarfen\Inc\Returns\Core\Return_Status;
 
 defined( 'ABSPATH' ) || exit();
 
-$hez_order = $request->get_order();
+$hez_order  = $request->get_order();
+$hez_refund = $request->get_refund_id() ? wc_get_order( $request->get_refund_id() ) : null;
 
 $hez_primary_actions = array(
 	Return_Status::APPROVED  => __( 'Onayla', 'hezarfen-for-woocommerce' ),
@@ -193,6 +195,24 @@ $hez_action_keys = array(
 									<?php wp_nonce_field( Returns_Admin::NONCE_ACTION ); ?>
 									<input type="hidden" name="<?php echo esc_attr( Returns_Admin::ACTION_FIELD ); ?>" value="<?php echo esc_attr( $hez_action_keys[ $hez_target ] ); ?>">
 									<input type="hidden" name="return_id" value="<?php echo esc_attr( (string) $request->get_id() ); ?>">
+
+									<?php if ( Return_Status::COMPLETED === $hez_target && ! $hez_refund ) : ?>
+										<?php
+										// The store setting decides what is
+										// ticked; the merchant decides what
+										// actually happens to this request,
+										// because only they know whether this
+										// one was already refunded by hand.
+										?>
+										<label class="hez-admin-refund-toggle">
+											<input type="checkbox" name="create_refund" value="1" <?php checked( Return_Settings::auto_refund_enabled() ); ?>>
+											<?php esc_html_e( 'WooCommerce iade kaydı oluştur', 'hezarfen-for-woocommerce' ); ?>
+										</label>
+										<p class="description hez-admin-refund-hint">
+											<?php esc_html_e( 'Siparişe iade edilen ürünler kadar manuel iade kaydı düşülür. Para transferi ödeme altyapısına gönderilmez.', 'hezarfen-for-woocommerce' ); ?>
+										</p>
+									<?php endif; ?>
+
 									<button type="submit" class="button <?php echo Return_Status::APPROVED === $hez_target ? 'button-primary' : ''; ?>">
 										<?php echo esc_html( $hez_primary_actions[ $hez_target ] ); ?>
 									</button>
@@ -201,6 +221,20 @@ $hez_action_keys = array(
 						</div>
 					<?php else : ?>
 						<p class="description"><?php esc_html_e( 'Bu talep kapandı, yeni bir işlem yapılamaz.', 'hezarfen-for-woocommerce' ); ?></p>
+					<?php endif; ?>
+
+					<?php if ( $hez_refund ) : ?>
+						<p class="hez-admin-refund">
+							<?php
+							printf(
+								/* translators: 1: refunded amount, 2: opening link tag to the order, 3: closing link tag. */
+								esc_html__( 'Bu talep için %1$s tutarında WooCommerce iade kaydı var. %2$sSiparişte gör%3$s', 'hezarfen-for-woocommerce' ),
+								wp_kses_post( wc_price( $hez_refund->get_amount(), array( 'currency' => $request->get_currency() ) ) ),
+								$hez_order ? '<a href="' . esc_url( $hez_order->get_edit_order_url() ) . '">' : '',
+								$hez_order ? '</a>' : ''
+							);
+							?>
+						</p>
 					<?php endif; ?>
 
 					<?php if ( Return_Status::can_transition( $request->get_status(), Return_Status::INFO_REQUIRED ) ) : ?>

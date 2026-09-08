@@ -338,6 +338,10 @@ class Return_Repository implements Return_Repository_Interface {
 			$clauses[] = $wpdb->prepare( 'customer_email = %s', (string) $args['customer_email'] );
 		}
 
+		if ( ! empty( $args['tracking_number'] ) ) {
+			$clauses[] = $wpdb->prepare( 'tracking_number = %s', (string) $args['tracking_number'] );
+		}
+
 		if ( ! empty( $args['status'] ) ) {
 			$statuses = array_values( array_filter( array_map( 'strval', (array) $args['status'] ) ) );
 

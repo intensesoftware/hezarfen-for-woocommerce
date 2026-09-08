@@ -135,7 +135,30 @@ $hez_order_number = $hez_order ? $hez_order->get_order_number() : (string) $requ
 				</div>
 			<?php endif; ?>
 
-			<?php if ( $request->get_tracking_number() ) : ?>
+			<?php
+			/*
+			 * A tracking number the customer typed in is shown above the form
+			 * they typed it into, which stays open so they can correct it. It
+			 * is their own courier's number, not a code a courier will ask
+			 * them to read out, so it gets none of the barcode card below: no
+			 * copy button, no pickup day, no cancellation window.
+			 */
+			?>
+			<?php if ( $request->get_tracking_number() && ! $shipping_method->requires_customer_booking() ) : ?>
+				<p class="hez-tracking">
+					<span class="hez-tracking__label"><?php esc_html_e( 'Takip numarası', 'hezarfen-for-woocommerce' ); ?></span>
+					<span class="hez-tracking__value"><?php echo esc_html( $request->get_tracking_number() ); ?></span>
+				</p>
+
+				<?php if ( $request->get_courier() ) : ?>
+					<p class="hez-tracking">
+						<span class="hez-tracking__label"><?php esc_html_e( 'Kargo firması', 'hezarfen-for-woocommerce' ); ?></span>
+						<span class="hez-tracking__value hez-tracking__value--plain"><?php echo esc_html( $request->get_courier() ); ?></span>
+					</p>
+				<?php endif; ?>
+			<?php endif; ?>
+
+			<?php if ( $request->get_tracking_number() && $shipping_method->requires_customer_booking() ) : ?>
 				<?php
 				$hez_cancel_deadline = $request->get_booking_cancel_deadline();
 				$hez_can_unbook      = $request->is_booking_cancellable_by_customer();
@@ -278,14 +301,20 @@ $hez_order_number = $hez_order ? $hez_order->get_order_number() : (string) $requ
 
 					<p class="hez-field">
 						<label for="hez-courier"><?php esc_html_e( 'Kargo firması', 'hezarfen-for-woocommerce' ); ?></label>
-						<input type="text" id="hez-courier" name="courier" class="hez-input" maxlength="64">
+						<input type="text" id="hez-courier" name="courier" class="hez-input" maxlength="64" value="<?php echo esc_attr( $request->get_courier() ); ?>">
 					</p>
 					<p class="hez-field">
 						<label for="hez-tracking-number"><?php esc_html_e( 'Takip numarası', 'hezarfen-for-woocommerce' ); ?></label>
-						<input type="text" id="hez-tracking-number" name="tracking_number" class="hez-input" maxlength="100" required>
+						<input type="text" id="hez-tracking-number" name="tracking_number" class="hez-input" maxlength="100" value="<?php echo esc_attr( $request->get_tracking_number() ); ?>" required>
 					</p>
 
-					<button type="submit" class="hez-btn hez-btn--primary"><?php esc_html_e( 'Kargo bilgisini kaydet', 'hezarfen-for-woocommerce' ); ?></button>
+					<button type="submit" class="hez-btn hez-btn--primary">
+						<?php
+						echo $request->get_tracking_number()
+							? esc_html__( 'Kargo bilgisini güncelle', 'hezarfen-for-woocommerce' )
+							: esc_html__( 'Kargo bilgisini kaydet', 'hezarfen-for-woocommerce' );
+						?>
+					</button>
 				</form>
 			<?php endif; ?>
 		</section>

@@ -44,6 +44,8 @@ Yönetimi bölümünden açılır.
 - Gönderim yöntemi: müşteri kendi gönderir (manuel takip no) veya Kargokit iade barkodu — müşteri onaydan sonra kargo alım gününü kendi seçer (`includes/returns/shipping/`)
 - Admin liste + detay, manuel onay/red, basit ek bilgi isteme, dahili/müşteriye açık notlar (`includes/returns/admin/`)
 - Temel timeline ve standart WooCommerce e-postaları (`includes/returns/emails/`)
+- Tamamlanan talebi WooCommerce'in **manuel** iade kaydına yazma ve isteğe bağlı stok geri ekleme (`includes/returns/core/class-return-refunds.php`)
+- Talebin kilometre taşlarını sipariş notu olarak siparişe düşme (`includes/returns/core/class-return-order-sync.php`)
 
 ### Kapsam dışı (kasıtlı)
 
@@ -60,6 +62,10 @@ ekleyebilir:
 - Mağazanın kendi kargo anlaşmasıyla otomatik barkod
 - Talep içi mesajlaşma, değişim (exchange), mağaza kredisi
 - Kural motoru, otomatik onay, toplu işlem, SLA hatırlatmaları, analitik, CSV/API/webhook
+- **Paranın gerçekten iade edilmesi.** Modül ödeme altyapısına iade isteği
+  göndermez; sadece WooCommerce'e "bu kadarı iade edildi" der. Transferi
+  mağaza kendi kanalından yapar. Gateway üzerinden otomatik iade, bu
+  sözleşmenin (`hezarfen_return_refund_created`) üstüne bir eklentinin işidir.
 
 ## Veri Modeli
 
@@ -71,8 +77,9 @@ artmadan da kurulabilsin diye `hezarfen_db_version`'a bağlı değildir
 
 - `{prefix}hezarfen_returns` — talep başlığı. `return_number`, `order_id`,
   `customer_id`, `customer_email`, `status`, `shipping_method`, `courier`,
-  `tracking_number`, `pickup_date`, `return_address_id`, `customer_note`,
-  `refund_amount`, `currency`, `created_at`, `updated_at`.
+  `tracking_number`, `pickup_date`, `return_address_id`, `refund_id`,
+  `pickup_address`, `customer_note`, `refund_amount`, `currency`,
+  `created_at`, `updated_at`.
 - `{prefix}hezarfen_return_items` — talebe dahil satırlar. `return_id`,
   `order_item_id`, `product_id`, `variation_id`, `product_name`, `sku`,
   `quantity`, `line_total`, `reason_key`, `reason_note`.
@@ -187,6 +194,59 @@ adedi geri bırakır; diğer tüm durumlar adedi tutar.
 - **And** müsait gün listesi hiç alınamıyorsa form yerine aynı mesaj çıkar
 - **And** mağaza talebe manuel takip numarası girerek devam edebilir
 
+### Senaryo: Müşteri kargo randevusunu iptal eder
+- **Given** barkodu alınmış bir talep ve alım gününün bir gün öncesi 23:59
+  henüz geçmemiş
+- **When** müşteri "Kargo randevusunu iptal et" der
+- **Then** önce taşıyıcıya iptal geçilir; ancak orada serbest bırakıldıktan
+  sonra barkod, kargo firması ve alım günü talepten silinir
+- **And** siparişteki gönderi kaydı da `cancelled` işaretlenir: sipariş
+  ekranında iptal edilmiş bir randevu aktif görünmemelidir
+- **And** talep `approved` kalır, gün seçici geri gelir
+
+### Senaryo: Mağaza gönderiyi sipariş ekranından iptal eder
+- **Given** barkodu alınmış bir talep
+- **When** mağaza sipariş düzenleme ekranındaki gönderi kutusundan hepsiJET
+  gönderisini iptal eder
+- **Then** `hezarfen_hepsijet_shipment_cancelled` ile talebin de barkodu ve
+  alım günü temizlenir, timeline'a kayıt düşer
+- **And** müşteri artık geçersiz bir barkod görmez, yeni gün seçebilir
+
+### Senaryo: Kapıda ödemeli siparişte Kargokit iadesi
+- **Given** gönderim yöntemi Kargokit ve sipariş kapıda ödemeli (`cod`)
+- **When** mağaza talebi onaylar
+- **Then** Kargokit bu siparişe barkod üretemeyeceği için talep onay anında
+  "müşteri kendi gönderir" yöntemine aktarılır
+- **And** sebebi ve sonucu yalnızca mağazanın gördüğü tek bir timeline
+  kaydında yazar
+- **And** müşteri gün seçici yerine iade adresini ve takip numarası formunu
+  görür — onay sonrası çıkmaz sokak oluşmaz
+
+### Senaryo: Mağaza talebi tamamlar ve WooCommerce iadesi kaydeder
+- **Given** `received` durumda bir talep ve "Tamamlandı olarak işaretle"
+  aksiyonundaki iade kutusu işaretli
+- **When** aksiyon çalıştırılır
+- **Then** talep `completed` olur
+- **And** iade edilen satır ve adetler için siparişe **manuel** bir
+  WooCommerce iade kaydı (`refund_payment => false`) yazılır; ödeme
+  altyapısına hiçbir istek gitmez, parayı mağaza kendi gönderir
+- **And** kısmi iadede yalnızca dönen adet iade edilir; sipariş durumu
+  değiştirilmez
+- **And** siparişin tamamı iade edilmiş olursa siparişi `refunded` durumuna
+  **WooCommerce kendisi** çeker — modül bu durumu hiç yazmaz
+- **And** iade kaydının ID'si talebe yazılır, aynı talep ikinci kez iade
+  yazamaz
+- **And** stok yalnızca "stoğu geri ekle" ayarı açıkken geri eklenir; üstelik
+  WooCommerce yalnızca o sipariş için gerçekten düşürdüğü stoğu geri koyar
+  (`_reduced_stock`), elle oluşturulmuş siparişlerde bir şey olmaz
+
+### Senaryo: Zaten elle iade edilmiş bir talep tamamlanır
+- **Given** mağaza aynı satırı sipariş ekranından zaten iade etmiş
+- **When** talep iade kutusu işaretli hâlde tamamlanır
+- **Then** talep yine `completed` olur — mallar gerçekten döndü
+- **And** ikinci bir iade kaydı yazılmaz; sebebi mağazaya bir uyarı olarak
+  gösterilir ve iç timeline kaydına düşer
+
 ### Senaryo: Müşteri talebini iptal eder
 - **Given** `pending` veya `info-required` durumda bir talep
 - **When** müşteri "Talebi iptal et" der
@@ -199,6 +259,16 @@ adedi geri bırakır; diğer tüm durumlar adedi tutar.
   edilebilir miktardan düşülür. Tamamlanmış bir talep zaten aynı adedi
   düşürdüğü için ikisi toplanmaz; büyük olan geçerlidir. Açık talepler
   bunun üzerine ayrıca rezerve eder.
+- **Para transferi**: modül hiçbir zaman ödeme altyapısına iade isteği
+  göndermez. Yazdığı şey WooCommerce'in manuel iade kaydıdır; parayı mağaza
+  kendi kanalından gönderir. Bu yüzden iade kaydı varsayılan olarak kapalıdır
+  ve "Tamamlandı" aksiyonunda talep bazında onaylanır.
+- **Sipariş durumu**: modül siparişin durumunu hiçbir akışta değiştirmez.
+  `refunded` durumunu, toplam iade sipariş toplamına ulaştığında WooCommerce
+  kendisi yazar; kısmi iadede sipariş durumu olduğu gibi kalır.
+- **Sipariş notları**: talep açılması, onay, ret, iptal ve tamamlanma sipariş
+  notu olarak da düşer. Ara kargo adımları düşmez; onlar talebin kendi
+  timeline'ında kalır, yoksa sipariş notları boğulur.
 - **İlerleme çubuğu**: `info-required` bir milat değil, mola; çubukta
   park edildiği adımı (`pending`) ödünç alır, o ana kadarki ilerleme silinmez.
 - **Çift gönderim**: `return_number` benzersiz indekslidir; aynı sipariş için
@@ -223,6 +293,11 @@ adedi geri bırakır; diğer tüm durumlar adedi tutar.
   noktası); iade formu `/{hesabım}/iade-talebi/{sipariş id}/`; talep detayı
   `/{hesabım}/iadelerim/{talep id}/`. ID taşımayan `/{hesabım}/iadelerim/`
   adresi siparişler sayfasına yönlenir.
+- **Talep detayında kargo bloğu iki farklı şey gösterir**: taşıyıcının ürettiği
+  barkod, kuryeye okunacak bir kod olduğu için büyük, kopyalanabilir kartta
+  (`.hez-code`) ve iptal penceresiyle birlikte çıkar; müşterinin kendi girdiği
+  takip numarası ise sade bir etiket/değer çiftidir (`.hez-tracking`) ve
+  düzeltilebilsin diye formu açık bırakır.
 
 ## Uzantı Noktaları
 
@@ -233,7 +308,7 @@ sunar:
 |---|---|---|
 | `Return_Reason_Provider_Interface` | `core/interface-return-reason-provider.php` | Mağazaya özel iade sebepleri |
 | `Return_Policy_Provider_Interface` | `core/interface-return-policy-provider.php` | Ürün/kategori bazlı iade politikaları |
-| `Return_Shipping_Method_Interface` | `shipping/interface-return-shipping-method.php` | Kendi kargo anlaşmasıyla otomatik barkod; `requires_customer_booking()` + `get_booking_options()` + `book()` ile müşterinin randevu seçtiği akış |
+| `Return_Shipping_Method_Interface` | `shipping/interface-return-shipping-method.php` | Kendi kargo anlaşmasıyla otomatik barkod; `requires_customer_booking()` + `get_booking_options()` + `book()` ile müşterinin randevu seçtiği akış, `cancel_booking()` ile iptali, `requires_pickup_address()` ile alım adresi. **Arayüzün tamamı zorunludur**; eksik uygulayan bir sınıf tanımlandığı anda fatal verir |
 | `Return_Repository_Interface` | `core/interface-return-repository.php` | Alternatif depolama |
 
 ## Hooks
@@ -244,6 +319,8 @@ Tam liste için `specs/shared/hooks.md`. Öne çıkanlar:
 - action: `hezarfen_return_status_changed` — durum değişince `(Return_Request $request, string $old, string $new)`
 - action: `hezarfen_return_status_{status}` — belirli bir duruma geçince `(Return_Request $request, string $old)`
 - action: `hezarfen_return_shipment_booked` — müşteri iade kargo randevusunu alınca `(Return_Request $request, string $choice)`
+- action: `hezarfen_return_refund_created` — tamamlanan talep için WooCommerce iade kaydı yazılınca `(Return_Request $request, WC_Order_Refund $refund)`
+- action: `hezarfen_hepsijet_shipment_cancelled` — hepsiJET gönderisi iptal edilince; modül bunu dinleyip talebin randevusunu serbest bırakır `(int $order_id, string $delivery_no)`
 - action: `hezarfen_returns_loaded` — modül ayağa kalkınca; sağlayıcılar burada kaydedilir `(Returns_Module $module)`
 - filter: `hezarfen_returns_reason_providers` / `..._policy_providers` / `..._shipping_methods`
 - filter: `hezarfen_returns_return_address` — talebin gönderileceği adres
@@ -252,7 +329,12 @@ Tam liste için `specs/shared/hooks.md`. Öne çıkanlar:
 
 - E2E: `tests/e2e/returns-my-account.spec.ts`, `returns-admin.spec.ts`,
   `returns-eligibility.spec.ts`, `returns-settings.spec.ts`,
-  `returns-emails.spec.ts`.
+  `returns-emails.spec.ts`, `returns-booking.spec.ts`,
+  `returns-refund.spec.ts`, `returns-photos.spec.ts`.
+- İade kaydı specleri parayı gerçekten hareket ettirmez: `wc_create_refund`
+  `refund_payment => false` ile çağrıldığı için ödeme altyapısı hiç devreye
+  girmez. Ölçülen şey aritmetiktir — kısmi iade, elle iade edilmiş satırla
+  çakışma, stok.
 - Manuel: modülü açtıktan sonra kalıcı bağlantıları bir kez yenileyin
   (endpoint'ler `hezarfen_returns_endpoints_version` değişince otomatik flush
   olur; flush `shutdown`'a ertelenir, böylece geç kaydedilen kuralları düşürmez).

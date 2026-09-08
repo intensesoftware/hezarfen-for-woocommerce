@@ -271,7 +271,16 @@ class Returns_Admin {
 			case 'received':
 				return $service->change_status( $request, Return_Status::RECEIVED, array( 'message' => $message ) );
 			case 'complete':
-				return $service->change_status( $request, Return_Status::COMPLETED, array( 'message' => $message ) );
+				// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified in handle_actions().
+				$refund = ! empty( $_POST['create_refund'] );
+
+				return $service->complete(
+					$request,
+					array(
+						'message' => $message,
+						'refund'  => $refund,
+					)
+				);
 			case 'cancel':
 				return $service->change_status( $request, Return_Status::CANCELLED, array( 'message' => $message ) );
 			case 'request-info':

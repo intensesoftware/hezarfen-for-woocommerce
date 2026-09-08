@@ -434,13 +434,70 @@ class Courier_Hepsijet_Integration {
             return $response;
         }
 
-        if ( $response['success'] ) {
+        // A 200 with an empty or unexpected body is not a cancellation. Read
+        // as one it would free a shipment locally while the courier is still
+        // scheduled — so anything that is not an explicit success fails.
+        if ( is_array( $response ) && ! empty( $response['success'] ) ) {
             return true;
-        } else {
-            // Return WP_Error instead of just the message string
-            $error_message = $response['message'] ?? 'Gönderi iptal edilemedi.';
-            return new \WP_Error( 'cancel_failed', $error_message, array( 'status' => 400 ) );
         }
+
+        $error_message = is_array( $response ) && ! empty( $response['message'] )
+            ? $response['message']
+            : __( 'Gönderi iptal edilemedi.', 'hezarfen-for-woocommerce' );
+
+        return new \WP_Error( 'cancel_failed', $error_message, array( 'status' => 400 ) );
+    }
+
+    /**
+     * Marks a stored shipment as cancelled on its order.
+     *
+     * The relay call and this write are two halves of one cancellation: a
+     * shipment released at the carrier but still stored as `active` keeps
+     * showing on the order screen with a live "Cancel" button that can only
+     * fail. Every path that cancels a shipment — the order screen, and the
+     * customer calling off a return pickup from their account — goes
+     * through here.
+     *
+     * @param int    $order_id    Order the shipment belongs to.
+     * @param string $delivery_no Carrier delivery number.
+     * @param string $reason      Short reason stored alongside.
+     *
+     * @return bool Whether a stored shipment was found and updated.
+     */
+    public function mark_shipment_cancelled( $order_id, $delivery_no, $reason = 'IPTAL' ) {
+        $order = wc_get_order( $order_id );
+
+        if ( ! $order ) {
+            return false;
+        }
+
+        $meta_key         = '_hezarfen_hepsijet_shipment_' . $delivery_no;
+        $shipment_details = $order->get_meta( $meta_key );
+
+        if ( ! is_array( $shipment_details ) || ! $shipment_details ) {
+            return false;
+        }
+
+        $shipment_details['cancelled_at']  = current_time( 'mysql' );
+        $shipment_details['cancel_reason'] = $reason;
+        $shipment_details['status']        = 'cancelled';
+
+        $order->update_meta_data( $meta_key, $shipment_details );
+        $order->save_meta_data();
+
+        /**
+         * Fires after a hepsiJET shipment was released at the carrier and
+         * marked cancelled on its order.
+         *
+         * The returns module listens for this so a shipment cancelled from
+         * the order screen also clears the return request that booked it.
+         *
+         * @param int    $order_id    Order the shipment belongs to.
+         * @param string $delivery_no Carrier delivery number.
+         */
+        do_action( 'hezarfen_hepsijet_shipment_cancelled', (int) $order_id, (string) $delivery_no );
+
+        return true;
     }
 
     /**

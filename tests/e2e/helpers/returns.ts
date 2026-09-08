@@ -287,6 +287,17 @@ export function seedDigitalOrder(): string {
 }
 
 /**
+ * Reduce stock for an order the way a real checkout does.
+ *
+ * Seeded orders are built with `add_product()`, which never touches stock,
+ * and WooCommerce only ever restocks what it reduced (`_reduced_stock` on
+ * the line). Without this a restock spec would measure nothing and pass.
+ */
+export function reduceStockLevels( orderId: string ): void {
+	wp( [ 'eval', `wc_reduce_stock_levels( ${ orderId } );` ] );
+}
+
+/**
  * Refund part of an order's first line through WooCommerce itself, so a
  * spec can prove the returns module respects refunds it did not create.
  */
@@ -457,6 +468,101 @@ export function customerTrackingError(
 		`,
 		] )
 	);
+}
+
+/**
+ * Drive the customer's own cancellation of a carrier booking. Returns the
+ * WP_Error code, or an empty string on success.
+ */
+export function customerUnbookError( returnId: string ): string {
+	return lastLine(
+		wp( [
+			'eval',
+			`
+			$module  = \\Hezarfen\\Inc\\Returns\\Returns_Module::instance();
+			$request = $module->repository()->get( ${ returnId } );
+			$result  = $module->service()->cancel_booking_by_customer( $request );
+			echo is_wp_error( $result ) ? $result->get_error_code() : '';
+		`,
+		] )
+	);
+}
+
+/**
+ * Announce that a hepsiJET shipment was cancelled somewhere else — what the
+ * order screen's cancel button does once the carrier has answered. The
+ * returns module listens for this, so a spec drives the seam rather than
+ * the carrier.
+ */
+export function announceCarrierCancellation(
+	orderId: string,
+	deliveryNo: string
+): void {
+	wp( [
+		'eval',
+		`do_action( 'hezarfen_hepsijet_shipment_cancelled', ${ orderId }, '${ deliveryNo }' );`,
+	] );
+}
+
+/**
+ * Complete a request through the service, with or without the WooCommerce
+ * refund. Returns the WP_Error code, or an empty string on success.
+ */
+export function completeReturn( returnId: string, refund: boolean ): string {
+	return lastLine(
+		wp( [
+			'eval',
+			`
+			$module  = \\Hezarfen\\Inc\\Returns\\Returns_Module::instance();
+			$request = $module->repository()->get( ${ returnId } );
+			$result  = $module->service()->complete( $request, array( 'refund' => ${
+				refund ? 'true' : 'false'
+			} ) );
+			echo is_wp_error( $result ) ? $result->get_error_code() : '';
+		`,
+		] )
+	);
+}
+
+export interface RefundState {
+	orderStatus: string;
+	totalRefunded: number;
+	refundCount: number;
+	refundIdOnRequest: number;
+	firstLineQtyRefunded: number;
+	firstLineStock: number;
+}
+
+/**
+ * What the order knows about its refunds, and what the request recorded.
+ */
+export function getRefundState(
+	orderId: string,
+	returnId: string
+): RefundState {
+	const out = lastLine(
+		wp( [
+			'eval',
+			`
+			$order   = wc_get_order( ${ orderId } );
+			$request = \\Hezarfen\\Inc\\Returns\\Returns_Module::instance()->repository()->get( ${ returnId } );
+			$items   = $order->get_items();
+			$item    = reset( $items );
+			$product = $item ? $item->get_product() : null;
+
+			echo wp_json_encode( array(
+				'orderStatus'          => $order->get_status(),
+				'totalRefunded'        => (float) $order->get_total_refunded(),
+				'refundCount'          => count( $order->get_refunds() ),
+				'refundIdOnRequest'    => $request ? $request->get_refund_id() : 0,
+				'firstLineQtyRefunded' => $item ? (int) abs( $order->get_qty_refunded_for_item( $item->get_id() ) ) : 0,
+				'firstLineStock'       => $product && $product->managing_stock() ? (int) $product->get_stock_quantity() : -1,
+			) );
+		`,
+		] )
+	);
+
+	return JSON.parse( out ) as RefundState;
 }
 
 /**

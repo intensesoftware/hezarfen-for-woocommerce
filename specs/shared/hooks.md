@@ -26,7 +26,14 @@ WP/WC core hook'larına `add_filter`/`add_action` yapan ama kendi adıyla yeni b
 | `hezarfen_return_status_changed` | returns | Talep durumu değiştiğinde | `(Return_Request $request, string $old_status, string $new_status)` |
 | `hezarfen_return_status_{status}` | returns | Talep belirli bir duruma geçtiğinde (ör. `hezarfen_return_status_approved`) | `(Return_Request $request, string $old_status)` |
 | `hezarfen_return_shipment_booked` | returns | Müşteri iade kargo randevusunu aldığında (barkod ve alım günü talebe yazılmış olur) | `(Return_Request $request, string $choice)` |
+| `hezarfen_return_refund_created` | returns | Tamamlanan talep için WooCommerce iade kaydı yazıldığında | `(Return_Request $request, WC_Order_Refund $refund)` |
+| `hezarfen_returns_info_response_saved` | returns | Müşterinin ek bilgi yanıtı kaydedildikten sonra, POST hâlâ elde iken | `(Return_Request $request)` |
+| `hezarfen_returns_request_form_fields` | returns | Talep formunun alanları basıldıktan sonra (render noktası) | `(WC_Order $order)` |
+| `hezarfen_returns_info_form_fields` | returns | Ek bilgi yanıt formunun içinde (render noktası) | `(Return_Request $request)` |
+| `hezarfen_returns_detail_sections` | returns | Müşteri talep detayının sonunda (render noktası) | `(Return_Request $request)` |
+| `hezarfen_returns_admin_detail_sections` | returns | Yönetim talep detayının sonunda (render noktası) | `(Return_Request $request)` |
 | `hezarfen_returns_event_added` | returns | Timeline'a kayıt eklendiğinde | `(int $event_id, Return_Event $event)` |
+| `hezarfen_hepsijet_shipment_cancelled` | manual-shipment-tracking | hepsiJET gönderisi taşıyıcıda iptal edilip sipariş meta'sı güncellendiğinde. İade modülü bunu dinleyip ilgili talebin randevusunu serbest bırakır | `(int $order_id, string $delivery_no)` |
 
 ### HTTP / Webhook entry
 
@@ -90,6 +97,9 @@ Modül, ek yeteneklerin koda dokunmadan takılabilmesi için sağlayıcı tabanl
 | `hezarfen_returns_request_endpoint` | `iade-talebi` | `(string $slug)` | İade formu endpoint slug'ı |
 | `hezarfen_returns_admin_columns` | 7 kolon | `(array $columns)` | Yönetim listesine kolon ekle |
 | `hezarfen_returns_admin_column_content` | `''` | `(string $content, string $column, Return_Request $request)` | Eklenen kolonun içeriği |
+| `hezarfen_returns_is_booking_cancellable_by_customer` | `approved`, barkodlu ve alım gününden bir gün önce 23:59'a kadar | `(bool $cancellable, Return_Request $request)` | Randevu iptal penceresini değiştir |
+| `hezarfen_returns_order_panel_classes` | `[]` | `(string[] $classes, WC_Order $order, Return_Request[] $requests, array $returnable)` | Sipariş detayındaki iade kutusuna sınıf ekle |
+| `hezarfen_returns_form_accepts_uploads` | `false` | `(bool $accepts, string $context)` | Formu `multipart/form-data` olarak render et; `$context` `request` veya `info`. Fotoğraf eklentisi bunu açar |
 
 ---
 

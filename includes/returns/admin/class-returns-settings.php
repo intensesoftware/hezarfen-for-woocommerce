@@ -117,6 +117,22 @@ class Returns_Settings {
 				'options'  => $registry->get_choices(),
 			),
 			array(
+				'title'    => __( 'Tamamlanan iadede WooCommerce iade kaydı oluştur', 'hezarfen-for-woocommerce' ),
+				'desc'     => __( 'Talebi "Tamamlandı" işaretlediğinizde iade edilen ürünler için siparişe manuel iade kaydı düşülür.', 'hezarfen-for-woocommerce' ),
+				'desc_tip' => __( 'Kayıt yalnızca WooCommerce içindir; para transferi ödeme altyapısına gönderilmez, iadeyi kendiniz yaparsınız. Sipariş toplamının tamamı iade edildiğinde WooCommerce siparişi kendiliğinden "İade edildi" durumuna çeker. Zaten elle iade işliyorsanız kapalı bırakın.', 'hezarfen-for-woocommerce' ),
+				'type'     => 'checkbox',
+				'id'       => Return_Settings::OPTION_AUTO_REFUND,
+				'default'  => 'no',
+			),
+			array(
+				'title'    => __( 'İade kaydında stoğu geri ekle', 'hezarfen-for-woocommerce' ),
+				'desc'     => __( 'İade edilen adetler ürün stoğuna geri yazılır.', 'hezarfen-for-woocommerce' ),
+				'desc_tip' => __( 'Yalnızca yukarıdaki iade kaydı açıkken çalışır. Hasarlı ürünleri tekrar satışa çıkarmıyorsanız kapalı bırakın.', 'hezarfen-for-woocommerce' ),
+				'type'     => 'checkbox',
+				'id'       => Return_Settings::OPTION_RESTOCK,
+				'default'  => 'no',
+			),
+			array(
 				'title'    => __( 'Müşteriye gösterilecek yönerge', 'hezarfen-for-woocommerce' ),
 				'desc_tip' => __( 'Talep onaylandığında iade sayfasında gösterilir. Paketleme, fatura, etiket gibi konuları burada anlatabilirsiniz.', 'hezarfen-for-woocommerce' ),
 				'type'     => 'textarea',

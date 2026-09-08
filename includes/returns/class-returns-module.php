@@ -93,6 +93,8 @@ class Returns_Module {
 		new Frontend\Return_Assets();
 		new Frontend\Return_Address_Ajax();
 		new Emails\Return_Emails();
+		new Shipping\Carrier_Sync( $this );
+		new Core\Return_Order_Sync();
 
 		if ( is_admin() ) {
 			new Admin\Returns_Admin( $this );
@@ -155,11 +157,14 @@ class Returns_Module {
 			'core/class-global-return-policy-provider.php',
 			'core/class-return-policy-resolver.php',
 			'core/class-return-eligibility.php',
+			'core/class-return-refunds.php',
 			'core/class-return-service.php',
+			'core/class-return-order-sync.php',
 			'shipping/interface-return-shipping-method.php',
 			'shipping/class-customer-ships-method.php',
 			'shipping/class-kargokit-return-method.php',
 			'shipping/class-return-shipping-registry.php',
+			'shipping/class-carrier-sync.php',
 			'frontend/class-return-assets.php',
 			'frontend/class-return-access.php',
 			'frontend/class-return-address-ajax.php',
