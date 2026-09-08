@@ -132,6 +132,28 @@ class Return_Form_Handler {
 		if ( ! wp_verify_nonce( $nonce, 'hezarfen_returns_' . $action ) ) {
 			wc_add_notice( __( 'Oturumunuzun süresi doldu. Lütfen formu tekrar gönderin.', 'hezarfen-for-woocommerce' ), 'error' );
 
+			// The create form is the long one; without this an expired nonce
+			// loses every line, reason, note and the eight address fields. The
+			// input is preserved so the form re-renders filled in — and it
+			// re-renders with a fresh nonce in the same request, so submitting
+			// again works. Values are sanitised by the read_* helpers.
+			if ( self::ACTION_CREATE === $action ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Missing
+				$order_id = isset( $_POST['order_id'] ) ? absint( wp_unslash( $_POST['order_id'] ) ) : 0;
+
+				if ( $order_id ) {
+					$this->reject(
+						self::ACTION_CREATE,
+						$order_id,
+						array(
+							'lines'          => $this->read_submitted_lines(),
+							'customer_note'  => $this->read_textarea( 'customer_note' ),
+							'pickup_address' => $this->read_pickup_address(),
+						)
+					);
+				}
+			}
+
 			return;
 		}
 

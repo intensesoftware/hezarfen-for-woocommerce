@@ -159,3 +159,35 @@ if ( ! function_exists( 'hezarfen_returns_form_enctype' ) ) {
 		}
 	}
 }
+
+if ( ! function_exists( 'hezarfen_returns_courier_label' ) ) {
+	/**
+	 * Human label for a stored courier value.
+	 *
+	 * The booking methods store an internal slug (the carrier the label was
+	 * created through); a customer who ships it themselves stores whatever
+	 * courier name they typed. Known slugs get a readable name; anything else
+	 * — a customer-entered courier — is shown as it was given.
+	 *
+	 * @param string $courier Stored courier value.
+	 *
+	 * @return string
+	 */
+	function hezarfen_returns_courier_label( $courier ) {
+		$courier = (string) $courier;
+
+		$known = array(
+			'hepsijet-entegrasyon' => __( 'hepsiJET (Kargokit)', 'hezarfen-for-woocommerce' ),
+			'hepsijet'             => __( 'hepsiJET', 'hezarfen-for-woocommerce' ),
+		);
+
+		/**
+		 * Filters the readable labels for internal courier slugs.
+		 *
+		 * @param array<string, string> $known Label keyed by stored slug.
+		 */
+		$known = (array) apply_filters( 'hezarfen_returns_courier_labels', $known );
+
+		return isset( $known[ $courier ] ) ? $known[ $courier ] : $courier;
+	}
+}

@@ -222,7 +222,7 @@ $hez_order_number = $hez_order ? $hez_order->get_order_number() : (string) $requ
 						</form>
 					<?php elseif ( $hez_cancel_deadline ) : ?>
 						<p class="hez-code__cancel-hint hez-code__cancel-hint--closed">
-							<?php esc_html_e( 'Alım günü geldiği için randevu artık iptal edilemiyor. Kurye ile ilgili bir sorun olursa mağazayla iletişime geçin.', 'hezarfen-for-woocommerce' ); ?>
+							<?php esc_html_e( 'Randevu iptal süresi dolduğu için randevu artık iptal edilemiyor. Kurye ile ilgili bir sorun olursa mağazayla iletişime geçin.', 'hezarfen-for-woocommerce' ); ?>
 						</p>
 					<?php endif; ?>
 				</div>

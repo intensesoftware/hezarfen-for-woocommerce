@@ -291,7 +291,7 @@ $hez_action_keys = array(
 						<p class="hez-admin-tracking">
 							<strong><?php echo esc_html( $request->get_tracking_number() ); ?></strong>
 							<?php if ( $request->get_courier() ) : ?>
-								<span class="description"><?php echo esc_html( $request->get_courier() ); ?></span>
+								<span class="description"><?php echo esc_html( hezarfen_returns_courier_label( $request->get_courier() ) ); ?></span>
 							<?php endif; ?>
 						</p>
 					<?php endif; ?>

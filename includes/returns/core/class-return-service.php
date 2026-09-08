@@ -242,18 +242,22 @@ class Return_Service {
 			// method, so the reason and the consequence are recorded
 			// together — the merchant reads one line and knows the customer
 			// will now be shown a return address instead of a pickup.
+			// Customer visible on purpose: the customer filled in a pickup
+			// address expecting a courier, and now sees the "ship it yourself"
+			// screen instead. Saying why on the timeline — and that they can
+			// send it themselves and enter a tracking number — keeps the switch
+			// from looking like the request broke.
 			$this->log(
 				$request,
 				Return_Event::TYPE_SHIPPING,
 				sprintf(
-					/* translators: 1: reason the carrier declined, 2: label of the method the request fell back to. */
-					__( '%1$s Talep "%2$s" yöntemine aktarıldı.', 'hezarfen-for-woocommerce' ),
-					$shipping_error->get_error_message(),
-					$this->shipping->get_fallback_method()->get_label()
+					/* translators: %s: reason the carrier declined the pickup. */
+					__( '%s Ürünü kendiniz gönderip kargo takip numarasını girebilirsiniz.', 'hezarfen-for-woocommerce' ),
+					$shipping_error->get_error_message()
 				),
 				array(
 					'actor'               => $this->system_actor(),
-					'is_customer_visible' => false,
+					'is_customer_visible' => true,
 				)
 			);
 		}
@@ -325,6 +329,48 @@ class Return_Service {
 		}
 
 		return $this->shipping->get_for_request( $request )->requires_customer_booking();
+	}
+
+	/**
+	 * Moves a request whose carrier could not produce a label onto the manual
+	 * method, and tells the customer they can ship it themselves.
+	 *
+	 * Returned as a WP_Error on purpose: the caller (the form handler) shows the
+	 * message and re-renders the detail page, which — now that the method is the
+	 * manual one — presents the return address and the tracking form instead of
+	 * a day picker the carrier keeps refusing.
+	 *
+	 * @param Return_Request $request The approved request.
+	 * @param \WP_Error      $error   Why the carrier declined.
+	 *
+	 * @return \WP_Error
+	 */
+	private function fall_back_to_manual( $request, $error ) {
+		$request->set_shipping_method( $this->shipping->get_fallback_method()->get_key() );
+
+		$saved = $this->repository->save( $request );
+
+		if ( is_wp_error( $saved ) ) {
+			return $saved;
+		}
+
+		$message = sprintf(
+			/* translators: %s: reason the carrier could not create the label. */
+			__( '%s Ürünü kendiniz gönderip kargo takip numarasını girebilirsiniz.', 'hezarfen-for-woocommerce' ),
+			$error->get_error_message()
+		);
+
+		$this->log(
+			$request,
+			Return_Event::TYPE_SHIPPING,
+			$message,
+			array(
+				'actor'               => $this->system_actor(),
+				'is_customer_visible' => true,
+			)
+		);
+
+		return new \WP_Error( 'hezarfen_returns_switched_to_manual', $message );
 	}
 
 	/**
@@ -754,6 +800,23 @@ class Return_Service {
 		$booked = $method->book( $request, $choice );
 
 		if ( is_wp_error( $booked ) ) {
+			// A day that was just taken, or an unreadable/empty choice, is worth
+			// another go: the request stays approved and the picker reappears.
+			// Anything else means the carrier will not serve this request at all
+			// (address not covered, relay refusing it, no barcode) — looping the
+			// same picker would strand the customer, so the request falls back
+			// to the manual method and they can send it themselves.
+			$retryable = array(
+				'hezarfen_returns_empty_booking_choice',
+				'hezarfen_returns_kargokit_slot_taken',
+				'hez_pro_returns_hepsijet_slot_taken',
+				'hez_pro_returns_hepsijet_bad_choice',
+			);
+
+			if ( ! in_array( $booked->get_error_code(), $retryable, true ) ) {
+				return $this->fall_back_to_manual( $request, $booked );
+			}
+
 			// Nothing was written: the request is still an approved one
 			// waiting for a booking, so the customer can simply try again.
 			$this->log(
