@@ -32,6 +32,54 @@ class Returns_Settings {
 		add_filter( 'woocommerce_get_sections_hezarfen', array( $this, 'add_section' ) );
 		add_filter( 'woocommerce_get_settings_hezarfen', array( $this, 'add_settings' ), 10, 2 );
 		add_action( 'woocommerce_update_options_hezarfen', array( $this, 'after_save' ), 20 );
+		add_action( 'admin_notices', array( $this, 'render_missing_address_notice' ) );
+	}
+
+	/**
+	 * Warns when returns are live but there is nowhere to send the goods.
+	 *
+	 * The return address fields are all optional, so a store can switch the
+	 * module on with a single checkbox and never fill them in. With the
+	 * default "customer ships it" method that leaves every approved customer
+	 * looking at a page that has no address on it, and nothing tells the
+	 * merchant — the failure happens on a screen they never open.
+	 *
+	 * @return void
+	 */
+	public function render_missing_address_notice() {
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			return;
+		}
+
+		if ( ! Return_Settings::is_enabled() || Return_Settings::has_return_address() ) {
+			return;
+		}
+
+		$registry = new Return_Shipping_Registry();
+
+		// A method that collects the parcel from the customer's door needs
+		// no address of ours; only the manual flow does.
+		if ( ! $registry->get_active_method()->requires_customer_tracking() ) {
+			return;
+		}
+
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		$id     = $screen ? $screen->id : '';
+
+		// Kept to the screens the merchant is already on for this feature,
+		// so it does not become wallpaper on every admin page.
+		$screens = array( 'woocommerce_page_wc-settings', 'hezarfen_page_hezarfen-returns', 'woocommerce_page_hezarfen-returns' );
+
+		if ( ! in_array( $id, $screens, true ) ) {
+			return;
+		}
+
+		printf(
+			'<div class="notice notice-warning"><p>%1$s <a href="%2$s">%3$s</a></p></div>',
+			esc_html__( 'İade modülü açık ve seçili yöntem ürünlerin size gönderilmesini bekliyor, ancak bir iade adresi girilmemiş. Talebi onayladığınız müşteri kargoyu nereye göndereceğini göremeyecek.', 'hezarfen-for-woocommerce' ),
+			esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=' . self::SECTION ) ),
+			esc_html__( 'İade adresini girin', 'hezarfen-for-woocommerce' )
+		);
 	}
 
 	/**

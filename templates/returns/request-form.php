@@ -13,6 +13,7 @@
  * @var int                                                   $deadline        Return window deadline as a Unix timestamp.
  * @var string                                                $cancel_url      Where the cancel link goes.
  * @var array<string, string>                                 $pickup_address  Pickup address prefilled from the order.
+ * @var array<string, mixed>                                  $submitted       Values of a submission the server refused, empty otherwise.
  */
 
 use Hezarfen\Inc\Returns\Core\Return_Settings;
@@ -21,6 +22,13 @@ use Hezarfen\Inc\Returns\Frontend\Return_Form_Handler;
 defined( 'ABSPATH' ) || exit();
 
 $hez_reason_choices = $reasons->get_choices();
+
+// A refused submission renders this same form again. Everything the customer
+// typed comes back with it, so an error costs them one correction instead of
+// the whole form.
+$hez_submitted      = isset( $submitted ) && is_array( $submitted ) ? $submitted : array();
+$hez_sent_lines     = isset( $hez_submitted['lines'] ) && is_array( $hez_submitted['lines'] ) ? $hez_submitted['lines'] : array();
+$hez_customer_note  = isset( $hez_submitted['customer_note'] ) ? (string) $hez_submitted['customer_note'] : '';
 ?>
 <div class="hez-returns hez-returns--form">
 
@@ -68,6 +76,11 @@ $hez_reason_choices = $reasons->get_choices();
 					$hez_product = is_callable( array( $hez_item, 'get_product' ) ) ? $hez_item->get_product() : null;
 					$hez_field   = 'items[' . $hez_item_id . ']';
 					$hez_dom_id  = 'hez-item-' . $hez_item_id;
+
+					$hez_sent        = isset( $hez_sent_lines[ $hez_item_id ] ) ? $hez_sent_lines[ $hez_item_id ] : null;
+					$hez_sent_qty    = $hez_sent && ! empty( $hez_sent['quantity'] ) ? (int) $hez_sent['quantity'] : 1;
+					$hez_sent_reason = $hez_sent && isset( $hez_sent['reason'] ) ? (string) $hez_sent['reason'] : '';
+					$hez_sent_note   = $hez_sent && isset( $hez_sent['note'] ) ? (string) $hez_sent['note'] : '';
 					?>
 					<li class="hez-item" data-hez-item>
 						<div class="hez-item__row">
@@ -77,6 +90,7 @@ $hez_reason_choices = $reasons->get_choices();
 								id="<?php echo esc_attr( $hez_dom_id ); ?>"
 								name="<?php echo esc_attr( $hez_field ); ?>[selected]"
 								value="1"
+								<?php checked( null !== $hez_sent ); ?>
 								data-hez-item-toggle
 							>
 							<label class="hez-item__label" for="<?php echo esc_attr( $hez_dom_id ); ?>">
@@ -107,7 +121,7 @@ $hez_reason_choices = $reasons->get_choices();
 									id="<?php echo esc_attr( $hez_dom_id . '-qty' ); ?>"
 									name="<?php echo esc_attr( $hez_field ); ?>[quantity]"
 									class="hez-input hez-input--qty"
-									value="1"
+									value="<?php echo esc_attr( min( $hez_sent_qty, (int) $hez_line['max_qty'] ) ); ?>"
 									min="1"
 									max="<?php echo esc_attr( $hez_line['max_qty'] ); ?>"
 									step="1"
@@ -125,7 +139,7 @@ $hez_reason_choices = $reasons->get_choices();
 								>
 									<option value=""><?php esc_html_e( 'Sebep seçin', 'hezarfen-for-woocommerce' ); ?></option>
 									<?php foreach ( $hez_reason_choices as $hez_key => $hez_label ) : ?>
-										<option value="<?php echo esc_attr( $hez_key ); ?>"><?php echo esc_html( $hez_label ); ?></option>
+										<option value="<?php echo esc_attr( $hez_key ); ?>" <?php selected( $hez_sent_reason, $hez_key ); ?>><?php echo esc_html( $hez_label ); ?></option>
 									<?php endforeach; ?>
 								</select>
 							</p>
@@ -139,7 +153,7 @@ $hez_reason_choices = $reasons->get_choices();
 									rows="2"
 									maxlength="500"
 									placeholder="<?php esc_attr_e( 'Sorunu birkaç cümleyle anlatın', 'hezarfen-for-woocommerce' ); ?>"
-								></textarea>
+								><?php echo esc_textarea( $hez_sent_note ); ?></textarea>
 							</p>
 						</div>
 					</li>
@@ -190,7 +204,7 @@ $hez_reason_choices = $reasons->get_choices();
 					rows="3"
 					maxlength="1000"
 					placeholder="<?php esc_attr_e( 'İsteğe bağlı. Talebinizle ilgili eklemek istediğiniz bir şey varsa yazabilirsiniz.', 'hezarfen-for-woocommerce' ); ?>"
-				></textarea>
+				><?php echo esc_textarea( $hez_customer_note ); ?></textarea>
 			</p>
 
 			<?php

@@ -801,6 +801,14 @@
 	line-height: 1.5;
 }
 
+/* A select whose options are still being fetched. It stays enabled on
+   purpose — disabling it would drop the field from the submission — so the
+   cue has to be visual. */
+.hez-returns:not(#\9) .hez-select[aria-busy='true'] {
+	opacity: 0.6;
+	cursor: progress;
+}
+
 .hez-returns:not(#\9) .hez-tracking {
 	display: flex;
 	align-items: baseline;

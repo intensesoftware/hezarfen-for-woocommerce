@@ -7,6 +7,8 @@
 
 namespace Hezarfen\Inc\Returns\Shipping;
 
+use Hezarfen\Inc\Returns\Core\Return_Status;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -90,10 +92,16 @@ class Carrier_Sync {
 			return;
 		}
 
+		// Only a request still waiting for its pickup has a booking to lose.
+		// Once the courier has been and the request moved on, that tracking
+		// number is history: clearing it there would erase the record of a
+		// parcel that did arrive, and tell a customer whose return is closed
+		// to go and pick another pickup day.
 		$requests = $this->module->repository()->query(
 			array(
 				'order_id'        => (int) $order_id,
 				'tracking_number' => $delivery_no,
+				'status'          => Return_Status::APPROVED,
 				'limit'           => 5,
 			)
 		);

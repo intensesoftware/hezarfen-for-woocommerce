@@ -148,6 +148,12 @@ class Customer_Ships_Method implements Return_Shipping_Method_Interface {
 	/**
 	 * Tells the customer where to ship and what to do afterwards.
 	 *
+	 * The address is only promised when there is one to show. The store's
+	 * return address is optional and the module can be switched on without
+	 * it, and "send the goods to the address below" printed above an empty
+	 * space is worse than no instruction at all — the customer has nowhere
+	 * to send the parcel and no idea that anything is missing.
+	 *
 	 * @param \Hezarfen\Inc\Returns\Core\Return_Request $request The request.
 	 *
 	 * @return string
@@ -155,7 +161,9 @@ class Customer_Ships_Method implements Return_Shipping_Method_Interface {
 	public function get_customer_instructions( $request ) {
 		unset( $request );
 
-		$instructions = __( 'Ürünleri aşağıdaki iade adresine gönderin, ardından kargo takip numarasını bu sayfadaki forma girin.', 'hezarfen-for-woocommerce' );
+		$instructions = Return_Settings::has_return_address()
+			? __( 'Ürünleri aşağıdaki iade adresine gönderin, ardından kargo takip numarasını bu sayfadaki forma girin.', 'hezarfen-for-woocommerce' )
+			: __( 'Ürünleri nereye göndereceğinizi öğrenmek için mağazayla iletişime geçin; kargo takip numarasını sonra bu sayfadaki forma girebilirsiniz.', 'hezarfen-for-woocommerce' );
 
 		$custom = Return_Settings::get_instructions();
 

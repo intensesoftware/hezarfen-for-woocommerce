@@ -347,6 +347,20 @@
 			} );
 	}
 
+	/**
+	 * Marks a select as loading.
+	 *
+	 * Deliberately not `disabled`: a disabled control is skipped by the
+	 * browser's `required` check and is left out of the submission entirely,
+	 * so a submit landing mid-fetch would post an empty district and fail
+	 * server side with a field that looks filled in on screen. The submit is
+	 * held back instead — see the guard below.
+	 */
+	function setBusy( select, busy ) {
+		select.setAttribute( 'aria-busy', busy ? 'true' : 'false' );
+		select.classList.toggle( 'is-loading', busy );
+	}
+
 	function initAddressFields( fields ) {
 		var city = fields.querySelector( '[data-hez-address-city]' );
 		var district = fields.querySelector( '[data-hez-address-district]' );
@@ -357,6 +371,27 @@
 		}
 
 		var selects = [ city, district, neighborhood ];
+		var pending = 0;
+		var form = fields.closest( 'form' );
+
+		if ( form ) {
+			form.addEventListener(
+				'submit',
+				function ( event ) {
+					if ( pending < 1 ) {
+						return;
+					}
+
+					// The lists the customer is about to be judged on are
+					// still in flight; sending now would submit an address
+					// they never got to finish.
+					event.preventDefault();
+					showError( form, i18n.addressLoading || '' );
+				},
+				// Captured, so it runs before the form's own submit handlers.
+				true
+			);
+		}
 
 		selects.forEach( enhanceSelect );
 
@@ -371,46 +406,55 @@
 		}
 
 		function loadDistricts( selected ) {
-			if ( ! city.value ) {
-				fillSelect( district, [], '', i18n.selectDistrict );
-				fillSelect( neighborhood, [], '', i18n.selectNeighborhood );
+			// Emptied before the round trip, not after: the options on screen
+			// belong to the city that was just replaced, and leaving them
+			// selectable is how a district from another province gets
+			// submitted.
+			fillSelect( district, [], '', i18n.selectDistrict );
+			fillSelect( neighborhood, [], '', i18n.selectNeighborhood );
 
+			if ( ! city.value ) {
 				return;
 			}
 
-			district.disabled = true;
+			pending++;
+			setBusy( district, true );
 
 			fetchOptions( { city_code: city.value } )
 				.then( function ( data ) {
 					fillSelect( district, data.districts || [], selected || '', i18n.selectDistrict );
-					district.disabled = false;
 
 					// A district that survived the city change keeps its
-					// neighbourhoods; otherwise the list has to be emptied
-					// so a stale neighbourhood cannot be submitted.
-					loadNeighborhoods( district.value ? neighborhood.value : '' );
+					// neighbourhoods; otherwise the list stays empty.
+					if ( district.value ) {
+						loadNeighborhoods( neighborhood.value );
+					}
 				} )
-				.catch( function () {
-					district.disabled = false;
+				.catch( function () {} )
+				.then( function () {
+					pending--;
+					setBusy( district, false );
 				} );
 		}
 
 		function loadNeighborhoods( selected ) {
-			if ( ! city.value || ! district.value ) {
-				fillSelect( neighborhood, [], '', i18n.selectNeighborhood );
+			fillSelect( neighborhood, [], '', i18n.selectNeighborhood );
 
+			if ( ! city.value || ! district.value ) {
 				return;
 			}
 
-			neighborhood.disabled = true;
+			pending++;
+			setBusy( neighborhood, true );
 
 			fetchOptions( { city_code: city.value, district: district.value } )
 				.then( function ( data ) {
 					fillSelect( neighborhood, data.neighborhoods || [], selected || '', i18n.selectNeighborhood );
-					neighborhood.disabled = false;
 				} )
-				.catch( function () {
-					neighborhood.disabled = false;
+				.catch( function () {} )
+				.then( function () {
+					pending--;
+					setBusy( neighborhood, false );
 				} );
 		}
 

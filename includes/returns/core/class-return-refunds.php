@@ -75,8 +75,8 @@ class Return_Refunds {
 		$amount = round( $amount, wc_get_price_decimals() );
 
 		// The order may already carry refunds this module knows nothing
-		// about; WooCommerce refuses a refund past the order total, so the
-		// cap is applied here where it can be explained.
+		// about — a shipping-only refund, say, which lowers what is left
+		// without touching any line's own headroom.
 		$remaining = round( (float) $order->get_remaining_refund_amount(), wc_get_price_decimals() );
 
 		if ( $amount <= 0 || $remaining <= 0 ) {
@@ -86,8 +86,21 @@ class Return_Refunds {
 			);
 		}
 
+		// Clipping the amount to what is left while the line items still
+		// claim every unit would write a refund whose header and lines
+		// disagree: WooCommerce would then report units as refunded that no
+		// money was returned for, and the returnable quantity would shrink
+		// with it. Better to hand the case back to the merchant.
 		if ( $amount > $remaining ) {
-			$amount = $remaining;
+			return new \WP_Error(
+				'hezarfen_returns_refund_exceeds_remaining',
+				sprintf(
+					/* translators: 1: amount the return would refund, 2: amount still refundable on the order. */
+					__( 'Bu talebin iade tutarı (%1$s) siparişte kalan iade edilebilir tutarı (%2$s) aşıyor. Siparişte bu modülün bilmediği bir iade yapılmış olabilir; iadeyi sipariş ekranından işleyin.', 'hezarfen-for-woocommerce' ),
+					hezarfen_returns_plain_price( $amount, $order->get_currency() ),
+					hezarfen_returns_plain_price( $remaining, $order->get_currency() )
+				)
+			);
 		}
 
 		$refund = wc_create_refund(

@@ -47,6 +47,19 @@ class Return_Form_Handler {
 	private $access;
 
 	/**
+	 * What the customer submitted on a form that came back with an error.
+	 *
+	 * Kept for the rest of the request so the endpoint about to render can
+	 * hand the values back to the form. A rejected submission is not a
+	 * reason to make somebody retype three lines, their reasons, their notes
+	 * and an eight field address — and on a form this long, losing it is how
+	 * a customer gives up and e-mails the store instead.
+	 *
+	 * @var array<string, mixed>
+	 */
+	private static $rejected = array();
+
+	/**
 	 * Constructor.
 	 *
 	 * @param Returns_Module $module Module container.
@@ -56,6 +69,47 @@ class Return_Form_Handler {
 		$this->access = new Return_Access();
 
 		add_action( 'template_redirect', array( $this, 'handle' ) );
+	}
+
+	/**
+	 * The rejected submission for a given form, if this request produced one.
+	 *
+	 * @param string $context Form the values belong to: `create` for the
+	 *                        request form, `address` for the pickup address
+	 *                        form on a request's detail page.
+	 * @param int    $subject Order ID for `create`, request ID for `address`.
+	 *
+	 * @return array<string, mixed> Empty when nothing was rejected.
+	 */
+	public static function get_rejected_input( $context, $subject ) {
+		if ( empty( self::$rejected ) ) {
+			return array();
+		}
+
+		$rejected = self::$rejected;
+
+		if ( $rejected['context'] !== $context || (int) $rejected['subject'] !== (int) $subject ) {
+			return array();
+		}
+
+		return $rejected['input'];
+	}
+
+	/**
+	 * Remembers a submission the service refused.
+	 *
+	 * @param string               $context Form the values belong to.
+	 * @param int                  $subject Order or request the form was for.
+	 * @param array<string, mixed> $input   Sanitised submission.
+	 *
+	 * @return void
+	 */
+	private function reject( $context, $subject, $input ) {
+		self::$rejected = array(
+			'context' => $context,
+			'subject' => (int) $subject,
+			'input'   => $input,
+		);
 	}
 
 	/**
@@ -123,17 +177,20 @@ class Return_Form_Handler {
 			return;
 		}
 
-		$request = $this->module->service()->create(
-			$order,
-			array(
-				'lines'          => $this->read_submitted_lines(),
-				'customer_note'  => $this->read_textarea( 'customer_note' ),
-				'pickup_address' => $this->read_pickup_address(),
-			)
+		$input = array(
+			'lines'          => $this->read_submitted_lines(),
+			'customer_note'  => $this->read_textarea( 'customer_note' ),
+			'pickup_address' => $this->read_pickup_address(),
 		);
+
+		$request = $this->module->service()->create( $order, $input );
 
 		if ( is_wp_error( $request ) ) {
 			wc_add_notice( $request->get_error_message(), 'error' );
+
+			// No redirect follows, so the form renders again in this same
+			// request and can be given back what was typed.
+			$this->reject( self::ACTION_CREATE, $order->get_id(), $input );
 
 			return;
 		}
@@ -282,10 +339,13 @@ class Return_Form_Handler {
 			return;
 		}
 
-		$result = $this->module->service()->update_pickup_address( $request, $this->read_pickup_address() );
+		$address = $this->read_pickup_address();
+		$result  = $this->module->service()->update_pickup_address( $request, $address );
 
 		if ( is_wp_error( $result ) ) {
 			wc_add_notice( $result->get_error_message(), 'error' );
+
+			$this->reject( self::ACTION_ADDRESS, $request->get_id(), array( 'pickup_address' => $address ) );
 
 			return;
 		}

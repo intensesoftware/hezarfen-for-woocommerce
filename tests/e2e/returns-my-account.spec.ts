@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import { deleteOrder } from './helpers/orders';
 import { NOTICE_ERROR, NOTICE_SUCCESS } from './helpers/notices';
 import {
+	RETURNS_OPTIONS,
 	clearReturns,
 	countReturnEvents,
 	customerTrackingError,
@@ -12,6 +13,7 @@ import {
 	requestFormUrl,
 	seedReturn,
 	seedReturnableOrder,
+	setOption,
 	viewOrderUrl,
 } from './helpers/returns';
 import { snapshotOptions, restoreOptions } from './helpers/wp-options';
@@ -184,6 +186,49 @@ test.describe( 'Hezarfen iade — Hesabım akışı', () => {
 		);
 	} );
 
+	test( 'reddedilen form yazılanları geri veriyor', async ( { page } ) => {
+		const orderId = seedOrder();
+		await loginAsReturnsCustomer( page );
+
+		await page.goto( requestFormUrl( orderId ) );
+
+		const item = page.locator( '[data-hez-item]' ).first();
+		await item.locator( '[data-hez-item-toggle]' ).check();
+		await item.locator( '.hez-input--qty' ).fill( '2' );
+		await item.locator( '[data-hez-reason]' ).selectOption( 'other' );
+		await page
+			.locator( '#hez-customer-note' )
+			.fill( 'Kutusu ezik geldi.' );
+
+		// "other" wants an explanation; leaving it blank is the everyday
+		// rejection, and it must not cost the customer the rest of the form.
+		await page.evaluate( () => {
+			const form = document.querySelector(
+				'[data-hez-return-form]'
+			) as HTMLFormElement;
+			form.submit();
+		} );
+
+		await expect( page.locator( NOTICE_ERROR ) ).toContainText(
+			'açıklama yazmanız gerekiyor'
+		);
+
+		const returned = page.locator( '[data-hez-item]' ).first();
+
+		await expect(
+			returned.locator( '[data-hez-item-toggle]' )
+		).toBeChecked();
+		await expect( returned.locator( '.hez-input--qty' ) ).toHaveValue(
+			'2'
+		);
+		await expect( returned.locator( '[data-hez-reason]' ) ).toHaveValue(
+			'other'
+		);
+		await expect( page.locator( '#hez-customer-note' ) ).toHaveValue(
+			'Kutusu ezik geldi.'
+		);
+	} );
+
 	test( 'seçim yapılmadan gönderilen form hata veriyor', async ( {
 		page,
 	} ) => {
@@ -304,6 +349,40 @@ test.describe( 'Hezarfen iade — Hesabım akışı', () => {
 		// Handing the parcel over moves the request on by itself.
 		expect( getReturnStatus( seeded.id ) ).toBe( 'shipped' );
 		expect( countReturnEvents( seeded.id ) ).toBeGreaterThan( 2 );
+	} );
+
+	test( 'iade adresi girilmemişken olmayan adrese yönlendirilmiyor', async ( {
+		page,
+	} ) => {
+		const orderId = seedOrder();
+		const seeded = seedReturn( { orderId, status: 'approved' } );
+
+		// Every return address field is optional, so a store can switch the
+		// module on and never fill one in. The page must not then tell the
+		// customer to post the goods to an address it is not showing.
+		setOption( 'hezarfen_returns_address_line', '' );
+		setOption( 'hezarfen_returns_address_city', '' );
+
+		try {
+			await loginAsReturnsCustomer( page );
+			await page.goto( `/my-account/iadelerim/${ seeded.id }/` );
+
+			await expect( page.locator( '.hez-address__body' ) ).toHaveCount(
+				0
+			);
+			await expect(
+				page.locator( '.hez-panel__prose' ).first()
+			).toContainText( 'mağazayla iletişime geçin' );
+		} finally {
+			setOption(
+				'hezarfen_returns_address_line',
+				RETURNS_OPTIONS.hezarfen_returns_address_line
+			);
+			setOption(
+				'hezarfen_returns_address_city',
+				RETURNS_OPTIONS.hezarfen_returns_address_city
+			);
+		}
 	} );
 
 	test( 'ek bilgi beklenen talepte ilerleme çubuğu sıfırlanmıyor', async ( {

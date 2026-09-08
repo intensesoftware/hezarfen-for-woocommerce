@@ -207,6 +207,33 @@ test.describe( 'Hezarfen iade — WooCommerce iade kaydı', () => {
 		expect( state.refundCount ).toBe( 2 );
 	} );
 
+	test( 'kalan tutarı aşan iade kırpılmadan reddediliyor', () => {
+		const request = seedReceivedReturn( 2 );
+
+		// A refund with no line items — a shipping-only one, say — lowers
+		// what is left on the order without touching any line's headroom.
+		wp( [
+			'eval',
+			`wc_create_refund( array( 'order_id' => ${ request.orderId }, 'amount' => 150, 'line_items' => array() ) );`,
+		] );
+
+		const before = getRefundState( request.orderId, request.id );
+
+		expect( completeReturn( request.id, true ) ).toBe(
+			'hezarfen_returns_refund_exceeds_remaining'
+		);
+
+		const after = getRefundState( request.orderId, request.id );
+
+		// Clipping the amount while the line items still claim every unit
+		// would record units WooCommerce was never paid back for, and the
+		// returnable quantity would shrink with them.
+		expect( after.refundCount ).toBe( before.refundCount );
+		expect( after.firstLineQtyRefunded ).toBe( 0 );
+		expect( after.refundIdOnRequest ).toBe( 0 );
+		expect( getReturnStatus( request.id ) ).toBe( 'completed' );
+	} );
+
 	test( 'stok geri ekleme ayara bağlı', () => {
 		setOption( 'hezarfen_returns_restock', 'yes' );
 		setProductStock( true, 10 );

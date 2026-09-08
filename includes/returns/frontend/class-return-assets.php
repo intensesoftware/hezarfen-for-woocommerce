@@ -71,6 +71,7 @@ class Return_Assets {
 					'reasonRequired'   => __( 'Seçtiğiniz her ürün için bir iade sebebi seçin.', 'hezarfen-for-woocommerce' ),
 					'noteRequired'     => __( 'Seçtiğiniz sebep için açıklama yazmanız gerekiyor.', 'hezarfen-for-woocommerce' ),
 					'confirmCancel'    => __( 'İade talebinizi iptal etmek istediğinize emin misiniz?', 'hezarfen-for-woocommerce' ),
+					'addressLoading'   => __( 'Adres listeleri yükleniyor, bir saniye. Sonra tekrar gönderin.', 'hezarfen-for-woocommerce' ),
 					'selectDistrict'   => __( 'İlçe seçin', 'hezarfen-for-woocommerce' ),
 					'selectNeighborhood' => __( 'Mahalle seçin', 'hezarfen-for-woocommerce' ),
 					'searchNoResults'  => __( 'Sonuç bulunamadı', 'hezarfen-for-woocommerce' ),

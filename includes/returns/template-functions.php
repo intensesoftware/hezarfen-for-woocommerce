@@ -48,7 +48,14 @@ if ( ! function_exists( 'hezarfen_returns_format_datetime' ) ) {
 	/**
 	 * Formats a MySQL datetime stored in site time for display.
 	 *
-	 * @param string $mysql_date Datetime in `Y-m-d H:i:s`.
+	 * The conversion goes through `get_gmt_from_date()` rather than the
+	 * site's current `gmt_offset`: the offset in force today is not
+	 * necessarily the one that was in force when the row was written, and
+	 * subtracting the wrong one moves the timestamp by an hour. On a store
+	 * whose timezone observes DST that made the same request read 14:00 in
+	 * summer and 15:00 in winter.
+	 *
+	 * @param string $mysql_date Datetime in `Y-m-d H:i:s`, site time.
 	 *
 	 * @return string
 	 */
@@ -57,16 +64,13 @@ if ( ! function_exists( 'hezarfen_returns_format_datetime' ) ) {
 			return '';
 		}
 
-		$timestamp = strtotime( $mysql_date );
+		$timestamp = (int) get_gmt_from_date( $mysql_date, 'U' );
 
 		if ( ! $timestamp ) {
 			return '';
 		}
 
-		return wp_date(
-			get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-			$timestamp - (int) ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS )
-		);
+		return wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $timestamp );
 	}
 }
 
@@ -89,6 +93,27 @@ if ( ! function_exists( 'hezarfen_returns_format_date' ) ) {
 		}
 
 		return wp_date( get_option( 'date_format' ), $timestamp );
+	}
+}
+
+if ( ! function_exists( 'hezarfen_returns_plain_price' ) ) {
+	/**
+	 * A formatted price with no markup left in it.
+	 *
+	 * `wc_price()` wraps the amount in spans and writes the currency as an
+	 * HTML entity, so stripping the tags alone leaves `&#8378;` behind —
+	 * which then shows up verbatim wherever the string is escaped, such as
+	 * an admin notice or a timeline entry.
+	 *
+	 * @param float  $amount   Amount.
+	 * @param string $currency Currency code.
+	 *
+	 * @return string
+	 */
+	function hezarfen_returns_plain_price( $amount, $currency = '' ) {
+		$formatted = wc_price( $amount, array( 'currency' => $currency ) );
+
+		return trim( wp_strip_all_tags( html_entity_decode( $formatted, ENT_QUOTES, 'UTF-8' ) ) );
 	}
 }
 

@@ -230,6 +230,12 @@ class My_Account_Returns {
 		$order  = $request->get_order();
 		$method = $this->module->shipping()->get_for_request( $request );
 
+		$stored = $request->has_pickup_address()
+			? $request->get_pickup_address()
+			: ( $order ? Return_Pickup_Address::from_order( $order ) : Return_Pickup_Address::empty_address() );
+
+		$rejected = Return_Form_Handler::get_rejected_input( Return_Form_Handler::ACTION_ADDRESS, $request->get_id() );
+
 		hezarfen_returns_get_template(
 			'returns/detail.php',
 			array(
@@ -238,7 +244,7 @@ class My_Account_Returns {
 				'reasons'         => $this->module->reasons(),
 				'shipping_method' => $method,
 				'booking'         => $this->get_booking_view( $request, $method ),
-				'pickup_address'  => $request->has_pickup_address() ? $request->get_pickup_address() : ( $order ? Return_Pickup_Address::from_order( $order ) : Return_Pickup_Address::empty_address() ),
+				'pickup_address'  => $this->prefill_address( $rejected, $stored ),
 				'progress_steps'  => Return_Status::get_progress_steps(),
 				'back_url'        => $order ? $order->get_view_order_url() : '',
 			)
@@ -308,6 +314,10 @@ class My_Account_Returns {
 			return;
 		}
 
+		// A submission the service refused re-renders this same form, so it
+		// is handed back what the customer typed instead of a blank slate.
+		$rejected = Return_Form_Handler::get_rejected_input( Return_Form_Handler::ACTION_CREATE, $order->get_id() );
+
 		hezarfen_returns_get_template(
 			'returns/request-form.php',
 			array(
@@ -317,7 +327,8 @@ class My_Account_Returns {
 				'shipping_method' => $this->module->shipping()->get_active_method(),
 				'deadline'        => $this->module->eligibility()->get_order_deadline( $order ),
 				'cancel_url'      => $order->get_view_order_url(),
-				'pickup_address'  => Return_Pickup_Address::from_order( $order ),
+				'pickup_address'  => $this->prefill_address( $rejected, Return_Pickup_Address::from_order( $order ) ),
+				'submitted'       => $rejected,
 			)
 		);
 	}
@@ -360,6 +371,26 @@ class My_Account_Returns {
 				'request_url' => wc_get_endpoint_url( self::get_request_endpoint(), (string) $order->get_id(), wc_get_page_permalink( 'myaccount' ) ),
 			)
 		);
+	}
+
+	/**
+	 * The address to render: what the customer just typed when a submission
+	 * was refused, otherwise what is on file.
+	 *
+	 * @param array<string, mixed>  $rejected Rejected submission, if any.
+	 * @param array<string, string> $fallback Address on file.
+	 *
+	 * @return array<string, string>
+	 */
+	private function prefill_address( $rejected, $fallback ) {
+		if ( empty( $rejected['pickup_address'] ) || ! is_array( $rejected['pickup_address'] ) ) {
+			return $fallback;
+		}
+
+		// An empty submission means the form carried no address fields at
+		// all; falling back keeps the block populated for a method that does
+		// collect one.
+		return array_filter( $rejected['pickup_address'] ) ? $rejected['pickup_address'] : $fallback;
 	}
 
 	/**

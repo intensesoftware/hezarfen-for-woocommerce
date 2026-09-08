@@ -240,6 +240,16 @@ adedi geri bırakır; diğer tüm durumlar adedi tutar.
   WooCommerce yalnızca o sipariş için gerçekten düşürdüğü stoğu geri koyar
   (`_reduced_stock`), elle oluşturulmuş siparişlerde bir şey olmaz
 
+### Senaryo: İade kaydı siparişte kalan tutarı aşar
+- **Given** siparişte bu modülün açmadığı bir iade var (ör. yalnızca kargo
+  bedeli iade edilmiş), dolayısıyla kalan iade edilebilir tutar düşmüş
+- **When** talep iade kutusu işaretli hâlde tamamlanır
+- **Then** kayıt **kırpılmaz, hiç yazılmaz**: tutarı kısıp satır adetlerini
+  tam bırakmak, WooCommerce'in parası iade edilmemiş adetleri iade edilmiş
+  saymasına ve o satırın iade edilebilir adedinin düşmesine yol açardı
+- **And** mağazaya hangi tutarların çakıştığı yazan bir hata gösterilir
+- **And** talep yine `completed` olur
+
 ### Senaryo: Zaten elle iade edilmiş bir talep tamamlanır
 - **Given** mağaza aynı satırı sipariş ekranından zaten iade etmiş
 - **When** talep iade kutusu işaretli hâlde tamamlanır
@@ -269,6 +279,18 @@ adedi geri bırakır; diğer tüm durumlar adedi tutar.
 - **Sipariş notları**: talep açılması, onay, ret, iptal ve tamamlanma sipariş
   notu olarak da düşer. Ara kargo adımları düşmez; onlar talebin kendi
   timeline'ında kalır, yoksa sipariş notları boğulur.
+- **İade adresi boş**: adres alanlarının hiçbiri zorunlu değil, dolayısıyla
+  modül adres girilmeden açılabilir. Bu durumda "müşteri kendi gönderir"
+  yönteminin yönergesi adres vaat etmez, müşteriyi mağazayla iletişime
+  yönlendirir; mağaza da ayarlar ve iade ekranlarında bir uyarı görür.
+- **Reddedilen form**: sunucu bir talebi geri çevirdiğinde form aynı istekte
+  yeniden çizilir ve müşterinin yazdığı her şey — seçili satırlar, adetler,
+  sebepler, satır notları, talep notu ve düzenlenmiş alım adresi — geri
+  konur. Sekiz alanlık bir adresi hata başına yeniden yazdırmak, müşteriyi
+  formu bırakıp mağazaya e-posta atmaya iten şeydir.
+- **Zaman damgaları**: timeline ve talep tarihleri `get_gmt_from_date()` ile
+  çevrilir. Anlık `gmt_offset` ile çevirmek, yaz saati uygulayan bir mağazada
+  aynı kaydın yazın 14:00, kışın 15:00 görünmesine yol açıyordu.
 - **İlerleme çubuğu**: `info-required` bir milat değil, mola; çubukta
   park edildiği adımı (`pending`) ödünç alır, o ana kadarki ilerleme silinmez.
 - **Çift gönderim**: `return_number` benzersiz indekslidir; aynı sipariş için

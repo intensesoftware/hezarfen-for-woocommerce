@@ -336,7 +336,7 @@ class Return_Service {
 			sprintf(
 				/* translators: %s: refunded amount, formatted. */
 				__( 'Siparişe %s tutarında WooCommerce iade kaydı işlendi. Para transferini kendiniz yapmanız gerekir.', 'hezarfen-for-woocommerce' ),
-				wp_strip_all_tags( wc_price( $created->get_amount(), array( 'currency' => $request->get_currency() ) ) )
+				hezarfen_returns_plain_price( $created->get_amount(), $request->get_currency() )
 			),
 			array(
 				'actor'               => isset( $context['actor'] ) ? $context['actor'] : null,
