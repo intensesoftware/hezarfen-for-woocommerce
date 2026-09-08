@@ -368,14 +368,29 @@ class Courier_Hepsijet_Integration {
             return $response;
         }
 
-        if ( ! $response['success'] ) {
+        if ( empty( $response['success'] ) ) {
             return new \WP_Error( 'hepsijet_error', $response['message'] ?? 'API Error' );
         }
 
-        // Relay API returns data directly
-        $delivery_no = $response['delivery_no'];
-        $zpl_data = $response['zpl'];
-        $print_date = $response['print_date'];
+        // Relay API returns data directly. Read defensively: a 200/"success"
+        // body may still omit fields, and the returns flow now depends on
+        // this response.
+        $delivery_no = isset( $response['delivery_no'] ) ? (string) $response['delivery_no'] : '';
+        $zpl_data    = $response['zpl'] ?? '';
+        $print_date  = $response['print_date'] ?? '';
+
+        // A success response with no tracking number is not a usable barcode.
+        // Persisting it would write shipment meta under an empty key
+        // (_hezarfen_hepsijet_shipment_) and hand the caller an empty tracking
+        // number — which reads as "nothing was created", so the customer books
+        // again while the carrier may already hold a label, orphaning the
+        // first one. Fail instead of writing anything.
+        if ( '' === $delivery_no ) {
+            return new \WP_Error(
+                'hepsijet_error',
+                esc_html__( 'The carrier did not return a valid tracking number.', 'hezarfen-for-woocommerce' )
+            );
+        }
 
         // Calculate totals from packages array
         $package_count = count( $packages );
@@ -498,6 +513,42 @@ class Courier_Hepsijet_Integration {
         do_action( 'hezarfen_hepsijet_shipment_cancelled', (int) $order_id, (string) $delivery_no );
 
         return true;
+    }
+
+    /**
+     * Finds the order a delivery number belongs to.
+     *
+     * The shipment is stored as order meta under a per-delivery key, so an
+     * EXISTS query on that key resolves the order even when the caller only
+     * has the delivery number. This keeps a cancel that arrives without an
+     * order id from silently skipping the meta update — and, with it, the
+     * hook that releases a linked return request.
+     *
+     * @param string $delivery_no Carrier delivery number.
+     *
+     * @return int Order id, or 0 when nothing matches.
+     */
+    public function find_order_id_by_delivery_no( $delivery_no ) {
+        $delivery_no = (string) $delivery_no;
+
+        if ( '' === $delivery_no ) {
+            return 0;
+        }
+
+        $orders = wc_get_orders(
+            array(
+                'limit'      => 1,
+                'return'     => 'ids',
+                'meta_query' => array(
+                    array(
+                        'key'     => '_hezarfen_hepsijet_shipment_' . $delivery_no,
+                        'compare' => 'EXISTS',
+                    ),
+                ),
+            )
+        );
+
+        return $orders ? (int) $orders[0] : 0;
     }
 
     /**
@@ -722,53 +773,6 @@ class Courier_Hepsijet_Integration {
      */
     public function is_auto_shipment_supported(): bool {
         return true;
-    }
-
-    /**
-     * Convert Turkish date format to MySQL datetime format
-     * 
-     * @param string $turkish_date Date in format "31.08.2025 22:47"
-     * @return string Date in MySQL format "2025-08-31 22:47:00"
-     */
-    private function convert_turkish_date_to_mysql( $turkish_date ) {
-        if ( empty( $turkish_date ) ) {
-            return '';
-        }
-
-        try {
-            // Turkish format: "31.08.2025 22:47"
-            // Parse the date
-            $date_parts = explode( ' ', $turkish_date );
-            if ( count( $date_parts ) !== 2 ) {
-                return $turkish_date; // Return original if format is unexpected
-            }
-
-            $date_part = $date_parts[0]; // "31.08.2025"
-            $time_part = $date_parts[1]; // "22:47"
-
-            $date_components = explode( '.', $date_part );
-            if ( count( $date_components ) !== 3 ) {
-                return $turkish_date; // Return original if format is unexpected
-            }
-
-            $day = $date_components[0];
-            $month = $date_components[1];
-            $year = $date_components[2];
-
-            // Create MySQL format: "2025-08-31 22:47:00"
-            $mysql_format = sprintf( '%s-%s-%s %s:00', $year, $month, $day, $time_part );
-
-            // Validate the date
-            $timestamp = strtotime( $mysql_format );
-            if ( $timestamp === false ) {
-                return $turkish_date; // Return original if invalid
-            }
-
-            return $mysql_format;
-
-        } catch ( Exception $e ) {
-            return $turkish_date; // Return original on error
-        }
     }
 
     /**

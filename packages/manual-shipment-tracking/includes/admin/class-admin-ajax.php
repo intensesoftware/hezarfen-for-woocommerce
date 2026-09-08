@@ -298,12 +298,18 @@ class Admin_Ajax {
 
 		if ( $result === true ) {
 			// Mark shipment as cancelled in the encapsulated shipment meta.
-			// Shared with the returns module, which cancels the same way when
-			// a customer calls off their pickup.
-			if ( ! empty( $_POST['order_id'] ) ) {
-				$hepsijet_integration->mark_shipment_cancelled( absint( $_POST['order_id'] ), $delivery_no );
+			// Shared with the returns module: this meta update is what fires
+			// hezarfen_hepsijet_shipment_cancelled and releases a linked return
+			// request, so it must run even when the caller sent only the
+			// delivery number — the order is then resolved from that number.
+			$order_id = ! empty( $_POST['order_id'] )
+				? absint( $_POST['order_id'] )
+				: $hepsijet_integration->find_order_id_by_delivery_no( $delivery_no );
+
+			if ( $order_id ) {
+				$hepsijet_integration->mark_shipment_cancelled( $order_id, $delivery_no );
 			}
-			
+
 			wp_send_json_success( array( 'message' => 'Shipment cancelled successfully' ) );
 		} else {
 			// Handle unexpected response format

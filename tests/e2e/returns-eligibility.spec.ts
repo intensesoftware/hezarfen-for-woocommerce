@@ -164,6 +164,24 @@ test.describe( 'Hezarfen iade — iade edilebilirlik kuralları', () => {
 		).toContainText( '2 adet' );
 	} );
 
+	test( 'iptal edilen talep ayırdığı adedi geri bırakıyor', async ( {
+		page,
+	} ) => {
+		const orderId = seedOrder( { quantity: 2 } );
+		seedReturn( { orderId, quantity: 2, status: 'cancelled' } );
+
+		await page.goto( requestFormUrl( orderId ) );
+
+		// Cancelled releases its reserved units exactly like rejected:
+		// get_releasing_statuses() covers both, and dropping either from that
+		// list would lock the units forever. Tested separately so a regression
+		// on just one status cannot slip through.
+		await expect( page.locator( '.hez-return-form' ) ).toBeVisible();
+		await expect(
+			page.locator( '[data-hez-item] .hez-item__meta' ).first()
+		).toContainText( '2 adet' );
+	} );
+
 	test( 'dijital ürünler iade listesinde yer almıyor', async ( { page } ) => {
 		const orderId = seedDigitalOrder();
 		seededOrders.push( orderId );

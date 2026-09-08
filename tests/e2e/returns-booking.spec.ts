@@ -3,6 +3,7 @@ import { deleteOrder } from './helpers/orders';
 import { deleteMuPlugin, writeMuPlugin } from './helpers/mu-plugin';
 import { NOTICE_SUCCESS } from './helpers/notices';
 import {
+	advanceReturn,
 	announceCarrierCancellation,
 	clearReturns,
 	customerBookingError,
@@ -274,6 +275,28 @@ test.describe( 'Hezarfen iade — müşteri kargo randevusu', () => {
 		await loginAsReturnsCustomer( page );
 		await page.goto( returnDetailUrl( request.id ) );
 		await expect( page.locator( '#hez-pickup-date' ) ).toBeVisible();
+	} );
+
+	test( 'onaylı ve randevulu talep reddedilince/iptal edilince randevu da kalkar', () => {
+		for ( const target of [ 'rejected', 'cancelled' ] ) {
+			clearReturns();
+			const request = seedApprovedReturn();
+
+			// A live pickup exists once the fixture writes its barcode.
+			expect( customerBookingError( request.id, OFFERED_DAY ) ).toBe( '' );
+			expect( getReturnShipment( request.id ).tracking ).not.toBe( '' );
+
+			// Closing an approved-and-booked request has to call the pickup
+			// off, not just flip the status — otherwise the courier still shows
+			// up for a return that no longer exists, and the freed units are
+			// handed straight back for a fresh request.
+			advanceReturn( request.id, [ target ] );
+
+			expect( getReturnStatus( request.id ) ).toBe( target );
+			const after = getReturnShipment( request.id );
+			expect( after.tracking ).toBe( '' );
+			expect( after.pickup ).toBe( '' );
+		}
 	} );
 
 	test( 'mağaza kargoyu iptal edince talep de randevusuz kalır', async ( {

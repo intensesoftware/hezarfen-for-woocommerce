@@ -222,13 +222,25 @@
 				} )
 				.catch( function () {
 					// Nothing was copied, so the code has to stay reachable:
-					// selecting it lets the customer copy it by hand.
+					// selecting it lets the customer copy it by hand. This must
+					// not throw — getSelection() can be null, and a throw here
+					// would skip the label-reset below and leave the button
+					// stuck on "copy failed".
 					button.textContent = i18n.copyFailed || original;
 
-					var range = document.createRange();
-					range.selectNodeContents( source );
-					window.getSelection().removeAllRanges();
-					window.getSelection().addRange( range );
+					try {
+						var selection = window.getSelection();
+
+						if ( selection ) {
+							var range = document.createRange();
+							range.selectNodeContents( source );
+							selection.removeAllRanges();
+							selection.addRange( range );
+						}
+					} catch ( error ) {
+						// Selecting the code is a courtesy; the code is still on
+						// screen to copy by hand if the browser refuses.
+					}
 				} )
 				.then( function () {
 					window.clearTimeout( timer );
@@ -359,6 +371,18 @@
 	function setBusy( select, busy ) {
 		select.setAttribute( 'aria-busy', busy ? 'true' : 'false' );
 		select.classList.toggle( 'is-loading', busy );
+
+		// selectWoo hides the native <select> and renders a container in its
+		// place, so styling and announcing the state on the native control
+		// alone is invisible on the sites where the enhancement is active —
+		// which is most of them, and exactly the ones that hit the round trip.
+		// Mirror the state onto the visible widget too.
+		if ( select.hezEnhanced && window.jQuery ) {
+			window.jQuery( select )
+				.next( '.select2' )
+				.attr( 'aria-busy', busy ? 'true' : 'false' )
+				.toggleClass( 'is-loading', busy );
+		}
 	}
 
 	function initAddressFields( fields ) {
@@ -372,6 +396,11 @@
 
 		var selects = [ city, district, neighborhood ];
 		var pending = 0;
+		// One generation counter per list: a fast city→city switch leaves two
+		// fetches in flight, and without this the slower (older) response could
+		// land last and leave a district list that belongs to the wrong city.
+		var districtSeq = 0;
+		var neighborhoodSeq = 0;
 		var form = fields.closest( 'form' );
 
 		if ( form ) {
@@ -417,11 +446,19 @@
 				return;
 			}
 
+			var seq = ++districtSeq;
+
 			pending++;
 			setBusy( district, true );
 
 			fetchOptions( { city_code: city.value } )
 				.then( function ( data ) {
+					// A newer city change has already fired; that request owns
+					// the list now, so this stale response is dropped.
+					if ( seq !== districtSeq ) {
+						return;
+					}
+
 					fillSelect( district, data.districts || [], selected || '', i18n.selectDistrict );
 
 					// A district that survived the city change keeps its
@@ -430,10 +467,23 @@
 						loadNeighborhoods( neighborhood.value );
 					}
 				} )
-				.catch( function () {} )
+				.catch( function () {
+					// Nonce aged out or the network failed: the lists were
+					// already cleared, so tell the customer instead of leaving
+					// them staring at an empty district with no reason.
+					if ( seq === districtSeq && form ) {
+						showError( form, i18n.addressRefreshFailed || '' );
+					}
+				} )
 				.then( function () {
+					// pending is always decremented — it gates the submit and
+					// must return to zero — but only the latest request owns the
+					// busy indicator.
 					pending--;
-					setBusy( district, false );
+
+					if ( seq === districtSeq ) {
+						setBusy( district, false );
+					}
 				} );
 		}
 
@@ -444,17 +494,30 @@
 				return;
 			}
 
+			var seq = ++neighborhoodSeq;
+
 			pending++;
 			setBusy( neighborhood, true );
 
 			fetchOptions( { city_code: city.value, district: district.value } )
 				.then( function ( data ) {
+					if ( seq !== neighborhoodSeq ) {
+						return;
+					}
+
 					fillSelect( neighborhood, data.neighborhoods || [], selected || '', i18n.selectNeighborhood );
 				} )
-				.catch( function () {} )
+				.catch( function () {
+					if ( seq === neighborhoodSeq && form ) {
+						showError( form, i18n.addressRefreshFailed || '' );
+					}
+				} )
 				.then( function () {
 					pending--;
-					setBusy( neighborhood, false );
+
+					if ( seq === neighborhoodSeq ) {
+						setBusy( neighborhood, false );
+					}
 				} );
 		}
 

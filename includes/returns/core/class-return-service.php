@@ -184,6 +184,7 @@ class Return_Service {
 		$request->set_status( $new_status );
 
 		$shipping_error = null;
+		$booking_error  = null;
 
 		if ( Return_Status::APPROVED === $new_status ) {
 			$result = $this->shipping->get_for_request( $request )->handle_approved( $request );
@@ -197,6 +198,23 @@ class Return_Service {
 				// gives them a return address and a tracking form instead
 				// of a pickup that is never coming.
 				$request->set_shipping_method( $this->shipping->get_fallback_method()->get_key() );
+			}
+		} elseif (
+			in_array( $new_status, Return_Status::get_releasing_statuses(), true )
+			&& $this->holds_live_carrier_booking( $request, $old_status )
+		) {
+			// A pickup the carrier still holds must be called off before the
+			// request is closed. Rejecting or cancelling it here otherwise
+			// leaves a courier scheduled to collect a parcel for a return that
+			// no longer exists, while the freed units are handed straight back
+			// for a fresh request. Best effort: if the carrier cannot be
+			// reached the closure still stands, but the merchant is told the
+			// pickup may still be live so they can call it off by hand. This
+			// also clears the tracking number, so the change is saved below.
+			$released = $this->shipping->get_for_request( $request )->cancel_booking( $request );
+
+			if ( is_wp_error( $released ) ) {
+				$booking_error = $released;
 			}
 		}
 
@@ -240,6 +258,26 @@ class Return_Service {
 			);
 		}
 
+		if ( $booking_error ) {
+			// The status change was saved, but the carrier still believes a
+			// pickup is due. Spelling that out on the timeline is the only way
+			// the merchant learns a courier may arrive for a return they just
+			// closed, and that they must cancel it at the carrier by hand.
+			$this->log(
+				$request,
+				Return_Event::TYPE_SHIPPING,
+				sprintf(
+					/* translators: %s: reason the carrier pickup could not be cancelled. */
+					__( 'Kargo alım randevusu otomatik iptal edilemedi: %s Kurye yine de gelebilir; randevuyu kargo firması üzerinden manuel iptal edin.', 'hezarfen-for-woocommerce' ),
+					$booking_error->get_error_message()
+				),
+				array(
+					'actor'               => $this->system_actor(),
+					'is_customer_visible' => false,
+				)
+			);
+		}
+
 		/**
 		 * Fires after a return request changed status.
 		 *
@@ -261,6 +299,35 @@ class Return_Service {
 	}
 
 	/**
+	 * Whether the request still holds a carrier pickup that no courier has
+	 * collected yet — the only case where closing the request must also call
+	 * the appointment off.
+	 *
+	 * A booking only lives while the request is still approved: once the
+	 * courier collects it the request moves on to shipped/received, and its
+	 * tracking number then records a pickup that already happened rather than
+	 * one still to come. Manual "customer ships" tracking is the customer's
+	 * own number, with nothing to cancel at a carrier — so the method is asked
+	 * whether it books the pickup itself before we try to unbook it.
+	 *
+	 * @param Return_Request $request    The request.
+	 * @param string         $old_status Status the request is leaving.
+	 *
+	 * @return bool
+	 */
+	private function holds_live_carrier_booking( $request, $old_status ) {
+		if ( Return_Status::APPROVED !== $old_status ) {
+			return false;
+		}
+
+		if ( '' === $request->get_tracking_number() ) {
+			return false;
+		}
+
+		return $this->shipping->get_for_request( $request )->requires_customer_booking();
+	}
+
+	/**
 	 * Marks a request completed and, when asked, records the refund.
 	 *
 	 * The two are separate steps on purpose. Completion is the merchant
@@ -270,6 +337,13 @@ class Return_Service {
 	 * completion back — it is reported instead, and the merchant refunds
 	 * from the order screen.
 	 *
+	 * COMPLETED is terminal, so a first attempt whose refund failed used to
+	 * strand the request: re-running this action hit the transition guard and
+	 * never reached the refund step again. Now the completion is skipped when
+	 * the request is already closed, so the merchant can simply re-run it to
+	 * record the refund once the cause is resolved. The whole thing runs under
+	 * a per-request lock so a double-click cannot write two refunds.
+	 *
 	 * @param Return_Request       $request Request to complete.
 	 * @param array<string, mixed> $context Optional `message`, `actor` and
 	 *                                      `refund` (bool, defaults to the
@@ -278,10 +352,45 @@ class Return_Service {
 	 * @return true|\WP_Error
 	 */
 	public function complete( $request, $context = array() ) {
-		$changed = $this->change_status( $request, Return_Status::COMPLETED, $context );
+		return $this->with_request_lock(
+			$request,
+			function () use ( $request, $context ) {
+				// Re-read under the lock: a completion racing with this one may
+				// already have closed the request and written its refund, and
+				// the in-memory copy would still show neither.
+				$fresh = $request->get_id() ? $this->repository->get( $request->get_id() ) : $request;
 
-		if ( is_wp_error( $changed ) ) {
-			return $changed;
+				if ( ! $fresh ) {
+					return new \WP_Error(
+						'hezarfen_returns_not_found',
+						__( 'İade talebi bulunamadı.', 'hezarfen-for-woocommerce' )
+					);
+				}
+
+				return $this->do_complete( $fresh, $context );
+			}
+		);
+	}
+
+	/**
+	 * The body of complete(), run against a freshly loaded request while the
+	 * per-request lock is held.
+	 *
+	 * @param Return_Request       $request Fresh request loaded under lock.
+	 * @param array<string, mixed> $context Optional `message`, `actor`, `refund`.
+	 *
+	 * @return true|\WP_Error
+	 */
+	private function do_complete( $request, $context ) {
+		// A request already closed on an earlier attempt is not transitioned
+		// again — COMPLETED has no outgoing transitions — but its refund can
+		// still be recorded below.
+		if ( Return_Status::COMPLETED !== $request->get_status() ) {
+			$changed = $this->change_status( $request, Return_Status::COMPLETED, $context );
+
+			if ( is_wp_error( $changed ) ) {
+				return $changed;
+			}
 		}
 
 		$refund = array_key_exists( 'refund', $context )
@@ -310,8 +419,9 @@ class Return_Service {
 			);
 
 			// The goods came back and the request is closed; only the
-			// bookkeeping is missing. Saying so plainly keeps the merchant
-			// from re-running an action that already succeeded.
+			// bookkeeping is missing. Saying so plainly, and leaving the
+			// request completed, lets the merchant fix the cause and re-run
+			// the action to record the refund without re-opening anything.
 			return new \WP_Error(
 				$created->get_error_code(),
 				sprintf(
@@ -582,6 +692,40 @@ class Return_Service {
 	 * @return true|\WP_Error
 	 */
 	public function book_shipment_by_customer( $request, $choice ) {
+		return $this->with_request_lock(
+			$request,
+			function () use ( $request, $choice ) {
+				// Authoritative gate against the stored row: two bookings
+				// racing on one request each hold an in-memory copy that still
+				// looks unbooked, so both would pass the check below and the
+				// carrier would be called twice. Under the lock the first
+				// booking has already written its tracking number, and the
+				// second reads that here and stops before the carrier call.
+				$fresh = $request->get_id() ? $this->repository->get( $request->get_id() ) : null;
+
+				if ( $fresh && ! $fresh->is_bookable_by_customer() ) {
+					return new \WP_Error(
+						'hezarfen_returns_not_bookable',
+						__( 'Bu talep için kargo randevusu alınamaz.', 'hezarfen-for-woocommerce' )
+					);
+				}
+
+				return $this->do_book_shipment_by_customer( $request, $choice );
+			}
+		);
+	}
+
+	/**
+	 * The body of book_shipment_by_customer(), run while the per-request lock
+	 * is held. Mutates and saves the caller's request so the booking details
+	 * it filled in are visible to the caller afterwards.
+	 *
+	 * @param Return_Request $request Approved request.
+	 * @param string         $choice  Value of the picked option.
+	 *
+	 * @return true|\WP_Error
+	 */
+	private function do_book_shipment_by_customer( $request, $choice ) {
 		$method = $this->shipping->get_for_request( $request );
 
 		if ( ! $method->requires_customer_booking() ) {
@@ -901,6 +1045,51 @@ class Return_Service {
 		}
 
 		return round( $total, wc_get_price_decimals() );
+	}
+
+	/**
+	 * Runs a callback while holding an exclusive lock on one request.
+	 *
+	 * The money and carrier side effects — recording a refund, booking a
+	 * pickup — must not run twice for the same request, and an in-memory
+	 * precondition is not enough: two requests that both read the request as
+	 * eligible each pass it and both call the gateway or the carrier. A MySQL
+	 * advisory lock serialises them so the second sees what the first wrote.
+	 * The lock is released on both the normal and the error path. If it cannot
+	 * be taken within a few seconds the caller is told the request is busy
+	 * rather than left to race.
+	 *
+	 * @param Return_Request $request  Request to lock on.
+	 * @param callable       $callback Work to run under the lock.
+	 *
+	 * @return mixed Whatever the callback returns, or a WP_Error when the lock
+	 *               could not be acquired.
+	 */
+	private function with_request_lock( $request, $callback ) {
+		global $wpdb;
+
+		$id = (int) $request->get_id();
+
+		if ( ! $id ) {
+			// Not persisted yet, so nothing else can be racing it.
+			return $callback();
+		}
+
+		$key    = 'hezarfen_return_' . $id;
+		$locked = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, %d)', $key, 5 ) );
+
+		if ( 1 !== $locked ) {
+			return new \WP_Error(
+				'hezarfen_returns_busy',
+				__( 'Bu talep üzerinde başka bir işlem sürüyor. Lütfen birkaç saniye sonra tekrar deneyin.', 'hezarfen-for-woocommerce' )
+			);
+		}
+
+		try {
+			return $callback();
+		} finally {
+			$wpdb->query( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', $key ) );
+		}
 	}
 
 	/**

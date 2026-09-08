@@ -106,23 +106,35 @@ test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
 		await expect( page.locator( LOCKED_STATUSES_ROW ) ).toBeVisible();
 	} );
 
-	test( 'kilitli satır kaydetmede boş option yazmıyor', async ( {
+	test( 'kilitli satırlar kaydetmede boş option yazmıyor', async ( {
 		page,
 	} ) => {
 		await page.goto( SETTINGS_URL );
 		await page.locator( 'button[name="save"]' ).click();
 		await expect( page.locator( '#message.updated.inline' ) ).toBeVisible();
 
-		// The row is marked `is_option => false` precisely so WooCommerce's
-		// default save branch does not write an empty option for it. An empty
-		// value would read back as "no status is eligible", and every order
-		// would quietly stop being returnable.
-		expect(
-			wp( [
-				'eval',
-				`var_export( get_option( 'hezarfen_returns_eligible_order_statuses', 'MISSING' ) );`,
-			] ).trim()
-		).toBe( "'MISSING'" );
+		// Every locked row is marked `is_option => false` precisely so
+		// WooCommerce's default save branch does not write an empty option for
+		// it — wc_clean( null ) yields '' there, not null. A written empty value
+		// would later read back as "nothing is eligible" and quietly stop
+		// orders from being returnable. So none of the four placeholder ids may
+		// appear after a save, and the real statuses key the free flow falls
+		// back on must stay untouched. Checking all four guards against a
+		// regression that makes just one of them savable.
+		for ( const id of [
+			'hezarfen_returns_locked_statuses',
+			'hezarfen_returns_locked_products',
+			'hezarfen_returns_locked_reasons',
+			'hezarfen_returns_locked_photos',
+			'hezarfen_returns_eligible_order_statuses',
+		] ) {
+			expect(
+				wp( [
+					'eval',
+					`var_export( get_option( '${ id }', 'MISSING' ) );`,
+				] ).trim()
+			).toBe( "'MISSING'" );
+		}
 	} );
 
 	test( 'satış bağlantısı yalnızca promosyonlar açıkken çıkıyor', async ( {

@@ -190,6 +190,17 @@ class Return_Eligibility {
 			// refund for the same units, so adding the two together would
 			// consume the line twice. The wider of the two is what really
 			// left the order; an open request reserves on top of that.
+			//
+			// The one case this leaves loose is a completed return and a
+			// manual WooCommerce refund that cover *different* units of the
+			// same line (a return whose auto-refund was off, plus a separate
+			// hand refund): max() then counts only the larger, so the line can
+			// look returnable for a unit that is already gone. Summing instead
+			// would be worse — it would double-count the common case and block
+			// legitimate returns — so the rare disjoint overlap is accepted
+			// here, and the refund step catches it downstream: the amount is
+			// clamped to the order's remaining refundable total and a return
+			// with nothing left to refund is rejected rather than recorded.
 			$max_qty = $ordered - $open - max( $completed, $refunded );
 
 			if ( $max_qty < 1 ) {

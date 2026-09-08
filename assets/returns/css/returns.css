@@ -809,6 +809,14 @@
 	cursor: progress;
 }
 
+/* When selectWoo enhances the select it hides the native control and shows
+   this widget in its place, so the busy cue has to ride on the widget too —
+   otherwise it is invisible exactly where the fetch happens. */
+.hez-returns:not(#\9) .select2.is-loading {
+	opacity: 0.6;
+	cursor: progress;
+}
+
 .hez-returns:not(#\9) .hez-tracking {
 	display: flex;
 	align-items: baseline;

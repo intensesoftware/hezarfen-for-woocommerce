@@ -190,6 +190,28 @@ test.describe( 'Hezarfen iade — WooCommerce iade kaydı', () => {
 		expect( getReturnStatus( request.id ) ).toBe( 'completed' );
 	} );
 
+	test( 'tamamlanmış talebin iadesi sonradan kaydedilebilir', () => {
+		const request = seedReceivedReturn( 1 );
+
+		// Completed first without a WooCommerce refund — the store refunds by
+		// hand and only later decides to log the record in WooCommerce.
+		expect( completeReturn( request.id, false ) ).toBe( '' );
+		expect( getReturnStatus( request.id ) ).toBe( 'completed' );
+		expect(
+			getRefundState( request.orderId, request.id ).refundIdOnRequest
+		).toBe( 0 );
+
+		// Re-running completion records the refund on the already-closed
+		// request. COMPLETED is terminal, so this used to hit the transition
+		// guard and lock the refund out for good; now the closed request is
+		// left as is and only the refund is written.
+		expect( completeReturn( request.id, true ) ).toBe( '' );
+
+		const state = getRefundState( request.orderId, request.id );
+		expect( state.refundIdOnRequest ).toBeGreaterThan( 0 );
+		expect( state.refundCount ).toBe( 1 );
+	} );
+
 	test( 'kısmen elle iade edilmiş satırda yalnızca kalan iade edilir', () => {
 		// Two units returned, one of them already refunded by hand: the new
 		// record has to cover the gap, not the whole request.
