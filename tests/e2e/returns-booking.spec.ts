@@ -12,6 +12,7 @@ import {
 	getReturnShipment,
 	getReturnStatus,
 	loginAsReturnsCustomer,
+	raceServiceCall,
 	returnDetailUrl,
 	seedReturn,
 	seedReturnableOrder,
@@ -252,6 +253,29 @@ test.describe( 'Hezarfen iade — müşteri kargo randevusu', () => {
 			'e2e_slot_taken'
 		);
 		expect( getReturnShipment( request.id ).tracking ).toBe( '' );
+	} );
+
+	test( 'iki kere gönderilen randevu formu tek kurye çağırıyor', () => {
+		const request = seedApprovedReturn();
+
+		// The carrier cannot tell two submits of one request apart, so two
+		// calls mean two couriers — and only the second barcode would be
+		// stored, leaving the first appointment with nobody able to call it
+		// off.
+		const [ first, second ] = raceServiceCall(
+			request.id,
+			`$module->service()->book_shipment_by_customer( $request, '${ OFFERED_DAY }' )`
+		);
+
+		expect( first ).toBe( '' );
+		expect( second ).toBe( 'hezarfen_returns_booking_in_progress' );
+
+		const shipment = getReturnShipment( request.id );
+
+		// The fixture numbers its barcodes, so the stored one proves how
+		// many times the carrier was actually asked.
+		expect( shipment.tracking ).toBe( `E2E-BARKOD-${ request.id }` );
+		expect( shipment.pickup ).toBe( OFFERED_DAY );
 	} );
 
 	test( 'randevu iptal edilince gün seçici geri gelir', async ( {

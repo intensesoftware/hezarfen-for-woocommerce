@@ -27,6 +27,17 @@ class Courier_Hepsijet_Integration {
     const PRICING_URL = 'https://hezarfen-r2.intense.com.tr/plugin-assets/pricing.json';
 
     private $relay_base_url;
+
+    /**
+     * Cipher the webhook secret is stored under.
+     */
+    const SECRET_CIPHER = 'aes-256-cbc';
+
+    /**
+     * Marks a secret written with a per-value IV, so the older format —
+     * which shared one derived IV across every value — can still be read.
+     */
+    const SECRET_PREFIX = 'v2:';
     private $consumer_key;
     private $consumer_secret;
 
@@ -68,23 +79,30 @@ class Courier_Hepsijet_Integration {
             return base64_encode( $value );
         }
 
-        // Use WordPress auth keys for encryption
-        $key = AUTH_KEY . SECURE_AUTH_KEY;
-        $salt = AUTH_SALT . SECURE_AUTH_SALT;
-        
-        // Generate encryption key
-        $encryption_key = hash( 'sha256', $key );
-        $iv_length = openssl_cipher_iv_length( 'aes-256-cbc' );
-        $iv = substr( hash( 'sha256', $salt ), 0, $iv_length );
-        
-        // Encrypt the value
-        $encrypted = openssl_encrypt( $value, 'aes-256-cbc', $encryption_key, 0, $iv );
-        
+        $iv_length = openssl_cipher_iv_length( self::SECRET_CIPHER );
+
+        // A fresh IV per write, stored with the ciphertext. The old code
+        // derived one from the salts, so every site encrypted every value
+        // under the same IV — with CBC that means identical secrets produce
+        // identical ciphertext and the mode loses the property it exists
+        // for. Values written the old way still decrypt; see below.
+        $iv        = openssl_random_pseudo_bytes( $iv_length );
+        $encrypted = openssl_encrypt( $value, self::SECRET_CIPHER, $this->secret_key(), OPENSSL_RAW_DATA, $iv );
+
         if ( $encrypted === false ) {
             return base64_encode( $value );
         }
-        
-        return base64_encode( $encrypted );
+
+        return self::SECRET_PREFIX . base64_encode( $iv . $encrypted );
+    }
+
+    /**
+     * The key every stored secret is encrypted under.
+     *
+     * @return string
+     */
+    private function secret_key() {
+        return hash( 'sha256', AUTH_KEY . SECURE_AUTH_KEY, true );
     }
 
     /**
@@ -98,8 +116,37 @@ class Courier_Hepsijet_Integration {
             return '';
         }
 
+        // Written with a per-value IV: it travels in front of the ciphertext.
+        if ( 0 === strpos( $encrypted_value, self::SECRET_PREFIX ) ) {
+            if ( ! $this->is_openssl_available() ) {
+                return '';
+            }
+
+            $raw = base64_decode( substr( $encrypted_value, strlen( self::SECRET_PREFIX ) ), true );
+
+            if ( false === $raw ) {
+                return '';
+            }
+
+            $iv_length = openssl_cipher_iv_length( self::SECRET_CIPHER );
+
+            if ( strlen( $raw ) <= $iv_length ) {
+                return '';
+            }
+
+            $decrypted = openssl_decrypt(
+                substr( $raw, $iv_length ),
+                self::SECRET_CIPHER,
+                $this->secret_key(),
+                OPENSSL_RAW_DATA,
+                substr( $raw, 0, $iv_length )
+            );
+
+            return false === $decrypted ? '' : $decrypted;
+        }
+
         $decoded = base64_decode( $encrypted_value );
-        
+
         if ( $decoded === false ) {
             return '';
         }
@@ -110,18 +157,15 @@ class Courier_Hepsijet_Integration {
             return $decoded;
         }
 
-        // Use WordPress auth keys for decryption
-        $key = AUTH_KEY . SECURE_AUTH_KEY;
-        $salt = AUTH_SALT . SECURE_AUTH_SALT;
-        
-        // Generate decryption key
-        $encryption_key = hash( 'sha256', $key );
-        $iv_length = openssl_cipher_iv_length( 'aes-256-cbc' );
-        $iv = substr( hash( 'sha256', $salt ), 0, $iv_length );
-        
-        // Decrypt the value
-        $decrypted = openssl_decrypt( $decoded, 'aes-256-cbc', $encryption_key, 0, $iv );
-        
+        // Legacy format: one IV derived from the salts, shared by every
+        // value. Still read so sites that stored a secret before the change
+        // keep working; the next save rewrites it in the new format.
+        $encryption_key = hash( 'sha256', AUTH_KEY . SECURE_AUTH_KEY );
+        $iv_length      = openssl_cipher_iv_length( self::SECRET_CIPHER );
+        $iv             = substr( hash( 'sha256', AUTH_SALT . SECURE_AUTH_SALT ), 0, $iv_length );
+
+        $decrypted = openssl_decrypt( $decoded, self::SECRET_CIPHER, $encryption_key, 0, $iv );
+
         // If decryption fails, try to return the base64 decoded value (fallback scenario)
         if ( $decrypted === false ) {
             return $decoded;
@@ -149,6 +193,47 @@ class Courier_Hepsijet_Integration {
     private function save_webhook_secret( $value ) {
         $encrypted = $this->encrypt_webhook_secret( $value );
         return update_option( 'hez_ordermigo_webhook_secret', $encrypted, false ); // false = not autoloaded
+    }
+
+    /**
+     * The relay's own words for a failure, with any markup taken out.
+     *
+     * These strings travel a long way: a WP_Error here can end up in a
+     * customer facing WooCommerce notice, and WooCommerce renders notices
+     * through wc_kses_notice() — which keeps links and images. A relay that
+     * is compromised, proxied or simply buggy must not be able to put markup
+     * on a shop's account page, so the text is flattened at the boundary
+     * where it enters rather than at each of the places it might be shown.
+     *
+     * @param mixed  $decoded  Decoded response body.
+     * @param string $fallback Message to use when the relay sent none.
+     *
+     * @return string
+     */
+    private function relay_error_message( $decoded, $fallback ) {
+        $message = is_array( $decoded ) && ! empty( $decoded['message'] ) && is_scalar( $decoded['message'] )
+            ? (string) $decoded['message']
+            : '';
+
+        $message = trim( wp_strip_all_tags( $message ) );
+
+        return '' !== $message ? $message : $fallback;
+    }
+
+    /**
+     * A carrier delivery number, safe to put in a URL path.
+     *
+     * The number is concatenated straight into the relay endpoint, and it
+     * does not always come from the relay: a merchant can type one into the
+     * order screen. Encoding it keeps a slash or a query character from
+     * pointing the request at a different endpoint.
+     *
+     * @param string $delivery_no Delivery number.
+     *
+     * @return string
+     */
+    private function path_segment( $delivery_no ) {
+        return rawurlencode( trim( (string) $delivery_no ) );
     }
 
     /**
@@ -183,8 +268,10 @@ class Courier_Hepsijet_Integration {
         $decoded = json_decode( $body, true );
 
         if ( $http_code >= 400 ) {
-            $error_message = $decoded['message'] ?? 'API Error: ' . $http_code;
-            return new \WP_Error( 'relay_api_error', $error_message );
+            return new \WP_Error(
+                'relay_api_error',
+                $this->relay_error_message( $decoded, 'API Error: ' . $http_code )
+            );
         }
 
         return $decoded;
@@ -223,8 +310,10 @@ class Courier_Hepsijet_Integration {
         $decoded = json_decode( $body, true );
 
         if ( $http_code >= 400 ) {
-            $error_message = $decoded['message'] ?? 'API Error: ' . $http_code;
-            return new \WP_Error( 'relay_api_error', $error_message );
+            return new \WP_Error(
+                'relay_api_error',
+                $this->relay_error_message( $decoded, 'API Error: ' . $http_code )
+            );
         }
 
         return $decoded;
@@ -368,8 +457,10 @@ class Courier_Hepsijet_Integration {
             return $response;
         }
 
+        // `empty()` çünkü 200 dönen bir gövde alanı hiç taşımayabiliyor;
+        // mesaj ise ham gövdeden değil, temizleyen yardımcıdan geliyor.
         if ( empty( $response['success'] ) ) {
-            return new \WP_Error( 'hepsijet_error', $response['message'] ?? 'API Error' );
+            return new \WP_Error( 'hepsijet_error', $this->relay_error_message( $response, 'API Error' ) );
         }
 
         // Relay API returns data directly. Read defensively: a 200/"success"
@@ -434,7 +525,7 @@ class Courier_Hepsijet_Integration {
      * Get shipping details for tracking via Relay API
      */
     public function api_get_shipping_details($delivery_no) {
-        $response = $this->make_relay_request( '/tracking/' . $delivery_no, null, 'GET' );
+        $response = $this->make_relay_request( '/tracking/' . $this->path_segment( $delivery_no ), null, 'GET' );
 
         return $response;
     }
@@ -443,7 +534,7 @@ class Courier_Hepsijet_Integration {
      * Cancel shipment via Relay API
      */
     public function api_cancel_shipment($delivery_no) {
-        $response = $this->make_relay_request( '/shipment/' . $delivery_no, null, 'DELETE' );
+        $response = $this->make_relay_request( '/shipment/' . $this->path_segment( $delivery_no ), null, 'DELETE' );
 
         if ( is_wp_error( $response ) ) {
             return $response;
@@ -456,11 +547,11 @@ class Courier_Hepsijet_Integration {
             return true;
         }
 
-        $error_message = is_array( $response ) && ! empty( $response['message'] )
-            ? $response['message']
-            : __( 'Gönderi iptal edilemedi.', 'hezarfen-for-woocommerce' );
-
-        return new \WP_Error( 'cancel_failed', $error_message, array( 'status' => 400 ) );
+        return new \WP_Error(
+            'cancel_failed',
+            $this->relay_error_message( $response, __( 'Gönderi iptal edilemedi.', 'hezarfen-for-woocommerce' ) ),
+            array( 'status' => 400 )
+        );
     }
 
     /**
@@ -558,7 +649,7 @@ class Courier_Hepsijet_Integration {
      * @return string[]|false
      */
     public function get_barcode( $delivery_barcode_no ) {
-        $response = $this->make_relay_request( '/barcode/' . $delivery_barcode_no . '/label', null, 'GET' );
+        $response = $this->make_relay_request( '/barcode/' . $this->path_segment( $delivery_barcode_no ) . '/label', null, 'GET' );
 
         if ( is_wp_error( $response ) ) {
             return $response;

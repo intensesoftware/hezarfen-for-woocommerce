@@ -296,6 +296,23 @@ adedi geri bırakır; diğer tüm durumlar adedi tutar.
 - **Çift gönderim**: `return_number` benzersiz indekslidir; aynı sipariş için
   yarışan iki gönderimden yalnızca biri kaydolur, ikincisi "talebiniz az önce
   oluşturuldu" hatası alır.
+- **Eşzamanlı işlem**: durum geçişi ve kargo randevusu iddiası **veritabanında**
+  yapılır (`transition_status()`, `claim_booking()` — koşul `WHERE`
+  içindedir). Bellekteki kopyaya bakan bir kontrol, aynı anda gelen iki
+  isteğin ikisini de geçirir: yavaş bir yönetim ekranında "Tamamlandı"ya çift
+  tıklamak iki WooCommerce iadesi, randevu formunu iki kez göndermek iki
+  kurye demektir — ve ikinci barkod yazıldığı için birinci randevuyu kimse
+  iptal edemez. Yarışı kaybeden taşıyıcıya hiç ulaşmadan hata alır.
+- **Randevu iddiası**: `pickup_date` iddia alanı olarak kullanılır — randevusuz
+  bir talepte zaten boştur ve başarılı bir randevunun yazdığı değerdir. Süreç
+  taşıyıcı çağrısı sırasında ölürse geride kalan iddia hiçbir şeyi kilitlemez;
+  satırda takip numarası olmadığı için sonraki deneme üzerine yazar.
+- **Kişisel veri**: alım adresi (ad, telefon, açık adres), e-posta ve notlar
+  WordPress'in dışa aktarma/silme araçlarına kayıtlıdır
+  (`includes/returns/core/class-return-privacy.php`). Silme talebinde kayıt
+  anonimleştirilir, silinmez: tutarlar ve durum mağazanın kayıtlarında kalır,
+  kişiye işaret eden her şey gider. Kancalar modül kapalıyken de kaydedilir —
+  veri, ayarın açık olmasından uzun yaşar.
 - **Sayfa/endpoint çakışması**: `iadelerim` ve `iade-talebi` endpoint'leri
   `EP_ROOT` ile kaydedilir; aynı slug'a sahip bir sayfa bu kural tarafından
   gölgelenip 404 verir.
@@ -331,7 +348,7 @@ sunar:
 | `Return_Reason_Provider_Interface` | `core/interface-return-reason-provider.php` | Mağazaya özel iade sebepleri |
 | `Return_Policy_Provider_Interface` | `core/interface-return-policy-provider.php` | Ürün/kategori bazlı iade politikaları |
 | `Return_Shipping_Method_Interface` | `shipping/interface-return-shipping-method.php` | Kendi kargo anlaşmasıyla otomatik barkod; `requires_customer_booking()` + `get_booking_options()` + `book()` ile müşterinin randevu seçtiği akış, `cancel_booking()` ile iptali, `requires_pickup_address()` ile alım adresi. **Arayüzün tamamı zorunludur**; eksik uygulayan bir sınıf tanımlandığı anda fatal verir |
-| `Return_Repository_Interface` | `core/interface-return-repository.php` | Alternatif depolama |
+| `Return_Repository_Interface` | `core/interface-return-repository.php` | Alternatif depolama. `transition_status()`, `claim_booking()` ve `release_booking_claim()` **atomik** olmak zorundadır: koşul yazma işleminin kendi içinde olmalı, PHP'de kontrol edilmemeli |
 
 ## Hooks
 

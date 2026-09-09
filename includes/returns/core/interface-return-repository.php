@@ -37,6 +37,43 @@ interface Return_Repository_Interface {
 	public function get( $id );
 
 	/**
+	 * Moves a request from one status to another, atomically.
+	 *
+	 * Must guard on the current status inside the write itself, so that of
+	 * two callers holding the same row only one succeeds.
+	 *
+	 * @param int    $id   Request row ID.
+	 * @param string $from Status the row must still carry.
+	 * @param string $to   Status to move it to.
+	 *
+	 * @return bool Whether this caller changed it.
+	 */
+	public function transition_status( $id, $from, $to );
+
+	/**
+	 * Claims the right to book a request's shipment, atomically.
+	 *
+	 * Must succeed for exactly one caller of a request that is in $status
+	 * with no tracking number and no pickup day yet.
+	 *
+	 * @param int    $id          Request row ID.
+	 * @param string $status      Status the row must still carry.
+	 * @param string $pickup_date Day being booked, `Y-m-d`.
+	 *
+	 * @return bool Whether this caller claimed it.
+	 */
+	public function claim_booking( $id, $status, $pickup_date );
+
+	/**
+	 * Gives a booking claim back after the carrier refused it.
+	 *
+	 * @param int $id Request row ID.
+	 *
+	 * @return void
+	 */
+	public function release_booking_claim( $id );
+
+	/**
 	 * Queries requests.
 	 *
 	 * Supported arguments: order_id, customer_id, customer_email,

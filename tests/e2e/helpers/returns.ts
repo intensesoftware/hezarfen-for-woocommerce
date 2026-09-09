@@ -489,6 +489,37 @@ export function customerUnbookError( returnId: string ): string {
 }
 
 /**
+ * Run the same service call twice against two separately loaded copies of
+ * one request — what two simultaneous HTTP requests do. Returns both error
+ * codes ('' for the one that succeeded).
+ *
+ * The point is the second call: guards written in PHP against an in-memory
+ * copy let both through, and for a return that means two WooCommerce
+ * refunds or two couriers at the door.
+ */
+export function raceServiceCall(
+	returnId: string,
+	call: string
+): [ string, string ] {
+	const out = lastLine(
+		wp( [
+			'eval',
+			`
+			$module = \\Hezarfen\\Inc\\Returns\\Returns_Module::instance();
+			$a = $module->repository()->get( ${ returnId } );
+			$b = $module->repository()->get( ${ returnId } );
+			$code = function ( $r ) { return is_wp_error( $r ) ? $r->get_error_code() : ''; };
+			$ra = ${ call.replace( '$request', '$a' ) };
+			$rb = ${ call.replace( '$request', '$b' ) };
+			echo wp_json_encode( array( $code( $ra ), $code( $rb ) ) );
+		`,
+		] )
+	);
+
+	return JSON.parse( out ) as [ string, string ];
+}
+
+/**
  * Announce that a hepsiJET shipment was cancelled somewhere else — what the
  * order screen's cancel button does once the carrier has answered. The
  * returns module listens for this, so a spec drives the seam rather than

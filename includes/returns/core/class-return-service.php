@@ -181,6 +181,20 @@ class Return_Service {
 			return $allowed;
 		}
 
+		// The check above ran against a copy of the row loaded at the start
+		// of this request, so on its own it lets two simultaneous callers
+		// through — a double click on an admin action is enough. The
+		// database decides instead: whoever changes the row proceeds, the
+		// other is told the request already moved. Everything below this
+		// line therefore runs exactly once per transition, which is what
+		// keeps a completed return from being refunded twice.
+		if ( ! $this->repository->transition_status( $request->get_id(), $old_status, $new_status ) ) {
+			return new \WP_Error(
+				'hezarfen_returns_status_conflict',
+				__( 'Bu talep bu sırada başka bir işlemle güncellendi. Sayfayı yenileyip tekrar bakın.', 'hezarfen-for-woocommerce' )
+			);
+		}
+
 		$request->set_status( $new_status );
 
 		$shipping_error = null;
@@ -797,9 +811,27 @@ class Return_Service {
 			);
 		}
 
+		// Claimed before the carrier is called, not after. The carrier has
+		// no idea two submits are the same request, so two calls mean two
+		// couriers at the door — and only the second barcode would be
+		// stored, leaving the first appointment with nobody able to cancel
+		// it. Exactly one caller gets past this line.
+		if ( ! $this->repository->claim_booking( $request->get_id(), $request->get_status(), $choice ) ) {
+			return new \WP_Error(
+				'hezarfen_returns_booking_in_progress',
+				__( 'Bu talep için bir kargo randevusu şu anda oluşturuluyor. Sayfayı yenileyip tekrar bakın.', 'hezarfen-for-woocommerce' )
+			);
+		}
+
 		$booked = $method->book( $request, $choice );
 
 		if ( is_wp_error( $booked ) ) {
+			// Nothing reached the carrier, so the claim goes back before
+			// either branch below: on a retry the customer would otherwise be
+			// held up by a claim they are still holding themselves.
+			$this->repository->release_booking_claim( $request->get_id() );
+			$request->set_pickup_date( '' );
+
 			// A day that was just taken, or an unreadable/empty choice, is worth
 			// another go: the request stays approved and the picker reappears.
 			// Anything else means the carrier will not serve this request at all

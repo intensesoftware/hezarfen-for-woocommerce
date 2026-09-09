@@ -8,6 +8,7 @@ import {
 	enableReturns,
 	getRefundState,
 	getReturnStatus,
+	raceServiceCall,
 	reduceStockLevels,
 	refundFirstLine,
 	seedReturn,
@@ -254,6 +255,30 @@ test.describe( 'Hezarfen iade — WooCommerce iade kaydı', () => {
 		expect( after.firstLineQtyRefunded ).toBe( 0 );
 		expect( after.refundIdOnRequest ).toBe( 0 );
 		expect( getReturnStatus( request.id ) ).toBe( 'completed' );
+	} );
+
+	test( 'iki kere tıklanan "Tamamlandı" tek iade yazıyor', () => {
+		setOption( 'hezarfen_returns_auto_refund', 'yes' );
+
+		const request = seedReceivedReturn( 1 );
+		const total = orderTotal( request.orderId );
+
+		// Two submits of the same action, each with its own loaded copy of
+		// the row — a double click on a slow admin screen. Guarded in PHP
+		// alone, both would pass and the customer would be paid twice.
+		const [ first, second ] = raceServiceCall(
+			request.id,
+			`$module->service()->complete( $request, array( 'refund' => true ) )`
+		);
+
+		expect( first ).toBe( '' );
+		expect( second ).toBe( 'hezarfen_returns_status_conflict' );
+
+		const state = getRefundState( request.orderId, request.id );
+
+		expect( state.refundCount ).toBe( 1 );
+		expect( state.totalRefunded ).toBeCloseTo( total / 2, 2 );
+		expect( state.firstLineQtyRefunded ).toBe( 1 );
 	} );
 
 	test( 'stok geri ekleme ayara bağlı', () => {

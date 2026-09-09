@@ -76,6 +76,129 @@ class Return_Repository implements Return_Repository_Interface {
 	}
 
 	/**
+	 * Moves a request from one status to another, atomically.
+	 *
+	 * The guard has to live in the WHERE clause, not in PHP. Two requests
+	 * arriving together — a double click on an admin action, two submits of
+	 * the same form — each load their own copy of the row, so both see the
+	 * old status and both would be allowed through a check made in memory.
+	 * Letting the database decide means exactly one of them changes the row
+	 * and the other is told the request moved on. Without it, completing a
+	 * return twice writes two WooCommerce refunds for the same goods.
+	 *
+	 * @param int    $id   Request row ID.
+	 * @param string $from Status the row must still carry.
+	 * @param string $to   Status to move it to.
+	 *
+	 * @return bool Whether this caller is the one that changed it.
+	 */
+	public function transition_status( $id, $from, $to ) {
+		global $wpdb;
+
+		$id = (int) $id;
+
+		if ( ! $id ) {
+			return false;
+		}
+
+		$updated = $wpdb->update(
+			Returns_Schema::table( Returns_Schema::TABLE_RETURNS ),
+			array(
+				'status'     => (string) $to,
+				'updated_at' => current_time( 'mysql' ),
+			),
+			array(
+				'id'     => $id,
+				'status' => (string) $from,
+			),
+			array( '%s', '%s' ),
+			array( '%d', '%s' )
+		);
+
+		return (int) $updated === 1;
+	}
+
+	/**
+	 * Claims the right to book a request's shipment, atomically.
+	 *
+	 * The pickup day doubles as the claim: it is empty on a request with no
+	 * booking, it is what a successful booking writes anyway, and a claim
+	 * left behind by a process that died mid-call blocks nothing — the row
+	 * still has no tracking number, so the next attempt overwrites it.
+	 *
+	 * Claiming before the carrier is called is the whole point: the carrier
+	 * has no idea the two requests are the same one, so two calls mean two
+	 * couriers at the door and only one of them recorded anywhere.
+	 *
+	 * @param int    $id          Request row ID.
+	 * @param string $status      Status the row must still carry.
+	 * @param string $pickup_date Day being booked, `Y-m-d`.
+	 *
+	 * @return bool Whether this caller is the one that claimed it.
+	 */
+	public function claim_booking( $id, $status, $pickup_date ) {
+		global $wpdb;
+
+		$id = (int) $id;
+
+		if ( ! $id ) {
+			return false;
+		}
+
+		$updated = $wpdb->update(
+			Returns_Schema::table( Returns_Schema::TABLE_RETURNS ),
+			array(
+				'pickup_date' => (string) $pickup_date,
+				'updated_at'  => current_time( 'mysql' ),
+			),
+			array(
+				'id'              => $id,
+				'status'          => (string) $status,
+				'tracking_number' => '',
+				'pickup_date'     => '',
+			),
+			array( '%s', '%s' ),
+			array( '%d', '%s', '%s', '%s' )
+		);
+
+		return (int) $updated === 1;
+	}
+
+	/**
+	 * Gives a booking claim back after the carrier refused it.
+	 *
+	 * Guarded on the tracking number so a claim that was meanwhile turned
+	 * into a real booking is never cleared.
+	 *
+	 * @param int $id Request row ID.
+	 *
+	 * @return void
+	 */
+	public function release_booking_claim( $id ) {
+		global $wpdb;
+
+		$id = (int) $id;
+
+		if ( ! $id ) {
+			return;
+		}
+
+		$wpdb->update(
+			Returns_Schema::table( Returns_Schema::TABLE_RETURNS ),
+			array(
+				'pickup_date' => '',
+				'updated_at'  => current_time( 'mysql' ),
+			),
+			array(
+				'id'              => $id,
+				'tracking_number' => '',
+			),
+			array( '%s', '%s' ),
+			array( '%d', '%s' )
+		);
+	}
+
+	/**
 	 * Replaces the persisted lines of a request with the in-memory ones.
 	 *
 	 * Lines are immutable once the request exists, so a full replace is

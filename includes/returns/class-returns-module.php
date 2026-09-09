@@ -70,6 +70,11 @@ class Returns_Module {
 		// otherwise the merchant has no way to switch it on.
 		add_action( 'init', array( $module, 'on_init' ), 15 );
 
+		// Personal data outlives the switch: a store that tried returns and
+		// turned them off still holds the addresses, and a customer's export
+		// or erasure request must still reach them.
+		new Core\Return_Privacy();
+
 		if ( is_admin() ) {
 			new Admin\Returns_Settings();
 		}
@@ -157,6 +162,7 @@ class Returns_Module {
 			'core/class-global-return-policy-provider.php',
 			'core/class-return-policy-resolver.php',
 			'core/class-return-eligibility.php',
+			'core/class-return-privacy.php',
 			'core/class-return-refunds.php',
 			'core/class-return-service.php',
 			'core/class-return-order-sync.php',

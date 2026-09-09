@@ -280,6 +280,25 @@ class Return_Request {
 	}
 
 	/**
+	 * Strips the identity off a request, keeping the record itself.
+	 *
+	 * What a privacy erasure asks for is that the person stops being
+	 * findable, not that the store's books lose a return. The amounts, the
+	 * status and the timeline stay; the name, the address and the way to
+	 * reach them go.
+	 *
+	 * @return void
+	 */
+	public function anonymize() {
+		$this->customer_id     = 0;
+		$this->customer_email  = '';
+		$this->customer_note   = '';
+		$this->courier         = '';
+		$this->tracking_number = '';
+		$this->pickup_address  = array();
+	}
+
+	/**
 	 * Current status key.
 	 *
 	 * @return string

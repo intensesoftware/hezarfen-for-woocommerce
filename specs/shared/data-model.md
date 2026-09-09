@@ -72,7 +72,7 @@ Plugin'in yazdığı/okuduğu tüm option key'leri, order meta'ları ve özel ta
 | Option | Tip | Modül | Açıklama |
 |---|---|---|---|
 | `hezarfen_returns_enabled` | yes/no | returns | İade modülü master switch (varsayılan `no`) |
-| `hezarfen_returns_db_version` | string | returns | İade tablolarının şema sürümü (plugin sürümünden bağımsız) |
+| `hezarfen_returns_db_version` | string | returns | İade tablolarının şema sürümü (plugin sürümünden bağımsız). Gizlilik dışa aktarıcısı da bu option'a bakar: yoksa tablolar hiç kurulmamıştır ve sorgulanmaz |
 | `hezarfen_returns_window_days` | int | returns | Global iade süresi; `0` = sınırsız |
 | `hezarfen_returns_window_reference` | completed\|paid\|created | returns | Sürenin sayılacağı sipariş tarihi |
 | `hezarfen_returns_eligible_order_statuses` | array | returns | İade açılabilecek sipariş durumları (`wc-` önekli saklanır). Ücretsiz sürümde ayar ekranında yok; varsayılan `completed`, Pro yazar |
