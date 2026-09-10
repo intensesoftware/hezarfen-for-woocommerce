@@ -350,6 +350,30 @@ sunar:
 | `Return_Shipping_Method_Interface` | `shipping/interface-return-shipping-method.php` | Kendi kargo anlaşmasıyla otomatik barkod; `requires_customer_booking()` + `get_booking_options()` + `book()` ile müşterinin randevu seçtiği akış, `cancel_booking()` ile iptali, `requires_pickup_address()` ile alım adresi. **Arayüzün tamamı zorunludur**; eksik uygulayan bir sınıf tanımlandığı anda fatal verir |
 | `Return_Repository_Interface` | `core/interface-return-repository.php` | Alternatif depolama. `transition_status()`, `claim_booking()` ve `release_booking_claim()` **atomik** olmak zorundadır: koşul yazma işleminin kendi içinde olmalı, PHP'de kontrol edilmemeli |
 
+### Sözleşme Sürümü
+
+`Returns_Module::API_VERSION` bu uzantı yüzeyinin sürümüdür;
+`API_MIN_COMPAT` ise hâlâ desteklenen en eski sürüm. İkisi ayrı olduğu için
+eski bir eklenti yalnızca **eski olduğu için** dışarıda kalmaz -- aralıkta
+kaldığı sürece çalışmaya devam eder.
+
+İki eklenti bağımsız güncelleniyor, yani herhangi bir sürüm çifti bir
+mağazada karşılaşabiliyor. Modülün yalnızca *var olduğunu* doğrulamak bir
+uzantıya onu ANLAYIP anlamadığını söylemez; uyumsuzluğun bedeli de çalışma
+anında, mağazacının ekranında ödenir.
+
+`API_VERSION` şunlar değiştiğinde yükselir: yukarıdaki arayüzlerden biri,
+bir uzantının çağırdığı public metodun adı/imzası/dönüşü, bir kancanın
+kaldırılması, ya da Pro'nun `hezarfen_returns_setting_fields` ile aradığı
+ayar alanı id'lerinden birinin adı. Yeni bir şey EKLEMEK kimseyi bozmaz ve
+sürüm yükseltmeyi gerektirmez.
+
+`API_MIN_COMPAT` ancak eski bir uzantıya hizmet etmek gerçekten
+imkânsızlaştığında yükselir. Pro tarafında karşılığı
+`Modules\Returns\Module::FREE_API_REQUIRED`; eşleşmediğinde Pro'nun iade
+modülü hiç boot etmez ve mağazacıya hangi eklentiyi güncelleyeceğini söyleyen
+bir uyarı basar.
+
 ## Hooks
 
 Tam liste için `specs/shared/hooks.md`. Öne çıkanlar:

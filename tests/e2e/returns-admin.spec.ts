@@ -10,6 +10,7 @@ import {
 	enableReturns,
 	getReturnStatus,
 	requestInfoError,
+	proReturnsActive,
 	seedReturn,
 	seedReturnableOrder,
 } from './helpers/returns';
@@ -184,6 +185,8 @@ test.describe( 'Hezarfen iade — yönetim ekranı', () => {
 	} );
 
 	test( 'Pro yokken ek bilgi isteme kilitli', async ( { page } ) => {
+		test.skip( proReturnsActive(), 'Kilit yalnızca Pro yokken görünür.' );
+
 		const orderId = seedOrder();
 		const seeded = seedReturn( { orderId } );
 

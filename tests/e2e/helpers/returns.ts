@@ -358,7 +358,11 @@ export interface SeededReturn {
 export function seedReturn( opts: SeedReturnOptions ): SeededReturn {
 	const quantity = opts.quantity ?? 1;
 	const reason = opts.reason ?? 'defective';
-	const note = opts.note ?? '';
+	// Açıklama her zaman doluyor. Bir sebebin açıklama isteyip istemediği
+	// mağazanın ayarına bağlı -- Pro kuruluyken liste mağazanın kendi
+	// sebepleriyle değişiyor -- ve tohum bu yüzden reddedilebiliyordu.
+	// Açıklama istemeyen bir sebep için fazladan metin zararsız.
+	const note = opts.note ?? 'E2E açıklaması';
 
 	const out = lastLine(
 		wp( [
@@ -438,6 +442,20 @@ export function advanceReturn( returnId: string, statuses: string[] ): void {
  * Pro'yu kurmak, sınanan şeyle ilgisi olmayan bir sürü başka davranışı da
  * getirirdi.
  */
+/**
+ * Hezarfen Pro etkin mi?
+ *
+ * Ücretsiz eklentinin spec'lerinin bir kısmı Pro'nun YOKLUĞUNU sınıyor --
+ * kilitli satırlar, satış bağlantısı, kapalı kapılar. Pro kurulu bir
+ * geliştirme sitesinde bunlar haklı olarak kaybolur; testin orada hata
+ * vermesi bulgu değil gürültü olurdu.
+ */
+export function proReturnsActive(): boolean {
+	return wp( [ 'plugin', 'list', '--field=name', '--status=active' ] ).includes(
+		'hezarfen-pro-for-woocommerce'
+	);
+}
+
 const INFO_GATE_SLUG = 'hezarfen-e2e-returns-info-requests';
 
 export function enableInfoRequests(): void {

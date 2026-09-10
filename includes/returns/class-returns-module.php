@@ -29,11 +29,61 @@ defined( 'ABSPATH' ) || exit();
 class Returns_Module {
 
 	/**
+	 * The contract this module offers add-ons, as a whole number.
+	 *
+	 * Hezarfen Pro extends the module from another codebase, updated on its
+	 * own schedule: it implements the provider interfaces, calls into the
+	 * service and the settings, and reads Return_Request. Both plugins are
+	 * updated independently, so any pair of versions can meet on a store.
+	 *
+	 * Merely checking that the module exists cannot tell an add-on whether
+	 * the module is one it understands, so the module says so out loud.
+	 * Raise this whenever the surface an add-on touches changes in a way
+	 * that would break one written against the previous number -- a renamed
+	 * or removed public method, a changed signature or return shape, a
+	 * dropped filter, a renamed setting field id the injector looks for.
+	 * Adding something new breaks nobody and needs no bump.
+	 */
+	const API_VERSION = 1;
+
+	/**
+	 * The oldest contract this module still honours.
+	 *
+	 * Raise it when support for an older add-on is genuinely dropped -- the
+	 * moment a removal makes it impossible to serve one. Keeping this behind
+	 * API_VERSION is what lets a Pro written against an earlier contract keep
+	 * working instead of being locked out for being merely older.
+	 */
+	const API_MIN_COMPAT = 1;
+
+	/**
 	 * Singleton instance.
 	 *
 	 * @var Returns_Module|null
 	 */
 	private static $instance = null;
+
+	/**
+	 * The contract this module currently offers.
+	 *
+	 * Static and side-effect free: an add-on has to be able to ask before
+	 * deciding whether it may boot, which is long before the module has
+	 * built anything.
+	 *
+	 * @return int
+	 */
+	public static function api_version() {
+		return self::API_VERSION;
+	}
+
+	/**
+	 * The oldest contract this module still honours.
+	 *
+	 * @return int
+	 */
+	public static function api_min_compat() {
+		return self::API_MIN_COMPAT;
+	}
 
 	/**
 	 * Lazily built services keyed by name.

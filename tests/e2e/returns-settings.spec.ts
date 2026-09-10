@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { deleteMuPlugin, writeMuPlugin } from './helpers/mu-plugin';
 import { loginAsAdmin } from './helpers/auth';
-import { enableReturns } from './helpers/returns';
+import { enableReturns, proReturnsActive } from './helpers/returns';
 import { restoreOptions, snapshotOptions } from './helpers/wp-options';
 import { wp } from './helpers/wp-cli';
 
@@ -123,10 +123,22 @@ test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
 		// Which order statuses may be returned is a Pro setting, so the free
 		// section shows the locked row in its place. Asserting on the field
 		// would go green the day someone ships the Pro setting for free.
-		await expect(
-			page.locator( '#hezarfen_returns_eligible_order_statuses' )
-		).toHaveCount( 0 );
-		await expect( page.locator( LOCKED_STATUSES_ROW ) ).toBeVisible();
+		//
+		// Pro kuruluysa denklem tersine döner: kilit gider, gerçek alan
+		// gelir. Bu yüzden iki hâl de burada, aynı yerde sınanıyor -- birini
+		// atlamak, spec'i geliştirme sitesinin eklenti durumuna bağımlı
+		// kılardı.
+		if ( proReturnsActive() ) {
+			await expect(
+				page.locator( '#hezarfen_returns_eligible_order_statuses' )
+			).toBeVisible();
+			await expect( page.locator( LOCKED_STATUSES_ROW ) ).toHaveCount( 0 );
+		} else {
+			await expect(
+				page.locator( '#hezarfen_returns_eligible_order_statuses' )
+			).toHaveCount( 0 );
+			await expect( page.locator( LOCKED_STATUSES_ROW ) ).toBeVisible();
+		}
 	} );
 
 	test( 'kilitli satırlar kaydetmede boş option yazmıyor', async ( {
@@ -181,6 +193,8 @@ test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
 	test( 'Pro placement filtresi kilitli satırı değiştirebiliyor', async ( {
 		page,
 	} ) => {
+		test.skip( proReturnsActive(), 'Kilitli satırların yerini gerçek ayarlar aldı.' );
+
 		writeMuPlugin( SWAP_SLUG, SWAP_PHP );
 
 		try {
@@ -201,6 +215,8 @@ test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
 	test( 'satış bağlantısı yalnızca Pro çalışmazken çıkıyor', async ( {
 		page,
 	} ) => {
+		test.skip( proReturnsActive(), 'Kilitli satırların yerini gerçek ayarlar aldı.' );
+
 		await page.goto( SETTINGS_URL );
 
 		const row = page.locator( LOCKED_STATUSES_ROW );

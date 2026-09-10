@@ -5,6 +5,7 @@ import {
 	disableReturns,
 	enableReturns,
 	loginAsReturnsCustomer,
+	proReturnsActive,
 	requestFormUrl,
 	seedReturnableOrder,
 } from './helpers/returns';
@@ -56,12 +57,6 @@ async function fillFirstLine( page: Page ): Promise< void > {
 	if ( await note.isVisible() ) {
 		await note.fill( 'Test açıklaması' );
 	}
-}
-
-function proReturnsActive(): boolean {
-	const out = wp( [ 'plugin', 'list', '--field=name', '--status=active' ] );
-
-	return out.includes( 'hezarfen-pro-for-woocommerce' );
 }
 
 test.describe( 'iade fotoğrafları', () => {
