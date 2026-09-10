@@ -60,6 +60,14 @@ add_filter( 'hezarfen_returns_setting_fields', function ( $fields, $placement ) 
 }, 10, 2 );
 `;
 
+/** Kilitli satırın temsil ettiği option'ın ham hâli. */
+function readEligibleStatuses(): string {
+	return wp( [
+		'eval',
+		`var_export( get_option( 'hezarfen_returns_eligible_order_statuses', 'MISSING' ) );`,
+	] ).trim();
+}
+
 let optionSnapshot: Record< string, string >;
 
 test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
@@ -123,7 +131,18 @@ test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
 	test( 'kilitli satırlar kaydetmede boş option yazmıyor', async ( {
 		page,
 	} ) => {
+		const before = readEligibleStatuses();
+
 		await page.goto( SETTINGS_URL );
+
+		// WooCommerce kaydet butonunu sayfada bir değişiklik olana kadar
+		// devre dışı bırakıyor. Kaydetmeyi tetiklemek için formu kirletmek
+		// gerekiyor; kirletilen alan kilitli satırın kendisi değil, yanındaki
+		// gerçek bir ayar -- iddia zaten kilitli satırın kayda katılmadığı.
+		const days = page.locator( '#hezarfen_returns_window_days' );
+		await days.fill( String( Number( await days.inputValue() ) || 14 ) );
+		await days.dispatchEvent( 'change' );
+
 		await page.locator( 'button[name="save"]' ).click();
 		await expect( page.locator( '#message.updated.inline' ) ).toBeVisible();
 
@@ -140,7 +159,6 @@ test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
 			'hezarfen_returns_locked_products',
 			'hezarfen_returns_locked_reasons',
 			'hezarfen_returns_locked_photos',
-			'hezarfen_returns_eligible_order_statuses',
 		] ) {
 			expect(
 				wp( [
@@ -149,6 +167,14 @@ test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
 				] ).trim()
 			).toBe( "'MISSING'" );
 		}
+
+		// Ücretsiz akışın geri düştüğü gerçek anahtar için iddia "yok" değil
+		// "dokunulmadı": Pro bir kez çalışmış sitede değer zaten yazılıdır ve
+		// yokluğunu beklemek eklentiyi değil ortamın geçmişini sınardı.
+		expect(
+			readEligibleStatuses(),
+			'Kilitli satır option değerini değiştirmemeli.'
+		).toBe( before );
 	} );
 
 	test( 'Pro placement filtresi kilitli satırı değiştirebiliyor', async ( {
@@ -180,6 +206,20 @@ test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
 		await expect( page.locator( LOCKED_STATUSES_ROW ) ).toBeVisible();
 		await expect( page.locator( '.hez-locked__cta' ) ).toHaveCount( 0 );
 
+		// Pro'nun sürüm damgası ikinci kapı: bir kez kurulmuş siteye satış
+		// yapılmıyor. Test sitesinde Pro daha önce kurulmuş olabildiği için
+		// damga geçici olarak kaldırılıyor, yoksa bu iddia eklentinin
+		// hatasıyla değil ortamın geçmişiyle kırılırdı.
+		const proStamp = wp( [
+			'option',
+			'get',
+			'hezarfen_pro_db_version',
+		] ).trim();
+
+		if ( proStamp ) {
+			wp( [ 'option', 'delete', 'hezarfen_pro_db_version' ] );
+		}
+
 		writeMuPlugin( PROMO_SLUG, PROMO_PHP );
 
 		try {
@@ -189,6 +229,10 @@ test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
 			).toBeVisible();
 		} finally {
 			deleteMuPlugin( PROMO_SLUG );
+
+			if ( proStamp ) {
+				wp( [ 'option', 'update', 'hezarfen_pro_db_version', proStamp ] );
+			}
 		}
 	} );
 

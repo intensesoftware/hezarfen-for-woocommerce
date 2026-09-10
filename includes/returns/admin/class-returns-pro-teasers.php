@@ -71,24 +71,28 @@ class Returns_Pro_Teasers {
 	 * @return array<int, array<string, mixed>> Empty for an unknown placement.
 	 */
 	public static function get_fields( $placement ) {
+		// Metinler komşu ayarlarla aynı dilde: satırın NE OLDUĞUNU söylüyorlar,
+		// eksikliği anlatmıyorlar. Kilidi rozet ve önizleme zaten gösteriyor;
+		// açıklamanın ayrıca ikna etmeye çalışması hem gereksiz hem de yanlışa
+		// açık -- "kargoya verilmiş sipariş iade edilemez" gibi bir cümle,
+		// siparişi kargolarken "tamamlandı" işaretleyen mağazalar için doğru
+		// bile değildi.
 		$fields = array(
 			'statuses' => array(
 				'title' => __( 'İade edilebilir sipariş durumları', 'hezarfen-for-woocommerce' ),
-				// Tek cümle, somut sonuç: özellik listesi değil, mağazanın
-				// bugün yaşadığı kısıt.
-				'desc'  => __( 'Ücretsiz sürümde yalnızca tamamlanmış siparişler iade edilebilir. Kargoya verilmiş bir siparişte müşteri talep açamaz.', 'hezarfen-for-woocommerce' ),
+				'desc'  => __( 'Hangi durumdaki siparişler için iade talebi açılabileceği.', 'hezarfen-for-woocommerce' ),
 			),
 			'products' => array(
 				'title' => __( 'İade edilebilir ürünler', 'hezarfen-for-woocommerce' ),
-				'desc'  => __( 'İç giyim, kozmetik gibi iade alınamayan ürünler de müşteriye iade edilebilir görünür; talep açıldıktan sonra reddetmek zorunda kalırsınız.', 'hezarfen-for-woocommerce' ),
+				'desc'  => __( 'Hangi ürün ve kategorilerin iade edilebileceği.', 'hezarfen-for-woocommerce' ),
 			),
 			'reasons'  => array(
 				'title' => __( 'İade sebepleri', 'hezarfen-for-woocommerce' ),
-				'desc'  => __( 'Sebep listesi sabittir. Kendi sebeplerinizi yazamaz, sıralayamaz, hangi sebepte açıklama isteneceğini belirleyemezsiniz.', 'hezarfen-for-woocommerce' ),
+				'desc'  => __( 'Müşterinin talep oluştururken seçeceği sebepler.', 'hezarfen-for-woocommerce' ),
 			),
 			'photos'   => array(
 				'title' => __( 'Fotoğraflı iade talebi', 'hezarfen-for-woocommerce' ),
-				'desc'  => __( 'Müşteri hasarın fotoğrafını ekleyemez. Kusurlu ürün tartışması WhatsApp’a taşınır ve talebin geçmişinde iz bırakmaz.', 'hezarfen-for-woocommerce' ),
+				'desc'  => __( 'Müşterinin talebe ürün fotoğrafı ekleyebilmesi.', 'hezarfen-for-woocommerce' ),
 			),
 		);
 
@@ -168,14 +172,7 @@ class Returns_Pro_Teasers {
 
 		switch ( $placement ) {
 			case 'statuses':
-				$this->render_chip_preview(
-					array(
-						__( 'Tamamlandı', 'hezarfen-for-woocommerce' ),
-						__( 'İşleniyor', 'hezarfen-for-woocommerce' ),
-						__( 'Beklemede', 'hezarfen-for-woocommerce' ),
-					),
-					array( 0 )
-				);
+				$this->render_status_preview();
 				break;
 
 			case 'products':
@@ -195,20 +192,37 @@ class Returns_Pro_Teasers {
 	}
 
 	/**
-	 * Seçili ve seçilebilir durumları çip olarak gösterir.
+	 * Mağazanın gerçek sipariş durumları, gerçekten iade edilebilir olanlar
+	 * işaretli.
 	 *
-	 * @param string[] $labels   Etiketler.
-	 * @param int[]    $selected Seçili olanların dizinleri.
+	 * Uydurma etiketler yerine kayıtlı ayar gösteriliyor: satır zaten bu ayarı
+	 * temsil ediyor, temsilin de doğru olması gerekiyor.
 	 *
 	 * @return void
 	 */
-	private function render_chip_preview( $labels, $selected ) {
+	private function render_status_preview() {
+		if ( ! function_exists( 'wc_get_order_statuses' ) ) {
+			return;
+		}
+
+		$eligible = (array) get_option( 'hezarfen_returns_eligible_order_statuses', array( 'wc-completed' ) );
+		$statuses = wc_get_order_statuses();
+
+		// Uzun listeyi kısaltırken uygun olanlar önce geliyor; ayarın etkisi
+		// ilk bakışta görünsün.
+		uksort(
+			$statuses,
+			static function ( $left, $right ) use ( $eligible ) {
+				return (int) in_array( $right, $eligible, true ) - (int) in_array( $left, $eligible, true );
+			}
+		);
+
 		echo '<div class="hez-locked__chips">';
 
-		foreach ( $labels as $index => $label ) {
+		foreach ( array_slice( $statuses, 0, 4, true ) as $key => $label ) {
 			printf(
 				'<span class="hez-locked__chip%1$s">%2$s</span>',
-				in_array( $index, $selected, true ) ? ' is-on' : '',
+				in_array( $key, $eligible, true ) ? ' is-on' : '',
 				esc_html( $label )
 			);
 		}
@@ -217,45 +231,89 @@ class Returns_Pro_Teasers {
 	}
 
 	/**
-	 * Ürün ekranındaki iade kuralının küçük bir kopyası.
+	 * Mağazanın gerçek ürün kategorileri, kuralın uygulanacağı denetimle.
+	 *
+	 * Kategori adları gerçek; kuralın kendisi ücretsiz sürümde bulunmadığı için
+	 * denetim "Mağaza ayarını kullan" konumunda gösteriliyor. Var olmayan bir
+	 * durumu varmış gibi göstermek yanlış olurdu.
 	 *
 	 * @return void
 	 */
 	private function render_product_preview() {
-		?>
-		<div class="hez-locked__line">
-			<span class="hez-locked__line-label"><?php esc_html_e( 'İç Giyim', 'hezarfen-for-woocommerce' ); ?></span>
-			<span class="hez-locked__pill is-off"><?php esc_html_e( 'İade edilemez', 'hezarfen-for-woocommerce' ); ?></span>
-		</div>
-		<div class="hez-locked__line">
-			<span class="hez-locked__line-label"><?php esc_html_e( 'Kışlık Mont', 'hezarfen-for-woocommerce' ); ?></span>
-			<span class="hez-locked__pill"><?php esc_html_e( '30 gün', 'hezarfen-for-woocommerce' ); ?></span>
-		</div>
-		<?php
+		$terms = get_terms(
+			array(
+				'taxonomy'   => 'product_cat',
+				'hide_empty' => false,
+				'number'     => 2,
+				'orderby'    => 'count',
+				'order'      => 'DESC',
+			)
+		);
+
+		if ( is_wp_error( $terms ) || ! $terms ) {
+			return;
+		}
+
+		foreach ( $terms as $term ) {
+			?>
+			<div class="hez-locked__line">
+				<span class="hez-locked__line-label"><?php echo esc_html( $term->name ); ?></span>
+				<span class="hez-locked__pill"><?php esc_html_e( 'Mağaza ayarını kullan', 'hezarfen-for-woocommerce' ); ?></span>
+			</div>
+			<?php
+		}
 	}
 
 	/**
-	 * Pro'daki sebep listesinin devre dışı kopyası.
+	 * Müşterinin ŞU AN gördüğü sebeplerin devre dışı kopyası.
+	 *
+	 * Örnek metin uydurulmuyor: satır bu listeyi düzenlemeyi vadediyor, o
+	 * hâlde gösterdiği liste de gerçek olmalı. Mağaza kendi listesini
+	 * tanıyarak neyi düzenleyeceğini anlıyor.
 	 *
 	 * @return void
 	 */
 	private function render_reason_preview() {
-		$rows = array(
-			array( __( 'Beden uymadı', 'hezarfen-for-woocommerce' ), false ),
-			array( __( 'Üründe hasar var', 'hezarfen-for-woocommerce' ), true ),
-		);
+		if ( ! class_exists( '\Hezarfen\Inc\Returns\Core\Return_Reasons' ) ) {
+			return;
+		}
 
-		foreach ( $rows as $row ) {
+		$reasons = new \Hezarfen\Inc\Returns\Core\Return_Reasons();
+		$choices = $reasons->get_choices();
+		$notes   = $reasons->get_keys_requiring_note();
+
+		if ( ! $choices ) {
+			return;
+		}
+
+		$shown = array_slice( $choices, 0, 3, true );
+
+		foreach ( $shown as $key => $label ) {
 			?>
 			<div class="hez-locked__row">
 				<span class="hez-locked__grip">&#8942;&#8942;</span>
-				<span class="hez-locked__input"><?php echo esc_html( $row[0] ); ?></span>
+				<span class="hez-locked__input"><?php echo esc_html( $label ); ?></span>
 				<span class="hez-locked__check">
-					<input type="checkbox" disabled <?php checked( $row[1] ); ?>>
+					<input type="checkbox" disabled <?php checked( in_array( $key, $notes, true ) ); ?>>
 					<?php esc_html_e( 'Açıklama iste', 'hezarfen-for-woocommerce' ); ?>
 				</span>
 			</div>
 			<?php
+		}
+
+		$rest = count( $choices ) - count( $shown );
+
+		if ( $rest > 0 ) {
+			printf(
+				'<p class="hez-locked__more">%s</p>',
+				esc_html(
+					sprintf(
+						/* translators: %d: listede gösterilmeyen sebep sayısı. */
+						_n('ve %d sebep daha', 've %d sebep daha', $rest, 'hezarfen-for-woocommerce' ),
+						$rest
+					)
+				)
+			);
 		}
 	}
 
@@ -399,6 +457,12 @@ class Returns_Pro_Teasers {
 				background: #fff;
 				color: #c3c4c7;
 				font-size: 18px;
+			}
+
+			.hez-locked__more {
+				margin: 6px 0 0;
+				color: #8c8f94;
+				font-size: 11px;
 			}
 
 			.hez-locked__desc {
