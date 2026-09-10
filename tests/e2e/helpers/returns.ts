@@ -227,7 +227,20 @@ export function seedReturnableOrder(
 			$order->set_billing_country( 'TR' );
 			$order->set_billing_state( 'TR06' );
 			$order->set_billing_city( 'Çankaya' );
-			$order->set_billing_address_1( 'Test Mah.' );
+			// Kargo alım adresi mahalleyi resmi listeye karşı doğruluyor:
+			// uydurma bir mahalle adı talebi adres onayı ekranında tutar ve
+			// randevu seçici hiç görünmez. Gerçek bir Çankaya mahallesi.
+			$order->set_billing_address_1( 'Ahlatlıbel Mah' );
+			$order->set_billing_address_2( 'Test Sk. No:1' );
+			$order->set_billing_phone( '5321234567' );
+			$order->set_shipping_first_name( 'Ada' );
+			$order->set_shipping_last_name( 'Lovelace' );
+			$order->set_shipping_phone( '5321234567' );
+			$order->set_shipping_country( 'TR' );
+			$order->set_shipping_state( 'TR06' );
+			$order->set_shipping_city( 'Çankaya' );
+			$order->set_shipping_address_1( 'Ahlatlıbel Mah' );
+			$order->set_shipping_address_2( 'Test Sk. No:1' );
 			$order->calculate_totals();
 			$order->set_date_completed( time() - ( ${ daysAgo } * DAY_IN_SECONDS ) );
 			$order->set_date_paid( time() - ( ${ daysAgo } * DAY_IN_SECONDS ) );

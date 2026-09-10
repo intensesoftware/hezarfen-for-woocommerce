@@ -59,13 +59,42 @@ class Returns_Pro_Teasers {
 	 *
 	 * The row itself is never gated on this: the merchant is told the setting
 	 * exists either way. The link is dropped only where it would be noise --
-	 * on a store that already has Pro, where the row is about to be replaced
-	 * by the real setting anyway.
+	 * on a store running Pro, where a still-locked row means a placement Pro
+	 * has not implemented yet, not something to be sold.
+	 *
+	 * Running, not "ever installed": the version stamp survives Pro being
+	 * deactivated or removed, and a store that no longer has the feature is
+	 * exactly a store the link is for.
 	 *
 	 * @return bool
 	 */
 	public static function may_promote() {
-		return false === get_option( 'hezarfen_pro_db_version', false );
+		return ! defined( 'HEZARFEN_PRO_VERSION' );
+	}
+
+	/**
+	 * The Pro badge, a link wherever there is somewhere to send the merchant.
+	 *
+	 * The padlock carries the meaning on its own -- a coloured "Pro" pill
+	 * reads as a label, a padlock reads as a closed door -- so it goes in
+	 * front of the word rather than replacing it.
+	 *
+	 * @return string
+	 */
+	public static function badge() {
+		$inner = '<span class="dashicons dashicons-lock" aria-hidden="true"></span>'
+			. esc_html__( 'Pro', 'hezarfen-for-woocommerce' );
+
+		if ( ! self::may_promote() ) {
+			return '<span class="hez-locked-badge">' . $inner . '</span>';
+		}
+
+		return sprintf(
+			'<a class="hez-locked-badge" href="%1$s" target="_blank" rel="nofollow noreferrer" title="%2$s">%3$s</a>',
+			esc_url( self::PRO_URL ),
+			esc_attr__( 'Hezarfen Pro ile açın', 'hezarfen-for-woocommerce' ),
+			$inner
+		);
 	}
 
 	/**
@@ -162,7 +191,7 @@ class Returns_Pro_Teasers {
 			<th scope="row" class="titledesc">
 				<label>
 					<?php echo esc_html( $field['title'] ); ?>
-					<span class="hez-locked-badge"><?php esc_html_e( 'Pro', 'hezarfen-for-woocommerce' ); ?></span>
+					<?php echo wp_kses_post( self::badge() ); ?>
 				</label>
 			</th>
 			<td class="forminp">
@@ -387,8 +416,11 @@ class Returns_Pro_Teasers {
 			.hez-locked-row .titledesc label { color: #50575e; }
 
 			.hez-locked-badge {
-				display: inline-block;
+				display: inline-flex;
+				align-items: center;
+				gap: 3px;
 				margin-left: 6px;
+				text-decoration: none;
 				padding: 1px 7px;
 				border-radius: 999px;
 				background: #eff6ff;
@@ -397,6 +429,21 @@ class Returns_Pro_Teasers {
 				font-weight: 600;
 				vertical-align: middle;
 				white-space: nowrap;
+			}
+
+			/* Dashicon varsayılan 20px kutusunda geliyor; rozetin içinde
+			   yazıyla aynı boyda durması için küçültülüyor. */
+			.hez-locked-badge .dashicons {
+				width: 12px;
+				height: 12px;
+				font-size: 12px;
+				line-height: 1;
+			}
+
+			a.hez-locked-badge:hover,
+			a.hez-locked-badge:focus {
+				background: #dbeafe;
+				color: #1e3a8a;
 			}
 
 			.hez-locked { max-width: 460px; }

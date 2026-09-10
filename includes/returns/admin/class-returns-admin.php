@@ -123,6 +123,15 @@ class Returns_Admin {
 	}
 
 	/**
+	 * The module's own settings section, inside WooCommerce's settings.
+	 *
+	 * @return string
+	 */
+	public static function settings_url() {
+		return admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=returns' );
+	}
+
+	/**
 	 * The Hezarfen wordmark shown in the corner of the module's screens.
 	 *
 	 * The list and the detail view are plain WordPress chrome, so without a
@@ -136,6 +145,17 @@ class Returns_Admin {
 		<div class="hez-admin-brand">
 			<span class="hez-admin-brand__name">Hezarfen</span>
 			<span class="hez-admin-brand__tag"><?php esc_html_e( 'İade Yönetimi', 'hezarfen-for-woocommerce' ); ?></span>
+
+			<?php
+			// Bu ekranlar WooCommerce ayarlarının altındaki iade bölümünden
+			// besleniyor ama menüde ona komşu değiller; kısayol olmadan
+			// mağazacı ayarı WooCommerce → Ayarlar → Hezarfen içinde aramak
+			// zorunda kalıyor.
+			?>
+			<a class="hez-admin-brand__settings" href="<?php echo esc_url( self::settings_url() ); ?>">
+				<span class="dashicons dashicons-admin-generic" aria-hidden="true"></span>
+				<?php esc_html_e( 'İade ayarları', 'hezarfen-for-woocommerce' ); ?>
+			</a>
 		</div>
 		<?php
 	}

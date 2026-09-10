@@ -244,10 +244,21 @@ $hez_action_keys = array(
 						<div class="hez-admin-locked">
 							<p class="hez-admin-locked__head">
 								<strong><?php esc_html_e( 'Müşteriden ek bilgi iste', 'hezarfen-for-woocommerce' ); ?></strong>
-								<span class="hez-admin-locked__badge"><?php esc_html_e( 'Pro', 'hezarfen-for-woocommerce' ); ?></span>
+								<?php echo wp_kses_post( Returns_Pro_Teasers::badge() ); ?>
 							</p>
+
+							<?php
+							// Anlatmak yerine göstermek: aracın kendisi, tam
+							// duracağı yerde, dokunulamaz hâlde. Mağazacı neyi
+							// açtığını okuyarak değil görerek anlıyor.
+							?>
+							<div class="hez-admin-locked__preview" aria-hidden="true">
+								<textarea rows="3" class="large-text" disabled placeholder="<?php esc_attr_e( 'Örn. Ürünün kutusunun fotoğrafını paylaşır mısınız?', 'hezarfen-for-woocommerce' ); ?>"></textarea>
+								<span class="button" role="presentation"><?php esc_html_e( 'Bilgi iste', 'hezarfen-for-woocommerce' ); ?></span>
+							</div>
+
 							<p class="hez-admin-locked__desc">
-								<?php esc_html_e( 'Talebi bekletip müşteriye soru sorun; yanıtladığında talep sıraya geri döner.', 'hezarfen-for-woocommerce' ); ?>
+								<?php esc_html_e( 'Talep beklemeye alınır, müşteri sorunuzu yanıtlayınca sıraya geri döner.', 'hezarfen-for-woocommerce' ); ?>
 							</p>
 							<?php
 							if ( Returns_Pro_Teasers::may_promote() ) {

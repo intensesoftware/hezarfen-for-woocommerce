@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { deleteMuPlugin, writeMuPlugin } from './helpers/mu-plugin';
 import { loginAsAdmin } from './helpers/auth';
 import { enableReturns } from './helpers/returns';
 import { restoreOptions, snapshotOptions } from './helpers/wp-options';
@@ -41,6 +42,18 @@ const LOCKED_REASONS_ROW = 'tr.hez-locked-row:has-text("İade sebepleri")';
  * seam lets it drop a locked preview row (here, reasons) without any change to
  * the free plugin.
  */
+/**
+ * Pro'nun çalıştığını taklit eder. Satış bağlantısının kapısı sürüm
+ * sabitine bakıyor; option damgası Pro kaldırıldıktan sonra da geride
+ * kaldığı için kapı olamazdı.
+ */
+const PRO_ACTIVE_SLUG = 'hezarfen-e2e-returns-pro-active';
+const PRO_ACTIVE_PHP = `<?php
+if ( ! defined( 'HEZARFEN_PRO_VERSION' ) ) {
+	define( 'HEZARFEN_PRO_VERSION', '0.0.0-e2e' );
+}
+`;
+
 const SWAP_SLUG = 'hezarfen-e2e-returns-setting-fields';
 const SWAP_PHP = `<?php
 add_filter( 'hezarfen_returns_setting_fields', function ( $fields, $placement ) {
@@ -185,47 +198,53 @@ test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
 		}
 	} );
 
-	test( 'satış bağlantısı yalnızca Pro yokken çıkıyor', async ( {
+	test( 'satış bağlantısı yalnızca Pro çalışmazken çıkıyor', async ( {
 		page,
 	} ) => {
-		// Pro'nun sürüm damgası tek kapı: kurulu olan mağazaya satış
-		// yapılmıyor, çünkü satır zaten gerçek ayarla değişecek.
-		const proStamp = wp( [
-			'option',
-			'get',
-			'hezarfen_pro_db_version',
-		] ).trim();
+		await page.goto( SETTINGS_URL );
 
-		if ( proStamp ) {
-			await page.goto( SETTINGS_URL );
-			await expect( page.locator( LOCKED_STATUSES_ROW ) ).toBeVisible();
-			await expect( page.locator( '.hez-locked__cta' ) ).toHaveCount( 0 );
+		const row = page.locator( LOCKED_STATUSES_ROW );
 
-			wp( [ 'option', 'delete', 'hezarfen_pro_db_version' ] );
+		await expect( row ).toBeVisible();
+
+		// Rozetin kendisi de bağlantı: kilidi gören mağazacının ilk
+		// tıklayacağı yer orası, ayrı bir düğmeyi aramak zorunda kalmasın.
+		for ( const link of [
+			row.locator( '.hez-locked__cta' ),
+			row.locator( 'a.hez-locked-badge' ),
+		] ) {
+			await expect( link ).toBeVisible();
+			await expect( link ).toHaveAttribute(
+				'href',
+				'https://intense.com.tr/hezarfen-pro'
+			);
+			await expect( link ).toHaveAttribute( 'target', '_blank' );
+
+			// Dış bağlantı: mağazanın yönetim adresi karşı tarafa sızmasın,
+			// ve her kuruluma basılan ticari bağlantı takip edilmesin.
+			await expect( link ).toHaveAttribute( 'rel', /nofollow/ );
+			await expect( link ).toHaveAttribute( 'rel', /noreferrer/ );
 		}
+
+		await expect(
+			row.locator( '.hez-locked-badge .dashicons-lock' ),
+			'Rozet kilidi göstermeli.'
+		).toBeVisible();
+
+		// Pro çalışırken kilitli kalan bir satır, Pro'nun henüz yapmadığı bir
+		// yerleşim demek -- satılacak bir şey değil.
+		writeMuPlugin( PRO_ACTIVE_SLUG, PRO_ACTIVE_PHP );
 
 		try {
 			await page.goto( SETTINGS_URL );
 
-			const cta = page.locator(
-				`${ LOCKED_STATUSES_ROW } .hez-locked__cta`
-			);
-
-			await expect( cta ).toBeVisible();
-
-			// Dış bağlantı: mağazanın yönetim adresi karşı tarafa sızmasın,
-			// ve her kuruluma basılan ticari bağlantı takip edilmesin.
-			await expect( cta ).toHaveAttribute(
-				'href',
-				'https://intense.com.tr/hezarfen-pro'
-			);
-			await expect( cta ).toHaveAttribute( 'target', '_blank' );
-			await expect( cta ).toHaveAttribute( 'rel', /nofollow/ );
-			await expect( cta ).toHaveAttribute( 'rel', /noreferrer/ );
+			await expect( page.locator( '.hez-locked__cta' ) ).toHaveCount( 0 );
+			await expect( page.locator( 'a.hez-locked-badge' ) ).toHaveCount( 0 );
+			await expect(
+				page.locator( 'span.hez-locked-badge' ).first()
+			).toBeVisible();
 		} finally {
-			if ( proStamp ) {
-				wp( [ 'option', 'update', 'hezarfen_pro_db_version', proStamp ] );
-			}
+			deleteMuPlugin( PRO_ACTIVE_SLUG );
 		}
 	} );
 

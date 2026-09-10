@@ -121,6 +121,15 @@ add_action( 'hezarfen_returns_loaded', function () {
 		}
 	}
 
+	// Fixture kendi reddini "tekrar denenebilir" olarak bildiriyor; aksi
+	// hâlde ücretsiz akış talebi manuel yönteme düşürür ve testin sınadığı
+	// şey (yöntemin günü reddetmesi) hiç görünmez.
+	add_filter( 'hezarfen_returns_retryable_booking_errors', function ( $codes ) {
+		$codes[] = 'e2e_slot_taken';
+
+		return $codes;
+	} );
+
 	add_filter( 'hezarfen_returns_shipping_methods', function ( $methods ) {
 		$methods[] = new Hezarfen_E2E_Booking_Return_Method();
 
@@ -203,7 +212,10 @@ test.describe( 'Hezarfen iade — müşteri kargo randevusu', () => {
 		await expect(
 			page.locator( '.hez-code__value' ).first()
 		).toContainText( `E2E-BARKOD-${ request.id }` );
-		await expect( page.locator( '.hez-panel' ) ).toContainText( '2099' );
+		// Sayfada birden çok panel var; iddia günü taşıyan koda bağlanıyor.
+		await expect(
+			page.locator( '.hez-panel:has-text("kargo alım günü")' )
+		).toContainText( '2099' );
 
 		// One booking per request: the picker is gone once it is made.
 		await expect( page.locator( '#hez-pickup-date' ) ).toHaveCount( 0 );
@@ -268,7 +280,15 @@ test.describe( 'Hezarfen iade — müşteri kargo randevusu', () => {
 		);
 
 		expect( first ).toBe( '' );
-		expect( second ).toBe( 'hezarfen_returns_booking_in_progress' );
+
+		// Kaybeden isteğin hangi kapıya çarptığı zamanlamaya bağlı: iddia
+		// tek bir hata koduna değil, taşıyıcıya İKİNCİ KEZ ULAŞILMADIĞINA
+		// bağlanıyor -- randevu iddiası hâlâ tutuluyorsa biri, kazanan çoktan
+		// durumu değiştirdiyse diğeri döner.
+		expect( [
+			'hezarfen_returns_booking_in_progress',
+			'hezarfen_returns_not_bookable',
+		] ).toContain( second );
 
 		const shipment = getReturnShipment( request.id );
 

@@ -855,6 +855,25 @@ class Return_Service {
 				'hez_pro_returns_hepsijet_bad_choice',
 			);
 
+			/**
+			 * Filters which booking failures the customer may simply retry.
+			 *
+			 * A shipping method that free does not ship -- Pro's carriers, or
+			 * a store's own -- knows its own refusals better than this list
+			 * does. Anything not named here is treated as final and the
+			 * request falls back to the manual method.
+			 *
+			 * @param array<int, string>  $retryable Error codes worth another go.
+			 * @param \WP_Error           $booked    What the method returned.
+			 * @param Return_Request      $request   The request being booked.
+			 */
+			$retryable = (array) apply_filters(
+				'hezarfen_returns_retryable_booking_errors',
+				$retryable,
+				$booked,
+				$request
+			);
+
 			if ( ! in_array( $booked->get_error_code(), $retryable, true ) ) {
 				return $this->fall_back_to_manual( $request, $booked );
 			}

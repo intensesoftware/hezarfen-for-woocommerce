@@ -170,6 +170,19 @@ test.describe( 'Hezarfen iade — yönetim ekranı', () => {
 		await expect( page.locator( '.hez-admin-actions' ) ).toHaveCount( 0 );
 	} );
 
+	test( 'talep ekranından iade ayarlarına gidilebiliyor', async ( { page } ) => {
+		const orderId = seedOrder();
+		const seeded = seedReturn( { orderId } );
+
+		await page.goto( `${ ADMIN_URL }&return_id=${ seeded.id }` );
+
+		// Ekranlar ayarlarını WooCommerce'in altındaki bölümden alıyor ama
+		// menüde ona komşu değiller; kısayol olmazsa mağazacı aramak zorunda.
+		await page.locator( '.hez-admin-brand__settings' ).click();
+
+		await expect( page.locator( '#hezarfen_returns_enabled' ) ).toBeVisible();
+	} );
+
 	test( 'Pro yokken ek bilgi isteme kilitli', async ( { page } ) => {
 		const orderId = seedOrder();
 		const seeded = seedReturn( { orderId } );
@@ -182,6 +195,14 @@ test.describe( 'Hezarfen iade — yönetim ekranı', () => {
 		await expect( page.locator( '.hez-admin-locked' ) ).toContainText(
 			'Müşteriden ek bilgi iste'
 		);
+
+		// Anlatmak yerine göstermek: aracın kendisi duruyor ama dokunulamaz.
+		await expect(
+			page.locator( '.hez-admin-locked__preview textarea' )
+		).toBeDisabled();
+		await expect(
+			page.locator( '.hez-admin-locked .hez-locked-badge .dashicons-lock' )
+		).toBeVisible();
 
 		expect( requestInfoError( seeded.id, 'Fatura numarası nedir?' ) ).toBe(
 			'hezarfen_returns_info_requests_unavailable'
