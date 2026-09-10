@@ -13,6 +13,8 @@
  */
 
 use Hezarfen\Inc\Returns\Admin\Returns_Admin;
+use Hezarfen\Inc\Returns\Admin\Returns_Pro_Teasers;
+use Hezarfen\Inc\Returns\Core\Return_Features;
 use Hezarfen\Inc\Returns\Core\Return_Event;
 use Hezarfen\Inc\Returns\Core\Return_Pickup_Address;
 use Hezarfen\Inc\Returns\Core\Return_Settings;
@@ -237,7 +239,25 @@ $hez_action_keys = array(
 						</p>
 					<?php endif; ?>
 
-					<?php if ( Return_Status::can_transition( $request->get_status(), Return_Status::INFO_REQUIRED ) ) : ?>
+					<?php if ( Return_Status::can_transition( $request->get_status(), Return_Status::INFO_REQUIRED ) && ! Return_Features::info_requests() ) : ?>
+						<hr>
+						<div class="hez-admin-locked">
+							<p class="hez-admin-locked__head">
+								<strong><?php esc_html_e( 'Müşteriden ek bilgi iste', 'hezarfen-for-woocommerce' ); ?></strong>
+								<span class="hez-admin-locked__badge"><?php esc_html_e( 'Pro', 'hezarfen-for-woocommerce' ); ?></span>
+							</p>
+							<p class="hez-admin-locked__desc">
+								<?php esc_html_e( 'Talebi bekletip müşteriye soru sorun; yanıtladığında talep sıraya geri döner.', 'hezarfen-for-woocommerce' ); ?>
+							</p>
+							<?php
+							if ( Returns_Pro_Teasers::may_promote() ) {
+								echo wp_kses_post(
+									Returns_Pro_Teasers::pro_link( __( 'Hezarfen Pro ile açın', 'hezarfen-for-woocommerce' ), 'button' )
+								);
+							}
+							?>
+						</div>
+					<?php elseif ( Return_Status::can_transition( $request->get_status(), Return_Status::INFO_REQUIRED ) ) : ?>
 						<hr>
 						<form method="post" class="hez-admin-form">
 							<?php wp_nonce_field( Returns_Admin::NONCE_ACTION ); ?>

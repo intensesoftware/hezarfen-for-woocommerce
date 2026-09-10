@@ -146,6 +146,7 @@ class Returns_Module {
 			'core/class-returns-schema.php',
 			'core/class-return-settings.php',
 			'core/class-return-status.php',
+			'core/class-return-features.php',
 			'core/trait-hydrates-props.php',
 			'core/class-return-pickup-address.php',
 			'core/class-return-item.php',

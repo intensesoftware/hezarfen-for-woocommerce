@@ -46,20 +46,48 @@ class Returns_Pro_Teasers {
 	}
 
 	/**
+	 * Where a locked row sends a merchant who wants the setting.
+	 *
+	 * An external page rather than the bundled upgrade screen: that screen is
+	 * itself behind the promotions flag, so a link to it would dead-end on
+	 * exactly the installs a locked row appears on.
+	 */
+	const PRO_URL = 'https://intense.com.tr/hezarfen-pro';
+
+	/**
 	 * Whether the upgrade link may ride along with a locked row.
 	 *
 	 * The row itself is never gated on this: the merchant is told the setting
-	 * exists either way. Only the sales pitch answers to the promotions flag,
-	 * and only while Pro is absent.
+	 * exists either way. The link is dropped only where it would be noise --
+	 * on a store that already has Pro, where the row is about to be replaced
+	 * by the real setting anyway.
 	 *
 	 * @return bool
 	 */
 	public static function may_promote() {
-		if ( ! function_exists( 'hezarfen_show_pro_promotions' ) || ! hezarfen_show_pro_promotions() ) {
-			return false;
-		}
-
 		return false === get_option( 'hezarfen_pro_db_version', false );
+	}
+
+	/**
+	 * The upgrade link, ready to print.
+	 *
+	 * `noreferrer` keeps the store's own admin URL -- which carries the site
+	 * address and the screen being looked at -- out of the request, and
+	 * closes `window.opener` on the new tab. `nofollow` because this is a
+	 * commercial link printed on every install.
+	 *
+	 * @param string $label Link text.
+	 * @param string $class Extra class names.
+	 *
+	 * @return string
+	 */
+	public static function pro_link( $label, $class = '' ) {
+		return sprintf(
+			'<a class="%1$s" href="%2$s" target="_blank" rel="nofollow noreferrer">%3$s</a>',
+			esc_attr( trim( 'hez-locked__cta ' . $class ) ),
+			esc_url( self::PRO_URL ),
+			esc_html( $label )
+		);
 	}
 
 	/**
@@ -150,9 +178,14 @@ class Returns_Pro_Teasers {
 					<p class="hez-locked__desc"><?php echo esc_html( $field['desc'] ); ?></p>
 
 					<?php if ( self::may_promote() ) : ?>
-						<a class="button button-primary hez-locked__cta" href="<?php echo esc_url( admin_url( 'admin.php?page=hezarfen-upgrade' ) ); ?>">
-							<?php esc_html_e( 'Hezarfen Pro ile açın', 'hezarfen-for-woocommerce' ); ?>
-						</a>
+						<?php
+						echo wp_kses_post(
+							self::pro_link(
+								__( 'Hezarfen Pro ile açın', 'hezarfen-for-woocommerce' ),
+								'button button-primary'
+							)
+						);
+						?>
 					<?php endif; ?>
 				</div>
 			</td>

@@ -8,6 +8,7 @@
 namespace Hezarfen\Inc\Returns\Emails;
 
 use Hezarfen\Inc\Returns\Core\Return_Status;
+use Hezarfen\Inc\Returns\Core\Return_Features;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -57,15 +58,23 @@ class Return_Emails {
 		require_once HEZARFEN_RETURNS_PATH . 'emails/class-email-return-received-customer.php';
 		require_once HEZARFEN_RETURNS_PATH . 'emails/class-email-return-approved.php';
 		require_once HEZARFEN_RETURNS_PATH . 'emails/class-email-return-rejected.php';
-		require_once HEZARFEN_RETURNS_PATH . 'emails/class-email-return-info-required.php';
 		require_once HEZARFEN_RETURNS_PATH . 'emails/class-email-return-completed.php';
 
 		$emails['Hezarfen_Return_Received_Admin']    = new Email_Return_Received_Admin();
 		$emails['Hezarfen_Return_Received_Customer'] = new Email_Return_Received_Customer();
 		$emails['Hezarfen_Return_Approved']          = new Email_Return_Approved();
 		$emails['Hezarfen_Return_Rejected']          = new Email_Return_Rejected();
-		$emails['Hezarfen_Return_Info_Required']     = new Email_Return_Info_Required();
 		$emails['Hezarfen_Return_Completed']         = new Email_Return_Completed();
+
+		// Bildirim ancak gönderilebiliyorsa kaydediliyor; aksi hâlde
+		// WooCommerce'in e-posta ayarlarında hiç tetiklenmeyecek bir satır
+		// dururdu. Kayıt burada, kurucuda değil: yetenek filtresi bu noktada
+		// kesinlikle bağlanmış oluyor.
+		if ( Return_Features::info_requests() ) {
+			require_once HEZARFEN_RETURNS_PATH . 'emails/class-email-return-info-required.php';
+
+			$emails['Hezarfen_Return_Info_Required'] = new Email_Return_Info_Required();
+		}
 
 		return $emails;
 	}

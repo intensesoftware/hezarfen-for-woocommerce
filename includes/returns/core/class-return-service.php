@@ -535,6 +535,16 @@ class Return_Service {
 	 * @return true|\WP_Error
 	 */
 	public function request_info( $request, $message, $actor = null ) {
+		// Asıl kapı burada: yönetim ekranı ve e-posta tarafındaki kilitler
+		// mağazacının karşısındaki yüzeyi düzenliyor, talebi bu duruma
+		// gerçekten sokabilen tek yer ise bu metot.
+		if ( ! Return_Features::info_requests() ) {
+			return new \WP_Error(
+				'hezarfen_returns_info_requests_unavailable',
+				__( 'Müşteriden ek bilgi isteme özelliği Hezarfen Pro ile geliyor.', 'hezarfen-for-woocommerce' )
+			);
+		}
+
 		$message = trim( (string) $message );
 
 		if ( '' === $message ) {

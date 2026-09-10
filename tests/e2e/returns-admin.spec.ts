@@ -5,6 +5,8 @@ import {
 	advanceReturn,
 	clearReturns,
 	countReturnEvents,
+	disableInfoRequests,
+	enableInfoRequests,
 	enableReturns,
 	getReturnStatus,
 	requestInfoError,
@@ -58,6 +60,13 @@ test.describe( 'Hezarfen iade — yönetim ekranı', () => {
 	test.beforeEach( async ( { page } ) => {
 		clearReturns();
 		await loginAsAdmin( page );
+	} );
+
+	// Yeteneği açan fixture her testten sonra kaldırılıyor: testin ortasında
+	// kalan bir hata dosyayı yerinde bırakırsa sonraki testler Pro kuruluymuş
+	// gibi çalışırdı.
+	test.afterEach( () => {
+		disableInfoRequests();
 	} );
 
 	test( 'liste ekranı talepleri ve durum filtrelerini gösteriyor', async ( {
@@ -161,9 +170,30 @@ test.describe( 'Hezarfen iade — yönetim ekranı', () => {
 		await expect( page.locator( '.hez-admin-actions' ) ).toHaveCount( 0 );
 	} );
 
+	test( 'Pro yokken ek bilgi isteme kilitli', async ( { page } ) => {
+		const orderId = seedOrder();
+		const seeded = seedReturn( { orderId } );
+
+		await page.goto( `${ ADMIN_URL }&return_id=${ seeded.id }` );
+
+		// Form yok, yerinde kilitli kutu var; ve elle kurulmuş bir istek de
+		// talebi o duruma sokamıyor -- asıl kapı serviste.
+		await expect( page.locator( '#hez-admin-info' ) ).toHaveCount( 0 );
+		await expect( page.locator( '.hez-admin-locked' ) ).toContainText(
+			'Müşteriden ek bilgi iste'
+		);
+
+		expect( requestInfoError( seeded.id, 'Fatura numarası nedir?' ) ).toBe(
+			'hezarfen_returns_info_requests_unavailable'
+		);
+		expect( getReturnStatus( seeded.id ) ).toBe( 'pending' );
+	} );
+
 	test( 'müşteriden ek bilgi istenebiliyor', async ( { page } ) => {
 		const orderId = seedOrder();
 		const seeded = seedReturn( { orderId } );
+
+		enableInfoRequests();
 
 		await page.goto( `${ ADMIN_URL }&return_id=${ seeded.id }` );
 		await page
@@ -186,6 +216,7 @@ test.describe( 'Hezarfen iade — yönetim ekranı', () => {
 		const orderId = seedOrder();
 		const seeded = seedReturn( { orderId } );
 
+		enableInfoRequests();
 		advanceReturn( seeded.id, [ 'rejected' ] );
 
 		const before = countReturnEvents( seeded.id );

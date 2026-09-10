@@ -376,3 +376,38 @@
 		margin: 0 0 10px;
 	}
 }
+
+/* Pro'da olan bir aksiyonun yerini tutan kutu.
+   Formun tam durduğu yerde duruyor: mağazacı özelliği burada arıyor, ve
+   kilidi ayarlar ekranına göndermek yerine ne olduğunu burada anlatmak
+   hem daha dürüst hem daha kısa yol. */
+.hez-admin-locked {
+	padding: 12px;
+	border: 1px dashed #dcdcde;
+	border-radius: 4px;
+	background: #f6f7f7;
+}
+
+.hez-admin-locked__head {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 0 0 4px;
+}
+
+.hez-admin-locked__badge {
+	padding: 1px 6px;
+	border-radius: 9px;
+	background: #d6452b;
+	color: #fff;
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+}
+
+.hez-admin-locked__desc {
+	margin: 0 0 10px;
+	color: #646970;
+	font-size: 12px;
+}

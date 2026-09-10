@@ -1,4 +1,5 @@
 import { expect, type Page } from '@playwright/test';
+import { deleteMuPlugin, writeMuPlugin } from './mu-plugin';
 import { wp } from './wp-cli';
 
 /**
@@ -415,6 +416,28 @@ export function advanceReturn( returnId: string, statuses: string[] ): void {
  * Drive "ask the customer for more information" directly. Returns the
  * WP_Error code, or an empty string on success.
  */
+/**
+ * Ek bilgi isteme yeteneğini açıp kapatır.
+ *
+ * Mekanizma ücretsiz tarafta duruyor ama kapısı Pro'da; Pro'nun yaptığı tek
+ * şey bu filtreyi doğrulamak. Spec'ler mekanizmayı Pro kurulu olmadan da
+ * sınayabilsin diye aynı filtre bir fixture mu-plugin'inden veriliyor --
+ * Pro'yu kurmak, sınanan şeyle ilgisi olmayan bir sürü başka davranışı da
+ * getirirdi.
+ */
+const INFO_GATE_SLUG = 'hezarfen-e2e-returns-info-requests';
+
+export function enableInfoRequests(): void {
+	writeMuPlugin(
+		INFO_GATE_SLUG,
+		"<?php\nadd_filter( 'hezarfen_returns_info_requests_enabled', '__return_true' );\n"
+	);
+}
+
+export function disableInfoRequests(): void {
+	deleteMuPlugin( INFO_GATE_SLUG );
+}
+
 export function requestInfoError( returnId: string, message: string ): string {
 	return lastLine(
 		wp( [

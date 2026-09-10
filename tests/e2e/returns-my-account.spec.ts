@@ -342,9 +342,11 @@ test.describe( 'Hezarfen iade — Hesabım akışı', () => {
 		await expect( page.locator( NOTICE_SUCCESS ) ).toContainText(
 			'Kargo bilginiz kaydedildi'
 		);
-		await expect( page.locator( '.hez-tracking__value' ) ).toContainText(
-			'E2E-TRACK-1'
-		);
+		// Takip numarası ve kargo firması aynı sınıfı paylaşıyor; iddia
+		// numarayı taşıyan satıra bağlanıyor, ilk elemana değil.
+		await expect(
+			page.locator( '.hez-tracking:has-text("Takip numarası") .hez-tracking__value' )
+		).toContainText( 'E2E-TRACK-1' );
 
 		// Handing the parcel over moves the request on by itself.
 		expect( getReturnStatus( seeded.id ) ).toBe( 'shipped' );

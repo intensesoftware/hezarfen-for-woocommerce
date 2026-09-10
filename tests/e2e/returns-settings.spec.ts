@@ -1,6 +1,5 @@
 import { expect, test } from '@playwright/test';
 import { loginAsAdmin } from './helpers/auth';
-import { deleteMuPlugin, writeMuPlugin } from './helpers/mu-plugin';
 import { enableReturns } from './helpers/returns';
 import { restoreOptions, snapshotOptions } from './helpers/wp-options';
 import { wp } from './helpers/wp-cli';
@@ -30,17 +29,6 @@ const OPTION_KEYS = [
 	'hezarfen_returns_address_line',
 	'hezarfen_returns_address_city',
 ];
-
-/**
- * The promotions flag is a constant, not an option, so a mu-plugin is the
- * only way to flip it from a spec.
- */
-const PROMO_SLUG = 'hezarfen-e2e-returns-promotions';
-const PROMO_PHP = `<?php
-if ( ! defined( 'HEZARFEN_SHOW_PRO_PROMOTIONS' ) ) {
-	define( 'HEZARFEN_SHOW_PRO_PROMOTIONS', true );
-}
-`;
 
 /** The locked row of a Pro-backed setting, found by the setting's own name. */
 const LOCKED_STATUSES_ROW =
@@ -197,19 +185,11 @@ test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
 		}
 	} );
 
-	test( 'satış bağlantısı yalnızca promosyonlar açıkken çıkıyor', async ( {
+	test( 'satış bağlantısı yalnızca Pro yokken çıkıyor', async ( {
 		page,
 	} ) => {
-		// Promotions off, which is the plugin's own default: the merchant
-		// still sees that the setting exists, but is not sold anything.
-		await page.goto( SETTINGS_URL );
-		await expect( page.locator( LOCKED_STATUSES_ROW ) ).toBeVisible();
-		await expect( page.locator( '.hez-locked__cta' ) ).toHaveCount( 0 );
-
-		// Pro'nun sürüm damgası ikinci kapı: bir kez kurulmuş siteye satış
-		// yapılmıyor. Test sitesinde Pro daha önce kurulmuş olabildiği için
-		// damga geçici olarak kaldırılıyor, yoksa bu iddia eklentinin
-		// hatasıyla değil ortamın geçmişiyle kırılırdı.
+		// Pro'nun sürüm damgası tek kapı: kurulu olan mağazaya satış
+		// yapılmıyor, çünkü satır zaten gerçek ayarla değişecek.
 		const proStamp = wp( [
 			'option',
 			'get',
@@ -217,19 +197,32 @@ test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
 		] ).trim();
 
 		if ( proStamp ) {
+			await page.goto( SETTINGS_URL );
+			await expect( page.locator( LOCKED_STATUSES_ROW ) ).toBeVisible();
+			await expect( page.locator( '.hez-locked__cta' ) ).toHaveCount( 0 );
+
 			wp( [ 'option', 'delete', 'hezarfen_pro_db_version' ] );
 		}
 
-		writeMuPlugin( PROMO_SLUG, PROMO_PHP );
-
 		try {
 			await page.goto( SETTINGS_URL );
-			await expect(
-				page.locator( `${ LOCKED_STATUSES_ROW } .hez-locked__cta` )
-			).toBeVisible();
-		} finally {
-			deleteMuPlugin( PROMO_SLUG );
 
+			const cta = page.locator(
+				`${ LOCKED_STATUSES_ROW } .hez-locked__cta`
+			);
+
+			await expect( cta ).toBeVisible();
+
+			// Dış bağlantı: mağazanın yönetim adresi karşı tarafa sızmasın,
+			// ve her kuruluma basılan ticari bağlantı takip edilmesin.
+			await expect( cta ).toHaveAttribute(
+				'href',
+				'https://intense.com.tr/hezarfen-pro'
+			);
+			await expect( cta ).toHaveAttribute( 'target', '_blank' );
+			await expect( cta ).toHaveAttribute( 'rel', /nofollow/ );
+			await expect( cta ).toHaveAttribute( 'rel', /noreferrer/ );
+		} finally {
 			if ( proStamp ) {
 				wp( [ 'option', 'update', 'hezarfen_pro_db_version', proStamp ] );
 			}
