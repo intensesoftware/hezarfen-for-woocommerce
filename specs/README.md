@@ -21,6 +21,7 @@ specs/
 │   ├── my-account.md
 │   ├── install-migration.md
 │   ├── privacy-policy.md
+│   ├── returns.md
 │   └── admin-menu.md
 └── shared/                         # tüm modülleri kesen referanslar
     ├── glossary.md                 # MSS, ÖBF, desi, IYS, KVKK vs.

@@ -297,27 +297,19 @@ class Admin_Ajax {
 		}
 
 		if ( $result === true ) {
-			// Mark shipment as cancelled in the encapsulated shipment meta
-			if ( ! empty( $_POST['order_id'] ) ) {
-				$order_id = absint( $_POST['order_id'] );
-				
-				$order = wc_get_order( $order_id );
-				if ( $order ) {
-					// Find shipment by delivery number
-					$shipment_meta_key = '_hezarfen_hepsijet_shipment_' . $delivery_no;
-					$shipment_details = $order->get_meta( $shipment_meta_key );
-					
-					if ( $shipment_details && is_array( $shipment_details ) ) {
-						$shipment_details['cancelled_at'] = current_time('mysql');
-						$shipment_details['cancel_reason'] = 'IPTAL';
-						$shipment_details['status'] = 'cancelled';
-						
-						$order->update_meta_data( $shipment_meta_key, $shipment_details );
-						$order->save_meta_data();
-					}
-				}
+			// Mark shipment as cancelled in the encapsulated shipment meta.
+			// Shared with the returns module: this meta update is what fires
+			// hezarfen_hepsijet_shipment_cancelled and releases a linked return
+			// request, so it must run even when the caller sent only the
+			// delivery number — the order is then resolved from that number.
+			$order_id = ! empty( $_POST['order_id'] )
+				? absint( $_POST['order_id'] )
+				: $hepsijet_integration->find_order_id_by_delivery_no( $delivery_no );
+
+			if ( $order_id ) {
+				$hepsijet_integration->mark_shipment_cancelled( $order_id, $delivery_no );
 			}
-			
+
 			wp_send_json_success( array( 'message' => 'Shipment cancelled successfully' ) );
 		} else {
 			// Handle unexpected response format

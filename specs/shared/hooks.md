@@ -17,6 +17,24 @@ WP/WC core hook'larına `add_filter`/`add_action` yapan ama kendi adıyla yeni b
 | `hezarfen_order_shipped` | sms-automation | Kargo SMS'i işlendikten sonra (sms modülünden zincirleme) | `(WC_Order $order, array $shipment_data)` |
 | `hezarfen_checkout_neighborhood_changed` | neighborhood-selection | Müşteri checkout'ta mahalle değiştirdi (AJAX) | Yok (POST verilerine erişim açık) |
 
+### İade Yönetimi
+
+| Hook | Modül | Ne Zaman | Params |
+|---|---|---|---|
+| `hezarfen_returns_loaded` | returns | Modül ayağa kalktığında; sağlayıcılar burada kaydedilmeli | `(Returns_Module $module)` |
+| `hezarfen_return_created` | returns | Yeni iade talebi kaydedildikten sonra | `(Return_Request $request, WC_Order $order)` |
+| `hezarfen_return_status_changed` | returns | Talep durumu değiştiğinde | `(Return_Request $request, string $old_status, string $new_status)` |
+| `hezarfen_return_status_{status}` | returns | Talep belirli bir duruma geçtiğinde (ör. `hezarfen_return_status_approved`) | `(Return_Request $request, string $old_status)` |
+| `hezarfen_return_shipment_booked` | returns | Müşteri iade kargo randevusunu aldığında (barkod ve alım günü talebe yazılmış olur) | `(Return_Request $request, string $choice)` |
+| `hezarfen_return_refund_created` | returns | Tamamlanan talep için WooCommerce iade kaydı yazıldığında | `(Return_Request $request, WC_Order_Refund $refund)` |
+| `hezarfen_returns_info_response_saved` | returns | Müşterinin ek bilgi yanıtı kaydedildikten sonra, POST hâlâ elde iken | `(Return_Request $request)` |
+| `hezarfen_returns_request_form_fields` | returns | Talep formunun alanları basıldıktan sonra (render noktası) | `(WC_Order $order)` |
+| `hezarfen_returns_info_form_fields` | returns | Ek bilgi yanıt formunun içinde (render noktası) | `(Return_Request $request)` |
+| `hezarfen_returns_detail_sections` | returns | Müşteri talep detayının sonunda (render noktası) | `(Return_Request $request)` |
+| `hezarfen_returns_admin_detail_sections` | returns | Yönetim talep detayının sonunda (render noktası) | `(Return_Request $request)` |
+| `hezarfen_returns_event_added` | returns | Timeline'a kayıt eklendiğinde | `(int $event_id, Return_Event $event)` |
+| `hezarfen_hepsijet_shipment_cancelled` | manual-shipment-tracking | hepsiJET gönderisi taşıyıcıda iptal edilip sipariş meta'sı güncellendiğinde. İade modülü bunu dinleyip ilgili talebin randevusunu serbest bırakır | `(int $order_id, string $delivery_no)` |
+
 ### HTTP / Webhook entry
 
 | Hook | Modül | Açıklama |
@@ -48,6 +66,42 @@ WP/WC core hook'larına `add_filter`/`add_action` yapan ama kendi adıyla yeni b
 | Hook | Default | Params | Amaç |
 |---|---|---|---|
 | `hezarfen_checkout_neighborhood_changed_output_args` | `{update_checkout: true}` | `(array $args)` | AJAX yanıtını özelleştir |
+
+### İade Yönetimi
+
+Modül, ek yeteneklerin koda dokunmadan takılabilmesi için sağlayıcı tabanlı
+çalışır: liste filtreleri bir arayüzü uygulayan nesne bekler.
+
+| Hook | Default | Params | Amaç |
+|---|---|---|---|
+| `hezarfen_returns_enabled` | option değeri | `(bool $enabled)` | Modülü programatik aç/kapa |
+| `hezarfen_returns_reason_providers` | `[Default_Reason_Provider]` | `(Return_Reason_Provider_Interface[] $providers)` | Mağazaya özel iade sebepleri ekle |
+| `hezarfen_returns_reasons` | birleştirilmiş liste | `(array $reasons)` | Nihai sebep listesini düzenle |
+| `hezarfen_returns_policy_providers` | `[Global_Return_Policy_Provider]` | `(Return_Policy_Provider_Interface[] $providers)` | Ürün/kategori bazlı iade politikası ekle |
+| `hezarfen_returns_eligible_order_statuses` | option değeri (`completed`) | `(string[] $statuses)` | İade edilebilir sipariş durumlarını çalışma anında belirle (boş dönerse yok sayılır) |
+| `hezarfen_returns_setting_fields` | kilitli önizleme satırı | `(array $fields, string $placement)` | Bir Pro placement'ının (`statuses`/`products`/`reasons`/`photos`) kilitli satırını gerçek ayar alanıyla değiştir ya da (boş dizi) kaldır |
+| `hezarfen_returns_resolved_policy` | çözümlenen politika | `(Return_Policy $policy, WC_Order $order, WC_Order_Item $item)` | Satır politikasını son anda değiştir |
+| `hezarfen_returns_shipping_methods` | `[Customer_Ships, Kargokit]` | `(Return_Shipping_Method_Interface[] $methods)` | Kendi kargo anlaşmanı yöntem olarak ekle |
+| `hezarfen_returns_repository` | `Return_Repository` | `(Return_Repository_Interface $repository)` | Alternatif depolama katmanı |
+| `hezarfen_returns_statuses` | 8 durum | `(array $statuses)` | Yeni talep durumu tanımla |
+| `hezarfen_returns_status_transitions` | geçiş haritası | `(array $transitions)` | İzinli durum geçişlerini değiştir |
+| `hezarfen_returns_releasing_statuses` | `rejected`, `cancelled` | `(string[] $statuses)` | Ayrılan adedi geri bırakan durumlar |
+| `hezarfen_returns_progress_steps` | 5 adım | `(string[] $steps)` | Müşteriye gösterilen ilerleme adımları |
+| `hezarfen_returns_progress_aliases` | `info-required` → `pending` | `(array $aliases)` | İlerleme çubuğunda başka adımı ödünç alan durumlar |
+| `hezarfen_returns_order_eligibility` | `true` | `(true\|WP_Error $result, WC_Order $order)` | Sipariş düzeyinde ek kural |
+| `hezarfen_returns_returnable_lines` | hesaplanan satırlar | `(array $lines, WC_Order $order)` | İade edilebilir satırları filtrele |
+| `hezarfen_returns_is_cancellable_by_customer` | `pending`/`info-required` | `(bool $cancellable, Return_Request $request)` | Müşteri iptal hakkını değiştir |
+| `hezarfen_returns_is_tracking_editable_by_customer` | `approved`/`shipped` | `(bool $editable, Return_Request $request)` | Müşterinin kargo bilgisi girebildiği durumlar |
+| `hezarfen_returns_is_bookable_by_customer` | `approved` ve barkodsuz | `(bool $bookable, Return_Request $request)` | Müşterinin kargo randevusu alabildiği durumlar |
+| `hezarfen_returns_return_address` | tek adres | `(array $address)` | Çoklu depo desteği |
+| `hezarfen_returns_return_number` | `IADE-{sipariş}-{n}` | `(string $number, WC_Order $order)` | Talep referans formatı |
+| `hezarfen_returns_list_endpoint` | `iadelerim` | `(string $slug)` | Hesabım endpoint slug'ı |
+| `hezarfen_returns_request_endpoint` | `iade-talebi` | `(string $slug)` | İade formu endpoint slug'ı |
+| `hezarfen_returns_admin_columns` | 7 kolon | `(array $columns)` | Yönetim listesine kolon ekle |
+| `hezarfen_returns_admin_column_content` | `''` | `(string $content, string $column, Return_Request $request)` | Eklenen kolonun içeriği |
+| `hezarfen_returns_is_booking_cancellable_by_customer` | `approved`, barkodlu ve alım gününden bir gün önce 23:59'a kadar | `(bool $cancellable, Return_Request $request)` | Randevu iptal penceresini değiştir |
+| `hezarfen_returns_order_panel_classes` | `[]` | `(string[] $classes, WC_Order $order, Return_Request[] $requests, array $returnable)` | Sipariş detayındaki iade kutusuna sınıf ekle |
+| `hezarfen_returns_form_accepts_uploads` | `false` | `(bool $accepts, string $context)` | Formu `multipart/form-data` olarak render et; `$context` `request` veya `info`. Fotoğraf eklentisi bunu açar |
 
 ---
 
@@ -109,7 +163,9 @@ Tüm AJAX endpoint'leri WordPress `wp_ajax_{action}` (auth gerekli) ve gerekiyor
 | `woocommerce_address_to_edit` | my-account, neighborhood-selection |
 | `woocommerce_after_save_address_validation` | my-account |
 | `woocommerce_my_account_my_orders_columns` | shipment-tracking |
-| `woocommerce_order_details_after_order_table` | shipment-tracking, sales-contract |
+| `woocommerce_order_details_after_order_table` | shipment-tracking, sales-contract, returns |
+| `woocommerce_get_sections_hezarfen` / `woocommerce_get_settings_hezarfen` | returns |
+| `woocommerce_email_classes` | shipment-tracking, returns |
 | `woocommerce_thankyou` | sales-contract |
 | `wc_order_statuses` | shipment-tracking (`wc-hezarfen-shipped` ekler) |
 | `add_meta_boxes` | shipment-tracking, sales-contract, invoice-fields |
