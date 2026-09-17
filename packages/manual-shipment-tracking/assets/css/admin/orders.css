@@ -32,6 +32,24 @@ td.column-hezarfen_mst_shipment_info p {
 	content: "\f14c";
 }
 
+.column-hezarfen_mst_shipment_info .hezarfen-mst-barcode-ready {
+	color: #d98a00;
+	font-weight: 600;
+}
+
+.column-hezarfen_mst_shipment_info .hezarfen-mst-barcode-count {
+	display: inline-block;
+	margin-left: 3px;
+	padding: 1px 6px;
+	border-radius: 10px;
+	background: #fdf1dc;
+	color: #d98a00;
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 1.6;
+	cursor: default;
+}
+
 #tiptip_holder #tiptip_content {
 	max-width: 200px;
 }

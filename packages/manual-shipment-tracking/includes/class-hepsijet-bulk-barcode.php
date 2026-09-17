@@ -184,7 +184,24 @@ class Hepsijet_Bulk_Barcode {
 	 * @return array|null Shipment details or null.
 	 */
 	public static function get_active_hepsijet_shipment( $order ) {
-		$all_meta = $order->get_meta_data();
+		$active_shipments = self::get_all_active_hepsijet_shipments( $order );
+
+		return $active_shipments ? $active_shipments[0] : null;
+	}
+
+	/**
+	 * Finds all active HepsiJet shipments for an order.
+	 *
+	 * Unlike get_active_hepsijet_shipment(), which only returns the first match, this returns
+	 * every order meta entry prefixed `_hezarfen_hepsijet_shipment_` whose status is unset or
+	 * `active`. Used to count how many barcodes have been created for an order.
+	 *
+	 * @param \WC_Order $order Order object.
+	 * @return array[] List of active shipment meta values.
+	 */
+	public static function get_all_active_hepsijet_shipments( $order ) {
+		$active_shipments = array();
+		$all_meta         = $order->get_meta_data();
 
 		foreach ( $all_meta as $meta ) {
 			if ( strpos( $meta->key, '_hezarfen_hepsijet_shipment_' ) === 0 ) {
@@ -195,12 +212,28 @@ class Hepsijet_Bulk_Barcode {
 					&& isset( $meta_value['delivery_no'] )
 					&& ( ! isset( $meta_value['status'] ) || 'active' === $meta_value['status'] )
 				) {
-					return $meta_value;
+					$active_shipments[] = $meta_value;
 				}
 			}
 		}
 
-		return null;
+		return $active_shipments;
+	}
+
+	/**
+	 * Counts the active HepsiJet shipments/barcodes for an order.
+	 *
+	 * @param int|\WC_Order $order Order ID or object.
+	 * @return int
+	 */
+	public static function count_active_hepsijet_shipments( $order ) {
+		$order = $order instanceof \WC_Order ? $order : wc_get_order( $order );
+
+		if ( ! $order ) {
+			return 0;
+		}
+
+		return count( self::get_all_active_hepsijet_shipments( $order ) );
 	}
 
 	/**
