@@ -30,8 +30,11 @@ bilerek yoktur.
 Hesabım menüsüne ayrı bir "İadelerim" sekmesi **eklenmez**: iade siparişe
 aittir, dolayısıyla hem başlatma hem takip o siparişin sayfasında olur.
 
-Modül **varsayılan olarak kapalıdır**; WooCommerce → Ayarlar → Hezarfen → İade
-Yönetimi bölümünden açılır.
+Modül kademeli yayınlanır: Hezarfen'i **ilk kez kuran** mağazada açık başlar,
+**güncelleyen** (mevcut) mağazada kapalı kalır. Mevcut mağazalar, eski hepsiJET
+iade formunu kullananlar dahil, modülü WooCommerce → Ayarlar → Hezarfen → İade
+Yönetimi bölümünden kendileri açar. Amaç, olası bir regresyonun canlı
+mağazaların olabildiğince azına ulaşması.
 
 ## Kapsam
 
