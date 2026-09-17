@@ -576,8 +576,36 @@ class Admin_Ajax {
 	}
 
 	/**
+	 * Fails loudly when TCPDF could not embed the barcode image.
+	 *
+	 * TCPDF::Image() answers an image it cannot process with false (or with null,
+	 * when it bailed out inside ImagePngAlpha()) instead of raising, so an
+	 * unembeddable barcode would otherwise yield a label carrying the order
+	 * details and an empty barcode area. A successful call answers the image key,
+	 * which is 0 for the first image on the page, hence the strict comparisons.
+	 *
+	 * @param mixed  $result      Return value of TCPDF::Image().
+	 * @param string $delivery_no Delivery number, for the error message.
+	 * @return void
+	 * @throws Exception If the barcode image was not embedded.
+	 */
+	private static function assert_barcode_drawn( $result, $delivery_no ) {
+		if ( false !== $result && null !== $result ) {
+			return;
+		}
+
+		throw new Exception(
+			sprintf(
+				/* translators: %s: HepsiJet delivery number. */
+				__( '%s numaralı gönderinin barkod görseli PDF\'e eklenemedi. Sunucunun geçici dosya dizini (upload_tmp_dir) yazılabilir olmayabilir.', 'hezarfen-for-woocommerce' ),
+				$delivery_no
+			)
+		);
+	}
+
+	/**
 	 * Create Hepsijet PDF using TCPDF.
-	 * 
+	 *
 	 * @param WC_Order $order Order object.
 	 * @param array $barcode_data Barcode data from API.
 	 * @param string $delivery_no Delivery number.
@@ -752,8 +780,17 @@ class Admin_Ajax {
 							if ( $rotated_gd ) {
 								$rot_w        = imagesx( $rotated_gd );
 								$rot_h        = imagesy( $rotated_gd );
-								$rotated_file = wp_tempnam( 'hepsijet_barcode_rot_' . $delivery_no . '.png' );
-								imagepng( $rotated_gd, $rotated_file );
+								// The rotated copy is written as JPEG rather than PNG:
+								// imagerotate() leaves an alpha channel behind, and TCPDF
+								// answers an alpha PNG by taking its ImagePngAlpha() path,
+								// which needs write access to K_PATH_CACHE (PHP's
+								// upload_tmp_dir). Where that directory isn't writable --
+								// Bitnami images point it at /opt/bitnami/php/tmp -- Image()
+								// then fails and the label prints its order details with an
+								// empty barcode area. JPEG carries no alpha channel, so that
+								// path is never taken.
+								$rotated_file = wp_tempnam( 'hepsijet_barcode_rot_' . $delivery_no . '.jpg' );
+								imagejpeg( $rotated_gd, $rotated_file, 95 );
 								imagedestroy( $rotated_gd );
 							}
 						}
@@ -765,7 +802,8 @@ class Admin_Ajax {
 						$draw_width  = $content_width;
 						$draw_height = $content_width * $rot_h / max( 1, $rot_w );
 
-						$pdf->Image( $rotated_file, $content_x, $current_y, $draw_width, $draw_height, '', '', '', false, 300, '', false, false, 0, false, false, false );
+						$drawn = $pdf->Image( $rotated_file, $content_x, $current_y, $draw_width, $draw_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
+						self::assert_barcode_drawn( $drawn, $delivery_no );
 
 						if ( $rotated_file !== $temp_file ) {
 							@unlink( $rotated_file );
@@ -781,7 +819,8 @@ class Admin_Ajax {
 						$display_width  = $content_width;
 						$display_height = $display_width / $image_aspect_ratio;
 
-						$pdf->Image( $temp_file, $content_x, $current_y, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
+						$drawn = $pdf->Image( $temp_file, $content_x, $current_y, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
+						self::assert_barcode_drawn( $drawn, $delivery_no );
 
 
 						$pdf->SetY( $current_y + $display_height + $barcode_bottom_gap );
