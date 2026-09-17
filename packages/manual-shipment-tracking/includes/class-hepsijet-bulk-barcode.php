@@ -221,7 +221,10 @@ class Hepsijet_Bulk_Barcode {
 	}
 
 	/**
-	 * Counts the active HepsiJet shipments/barcodes for an order.
+	 * Counts the active outgoing HepsiJet shipments/barcodes for an order.
+	 *
+	 * Return (iade) shipments are excluded: they are stored alongside outgoing shipments but must
+	 * not make the orders list "Shipment" column report a barcode as ready to go out.
 	 *
 	 * @param int|\WC_Order $order Order ID or object.
 	 * @return int
@@ -233,7 +236,14 @@ class Hepsijet_Bulk_Barcode {
 			return 0;
 		}
 
-		return count( self::get_all_active_hepsijet_shipments( $order ) );
+		$outgoing_shipments = array_filter(
+			self::get_all_active_hepsijet_shipments( $order ),
+			function ( $shipment ) {
+				return empty( $shipment['is_return'] );
+			}
+		);
+
+		return count( $outgoing_shipments );
 	}
 
 	/**

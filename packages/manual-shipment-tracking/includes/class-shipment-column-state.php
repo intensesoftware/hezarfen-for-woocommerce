@@ -49,8 +49,8 @@ class Shipment_Column_State {
 	 *
 	 * Precedence:
 	 * 1. self::STATUS_SHIPPED   — manual shipment data exists (Helper::get_all_shipment_data()).
-	 * 2. self::STATUS_BARCODE_READY — no manual shipment data, but at least one active hepsiJET
-	 *    barcode meta exists on the order.
+	 * 2. self::STATUS_BARCODE_READY — no manual shipment data, but at least one active outgoing
+	 *    hepsiJET barcode meta exists on the order (return/iade barcodes are not counted).
 	 * 3. self::STATUS_NONE      — nothing to show.
 	 *
 	 * @param int $order_id Order ID.
@@ -85,7 +85,12 @@ class Shipment_Column_State {
 		 *
 		 * Set `status` and `count` only: the column renders the markup itself afterwards, so a
 		 * count added here shows up in the "multiple barcodes" badge without the extension having
-		 * to reproduce the markup. To append extra controls to the column, use the
+		 * to reproduce the markup. This holds for self::STATUS_BARCODE_READY and self::STATUS_NONE.
+		 *
+		 * self::STATUS_SHIPPED is the exception: core can only draw its markup (the courier logo)
+		 * from its own manual shipment data. An extension that reports self::STATUS_SHIPPED for an
+		 * order without manual shipment data must also set `html` itself, or the cell is left
+		 * blank. To append extra controls to the column, use the
 		 * `hezarfen_mst_after_shipment_column` action instead.
 		 *
 		 * @since x.x
@@ -95,7 +100,15 @@ class Shipment_Column_State {
 		 *
 		 * @return Shipment_Column_State
 		 */
-		$state = apply_filters( 'hezarfen_mst_order_shipment_state', $state, $order_id );
+		$pre_filter_state = $state;
+		$state            = apply_filters( 'hezarfen_mst_order_shipment_state', $state, $order_id );
+
+		// A misbehaving extension can return something other than a Shipment_Column_State instance
+		// (null, an array, etc.). One bad extension must not take down the whole orders list, so
+		// fall back to the pre-filter state rather than using the filtered value unchecked.
+		if ( ! $state instanceof self ) {
+			$state = $pre_filter_state;
+		}
 
 		// The markup is always built here, from the state as it stands after the filter, so that a
 		// count an extension added (a Pro barcode on top of a hepsiJET one, say) is reflected in the
