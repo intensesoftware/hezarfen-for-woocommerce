@@ -568,14 +568,13 @@ class Settings {
 	 * @return string Decrypted value
 	 */
 	public static function decrypt_webhook_secret_for_display( $value ) {
-		// Don't decrypt during save operations.
-		// Nonce verification happens in WordPress core's options.php / WC settings handler before this filter fires; here we only branch on presence.
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( isset( $_POST['save'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			return $value;
 		}
 
-		// Only decrypt when viewing settings page (not saving)
+		// Only decrypt when rendering the settings page. The save handler reads the
+		// raw value straight from the database, so decrypting here is safe even
+		// during the POST request that WooCommerce renders the page from.
 		global $current_section;
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( is_admin() && isset( $_GET['page'] ) && 'wc-settings' === sanitize_text_field( wp_unslash( $_GET['page'] ) ) && 'hepsijet_integration' === $current_section ) {
@@ -606,13 +605,29 @@ class Settings {
 			return;
 		}
 
+		// WooCommerce must never write this option itself: save_fields() turns a
+		// missing POST field into an empty string on some setups and wipes the
+		// stored secret right after we saved it. Guard the option instead of
+		// relying on unset( $_POST ) alone.
+		add_filter( 'pre_update_option_hez_ordermigo_webhook_secret', array( __CLASS__, 'keep_webhook_secret_on_empty_write' ), PHP_INT_MAX, 2 );
+
 		if ( isset( $_POST['hez_ordermigo_webhook_secret'] ) ) {
 			$webhook_secret = sanitize_text_field( wp_unslash( $_POST['hez_ordermigo_webhook_secret'] ) );
-			
-			// Get current value to see if it changed
-			$current_encrypted = get_option( 'hez_ordermigo_webhook_secret', '' );
+
+			// Read the raw value straight from the database: get_option() would go
+			// through the display filter and hand back an already decrypted value.
+			global $wpdb;
+			$current_encrypted = (string) $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", 'hez_ordermigo_webhook_secret' ) );
 			$current_decrypted = self::decrypt_webhook_secret( $current_encrypted );
-			
+
+			// The posted value is the stored ciphertext, so the field was rendered
+			// without being decrypted. Leave the secret alone instead of encrypting
+			// the ciphertext a second time.
+			if ( '' !== $current_encrypted && $webhook_secret === $current_encrypted ) {
+				unset( $_POST['hez_ordermigo_webhook_secret'] );
+				return;
+			}
+
 			// Only save if the value actually changed
 			if ( $webhook_secret !== $current_decrypted ) {
 				if ( ! empty( $webhook_secret ) ) {
@@ -629,6 +644,26 @@ class Settings {
 			unset( $_POST['hez_ordermigo_webhook_secret'] );
 		}
 		// phpcs:enable
+	}
+
+	/**
+	 * Keeps the stored webhook secret when something tries to blank it out.
+	 *
+	 * Only registered for the duration of a settings save request. Clearing the
+	 * secret on purpose goes through delete_option(), so an empty update is
+	 * always an unwanted overwrite.
+	 *
+	 * @param mixed $value     New option value.
+	 * @param mixed $old_value Current option value.
+	 *
+	 * @return mixed
+	 */
+	public static function keep_webhook_secret_on_empty_write( $value, $old_value ) {
+		if ( ( '' === $value || null === $value ) && ! empty( $old_value ) ) {
+			return $old_value;
+		}
+
+		return $value;
 	}
 
 	/**
