@@ -261,10 +261,11 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
-= 2.16.0 - 2026-09-17 =
+= 2.16.0 - 2026-09-18 =
 
 * feat(orders): kargo sütununu tek bir durum kaynağına bağla
 * fix(hepsijet-label): embed the rotated barcode as JPEG, not alpha PNG
+* fix(hepsijet): stop the settings save from wiping the webhook secret
 = 2.15.0 - 2026-08-05 =
 
 * refactor: Aras Kargo talep anketi kaldırıldı
