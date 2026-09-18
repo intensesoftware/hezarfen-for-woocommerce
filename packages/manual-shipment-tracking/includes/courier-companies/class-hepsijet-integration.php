@@ -27,6 +27,17 @@ class Courier_Hepsijet_Integration {
     const PRICING_URL = 'https://hezarfen-r2.intense.com.tr/plugin-assets/pricing.json';
 
     private $relay_base_url;
+
+    /**
+     * Cipher the webhook secret is stored under.
+     */
+    const SECRET_CIPHER = 'aes-256-cbc';
+
+    /**
+     * Marks a secret written with a per-value IV, so the older format —
+     * which shared one derived IV across every value — can still be read.
+     */
+    const SECRET_PREFIX = 'v2:';
     private $consumer_key;
     private $consumer_secret;
 
@@ -68,23 +79,30 @@ class Courier_Hepsijet_Integration {
             return base64_encode( $value );
         }
 
-        // Use WordPress auth keys for encryption
-        $key = AUTH_KEY . SECURE_AUTH_KEY;
-        $salt = AUTH_SALT . SECURE_AUTH_SALT;
-        
-        // Generate encryption key
-        $encryption_key = hash( 'sha256', $key );
-        $iv_length = openssl_cipher_iv_length( 'aes-256-cbc' );
-        $iv = substr( hash( 'sha256', $salt ), 0, $iv_length );
-        
-        // Encrypt the value
-        $encrypted = openssl_encrypt( $value, 'aes-256-cbc', $encryption_key, 0, $iv );
-        
+        $iv_length = openssl_cipher_iv_length( self::SECRET_CIPHER );
+
+        // A fresh IV per write, stored with the ciphertext. The old code
+        // derived one from the salts, so every site encrypted every value
+        // under the same IV — with CBC that means identical secrets produce
+        // identical ciphertext and the mode loses the property it exists
+        // for. Values written the old way still decrypt; see below.
+        $iv        = openssl_random_pseudo_bytes( $iv_length );
+        $encrypted = openssl_encrypt( $value, self::SECRET_CIPHER, $this->secret_key(), OPENSSL_RAW_DATA, $iv );
+
         if ( $encrypted === false ) {
             return base64_encode( $value );
         }
-        
-        return base64_encode( $encrypted );
+
+        return self::SECRET_PREFIX . base64_encode( $iv . $encrypted );
+    }
+
+    /**
+     * The key every stored secret is encrypted under.
+     *
+     * @return string
+     */
+    private function secret_key() {
+        return hash( 'sha256', AUTH_KEY . SECURE_AUTH_KEY, true );
     }
 
     /**
@@ -98,8 +116,37 @@ class Courier_Hepsijet_Integration {
             return '';
         }
 
+        // Written with a per-value IV: it travels in front of the ciphertext.
+        if ( 0 === strpos( $encrypted_value, self::SECRET_PREFIX ) ) {
+            if ( ! $this->is_openssl_available() ) {
+                return '';
+            }
+
+            $raw = base64_decode( substr( $encrypted_value, strlen( self::SECRET_PREFIX ) ), true );
+
+            if ( false === $raw ) {
+                return '';
+            }
+
+            $iv_length = openssl_cipher_iv_length( self::SECRET_CIPHER );
+
+            if ( strlen( $raw ) <= $iv_length ) {
+                return '';
+            }
+
+            $decrypted = openssl_decrypt(
+                substr( $raw, $iv_length ),
+                self::SECRET_CIPHER,
+                $this->secret_key(),
+                OPENSSL_RAW_DATA,
+                substr( $raw, 0, $iv_length )
+            );
+
+            return false === $decrypted ? '' : $decrypted;
+        }
+
         $decoded = base64_decode( $encrypted_value );
-        
+
         if ( $decoded === false ) {
             return '';
         }
@@ -110,18 +157,15 @@ class Courier_Hepsijet_Integration {
             return $decoded;
         }
 
-        // Use WordPress auth keys for decryption
-        $key = AUTH_KEY . SECURE_AUTH_KEY;
-        $salt = AUTH_SALT . SECURE_AUTH_SALT;
-        
-        // Generate decryption key
-        $encryption_key = hash( 'sha256', $key );
-        $iv_length = openssl_cipher_iv_length( 'aes-256-cbc' );
-        $iv = substr( hash( 'sha256', $salt ), 0, $iv_length );
-        
-        // Decrypt the value
-        $decrypted = openssl_decrypt( $decoded, 'aes-256-cbc', $encryption_key, 0, $iv );
-        
+        // Legacy format: one IV derived from the salts, shared by every
+        // value. Still read so sites that stored a secret before the change
+        // keep working; the next save rewrites it in the new format.
+        $encryption_key = hash( 'sha256', AUTH_KEY . SECURE_AUTH_KEY );
+        $iv_length      = openssl_cipher_iv_length( self::SECRET_CIPHER );
+        $iv             = substr( hash( 'sha256', AUTH_SALT . SECURE_AUTH_SALT ), 0, $iv_length );
+
+        $decrypted = openssl_decrypt( $decoded, self::SECRET_CIPHER, $encryption_key, 0, $iv );
+
         // If decryption fails, try to return the base64 decoded value (fallback scenario)
         if ( $decrypted === false ) {
             return $decoded;
@@ -149,6 +193,47 @@ class Courier_Hepsijet_Integration {
     private function save_webhook_secret( $value ) {
         $encrypted = $this->encrypt_webhook_secret( $value );
         return update_option( 'hez_ordermigo_webhook_secret', $encrypted, false ); // false = not autoloaded
+    }
+
+    /**
+     * The relay's own words for a failure, with any markup taken out.
+     *
+     * These strings travel a long way: a WP_Error here can end up in a
+     * customer facing WooCommerce notice, and WooCommerce renders notices
+     * through wc_kses_notice() — which keeps links and images. A relay that
+     * is compromised, proxied or simply buggy must not be able to put markup
+     * on a shop's account page, so the text is flattened at the boundary
+     * where it enters rather than at each of the places it might be shown.
+     *
+     * @param mixed  $decoded  Decoded response body.
+     * @param string $fallback Message to use when the relay sent none.
+     *
+     * @return string
+     */
+    private function relay_error_message( $decoded, $fallback ) {
+        $message = is_array( $decoded ) && ! empty( $decoded['message'] ) && is_scalar( $decoded['message'] )
+            ? (string) $decoded['message']
+            : '';
+
+        $message = trim( wp_strip_all_tags( $message ) );
+
+        return '' !== $message ? $message : $fallback;
+    }
+
+    /**
+     * A carrier delivery number, safe to put in a URL path.
+     *
+     * The number is concatenated straight into the relay endpoint, and it
+     * does not always come from the relay: a merchant can type one into the
+     * order screen. Encoding it keeps a slash or a query character from
+     * pointing the request at a different endpoint.
+     *
+     * @param string $delivery_no Delivery number.
+     *
+     * @return string
+     */
+    private function path_segment( $delivery_no ) {
+        return rawurlencode( trim( (string) $delivery_no ) );
     }
 
     /**
@@ -183,8 +268,10 @@ class Courier_Hepsijet_Integration {
         $decoded = json_decode( $body, true );
 
         if ( $http_code >= 400 ) {
-            $error_message = $decoded['message'] ?? 'API Error: ' . $http_code;
-            return new \WP_Error( 'relay_api_error', $error_message );
+            return new \WP_Error(
+                'relay_api_error',
+                $this->relay_error_message( $decoded, 'API Error: ' . $http_code )
+            );
         }
 
         return $decoded;
@@ -223,146 +310,13 @@ class Courier_Hepsijet_Integration {
         $decoded = json_decode( $body, true );
 
         if ( $http_code >= 400 ) {
-            $error_message = $decoded['message'] ?? 'API Error: ' . $http_code;
-            return new \WP_Error( 'relay_api_error', $error_message );
+            return new \WP_Error(
+                'relay_api_error',
+                $this->relay_error_message( $decoded, 'API Error: ' . $http_code )
+            );
         }
 
         return $decoded;
-    }
-
-    /**
-     * Create return barcode
-     */
-    public function api_create_return_barcode( $order_id, $delivery_date_original ) {
-        $order = wc_get_order($order_id);
-        if ( ! $order ) {
-            return new \WP_Error( 'hepsijet_error', 'Order not found' );
-        }
-
-        $delivery_barcode_no = $this->delivery_barcode_uret();
-        $shipping_details = new Shipping_Details( $order_id );
-
-        $customerCompanyAddressId = sprintf('%s-%s', $order->get_id(), wp_generate_uuid4());
-        $customerCompanyCustomerId = sprintf('%s-%s', $order->get_id(), wp_generate_uuid4());
-
-        // Get shipments to get package count and desi
-        $shipments_data = Helper::get_all_shipment_data( $order->get_id() );
-        
-        if( count( $shipments_data ) < 1 ) {
-            return false;
-        }
-
-        // Use data from first shipment
-        $package_count = 1; // Default value
-        $desi = 1; // Default value
-
-        $params = array(
-            'company' => [
-                'name' => $this->get_setting( 'sender_company_name', '' ),
-                'abbreviationCode' => $this->get_setting( 'company_abbreviation_code', '' ),
-            ],
-            'delivery'=>[
-                'customerDeliveryNo' => $delivery_barcode_no,
-                'customerOrderId' => $order->get_order_number(),
-                'totalParcels'       => $package_count,
-                'desi'       => $desi,
-                'deliverySlotOriginal'=>"0",
-                'deliveryDateOriginal'=>$delivery_date_original,
-                'deliveryType'       => 'RETURNED',
-                'receiver'=>[
-                    'companyCustomerId'=>$customerCompanyCustomerId,
-                    'phone1'=>$this->get_setting( 'sender_company_phone', '' ),
-                ],
-                'product'=>[
-                    'productCode'=>'HX_STD'
-                ],
-                'senderAddress'=>[
-                    'companyAddressID'=>$customerCompanyAddressId,
-                    'country'=>[
-                        'name'=>'Türkiye'
-                    ],
-                    'city'=>[
-                        'name'=>$shipping_details->get_city()
-                    ],
-                    'town'=>[
-                        'name'=>$shipping_details->get_district()
-                    ],
-                    'district'=>[
-                        'name'=>$shipping_details->get_neighborhood()
-                    ],
-                    'addressLine1'=>$shipping_details->get_address()
-                ],
-                'recipientAddress'=>[
-                    'companyAddressId'=>$this->get_setting( 'sender_company_address_id', '' ),
-                    'country'=>[
-                        'name'=>'Türkiye'
-                    ],
-                    'city'=>[
-                        'name'=>$this->get_setting('sender_company_city', '')
-                    ],
-                    'town'=>[
-                        'name'=>$this->get_setting('sender_company_district', '')
-                    ],
-                    'district'=>[
-                        'name'=>$this->get_setting('sender_company_neighborhood', '')
-                    ],
-                    'addressLine1'=>$this->get_setting( 'sender_company_address', '' ),
-                ],
-                'recipientPerson'=>$this->get_setting( 'authorized_person_fullname', '' ),
-                'recipientPersonPhone1'=>$this->get_setting( 'authorized_person_phone', '' ),
-
-            ]
-        );
-
-        $share_email = 'yes' === $this->get_setting( 'share_customer_email_with_hepsijet', 'no' );
-        if ( $share_email ) {
-            $params['delivery']['receiver']['email'] = $shipping_details->get_email();
-        }
-
-        $response = $this->send_request(
-            'delivery/sendDeliveryOrderEnhanced',
-            $params
-        );
-
-        if ( is_wp_error( $response ) || !array_key_exists('status', $response) || $response['status'] !== "OK" ) {
-            return new \WP_Error( 'hepsijet_error', is_wp_error( $response ) ? $response->get_error_message() : 'API Error' );
-        }
-
-        if( ! array_key_exists('data', $response) ) {
-            return new \WP_Error( 'hepsijet_error', 'Bilinmeyen Hata' );
-        }
-
-        $response_data = $response['data'];
-
-        // Save return shipment data
-        $shipment_data = Helper::new_order_shipment_data(
-            $order,
-            null,
-            'hepsijet-entegrasyon',
-            $response_data['customerDeliveryNo']
-        );
-
-        // Save return shipment response data to order meta
-        if ( isset( $response_data['zplBarcodeDTOList'] ) && is_array( $response_data['zplBarcodeDTOList'] ) && count( $response_data['zplBarcodeDTOList'] ) > 0 ) {
-            $barcode_data = $response_data['zplBarcodeDTOList'][0];
-            
-            // Save return shipment data with suffix
-            $order->update_meta_data( '_hezarfen_hepsijet_return_barcode_no', $response_data['customerDeliveryNo'] );
-            
-            if ( isset( $barcode_data['barcodePrintDate'] ) ) {
-                $mysql_date = $this->convert_turkish_date_to_mysql( $barcode_data['barcodePrintDate'] );
-                $order->update_meta_data( '_hezarfen_hepsijet_return_barcode_print_date', $mysql_date );
-            }
-            
-            if ( isset( $barcode_data['zplBarcode'] ) ) {
-                $order->update_meta_data( '_hezarfen_hepsijet_return_zpl_barcode', $barcode_data['zplBarcode'] );
-            }
-            
-            $order->update_meta_data( '_hezarfen_hepsijet_return_complete_response', $response_data );
-            $order->save_meta_data();
-        }
-
-        return true;
     }
 
     /**
@@ -503,14 +457,31 @@ class Courier_Hepsijet_Integration {
             return $response;
         }
 
-        if ( ! $response['success'] ) {
-            return new \WP_Error( 'hepsijet_error', $response['message'] ?? 'API Error' );
+        // `empty()` çünkü 200 dönen bir gövde alanı hiç taşımayabiliyor;
+        // mesaj ise ham gövdeden değil, temizleyen yardımcıdan geliyor.
+        if ( empty( $response['success'] ) ) {
+            return new \WP_Error( 'hepsijet_error', $this->relay_error_message( $response, 'API Error' ) );
         }
 
-        // Relay API returns data directly
-        $delivery_no = $response['delivery_no'];
-        $zpl_data = $response['zpl'];
-        $print_date = $response['print_date'];
+        // Relay API returns data directly. Read defensively: a 200/"success"
+        // body may still omit fields, and the returns flow now depends on
+        // this response.
+        $delivery_no = isset( $response['delivery_no'] ) ? (string) $response['delivery_no'] : '';
+        $zpl_data    = $response['zpl'] ?? '';
+        $print_date  = $response['print_date'] ?? '';
+
+        // A success response with no tracking number is not a usable barcode.
+        // Persisting it would write shipment meta under an empty key
+        // (_hezarfen_hepsijet_shipment_) and hand the caller an empty tracking
+        // number — which reads as "nothing was created", so the customer books
+        // again while the carrier may already hold a label, orphaning the
+        // first one. Fail instead of writing anything.
+        if ( '' === $delivery_no ) {
+            return new \WP_Error(
+                'hepsijet_error',
+                esc_html__( 'The carrier did not return a valid tracking number.', 'hezarfen-for-woocommerce' )
+            );
+        }
 
         // Calculate totals from packages array
         $package_count = count( $packages );
@@ -554,7 +525,7 @@ class Courier_Hepsijet_Integration {
      * Get shipping details for tracking via Relay API
      */
     public function api_get_shipping_details($delivery_no) {
-        $response = $this->make_relay_request( '/tracking/' . $delivery_no, null, 'GET' );
+        $response = $this->make_relay_request( '/tracking/' . $this->path_segment( $delivery_no ), null, 'GET' );
 
         return $response;
     }
@@ -563,19 +534,112 @@ class Courier_Hepsijet_Integration {
      * Cancel shipment via Relay API
      */
     public function api_cancel_shipment($delivery_no) {
-        $response = $this->make_relay_request( '/shipment/' . $delivery_no, null, 'DELETE' );
+        $response = $this->make_relay_request( '/shipment/' . $this->path_segment( $delivery_no ), null, 'DELETE' );
 
         if ( is_wp_error( $response ) ) {
             return $response;
         }
 
-        if ( $response['success'] ) {
+        // A 200 with an empty or unexpected body is not a cancellation. Read
+        // as one it would free a shipment locally while the courier is still
+        // scheduled — so anything that is not an explicit success fails.
+        if ( is_array( $response ) && ! empty( $response['success'] ) ) {
             return true;
-        } else {
-            // Return WP_Error instead of just the message string
-            $error_message = $response['message'] ?? 'Gönderi iptal edilemedi.';
-            return new \WP_Error( 'cancel_failed', $error_message, array( 'status' => 400 ) );
         }
+
+        return new \WP_Error(
+            'cancel_failed',
+            $this->relay_error_message( $response, __( 'Gönderi iptal edilemedi.', 'hezarfen-for-woocommerce' ) ),
+            array( 'status' => 400 )
+        );
+    }
+
+    /**
+     * Marks a stored shipment as cancelled on its order.
+     *
+     * The relay call and this write are two halves of one cancellation: a
+     * shipment released at the carrier but still stored as `active` keeps
+     * showing on the order screen with a live "Cancel" button that can only
+     * fail. Every path that cancels a shipment — the order screen, and the
+     * customer calling off a return pickup from their account — goes
+     * through here.
+     *
+     * @param int    $order_id    Order the shipment belongs to.
+     * @param string $delivery_no Carrier delivery number.
+     * @param string $reason      Short reason stored alongside.
+     *
+     * @return bool Whether a stored shipment was found and updated.
+     */
+    public function mark_shipment_cancelled( $order_id, $delivery_no, $reason = 'IPTAL' ) {
+        $order = wc_get_order( $order_id );
+
+        if ( ! $order ) {
+            return false;
+        }
+
+        $meta_key         = '_hezarfen_hepsijet_shipment_' . $delivery_no;
+        $shipment_details = $order->get_meta( $meta_key );
+
+        if ( ! is_array( $shipment_details ) || ! $shipment_details ) {
+            return false;
+        }
+
+        $shipment_details['cancelled_at']  = current_time( 'mysql' );
+        $shipment_details['cancel_reason'] = $reason;
+        $shipment_details['status']        = 'cancelled';
+
+        $order->update_meta_data( $meta_key, $shipment_details );
+        $order->save_meta_data();
+
+        /**
+         * Fires after a hepsiJET shipment was released at the carrier and
+         * marked cancelled on its order.
+         *
+         * The returns module listens for this so a shipment cancelled from
+         * the order screen also clears the return request that booked it.
+         *
+         * @param int    $order_id    Order the shipment belongs to.
+         * @param string $delivery_no Carrier delivery number.
+         */
+        do_action( 'hezarfen_hepsijet_shipment_cancelled', (int) $order_id, (string) $delivery_no );
+
+        return true;
+    }
+
+    /**
+     * Finds the order a delivery number belongs to.
+     *
+     * The shipment is stored as order meta under a per-delivery key, so an
+     * EXISTS query on that key resolves the order even when the caller only
+     * has the delivery number. This keeps a cancel that arrives without an
+     * order id from silently skipping the meta update — and, with it, the
+     * hook that releases a linked return request.
+     *
+     * @param string $delivery_no Carrier delivery number.
+     *
+     * @return int Order id, or 0 when nothing matches.
+     */
+    public function find_order_id_by_delivery_no( $delivery_no ) {
+        $delivery_no = (string) $delivery_no;
+
+        if ( '' === $delivery_no ) {
+            return 0;
+        }
+
+        $orders = wc_get_orders(
+            array(
+                'limit'      => 1,
+                'return'     => 'ids',
+                'meta_query' => array(
+                    array(
+                        'key'     => '_hezarfen_hepsijet_shipment_' . $delivery_no,
+                        'compare' => 'EXISTS',
+                    ),
+                ),
+            )
+        );
+
+        return $orders ? (int) $orders[0] : 0;
     }
 
     /**
@@ -585,7 +649,7 @@ class Courier_Hepsijet_Integration {
      * @return string[]|false
      */
     public function get_barcode( $delivery_barcode_no ) {
-        $response = $this->make_relay_request( '/barcode/' . $delivery_barcode_no . '/label', null, 'GET' );
+        $response = $this->make_relay_request( '/barcode/' . $this->path_segment( $delivery_barcode_no ) . '/label', null, 'GET' );
 
         if ( is_wp_error( $response ) ) {
             return $response;
@@ -689,44 +753,45 @@ class Courier_Hepsijet_Integration {
     }
 
     /**
-     * Get available dates for return shipments
+     * Get available dates for return shipments.
+     *
+     * The relay owns the carrier call and already reduces the response to
+     * the days that still have return capacity, keyed by cross-dock, so
+     * this method only forwards the query and guards the shape.
+     *
+     * @param string $start_date First day to look at, `Y-m-d`.
+     * @param string $end_date   Last day to look at, `Y-m-d`.
+     * @param string $city       City name.
+     * @param string $district   District name.
+     *
+     * @return array<string, string[]>|\WP_Error Days keyed by cross-dock name.
      */
     public function get_available_dates_for_return($start_date, $end_date, $city, $district) {
-        $params = array(
-            'startDate' => $start_date,
-            'endDate' => $end_date,
-            'deliveryType' => 'RETURNED',
-            'city' => $city,
-            'town' => $district
-        );
+        $response = $this->make_relay_request_for_return_dates( array(
+            'start_date' => $start_date,
+            'end_date'   => $end_date,
+            'city'       => $city,
+            'district'   => $district,
+        ) );
 
-        $response = $this->send_request( add_query_arg( $params, '/rest/delivery/findAvailableDeliveryDatesV2' ), array(), 'GET' );
+        if ( is_wp_error( $response ) ) {
+            return $response;
+        }
 
+        if ( ! is_array( $response ) ) {
+            return new \WP_Error( 'unknown_error', esc_html__( 'Available dates cannot be queried', 'hezarfen-for-woocommerce' ) );
+        }
+
+        // A relay that answers 200 with an error payload instead of a map of
+        // cross-docks must not be read as "no days available".
         if ( array_key_exists( 'message', $response ) ) {
             return new \WP_Error( 'error', $response['message'] );
-        }else if ( ! array_key_exists( 'data', $response ) ) {
-            return new \WP_Error( 'unknown_error', esc_html( 'Available dates cannot be queried', 'hezarfen-for-woocommerce' ) );
         }
 
         $available_dates = array();
 
-        foreach( $response['data'] as $city_response ) {
-            foreach( $city_response['towns'] as $town_response ) {
-                foreach( $town_response['xDock'] as $xdock_details ) {
-                    $xdock_name = $xdock_details['xDockName'];
-                    $days = $xdock_details['days'];
-
-                    if( ! array_key_exists( $xdock_name, $available_dates ) ) {
-                        $available_dates[$xdock_name] = array();
-                    }
-
-                    foreach($days as $day_args) {
-                        if( $day_args['returnedLimit'] > 0 ) {
-                            $available_dates[$xdock_name][] = $day_args['date'];
-                        }
-                    }
-                }
-            }
+        foreach ( $response as $xdock_name => $days ) {
+            $available_dates[ (string) $xdock_name ] = array_values( array_filter( array_map( 'strval', (array) $days ) ) );
         }
 
         return $available_dates;
@@ -799,53 +864,6 @@ class Courier_Hepsijet_Integration {
      */
     public function is_auto_shipment_supported(): bool {
         return true;
-    }
-
-    /**
-     * Convert Turkish date format to MySQL datetime format
-     * 
-     * @param string $turkish_date Date in format "31.08.2025 22:47"
-     * @return string Date in MySQL format "2025-08-31 22:47:00"
-     */
-    private function convert_turkish_date_to_mysql( $turkish_date ) {
-        if ( empty( $turkish_date ) ) {
-            return '';
-        }
-
-        try {
-            // Turkish format: "31.08.2025 22:47"
-            // Parse the date
-            $date_parts = explode( ' ', $turkish_date );
-            if ( count( $date_parts ) !== 2 ) {
-                return $turkish_date; // Return original if format is unexpected
-            }
-
-            $date_part = $date_parts[0]; // "31.08.2025"
-            $time_part = $date_parts[1]; // "22:47"
-
-            $date_components = explode( '.', $date_part );
-            if ( count( $date_components ) !== 3 ) {
-                return $turkish_date; // Return original if format is unexpected
-            }
-
-            $day = $date_components[0];
-            $month = $date_components[1];
-            $year = $date_components[2];
-
-            // Create MySQL format: "2025-08-31 22:47:00"
-            $mysql_format = sprintf( '%s-%s-%s %s:00', $year, $month, $day, $time_part );
-
-            // Validate the date
-            $timestamp = strtotime( $mysql_format );
-            if ( $timestamp === false ) {
-                return $turkish_date; // Return original if invalid
-            }
-
-            return $mysql_format;
-
-        } catch ( Exception $e ) {
-            return $turkish_date; // Return original on error
-        }
     }
 
     /**
