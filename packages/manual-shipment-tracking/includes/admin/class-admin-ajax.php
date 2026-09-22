@@ -1543,7 +1543,20 @@ class Admin_Ajax {
 			}
 
 			// Pass existing $pdf (or null for the first iteration) and request the object back.
-			$pdf = self::create_hepsijet_pdf( $order, $barcode_data, $delivery_no, $pdf, true );
+			// One unembeddable barcode must not abort the whole bulk print job: skip the
+			// offending order and keep going. If nothing at all could be added, the null
+			// guard below still fails the request cleanly.
+			try {
+				$pdf = self::create_hepsijet_pdf( $order, $barcode_data, $delivery_no, $pdf, true );
+			} catch ( Exception $e ) {
+				if ( function_exists( 'wc_get_logger' ) ) {
+					wc_get_logger()->warning(
+						sprintf( 'Hepsijet combined PDF: sipariş #%d (%s) atlandı: %s', $order_id, $delivery_no, $e->getMessage() ),
+						array( 'source' => 'hezarfen-hepsijet' )
+					);
+				}
+				continue;
+			}
 		}
 
 		if ( null === $pdf ) {

@@ -23,6 +23,7 @@ $hez_neighborhoods = $address['city_code'] && $address['district']
 	: array();
 ?>
 <div class="hez-address-fields" data-hez-address-fields>
+	<p class="hez-address-fields__error" data-hez-address-error role="alert" aria-live="polite"></p>
 	<p class="hez-field hez-field--first-name">
 		<label for="hez-pickup-first-name"><?php esc_html_e( 'Ad', 'hezarfen-for-woocommerce' ); ?></label>
 		<input type="text" id="hez-pickup-first-name" class="hez-input" name="pickup_address[first_name]" value="<?php echo esc_attr( $address['first_name'] ); ?>" autocomplete="given-name" required>

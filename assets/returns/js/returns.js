@@ -109,6 +109,20 @@
 		}
 	}
 
+	// Address/booking forms (e.g. the request detail page) have no
+	// [data-hez-summary] region, so prefer a dedicated inline error box inside
+	// the address block; fall back to showError() only if it is missing.
+	function showAddressError( fields, form, message ) {
+		var box = fields ? fields.querySelector( '[data-hez-address-error]' ) : null;
+
+		if ( box ) {
+			box.textContent = message;
+			return;
+		}
+
+		showError( form, message );
+	}
+
 	function initForm( form ) {
 		var items = form.querySelectorAll( '[data-hez-item]' );
 
@@ -415,7 +429,7 @@
 					// still in flight; sending now would submit an address
 					// they never got to finish.
 					event.preventDefault();
-					showError( form, i18n.addressLoading || '' );
+					showAddressError( fields, form, i18n.addressLoading || '' );
 				},
 				// Captured, so it runs before the form's own submit handlers.
 				true
@@ -472,7 +486,7 @@
 					// already cleared, so tell the customer instead of leaving
 					// them staring at an empty district with no reason.
 					if ( seq === districtSeq && form ) {
-						showError( form, i18n.addressRefreshFailed || '' );
+						showAddressError( fields, form, i18n.addressRefreshFailed || '' );
 					}
 				} )
 				.then( function () {
@@ -509,7 +523,7 @@
 				} )
 				.catch( function () {
 					if ( seq === neighborhoodSeq && form ) {
-						showError( form, i18n.addressRefreshFailed || '' );
+						showAddressError( fields, form, i18n.addressRefreshFailed || '' );
 					}
 				} )
 				.then( function () {

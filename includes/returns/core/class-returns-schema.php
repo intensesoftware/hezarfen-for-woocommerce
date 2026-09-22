@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit();
  */
 class Returns_Schema {
 
-	const DB_VERSION     = '1.4.0';
+	const DB_VERSION     = '1.5.0';
 	const VERSION_OPTION = 'hezarfen_returns_db_version';
 
 	const TABLE_RETURNS = 'hezarfen_returns';
@@ -130,7 +130,7 @@ class Returns_Schema {
 
 		$definitions[] = "CREATE TABLE {$returns} (
 			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-			return_number varchar(32) NOT NULL DEFAULT '',
+			return_number varchar(100) NOT NULL DEFAULT '',
 			order_id bigint(20) unsigned NOT NULL,
 			customer_id bigint(20) unsigned NOT NULL DEFAULT 0,
 			customer_email varchar(190) NOT NULL DEFAULT '',

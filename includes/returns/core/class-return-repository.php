@@ -155,10 +155,9 @@ class Return_Repository implements Return_Repository_Interface {
 				'id'              => $id,
 				'status'          => (string) $status,
 				'tracking_number' => '',
-				'pickup_date'     => '',
 			),
 			array( '%s', '%s' ),
-			array( '%d', '%s', '%s', '%s' )
+			array( '%d', '%s', '%s' )
 		);
 
 		return (int) $updated === 1;

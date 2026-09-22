@@ -352,7 +352,7 @@ $hez_order_number = $hez_order ? $hez_order->get_order_number() : (string) $requ
 			<tfoot>
 				<tr>
 					<th scope="row" colspan="3"><?php esc_html_e( 'Toplam', 'hezarfen-for-woocommerce' ); ?></th>
-					<td><?php echo wp_kses_post( wc_price( $request->get_refund_amount(), array( 'currency' => $request->get_currency() ) ) ); ?></td>
+					<td data-label="<?php esc_attr_e( 'Toplam', 'hezarfen-for-woocommerce' ); ?>"><?php echo wp_kses_post( wc_price( $request->get_refund_amount(), array( 'currency' => $request->get_currency() ) ) ); ?></td>
 				</tr>
 			</tfoot>
 		</table>

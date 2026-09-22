@@ -267,6 +267,11 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 * fix(hepsijet-label): embed the rotated barcode as JPEG, not alpha PNG
 * fix(hepsijet): stop the settings save from wiping the webhook secret
 * feat: iade yönetimi modülü
+* fix(returns): iade numarası sütunu 100 karaktere çıkarıldı; uzun/özel sipariş numarası formatlarında iade oluşturma başarısız olmasın
+* fix(returns): süreç ortada çökünce kilitli kalan kargo randevusu yeniden alınabilir yapıldı
+* fix(returns): adres formu hataları artık native alert yerine satır içi gösteriliyor; mobilde iade toplamına etiket eklendi
+* fix(returns): onay e-postasındaki yanıltıcı "aşağıda" ifadeleri hesap bağlantısına yönlendirilecek şekilde düzeltildi
+* fix(hepsijet): toplu barkod PDF'inde tek bir bozuk barkod artık tüm baskıyı iptal etmiyor
 = 2.15.0 - 2026-08-05 =
 
 * refactor: Aras Kargo talep anketi kaldırıldı

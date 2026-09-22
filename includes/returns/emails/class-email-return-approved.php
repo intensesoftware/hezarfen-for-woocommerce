@@ -57,9 +57,9 @@ class Email_Return_Approved extends Abstract_Return_Email {
 	 */
 	public function get_intro() {
 		if ( $this->return_request && Returns_Module::instance()->shipping()->get_for_request( $this->return_request )->requires_customer_booking() ) {
-			return __( 'İade talebiniz onaylandı. Kargonuzun adresinizden alınmasını istediğiniz günü seçerek iade kargo kodunuzu oluşturabilirsiniz.', 'hezarfen-for-woocommerce' );
+			return __( 'İade talebiniz onaylandı. Kargonuzun adresinizden alınmasını istediğiniz günü hesabınızdan seçerek iade kargo kodunuzu oluşturabilirsiniz.', 'hezarfen-for-woocommerce' );
 		}
 
-		return __( 'İade talebiniz onaylandı. Gönderim adımlarını aşağıda bulabilirsiniz.', 'hezarfen-for-woocommerce' );
+		return __( 'İade talebiniz onaylandı. Gönderim adımlarını aşağıdaki bağlantıdan görüntüleyebilirsiniz.', 'hezarfen-for-woocommerce' );
 	}
 }

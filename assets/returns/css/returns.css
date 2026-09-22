@@ -909,6 +909,17 @@
 	font-weight: 600;
 }
 
+.hez-returns:not(#\9) .hez-address-fields__error {
+	margin: 0 0 12px;
+	color: var(--hez-danger, #b3261e);
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.hez-returns:not(#\9) .hez-address-fields__error:empty {
+	display: none;
+}
+
 .hez-returns:not(#\9) .hez-return-form__actions {
 	display: flex;
 	align-items: center;
