@@ -261,7 +261,7 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
-= 2.16.0 - 2026-09-22 =
+= 2.16.0 - 2026-09-23 =
 
 * feat(orders): kargo sütununu tek bir durum kaynağına bağla
 * fix(hepsijet-label): embed the rotated barcode as JPEG, not alpha PNG
@@ -272,6 +272,7 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 * fix(returns): adres formu hataları artık native alert yerine satır içi gösteriliyor; mobilde iade toplamına etiket eklendi
 * fix(returns): onay e-postasındaki yanıltıcı "aşağıda" ifadeleri hesap bağlantısına yönlendirilecek şekilde düzeltildi
 * fix(hepsijet): toplu barkod PDF'inde tek bir bozuk barkod artık tüm baskıyı iptal etmiyor
+* ci(e2e): drop EOL PHP 7.4/8.0 from Playwright matrix
 = 2.15.0 - 2026-08-05 =
 
 * refactor: Aras Kargo talep anketi kaldırıldı
