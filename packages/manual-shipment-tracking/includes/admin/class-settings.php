@@ -461,7 +461,7 @@ class Settings {
 			),
 			array(
 				'title' => __( 'Webhook Secret', 'hezarfen-for-woocommerce' ),
-				'type' => 'text',
+				'type' => 'password',
 				'id' => 'hez_ordermigo_webhook_secret',
 				'default' => '',
 				'desc' => __( 'This secret is used to verify webhook notifications from KargoKit. It is automatically generated when you create your first shipment. Do not edit this unless instructed by support.', 'hezarfen-for-woocommerce' ),
