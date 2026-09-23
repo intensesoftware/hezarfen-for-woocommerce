@@ -461,9 +461,34 @@ class Return_Service {
 			return true;
 		}
 
+		// The per-request lock serialises re-runs on a healthy database, but it
+		// degrades to nothing where MySQL GET_LOCK is unavailable. Take a
+		// database-level claim too so two genuinely simultaneous re-runs of a
+		// completion whose first refund failed (COMPLETED, refund_id still 0)
+		// cannot both slip past Return_Refunds' already-refunded check and write
+		// two refunds for the same goods. A request that already carries a refund
+		// id is left to that check; only the unrefunded path takes the claim.
+		$claimed_refund = false;
+
+		if ( $request->get_id() && ! $request->get_refund_id() ) {
+			if ( ! $this->repository->claim_refund( $request->get_id() ) ) {
+				return new \WP_Error(
+					'hezarfen_returns_refund_in_progress',
+					__( 'Bu talep için iade kaydı şu anda oluşturuluyor. Sayfayı yenileyip tekrar bakın.', 'hezarfen-for-woocommerce' )
+				);
+			}
+
+			$claimed_refund = true;
+		}
+
 		$created = ( new Return_Refunds() )->create_for_request( $request, Return_Settings::restock_enabled() );
 
 		if ( is_wp_error( $created ) ) {
+			// Hand the claim back so the merchant can fix the cause and re-run.
+			if ( $claimed_refund ) {
+				$this->repository->release_refund_claim( $request->get_id() );
+			}
+
 			$this->log(
 				$request,
 				Return_Event::TYPE_NOTE,

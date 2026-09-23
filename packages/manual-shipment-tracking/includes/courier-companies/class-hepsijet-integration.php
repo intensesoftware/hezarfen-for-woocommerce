@@ -56,26 +56,31 @@ class Courier_Hepsijet_Integration {
 
     /**
      * Check if OpenSSL extension is available
-     * 
+     *
      * @return bool True if OpenSSL is available
      */
-    private function is_openssl_available() {
+    private static function is_openssl_available() {
         return extension_loaded( 'openssl' ) && function_exists( 'openssl_encrypt' );
     }
 
     /**
-     * Encrypt webhook secret
-     * 
-     * @param string $value Value to encrypt
-     * @return string Encrypted value
+     * Encrypt a stored secret.
+     *
+     * The single implementation both this class and the Settings screen use,
+     * so the on-disk format can never drift between the two again: a secret
+     * written here in the `v2:` format was once read back by a second, legacy
+     * only decrypter on the settings page and shown as garbage.
+     *
+     * @param string $value Value to encrypt.
+     * @return string Encrypted value.
      */
-    private function encrypt_webhook_secret( $value ) {
+    public static function encrypt_secret( $value ) {
         if ( empty( $value ) ) {
             return '';
         }
 
         // Check if OpenSSL is available
-        if ( ! $this->is_openssl_available() ) {
+        if ( ! self::is_openssl_available() ) {
             return base64_encode( $value );
         }
 
@@ -87,7 +92,7 @@ class Courier_Hepsijet_Integration {
         // identical ciphertext and the mode loses the property it exists
         // for. Values written the old way still decrypt; see below.
         $iv        = openssl_random_pseudo_bytes( $iv_length );
-        $encrypted = openssl_encrypt( $value, self::SECRET_CIPHER, $this->secret_key(), OPENSSL_RAW_DATA, $iv );
+        $encrypted = openssl_encrypt( $value, self::SECRET_CIPHER, self::secret_key(), OPENSSL_RAW_DATA, $iv );
 
         if ( $encrypted === false ) {
             return base64_encode( $value );
@@ -101,24 +106,26 @@ class Courier_Hepsijet_Integration {
      *
      * @return string
      */
-    private function secret_key() {
+    private static function secret_key() {
         return hash( 'sha256', AUTH_KEY . SECURE_AUTH_KEY, true );
     }
 
     /**
-     * Decrypt webhook secret
-     * 
-     * @param string $encrypted_value Encrypted value
-     * @return string Decrypted value
+     * Decrypt a stored secret. Reads both the `v2:` per-value-IV format and
+     * the legacy shared-IV format. Shared with the Settings screen so the two
+     * never diverge.
+     *
+     * @param string $encrypted_value Encrypted value.
+     * @return string Decrypted value.
      */
-    private function decrypt_webhook_secret( $encrypted_value ) {
+    public static function decrypt_secret( $encrypted_value ) {
         if ( empty( $encrypted_value ) ) {
             return '';
         }
 
         // Written with a per-value IV: it travels in front of the ciphertext.
         if ( 0 === strpos( $encrypted_value, self::SECRET_PREFIX ) ) {
-            if ( ! $this->is_openssl_available() ) {
+            if ( ! self::is_openssl_available() ) {
                 return '';
             }
 
@@ -137,7 +144,7 @@ class Courier_Hepsijet_Integration {
             $decrypted = openssl_decrypt(
                 substr( $raw, $iv_length ),
                 self::SECRET_CIPHER,
-                $this->secret_key(),
+                self::secret_key(),
                 OPENSSL_RAW_DATA,
                 substr( $raw, 0, $iv_length )
             );
@@ -152,7 +159,7 @@ class Courier_Hepsijet_Integration {
         }
 
         // Check if OpenSSL is available
-        if ( ! $this->is_openssl_available() ) {
+        if ( ! self::is_openssl_available() ) {
             // Fallback: Value was stored with base64 only
             return $decoded;
         }
@@ -170,28 +177,28 @@ class Courier_Hepsijet_Integration {
         if ( $decrypted === false ) {
             return $decoded;
         }
-        
+
         return $decrypted;
     }
 
     /**
      * Get webhook secret (decrypted)
-     * 
+     *
      * @return string Decrypted webhook secret
      */
     private function get_webhook_secret() {
         $encrypted = get_option( 'hez_ordermigo_webhook_secret', '' );
-        return $this->decrypt_webhook_secret( $encrypted );
+        return self::decrypt_secret( $encrypted );
     }
 
     /**
      * Save webhook secret (encrypted, not autoloaded)
-     * 
+     *
      * @param string $value Webhook secret to save
      * @return bool True on success, false on failure
      */
     private function save_webhook_secret( $value ) {
-        $encrypted = $this->encrypt_webhook_secret( $value );
+        $encrypted = self::encrypt_secret( $value );
         return update_option( 'hez_ordermigo_webhook_secret', $encrypted, false ); // false = not autoloaded
     }
 

@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit();
  */
 class Returns_Schema {
 
-	const DB_VERSION     = '1.5.0';
+	const DB_VERSION     = '1.6.0';
 	const VERSION_OPTION = 'hezarfen_returns_db_version';
 
 	const TABLE_RETURNS = 'hezarfen_returns';
@@ -141,6 +141,7 @@ class Returns_Schema {
 			pickup_date varchar(10) NOT NULL DEFAULT '',
 			return_address_id varchar(64) NOT NULL DEFAULT '',
 			refund_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			refund_lock tinyint(1) NOT NULL DEFAULT 0,
 			pickup_address text NULL,
 			customer_note text NULL,
 			refund_amount decimal(19,4) NOT NULL DEFAULT 0.0000,

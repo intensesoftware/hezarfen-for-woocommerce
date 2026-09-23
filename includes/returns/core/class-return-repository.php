@@ -121,14 +121,22 @@ class Return_Repository implements Return_Repository_Interface {
 	/**
 	 * Claims the right to book a request's shipment, atomically.
 	 *
-	 * The pickup day doubles as the claim: it is empty on a request with no
-	 * booking, it is what a successful booking writes anyway, and a claim
-	 * left behind by a process that died mid-call blocks nothing — the row
-	 * still has no tracking number, so the next attempt overwrites it.
+	 * The empty pickup day IS the claim: the WHERE requires it to still be
+	 * empty, so of two concurrent first-time bookers the database lets exactly
+	 * one row-change through and the other matches nothing. Guarding on the
+	 * tracking number alone was not enough — the tracking number is written
+	 * only later, by the carrier call, so both racers still saw it empty and
+	 * both "claimed", which meant two couriers at the door with only one
+	 * barcode recorded. This must hold even where MySQL GET_LOCK is
+	 * unavailable (connection-splitting drop-ins like HyperDB/LudicrousDB),
+	 * so the guard cannot lean on the advisory lock in with_request_lock().
 	 *
-	 * Claiming before the carrier is called is the whole point: the carrier
-	 * has no idea the two requests are the same one, so two calls mean two
-	 * couriers at the door and only one of them recorded anywhere.
+	 * A claim released after the carrier refused it is cleared back to an
+	 * empty pickup day by release_booking_claim(), so a normal retry works.
+	 * The one case this no longer self-heals is a process that dies between
+	 * the claim and the carrier call: the row keeps a pickup day with no
+	 * tracking number and the customer cannot re-book until the merchant
+	 * clears it — an accepted trade for never dispatching a second courier.
 	 *
 	 * @param int    $id          Request row ID.
 	 * @param string $status      Status the row must still carry.
@@ -155,9 +163,10 @@ class Return_Repository implements Return_Repository_Interface {
 				'id'              => $id,
 				'status'          => (string) $status,
 				'tracking_number' => '',
+				'pickup_date'     => '',
 			),
 			array( '%s', '%s' ),
-			array( '%d', '%s', '%s' )
+			array( '%d', '%s', '%s', '%s' )
 		);
 
 		return (int) $updated === 1;
@@ -194,6 +203,85 @@ class Return_Repository implements Return_Repository_Interface {
 			),
 			array( '%s', '%s' ),
 			array( '%d', '%s' )
+		);
+	}
+
+	/**
+	 * Claims the right to record a request's WooCommerce refund, atomically.
+	 *
+	 * First-time completion is already serialised by transition_status(), but
+	 * a completion whose refund failed leaves the request COMPLETED with no
+	 * refund recorded, and re-running the action skips the status transition
+	 * to record it. That re-run path has no other atomic gate, so two genuinely
+	 * simultaneous re-runs could both pass Return_Refunds' already-refunded
+	 * check (refund_id still 0) and both write a refund. The database decides
+	 * here instead: the WHERE requires the lock to still be clear, so exactly
+	 * one caller flips it and proceeds. Holds without MySQL GET_LOCK.
+	 *
+	 * A caller that then fails must give the lock back with
+	 * release_refund_claim(); a stuck lock (process died mid-refund) only
+	 * blocks re-recording, and the merchant can still refund from the order
+	 * screen — the documented fallback for a failed refund anyway.
+	 *
+	 * @param int $id Request row ID.
+	 *
+	 * @return bool Whether this caller is the one that claimed it.
+	 */
+	public function claim_refund( $id ) {
+		global $wpdb;
+
+		$id = (int) $id;
+
+		if ( ! $id ) {
+			return false;
+		}
+
+		$updated = $wpdb->update(
+			Returns_Schema::table( Returns_Schema::TABLE_RETURNS ),
+			array(
+				'refund_lock' => 1,
+				'updated_at'  => current_time( 'mysql' ),
+			),
+			array(
+				'id'          => $id,
+				'refund_lock' => 0,
+			),
+			array( '%d', '%s' ),
+			array( '%d', '%d' )
+		);
+
+		return (int) $updated === 1;
+	}
+
+	/**
+	 * Gives a refund claim back after the refund could not be recorded, so a
+	 * later re-run can try again.
+	 *
+	 * @param int $id Request row ID.
+	 *
+	 * @return void
+	 */
+	public function release_refund_claim( $id ) {
+		global $wpdb;
+
+		$id = (int) $id;
+
+		if ( ! $id ) {
+			return;
+		}
+
+		$wpdb->update(
+			Returns_Schema::table( Returns_Schema::TABLE_RETURNS ),
+			array(
+				'refund_lock' => 0,
+				'updated_at'  => current_time( 'mysql' ),
+			),
+			array(
+				'id'          => $id,
+				'refund_lock' => 1,
+			),
+			array( '%d', '%s' ),
+			array( '%d', '%d' )
 		);
 	}
 
