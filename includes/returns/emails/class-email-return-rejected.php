@@ -7,6 +7,9 @@
 
 namespace Hezarfen\Inc\Returns\Emails;
 
+use Hezarfen\Inc\Returns\Core\Return_Event;
+use Hezarfen\Inc\Returns\Core\Return_Status;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -50,6 +53,28 @@ class Email_Return_Rejected extends Abstract_Return_Email {
 	 * @return string
 	 */
 	public function get_intro() {
-		return __( 'İade talebinizi maalesef onaylayamadık. Gerekçeyi aşağıdaki talep geçmişinde bulabilirsiniz.', 'hezarfen-for-woocommerce' );
+		if ( '' !== $this->get_inline_message() ) {
+			return __( 'İade talebinizi maalesef onaylayamadık. Gerekçeyi bu e-postada aşağıda bulabilirsiniz.', 'hezarfen-for-woocommerce' );
+		}
+
+		return __( 'İade talebinizi maalesef onaylayamadık. Ayrıntılar için aşağıdaki "İade talebimi görüntüle" bağlantısını kullanabilirsiniz.', 'hezarfen-for-woocommerce' );
+	}
+
+	/**
+	 * The customer-visible reason the request was declined.
+	 *
+	 * @return string
+	 */
+	protected function get_inline_message() {
+		return $this->latest_customer_message( Return_Event::TYPE_STATUS_CHANGE, Return_Status::REJECTED );
+	}
+
+	/**
+	 * Heading shown above the rejection reason.
+	 *
+	 * @return string
+	 */
+	protected function get_inline_message_heading() {
+		return __( 'Gerekçe', 'hezarfen-for-woocommerce' );
 	}
 }

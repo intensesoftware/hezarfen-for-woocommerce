@@ -6,13 +6,17 @@
  *
  * @package Hezarfen\Inc\Returns
  *
- * @var \Hezarfen\Inc\Returns\Core\Return_Request $request            The request.
- * @var WC_Order|false                            $order              Parent order.
- * @var string                                    $intro              Opening paragraph.
- * @var string                                    $email_heading      Heading.
- * @var string                                    $view_url           Link to the request.
- * @var string                                    $additional_content Merchant supplied footer text.
- * @var WC_Email                                  $email              Email object.
+ * @var \Hezarfen\Inc\Returns\Core\Return_Request $request                The request.
+ * @var WC_Order|false                            $order                  Parent order.
+ * @var string                                    $intro                  Opening paragraph.
+ * @var string                                    $email_heading          Heading.
+ * @var string                                    $view_url               Link to the request.
+ * @var string                                    $inline_message         Customer-visible message to quote.
+ * @var string                                    $inline_message_heading Heading for the quoted message.
+ * @var string                                    $refund_display         Formatted refund amount, if any.
+ * @var string                                    $additional_content     Merchant supplied footer text.
+ * @var bool                                      $sent_to_admin          Whether the admin is the recipient.
+ * @var WC_Email                                  $email                  Email object.
  */
 
 use Hezarfen\Inc\Returns\Core\Return_Reasons;
@@ -30,9 +34,18 @@ if ( ! $request ) {
 
 echo esc_html( wp_strip_all_tags( $email->format_string( $intro ) ) ) . "\n\n";
 
+if ( $inline_message ) {
+	echo esc_html( wp_strip_all_tags( $inline_message_heading ) ) . ":\n";
+	echo esc_html( wp_strip_all_tags( $inline_message ) ) . "\n\n";
+}
+
 echo esc_html__( 'Talep numarası', 'hezarfen-for-woocommerce' ) . ': ' . esc_html( $request->get_return_number() ) . "\n";
 echo esc_html__( 'Sipariş', 'hezarfen-for-woocommerce' ) . ': ' . esc_html( $order ? $order->get_order_number() : $request->get_order_id() ) . "\n";
 echo esc_html__( 'Durum', 'hezarfen-for-woocommerce' ) . ': ' . esc_html( Return_Status::get_customer_label( $request->get_status() ) ) . "\n";
+
+if ( $refund_display ) {
+	echo esc_html__( 'İade tutarı', 'hezarfen-for-woocommerce' ) . ': ' . esc_html( $refund_display ) . "\n";
+}
 
 if ( $request->get_tracking_number() ) {
 	echo esc_html__( 'Kargo takip no', 'hezarfen-for-woocommerce' ) . ': ' . esc_html( $request->get_tracking_number() ) . "\n";
@@ -59,7 +72,11 @@ foreach ( $request->get_items() as $hez_item ) {
 }
 
 if ( $view_url ) {
-	echo "\n" . esc_url_raw( $view_url ) . "\n";
+	$hez_link_label = $sent_to_admin
+		? esc_html__( 'Talebi yönetim panelinde aç', 'hezarfen-for-woocommerce' )
+		: esc_html__( 'İade talebimi görüntüle', 'hezarfen-for-woocommerce' );
+
+	echo "\n" . $hez_link_label . ': ' . esc_url_raw( $view_url ) . "\n";
 }
 
 if ( $additional_content ) {

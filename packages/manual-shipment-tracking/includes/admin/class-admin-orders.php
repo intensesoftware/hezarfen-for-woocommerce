@@ -253,6 +253,7 @@ class Admin_Orders {
 				'tooltip_placeholder'      => esc_html__( 'Fetching data..', 'hezarfen-for-woocommerce' ),
 				'courier_company_i18n'     => esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ),
 				'tracking_num_i18n'        => esc_html__( 'Tracking Number', 'hezarfen-for-woocommerce' ),
+				'load_error_i18n'          => esc_html__( 'Gönderi bilgisi yüklenemedi. Tekrar deneyin.', 'hezarfen-for-woocommerce' ),
 			)
 		);
 	}

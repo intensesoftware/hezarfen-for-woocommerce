@@ -33,7 +33,7 @@ td.column-hezarfen_mst_shipment_info p {
 }
 
 .column-hezarfen_mst_shipment_info .hezarfen-mst-barcode-ready {
-	color: orange;
+	color: #996800;
 }
 
 .column-hezarfen_mst_shipment_info .hezarfen-mst-barcode-count {
@@ -42,7 +42,7 @@ td.column-hezarfen_mst_shipment_info p {
 	padding: 1px 6px;
 	border-radius: 10px;
 	background: #fff3e0;
-	color: orange;
+	color: #8a6d0b;
 	font-size: 11px;
 	font-weight: 600;
 	line-height: 1.6;

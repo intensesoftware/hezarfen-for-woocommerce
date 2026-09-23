@@ -212,6 +212,10 @@ class Returns_Admin {
 
 			<form method="get">
 				<input type="hidden" name="page" value="<?php echo esc_attr( self::PAGE_SLUG ); ?>">
+				<?php $hez_status = $table->current_status(); ?>
+				<?php if ( '' !== $hez_status ) : ?>
+					<input type="hidden" name="status" value="<?php echo esc_attr( $hez_status ); ?>">
+				<?php endif; ?>
 				<?php $table->search_box( __( 'Talep ara', 'hezarfen-for-woocommerce' ), 'hezarfen-returns' ); ?>
 				<?php $table->display(); ?>
 			</form>

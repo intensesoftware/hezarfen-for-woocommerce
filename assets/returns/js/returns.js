@@ -30,6 +30,64 @@
 		);
 	}
 
+	/**
+	 * Locks a form's submit button once the submission is genuinely on its
+	 * way, so a second click can not fire a duplicate POST. Callers must only
+	 * reach this after the submit was allowed to proceed — never while it is
+	 * still being validated or held back.
+	 */
+	function disableSubmit( form ) {
+		var button = form.querySelector( '[type="submit"]' );
+
+		if ( ! button || button.disabled ) {
+			return;
+		}
+
+		button.disabled = true;
+		button.setAttribute( 'aria-busy', 'true' );
+		button.classList.add( 'is-busy' );
+	}
+
+	/**
+	 * Flags the note as required in the DOM when the chosen reason needs one.
+	 *
+	 * The markup lives in a template owned elsewhere, so the required state is
+	 * expressed purely from here: aria-required for assistive tech and a
+	 * visible marker next to the label for everyone else. Both are torn down
+	 * again when the reason no longer needs a note, so a stale asterisk never
+	 * lingers on an optional field.
+	 */
+	function setNoteRequired( noteField, required ) {
+		var textarea = noteField.querySelector( 'textarea' );
+		var label = noteField.querySelector( 'label' );
+		var marker = noteField.querySelector( '[data-hez-note-required]' );
+
+		if ( required ) {
+			if ( textarea ) {
+				textarea.setAttribute( 'aria-required', 'true' );
+			}
+
+			if ( ! marker && label ) {
+				marker = document.createElement( 'abbr' );
+				marker.className = 'required hez-field__required';
+				marker.setAttribute( 'data-hez-note-required', '' );
+				marker.setAttribute( 'title', i18n.requiredHint || 'zorunlu' );
+				marker.textContent = '*';
+				label.appendChild( marker );
+			}
+
+			return;
+		}
+
+		if ( textarea ) {
+			textarea.removeAttribute( 'aria-required' );
+		}
+
+		if ( marker && marker.parentNode ) {
+			marker.parentNode.removeChild( marker );
+		}
+	}
+
 	function syncItem( item ) {
 		var checkbox = item.querySelector( '[data-hez-item-toggle]' );
 		var details = item.querySelector( '[data-hez-item-details]' );
@@ -44,7 +102,10 @@
 		item.classList.toggle( 'is-selected', checkbox.checked );
 
 		if ( noteField && reason ) {
-			noteField.hidden = ! checkbox.checked || ! requiresNote( reason.value );
+			var needsNote = requiresNote( reason.value );
+
+			noteField.hidden = ! checkbox.checked || ! needsNote;
+			setNoteRequired( noteField, checkbox.checked && needsNote );
 		}
 	}
 
@@ -70,12 +131,20 @@
 	/**
 	 * Client-side mirror of the server rules. It exists to save the
 	 * customer a page load, never to be the only check.
+	 *
+	 * Returns the first problem as { message, control }: the message drives
+	 * the aggregate summary, and the control is the field to flag and move
+	 * focus to so the customer lands on the thing that needs fixing instead of
+	 * hunting for it. An empty message means the form passed.
 	 */
 	function validate( form ) {
 		var selected = selectedItems( form );
 
 		if ( ! selected.length ) {
-			return i18n.selectAtLeastOne || '';
+			return {
+				message: i18n.selectAtLeastOne || '',
+				control: form.querySelector( '[data-hez-item-toggle]' )
+			};
 		}
 
 		for ( var i = 0; i < selected.length; i++ ) {
@@ -83,19 +152,25 @@
 			var reason = item && item.querySelector( '[data-hez-reason]' );
 
 			if ( ! reason || ! reason.value ) {
-				return i18n.reasonRequired || '';
+				return {
+					message: i18n.reasonRequired || '',
+					control: reason || null
+				};
 			}
 
 			if ( requiresNote( reason.value ) ) {
 				var note = item.querySelector( '[data-hez-note-field] textarea' );
 
 				if ( ! note || ! note.value.trim() ) {
-					return i18n.noteRequired || '';
+					return {
+						message: i18n.noteRequired || '',
+						control: note || null
+					};
 				}
 			}
 		}
 
-		return '';
+		return { message: '', control: null };
 	}
 
 	function showError( form, message ) {
@@ -126,6 +201,26 @@
 	function initForm( form ) {
 		var items = form.querySelectorAll( '[data-hez-item]' );
 
+		// The control that failed the last submit, so its aria-invalid can be
+		// lifted the moment the customer touches the form again.
+		var invalidControl = null;
+
+		function clearError() {
+			if ( invalidControl ) {
+				invalidControl.removeAttribute( 'aria-invalid' );
+				invalidControl = null;
+			}
+
+			var summary = form.querySelector( '[data-hez-summary]' );
+
+			if ( summary ) {
+				summary.classList.remove( 'is-error' );
+			}
+
+			// Restores the neutral counter text over the error message.
+			updateSummary( form );
+		}
+
 		Array.prototype.forEach.call( items, function ( item ) {
 			syncItem( item );
 
@@ -138,23 +233,47 @@
 					syncItem( item );
 				}
 
-				updateSummary( form );
+				clearError();
 			} );
 
 			item.addEventListener( 'input', function () {
-				updateSummary( form );
+				clearError();
 			} );
 		} );
 
 		updateSummary( form );
 
 		form.addEventListener( 'submit', function ( event ) {
-			var error = validate( form );
+			var result = validate( form );
 
-			if ( error ) {
+			if ( result.message ) {
 				event.preventDefault();
-				showError( form, error );
+				showError( form, result.message );
+
+				if ( result.control ) {
+					invalidControl = result.control;
+					result.control.setAttribute( 'aria-invalid', 'true' );
+
+					if ( typeof result.control.focus === 'function' ) {
+						result.control.focus();
+					}
+
+					if ( typeof result.control.scrollIntoView === 'function' ) {
+						result.control.scrollIntoView( { block: 'center' } );
+					}
+				}
+
+				return;
 			}
+
+			// Another handler — the pending-address guard runs first, in the
+			// capture phase — may have already held the submit back. Only lock
+			// the button when the POST is really leaving.
+			if ( event.defaultPrevented ) {
+				return;
+			}
+
+			disableSubmit( form );
 		} );
 	}
 
@@ -165,7 +284,11 @@
 				! window.confirm( i18n.confirmCancel )
 			) {
 				event.preventDefault();
+
+				return;
 			}
+
+			disableSubmit( form );
 		} );
 	}
 
@@ -178,7 +301,11 @@
 				! window.confirm( i18n.confirmUnbook )
 			) {
 				event.preventDefault();
+
+				return;
 			}
+
+			disableSubmit( form );
 		} );
 	}
 
@@ -228,11 +355,22 @@
 		var original = button.textContent;
 		var timer = null;
 
+		// The button keeps a fixed aria-label ("İade kargo kodunu kopyala"),
+		// so the visible label swap to "Kopyalandı" is silent for screen
+		// readers. A polite off-screen live region carries the outcome to them
+		// without touching the button's accessible name.
+		var status = document.createElement( 'span' );
+
+		status.className = 'hez-visually-hidden';
+		status.setAttribute( 'aria-live', 'polite' );
+		block.appendChild( status );
+
 		button.addEventListener( 'click', function () {
 			copyText( source.textContent.trim() )
 				.then( function () {
 					button.textContent = i18n.copied || original;
 					button.classList.add( 'is-copied' );
+					status.textContent = i18n.copied || '';
 				} )
 				.catch( function () {
 					// Nothing was copied, so the code has to stay reachable:
@@ -241,6 +379,7 @@
 					// would skip the label-reset below and leave the button
 					// stuck on "copy failed".
 					button.textContent = i18n.copyFailed || original;
+					status.textContent = i18n.copyFailed || '';
 
 					try {
 						var selection = window.getSelection();
@@ -261,6 +400,7 @@
 					timer = window.setTimeout( function () {
 						button.textContent = original;
 						button.classList.remove( 'is-copied' );
+						status.textContent = '';
 					}, 2500 );
 				} );
 		} );
@@ -374,6 +514,43 @@
 	}
 
 	/**
+	 * Shows or hides a friendly "still loading" hint next to a select.
+	 *
+	 * The busy opacity alone is easy to miss, and the browser's native
+	 * `required` check can intercept a mid-fetch submit before the form's own
+	 * loading message ever gets a chance to appear. Putting the hint right by
+	 * the select the moment the fetch starts means the customer sees why the
+	 * list is empty even in that case. The hint is created on demand and torn
+	 * down when the fetch settles, so nothing lingers.
+	 */
+	function setLoadingHint( select, show ) {
+		var field = select.closest( '.hez-field' ) || select.parentNode;
+
+		if ( ! field ) {
+			return;
+		}
+
+		var hint = field.querySelector( '[data-hez-loading-hint]' );
+
+		if ( show ) {
+			if ( ! hint ) {
+				hint = document.createElement( 'span' );
+				hint.className = 'hez-field__hint hez-field__loading';
+				hint.setAttribute( 'data-hez-loading-hint', '' );
+				hint.setAttribute( 'aria-live', 'polite' );
+				hint.textContent = i18n.addressLoading || '';
+				field.appendChild( hint );
+			}
+
+			return;
+		}
+
+		if ( hint && hint.parentNode ) {
+			hint.parentNode.removeChild( hint );
+		}
+	}
+
+	/**
 	 * Marks a select as loading.
 	 *
 	 * Deliberately not `disabled`: a disabled control is skipped by the
@@ -397,6 +574,10 @@
 				.attr( 'aria-busy', busy ? 'true' : 'false' )
 				.toggleClass( 'is-loading', busy );
 		}
+
+		// The visible message rides alongside the busy cue so it appears the
+		// instant a fetch starts, not only when a submit is intercepted.
+		setLoadingHint( select, busy );
 	}
 
 	function initAddressFields( fields ) {
@@ -434,6 +615,19 @@
 				// Captured, so it runs before the form's own submit handlers.
 				true
 			);
+
+			// Once every guard has let the submit through, lock the button so
+			// a stand-alone address form (the correction form on an approved
+			// request) can not be double-posted. On the request form the main
+			// handler already does this; disableSubmit is a no-op the second
+			// time, so running here as well is harmless.
+			form.addEventListener( 'submit', function ( event ) {
+				if ( event.defaultPrevented ) {
+					return;
+				}
+
+				disableSubmit( form );
+			} );
 		}
 
 		selects.forEach( enhanceSelect );
@@ -569,6 +763,26 @@
 			document.querySelectorAll( '[data-hez-confirm-unbook]' ),
 			initUnbookConfirm
 		);
+
+		// A submit lock has to survive the back button: when the browser
+		// restores this page from its cache, the button it disabled on the way
+		// out comes back disabled, stranding the customer on a dead control.
+		// Restoring from cache means the earlier navigation never completed, so
+		// the button is released.
+		window.addEventListener( 'pageshow', function ( event ) {
+			if ( ! event.persisted ) {
+				return;
+			}
+
+			Array.prototype.forEach.call(
+				document.querySelectorAll( '[type="submit"].is-busy' ),
+				function ( button ) {
+					button.disabled = false;
+					button.removeAttribute( 'aria-busy' );
+					button.classList.remove( 'is-busy' );
+				}
+			);
+		} );
 	}
 
 	if ( document.readyState === 'loading' ) {

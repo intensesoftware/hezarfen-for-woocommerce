@@ -511,6 +511,17 @@
 	font-weight: 600;
 }
 
+/* Zorunlu alan işareti: sebep bir açıklama gerektirdiğinde JS not alanının
+   etiketine ekler, sebep değişince kaldırır. Tema abbr'ye alt çizgi dayatsa
+   da işaret düz kalsın diye text-decoration açıkça kapatılıyor. */
+.hez-returns:not(#\9) .hez-field__required {
+	margin-left: 4px;
+	color: var(--hez-danger);
+	font-weight: 700;
+	text-decoration: none;
+	cursor: help;
+}
+
 /*
  * Two class names deep on purpose. Themes style form controls by input
  * type — Storefront paints input[type=text] and textarea grey but leaves
@@ -909,6 +920,13 @@
 	font-weight: 600;
 }
 
+/* Doğrulama hatası: nötr sayaçtan renk ve ağırlıkla ayrışır, yoksa hata
+   mesajı sıradan bilgi metni gibi görünür (bkz. .hez-address-fields__error). */
+.hez-returns:not(#\9) .hez-return-form__summary.is-error {
+	color: var(--hez-danger);
+	font-weight: 700;
+}
+
 .hez-returns:not(#\9) .hez-address-fields__error {
 	margin: 0 0 12px;
 	color: var(--hez-danger, #b3261e);
@@ -1051,6 +1069,16 @@
 	outline-offset: 2px;
 }
 
+/* Gönderim başlayınca buton kilitlenir: aynı iade talebinin iki kez
+   yollanmasını önler. Tıklama engellenir, imleç beklemeyi anlatır. */
+.hez-returns:not(#\9) .hez-btn[disabled],
+.hez-returns:not(#\9) .hez-btn.is-busy,
+.hez-returns:not(#\9) button.hez-btn:disabled {
+	opacity: 0.65;
+	cursor: progress;
+	pointer-events: none;
+}
+
 /* --------------------------------------------------------------- order panel */
 
 /*
@@ -1173,6 +1201,14 @@
 	font-size: 12px;
 }
 
+/* İl/ilçe/mahalle listesi çekilirken alanın hemen altında beliren mesaj. Fetch
+   başlar başlamaz eklenir; tarayıcının native `required` kontrolü gönderimi
+   kesse bile müşteri listenin neden boş olduğunu görür. */
+.hez-returns:not(#\9) .hez-field__loading {
+	color: var(--hez-accent);
+	font-weight: 600;
+}
+
 /* The address the day list was fetched for, foldable so it stays a detail
    until the customer needs to correct it. */
 
@@ -1292,6 +1328,21 @@
 	margin: 10px 0 0;
 	color: var(--hez-text-muted);
 	font-size: 14px;
+}
+
+/* Ekranda görünmez ama ekran okuyucuya ulaşan durum düğümü: kopyala butonu
+   sabit bir aria-label taşıdığı için "Kopyalandı" metin değişimi tek başına
+   duyurulmaz; canlı bölge sonucu iletir. */
+.hez-returns:not(#\9) .hez-visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	border: 0;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
 }
 
 .hez-returns:not(#\9) .hez-code__meta {

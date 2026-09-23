@@ -80,6 +80,7 @@ class Return_Assets {
 					'copied'           => __( 'Kopyalandı', 'hezarfen-for-woocommerce' ),
 					'copyFailed'       => __( 'Kopyalanamadı', 'hezarfen-for-woocommerce' ),
 					'confirmUnbook'    => __( 'Kargo randevunuzu iptal etmek istediğinize emin misiniz? İptal ettikten sonra yeni bir alım günü seçmeniz gerekir.', 'hezarfen-for-woocommerce' ),
+					'requiredHint'     => __( 'zorunlu', 'hezarfen-for-woocommerce' ),
 				),
 			)
 		);

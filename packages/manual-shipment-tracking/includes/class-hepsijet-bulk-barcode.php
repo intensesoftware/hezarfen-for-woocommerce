@@ -304,6 +304,14 @@ class Hepsijet_Bulk_Barcode {
 					'print_barcodes_btn'    => __( 'Barkodları Yazdır', 'hezarfen-for-woocommerce' ),
 					'package_label'         => __( 'Koli', 'hezarfen-for-woocommerce' ),
 					'remove'                => __( 'Kaldır', 'hezarfen-for-woocommerce' ),
+					'desi_placeholder'      => __( 'Desi', 'hezarfen-for-woocommerce' ),
+					'preparing_print_title' => __( 'PDF Hazırlanıyor...', 'hezarfen-for-woocommerce' ),
+					/* translators: %d: number of successfully created barcodes. */
+					'summary_success'       => __( 'Tamamlandı — %d başarılı', 'hezarfen-for-woocommerce' ),
+					/* translators: 1: number of successful barcodes, 2: number of errors. */
+					'summary_partial'       => __( 'Tamamlandı — %1$d başarılı, %2$d hata', 'hezarfen-for-woocommerce' ),
+					/* translators: %d: number of skipped orders. */
+					'summary_skipped'       => __( 'Tamamlandı — %d atlandı', 'hezarfen-for-woocommerce' ),
 				),
 			)
 		);

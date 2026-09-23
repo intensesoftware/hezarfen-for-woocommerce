@@ -192,8 +192,24 @@ $hez_action_keys = array(
 								if ( ! isset( $hez_action_keys[ $hez_target ] ) ) {
 									continue;
 								}
+
+								// İşlemin niteliğine göre onay: geri alınamaz ya da
+								// finansal adımlar (reddet/iptal/tamamla) sorulur; ileri
+								// taşıyan güvenli adımlar (onayla/ürünler ulaştı) sorulmaz.
+								$hez_confirm = '';
+								$hez_danger  = false;
+
+								if ( Return_Status::REJECTED === $hez_target ) {
+									$hez_confirm = __( 'Bu iade talebi reddedilecek ve müşteri bilgilendirilecek. Bu işlem geri alınamaz. Devam edilsin mi?', 'hezarfen-for-woocommerce' );
+									$hez_danger  = true;
+								} elseif ( Return_Status::CANCELLED === $hez_target ) {
+									$hez_confirm = __( 'Bu iade talebi iptal edilecek. Devam edilsin mi?', 'hezarfen-for-woocommerce' );
+									$hez_danger  = true;
+								} elseif ( Return_Status::COMPLETED === $hez_target ) {
+									$hez_confirm = __( 'Talep tamamlanacak; "WooCommerce iade kaydı oluştur" seçiliyse siparişe iade ve stok girişi yapılacak. Devam edilsin mi?', 'hezarfen-for-woocommerce' );
+								}
 								?>
-								<form method="post">
+								<form method="post"<?php if ( '' !== $hez_confirm ) : ?> onsubmit="return confirm( '<?php echo esc_js( $hez_confirm ); ?>' );"<?php endif; ?>>
 									<?php wp_nonce_field( Returns_Admin::NONCE_ACTION ); ?>
 									<input type="hidden" name="<?php echo esc_attr( Returns_Admin::ACTION_FIELD ); ?>" value="<?php echo esc_attr( $hez_action_keys[ $hez_target ] ); ?>">
 									<input type="hidden" name="return_id" value="<?php echo esc_attr( (string) $request->get_id() ); ?>">
@@ -215,7 +231,14 @@ $hez_action_keys = array(
 										</p>
 									<?php endif; ?>
 
-									<button type="submit" class="button <?php echo Return_Status::APPROVED === $hez_target ? 'button-primary' : ''; ?>">
+									<?php if ( Return_Status::REJECTED === $hez_target ) : ?>
+										<p class="hez-admin-reject-reason">
+											<label for="hez-reject-reason"><?php esc_html_e( 'Red gerekçesi (opsiyonel — müşteriye gösterilir)', 'hezarfen-for-woocommerce' ); ?></label>
+											<textarea id="hez-reject-reason" name="message" rows="2" class="large-text" placeholder="<?php esc_attr_e( 'Örn. Ürün kullanılmış olduğu için iade kabul edilmedi.', 'hezarfen-for-woocommerce' ); ?>"></textarea>
+										</p>
+									<?php endif; ?>
+
+									<button type="submit" class="button <?php echo Return_Status::APPROVED === $hez_target ? 'button-primary' : ''; ?><?php echo $hez_danger ? ' hez-admin-action--danger' : ''; ?>">
 										<?php echo esc_html( $hez_primary_actions[ $hez_target ] ); ?>
 									</button>
 								</form>

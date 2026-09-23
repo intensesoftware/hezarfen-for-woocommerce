@@ -52,4 +52,23 @@ class Email_Return_Completed extends Abstract_Return_Email {
 	public function get_intro() {
 		return __( 'İade süreciniz tamamlandı. Bizi tercih ettiğiniz için teşekkür ederiz.', 'hezarfen-for-woocommerce' );
 	}
+
+	/**
+	 * The refunded amount, formatted for display, when one was recorded.
+	 *
+	 * @return string
+	 */
+	protected function get_refund_display() {
+		if ( ! $this->return_request ) {
+			return '';
+		}
+
+		$amount = (float) $this->return_request->get_refund_amount();
+
+		if ( $amount <= 0 ) {
+			return '';
+		}
+
+		return hezarfen_returns_plain_price( $amount, $this->return_request->get_currency() );
+	}
 }

@@ -1076,7 +1076,7 @@ class Courier_Hepsijet_Integration {
     /**
      * Get Hepsijet ile Avantajlı Kargo Fiyatları wallet balance
      *
-     * @return array|WP_Error
+     * @return array|\WP_Error
      */
     public function get_kargogate_balance() {
         // Use Hepsijet ile Avantajlı Kargo Fiyatları namespace for wallet balance

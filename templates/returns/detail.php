@@ -71,12 +71,32 @@ $hez_order_number = $hez_order ? $hez_order->get_order_number() : (string) $requ
 					<?php echo 'current' === $hez_state ? 'aria-current="step"' : ''; ?>>
 					<span class="hez-progress__dot" aria-hidden="true"></span>
 					<span class="hez-progress__label"><?php echo esc_html( Return_Status::get_customer_label( $hez_step ) ); ?></span>
+					<?php if ( 'done' === $hez_state ) : ?>
+						<span class="screen-reader-text"><?php esc_html_e( 'tamamlandı', 'hezarfen-for-woocommerce' ); ?></span>
+					<?php elseif ( 'upcoming' === $hez_state ) : ?>
+						<span class="screen-reader-text"><?php esc_html_e( 'sırada', 'hezarfen-for-woocommerce' ); ?></span>
+					<?php endif; ?>
 				</li>
 			<?php endforeach; ?>
 		</ol>
 	<?php else : ?>
+		<?php
+		$hez_derail_message = '';
+
+		if ( Return_Status::REJECTED === $hez_status ) {
+			foreach ( array_reverse( $events ) as $hez_event ) {
+				if ( Return_Status::REJECTED === $hez_event->get_to_status() && $hez_event->get_message() ) {
+					$hez_derail_message = $hez_event->get_message();
+					break;
+				}
+			}
+		}
+		?>
 		<div class="hez-callout hez-callout--<?php echo esc_attr( Return_Status::get_tone( $hez_status ) ); ?>">
 			<p><?php echo esc_html( Return_Status::get_customer_label( $hez_status ) ); ?></p>
+			<?php if ( $hez_derail_message ) : ?>
+				<p class="hez-callout__reason"><?php echo esc_html( $hez_derail_message ); ?></p>
+			<?php endif; ?>
 		</div>
 	<?php endif; ?>
 

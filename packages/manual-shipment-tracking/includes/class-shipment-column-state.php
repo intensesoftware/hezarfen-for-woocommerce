@@ -154,7 +154,7 @@ class Shipment_Column_State {
 		ob_start();
 
 		if ( count( $shipment_data ) > 1 ) {
-			printf( '<p>%s</p>', esc_html__( 'Shipment in pieces', 'hezarfen-for-woocommerce' ) );
+			printf( '<p>%s</p>', esc_html__( 'Multiple shipments', 'hezarfen-for-woocommerce' ) );
 		} else {
 			$courier = Helper::get_courier_class( $shipment_data[0]->courier_id );
 
@@ -165,7 +165,7 @@ class Shipment_Column_State {
 			}
 		}
 
-		printf( '<span data-order-id="%s" class="dashicons dashicons-info-outline shipment-info-icon"></span>', esc_attr( (string) $order_id ) );
+		printf( '<button type="button" data-order-id="%s" class="button-link dashicons dashicons-info-outline shipment-info-icon" aria-label="%s"></button>', esc_attr( (string) $order_id ), esc_attr__( 'Gönderi detayını göster', 'hezarfen-for-woocommerce' ) );
 
 		return ob_get_clean();
 	}
@@ -219,7 +219,7 @@ class Shipment_Column_State {
 		$no_shipment_msg = apply_filters( 'hezarfen_shop_order_no_shipment_found_msg', null, $order_id );
 
 		if ( is_null( $no_shipment_msg ) ) {
-			return esc_html__( 'No shipment data found', 'hezarfen-for-woocommerce' );
+			return sprintf( '<span class="no-shipment-found">%s</span>', esc_html__( 'No shipment data found', 'hezarfen-for-woocommerce' ) );
 		}
 
 		return wp_kses_post( $no_shipment_msg );

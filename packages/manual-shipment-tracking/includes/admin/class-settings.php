@@ -59,6 +59,9 @@ class Settings {
 		// Custom field type for cache clear button
 		add_action( 'woocommerce_admin_field_hepsijet_cache_button', array( __CLASS__, 'render_cache_clear_button' ) );
 
+		// Custom field type for the connection/credential test button
+		add_action( 'woocommerce_admin_field_hepsijet_test_button', array( __CLASS__, 'render_test_connection_button' ) );
+
 		// Custom field type for courier visibility
 		add_action( 'woocommerce_admin_field_hezarfen_courier_visibility', array( __CLASS__, 'render_courier_visibility_setting' ) );
 
@@ -343,14 +346,18 @@ class Settings {
 				'type' => 'text',
 				'id' => 'hezarfen_hepsijet_consumer_key',
 				'default' => '',
-				'desc' => __( 'Consumer Key from Hepsijet API Relay plugin', 'hezarfen-for-woocommerce' )
+				'desc' => __( 'Consumer Key from your kargokit.com account (My Account → Hepsijet)', 'hezarfen-for-woocommerce' )
 			),
 			array(
 				'title' => __( 'Consumer Secret', 'hezarfen-for-woocommerce' ),
 				'type' => 'password',
 				'id' => 'hezarfen_hepsijet_consumer_secret',
 				'default' => '',
-				'desc' => __( 'Consumer Secret from Hepsijet API Relay plugin', 'hezarfen-for-woocommerce' )
+				'desc' => __( 'Consumer Secret from your kargokit.com account (My Account → Hepsijet)', 'hezarfen-for-woocommerce' )
+			),
+			array(
+				'type' => 'hepsijet_test_button',
+				'id' => 'hezarfen_hepsijet_test_connection',
 			),
 			array(
 				'type' => 'sectionend',
@@ -730,6 +737,99 @@ class Settings {
 				});
 				</script>
 				
+				<style>
+				.dashicons.spin {
+					animation: rotation 1s infinite linear;
+				}
+				@keyframes rotation {
+					from { transform: rotate(0deg); }
+					to { transform: rotate(359deg); }
+				}
+				</style>
+			</td>
+		</tr>
+		<?php
+	}
+
+	/**
+	 * Render the "test connection" button for Hepsijet credentials.
+	 *
+	 * Mirrors the cache-clear button: an inline AJAX call that verifies the saved
+	 * Consumer Key/Secret against the kargokit.com relay and reports the result
+	 * inline. Shows a positive "kayıtlı / bağlı" indicator when a webhook secret
+	 * already exists (i.e. the store is fully connected).
+	 *
+	 * @param array<string, mixed> $value Field settings.
+	 * @return void
+	 */
+	public static function render_test_connection_button( $value ) {
+		$is_connected = Courier_Hepsijet_Integration::has_credentials_with_webhook();
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label><?php esc_html_e( 'Bağlantı Durumu', 'hezarfen-for-woocommerce' ); ?></label>
+			</th>
+			<td class="forminp forminp-button">
+				<button type="button" id="test-hepsijet-connection" class="button button-secondary">
+					<span class="dashicons dashicons-admin-links" style="margin-top: 3px;"></span>
+					<?php esc_html_e( 'Bağlantıyı test et', 'hezarfen-for-woocommerce' ); ?>
+				</button>
+				<?php if ( $is_connected ) : ?>
+					<span class="hepsijet-connection-indicator" style="display: inline-flex; align-items: center; gap: 4px; margin-left: 10px; padding: 3px 10px; border-radius: 9999px; background: #edfaef; color: #1e7e34; font-size: 12px; font-weight: 600;">
+						<span class="dashicons dashicons-yes-alt" style="font-size: 16px; width: 16px; height: 16px;"></span>
+						<?php esc_html_e( 'Kayıtlı / Bağlı', 'hezarfen-for-woocommerce' ); ?>
+					</span>
+				<?php endif; ?>
+				<p class="description">
+					<?php esc_html_e( 'Consumer Key ve Consumer Secret bilgilerinizi kaydettikten sonra bu butona tıklayarak kargokit.com bağlantınızı doğrulayın.', 'hezarfen-for-woocommerce' ); ?>
+				</p>
+				<div id="hepsijet-connection-status" style="margin-top: 10px; display: none;"></div>
+
+				<script type="text/javascript">
+				jQuery(document).ready(function($) {
+					$('#test-hepsijet-connection').on('click', function(e) {
+						e.preventDefault();
+
+						var $button = $(this);
+						var $status = $('#hepsijet-connection-status');
+						var originalText = $button.html();
+
+						$button.prop('disabled', true).html('<span class="dashicons dashicons-update spin" style="margin-top: 3px;"></span> <?php echo esc_js( __( 'Test ediliyor...', 'hezarfen-for-woocommerce' ) ); ?>');
+
+						$.ajax({
+							url: ajaxurl,
+							type: 'POST',
+							data: {
+								action: '<?php echo esc_js( Admin_Ajax::TEST_HEPSIJET_CONNECTION_ACTION ); ?>',
+								_wpnonce: '<?php echo esc_js( wp_create_nonce( Admin_Ajax::TEST_HEPSIJET_CONNECTION_NONCE ) ); ?>'
+							},
+							success: function(response) {
+								if (response.success) {
+									$status.html('<div class="notice notice-success inline" style="padding: 8px 12px; margin: 0;"><p style="margin: 0;">' +
+										'<span class="dashicons dashicons-yes-alt" style="color: #46b450;"></span> ' +
+										response.data.message +
+									'</p></div>').fadeIn();
+								} else {
+									$status.html('<div class="notice notice-error inline" style="padding: 8px 12px; margin: 0;"><p style="margin: 0;">' +
+										'<span class="dashicons dashicons-warning"></span> ' +
+										((response.data && response.data.message) ? response.data.message : '<?php echo esc_js( __( 'An error occurred', 'hezarfen-for-woocommerce' ) ); ?>') +
+									'</p></div>').fadeIn();
+								}
+							},
+							error: function() {
+								$status.html('<div class="notice notice-error inline" style="padding: 8px 12px; margin: 0;"><p style="margin: 0;">' +
+									'<span class="dashicons dashicons-warning"></span> ' +
+									'<?php echo esc_js( __( 'Connection error', 'hezarfen-for-woocommerce' ) ); ?>' +
+								'</p></div>').fadeIn();
+							},
+							complete: function() {
+								$button.prop('disabled', false).html(originalText);
+							}
+						});
+					});
+				});
+				</script>
+
 				<style>
 				.dashicons.spin {
 					animation: rotation 1s infinite linear;

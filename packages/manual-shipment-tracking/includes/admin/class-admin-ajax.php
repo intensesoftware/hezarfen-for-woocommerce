@@ -41,6 +41,8 @@ class Admin_Ajax {
 	const GET_HEPSIJET_PRICING_NONCE  = 'hezarfen_mst_get_hepsijet_pricing';
 	const GET_KARGOGATE_BALANCE_ACTION = 'hezarfen_mst_get_kargogate_balance';
 	const GET_KARGOGATE_BALANCE_NONCE  = 'hezarfen_mst_get_kargogate_balance';
+	const TEST_HEPSIJET_CONNECTION_ACTION = 'hezarfen_mst_test_hepsijet_connection';
+	const TEST_HEPSIJET_CONNECTION_NONCE  = 'hezarfen_mst_test_hepsijet_connection';
 	const DATA_ARRAY_KEY         = 'hezarfen_mst_shipment_data';
 	const COURIER_HTML_NAME      = 'courier_company';
 	const TRACKING_NUM_HTML_NAME = 'tracking_number';
@@ -64,6 +66,7 @@ class Admin_Ajax {
 		add_action( 'wp_ajax_' . self::GENERATE_HEPSIJET_PDF_ACTION, array( __CLASS__, 'generate_hepsijet_pdf' ) );
 		add_action( 'wp_ajax_' . self::GET_HEPSIJET_BARCODE_PDF_ACTION, array( __CLASS__, 'get_hepsijet_barcode_pdf' ) );
 		add_action( 'wp_ajax_' . self::GET_KARGOGATE_BALANCE_ACTION, array( __CLASS__, 'get_kargogate_balance' ) );
+		add_action( 'wp_ajax_' . self::TEST_HEPSIJET_CONNECTION_ACTION, array( __CLASS__, 'test_hepsijet_connection' ) );
 
 		add_action( 'wp_ajax_hezarfen_mst_get_return_dates', array( __CLASS__, 'get_return_dates' ) );
 		add_action( 'wp_ajax_hepsijet_get_warehouses', array( __CLASS__, 'get_hepsijet_warehouses' ) );
@@ -1479,6 +1482,62 @@ class Admin_Ajax {
 
 		// Return the balance data
 		wp_send_json_success( $result );
+	}
+
+	/**
+	 * Verifies the saved Hepsijet credentials against the kargokit.com relay.
+	 *
+	 * Lightweight connectivity check for the settings screen: reuses the cheap
+	 * authenticated wallet-balance endpoint to confirm the Consumer Key/Secret
+	 * are valid, and reports the result inline.
+	 *
+	 * @return void
+	 */
+	public static function test_hepsijet_connection() {
+		check_ajax_referer( self::TEST_HEPSIJET_CONNECTION_NONCE, '_wpnonce' );
+
+		// Check user capabilities
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'Bu işlemi gerçekleştirme yetkiniz yok.', 'hezarfen-for-woocommerce' )
+			), 403 );
+		}
+
+		// The relay is queried with the stored credentials, so they must be saved
+		// before the test can run. Give a clear, non-empty status otherwise.
+		if ( ! Courier_Hepsijet_Integration::has_credentials() ) {
+			wp_send_json_error( array(
+				'message' => __( 'Consumer Key ve Consumer Secret alanları boş. Lütfen bilgileri girip kaydettikten sonra tekrar deneyin.', 'hezarfen-for-woocommerce' )
+			) );
+		}
+
+		try {
+			$hepsijet_integration = new \Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration();
+
+			$result = $hepsijet_integration->get_kargogate_balance();
+
+			if ( is_wp_error( $result ) ) {
+				wp_send_json_error( array(
+					'message' => sprintf(
+						/* translators: %s: error message returned by the relay */
+						__( 'Bağlantı başarısız: %s. Consumer Key/Secret bilgilerinizi kontrol edin.', 'hezarfen-for-woocommerce' ),
+						$result->get_error_message()
+					)
+				) );
+			}
+
+			wp_send_json_success( array(
+				'message' => __( 'Bağlantı başarılı! Consumer Key ve Consumer Secret doğrulandı.', 'hezarfen-for-woocommerce' )
+			) );
+		} catch ( Exception $e ) {
+			wp_send_json_error( array(
+				'message' => sprintf(
+					/* translators: %s: exception message */
+					__( 'Bağlantı test edilirken bir hata oluştu: %s', 'hezarfen-for-woocommerce' ),
+					$e->getMessage()
+				)
+			) );
+		}
 	}
 
 	/**

@@ -224,6 +224,12 @@ class My_Account_Returns {
 		if ( ! $request ) {
 			wc_print_notice( __( 'İade talebi bulunamadı.', 'hezarfen-for-woocommerce' ), 'error' );
 
+			printf(
+				'<p><a class="woocommerce-Button button" href="%s">%s</a></p>',
+				esc_url( wc_get_endpoint_url( 'orders', '', wc_get_page_permalink( 'myaccount' ) ) ),
+				esc_html__( 'Siparişlerime dön', 'hezarfen-for-woocommerce' )
+			);
+
 			return;
 		}
 

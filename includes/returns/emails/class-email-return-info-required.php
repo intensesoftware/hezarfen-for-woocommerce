@@ -7,6 +7,8 @@
 
 namespace Hezarfen\Inc\Returns\Emails;
 
+use Hezarfen\Inc\Returns\Core\Return_Event;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -51,5 +53,23 @@ class Email_Return_Info_Required extends Abstract_Return_Email {
 	 */
 	public function get_intro() {
 		return __( 'İade talebinizi değerlendirebilmemiz için birkaç ayrıntıya daha ihtiyacımız var. Aşağıdaki bağlantıdan yanıtlayabilirsiniz.', 'hezarfen-for-woocommerce' );
+	}
+
+	/**
+	 * The merchant's latest question to the customer.
+	 *
+	 * @return string
+	 */
+	protected function get_inline_message() {
+		return $this->latest_customer_message( Return_Event::TYPE_INFO_REQUEST );
+	}
+
+	/**
+	 * Heading shown above the merchant's question.
+	 *
+	 * @return string
+	 */
+	protected function get_inline_message_heading() {
+		return __( 'Mağazanın sorusu', 'hezarfen-for-woocommerce' );
 	}
 }

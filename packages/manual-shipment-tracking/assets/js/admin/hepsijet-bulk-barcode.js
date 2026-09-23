@@ -71,7 +71,7 @@
 	function addPackageToContainer($container) {
 		var $item = $('<div class="hezarfen-package-item">' +
 			'<span class="hezarfen-package-label"></span>' +
-			'<input type="number" class="hezarfen-package-desi" min="0.01" max="9999" step="0.01" placeholder="Desi" />' +
+			'<input type="number" class="hezarfen-package-desi" min="0.01" max="9999" step="0.01" placeholder="' + escapeHtml(i18n.desi_placeholder || 'Desi') + '" />' +
 			'<button type="button" class="hezarfen-remove-package" title="' + escapeHtml(i18n.remove || 'Kaldır') + '">&times;</button>' +
 			'</div>');
 		$container.append($item);
@@ -177,7 +177,7 @@
 			for (var i = 0; i < bulkPackages.length; i++) {
 				var $item = $('<div class="hezarfen-package-item">' +
 					'<span class="hezarfen-package-label"></span>' +
-					'<input type="number" class="hezarfen-package-desi" min="0.01" max="9999" step="0.01" placeholder="Desi" />' +
+					'<input type="number" class="hezarfen-package-desi" min="0.01" max="9999" step="0.01" placeholder="' + escapeHtml(i18n.desi_placeholder || 'Desi') + '" />' +
 					'<button type="button" class="hezarfen-remove-package" title="' + escapeHtml(i18n.remove || 'Kaldır') + '">&times;</button>' +
 					'</div>');
 				$item.find('.hezarfen-package-desi').val(bulkPackages[i]);
@@ -382,7 +382,7 @@
 
 		$('#hezarfen-progress-counter').text(done + '/' + total);
 		$('#hezarfen-progress-percent').text('(' + pct + '%)');
-		$('#hezarfen-progress-bar').css('width', pct + '%');
+		$('#hezarfen-progress-bar').css('width', pct + '%').attr('aria-valuenow', pct);
 
 		// Estimated remaining time.
 		if (state.elapsedTimes.length > 0) {
@@ -464,16 +464,15 @@
 
 		if (state.errorCount === 0 && state.totalToProcess > 0) {
 			summaryHtml = '<div class="notice notice-success inline"><p>' +
-				i18n.completed + ' &mdash; ' + total + ' ' + i18n.success.toLowerCase() +
+				escapeHtml(formatStr(i18n.summary_success || 'Tamamlandı — %d başarılı', total)) +
 				'</p></div>';
 		} else if (state.errorCount > 0) {
 			summaryHtml = '<div class="notice notice-warning inline"><p>' +
-				i18n.completed + ' &mdash; ' + total + ' ' + i18n.success.toLowerCase() +
-				', ' + state.errorCount + ' ' + i18n.error.toLowerCase() +
+				escapeHtml(formatStr(i18n.summary_partial || 'Tamamlandı — %1$d başarılı, %2$d hata', total, state.errorCount)) +
 				'</p></div>';
 		} else {
 			summaryHtml = '<div class="notice notice-info inline"><p>' +
-				i18n.completed + ' &mdash; ' + state.skipped.length + ' ' + i18n.skipped.toLowerCase() +
+				escapeHtml(formatStr(i18n.summary_skipped || 'Tamamlandı — %d atlandı', state.skipped.length)) +
 				'</p></div>';
 		}
 
@@ -570,7 +569,7 @@
 		// Show loading message in the new tab while PDF is generated.
 		if (printWin) {
 			printWin.document.write(
-				'<!DOCTYPE html><html><head><meta charset="UTF-8"><title>PDF Hazırlanıyor...</title>' +
+				'<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + escapeHtml(i18n.preparing_print_title || 'PDF Hazırlanıyor...') + '</title>' +
 				'<style>body{display:flex;align-items:center;justify-content:center;height:100vh;margin:0;' +
 				'font-family:Arial,sans-serif;background:#f0f0f1;color:#333;}' +
 				'.loader{text-align:center;}.spinner{border:4px solid #e5e5e5;border-top:4px solid #2271b1;' +
@@ -631,6 +630,21 @@
 		}
 		var blob = new Blob([arr], { type: mime });
 		return URL.createObjectURL(blob);
+	}
+
+	/**
+	 * Minimal sprintf: fills %d and positional %1$d, %2$d placeholders from the given args.
+	 * Used so translated result-summary sentences stay grammatically intact per locale.
+	 */
+	function formatStr(template) {
+		var args = Array.prototype.slice.call(arguments, 1);
+		var auto = 0;
+		return String(template).replace(/%(\d+\$)?d/g, function (match, position) {
+			if (position) {
+				return args[parseInt(position, 10) - 1];
+			}
+			return args[auto++];
+		});
 	}
 
 	/**

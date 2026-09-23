@@ -465,3 +465,27 @@
 	font-size: 14px;
 	line-height: 1;
 }
+
+/* Geri alınamaz işlemler (reddet/iptal) görsel olarak da tehlikeli görünür;
+   ilerleten güvenli işlemlerden ayrışsın diye kırmızı ağırlık taşır. */
+.hez-admin-actions .hez-admin-action--danger {
+	color: #d63638;
+	border-color: #d63638;
+}
+
+.hez-admin-actions .hez-admin-action--danger:hover,
+.hez-admin-actions .hez-admin-action--danger:focus {
+	background: #d63638;
+	border-color: #d63638;
+	color: #fff;
+}
+
+.hez-admin-reject-reason {
+	margin: 0 0 12px;
+}
+
+.hez-admin-reject-reason label {
+	display: block;
+	margin-bottom: 4px;
+	font-weight: 600;
+}

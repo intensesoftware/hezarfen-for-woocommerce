@@ -109,6 +109,32 @@ class Returns_List_Table extends \WP_List_Table {
 		$current = $this->get_current_status();
 		$base    = admin_url( 'admin.php?page=' . Returns_Admin::PAGE_SLUG );
 
+		// Aramayı ve sıralamayı koru: bir durum filtresine tıklamak,
+		// mağazacının yazdığı aramayı ya da seçtiği sıralamayı sıfırlamasın.
+		$carry = array();
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only list filtering.
+		if ( ! empty( $_REQUEST['s'] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$carry['s'] = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! empty( $_REQUEST['orderby'] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$carry['orderby'] = sanitize_key( wp_unslash( $_REQUEST['orderby'] ) );
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! empty( $_REQUEST['order'] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$carry['order'] = sanitize_key( wp_unslash( $_REQUEST['order'] ) );
+		}
+
+		if ( $carry ) {
+			$base = add_query_arg( $carry, $base );
+		}
+
 		$views = array(
 			'all' => sprintf(
 				'<a href="%1$s" class="%2$s">%3$s <span class="count">(%4$d)</span></a>',
@@ -345,5 +371,14 @@ class Returns_List_Table extends \WP_List_Table {
 		$status = isset( $_GET['status'] ) ? sanitize_key( wp_unslash( $_GET['status'] ) ) : '';
 
 		return Return_Status::exists( $status ) ? $status : '';
+	}
+
+	/**
+	 * The status filter currently applied (public accessor for the screen).
+	 *
+	 * @return string
+	 */
+	public function current_status() {
+		return $this->get_current_status();
 	}
 }
