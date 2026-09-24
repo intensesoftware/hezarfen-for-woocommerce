@@ -938,9 +938,15 @@
 	display: none;
 }
 
+/*
+ * Vazgeç bir bağlantı (<a>), gönder bir <button>; temalar ikisini ayrı
+ * stillediği için yükseklikler tutmayabiliyor. `stretch` ikisini satırın en
+ * uzun elemanına eşitliyor, buton sıfırlamasının kaçırdığı bir kural olsa da.
+ */
 .hez-returns:not(#\9) .hez-return-form__actions {
 	display: flex;
-	align-items: center;
+	flex-wrap: wrap;
+	align-items: stretch;
 	gap: 10px;
 }
 
@@ -970,14 +976,25 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	box-sizing: border-box;
+	width: auto;
+	height: auto;
+	min-height: 0;
+	margin: 0;
 	padding: 10px 18px;
 	border: 1px solid transparent;
 	border-radius: var(--hez-radius-sm);
 	background: transparent;
 	color: var(--hez-text);
+	font-family: inherit;
 	font-size: 14px;
 	font-weight: 600;
 	line-height: 1.2;
+	letter-spacing: normal;
+	text-align: center;
+	text-transform: none;
+	vertical-align: middle;
+	white-space: nowrap;
 	text-decoration: none !important;
 	box-shadow: none;
 	cursor: pointer;
