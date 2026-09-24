@@ -6,7 +6,7 @@ Requires at least: 5.3
 Tested up to: 7.0
 Requires PHP: 7.0
 License: GPL2
-Stable tag: 2.15.0
+Stable tag: 2.16.0
 
 WooCommerce Kargo Takip eklentisi: ücretsiz Hepsijet entegrasyonu, 23 kargo firması, NetGSM SMS, Mesafeli Satış Sözleşmesi, mahalle seçimi.
 == Description ==
@@ -261,6 +261,18 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
+= 2.16.0 - 2026-09-23 =
+
+* feat(orders): kargo sütununu tek bir durum kaynağına bağla
+* fix(hepsijet-label): embed the rotated barcode as JPEG, not alpha PNG
+* fix(hepsijet): stop the settings save from wiping the webhook secret
+* feat: iade yönetimi modülü
+* fix(returns): iade numarası sütunu 100 karaktere çıkarıldı; uzun/özel sipariş numarası formatlarında iade oluşturma başarısız olmasın
+* fix(returns): süreç ortada çökünce kilitli kalan kargo randevusu yeniden alınabilir yapıldı
+* fix(returns): adres formu hataları artık native alert yerine satır içi gösteriliyor; mobilde iade toplamına etiket eklendi
+* fix(returns): onay e-postasındaki yanıltıcı "aşağıda" ifadeleri hesap bağlantısına yönlendirilecek şekilde düzeltildi
+* fix(hepsijet): toplu barkod PDF'inde tek bir bozuk barkod artık tüm baskıyı iptal etmiyor
+* ci(e2e): drop EOL PHP 7.4/8.0 from Playwright matrix
 = 2.15.0 - 2026-08-05 =
 
 * refactor: Aras Kargo talep anketi kaldırıldı
