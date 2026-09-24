@@ -71,6 +71,29 @@ class My_Account_Returns {
 		add_action( 'woocommerce_account_' . self::get_request_endpoint() . '_endpoint', array( $this, 'render_request_form' ) );
 
 		add_action( 'woocommerce_order_details_after_order_table', array( $this, 'render_order_panel' ), 20 );
+		add_filter( 'woocommerce_my_account_my_orders_actions', array( $this, 'add_orders_table_action' ), 10, 2 );
+	}
+
+	/**
+	 * Adds a shortcut to the return form next to "View" in the orders
+	 * table, for orders the customer can still return something from.
+	 *
+	 * @param array<string, array<string, string>> $actions Row actions.
+	 * @param \WC_Order                            $order   Order.
+	 *
+	 * @return array<string, array<string, string>>
+	 */
+	public function add_orders_table_action( $actions, $order ) {
+		if ( ! $order instanceof \WC_Order || ! $this->module->eligibility()->is_order_returnable( $order ) ) {
+			return $actions;
+		}
+
+		$actions['hezarfen-return'] = array(
+			'url'  => wc_get_endpoint_url( self::get_request_endpoint(), (string) $order->get_id(), wc_get_page_permalink( 'myaccount' ) ),
+			'name' => __( 'İade et', 'hezarfen-for-woocommerce' ),
+		);
+
+		return $actions;
 	}
 
 	/**
