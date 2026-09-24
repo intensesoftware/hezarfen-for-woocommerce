@@ -218,6 +218,7 @@ class Returns_Module {
 			'core/class-return-service.php',
 			'core/class-return-order-sync.php',
 			'shipping/interface-return-shipping-method.php',
+			'shipping/interface-return-shipping-customer-copy.php',
 			'shipping/class-customer-ships-method.php',
 			'shipping/class-kargokit-return-method.php',
 			'shipping/class-return-shipping-registry.php',

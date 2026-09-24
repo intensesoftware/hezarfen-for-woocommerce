@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit();
  * they will be home on. Approval only unlocks the booking; the customer
  * makes it from their account.
  */
-class Kargokit_Return_Method implements Return_Shipping_Method_Interface {
+class Kargokit_Return_Method implements Return_Shipping_Method_Interface, Return_Shipping_Customer_Copy_Interface {
 
 	const KEY = 'kargokit';
 
@@ -70,6 +70,24 @@ class Kargokit_Return_Method implements Return_Shipping_Method_Interface {
 	 */
 	public function get_description() {
 		return __( 'Talebi onayladığınızda müşteri hesabından kargo alım gününü seçer; iade barkodu hepsiJET (Kargokit) üzerinden otomatik oluşturulur ve kargo müşterinin adresinden alınır. Bu seçenek yalnızca Kargokit API bilgileri girildiğinde listelenir.', 'hezarfen-for-woocommerce' );
+	}
+
+	/**
+	 * Title shown to the customer on the request form.
+	 *
+	 * @return string
+	 */
+	public function get_customer_label() {
+		return __( 'Kurye adresinizden alır', 'hezarfen-for-woocommerce' );
+	}
+
+	/**
+	 * What the customer should expect once the request is approved.
+	 *
+	 * @return string
+	 */
+	public function get_customer_description() {
+		return __( 'Talebiniz onaylandığında hesabınızdan kargo alım gününü seçersiniz; hepsiJET kuryesi ürünleri adresinizden teslim alır.', 'hezarfen-for-woocommerce' );
 	}
 
 	/**

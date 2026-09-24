@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit();
  * Always available: it needs nothing but a return address, and it is the
  * safe fallback whenever an automated method fails.
  */
-class Customer_Ships_Method implements Return_Shipping_Method_Interface {
+class Customer_Ships_Method implements Return_Shipping_Method_Interface, Return_Shipping_Customer_Copy_Interface {
 
 	const KEY = 'customer-ships';
 
@@ -46,6 +46,24 @@ class Customer_Ships_Method implements Return_Shipping_Method_Interface {
 	 */
 	public function get_description() {
 		return __( 'Müşteri ürünü dilediği kargo firmasıyla iade adresinize gönderir ve takip numarasını hesabından girer.', 'hezarfen-for-woocommerce' );
+	}
+
+	/**
+	 * Title shown to the customer on the request form.
+	 *
+	 * @return string
+	 */
+	public function get_customer_label() {
+		return __( 'Kargoyu siz gönderirsiniz', 'hezarfen-for-woocommerce' );
+	}
+
+	/**
+	 * What the customer should expect once the request is approved.
+	 *
+	 * @return string
+	 */
+	public function get_customer_description() {
+		return __( 'Talebiniz onaylandığında ürünleri dilediğiniz kargo firmasıyla iade adresine gönderir, takip numarasını hesabınızdan girersiniz.', 'hezarfen-for-woocommerce' );
 	}
 
 	/**

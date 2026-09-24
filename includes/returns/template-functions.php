@@ -191,3 +191,53 @@ if ( ! function_exists( 'hezarfen_returns_courier_label' ) ) {
 		return isset( $known[ $courier ] ) ? $known[ $courier ] : $courier;
 	}
 }
+
+if ( ! function_exists( 'hezarfen_returns_shipping_customer_copy' ) ) {
+	/**
+	 * What the request form tells the customer about the return shipment.
+	 *
+	 * A method's get_label() and get_description() are written for the
+	 * merchant and mention integrations and credentials, so they are never
+	 * shown here. Methods that implement the customer copy contract speak for
+	 * themselves; any other method gets a wording that follows from what it
+	 * asks of the customer.
+	 *
+	 * @param \Hezarfen\Inc\Returns\Shipping\Return_Shipping_Method_Interface $method Active shipping method.
+	 *
+	 * @return array{label: string, description: string}
+	 */
+	function hezarfen_returns_shipping_customer_copy( $method ) {
+		if ( $method instanceof \Hezarfen\Inc\Returns\Shipping\Return_Shipping_Customer_Copy_Interface ) {
+			$copy = array(
+				'label'       => (string) $method->get_customer_label(),
+				'description' => (string) $method->get_customer_description(),
+			);
+		} elseif ( $method->requires_customer_booking() ) {
+			$copy = array(
+				'label'       => __( 'Kurye adresinizden alır', 'hezarfen-for-woocommerce' ),
+				'description' => __( 'Talebiniz onaylandığında hesabınızdan kargo alım gününü seçersiniz; kurye ürünleri adresinizden teslim alır.', 'hezarfen-for-woocommerce' ),
+			);
+		} elseif ( $method->requires_customer_tracking() ) {
+			$copy = array(
+				'label'       => __( 'Kargoyu siz gönderirsiniz', 'hezarfen-for-woocommerce' ),
+				'description' => __( 'Talebiniz onaylandığında ürünleri dilediğiniz kargo firmasıyla iade adresine gönderir, takip numarasını hesabınızdan girersiniz.', 'hezarfen-for-woocommerce' ),
+			);
+		} else {
+			$copy = array(
+				'label'       => __( 'İade gönderimi', 'hezarfen-for-woocommerce' ),
+				'description' => __( 'Talebiniz onaylandığında gönderimle ilgili adımlar hesabınızda görünecek.', 'hezarfen-for-woocommerce' ),
+			);
+		}
+
+		/**
+		 * Filters the customer facing wording of the return shipping method.
+		 *
+		 * @param array{label: string, description: string}                        $copy   Label and description.
+		 * @param \Hezarfen\Inc\Returns\Shipping\Return_Shipping_Method_Interface $method Active shipping method.
+		 */
+		return (array) apply_filters( 'hezarfen_returns_shipping_customer_copy', $copy, $method ) + array(
+			'label'       => '',
+			'description' => '',
+		);
+	}
+}

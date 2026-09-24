@@ -29,6 +29,9 @@ $hez_reason_choices = $reasons->get_choices();
 $hez_submitted      = isset( $submitted ) && is_array( $submitted ) ? $submitted : array();
 $hez_sent_lines     = isset( $hez_submitted['lines'] ) && is_array( $hez_submitted['lines'] ) ? $hez_submitted['lines'] : array();
 $hez_customer_note  = isset( $hez_submitted['customer_note'] ) ? (string) $hez_submitted['customer_note'] : '';
+
+// The method's own label and description are written for the merchant.
+$hez_shipping_copy = hezarfen_returns_shipping_customer_copy( $shipping_method );
 ?>
 <div class="hez-returns hez-returns--form">
 
@@ -168,8 +171,10 @@ $hez_customer_note  = isset( $hez_submitted['customer_note'] ) ? (string) $hez_s
 			</div>
 
 			<div class="hez-shipping-card">
-				<p class="hez-shipping-card__title"><?php echo esc_html( $shipping_method->get_label() ); ?></p>
-				<p class="hez-shipping-card__desc"><?php echo esc_html( $shipping_method->get_description() ); ?></p>
+				<p class="hez-shipping-card__title"><?php echo esc_html( $hez_shipping_copy['label'] ); ?></p>
+				<?php if ( '' !== $hez_shipping_copy['description'] ) : ?>
+					<p class="hez-shipping-card__desc"><?php echo esc_html( $hez_shipping_copy['description'] ); ?></p>
+				<?php endif; ?>
 
 				<?php if ( $shipping_method->requires_customer_tracking() && Return_Settings::has_return_address() ) : ?>
 					<div class="hez-address">
