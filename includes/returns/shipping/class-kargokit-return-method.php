@@ -69,7 +69,7 @@ class Kargokit_Return_Method implements Return_Shipping_Method_Interface, Return
 	 * @return string
 	 */
 	public function get_description() {
-		return __( 'Talebi onayladığınızda müşteri hesabından kargo alım gününü seçer; iade barkodu hepsiJET (Kargokit) üzerinden otomatik oluşturulur ve kargo müşterinin adresinden alınır. Bu seçenek yalnızca Kargokit API bilgileri girildiğinde listelenir.', 'hezarfen-for-woocommerce' );
+		return __( 'Talep onaylandığında müşteri hesabından kargo alım gününü seçer; iade barkodu hepsiJET (Kargokit) üzerinden otomatik oluşturulur ve kargo müşterinin adresinden alınır. Bu seçenek yalnızca Kargokit API bilgileri girildiğinde listelenir.', 'hezarfen-for-woocommerce' );
 	}
 
 	/**
@@ -87,7 +87,7 @@ class Kargokit_Return_Method implements Return_Shipping_Method_Interface, Return
 	 * @return string
 	 */
 	public function get_customer_description() {
-		return __( 'Talebiniz onaylandığında hesabınızdan kargo alım gününü seçersiniz; hepsiJET kuryesi ürünleri adresinizden teslim alır.', 'hezarfen-for-woocommerce' );
+		return __( 'Kargo alım gününü hesabınızdan seçersiniz; hepsiJET kuryesi ürünleri adresinizden teslim alır.', 'hezarfen-for-woocommerce' );
 	}
 
 	/**

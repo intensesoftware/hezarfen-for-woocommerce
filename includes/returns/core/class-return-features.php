@@ -44,4 +44,25 @@ class Return_Features {
 		 */
 		return (bool) apply_filters( 'hezarfen_returns_info_requests_enabled', false );
 	}
+
+	/**
+	 * Whether the merchant may hold requests for manual approval.
+	 *
+	 * Requests are approved the moment they are created unless this is on
+	 * AND the merchant chose manual approval. Free carries the whole
+	 * approval flow -- the admin screen approves and rejects either way --
+	 * so the only thing gated is the choice to stop approving
+	 * automatically. A store that loses Pro falls back to automatic
+	 * approval; requests already waiting stay pending until someone acts.
+	 *
+	 * @return bool
+	 */
+	public static function manual_approval() {
+		/**
+		 * Filters whether manual approval of return requests is available.
+		 *
+		 * @param bool $enabled Off in the free plugin; Hezarfen Pro turns it on.
+		 */
+		return (bool) apply_filters( 'hezarfen_returns_manual_approval_enabled', false );
+	}
 }

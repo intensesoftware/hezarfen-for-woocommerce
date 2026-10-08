@@ -41,7 +41,10 @@ class Return_Emails {
 		);
 
 		add_filter( 'woocommerce_email_classes', array( $this, 'register_emails' ) );
-		add_action( 'hezarfen_return_created', array( $this, 'on_created' ) );
+		// Not `hezarfen_return_created`: that fires before an automatic
+		// approval, while the status is still about to change. By the time
+		// this one fires the request is in the state the customer sees.
+		add_action( 'hezarfen_return_submitted', array( $this, 'on_submitted' ) );
 		add_action( 'hezarfen_return_status_changed', array( $this, 'on_status_changed' ), 10, 3 );
 	}
 
@@ -80,14 +83,23 @@ class Return_Emails {
 	}
 
 	/**
-	 * Sends the pair of "we got it" notifications.
+	 * Sends the "we got it" notifications for a new request.
+	 *
+	 * An automatically approved request already sent the customer the
+	 * "approved" mail from the status change, so a "received, we will
+	 * review it" mail on top would arrive in the same second and contradict
+	 * it. The merchant is told either way; the mail's wording follows the
+	 * status.
 	 *
 	 * @param \Hezarfen\Inc\Returns\Core\Return_Request $request The new request.
 	 *
 	 * @return void
 	 */
-	public function on_created( $request ) {
-		$this->send( 'hezarfen_return_received_customer', $request );
+	public function on_submitted( $request ) {
+		if ( Return_Status::PENDING === $request->get_status() ) {
+			$this->send( 'hezarfen_return_received_customer', $request );
+		}
+
 		$this->send( 'hezarfen_return_received_admin', $request );
 	}
 

@@ -8,6 +8,7 @@
 namespace Hezarfen\Inc\Returns\Frontend;
 
 use Hezarfen\Inc\Returns\Core\Return_Pickup_Address;
+use Hezarfen\Inc\Returns\Core\Return_Status;
 use Hezarfen\Inc\Returns\Returns_Module;
 
 defined( 'ABSPATH' ) || exit();
@@ -217,14 +218,15 @@ class Return_Form_Handler {
 			return;
 		}
 
-		wc_add_notice(
-			sprintf(
-				/* translators: %s: return reference. */
-				__( 'İade talebiniz alındı. Talep numaranız: %s', 'hezarfen-for-woocommerce' ),
-				$request->get_return_number()
-			),
-			'success'
-		);
+		// The detail page the customer lands on already shows the next
+		// step, so an approved request only needs to say it was approved.
+		$notice = Return_Status::APPROVED === $request->get_status()
+			/* translators: %s: return reference. */
+			? __( 'İade talebiniz onaylandı. Talep numaranız: %s', 'hezarfen-for-woocommerce' )
+			/* translators: %s: return reference. */
+			: __( 'İade talebiniz alındı. Talep numaranız: %s', 'hezarfen-for-woocommerce' );
+
+		wc_add_notice( sprintf( $notice, $request->get_return_number() ), 'success' );
 
 		$this->redirect( $this->access->get_request_url( $request ) );
 	}

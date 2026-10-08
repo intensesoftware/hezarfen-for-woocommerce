@@ -7,6 +7,8 @@
 
 namespace Hezarfen\Inc\Returns\Emails;
 
+use Hezarfen\Inc\Returns\Core\Return_Status;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -50,6 +52,10 @@ class Email_Return_Received_Admin extends Abstract_Return_Email {
 	 * @return string
 	 */
 	public function get_intro() {
-		return __( '{order_number} numaralı sipariş için yeni bir iade talebi oluşturuldu. Talebi inceleyip onaylayabilir veya reddedebilirsiniz.', 'hezarfen-for-woocommerce' );
+		if ( $this->return_request && Return_Status::PENDING !== $this->return_request->get_status() ) {
+			return __( '{order_number} numaralı sipariş için yeni bir iade talebi oluşturuldu ve otomatik olarak onaylandı; müşteri gönderim adımlarına yönlendirildi. Ürünler size ulaştığında talebi tamamlayabilirsiniz. İade koşullarınıza uymayan bir talebi reddetmeniz de mümkün.', 'hezarfen-for-woocommerce' );
+		}
+
+		return __( '{order_number} numaralı sipariş için yeni bir iade talebi oluşturuldu ve onayınızı bekliyor. Talebi inceleyip onaylayabilir veya reddedebilirsiniz.', 'hezarfen-for-woocommerce' );
 	}
 }

@@ -76,7 +76,7 @@ class Returns_Settings {
 
 		printf(
 			'<div class="notice notice-warning"><p>%1$s <a href="%2$s">%3$s</a></p></div>',
-			esc_html__( 'İade modülü açık ve seçili yöntem ürünlerin size gönderilmesini bekliyor, ancak bir iade adresi girilmemiş. Talebi onayladığınız müşteri kargoyu nereye göndereceğini göremeyecek.', 'hezarfen-for-woocommerce' ),
+			esc_html__( 'İade modülü açık ve seçili yöntem ürünlerin size gönderilmesini bekliyor, ancak bir iade adresi girilmemiş. Talebi onaylanan müşteriler ürünleri nereye göndereceklerini göremeyecek.', 'hezarfen-for-woocommerce' ),
 			esc_url( admin_url( 'admin.php?page=wc-settings&tab=hezarfen&section=' . self::SECTION ) ),
 			esc_html__( 'İade adresini girin', 'hezarfen-for-woocommerce' )
 		);
@@ -208,9 +208,10 @@ class Returns_Settings {
 		// Anchored on the setting each placeholder sits beside, not on an
 		// index, so reordering the section above cannot silently move one
 		// somewhere it makes no sense. The eligibility trio goes together:
-		// which orders, which products, and why.
+		// which orders, which products, and why -- then what happens to a
+		// request that passed them, right before how the goods come back.
 		$after = array(
-			Return_Settings::OPTION_WINDOW_REFERENCE => array( 'statuses', 'products', 'reasons' ),
+			Return_Settings::OPTION_WINDOW_REFERENCE => array( 'statuses', 'products', 'reasons', 'approval' ),
 			Return_Settings::OPTION_INSTRUCTIONS     => array( 'photos' ),
 		);
 
@@ -231,7 +232,8 @@ class Returns_Settings {
 				 * placement.
 				 *
 				 * The free plugin renders a single disabled preview row per
-				 * placement (`statuses`, `products`, `reasons`, `photos`). Pro
+				 * placement (`statuses`, `products`, `reasons`, `approval`,
+				 * `photos`). Pro
 				 * replaces a placement it implements by returning its own real
 				 * setting fields here — or an empty array to drop the row
 				 * entirely — so the swap needs no change to the free plugin.

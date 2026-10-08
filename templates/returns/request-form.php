@@ -46,7 +46,11 @@ $hez_shipping_copy = hezarfen_returns_shipping_customer_copy( $shipping_method )
 			?>
 		</h2>
 		<p class="hez-returns__subtitle">
-			<?php esc_html_e( 'İade etmek istediğiniz ürünleri ve adetlerini seçin. Talebiniz onaylandığında size e-posta ile bilgi vereceğiz.', 'hezarfen-for-woocommerce' ); ?>
+			<?php if ( Return_Settings::approves_automatically() ) : ?>
+				<?php esc_html_e( 'İade etmek istediğiniz ürünleri ve adetlerini seçin. Talebiniz gönderdiğiniz anda onaylanır ve gönderim adımları hemen ardından görünür.', 'hezarfen-for-woocommerce' ); ?>
+			<?php else : ?>
+				<?php esc_html_e( 'İade etmek istediğiniz ürünleri ve adetlerini seçin. Talebinizi inceledikten sonra sonucu size e-posta ile bildireceğiz.', 'hezarfen-for-woocommerce' ); ?>
+			<?php endif; ?>
 		</p>
 		<?php if ( $deadline ) : ?>
 			<p class="hez-returns__deadline">

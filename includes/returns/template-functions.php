@@ -215,17 +215,17 @@ if ( ! function_exists( 'hezarfen_returns_shipping_customer_copy' ) ) {
 		} elseif ( $method->requires_customer_booking() ) {
 			$copy = array(
 				'label'       => __( 'Kurye adresinizden alır', 'hezarfen-for-woocommerce' ),
-				'description' => __( 'Talebiniz onaylandığında hesabınızdan kargo alım gününü seçersiniz; kurye ürünleri adresinizden teslim alır.', 'hezarfen-for-woocommerce' ),
+				'description' => __( 'Kargo alım gününü hesabınızdan seçersiniz; kurye ürünleri adresinizden teslim alır.', 'hezarfen-for-woocommerce' ),
 			);
 		} elseif ( $method->requires_customer_tracking() ) {
 			$copy = array(
 				'label'       => __( 'Kargoyu siz gönderirsiniz', 'hezarfen-for-woocommerce' ),
-				'description' => __( 'Talebiniz onaylandığında ürünleri dilediğiniz kargo firmasıyla iade adresine gönderir, takip numarasını hesabınızdan girersiniz.', 'hezarfen-for-woocommerce' ),
+				'description' => __( 'Ürünleri dilediğiniz kargo firmasıyla iade adresine gönderir, takip numarasını hesabınızdan girersiniz.', 'hezarfen-for-woocommerce' ),
 			);
 		} else {
 			$copy = array(
 				'label'       => __( 'İade gönderimi', 'hezarfen-for-woocommerce' ),
-				'description' => __( 'Talebiniz onaylandığında gönderimle ilgili adımlar hesabınızda görünecek.', 'hezarfen-for-woocommerce' ),
+				'description' => __( 'Gönderimle ilgili adımlar hesabınızda görünecek.', 'hezarfen-for-woocommerce' ),
 			);
 		}
 

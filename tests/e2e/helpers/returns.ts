@@ -95,6 +95,31 @@ export function enableReturns(): void {
 	// Endpoints are added on `init`, which already ran for the eval above,
 	// so the rules have to be rebuilt in a fresh request.
 	wp( [ 'rewrite', 'flush' ] );
+
+	// Talepler varsayılan olarak oluşturulduğu anda onaylanıyor. Spec'lerin
+	// çoğu `pending` bir talepten yola çıkıyor (onay, red, ek bilgi), bu
+	// yüzden kurulum talepleri beklemede tutuyor; otomatik onayı sınayan
+	// spec `useAutoApproval()` ile kapıyı açar.
+	holdForReview();
+}
+
+const APPROVAL_SLUG = 'hezarfen-e2e-returns-hold-for-review';
+
+/**
+ * Yeni talepleri, Pro'daki "Yönetici onayı" seçimi gibi beklemede tutar.
+ */
+export function holdForReview(): void {
+	writeMuPlugin(
+		APPROVAL_SLUG,
+		"<?php\nadd_filter( 'hezarfen_returns_auto_approve', '__return_false' );\n"
+	);
+}
+
+/**
+ * Varsayılan davranışa döner: talep oluşturulduğu anda onaylanır.
+ */
+export function useAutoApproval(): void {
+	deleteMuPlugin( APPROVAL_SLUG );
 }
 
 export function disableReturns(): void {

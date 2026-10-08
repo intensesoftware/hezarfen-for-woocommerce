@@ -45,7 +45,8 @@ mağazaların olabildiğince azına ulaşması.
 - Global iade süresi ve süre başlangıcı ayarı (`includes/returns/core/class-global-return-policy-provider.php`)
 - Tek iade adresi (`includes/returns/core/class-return-settings.php`)
 - Gönderim yöntemi: müşteri kendi gönderir (manuel takip no) veya Kargokit iade barkodu — müşteri onaydan sonra kargo alım gününü kendi seçer (`includes/returns/shipping/`)
-- Admin liste + detay, manuel onay/red, basit ek bilgi isteme, dahili/müşteriye açık notlar (`includes/returns/admin/`)
+- Talebin oluşturulduğu anda otomatik onaylanması (varsayılan; `Return_Settings::approves_automatically()`)
+- Admin liste + detay, onay/red, basit ek bilgi isteme, dahili/müşteriye açık notlar (`includes/returns/admin/`)
 - Temel timeline ve standart WooCommerce e-postaları (`includes/returns/emails/`)
 - Tamamlanan talebi WooCommerce'in **manuel** iade kaydına yazma ve isteğe bağlı stok geri ekleme (`includes/returns/core/class-return-refunds.php`)
 - Talebin kilometre taşlarını sipariş notu olarak siparişe düşme (`includes/returns/core/class-return-order-sync.php`)
@@ -64,7 +65,8 @@ ekleyebilir:
 - Çoklu iade adresi / depo
 - Mağazanın kendi kargo anlaşmasıyla otomatik barkod
 - Talep içi mesajlaşma, değişim (exchange), mağaza kredisi
-- Kural motoru, otomatik onay, toplu işlem, SLA hatırlatmaları, analitik, CSV/API/webhook
+- Yönetici onayı modu (talebi onaylanana kadar bekletme — Pro; kapı: `hezarfen_returns_manual_approval_enabled`)
+- Kural motoru, toplu işlem, SLA hatırlatmaları, analitik, CSV/API/webhook
 - **Paranın gerçekten iade edilmesi.** Modül ödeme altyapısına iade isteği
   göndermez; sadece WooCommerce'e "bu kadarı iade edildi" der. Transferi
   mağaza kendi kanalından yapar. Gateway üzerinden otomatik iade, bu
@@ -113,8 +115,12 @@ adedi geri bırakır; diğer tüm durumlar adedi tutar.
 - **Given** modül açık ve siparişin durumu izinli durumlar arasında
 - **And** iade süresi dolmamış
 - **When** müşteri Hesabım → Siparişler → sipariş detayı → "İade talebi oluştur" yolunu izleyip bir satırdan 2 adetten 1'ini seçer, sebep belirtir ve formu gönderir
-- **Then** `pending` durumunda bir talep oluşur, `IADE-{sipariş no}-{sıra}` referansı atanır
-- **And** müşteriye onay, mağazaya bilgi e-postası gider
+- **Then** talep oluşur, `IADE-{sipariş no}-{sıra}` referansı atanır ve aynı anda
+  sistem aktörüyle `approved` durumuna geçer ("Talep otomatik olarak onaylandı.")
+- **And** müşteriye yalnızca "İade talebi onaylandı" e-postası gider ("alındı"
+  e-postası gitmez; ikisi aynı saniyede çelişirdi), mağazaya "otomatik
+  onaylandı" diyen bilgi e-postası gider
+- **And** müşteri, gönderim adımlarını gösteren talep detayına yönlenir
 - **And** aynı satır için kalan 1 adet hâlâ iade edilebilir görünür
 
 ### Senaryo: "Diğer" sebebi açıklama olmadan gönderilir
@@ -138,8 +144,22 @@ adedi geri bırakır; diğer tüm durumlar adedi tutar.
 - **When** iade formu açılmak istenir
 - **Then** "iade süresi ... doldu" hatası gösterilir ve form render edilmez
 
+### Senaryo: Yönetici onayı modunda talep açılır (Pro)
+- **Given** Hezarfen Pro etkin ve "İade onayı" ayarı "Yönetici onayı"
+- **When** müşteri talep oluşturur
+- **Then** talep `pending` kalır; müşteriye "talebiniz alındı", mağazaya "onayınızı
+  bekliyor" e-postası gider
+- **And** Pro devre dışı kalırsa kayıtlı seçim yok sayılır, yeni talepler yine
+  otomatik onaylanır; bekleyen talepler beklemede kalır
+
+### Senaryo: Otomatik onay kaydedilemez
+- **Given** otomatik onay açık
+- **When** onay geçişi hata döndürür
+- **Then** talep `pending` kalır, timeline'a müşteriye kapalı bir not düşer ve
+  e-postalar yönetici onayı modundaki gibi gider
+
 ### Senaryo: Mağaza talebi onaylar
-- **Given** `pending` durumda bir talep
+- **Given** `pending` durumda bir talep (yönetici onayı modu ya da otomatik onayın kaydedilemediği durum)
 - **When** yönetici Hezarfen → İadeler → talep detayında "Onayla" der
 - **Then** durum `approved` olur, timeline'a yönetici aktörlü bir kayıt düşer
 - **And** müşteriye onay e-postası gider
@@ -381,7 +401,8 @@ bir uyarı basar.
 
 Tam liste için `specs/shared/hooks.md`. Öne çıkanlar:
 
-- action: `hezarfen_return_created` — talep kaydedildikten sonra `(Return_Request $request, WC_Order $order)`
+- action: `hezarfen_return_created` — talep kaydedildikten sonra, otomatik onaydan önce `(Return_Request $request, WC_Order $order)`
+- action: `hezarfen_return_submitted` — talep kurulumu bittikten sonra (otomatik onay dahil); durum müşterinin göreceği durumdur `(Return_Request $request, WC_Order $order)`
 - action: `hezarfen_return_status_changed` — durum değişince `(Return_Request $request, string $old, string $new)`
 - action: `hezarfen_return_status_{status}` — belirli bir duruma geçince `(Return_Request $request, string $old)`
 - action: `hezarfen_return_shipment_booked` — müşteri iade kargo randevusunu alınca `(Return_Request $request, string $choice)`
@@ -390,6 +411,8 @@ Tam liste için `specs/shared/hooks.md`. Öne çıkanlar:
 - action: `hezarfen_returns_loaded` — modül ayağa kalkınca; sağlayıcılar burada kaydedilir `(Returns_Module $module)`
 - filter: `hezarfen_returns_reason_providers` / `..._policy_providers` / `..._shipping_methods`
 - filter: `hezarfen_returns_eligible_order_statuses` — iade edilebilir sipariş durumlarını çalışma anında belirle (Pro seam'i; boş dönerse yok sayılır)
+- filter: `hezarfen_returns_auto_approve` — talep oluşturulduğu anda onaylansın mı `(bool $automatic, Return_Request|null $request)`
+- filter: `hezarfen_returns_manual_approval_enabled` — yönetici onayı seçeneğinin kapısı; ücretsizde kapalı, Pro açar `(bool $enabled)`
 - filter: `hezarfen_returns_setting_fields` — bir Pro placement'ının kilitli önizleme satırını gerçek ayar alanıyla değiştir ya da kaldır `(array $fields, string $placement)`
 - filter: `hezarfen_returns_return_address` — talebin gönderileceği adres
 
