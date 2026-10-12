@@ -93,6 +93,13 @@ class Returns_Module {
 	private $services = array();
 
 	/**
+	 * Policy that may hold new requests for review; null approves them all.
+	 *
+	 * @var Core\Return_Approval_Policy_Interface|null
+	 */
+	private $approval_policy = null;
+
+	/**
 	 * Returns the shared instance.
 	 *
 	 * @return Returns_Module
@@ -202,6 +209,7 @@ class Returns_Module {
 			'core/class-return-item.php',
 			'core/class-return-event.php',
 			'core/class-return-request.php',
+			'core/interface-return-approval-policy.php',
 			'core/interface-return-repository.php',
 			'core/class-return-repository.php',
 			'core/class-return-event-repository.php',
@@ -348,5 +356,39 @@ class Returns_Module {
 		}
 
 		return $this->services['service'];
+	}
+
+	/**
+	 * Hands the module the policy that decides whether new requests are
+	 * approved on creation.
+	 *
+	 * Free approves every request; holding them for review is Hezarfen
+	 * Pro's.
+	 *
+	 * @internal Pro seam, not a public extension point.
+	 *
+	 * @param Core\Return_Approval_Policy_Interface $policy Policy.
+	 *
+	 * @return void
+	 */
+	public function set_approval_policy( Core\Return_Approval_Policy_Interface $policy ) {
+		$this->approval_policy = $policy;
+	}
+
+	/**
+	 * Whether new requests are approved the moment they are created.
+	 *
+	 * Yes unless a policy says otherwise: a request only gets this far
+	 * after the eligibility checks passed, and making every customer wait
+	 * for a person to click "approve" mostly delays the parcel.
+	 *
+	 * @param Core\Return_Request|null $request The request about to be
+	 *                                          approved, or null when asking
+	 *                                          about the store in general.
+	 *
+	 * @return bool
+	 */
+	public function approves_automatically( $request = null ) {
+		return null === $this->approval_policy || $this->approval_policy->approves_automatically( $request );
 	}
 }

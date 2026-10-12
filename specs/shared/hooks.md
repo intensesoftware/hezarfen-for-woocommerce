@@ -81,8 +81,6 @@ Modül, ek yeteneklerin koda dokunmadan takılabilmesi için sağlayıcı tabanl
 | `hezarfen_returns_policy_providers` | `[Global_Return_Policy_Provider]` | `(Return_Policy_Provider_Interface[] $providers)` | Ürün/kategori bazlı iade politikası ekle |
 | `hezarfen_returns_eligible_order_statuses` | option değeri (`completed`) | `(string[] $statuses)` | İade edilebilir sipariş durumlarını çalışma anında belirle (boş dönerse yok sayılır) |
 | `hezarfen_returns_setting_fields` | kilitli önizleme satırı | `(array $fields, string $placement)` | Bir Pro placement'ının (`statuses`/`products`/`reasons`/`approval`/`photos`) kilitli satırını gerçek ayar alanıyla değiştir ya da (boş dizi) kaldır |
-| `hezarfen_returns_auto_approve` | `! manual` | `(bool $automatic, Return_Request\|null $request)` | Talep oluşturulduğu anda onaylansın mı; form metni için `null` ile de sorulur |
-| `hezarfen_returns_manual_approval_enabled` | `false` | `(bool $enabled)` | Yönetici onayı seçeneğinin kapısı; Pro açar. Kapalıyken kayıtlı `hezarfen_returns_approval_mode` yok sayılır |
 | `hezarfen_returns_resolved_policy` | çözümlenen politika | `(Return_Policy $policy, WC_Order $order, WC_Order_Item $item)` | Satır politikasını son anda değiştir |
 | `hezarfen_returns_shipping_methods` | `[Customer_Ships, Kargokit]` | `(Return_Shipping_Method_Interface[] $methods)` | Kendi kargo anlaşmanı yöntem olarak ekle |
 | `hezarfen_returns_repository` | `Return_Repository` | `(Return_Repository_Interface $repository)` | Alternatif depolama katmanı |

@@ -161,7 +161,7 @@ class Return_Service {
 		 */
 		do_action( 'hezarfen_return_created', $request, $order );
 
-		if ( Return_Settings::approves_automatically( $request ) ) {
+		if ( \Hezarfen\Inc\Returns\Returns_Module::instance()->approves_automatically( $request ) ) {
 			$this->approve_automatically( $request );
 		}
 

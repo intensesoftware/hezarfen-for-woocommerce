@@ -145,12 +145,12 @@ test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
 		// önizleme, Pro'da gerçek seçim.
 		if ( proReturnsActive() ) {
 			await expect(
-				page.locator( 'input[name="hezarfen_returns_approval_mode"]' )
+				page.locator( 'input[name="hezarfen_pro_returns_approval_mode"]' )
 			).toHaveCount( 2 );
 			await expect( page.locator( LOCKED_APPROVAL_ROW ) ).toHaveCount( 0 );
 		} else {
 			await expect(
-				page.locator( 'input[name="hezarfen_returns_approval_mode"]' )
+				page.locator( 'input[name="hezarfen_pro_returns_approval_mode"]' )
 			).toHaveCount( 0 );
 			await expect( page.locator( LOCKED_APPROVAL_ROW ) ).toBeVisible();
 			await expect(

@@ -25,10 +25,6 @@ class Return_Settings {
 	const OPTION_INSTRUCTIONS      = 'hezarfen_returns_instructions';
 	const OPTION_AUTO_REFUND       = 'hezarfen_returns_auto_refund';
 	const OPTION_RESTOCK           = 'hezarfen_returns_restock';
-	const OPTION_APPROVAL_MODE     = 'hezarfen_returns_approval_mode';
-
-	const APPROVAL_AUTO   = 'auto';
-	const APPROVAL_MANUAL = 'manual';
 
 	const OPTION_ADDRESS_LABEL        = 'hezarfen_returns_address_label';
 	const OPTION_ADDRESS_CONTACT      = 'hezarfen_returns_address_contact';
@@ -125,38 +121,6 @@ class Return_Settings {
 		// downstream as "no status is eligible", which would silently make
 		// every order non-returnable. Fall back to the stored statuses.
 		return $filtered ? $filtered : $statuses;
-	}
-
-	/**
-	 * Whether new requests are approved the moment they are created.
-	 *
-	 * On by default: a request only gets this far after the eligibility
-	 * checks passed, and making every customer wait for a person to click
-	 * "approve" mostly delays the parcel. Holding requests for review is a
-	 * Pro choice; without Pro the stored mode is ignored, so a store that
-	 * drops Pro does not leave new requests waiting on a setting it can no
-	 * longer see.
-	 *
-	 * @param Return_Request|null $request The request about to be approved,
-	 *                                     or null when asking about the store
-	 *                                     in general (e.g. to word the form).
-	 *
-	 * @return bool
-	 */
-	public static function approves_automatically( $request = null ) {
-		$manual = Return_Features::manual_approval()
-			&& self::APPROVAL_MANUAL === get_option( self::OPTION_APPROVAL_MODE, self::APPROVAL_AUTO );
-
-		/**
-		 * Filters whether a return request is approved automatically.
-		 *
-		 * Runs once per new request with that request, and with null when
-		 * the form asks how the store works in general.
-		 *
-		 * @param bool                $automatic Whether the request is approved on creation.
-		 * @param Return_Request|null $request   The new request, or null.
-		 */
-		return (bool) apply_filters( 'hezarfen_returns_auto_approve', ! $manual, $request );
 	}
 
 	/**

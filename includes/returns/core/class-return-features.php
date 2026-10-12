@@ -21,9 +21,28 @@ defined( 'ABSPATH' ) || exit();
  * the state machine: asking a customer for more information writes an event,
  * resolves an actor and moves the request between statuses, all through
  * internals no add-on should be handed. So the gate sits on the ENTRY POINTS,
- * and what is behind them is unreachable without Pro.
+ * and what is behind them is unreachable without Pro. Pro opens it by calling
+ * the module directly.
  */
 class Return_Features {
+
+	/**
+	 * Whether Pro switched information requests on.
+	 *
+	 * @var bool
+	 */
+	private static $info_requests = false;
+
+	/**
+	 * Switches information requests on.
+	 *
+	 * @internal Called by Hezarfen Pro.
+	 *
+	 * @return void
+	 */
+	public static function enable_info_requests() {
+		self::$info_requests = true;
+	}
 
 	/**
 	 * Whether the merchant may ask a customer for more information.
@@ -37,32 +56,6 @@ class Return_Features {
 	 * @return bool
 	 */
 	public static function info_requests() {
-		/**
-		 * Filters whether information requests are available.
-		 *
-		 * @param bool $enabled Off in the free plugin; Hezarfen Pro turns it on.
-		 */
-		return (bool) apply_filters( 'hezarfen_returns_info_requests_enabled', false );
-	}
-
-	/**
-	 * Whether the merchant may hold requests for manual approval.
-	 *
-	 * Requests are approved the moment they are created unless this is on
-	 * AND the merchant chose manual approval. Free carries the whole
-	 * approval flow -- the admin screen approves and rejects either way --
-	 * so the only thing gated is the choice to stop approving
-	 * automatically. A store that loses Pro falls back to automatic
-	 * approval; requests already waiting stay pending until someone acts.
-	 *
-	 * @return bool
-	 */
-	public static function manual_approval() {
-		/**
-		 * Filters whether manual approval of return requests is available.
-		 *
-		 * @param bool $enabled Off in the free plugin; Hezarfen Pro turns it on.
-		 */
-		return (bool) apply_filters( 'hezarfen_returns_manual_approval_enabled', false );
+		return self::$info_requests;
 	}
 }

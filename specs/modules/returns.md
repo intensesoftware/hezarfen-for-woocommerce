@@ -45,7 +45,7 @@ mağazaların olabildiğince azına ulaşması.
 - Global iade süresi ve süre başlangıcı ayarı (`includes/returns/core/class-global-return-policy-provider.php`)
 - Tek iade adresi (`includes/returns/core/class-return-settings.php`)
 - Gönderim yöntemi: müşteri kendi gönderir (manuel takip no) veya Kargokit iade barkodu — müşteri onaydan sonra kargo alım gününü kendi seçer (`includes/returns/shipping/`)
-- Talebin oluşturulduğu anda otomatik onaylanması (varsayılan; `Return_Settings::approves_automatically()`)
+- Talebin oluşturulduğu anda otomatik onaylanması (varsayılan; `Returns_Module::approves_automatically()`)
 - Admin liste + detay, onay/red, basit ek bilgi isteme, dahili/müşteriye açık notlar (`includes/returns/admin/`)
 - Temel timeline ve standart WooCommerce e-postaları (`includes/returns/emails/`)
 - Tamamlanan talebi WooCommerce'in **manuel** iade kaydına yazma ve isteğe bağlı stok geri ekleme (`includes/returns/core/class-return-refunds.php`)
@@ -65,7 +65,7 @@ ekleyebilir:
 - Çoklu iade adresi / depo
 - Mağazanın kendi kargo anlaşmasıyla otomatik barkod
 - Talep içi mesajlaşma, değişim (exchange), mağaza kredisi
-- Yönetici onayı modu (talebi onaylanana kadar bekletme — Pro; kapı: `hezarfen_returns_manual_approval_enabled`)
+- Yönetici onayı modu (talebi onaylanana kadar bekletme). Ayarı ve mantığı tamamen Pro'da.
 - Kural motoru, toplu işlem, SLA hatırlatmaları, analitik, CSV/API/webhook
 - **Paranın gerçekten iade edilmesi.** Modül ödeme altyapısına iade isteği
   göndermez; sadece WooCommerce'e "bu kadarı iade edildi" der. Transferi
@@ -411,8 +411,6 @@ Tam liste için `specs/shared/hooks.md`. Öne çıkanlar:
 - action: `hezarfen_returns_loaded` — modül ayağa kalkınca; sağlayıcılar burada kaydedilir `(Returns_Module $module)`
 - filter: `hezarfen_returns_reason_providers` / `..._policy_providers` / `..._shipping_methods`
 - filter: `hezarfen_returns_eligible_order_statuses` — iade edilebilir sipariş durumlarını çalışma anında belirle (Pro seam'i; boş dönerse yok sayılır)
-- filter: `hezarfen_returns_auto_approve` — talep oluşturulduğu anda onaylansın mı `(bool $automatic, Return_Request|null $request)`
-- filter: `hezarfen_returns_manual_approval_enabled` — yönetici onayı seçeneğinin kapısı; ücretsizde kapalı, Pro açar `(bool $enabled)`
 - filter: `hezarfen_returns_setting_fields` — bir Pro placement'ının kilitli önizleme satırını gerçek ayar alanıyla değiştir ya da kaldır `(array $fields, string $placement)`
 - filter: `hezarfen_returns_return_address` — talebin gönderileceği adres
 

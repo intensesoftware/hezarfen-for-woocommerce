@@ -95,32 +95,23 @@ export function enableReturns(): void {
 	// Endpoints are added on `init`, which already ran for the eval above,
 	// so the rules have to be rebuilt in a fresh request.
 	wp( [ 'rewrite', 'flush' ] );
-
-	// Talepler varsayılan olarak oluşturulduğu anda onaylanıyor. Spec'lerin
-	// çoğu `pending` bir talepten yola çıkıyor (onay, red, ek bilgi), bu
-	// yüzden kurulum talepleri beklemede tutuyor; otomatik onayı sınayan
-	// spec `useAutoApproval()` ile kapıyı açar.
-	holdForReview();
 }
 
-const APPROVAL_SLUG = 'hezarfen-e2e-returns-hold-for-review';
-
 /**
- * Yeni talepleri, Pro'daki "Yönetici onayı" seçimi gibi beklemede tutar.
+ * PHP that makes the module hold new requests for review, the way Pro does
+ * when the merchant picks "Yönetici onayı".
+ *
+ * The policy is set on the module inside the same `wp eval` that creates
+ * the request; runtime-written mu-plugins do not reliably reach the next
+ * request on wp-env.
  */
-export function holdForReview(): void {
-	writeMuPlugin(
-		APPROVAL_SLUG,
-		"<?php\nadd_filter( 'hezarfen_returns_auto_approve', '__return_false' );\n"
+export const HOLD_FOR_REVIEW_PHP = `
+	\\Hezarfen\\Inc\\Returns\\Returns_Module::instance()->set_approval_policy(
+		new class implements \\Hezarfen\\Inc\\Returns\\Core\\Return_Approval_Policy_Interface {
+			public function approves_automatically( $request = null ) { return false; }
+		}
 	);
-}
-
-/**
- * Varsayılan davranışa döner: talep oluşturulduğu anda onaylanır.
- */
-export function useAutoApproval(): void {
-	deleteMuPlugin( APPROVAL_SLUG );
-}
+`;
 
 export function disableReturns(): void {
 	setOption( 'hezarfen_returns_enabled', 'no' );
@@ -379,6 +370,9 @@ export interface SeededReturn {
 /**
  * Create a request through Return_Service, optionally advancing it to a
  * given status. Returns the identifiers a spec needs to build URLs.
+ *
+ * The request is held for review on creation, so it starts `pending` and
+ * `status` is one hop from there, just as a merchant would move it.
  */
 export function seedReturn( opts: SeedReturnOptions ): SeededReturn {
 	const quantity = opts.quantity ?? 1;
@@ -393,6 +387,7 @@ export function seedReturn( opts: SeedReturnOptions ): SeededReturn {
 		wp( [
 			'eval',
 			`
+			${ HOLD_FOR_REVIEW_PHP }
 			$module = \\Hezarfen\\Inc\\Returns\\Returns_Module::instance();
 			$order  = wc_get_order( ${ opts.orderId } );
 			$lines  = $module->eligibility()->get_returnable_lines( $order );
@@ -461,11 +456,9 @@ export function advanceReturn( returnId: string, statuses: string[] ): void {
 /**
  * Ek bilgi isteme yeteneğini açıp kapatır.
  *
- * Mekanizma ücretsiz tarafta duruyor ama kapısı Pro'da; Pro'nun yaptığı tek
- * şey bu filtreyi doğrulamak. Spec'ler mekanizmayı Pro kurulu olmadan da
- * sınayabilsin diye aynı filtre bir fixture mu-plugin'inden veriliyor --
- * Pro'yu kurmak, sınanan şeyle ilgisi olmayan bir sürü başka davranışı da
- * getirirdi.
+ * Mekanizma ücretsiz tarafta duruyor, Pro yalnızca kapıyı açıyor. Spec'ler
+ * mekanizmayı Pro kurulu olmadan da sınayabilsin diye kapı bir fixture
+ * mu-plugin'inden açılıyor.
  */
 /**
  * Hezarfen Pro etkin mi?
@@ -486,7 +479,7 @@ const INFO_GATE_SLUG = 'hezarfen-e2e-returns-info-requests';
 export function enableInfoRequests(): void {
 	writeMuPlugin(
 		INFO_GATE_SLUG,
-		"<?php\nadd_filter( 'hezarfen_returns_info_requests_enabled', '__return_true' );\n"
+		"<?php\nadd_action( 'init', static function () {\n\tif ( class_exists( 'Hezarfen\\Inc\\Returns\\Core\\Return_Features' ) ) {\n\t\t\\Hezarfen\\Inc\\Returns\\Core\\Return_Features::enable_info_requests();\n\t}\n}, 1 );\n"
 	);
 }
 

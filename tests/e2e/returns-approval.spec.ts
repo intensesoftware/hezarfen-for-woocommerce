@@ -4,15 +4,17 @@ import {
 	clearReturns,
 	enableReturns,
 	getReturnStatus,
-	holdForReview,
+	HOLD_FOR_REVIEW_PHP,
 	seedReturnableOrder,
-	useAutoApproval,
 } from './helpers/returns';
 import { restoreOptions, snapshotOptions } from './helpers/wp-options';
 import { wp } from './helpers/wp-cli';
 
 /**
  * Talep onayı: varsayılan otomatik onay ve yönetici onayı.
+ *
+ * `createCapturingMail`'e verilen PHP, talep oluşturulmadan hemen önce aynı
+ * süreçte çalışır.
  *
  * Talep servis üzerinden oluşturulup giden e-postalar `pre_wp_mail`'de
  * yakalanıyor; böylece hem durum hem de müşteriye/mağazaya giden bildirim
@@ -34,13 +36,14 @@ interface CreatedReturn {
 	events: string[];
 }
 
-function createCapturingMail(): CreatedReturn {
+function createCapturingMail( preamble = '' ): CreatedReturn {
 	const orderId = seedReturnableOrder();
 	seededOrders.push( orderId );
 
 	const out = wp( [
 		'eval',
 		`
+			${ preamble }
 			$subjects = array();
 			add_filter( 'pre_wp_mail', function ( $short_circuit, $atts ) use ( &$subjects ) {
 				$subjects[] = (string) $atts['subject'];
@@ -96,7 +99,6 @@ test.describe( 'Hezarfen iade — talep onayı', () => {
 	} );
 
 	test.afterAll( () => {
-		holdForReview();
 		for ( const orderId of seededOrders ) {
 			deleteOrder( orderId );
 		}
@@ -105,8 +107,6 @@ test.describe( 'Hezarfen iade — talep onayı', () => {
 	} );
 
 	test( 'varsayılan: talep oluşturulduğu anda sistem tarafından onaylanıyor', () => {
-		useAutoApproval();
-
 		const created = createCapturingMail();
 
 		expect( created.status ).toBe( 'approved' );
@@ -121,9 +121,7 @@ test.describe( 'Hezarfen iade — talep onayı', () => {
 	} );
 
 	test( 'yönetici onayında talep beklemede kalıyor', () => {
-		holdForReview();
-
-		const created = createCapturingMail();
+		const created = createCapturingMail( HOLD_FOR_REVIEW_PHP );
 
 		expect( created.status ).toBe( 'pending' );
 		expect( created.events ).not.toContain( 'status-change:system:approved' );
@@ -131,23 +129,11 @@ test.describe( 'Hezarfen iade — talep onayı', () => {
 		expect( created.subjects.some( ( s ) => s.includes( 'onaylandı' ) ) ).toBe( false );
 	} );
 
-	test( 'Pro kapısı kapalıyken kayıtlı yönetici onayı yok sayılıyor', () => {
-		useAutoApproval();
+	test( 'yönetici onayı filtreyle açılmıyor', () => {
+		const created = createCapturingMail(
+			"add_filter( 'hezarfen_returns_auto_approve', '__return_false' );"
+		);
 
-		const mode = wp( [
-			'eval',
-			`
-				update_option( 'hezarfen_returns_approval_mode', 'manual' );
-				add_filter( 'hezarfen_returns_manual_approval_enabled', '__return_false', 99 );
-				$auto = \\Hezarfen\\Inc\\Returns\\Core\\Return_Settings::approves_automatically();
-				delete_option( 'hezarfen_returns_approval_mode' );
-				echo $auto ? 'auto' : 'manual';
-			`,
-		] )
-			.trim()
-			.split( '\n' )
-			.pop();
-
-		expect( mode ).toBe( 'auto' );
+		expect( created.status ).toBe( 'approved' );
 	} );
 } );
