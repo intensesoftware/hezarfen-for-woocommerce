@@ -21,7 +21,7 @@ class Email_Return_Received_Customer extends Abstract_Return_Email {
 		$this->id             = 'hezarfen_return_received_customer';
 		$this->customer_email = true;
 		$this->title          = __( 'İade talebi alındı (müşteri)', 'hezarfen-for-woocommerce' );
-		$this->description    = __( 'Müşteri iade talebi oluşturduğunda kendisine gönderilen onay e-postası.', 'hezarfen-for-woocommerce' );
+		$this->description    = __( 'Onayınızı bekleyen yeni bir iade talebi oluşturulduğunda müşteriye gönderilir. Otomatik onaylanan taleplerde bunun yerine "İade talebi onaylandı" e-postası gönderilir.', 'hezarfen-for-woocommerce' );
 
 		parent::__construct();
 	}

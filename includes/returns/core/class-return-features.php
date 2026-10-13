@@ -21,9 +21,28 @@ defined( 'ABSPATH' ) || exit();
  * the state machine: asking a customer for more information writes an event,
  * resolves an actor and moves the request between statuses, all through
  * internals no add-on should be handed. So the gate sits on the ENTRY POINTS,
- * and what is behind them is unreachable without Pro.
+ * and what is behind them is unreachable without Pro. Pro opens it by calling
+ * the module directly.
  */
 class Return_Features {
+
+	/**
+	 * Whether Pro switched information requests on.
+	 *
+	 * @var bool
+	 */
+	private static $info_requests = false;
+
+	/**
+	 * Switches information requests on.
+	 *
+	 * @internal Called by Hezarfen Pro.
+	 *
+	 * @return void
+	 */
+	public static function enable_info_requests() {
+		self::$info_requests = true;
+	}
 
 	/**
 	 * Whether the merchant may ask a customer for more information.
@@ -37,11 +56,6 @@ class Return_Features {
 	 * @return bool
 	 */
 	public static function info_requests() {
-		/**
-		 * Filters whether information requests are available.
-		 *
-		 * @param bool $enabled Off in the free plugin; Hezarfen Pro turns it on.
-		 */
-		return (bool) apply_filters( 'hezarfen_returns_info_requests_enabled', false );
+		return self::$info_requests;
 	}
 }

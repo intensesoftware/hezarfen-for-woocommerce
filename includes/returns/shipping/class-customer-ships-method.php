@@ -63,7 +63,7 @@ class Customer_Ships_Method implements Return_Shipping_Method_Interface, Return_
 	 * @return string
 	 */
 	public function get_customer_description() {
-		return __( 'Talebiniz onaylandığında ürünleri dilediğiniz kargo firmasıyla iade adresine gönderir, takip numarasını hesabınızdan girersiniz.', 'hezarfen-for-woocommerce' );
+		return __( 'Ürünleri dilediğiniz kargo firmasıyla iade adresine gönderir, takip numarasını hesabınızdan girersiniz.', 'hezarfen-for-woocommerce' );
 	}
 
 	/**

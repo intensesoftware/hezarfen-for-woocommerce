@@ -161,7 +161,67 @@ class Return_Service {
 		 */
 		do_action( 'hezarfen_return_created', $request, $order );
 
+		if ( \Hezarfen\Inc\Returns\Returns_Module::instance()->approves_automatically( $request ) ) {
+			$this->approve_automatically( $request );
+		}
+
+		/**
+		 * Fires once a new request is fully set up, after any automatic
+		 * approval ran.
+		 *
+		 * Unlike `hezarfen_return_created`, the request's status here is the
+		 * one the customer will actually see: approved when the store
+		 * approves automatically, pending when it reviews requests first
+		 * (or when the automatic approval could not be saved).
+		 *
+		 * @param Return_Request $request The stored request.
+		 * @param \WC_Order      $order   Parent order.
+		 */
+		do_action( 'hezarfen_return_submitted', $request, $order );
+
 		return $request;
+	}
+
+	/**
+	 * Approves a request the moment it is created.
+	 *
+	 * Goes through change_status() like a merchant's click would, so the
+	 * shipping method still gets its handle_approved() call, the order gets
+	 * its note and the customer gets the "approved" e-mail. If the approval
+	 * cannot be saved the request simply stays pending: it is still a valid
+	 * request, and the merchant can approve it from the admin screen.
+	 *
+	 * @param Return_Request $request Freshly created request.
+	 *
+	 * @return void
+	 */
+	private function approve_automatically( $request ) {
+		$result = $this->change_status(
+			$request,
+			Return_Status::APPROVED,
+			array(
+				'message' => __( 'Talep otomatik olarak onaylandı.', 'hezarfen-for-woocommerce' ),
+				'actor'   => $this->system_actor(),
+			)
+		);
+
+		if ( ! is_wp_error( $result ) ) {
+			return;
+		}
+
+		$this->log(
+			$request,
+			Return_Event::TYPE_NOTE,
+			sprintf(
+				/* translators: %s: reason the approval could not be saved. */
+				__( 'Talep otomatik olarak onaylanamadı ve onayınızı bekliyor: %s', 'hezarfen-for-woocommerce' ),
+				$result->get_error_message()
+			),
+			array(
+				'actor'               => $this->system_actor(),
+				'is_customer_visible' => false,
+			)
+		);
 	}
 
 	/**

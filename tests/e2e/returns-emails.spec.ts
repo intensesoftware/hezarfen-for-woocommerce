@@ -3,6 +3,7 @@ import { deleteOrder } from './helpers/orders';
 import {
 	clearReturns,
 	enableReturns,
+	proReturnsActive,
 	RETURNS_CUSTOMER,
 	seedReturn,
 	seedReturnableOrder,
@@ -107,7 +108,7 @@ test.describe( 'Hezarfen iade — standart e-postalar', () => {
 		restoreOptions( optionSnapshot );
 	} );
 
-	test( 'altı bildirim WooCommerce e-posta ayarlarına kaydediliyor', () => {
+	test( 'bildirimler WooCommerce e-posta ayarlarına kaydediliyor', () => {
 		const ids = wp( [
 			'eval',
 			`
@@ -125,10 +126,11 @@ test.describe( 'Hezarfen iade — standart e-postalar', () => {
 			.split( '\n' )
 			.pop() as string;
 
+		// Ek bilgi isteme Pro'da; e-postası da yalnızca o zaman kaydoluyor.
 		expect( ids.split( ',' ) ).toEqual( [
 			'hezarfen_return_approved',
 			'hezarfen_return_completed',
-			'hezarfen_return_info_required',
+			...( proReturnsActive() ? [ 'hezarfen_return_info_required' ] : [] ),
 			'hezarfen_return_received_admin',
 			'hezarfen_return_received_customer',
 			'hezarfen_return_rejected',

@@ -163,12 +163,19 @@ test.describe( 'Hezarfen iade — yönetim ekranı', () => {
 		const seeded = seedReturn( { orderId } );
 
 		await page.goto( `${ ADMIN_URL }&return_id=${ seeded.id }` );
-		await page
-			.locator( '.hez-admin-actions button', { hasText: 'Reddet' } )
-			.click();
+
+		// Reddetmek geri alınamaz, form bu yüzden confirm() ile soruyor;
+		// Playwright diyaloğu varsayılan olarak kapattığı için kabul ediliyor.
+		page.once( 'dialog', ( dialog ) => dialog.accept() );
+		await Promise.all( [
+			page.waitForLoadState( 'load' ),
+			page
+				.locator( '.hez-admin-actions button', { hasText: 'Reddet' } )
+				.click(),
+		] );
+		await expect( page.locator( '.hez-admin-actions' ) ).toHaveCount( 0 );
 
 		expect( getReturnStatus( seeded.id ) ).toBe( 'rejected' );
-		await expect( page.locator( '.hez-admin-actions' ) ).toHaveCount( 0 );
 	} );
 
 	test( 'talep ekranından iade ayarlarına gidilebiliyor', async ( { page } ) => {

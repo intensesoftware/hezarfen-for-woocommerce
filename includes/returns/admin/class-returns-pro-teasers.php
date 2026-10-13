@@ -123,7 +123,7 @@ class Returns_Pro_Teasers {
 	 * The locked rows, ready to be merged into the section's fields.
 	 *
 	 * @param string $placement Which row to return: `statuses`, `products`,
-	 *                          `reasons` or `photos`.
+	 *                          `reasons`, `approval` or `photos`.
 	 *
 	 * @return array<int, array<string, mixed>> Empty for an unknown placement.
 	 */
@@ -146,6 +146,10 @@ class Returns_Pro_Teasers {
 			'reasons'  => array(
 				'title' => __( 'İade sebepleri', 'hezarfen-for-woocommerce' ),
 				'desc'  => __( 'Müşterinin talep oluştururken seçeceği sebepler.', 'hezarfen-for-woocommerce' ),
+			),
+			'approval' => array(
+				'title' => __( 'İade onayı', 'hezarfen-for-woocommerce' ),
+				'desc'  => __( 'İade koşullarınıza uyan talepler oluşturulduğu anda onaylanır. Yönetici onayında her talep, siz onaylayana veya reddedene kadar beklemede kalır.', 'hezarfen-for-woocommerce' ),
 			),
 			'photos'   => array(
 				'title' => __( 'Fotoğraflı iade talebi', 'hezarfen-for-woocommerce' ),
@@ -243,6 +247,10 @@ class Returns_Pro_Teasers {
 
 			case 'reasons':
 				$this->render_reason_preview();
+				break;
+
+			case 'approval':
+				$this->render_approval_preview();
 				break;
 
 			case 'photos':
@@ -376,6 +384,28 @@ class Returns_Pro_Teasers {
 					)
 				)
 			);
+		}
+	}
+
+	/**
+	 * Onay seçeneklerinin devre dışı kopyası, ücretsiz sürümün gerçekte
+	 * uyguladığı "Otomatik" seçili.
+	 *
+	 * @return void
+	 */
+	private function render_approval_preview() {
+		$options = array(
+			array( __( 'Otomatik onay', 'hezarfen-for-woocommerce' ), true ),
+			array( __( 'Yönetici onayı', 'hezarfen-for-woocommerce' ), false ),
+		);
+
+		foreach ( $options as $option ) {
+			?>
+			<label class="hez-locked__radio">
+				<input type="radio" disabled <?php checked( $option[1] ); ?>>
+				<?php echo esc_html( $option[0] ); ?>
+			</label>
+			<?php
 		}
 	}
 
@@ -518,6 +548,17 @@ class Returns_Pro_Teasers {
 			}
 
 			.hez-locked__pill.is-off { background: #fcf0f1; color: #b32d2e; }
+
+			.hez-locked__radio {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				padding: 3px 0;
+				color: #646970;
+				font-size: 12px;
+			}
+
+			.hez-locked__radio input { margin: 0; }
 
 			.hez-locked__thumbs { display: flex; gap: 6px; }
 

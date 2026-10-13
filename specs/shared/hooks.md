@@ -22,7 +22,8 @@ WP/WC core hook'larına `add_filter`/`add_action` yapan ama kendi adıyla yeni b
 | Hook | Modül | Ne Zaman | Params |
 |---|---|---|---|
 | `hezarfen_returns_loaded` | returns | Modül ayağa kalktığında; sağlayıcılar burada kaydedilmeli | `(Returns_Module $module)` |
-| `hezarfen_return_created` | returns | Yeni iade talebi kaydedildikten sonra | `(Return_Request $request, WC_Order $order)` |
+| `hezarfen_return_created` | returns | Yeni iade talebi kaydedildikten sonra, otomatik onaydan önce | `(Return_Request $request, WC_Order $order)` |
+| `hezarfen_return_submitted` | returns | Yeni talebin kurulumu bittikten sonra (otomatik onay dahil); talep müşterinin göreceği durumdadır. Talep e-postaları bunu dinler | `(Return_Request $request, WC_Order $order)` |
 | `hezarfen_return_status_changed` | returns | Talep durumu değiştiğinde | `(Return_Request $request, string $old_status, string $new_status)` |
 | `hezarfen_return_status_{status}` | returns | Talep belirli bir duruma geçtiğinde (ör. `hezarfen_return_status_approved`) | `(Return_Request $request, string $old_status)` |
 | `hezarfen_return_shipment_booked` | returns | Müşteri iade kargo randevusunu aldığında (barkod ve alım günü talebe yazılmış olur) | `(Return_Request $request, string $choice)` |
@@ -79,7 +80,7 @@ Modül, ek yeteneklerin koda dokunmadan takılabilmesi için sağlayıcı tabanl
 | `hezarfen_returns_reasons` | birleştirilmiş liste | `(array $reasons)` | Nihai sebep listesini düzenle |
 | `hezarfen_returns_policy_providers` | `[Global_Return_Policy_Provider]` | `(Return_Policy_Provider_Interface[] $providers)` | Ürün/kategori bazlı iade politikası ekle |
 | `hezarfen_returns_eligible_order_statuses` | option değeri (`completed`) | `(string[] $statuses)` | İade edilebilir sipariş durumlarını çalışma anında belirle (boş dönerse yok sayılır) |
-| `hezarfen_returns_setting_fields` | kilitli önizleme satırı | `(array $fields, string $placement)` | Bir Pro placement'ının (`statuses`/`products`/`reasons`/`photos`) kilitli satırını gerçek ayar alanıyla değiştir ya da (boş dizi) kaldır |
+| `hezarfen_returns_setting_fields` | kilitli önizleme satırı | `(array $fields, string $placement)` | Bir Pro placement'ının (`statuses`/`products`/`reasons`/`approval`/`photos`) kilitli satırını gerçek ayar alanıyla değiştir ya da (boş dizi) kaldır |
 | `hezarfen_returns_resolved_policy` | çözümlenen politika | `(Return_Policy $policy, WC_Order $order, WC_Order_Item $item)` | Satır politikasını son anda değiştir |
 | `hezarfen_returns_shipping_methods` | `[Customer_Ships, Kargokit]` | `(Return_Shipping_Method_Interface[] $methods)` | Kendi kargo anlaşmanı yöntem olarak ekle |
 | `hezarfen_returns_repository` | `Return_Repository` | `(Return_Repository_Interface $repository)` | Alternatif depolama katmanı |

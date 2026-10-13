@@ -273,6 +273,7 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 * fix(returns): onay e-postasındaki yanıltıcı "aşağıda" ifadeleri hesap bağlantısına yönlendirilecek şekilde düzeltildi
 * fix(hepsijet): toplu barkod PDF'inde tek bir bozuk barkod artık tüm baskıyı iptal etmiyor
 * ci(e2e): drop EOL PHP 7.4/8.0 from Playwright matrix
+* feat(returns): iade talepleri oluşturulduğu anda otomatik onaylanır; yönetici onayı seçeneği Hezarfen Pro'da
 = 2.15.0 - 2026-08-05 =
 
 * refactor: Aras Kargo talep anketi kaldırıldı

@@ -36,6 +36,7 @@ const LOCKED_STATUSES_ROW =
 	'tr.hez-locked-row:has-text("İade edilebilir sipariş durumları")';
 
 const LOCKED_REASONS_ROW = 'tr.hez-locked-row:has-text("İade sebepleri")';
+const LOCKED_APPROVAL_ROW = 'tr.hez-locked-row:has-text("İade onayı")';
 
 /**
  * Stands in for a Pro that implements one placement: the `hezarfen_returns_setting_fields`
@@ -139,6 +140,23 @@ test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
 			).toHaveCount( 0 );
 			await expect( page.locator( LOCKED_STATUSES_ROW ) ).toBeVisible();
 		}
+
+		// Onay modu da aynı ikili: ücretsizde "Otomatik onay" seçili kilitli
+		// önizleme, Pro'da gerçek seçim.
+		if ( proReturnsActive() ) {
+			await expect(
+				page.locator( 'input[name="hezarfen_pro_returns_approval_mode"]' )
+			).toHaveCount( 2 );
+			await expect( page.locator( LOCKED_APPROVAL_ROW ) ).toHaveCount( 0 );
+		} else {
+			await expect(
+				page.locator( 'input[name="hezarfen_pro_returns_approval_mode"]' )
+			).toHaveCount( 0 );
+			await expect( page.locator( LOCKED_APPROVAL_ROW ) ).toBeVisible();
+			await expect(
+				page.locator( `${ LOCKED_APPROVAL_ROW } input[type="radio"]:checked` )
+			).toHaveCount( 1 );
+		}
 	} );
 
 	test( 'kilitli satırlar kaydetmede boş option yazmıyor', async ( {
@@ -163,14 +181,15 @@ test.describe( 'Hezarfen iade — ayarlar bölümü', () => {
 		// WooCommerce's default save branch does not write an empty option for
 		// it — wc_clean( null ) yields '' there, not null. A written empty value
 		// would later read back as "nothing is eligible" and quietly stop
-		// orders from being returnable. So none of the four placeholder ids may
+		// orders from being returnable. So none of the placeholder ids may
 		// appear after a save, and the real statuses key the free flow falls
-		// back on must stay untouched. Checking all four guards against a
+		// back on must stay untouched. Checking all of them guards against a
 		// regression that makes just one of them savable.
 		for ( const id of [
 			'hezarfen_returns_locked_statuses',
 			'hezarfen_returns_locked_products',
 			'hezarfen_returns_locked_reasons',
+			'hezarfen_returns_locked_approval',
 			'hezarfen_returns_locked_photos',
 		] ) {
 			expect(
