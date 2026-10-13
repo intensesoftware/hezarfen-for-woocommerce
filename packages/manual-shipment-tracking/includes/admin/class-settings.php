@@ -59,6 +59,9 @@ class Settings {
 		// Custom field type for cache clear button
 		add_action( 'woocommerce_admin_field_hepsijet_cache_button', array( __CLASS__, 'render_cache_clear_button' ) );
 
+		// Custom field type for the connection/credential test button
+		add_action( 'woocommerce_admin_field_hepsijet_test_button', array( __CLASS__, 'render_test_connection_button' ) );
+
 		// Custom field type for courier visibility
 		add_action( 'woocommerce_admin_field_hezarfen_courier_visibility', array( __CLASS__, 'render_courier_visibility_setting' ) );
 
@@ -343,14 +346,18 @@ class Settings {
 				'type' => 'text',
 				'id' => 'hezarfen_hepsijet_consumer_key',
 				'default' => '',
-				'desc' => __( 'Consumer Key from Hepsijet API Relay plugin', 'hezarfen-for-woocommerce' )
+				'desc' => __( 'Consumer Key from your kargokit.com account (My Account → Hepsijet)', 'hezarfen-for-woocommerce' )
 			),
 			array(
 				'title' => __( 'Consumer Secret', 'hezarfen-for-woocommerce' ),
 				'type' => 'password',
 				'id' => 'hezarfen_hepsijet_consumer_secret',
 				'default' => '',
-				'desc' => __( 'Consumer Secret from Hepsijet API Relay plugin', 'hezarfen-for-woocommerce' )
+				'desc' => __( 'Consumer Secret from your kargokit.com account (My Account → Hepsijet)', 'hezarfen-for-woocommerce' )
+			),
+			array(
+				'type' => 'hepsijet_test_button',
+				'id' => 'hezarfen_hepsijet_test_connection',
 			),
 			array(
 				'type' => 'sectionend',
@@ -461,7 +468,7 @@ class Settings {
 			),
 			array(
 				'title' => __( 'Webhook Secret', 'hezarfen-for-woocommerce' ),
-				'type' => 'text',
+				'type' => 'password',
 				'id' => 'hez_ordermigo_webhook_secret',
 				'default' => '',
 				'desc' => __( 'This secret is used to verify webhook notifications from KargoKit. It is automatically generated when you create your first shipment. Do not edit this unless instructed by support.', 'hezarfen-for-woocommerce' ),
@@ -475,90 +482,30 @@ class Settings {
 	}
 
 	/**
-	 * Check if OpenSSL extension is available
-	 * 
-	 * @return bool True if OpenSSL is available
-	 */
-	private static function is_openssl_available() {
-		return extension_loaded( 'openssl' ) && function_exists( 'openssl_encrypt' );
-	}
-
-	/**
 	 * Encrypt webhook secret
 	 * 
 	 * @param string $value Value to encrypt
 	 * @return string Encrypted value
 	 */
 	private static function encrypt_webhook_secret( $value ) {
-		if ( empty( $value ) ) {
-			return '';
-		}
-
-		// Check if OpenSSL is available
-		if ( ! self::is_openssl_available() ) {
-			return base64_encode( $value );
-		}
-
-		// Use WordPress auth keys for encryption
-		$key = AUTH_KEY . SECURE_AUTH_KEY;
-		$salt = AUTH_SALT . SECURE_AUTH_SALT;
-		
-		// Generate encryption key
-		$encryption_key = hash( 'sha256', $key );
-		$iv_length = openssl_cipher_iv_length( 'aes-256-cbc' );
-		$iv = substr( hash( 'sha256', $salt ), 0, $iv_length );
-		
-		// Encrypt the value
-		$encrypted = openssl_encrypt( $value, 'aes-256-cbc', $encryption_key, 0, $iv );
-		
-		if ( $encrypted === false ) {
-			return base64_encode( $value );
-		}
-		
-		return base64_encode( $encrypted );
+		// Delegate to the courier integration's single crypto implementation so
+		// the stored format cannot drift between the two classes. The two used
+		// to encrypt/decrypt independently, and once the integration moved to
+		// the `v2:` format this class still read it the old way and rendered the
+		// secret as garbage on the settings page.
+		return Courier_Hepsijet_Integration::encrypt_secret( $value );
 	}
 
 	/**
 	 * Decrypt webhook secret
-	 * 
+	 *
 	 * @param string $encrypted_value Encrypted value
 	 * @return string Decrypted value
 	 */
 	private static function decrypt_webhook_secret( $encrypted_value ) {
-		if ( empty( $encrypted_value ) ) {
-			return '';
-		}
-
-		$decoded = base64_decode( $encrypted_value );
-		
-		if ( $decoded === false ) {
-			return '';
-		}
-
-		// Check if OpenSSL is available
-		if ( ! self::is_openssl_available() ) {
-			// Fallback: Value was stored with base64 only
-			return $decoded;
-		}
-
-		// Use WordPress auth keys for decryption
-		$key = AUTH_KEY . SECURE_AUTH_KEY;
-		$salt = AUTH_SALT . SECURE_AUTH_SALT;
-		
-		// Generate decryption key
-		$encryption_key = hash( 'sha256', $key );
-		$iv_length = openssl_cipher_iv_length( 'aes-256-cbc' );
-		$iv = substr( hash( 'sha256', $salt ), 0, $iv_length );
-		
-		// Decrypt the value
-		$decrypted = openssl_decrypt( $decoded, 'aes-256-cbc', $encryption_key, 0, $iv );
-		
-		// If decryption fails, try to return the base64 decoded value (fallback scenario)
-		if ( $decrypted === false ) {
-			return $decoded;
-		}
-		
-		return $decrypted;
+		// Delegate to the courier integration's single crypto implementation
+		// (reads both the `v2:` and legacy formats). See encrypt_webhook_secret().
+		return Courier_Hepsijet_Integration::decrypt_secret( $encrypted_value );
 	}
 
 	/**
@@ -568,14 +515,13 @@ class Settings {
 	 * @return string Decrypted value
 	 */
 	public static function decrypt_webhook_secret_for_display( $value ) {
-		// Don't decrypt during save operations.
-		// Nonce verification happens in WordPress core's options.php / WC settings handler before this filter fires; here we only branch on presence.
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( isset( $_POST['save'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			return $value;
 		}
 
-		// Only decrypt when viewing settings page (not saving)
+		// Only decrypt when rendering the settings page. The save handler reads the
+		// raw value straight from the database, so decrypting here is safe even
+		// during the POST request that WooCommerce renders the page from.
 		global $current_section;
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( is_admin() && isset( $_GET['page'] ) && 'wc-settings' === sanitize_text_field( wp_unslash( $_GET['page'] ) ) && 'hepsijet_integration' === $current_section ) {
@@ -606,13 +552,29 @@ class Settings {
 			return;
 		}
 
+		// WooCommerce must never write this option itself: save_fields() turns a
+		// missing POST field into an empty string on some setups and wipes the
+		// stored secret right after we saved it. Guard the option instead of
+		// relying on unset( $_POST ) alone.
+		add_filter( 'pre_update_option_hez_ordermigo_webhook_secret', array( __CLASS__, 'keep_webhook_secret_on_empty_write' ), PHP_INT_MAX, 2 );
+
 		if ( isset( $_POST['hez_ordermigo_webhook_secret'] ) ) {
 			$webhook_secret = sanitize_text_field( wp_unslash( $_POST['hez_ordermigo_webhook_secret'] ) );
-			
-			// Get current value to see if it changed
-			$current_encrypted = get_option( 'hez_ordermigo_webhook_secret', '' );
+
+			// Read the raw value straight from the database: get_option() would go
+			// through the display filter and hand back an already decrypted value.
+			global $wpdb;
+			$current_encrypted = (string) $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", 'hez_ordermigo_webhook_secret' ) );
 			$current_decrypted = self::decrypt_webhook_secret( $current_encrypted );
-			
+
+			// The posted value is the stored ciphertext, so the field was rendered
+			// without being decrypted. Leave the secret alone instead of encrypting
+			// the ciphertext a second time.
+			if ( '' !== $current_encrypted && $webhook_secret === $current_encrypted ) {
+				unset( $_POST['hez_ordermigo_webhook_secret'] );
+				return;
+			}
+
 			// Only save if the value actually changed
 			if ( $webhook_secret !== $current_decrypted ) {
 				if ( ! empty( $webhook_secret ) ) {
@@ -629,6 +591,26 @@ class Settings {
 			unset( $_POST['hez_ordermigo_webhook_secret'] );
 		}
 		// phpcs:enable
+	}
+
+	/**
+	 * Keeps the stored webhook secret when something tries to blank it out.
+	 *
+	 * Only registered for the duration of a settings save request. Clearing the
+	 * secret on purpose goes through delete_option(), so an empty update is
+	 * always an unwanted overwrite.
+	 *
+	 * @param mixed $value     New option value.
+	 * @param mixed $old_value Current option value.
+	 *
+	 * @return mixed
+	 */
+	public static function keep_webhook_secret_on_empty_write( $value, $old_value ) {
+		if ( ( '' === $value || null === $value ) && ! empty( $old_value ) ) {
+			return $old_value;
+		}
+
+		return $value;
 	}
 
 	/**
@@ -755,6 +737,99 @@ class Settings {
 				});
 				</script>
 				
+				<style>
+				.dashicons.spin {
+					animation: rotation 1s infinite linear;
+				}
+				@keyframes rotation {
+					from { transform: rotate(0deg); }
+					to { transform: rotate(359deg); }
+				}
+				</style>
+			</td>
+		</tr>
+		<?php
+	}
+
+	/**
+	 * Render the "test connection" button for Hepsijet credentials.
+	 *
+	 * Mirrors the cache-clear button: an inline AJAX call that verifies the saved
+	 * Consumer Key/Secret against the kargokit.com relay and reports the result
+	 * inline. Shows a positive "kayıtlı / bağlı" indicator when a webhook secret
+	 * already exists (i.e. the store is fully connected).
+	 *
+	 * @param array<string, mixed> $value Field settings.
+	 * @return void
+	 */
+	public static function render_test_connection_button( $value ) {
+		$is_connected = Courier_Hepsijet_Integration::has_credentials_with_webhook();
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label><?php esc_html_e( 'Bağlantı Durumu', 'hezarfen-for-woocommerce' ); ?></label>
+			</th>
+			<td class="forminp forminp-button">
+				<button type="button" id="test-hepsijet-connection" class="button button-secondary">
+					<span class="dashicons dashicons-admin-links" style="margin-top: 3px;"></span>
+					<?php esc_html_e( 'Bağlantıyı test et', 'hezarfen-for-woocommerce' ); ?>
+				</button>
+				<?php if ( $is_connected ) : ?>
+					<span class="hepsijet-connection-indicator" style="display: inline-flex; align-items: center; gap: 4px; margin-left: 10px; padding: 3px 10px; border-radius: 9999px; background: #edfaef; color: #1e7e34; font-size: 12px; font-weight: 600;">
+						<span class="dashicons dashicons-yes-alt" style="font-size: 16px; width: 16px; height: 16px;"></span>
+						<?php esc_html_e( 'Kayıtlı / Bağlı', 'hezarfen-for-woocommerce' ); ?>
+					</span>
+				<?php endif; ?>
+				<p class="description">
+					<?php esc_html_e( 'Consumer Key ve Consumer Secret bilgilerinizi kaydettikten sonra bu butona tıklayarak kargokit.com bağlantınızı doğrulayın.', 'hezarfen-for-woocommerce' ); ?>
+				</p>
+				<div id="hepsijet-connection-status" style="margin-top: 10px; display: none;"></div>
+
+				<script type="text/javascript">
+				jQuery(document).ready(function($) {
+					$('#test-hepsijet-connection').on('click', function(e) {
+						e.preventDefault();
+
+						var $button = $(this);
+						var $status = $('#hepsijet-connection-status');
+						var originalText = $button.html();
+
+						$button.prop('disabled', true).html('<span class="dashicons dashicons-update spin" style="margin-top: 3px;"></span> <?php echo esc_js( __( 'Test ediliyor...', 'hezarfen-for-woocommerce' ) ); ?>');
+
+						$.ajax({
+							url: ajaxurl,
+							type: 'POST',
+							data: {
+								action: '<?php echo esc_js( Admin_Ajax::TEST_HEPSIJET_CONNECTION_ACTION ); ?>',
+								_wpnonce: '<?php echo esc_js( wp_create_nonce( Admin_Ajax::TEST_HEPSIJET_CONNECTION_NONCE ) ); ?>'
+							},
+							success: function(response) {
+								if (response.success) {
+									$status.html('<div class="notice notice-success inline" style="padding: 8px 12px; margin: 0;"><p style="margin: 0;">' +
+										'<span class="dashicons dashicons-yes-alt" style="color: #46b450;"></span> ' +
+										response.data.message +
+									'</p></div>').fadeIn();
+								} else {
+									$status.html('<div class="notice notice-error inline" style="padding: 8px 12px; margin: 0;"><p style="margin: 0;">' +
+										'<span class="dashicons dashicons-warning"></span> ' +
+										((response.data && response.data.message) ? response.data.message : '<?php echo esc_js( __( 'An error occurred', 'hezarfen-for-woocommerce' ) ); ?>') +
+									'</p></div>').fadeIn();
+								}
+							},
+							error: function() {
+								$status.html('<div class="notice notice-error inline" style="padding: 8px 12px; margin: 0;"><p style="margin: 0;">' +
+									'<span class="dashicons dashicons-warning"></span> ' +
+									'<?php echo esc_js( __( 'Connection error', 'hezarfen-for-woocommerce' ) ); ?>' +
+								'</p></div>').fadeIn();
+							},
+							complete: function() {
+								$button.prop('disabled', false).html(originalText);
+							}
+						});
+					});
+				});
+				</script>
+
 				<style>
 				.dashicons.spin {
 					animation: rotation 1s infinite linear;

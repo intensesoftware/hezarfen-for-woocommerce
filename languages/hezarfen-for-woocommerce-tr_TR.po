@@ -4213,3 +4213,11 @@ msgstr "🚀 HepsiJet Entegrasyon Kılavuzu"
 #: packages/manual-shipment-tracking/templates/order-edit/metabox-shipment.php:394
 msgid "🚀 Start Shipping Without a Shipping Agreement"
 msgstr "🚀 Dakikalar İçinde Kargo Gönderimini Başlatın!"
+
+#: packages/manual-shipment-tracking/includes/class-shipment-column-state.php
+msgid "Barcode ready"
+msgstr "Barkod hazır"
+
+#: packages/manual-shipment-tracking/includes/class-shipment-column-state.php
+msgid "%d barcodes created for this order"
+msgstr "Bu sipariş için %d barkod oluşturuldu"

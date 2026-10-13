@@ -32,9 +32,12 @@ class Autoload {
 		$this->load_assets();
 
 		add_action( 'plugins_loaded', array( $this, 'load_packages' ) );
-		
+
 		// Initialize Contracts integration immediately
 		$this->init_contracts_integration();
+
+		// Initialize the Returns module.
+		$this->init_returns_module();
 	}
 
 	/**
@@ -140,6 +143,9 @@ class Autoload {
 		// Load Contracts Integration
 		require_once 'contracts/class-contracts-integration.php';
 
+		// Load Returns module
+		require_once 'returns/class-returns-module.php';
+
 		if ( is_admin() ) {
 			require_once 'admin/order/OrderDetails.php';
 			require_once 'admin/order/OrderListColumns.php';
@@ -166,6 +172,15 @@ class Autoload {
 	 */
 	public function init_contracts_integration() {
 		new \Hezarfen\Inc\Contracts\Contracts_Integration();
+	}
+
+	/**
+	 * Initialize the Returns module.
+	 *
+	 * @return void
+	 */
+	public function init_returns_module() {
+		\Hezarfen\Inc\Returns\Returns_Module::init();
 	}
 }
 

@@ -4,7 +4,7 @@ jQuery(function ($) {
 
 		init_tooltip(shipment_info_icon, hezarfen_mst_backend.tooltip_placeholder);
 
-		shipment_info_icon.on('mouseenter', function () {
+		shipment_info_icon.on('mouseenter focus', function () {
 			const $this = $(this);
 			if ($this.data('shipment-info-saved')) {
 				return;
@@ -20,7 +20,7 @@ jQuery(function ($) {
 				function (response) {
 					const tooltip_content = create_tooltip_content(response.data);
 
-					if ($this.is(':hover')) {
+					if ($this.is(':hover') || $this.is(':focus')) {
 						$('#tiptip_content').html(tooltip_content);
 					}
 
@@ -29,7 +29,17 @@ jQuery(function ($) {
 					$this.data('shipment-info-saved', true);
 				},
 				'json'
-			);
+			).fail(function () {
+				const error_content = hezarfen_mst_backend.load_error_i18n || 'Gönderi detayı yüklenemedi.';
+
+				if ($this.is(':hover') || $this.is(':focus')) {
+					$('#tiptip_content').text(error_content);
+				}
+
+				init_tooltip($this, error_content);
+
+				// Do not set the 'saved' flag on failure so a later hover/focus can retry.
+			});
 		});
 	});
 

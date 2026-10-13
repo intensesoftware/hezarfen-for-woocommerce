@@ -25,6 +25,12 @@ jobs:
     # ad-hoc dispatches from other branches). Keeps CI minutes sane on
     # day-to-day work while still catching version drift before code
     # lands on develop.
+    #
+    # PHP 7.4 and 8.0 are intentionally excluded: their `wordpress`
+    # Docker images are EOL and frozen on Debian bullseye, whose apt
+    # pool no longer serves the pinned glibc/dpkg packages that wp-env's
+    # image build needs — the build fails with apt 404s before any test
+    # runs. Lowest supported line is PHP 8.1.
     runs-on: ubuntu-latest
     outputs:
       php-versions: ${{ steps.set.outputs.php-versions }}
@@ -32,7 +38,7 @@ jobs:
       - id: set
         run: |
           if [ "${{ github.ref }}" = "refs/heads/develop" ]; then
-            echo 'php-versions=["7.4","8.0","8.1","8.2","8.3","8.4"]' >> "$GITHUB_OUTPUT"
+            echo 'php-versions=["8.1","8.2","8.3","8.4"]' >> "$GITHUB_OUTPUT"
           else
             echo 'php-versions=["8.2"]' >> "$GITHUB_OUTPUT"
           fi
