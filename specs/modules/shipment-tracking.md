@@ -125,6 +125,27 @@ Liste `hezarfen_mst_courier_companies` filtresiyle genişletilebilir.
 - **SMS sağlayıcı eklentisi pasifken** `_hezarfen_mst_enable_sms_notification = yes` olsa bile SMS sessizce atlanır.
 - **Meta string formatı pipe-delimited**: legacy karar; JSON'a migrate edilirken backward-compat için parse fallback'i unutulmamalı.
 
+## REST API
+
+Takip kayıtları WooCommerce sipariş REST API'sinde (`wc/v1`, `wc/v2`, `wc/v3` — `GET /orders`, `GET /orders/{id}`) salt-okunur `hezarfen_shipments` alanında döner (`includes/class-rest-api.php`). `_hezarfen_mst_shipment_data` alt çizgiyle başladığı için WC onu `meta_data`'ya koymaz; bu alan o boşluğu kapatır. Yetki, siparişin kendi REST yetkisidir.
+
+```json
+"hezarfen_shipments": [
+  {
+    "id": 1234,
+    "courier_id": "yurtici",
+    "courier_title": "Yurtiçi Kargo",
+    "tracking_number": "123456789",
+    "tracking_url": "https://..."
+  }
+]
+```
+
+- Sipariş başına birden fazla kayıt olabilir; kayıt yoksa `[]`.
+- `id` sipariş meta ID'sidir; üçüncü parti eklenti verisinden (`hezarfen_mst_get_shipment_data`) gelen kayıtlarda `null`.
+- `_fields=id,hezarfen_shipments` ile sadece bu alan istenebilir.
+- Yazma desteklenmez (POST/PUT'ta alan yok sayılır).
+
 ## UI Lokasyonları
 
 - **Admin > WooCommerce > Siparişler > [sipariş]** — "Hezarfen Cargo Tracking & SMS Notifications" meta box
@@ -149,6 +170,7 @@ Liste `hezarfen_mst_courier_companies` filtresiyle genişletilebilir.
 - `hezarfen_mst_courier_companies` — kargo firma listesini değiştir. Params: `(array $courier_companies)`.
 - `hezarfen_mst_get_shipment_data` — üçüncü parti shipment data injekte et. Params: `(array $data, int $order_id)`.
 - `hezarfen_shop_order_no_shipment_found_msg` — kolonda "kargo bulunamadı" mesajını özelleştir.
+- `hezarfen_mst_rest_order_shipments` — REST response'undaki `hezarfen_shipments` dizisini değiştir. Params: `(array $shipments, int $order_id)`.
 
 ### AJAX Action'ları (admin, nonce'lu)
 - `hezarfen_mst_create_hepsijet_shipment`

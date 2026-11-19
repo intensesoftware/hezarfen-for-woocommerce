@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 			<div id="hezarfen-bulk-packages-container" class="hezarfen-packages-container">
 				<div class="hezarfen-package-item">
 					<span class="hezarfen-package-label"><?php esc_html_e( 'Koli 1:', 'hezarfen-for-woocommerce' ); ?></span>
-					<input type="number" class="hezarfen-package-desi" min="0.01" max="9999" step="0.01" placeholder="Desi" />
+					<input type="number" class="hezarfen-package-desi" min="0.01" max="9999" step="0.01" placeholder="<?php esc_attr_e( 'Desi', 'hezarfen-for-woocommerce' ); ?>" />
 					<button type="button" class="hezarfen-remove-package" style="visibility:hidden;" title="<?php esc_attr_e( 'Kaldır', 'hezarfen-for-woocommerce' ); ?>">&times;</button>
 				</div>
 			</div>
@@ -84,7 +84,7 @@ defined( 'ABSPATH' ) || exit;
 								<div class="hezarfen-packages-container">
 									<div class="hezarfen-package-item">
 										<span class="hezarfen-package-label"><?php esc_html_e( 'Koli 1:', 'hezarfen-for-woocommerce' ); ?></span>
-										<input type="number" class="hezarfen-package-desi" min="0.01" max="9999" step="0.01" placeholder="Desi" />
+										<input type="number" class="hezarfen-package-desi" min="0.01" max="9999" step="0.01" placeholder="<?php esc_attr_e( 'Desi', 'hezarfen-for-woocommerce' ); ?>" />
 										<button type="button" class="hezarfen-remove-package" style="visibility:hidden;" title="<?php esc_attr_e( 'Kaldır', 'hezarfen-for-woocommerce' ); ?>">&times;</button>
 									</div>
 								</div>
@@ -108,17 +108,17 @@ defined( 'ABSPATH' ) || exit;
 	<div id="hezarfen-bulk-progress-section" class="hezarfen-bulk-progress-section" style="display:none;">
 		<div class="hezarfen-progress-header">
 			<h3 id="hezarfen-progress-title"><?php esc_html_e( 'Barkod Oluşturuluyor...', 'hezarfen-for-woocommerce' ); ?></h3>
-			<span id="hezarfen-progress-counter">0/0</span>
+			<span id="hezarfen-progress-counter" role="status" aria-live="polite">0/0</span>
 			<span id="hezarfen-progress-percent">(0%)</span>
 		</div>
 
 		<div class="hezarfen-progress-bar-container">
-			<div class="hezarfen-progress-bar" id="hezarfen-progress-bar" style="width:0%"></div>
+			<div class="hezarfen-progress-bar" id="hezarfen-progress-bar" style="width:0%" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 		</div>
 
 		<div id="hezarfen-progress-estimated" class="hezarfen-progress-estimated"></div>
 
-		<div class="hezarfen-progress-log" id="hezarfen-progress-log"></div>
+		<div class="hezarfen-progress-log" id="hezarfen-progress-log" aria-live="polite"></div>
 
 		<div class="hezarfen-progress-actions">
 			<button type="button" id="hezarfen-cancel-btn" class="button button-secondary">
