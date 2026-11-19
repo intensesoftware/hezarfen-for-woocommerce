@@ -276,6 +276,7 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 * feat(returns): iade talepleri oluşturulduğu anda otomatik onaylanır; yönetici onayı seçeneği Hezarfen Pro'da
 * feat(returns): iade talepleri otomatik onaylansın, yönetici onayı Pro'da
 * feat(rest): sipariş REST API'sine Hezarfen kargo verileri eklendi
+* feat(hepsijet): toplu koli/desi girişi son değerleri hatırlasın
 = 2.15.0 - 2026-08-05 =
 
 * refactor: Aras Kargo talep anketi kaldırıldı
