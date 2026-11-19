@@ -140,6 +140,7 @@ Tüm AJAX endpoint'leri WordPress `wp_ajax_{action}` (auth gerekli) ve gerekiyor
 | Hook | Modül | Etki |
 |---|---|---|
 | `woocommerce_rest_prepare_shop_order_object` | invoice-fields | Bireysel siparişlerde `_billing_hez_TC_number` decrypt edilip response meta_data'ya eklenir |
+| `rest_api_init` → `register_rest_field( 'shop_order', 'hezarfen_shipments' )` | shipment-tracking | Sipariş response'una salt-okunur `hezarfen_shipments` dizisi eklenir (wc/v1–v3, HPOS + legacy) |
 
 ---
 
