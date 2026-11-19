@@ -9,6 +9,9 @@
 	var config = window.hezarfen_bulk_barcode || {};
 	var i18n = config.i18n || {};
 
+	/** localStorage key for the last applied bulk package structure. */
+	var BULK_PACKAGES_STORAGE_KEY = 'hezarfen_hepsijet_bulk_packages';
+
 	/** Processing state */
 	var state = {
 		isProcessing: false,
@@ -63,6 +66,72 @@
 
 		// If all orders already have barcodes, show print button directly.
 		checkAllBarcodesReady();
+
+		restoreBulkPackages();
+	}
+
+	/**
+	 * Reads the last applied bulk package desi values from localStorage.
+	 *
+	 * @return {number[]} Desi values, empty when nothing valid is stored.
+	 */
+	function loadSavedBulkPackages() {
+		var saved;
+		try {
+			saved = JSON.parse(window.localStorage.getItem(BULK_PACKAGES_STORAGE_KEY) || '[]');
+		} catch (e) {
+			return [];
+		}
+
+		if (!Array.isArray(saved)) {
+			return [];
+		}
+
+		var packages = [];
+		for (var i = 0; i < saved.length; i++) {
+			var desiVal = parseDesi(saved[i]);
+			if (!desiVal || desiVal < 0.01 || desiVal > 9999) {
+				return [];
+			}
+			packages.push(desiVal);
+		}
+
+		return packages;
+	}
+
+	/**
+	 * Remembers the applied bulk package desi values for the next visit.
+	 *
+	 * @param {number[]} packages Desi values.
+	 */
+	function saveBulkPackages(packages) {
+		try {
+			window.localStorage.setItem(BULK_PACKAGES_STORAGE_KEY, JSON.stringify(packages));
+		} catch (e) {
+			// Storage unavailable (private mode, quota): remembering is best-effort.
+		}
+	}
+
+	/**
+	 * Fills the bulk section with the last applied packages and applies them
+	 * to every order without a barcode. Rows stay editable afterwards.
+	 */
+	function restoreBulkPackages() {
+		var packages = loadSavedBulkPackages();
+		if (packages.length === 0) {
+			return;
+		}
+
+		var $container = $('#hezarfen-bulk-packages-container');
+		while ($container.find('.hezarfen-package-item').length < packages.length) {
+			addPackageToContainer($container);
+		}
+
+		$container.find('.hezarfen-package-desi').each(function (index) {
+			$(this).val(packages[index]);
+		});
+
+		applyBulkDesi();
 	}
 
 	/**
@@ -160,6 +229,8 @@
 		if (hasError || bulkPackages.length === 0) {
 			return;
 		}
+
+		saveBulkPackages(bulkPackages);
 
 		$('#hezarfen-bulk-orders-table tbody tr').each(function () {
 			var $row = $(this);
