@@ -1489,6 +1489,10 @@ msgstr "Kargo takip no post meta keyini giriniz"
 msgid "Enter T.C. Identity Number"
 msgstr "T.C. Kimlik numaranızı giriniz"
 
+#: includes/Checkout.php:427
+msgid "Enter T.C. Identity Number (optional)"
+msgstr "T.C. Kimlik numaranızı giriniz (isteğe bağlı)"
+
 #: includes/Checkout.php:412
 msgid "Enter tax number"
 msgstr "Vergi numaranızı giriniz"

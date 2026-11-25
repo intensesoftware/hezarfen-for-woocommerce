@@ -422,7 +422,9 @@ class Checkout {
 		if ( self::is_show_identity_field_on_checkout() ) {
 			$fields['billing']['billing_hez_TC_number'] = array(
 				'id'          => 'hezarfen_TC_number',
-				'placeholder' => __( 'Enter T.C. Identity Number', 'hezarfen-for-woocommerce' ),
+				'placeholder' => self::is_identity_number_field_required()
+					? __( 'Enter T.C. Identity Number', 'hezarfen-for-woocommerce' )
+					: __( 'Enter T.C. Identity Number (optional)', 'hezarfen-for-woocommerce' ),
 				'label'       => __(
 					'T.C. Identity Number',
 					'hezarfen-for-woocommerce'
