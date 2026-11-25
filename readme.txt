@@ -4,7 +4,7 @@ Contributors: intenseyazilim, mucahitbal, mskapusuz
 Tags: kargo, kargo takip, kargo entegrasyonu, yurtiçi kargo, aras kargo
 Requires at least: 5.3
 Tested up to: 7.0
-Requires PHP: 7.0
+Requires PHP: 7.2
 License: GPL2
 Stable tag: 2.16.0
 
