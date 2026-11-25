@@ -172,7 +172,9 @@ class Template_Processor {
 			'{{teslimat_adres_1}}' => $order->get_shipping_address_1() ?: $order->get_billing_address_1(),
 			'{{teslimat_adres_2}}' => $order->get_shipping_address_2() ?: $order->get_billing_address_2(),
 			'{{teslimat_ilce}}' => $order->get_shipping_city(),
-			'{{teslimat_sehir}}' => WC()->countries->states[ $order->get_shipping_country() ][ $order->get_shipping_state() ?: $order->get_billing_state() ],
+			'{{teslimat_sehir}}' => $order->get_shipping_state()
+				? self::get_state_name( $order->get_shipping_country(), $order->get_shipping_state() )
+				: self::get_state_name( $order->get_billing_country(), $order->get_billing_state() ),
 			'{{teslimat_posta_kodu}}' => $order->get_shipping_postcode() ?: $order->get_billing_postcode(),
 			'{{teslimat_ulke}}' => WC()->countries->countries[ $order->get_shipping_country() ?: $order->get_billing_country() ] ?? ($order->get_shipping_country() ?: $order->get_billing_country()),
 		);
@@ -340,8 +342,8 @@ class Template_Processor {
 			}
 		}
 
-		$billing_state = WC()->countries->states[ $form_data['billing_country'] ][ $form_data['billing_state'] ] ?? $form_data['billing_state'];
-		$shipping_state = WC()->countries->states[ $form_data['shipping_country'] ][ $form_data['shipping_state'] ] ?? $form_data['shipping_state'];
+		$billing_state = self::get_form_state_name( $form_data, 'billing' );
+		$shipping_state = self::get_form_state_name( $form_data, 'shipping' );
 		
 		$replacements = array(
 			// Form data variables (from checkout form)
@@ -507,6 +509,42 @@ class Template_Processor {
 	private static function get_country_name( $country_code ) {
 		$countries = WC()->countries->get_countries();
 		return isset( $countries[ $country_code ] ) ? $countries[ $country_code ] : $country_code;
+	}
+
+	/**
+	 * Formdaki il kodunu il adına çevirir.
+	 *
+	 * Ödeme formu her istekte ülke/il alanlarını göndermeyebilir (ülke
+	 * alanı gizli, il alanı henüz doldurulmamış vb.); eksik alan boş il
+	 * olarak ele alınır.
+	 *
+	 * @param array  $form_data Form data from checkout.
+	 * @param string $type      'billing' ya da 'shipping'.
+	 * @return string
+	 */
+	private static function get_form_state_name( $form_data, $type ) {
+		$country = isset( $form_data[ $type . '_country' ] ) ? sanitize_text_field( $form_data[ $type . '_country' ] ) : '';
+		$state   = isset( $form_data[ $type . '_state' ] ) ? sanitize_text_field( $form_data[ $type . '_state' ] ) : '';
+
+		return self::get_state_name( $country, $state );
+	}
+
+	/**
+	 * İl kodunu il adına çevirir; ülkenin il listesi yoksa ya da kod
+	 * listede değilse kodun kendisini döndürür.
+	 *
+	 * @param string $country Ülke kodu.
+	 * @param string $state   İl kodu.
+	 * @return string
+	 */
+	private static function get_state_name( $country, $state ) {
+		if ( '' === (string) $state ) {
+			return '';
+		}
+
+		$states = '' !== (string) $country ? WC()->countries->get_states( $country ) : array();
+
+		return is_array( $states ) && isset( $states[ $state ] ) ? $states[ $state ] : (string) $state;
 	}
 
 	/**
