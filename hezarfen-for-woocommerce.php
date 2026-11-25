@@ -10,7 +10,7 @@
  * License: GPL2
  * Text Domain: hezarfen-for-woocommerce
  * Domain Path: /languages
- * Requires PHP: 7.0
+ * Requires PHP: 7.2
  * Requires at least: 5.7
  * Requires Plugins: woocommerce
  * 
