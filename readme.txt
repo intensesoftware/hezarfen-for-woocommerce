@@ -278,6 +278,7 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 * feat(rest): sipariş REST API'sine Hezarfen kargo verileri eklendi
 * feat(hepsijet): toplu koli/desi girişi son değerleri hatırlasın
 * chore: minimum PHP sürümünü 7.2'ye yükselt
+* fix: sözleşme şablonu ve TCKN şifre çözmedeki PHP uyarıları
 = 2.15.0 - 2026-08-05 =
 
 * refactor: Aras Kargo talep anketi kaldırıldı
