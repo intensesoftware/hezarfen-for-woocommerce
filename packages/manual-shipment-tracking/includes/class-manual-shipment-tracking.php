@@ -18,13 +18,15 @@ require_once 'admin/class-settings.php';
 require_once 'email/class-email.php';
 require_once 'class-my-account.php';
 require_once 'admin/class-admin-ajax.php';
+require_once 'class-hepsijet-bulk-barcode.php';
+require_once 'class-shipment-column-state.php';
 require_once 'admin/class-admin-orders.php';
 require_once 'notification-providers/class-mst-notification-provider.php';
 require_once 'notification-providers/class-netgsm.php';
 require_once 'notification-providers/class-pandasms.php';
 require_once 'class-third-party-data-support.php';
 require_once 'class-deactivation-wizard.php';
-require_once 'class-hepsijet-bulk-barcode.php';
+require_once 'class-rest-api.php';
 
 /**
  * Manual Shipment Tracking package main class.
@@ -106,6 +108,7 @@ class Manual_Shipment_Tracking {
 		Admin_Orders::init();
 		Hepsijet_Bulk_Barcode::init();
 		Third_Party_Data_Support::init();
+		Rest_Api::init();
 
 		// Add PandaSMS filter globally if the plugin is ready
 		if ( Pandasms::is_plugin_ready() ) {

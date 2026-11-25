@@ -22,12 +22,16 @@ class Hezarfen_Install {
 	public static function install() {
 		// Get current stored versions
 		$stored_db_version = get_option( 'hezarfen_db_version', '0.0' );
-		
-		if ( 
+
+		if (
 		    version_compare( $stored_db_version, WC_HEZARFEN_VERSION, '>=' ) ) {
 			return;
 		}
-		
+
+		// Must run before update_version()/update_db_version() write the
+		// markers it reads.
+		self::maybe_enable_returns_for_fresh_install();
+
 		self::update_version();
 
 		self::migrate_legacy_sms_settings();
@@ -47,6 +51,26 @@ class Hezarfen_Install {
 		add_option( 'hezarfen_version', WC_HEZARFEN_VERSION );
 	}
 	
+	/**
+	 * Switches the returns module on for stores installing Hezarfen for the
+	 * first time.
+	 *
+	 * The module ships as a staged rollout: existing stores keep it off (the
+	 * option's default) so a regression reaches as few live stores as
+	 * possible, while new stores start with it on. A store is new when
+	 * neither version marker has ever been written. add_option() leaves an
+	 * already stored choice untouched.
+	 *
+	 * @return void
+	 */
+	private static function maybe_enable_returns_for_fresh_install() {
+		if ( false !== get_option( 'hezarfen_db_version', false ) || false !== get_option( 'hezarfen_version', false ) ) {
+			return;
+		}
+
+		add_option( 'hezarfen_returns_enabled', 'yes' );
+	}
+
 	/**
 	 * Update Hezarfen DB version info on the options table.
 	 *

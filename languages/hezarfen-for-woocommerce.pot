@@ -1553,6 +1553,10 @@ msgstr ""
 msgid "Enter T.C. Identity Number"
 msgstr ""
 
+#: includes/Checkout.php:427
+msgid "Enter T.C. Identity Number (optional)"
+msgstr ""
+
 #: includes/Checkout.php:400
 msgid "Title"
 msgstr ""

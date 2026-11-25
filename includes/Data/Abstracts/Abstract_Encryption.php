@@ -71,30 +71,40 @@ class Abstract_Encryption {
 			return $ciphertext;
 		}
 
-		$c                  = base64_decode( $ciphertext );
-		$cipher             = 'AES-128-CBC';
-		$ivlen              = openssl_cipher_iv_length( $cipher );
-		$iv                 = substr( $c, 0, $ivlen );
-		$hmac               = substr( $c, $ivlen, $sha2len = 32 );
-		$ciphertext_raw     = substr( $c, $ivlen + $sha2len );
-		$original_plaintext = openssl_decrypt(
-			$ciphertext_raw,
-			$cipher,
-			$this->encryption_key,
-			$options        = OPENSSL_RAW_DATA,
-			$iv
-		);
-		$calcmac       = hash_hmac(
+		$c       = base64_decode( (string) $ciphertext, true );
+		$cipher  = 'AES-128-CBC';
+		$ivlen   = openssl_cipher_iv_length( $cipher );
+		$sha2len = 32;
+
+		// Şifrelenmemiş değerler (eski siparişler, içe aktarma, REST) buraya
+		// düz metin olarak gelebilir. IV + HMAC + en az bir blok taşımayan
+		// gövde şifreli olamaz; openssl_decrypt()'e kısa IV verip uyarı
+		// üretmek yerine değer olduğu gibi döner.
+		if ( false === $c || strlen( $c ) < $ivlen + $sha2len + 16 ) {
+			return $ciphertext;
+		}
+
+		$iv             = substr( $c, 0, $ivlen );
+		$hmac           = substr( $c, $ivlen, $sha2len );
+		$ciphertext_raw = substr( $c, $ivlen + $sha2len );
+		$calcmac        = hash_hmac(
 			'sha256',
 			$ciphertext_raw,
 			$this->encryption_key,
 			$as_binary = true
 		);
-		if ( hash_equals( $hmac, $calcmac ) ) {
-			// PHP 5.6+ timing attack safe comparison.
-			return $original_plaintext;
+
+		// PHP 5.6+ timing attack safe comparison.
+		if ( ! hash_equals( $hmac, $calcmac ) ) {
+			return $ciphertext;
 		}
 
-		return $ciphertext;
+		return openssl_decrypt(
+			$ciphertext_raw,
+			$cipher,
+			$this->encryption_key,
+			$options = OPENSSL_RAW_DATA,
+			$iv
+		);
 	}
 }

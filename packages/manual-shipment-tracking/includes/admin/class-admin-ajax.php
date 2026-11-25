@@ -41,6 +41,8 @@ class Admin_Ajax {
 	const GET_HEPSIJET_PRICING_NONCE  = 'hezarfen_mst_get_hepsijet_pricing';
 	const GET_KARGOGATE_BALANCE_ACTION = 'hezarfen_mst_get_kargogate_balance';
 	const GET_KARGOGATE_BALANCE_NONCE  = 'hezarfen_mst_get_kargogate_balance';
+	const TEST_HEPSIJET_CONNECTION_ACTION = 'hezarfen_mst_test_hepsijet_connection';
+	const TEST_HEPSIJET_CONNECTION_NONCE  = 'hezarfen_mst_test_hepsijet_connection';
 	const DATA_ARRAY_KEY         = 'hezarfen_mst_shipment_data';
 	const COURIER_HTML_NAME      = 'courier_company';
 	const TRACKING_NUM_HTML_NAME = 'tracking_number';
@@ -64,6 +66,7 @@ class Admin_Ajax {
 		add_action( 'wp_ajax_' . self::GENERATE_HEPSIJET_PDF_ACTION, array( __CLASS__, 'generate_hepsijet_pdf' ) );
 		add_action( 'wp_ajax_' . self::GET_HEPSIJET_BARCODE_PDF_ACTION, array( __CLASS__, 'get_hepsijet_barcode_pdf' ) );
 		add_action( 'wp_ajax_' . self::GET_KARGOGATE_BALANCE_ACTION, array( __CLASS__, 'get_kargogate_balance' ) );
+		add_action( 'wp_ajax_' . self::TEST_HEPSIJET_CONNECTION_ACTION, array( __CLASS__, 'test_hepsijet_connection' ) );
 
 		add_action( 'wp_ajax_hezarfen_mst_get_return_dates', array( __CLASS__, 'get_return_dates' ) );
 		add_action( 'wp_ajax_hepsijet_get_warehouses', array( __CLASS__, 'get_hepsijet_warehouses' ) );
@@ -297,27 +300,19 @@ class Admin_Ajax {
 		}
 
 		if ( $result === true ) {
-			// Mark shipment as cancelled in the encapsulated shipment meta
-			if ( ! empty( $_POST['order_id'] ) ) {
-				$order_id = absint( $_POST['order_id'] );
-				
-				$order = wc_get_order( $order_id );
-				if ( $order ) {
-					// Find shipment by delivery number
-					$shipment_meta_key = '_hezarfen_hepsijet_shipment_' . $delivery_no;
-					$shipment_details = $order->get_meta( $shipment_meta_key );
-					
-					if ( $shipment_details && is_array( $shipment_details ) ) {
-						$shipment_details['cancelled_at'] = current_time('mysql');
-						$shipment_details['cancel_reason'] = 'IPTAL';
-						$shipment_details['status'] = 'cancelled';
-						
-						$order->update_meta_data( $shipment_meta_key, $shipment_details );
-						$order->save_meta_data();
-					}
-				}
+			// Mark shipment as cancelled in the encapsulated shipment meta.
+			// Shared with the returns module: this meta update is what fires
+			// hezarfen_hepsijet_shipment_cancelled and releases a linked return
+			// request, so it must run even when the caller sent only the
+			// delivery number — the order is then resolved from that number.
+			$order_id = ! empty( $_POST['order_id'] )
+				? absint( $_POST['order_id'] )
+				: $hepsijet_integration->find_order_id_by_delivery_no( $delivery_no );
+
+			if ( $order_id ) {
+				$hepsijet_integration->mark_shipment_cancelled( $order_id, $delivery_no );
 			}
-			
+
 			wp_send_json_success( array( 'message' => 'Shipment cancelled successfully' ) );
 		} else {
 			// Handle unexpected response format
@@ -576,8 +571,36 @@ class Admin_Ajax {
 	}
 
 	/**
+	 * Fails loudly when TCPDF could not embed the barcode image.
+	 *
+	 * TCPDF::Image() answers an image it cannot process with false (or with null,
+	 * when it bailed out inside ImagePngAlpha()) instead of raising, so an
+	 * unembeddable barcode would otherwise yield a label carrying the order
+	 * details and an empty barcode area. A successful call answers the image key,
+	 * which is 0 for the first image on the page, hence the strict comparisons.
+	 *
+	 * @param mixed  $result      Return value of TCPDF::Image().
+	 * @param string $delivery_no Delivery number, for the error message.
+	 * @return void
+	 * @throws Exception If the barcode image was not embedded.
+	 */
+	private static function assert_barcode_drawn( $result, $delivery_no ) {
+		if ( false !== $result && null !== $result ) {
+			return;
+		}
+
+		throw new Exception(
+			sprintf(
+				/* translators: %s: HepsiJet delivery number. */
+				__( '%s numaralı gönderinin barkod görseli PDF\'e eklenemedi. Sunucunun geçici dosya dizini (upload_tmp_dir) yazılabilir olmayabilir.', 'hezarfen-for-woocommerce' ),
+				$delivery_no
+			)
+		);
+	}
+
+	/**
 	 * Create Hepsijet PDF using TCPDF.
-	 * 
+	 *
 	 * @param WC_Order $order Order object.
 	 * @param array $barcode_data Barcode data from API.
 	 * @param string $delivery_no Delivery number.
@@ -752,8 +775,17 @@ class Admin_Ajax {
 							if ( $rotated_gd ) {
 								$rot_w        = imagesx( $rotated_gd );
 								$rot_h        = imagesy( $rotated_gd );
-								$rotated_file = wp_tempnam( 'hepsijet_barcode_rot_' . $delivery_no . '.png' );
-								imagepng( $rotated_gd, $rotated_file );
+								// The rotated copy is written as JPEG rather than PNG:
+								// imagerotate() leaves an alpha channel behind, and TCPDF
+								// answers an alpha PNG by taking its ImagePngAlpha() path,
+								// which needs write access to K_PATH_CACHE (PHP's
+								// upload_tmp_dir). Where that directory isn't writable --
+								// Bitnami images point it at /opt/bitnami/php/tmp -- Image()
+								// then fails and the label prints its order details with an
+								// empty barcode area. JPEG carries no alpha channel, so that
+								// path is never taken.
+								$rotated_file = wp_tempnam( 'hepsijet_barcode_rot_' . $delivery_no . '.jpg' );
+								imagejpeg( $rotated_gd, $rotated_file, 95 );
 								imagedestroy( $rotated_gd );
 							}
 						}
@@ -765,7 +797,8 @@ class Admin_Ajax {
 						$draw_width  = $content_width;
 						$draw_height = $content_width * $rot_h / max( 1, $rot_w );
 
-						$pdf->Image( $rotated_file, $content_x, $current_y, $draw_width, $draw_height, '', '', '', false, 300, '', false, false, 0, false, false, false );
+						$drawn = $pdf->Image( $rotated_file, $content_x, $current_y, $draw_width, $draw_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
+						self::assert_barcode_drawn( $drawn, $delivery_no );
 
 						if ( $rotated_file !== $temp_file ) {
 							@unlink( $rotated_file );
@@ -781,7 +814,8 @@ class Admin_Ajax {
 						$display_width  = $content_width;
 						$display_height = $display_width / $image_aspect_ratio;
 
-						$pdf->Image( $temp_file, $content_x, $current_y, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
+						$drawn = $pdf->Image( $temp_file, $content_x, $current_y, $display_width, $display_height, 'JPG', '', '', false, 300, '', false, false, 0, false, false, false );
+						self::assert_barcode_drawn( $drawn, $delivery_no );
 
 
 						$pdf->SetY( $current_y + $display_height + $barcode_bottom_gap );
@@ -1451,6 +1485,62 @@ class Admin_Ajax {
 	}
 
 	/**
+	 * Verifies the saved Hepsijet credentials against the kargokit.com relay.
+	 *
+	 * Lightweight connectivity check for the settings screen: reuses the cheap
+	 * authenticated wallet-balance endpoint to confirm the Consumer Key/Secret
+	 * are valid, and reports the result inline.
+	 *
+	 * @return void
+	 */
+	public static function test_hepsijet_connection() {
+		check_ajax_referer( self::TEST_HEPSIJET_CONNECTION_NONCE, '_wpnonce' );
+
+		// Check user capabilities
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'Bu işlemi gerçekleştirme yetkiniz yok.', 'hezarfen-for-woocommerce' )
+			), 403 );
+		}
+
+		// The relay is queried with the stored credentials, so they must be saved
+		// before the test can run. Give a clear, non-empty status otherwise.
+		if ( ! Courier_Hepsijet_Integration::has_credentials() ) {
+			wp_send_json_error( array(
+				'message' => __( 'Consumer Key ve Consumer Secret alanları boş. Lütfen bilgileri girip kaydettikten sonra tekrar deneyin.', 'hezarfen-for-woocommerce' )
+			) );
+		}
+
+		try {
+			$hepsijet_integration = new \Hezarfen\ManualShipmentTracking\Courier_Hepsijet_Integration();
+
+			$result = $hepsijet_integration->get_kargogate_balance();
+
+			if ( is_wp_error( $result ) ) {
+				wp_send_json_error( array(
+					'message' => sprintf(
+						/* translators: %s: error message returned by the relay */
+						__( 'Bağlantı başarısız: %s. Consumer Key/Secret bilgilerinizi kontrol edin.', 'hezarfen-for-woocommerce' ),
+						$result->get_error_message()
+					)
+				) );
+			}
+
+			wp_send_json_success( array(
+				'message' => __( 'Bağlantı başarılı! Consumer Key ve Consumer Secret doğrulandı.', 'hezarfen-for-woocommerce' )
+			) );
+		} catch ( Exception $e ) {
+			wp_send_json_error( array(
+				'message' => sprintf(
+					/* translators: %s: exception message */
+					__( 'Bağlantı test edilirken bir hata oluştu: %s', 'hezarfen-for-woocommerce' ),
+					$e->getMessage()
+				)
+			) );
+		}
+	}
+
+	/**
 	 * AJAX handler: Generates a combined PDF with barcodes from multiple orders.
 	 *
 	 * Expects POST data:
@@ -1512,7 +1602,20 @@ class Admin_Ajax {
 			}
 
 			// Pass existing $pdf (or null for the first iteration) and request the object back.
-			$pdf = self::create_hepsijet_pdf( $order, $barcode_data, $delivery_no, $pdf, true );
+			// One unembeddable barcode must not abort the whole bulk print job: skip the
+			// offending order and keep going. If nothing at all could be added, the null
+			// guard below still fails the request cleanly.
+			try {
+				$pdf = self::create_hepsijet_pdf( $order, $barcode_data, $delivery_no, $pdf, true );
+			} catch ( Exception $e ) {
+				if ( function_exists( 'wc_get_logger' ) ) {
+					wc_get_logger()->warning(
+						sprintf( 'Hepsijet combined PDF: sipariş #%d (%s) atlandı: %s', $order_id, $delivery_no, $e->getMessage() ),
+						array( 'source' => 'hezarfen-hepsijet' )
+					);
+				}
+				continue;
+			}
 		}
 
 		if ( null === $pdf ) {

@@ -69,30 +69,23 @@ class Admin_Orders {
 	 */
 	public static function render_shipment_column( $column_key, $order ) {
 		if ( self::SHIPMENT_COLUMN === $column_key ) { // TODO: early return.
-			$order_id      = $order instanceof \WC_Order ? $order->get_id() : $order;
-			$shipment_data = Helper::get_all_shipment_data( $order_id );
-			if ( $shipment_data ) {
-				if ( count( $shipment_data ) > 1 ) {
-					printf( '<p>%s</p>', esc_html__( 'Shipment in pieces', 'hezarfen-for-woocommerce' ) );
-				} else {
-					$courier = Helper::get_courier_class( $shipment_data[0]->courier_id );
-					if ( $courier::$logo ) {
-						printf( '<img src="%s" class="courier-logo" loading="lazy" alt="%s">', esc_url( HEZARFEN_MST_COURIER_LOGO_URL . $courier::$logo ), esc_attr( $courier::get_title( $order_id ) ) );
-					} else {
-						printf( '<p>%s</p>', esc_html( $courier::get_title( $order_id ) ) );
-					}
-				}
+			$order_id = $order instanceof \WC_Order ? $order->get_id() : $order;
+			$state    = Shipment_Column_State::resolve( $order_id );
 
-				printf( '<span data-order-id="%s" class="dashicons dashicons-info-outline shipment-info-icon"></span>', esc_attr( $order_id ) );
-			} else {
-				$no_shipment_msg = apply_filters( 'hezarfen_shop_order_no_shipment_found_msg', null, $order_id );
+			echo $state->html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Shipment_Column_State builds already-escaped HTML.
 
-				if ( is_null( $no_shipment_msg ) ) {
-					esc_html_e( 'No shipment data found', 'hezarfen-for-woocommerce' );
-				} else {
-					echo wp_kses_post( $no_shipment_msg );
-				}
-			}
+			/**
+			 * Fires at the end of the "Shipment" column output, after the resolved state's HTML.
+			 *
+			 * Extensions (e.g. Hezarfen Pro) can use this to append their own controls (such as a
+			 * "Detay" button) into the same column instead of registering a separate column.
+			 *
+			 * @since x.x
+			 *
+			 * @param int                    $order_id Order ID.
+			 * @param Shipment_Column_State  $state    The resolved shipment state for this order.
+			 */
+			do_action( 'hezarfen_mst_after_shipment_column', $order_id, $state );
 		}
 	}
 
@@ -210,10 +203,26 @@ class Admin_Orders {
 		return $statuses;
 	}
 
+	/**
+	 * Checks whether the current admin screen is the WooCommerce orders list.
+	 *
+	 * Covers both the legacy (post type based) orders list and the HPOS orders list, whose
+	 * screen id is `woocommerce_page_wc-orders` and has no `post_type` property.
+	 *
+	 * @return bool
+	 */
 	private static function is_wc_order_list_screen() {
 		$screen = get_current_screen();
 
-		if (isset($screen->post_type) && 'shop_order' === $screen->post_type) {
+		if ( ! $screen ) {
+			return false;
+		}
+
+		if ( 'shop_order' === $screen->post_type ) {
+			return true;
+		}
+
+		if ( 'woocommerce_page_wc-orders' === $screen->id ) {
 			return true;
 		}
 
@@ -244,6 +253,7 @@ class Admin_Orders {
 				'tooltip_placeholder'      => esc_html__( 'Fetching data..', 'hezarfen-for-woocommerce' ),
 				'courier_company_i18n'     => esc_html__( 'Courier Company', 'hezarfen-for-woocommerce' ),
 				'tracking_num_i18n'        => esc_html__( 'Tracking Number', 'hezarfen-for-woocommerce' ),
+				'load_error_i18n'          => esc_html__( 'Gönderi bilgisi yüklenemedi. Tekrar deneyin.', 'hezarfen-for-woocommerce' ),
 			)
 		);
 	}
