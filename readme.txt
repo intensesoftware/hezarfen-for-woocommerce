@@ -261,7 +261,7 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 15. Hesabım sayfasında siparişe ait oluşmuş sözleşmelerin gösterilmesi
 
 == Changelog ==
-= 2.16.0 - 2026-11-19 =
+= 2.16.0 - 2026-11-25 =
 
 * feat(orders): kargo sütununu tek bir durum kaynağına bağla
 * fix(hepsijet-label): embed the rotated barcode as JPEG, not alpha PNG
@@ -277,6 +277,7 @@ HepsiJET, Yurtiçi Kargo, Sürat Kargo, Aras Kargo, PTT Kargo, Trendyol Express,
 * feat(returns): iade talepleri otomatik onaylansın, yönetici onayı Pro'da
 * feat(rest): sipariş REST API'sine Hezarfen kargo verileri eklendi
 * feat(hepsijet): toplu koli/desi girişi son değerleri hatırlasın
+* chore: minimum PHP sürümünü 7.2'ye yükselt
 = 2.15.0 - 2026-08-05 =
 
 * refactor: Aras Kargo talep anketi kaldırıldı
